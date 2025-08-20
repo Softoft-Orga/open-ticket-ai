@@ -1,31 +1,28 @@
 ---
-description: Lernen Sie, wie Sie Python-Anwendungen mit OTOBO, Znuny und OTRS mithilfe
-  einer asynchronen Client-Bibliothek integrieren. Diese Anleitung bietet schrittweise
-  Anweisungen und Codebeispiele für die Verwaltung von Helpdesk-Tickets über die REST
-  API, einschließlich Erstellen, Suchen, Aktualisieren und Abrufen des Ticketverlaufs.
+description: Erfahren Sie, wie Sie Python-Anwendungen mit OTOBO, Znuny und OTRS über eine asynchrone Client-Bibliothek integrieren. Diese Anleitung bietet schrittweise Anweisungen und Codebeispiele für die Verwaltung von Helpdesk-Tickets über die REST-API, einschließlich Erstellen, Suchen, Aktualisieren und Abrufen des Ticket-Verlaufs.
 ---
+
 # OTOBO Znuny OTRS Integrationsanleitung
 
 Für die Integration in OTOBO, Znuny oder OTRS verwenden wir unsere otobo Python Client-Bibliothek.
 
 ## Python OTOBO Client-Bibliothek
 
-Ein asynchroner Python-Client zur Interaktion mit der OTOBO REST API. Entwickelt mit `httpx` und `pydantic` für Typsicherheit
-und einfache Bedienung.
+Ein asynchroner Python-Client zur Interaktion mit der OTOBO REST API. Entwickelt mit `httpx` und `pydantic` für Typsicherheit und einfache Bedienung.
 
 ### Funktionen
 
-*   **Asynchrone** HTTP-Anfragen mit `httpx.AsyncClient`
-*   **Pydantic**-Modelle zur Validierung von Anfrage- und Antwortdaten
-*   Vollständige CRUD-Operationen für Tickets:
+* **Asynchrone** HTTP-Anfragen mit `httpx.AsyncClient`
+* **Pydantic**-Modelle zur Validierung von Anfrage- und Antwortdaten
+* Vollständige CRUD-Operationen für Tickets:
 
-    *   `TicketCreate`
-    *   `TicketSearch`
-    *   `TicketGet`
-    *   `TicketUpdate`
-    *   `TicketHistoryGet`
-*   **Fehlerbehandlung** über `OTOBOError` für API-Fehler
-*   Hilfsmethode `search_and_get`, um Suchergebnisse mit detailliertem Abruf zu kombinieren
+  * `TicketCreate`
+  * `TicketSearch`
+  * `TicketGet`
+  * `TicketUpdate`
+  * `TicketHistoryGet`
+* **Fehlerbehandlung** über `OTOBOError` für API-Fehler
+* Hilfsmethode `search_and_get`, um Suchergebnisse mit einem detaillierten Abruf zu kombinieren
 
 ### Installation
 
@@ -132,7 +129,7 @@ update_params = TicketUpdateParams(
 await client.update_ticket(update_params)
 ```
 
-#### 6. Ticketverlauf abrufen
+#### 6. Ticket-Verlauf abrufen
 
 ```python
 from otobo import TicketHistoryParams

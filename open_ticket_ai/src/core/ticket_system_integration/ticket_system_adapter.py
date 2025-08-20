@@ -8,9 +8,8 @@ from open_ticket_ai.src.core.mixins.registry_providable_instance import (
     Providable,
 )
 from .unified_models import (
-    SearchCriteria,
-    UnifiedNote,
-    UnifiedTicket,
+    TicketSearchCriteria,
+    UnifiedNote, UnifiedTicket, UnifiedTicketUpdate,
 )
 
 
@@ -45,7 +44,7 @@ class TicketSystemAdapter(Providable, ABC):
         self.config = config
 
     @abstractmethod
-    async def update_ticket(self, ticket_id: str, updates: dict) -> bool:
+    async def update_ticket(self, ticket_id: str, updates: UnifiedTicketUpdate) -> bool:
         """Update a ticket in the system.
 
         This method must be implemented by concrete adapters to handle updating
@@ -54,7 +53,7 @@ class TicketSystemAdapter(Providable, ABC):
 
         Args:
             ticket_id: Unique identifier of the ticket to update.
-            updates: Dictionary of attributes to update on the ticket.
+            updates: UnifiedTicketUpdate of attributes to update on the ticket.
 
         Returns:
             bool: ``True`` if the update succeeded, otherwise ``False``.
@@ -62,7 +61,7 @@ class TicketSystemAdapter(Providable, ABC):
         pass
 
     @abstractmethod
-    async def find_tickets(self, criteria: SearchCriteria) -> list[UnifiedTicket]:
+    async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         """Search for tickets matching ``criteria``.
 
         This method must be implemented by concrete adapters to perform
@@ -81,7 +80,7 @@ class TicketSystemAdapter(Providable, ABC):
         pass
 
     @abstractmethod
-    async def find_first_ticket(self, criteria: SearchCriteria) -> UnifiedTicket | None:
+    async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         """Return the first ticket that matches ``criteria`` if any.
 
         This is a convenience method that should return the first matching
@@ -116,20 +115,18 @@ class TicketSystemAdapter(Providable, ABC):
         pass
 
     @abstractmethod
-    async def add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote:
+    async def add_note_to_ticket(self, ticket_id: str, note: UnifiedNote) -> bool:
         """Add a note to an existing ticket.
 
-        This method must be implemented by concrete adapters to attach notes/comments
-        to tickets in the target system. The note content is provided in a unified format.
+        This method must be implemented by concrete adapters to handle adding notes
+        to tickets in the target ticketing system.
 
         Args:
-            ticket_id (str):
-                Unique identifier of the target ticket.
-            note (UnifiedNote):
-                The note content and metadata to add.
+            ticket_id (str): The unique identifier of the ticket to which the note will be added.
+            note (UnifiedNote): the note to be added.
 
         Returns:
-            UnifiedNote:
-                The added note object with system-generated metadata (e.g., timestamp, ID).
+            bool: ``True`` if the note was successfully added, otherwise ``False``.
         """
         pass
+

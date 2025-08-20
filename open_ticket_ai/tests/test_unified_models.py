@@ -53,15 +53,15 @@ def test_unified_ticket_construction():
 
 
 def test_search_criteria():
-    """Test the construction and attribute access of SearchCriteria objects.
+    """Test the construction and attribute access of TicketSearchCriteria objects.
 
     This test verifies that:
-    1. SearchCriteria objects can be properly instantiated with various parameters
+    1. TicketSearchCriteria objects can be properly instantiated with various parameters
     2. Nested object attributes are correctly stored and accessible
 
     Steps performed:
     - Creates sample UnifiedUser and UnifiedQueue objects
-    - Constructs a SearchCriteria instance using these objects
+    - Constructs a TicketSearchCriteria instance using these objects
     - Asserts that the queue name stored in the criteria matches the created queue's name
     """
     user = UnifiedUser(id=1, name="Bob")

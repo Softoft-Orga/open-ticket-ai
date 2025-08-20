@@ -1142,7 +1142,7 @@ requires-dist = [
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.29.1" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "openai", specifier = ">=1.93.0" },
-    { name = "otobo", specifier = "==1.0.1" },
+    { name = "otobo", specifier = ">=1.1.4" },
     { name = "pdoc3" },
     { name = "phonenumbers" },
     { name = "pluggy" },
@@ -1220,16 +1220,16 @@ wheels = [
 
 [[package]]
 name = "otobo"
-version = "1.0.1"
+version = "1.1.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2f/ad/67d0e10dec5430dd65a22b165b2b784fcc12aab2e56dad176a3735093d19/otobo-1.0.1.tar.gz", hash = "sha256:a794a9aa3e945d604a62b21e83881f301dc468d0a2f61562f54f17197b680015", size = 15488, upload-time = "2025-06-23T19:32:56.424Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a1/04/de1d1332a7f0643820d1dda340951c96cc0244235675dc2558abd2331f7c/otobo-1.1.4.tar.gz", hash = "sha256:1c8770efc1af16ab99cd2bd36a920ed873805ea0e0b40d6361ff3b282405d6a3", size = 15498, upload-time = "2025-06-29T09:53:16.561Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/17/37/1ae74b50a2c4a56d9aa2172dbf3733aed6e4bb65e659bdb11f0c946281ff/otobo-1.0.1-py3-none-any.whl", hash = "sha256:18ff940f65b1b05989a0140c8c2d2ad00551d8db781874aa6f331fe5b554a6ea", size = 13452, upload-time = "2025-06-23T19:32:55.345Z" },
+    { url = "https://files.pythonhosted.org/packages/fc/b5/f20dff2efeda8057f33a5ce5f55ade9ae5a8eb0ca1fbe5a44e6990822de6/otobo-1.1.4-py3-none-any.whl", hash = "sha256:41016b3351194db61944791c111f26a7e4fca4b04d39143a9edbf434d18be8d6", size = 13454, upload-time = "2025-06-29T09:53:15.419Z" },
 ]
 
 [[package]]

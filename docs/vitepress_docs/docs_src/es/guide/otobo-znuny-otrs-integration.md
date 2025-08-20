@@ -1,21 +1,22 @@
 ---
-description: Aprenda a integrar aplicaciones Python con OTOBO, Znuny y OTRS utilizando
+description: Aprende a integrar aplicaciones Python con OTOBO, Znuny y OTRS utilizando
   una librería de cliente asíncrona. Esta guía proporciona instrucciones paso a paso y
-  ejemplos de código para gestionar tickets de helpdesk a través de la REST API, incluyendo
-  la creación, búsqueda, actualización y recuperación del historial de tickets.
+  ejemplos de código para gestionar tickets de soporte a través de la REST API, incluyendo la creación,
+  búsqueda, actualización y recuperación del historial de tickets.
 ---
+
 # Guía de Integración con OTOBO, Znuny y OTRS
 
-Para la integración con OTOBO, Znuny u OTRS, estamos utilizando nuestra librería cliente de python otobo.
+Para la integración con OTOBO, Znuny u OTRS, utilizamos nuestra librería de cliente python otobo.
 
-## Librería Cliente de Python para OTOBO
+## Librería de Cliente Python para OTOBO
 
 Un cliente Python asíncrono para interactuar con la REST API de OTOBO. Construido con `httpx` y `pydantic` para seguridad de tipos y facilidad de uso.
 
 ### Características
 
-*   **Peticiones HTTP asíncronas** usando `httpx.AsyncClient`
-*   **Modelos Pydantic** para la validación de datos de petición y respuesta
+*   **Peticiones** HTTP asíncronas utilizando `httpx.AsyncClient`
+*   **Modelos** Pydantic para la validación de datos de petición y respuesta
 *   Operaciones CRUD completas para tickets:
 
     *   `TicketCreate`
@@ -38,12 +39,12 @@ pip install otobo
 
 #### Configurar los Webservices de OTOBO:
 
-Cree un nuevo servicio web en OTOBO con la siguiente configuración:
-Consulte la Guía de Instalación.
+Crea un nuevo servicio web en OTOBO con la siguiente configuración:
+Consulta la Guía de Instalación.
 
 #### Crear un nuevo Agente
 
-Cree un nuevo Agente de Otobo con una contraseña segura y otórguele los permisos necesarios para la tarea que desea realizar.
+Crea un nuevo Agente de Otobo con una contraseña segura y otórgale los permisos necesarios para la tarea que deseas realizar.
 
 
 #### 1. Configurar el cliente

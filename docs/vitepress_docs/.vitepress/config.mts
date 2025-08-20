@@ -1,10 +1,9 @@
 import {defineConfig} from "vitepress";
 import {NavGenerator, NavGeneratorOptions} from "./util/navgen.ts";
-import {withMermaid} from "vitepress-plugin-mermaid";
+import viteCompression from 'vite-plugin-compression'
 
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
-
 const navGeneratorOptions: NavGeneratorOptions = {
     rootPath: './docs_src',
     allowedExtensions: ['.md'],
@@ -17,9 +16,9 @@ const navGeneratorOptions: NavGeneratorOptions = {
     sidebarCollapsed: true,
     sortComparator: (a: string, b: string) => a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'})
 }
-
 const navGenerator = new NavGenerator(navGeneratorOptions);
-export default withMermaid(defineConfig({
+const gaId = 'G-FBWC3JDZJ4'
+export default defineConfig({
 
     title: 'Open Ticket AI',
     srcDir: './docs_src',
@@ -29,15 +28,27 @@ export default withMermaid(defineConfig({
             'link',
             {
                 rel: 'icon',
-                href: 'https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100&lightness=100&colorlevel.white=100'
+                href: 'https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=84&q=90&lightness=100&colorlevel.white=100'
             }
         ],
-        ['script', {async: '', src: 'https://www.googletagmanager.com/gtag/js?id=G-FBWC3JDZJ4'}],
         ['script', {}, `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments)}
-      gtag('js', new Date());
-      gtag('config', 'G-FBWC3JDZJ4', { send_page_view: false });
+            (() => {
+              let id='${gaId}'
+              let loaded=false
+              function load(){
+                if(loaded) return; loaded=true
+                let s=document.createElement('script'); s.src='https://www.googletagmanager.com/gtag/js?id='+id; s.async=true; document.head.appendChild(s)
+                window.dataLayer=window.dataLayer||[]
+                function gtag(){dataLayer.push(arguments)}
+                gtag('js', new Date())
+                gtag('config', id, {send_page_view:false})
+              }
+              if('requestIdleCallback' in window) requestIdleCallback(load,{timeout:4000}); else setTimeout(load,2000)
+              let fired=false;
+              ['scroll','pointerdown','keydown','touchstart'].forEach((ev) =>{
+                addEventListener(ev,function(){ if(fired) return; fired=true; load() },{passive:true, once:true})
+              })
+            })();
     `]
     ],
     description: 'Open Ticket AI is an open-source, on-premise solution that auto-classifies support tickets by queue and priority—integrates with OTOBO, Znuny, and OTRS.',
@@ -45,9 +56,6 @@ export default withMermaid(defineConfig({
     cleanUrls: true,
     sitemap: {
         hostname: 'https://open-ticket-ai.com',
-    },
-    mermaid: {
-        securityLevel: 'loose', // needed for `click` links to work
     },
     locales: {
         root: {
@@ -103,6 +111,13 @@ export default withMermaid(defineConfig({
         }
     },
     vite: {
+        build: {
+            cssCodeSplit: true,
+        },
+        plugins: [
+            viteCompression({algorithm: 'brotliCompress'}),
+            viteCompression({algorithm: 'gzip'})
+        ],
         define: {
             __VUE_PROD_DEVTOOLS__: 'false',
         },
@@ -113,5 +128,5 @@ export default withMermaid(defineConfig({
                 '@intlify/shared'
             ]
         },
-    }
-}))
+    },
+})

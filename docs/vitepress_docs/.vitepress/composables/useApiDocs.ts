@@ -1,6 +1,5 @@
 import {readonly} from 'vue';
 // Make sure the path to your JSON file is correct relative to the .vitepress directory
-import apiJsonData from '../api_reference.json';
 
 
 export interface ParameterData {
@@ -54,7 +53,7 @@ export interface ClassDataWithContext extends ClassData {
 // --- DATA STORE ---
 
 // Type the raw JSON data import
-const apiData: ModuleEntry[] = apiJsonData;
+
 
 // This will hold our processed, easily searchable data with strong types
 const processedData = {
@@ -66,10 +65,14 @@ const processedData = {
  * Processes the raw API data from JSON into structured Maps for efficient lookups.
  * This function runs only once.
  */
-function processApiData() {
+async function processApiData() {
   // Guard to prevent processing more than once
   if (processedData.packages.size > 0) return;
-
+  const response = await fetch('/assets/api_reference.json'); // Adjust the path as needed
+    if (!response.ok) {
+        throw new Error(`Failed to fetch API documentation: ${response.statusText}`);
+    }
+  const apiData: ModuleEntry[] = await response.json();
   for (const module of apiData) {
     const modulePath = module.module_path;
 

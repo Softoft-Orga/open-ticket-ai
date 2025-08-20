@@ -27,10 +27,10 @@ dependencies = [
     "mkdocstrings[python]>=0.29.1",
     "mkdocs-gen-files>=0.5.0",
     "docstring-parser>=0.16",
-    "otobo==1.0.1",
     "openai>=1.93.0",
     "tenacity>=9.1.2",
     "prefect>=3.4.8",
+    "otobo>=1.1.5",
 ]
 
 [project.optional-dependencies]

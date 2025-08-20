@@ -11,20 +11,26 @@ to = "/.netlify/functions/classify"
 status = 200
 
 [[redirects]]
-  from = "https://ticket-classification.softoft.de/*"
-  to = "https://open-ticket-ai.com/:splat"
-  status = 301
-  force = true
+from = "https://ticket-classification.softoft.de/*"
+to = "https://open-ticket-ai.com/:splat"
+status = 301
+force = true
+
 
 [[headers]]
-  for = "/assets/*.js"
-  [headers.values]
-  Cache-Control = "public, max-age=31536000, immutable"
+for = "/assets/*.js"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/assets/*.css"
-  [headers.values]
-  Cache-Control = "public, max-age=31536000, immutable"
+for = "/api_reference.json"
+[headers.values]
+Cache-Control = "public, max-age=3600, immutable"
+
+[[headers]]
+for = "/assets/*.css"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
 
 [[redirects]]
 from = "/*.*"
@@ -36,37 +42,29 @@ from = "/assets/*"
 to = "/assets/:splat"
 status = 200
 
-[[redirects]]
-from = "/sitemap.xml"
-to = "/sitemap.xml"
-
 # --- Root language redirects ---
 [[redirects]]
 from = "/"
 to = "/de"
 status = 302
-force = true
 conditions = { Language = ["de"] }
 
 [[redirects]]
 from = "/"
 to = "/en"
 status = 302
-force = true
 conditions = { Language = ["en"] }
 
 [[redirects]]
 from = "/"
 to = "/fr"
 status = 302
-force = true
 conditions = { Language = ["fr"] }
 
 [[redirects]]
 from = "/"
 to = "/es"
 status = 302
-force = true
 conditions = { Language = ["es"] }
 
 # Fallback for other languages -> English
@@ -74,11 +72,3 @@ conditions = { Language = ["es"] }
 from = "/"
 to = "/en"
 status = 302
-force = true
-
-# --- Catch-all: any non-prefixed path -> language-prefixed path ---
-
-[[redirects]]
-from = "/*"
-to = "/en/:splat"
-status = 301

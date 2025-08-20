@@ -3,7 +3,7 @@ description: Discover our Python library for seamless ticket system integration.
   documentation details the `TicketSystemAdapter`, an abstract base class for building
   custom connectors, and provides a ready-to-use `OTOBOAdapter`. Learn to manage tickets
   across different platforms using unified models like `UnifiedTicket`, `UnifiedNote`,
-  and `SearchCriteria` for creating, updating, and finding support tickets.
+  and `TicketSearchCriteria` for creating, updating, and finding support tickets.
 ---
 # Documentation for `**/ce/ticket_system_integration/*.py`
 
@@ -110,7 +110,7 @@ in the target ticketing system. The ticket data is provided in a unified format.
 
 **Parameters:**
 
-- **`ticket_data`** (`UnifiedTicket`) - The ticket data to create. Contains all necessary fields in a 
+- **`ticket_data`** (`UnifiedTicket`) - The ticket data to create. Contains all necessary fields in a
 system-agnostic format.
 
 **Returns:** (`UnifiedTicket`) - The created ticket object with system-generated identifiers and fields.

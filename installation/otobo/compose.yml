@@ -1,21 +1,106 @@
-
+#file: noinspection ComposeUnknownValues
 services:
-  atc:
-    image: your-docker-repo/atc:latest
-    container_name: atc
-    ports:
-      - "8080:80"
-    env_file: .env
-    # Für lokale OTOBO-Installation (non-docker) Pfad mounten:
+  db:
+    image: mariadb:11.7
+    user: mysql:mysql
+    cap_drop:
+      - ALL
+    # noinspection ComposeUnknownValues
+    cap_add:
+      - CAP_SYS_CHROOT
+    restart: "always"
     volumes:
-      - "${OTOBO_PATH:-}/otobo:/opt/otobo:ro"
-    depends_on:
-      - setup
+      - mariadb_data:/var/lib/mysql
+      - /home/dump:/home/dump
+      - mysql.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: ${OTOBO_DB_ROOT_PASSWORD:?err}
+    command:
+    healthcheck:
+      test: healthcheck.sh --connect --innodb_initialized
 
-  setup:
-    image: your-docker-repo/atc-setup-otobo:latest
-    container_name: atc-setup
-    env_file: .env
-    entrypoint: ["/usr/local/bin/setup-otobo.sh"]
-    # Skript läuft nur einmal am Start und beendet sich:
-    restart: "no"
+
+  web:
+    image: rotheross/otobo:latest-11_0
+    user: otobo:otobo
+    cap_drop:
+      - ALL
+    depends_on:
+      - db
+      - elastic
+      - redis
+    restart: "always"
+    volumes:
+      - opt_otobo:/opt/otobo
+    command: web
+    healthcheck:
+      test: [ "CMD", "curl", "-sSf", "http://localhost:5000/robots.txt" ]
+
+  daemon:
+    image: rotheross/otobo:latest-11_0
+    user: otobo:otobo
+    cap_drop:
+      - ALL
+    depends_on:
+      - web
+    restart: "always"
+    volumes:
+      - opt_otobo:/opt/otobo
+    command: daemon
+    healthcheck:
+      test: [ "CMD-SHELL", "./bin/otobo.Daemon.pl status | grep 'Daemon running'" ]
+
+  elastic:
+    image: rotheross/otobo-elasticsearch:latest-11_0
+    user: elastic:elastic
+    cap_drop:
+      - ALL
+    cap_add:
+      - CAP_SYS_CHROOT
+      - CAP_SETUID
+      - CAP_SETGID
+    restart: "always"
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: ${OTOBO_ELASTICSEARCH_ES_JAVA_OPTS:?err}
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: [ "CMD", "curl", "-sSf", "http://localhost:9200/_cat/health" ]
+
+  redis:
+    image: redis:7.4.2-alpine
+    user: redis:redis
+    cap_drop:
+      - ALL
+    restart: "always"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+
+  nginx:
+    image: nginx:latest
+    user: nginx:nginx
+    container_name: nginx
+    restart: "always"
+    ports:
+      - "80:80"
+    volumes:
+      - nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - type: tmpfs
+        target: /var/cache/nginx
+        tmpfs:
+          - size: 256m
+    depends_on:
+      - web
+
+
+
+volumes:
+  mariadb_data: { }
+  backup_data: { }
+  opt_otobo: { }
+  elasticsearch_data: { }
+  redis_data: { }
+

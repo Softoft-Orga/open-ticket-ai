@@ -40,7 +40,7 @@ class BasicTicketFetcher(Pipe):
 
         The fetcher reads optional `filters` from its configuration. Each filter
         contains an `attribute` and `value` entry. Attributes must map to
-        fields supported by `SearchCriteria`. Unsupported attributes
+        fields supported by `TicketSearchCriteria`. Unsupported attributes
         result in a controlled pipeline stop.
 
         If no filters are provided, the `ticket_id` from the context is used as

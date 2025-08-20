@@ -8,11 +8,6 @@ pageClass: full-page
 ---
 # Architecture Overview
 
-<div class="flex justify-center mb-4 w-full h-[80vh]">
-<iframe
-  title="Open_Ticket_AI"
-  width="100%"
-  height="100%"
-  src="https://app.terrastruct.com/diagrams/1810325889">
-</iframe>
-</div>
+<ClientOnly>
+<ArchitectureOverview></ArchitectureOverview>
+</ClientOnly>
