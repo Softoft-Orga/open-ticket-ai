@@ -103,8 +103,8 @@ class DocGenerationFacade:
             model: Identifier of the AI model to use for translation.
             out_dir: Output directory for translated files.
         """
-        translator = Translator(self.client, base_language)
-        await translator.translate_directory(docs_dir, languages, model, out_dir)
+        translator = Translator(self.client, base_language, languages, model)
+        await translator.translate_directory(docs_dir, out_dir)
 
 
 # --- Global Configurations & Instances ---

@@ -63,6 +63,8 @@ class Translator:
         self,
         client: AsyncOpenAI,
         base_language: str,
+        languages: List[str],
+        model: str,
         translation_file_path: Path = None
     ) -> None:
         """Initializes the Translator instance.
@@ -82,6 +84,9 @@ class Translator:
         self.client = client
         self.base_language = base_language
         self.translation_instruction = translation_file_path.read_text(encoding="utf-8").strip()
+        self.languages = languages
+        self.model = model
+        self.used_file_paths = set()
 
     def initialize_hash_file(self, root: Path) -> None:
         """Initializes the hash file to track changes in Markdown files.
@@ -152,7 +157,7 @@ class Translator:
         wait=wait_exponential(multiplier=2, min=2, max=60),
         stop=stop_after_attempt(6),
     )
-    async def translate_text(self, content: str, target_lang: str, model: str) -> str:
+    async def translate_text(self, content: str, target_lang: str) -> str:
         """Translates Markdown content to a target language using OpenAI's API.
 
         This method uses exponential backoff and retries up to 6 times on failure.
@@ -169,7 +174,7 @@ class Translator:
             tenacity.RetryError: If all retry attempts fail.
         """
         response = await self.client.chat.completions.create(
-            model=model,
+            model=self.model,
             messages=[
                 {
                     "role": "system",
@@ -186,14 +191,28 @@ class Translator:
         )
         return response.choices[0].message.content
 
+    def set_lang_files_used(self, out_dir: Path, relative: Path) -> None:
+        for lang in self.languages:
+            out_file = out_dir / lang / relative
+            self.used_file_paths.add(str(out_file))
+
     async def process_file(
         self,
         path: Path,
         root: Path,
-        languages: List[str],
-        model: str,
         out_dir: Path,
     ) -> None:
+        async def write_lang_translated_file(
+            lang: str, text: str, relative: Path
+        ) -> None:
+            if lang == self.base_language:
+                translated = text
+            else:
+                translated = await self.translate_text(text, lang)
+            out_file = out_dir / lang / relative
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            out_file.write_text(translated, encoding="utf-8")
+            print(f"Wrote {out_file}")
         """Processes a single Markdown file for translation into multiple languages.
 
         For each target language:
@@ -214,28 +233,48 @@ class Translator:
         """
         text = path.read_text(encoding="utf-8")
         relative = path.relative_to(root)
+        self.set_lang_files_used(out_dir, relative)
         new_text_hash = self.create_hash_for_file(path)
         if not self.has_file_changed(root, relative, new_text_hash):
             print(f"Skipping {relative} as it has not changed.")
             return
         self.update_hash_file(root, relative, new_text_hash)
-        for lang in languages:
-            if lang == self.base_language:
-                translated = text
-            else:
-                translated = await self.translate_text(text, lang, model)
-            out_file = out_dir / lang / relative
-            out_file.parent.mkdir(parents=True, exist_ok=True)
-            out_file.write_text(translated, encoding="utf-8")
-            print(f"Wrote {out_file}")
+        file_tasks = [
+            write_lang_translated_file(lang, text, relative)
+            for lang in self.languages
+        ]
+        await asyncio.gather(*file_tasks)
 
+    def clean_up_unused_files(self, out_dir: Path) -> None:
+        """Cleans up files in the output directory that were not used during translation.
+
+        This method removes any files in the output directory that were not created
+        during the translation process, ensuring that only relevant translated files remain.
+
+        Args:
+            out_dir: Base output directory where translated files are stored.
+
+        Raises:
+            OSError: If there is an issue removing files or directories.
+        """
+        for lang in self.languages:
+            lang_dir = out_dir / lang
+            if lang_dir.exists():
+                for file in lang_dir.rglob("*.md"):
+                    if str(file) not in self.used_file_paths and file.is_file():
+                        print(f"Removing unused file: {file}")
+                        file.unlink()
+                # Remove empty directories
+                for dir in reversed(list(lang_dir.rglob("*"))):
+                    if dir.is_dir() and not any(dir.iterdir()):
+                        print(f"Removing empty directory: {dir}")
+                        dir.rmdir()
     async def translate_directory(
         self,
         docs_src: Path,
-        languages: List[str],
-        model: str,
         out_dir: Path,
     ) -> None:
+        start_time = asyncio.get_event_loop().time()
         """Translates an entire directory of Markdown files concurrently.
 
         Walks through all `.md` files in `docs_dir`, creates translation tasks
@@ -254,5 +293,8 @@ class Translator:
         self.initialize_hash_file(docs_src)
         tasks = []
         for md_file in docs_src.rglob("*.md"):
-            tasks.append(self.process_file(md_file, docs_src, languages, model, out_dir))
+            tasks.append(self.process_file(md_file, docs_src, out_dir))
         await asyncio.gather(*tasks)
+        self.clean_up_unused_files(out_dir)
+        end_time = asyncio.get_event_loop().time()
+        print(f"Translation completed in {end_time - start_time:.2f} seconds.")

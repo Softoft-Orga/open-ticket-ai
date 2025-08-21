@@ -34,6 +34,7 @@ export default {
         app.component('FeatureGrid', defineAsyncComponent(() => import('../components/core/basic/FeatureGrid.vue')))
         app.component('Accordion', defineAsyncComponent(() => import('../components/core/accordion/Accordion.vue')))
         app.component('AccordionItem', defineAsyncComponent(() => import('../components/core/accordion/AccordionItem.vue')))
+        app.component('LoadingComponent', defineAsyncComponent(() => import('../components/core/LoadingComponent.vue')))
         app.component('AIClassificationAnimation', defineAsyncComponent(() => import('../components/animation/AIClassificationAnimation.vue')))
         app.component('ContactForm', defineAsyncComponent(() => import('../components/ContactForm.vue')))
         app.component('YoutubeVideo', defineAsyncComponent(() => import('../components/YoutubeVideo.vue')))

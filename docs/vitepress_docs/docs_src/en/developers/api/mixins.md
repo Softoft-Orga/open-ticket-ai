@@ -1,4 +1,5 @@
 ---
+title: Providable Base Class
 description: Explore the documentation for the `Providable` base class in Python,
   a core mixin from the `open_ticket_ai` project. This class serves as a foundation
   for objects managed by a registry, providing essential functionality for configuration

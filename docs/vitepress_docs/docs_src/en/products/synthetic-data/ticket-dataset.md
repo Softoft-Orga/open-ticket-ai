@@ -9,14 +9,14 @@ classification, plus response-assist pretraining.
 Created with our Python **Synthetic Data Generator** and published on **Kaggle**.
 
 * **Kaggle:** [Ticket Dataset](https://www.kaggle.com/datasets/tobiasbueck/multilingual-customer-support-tickets/data)
-* **Generator:** [/synthetic-data/synthetic-data-generation.md](synthetic-data-generation.md) (planned **LGPL**)
+* [Synthetic Data Generation](synthetic-data-generation.md) (planned **LGPL**)
 * **Need custom data or the tool?** [sales@softoft.de](mailto:sales@softoft.de)
 
 ---
 
 ## Versions at a glance
 
-![Dataset version network diagram](_images/network_diagram.svg)
+![Dataset version network diagram](/images/network_diagram.svg)
 
 | Version | Languages                     | Size (relative) | Notes                                                                 |
 |--------:|-------------------------------|-----------------|-----------------------------------------------------------------------|
@@ -83,11 +83,11 @@ Every ticket includes core text plus labels used by **Open Ticket AI**.
 
 ## Visual tour
 
-![Word cloud of ticket subjects](_images/word_cloud.png)
+![Word cloud of ticket subjects](/images/word_cloud.png)
 
-![Most used tags](_images/tags.png)
+![Most used tags](/images/tags.png)
 
-![Distributions for queue, priority, language, type](_images/basic_distribution.png)
+![Distributions for queue, priority, language, type](/images/basic_distribution.png)
 
 ---
 
@@ -131,8 +131,8 @@ This dataset mirrors the labels **Open Ticket AI** predicts on inbound tickets (
 Use it to **bootstrap** training and evaluation; deploy your model with **Open Ticket AI** once you’re happy with
 metrics.
 
-* **Synthetic Data Generator:[/synthetic-data/synthetic-data-generation.md](synthetic-data-generation.md)
-* **Prediction API (hosted):** [/prediction-api/](../prediction-api/overview.md)
+* [Synthetic Data Generator](synthetic-data-generation.md)
+* [Prediction API (hosted)](../prediction-api/overview.md)
 
 ---
 

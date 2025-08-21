@@ -1,4 +1,5 @@
 ---
+title: Dependency Injection API
 description: Dependency Injection API documentation for the Core module.
 pageClass: wide-page
 layout: page
