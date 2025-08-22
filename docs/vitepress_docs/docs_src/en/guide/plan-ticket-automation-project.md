@@ -1,9 +1,10 @@
 ---
-description: "Plan your Ticket Automation project: multiple starting points (labeled data, unlabeled data, or no data) and clear flows to training, deployment, and support. Includes quick-start via hosted Prediction API."
-pageClass: "full-page"
 aside: false
+description: "Plan your ticket automation project. Choose the right path based on\
+  \ your data\u2014labeled, unlabeled, or none\u2014for fast training, deployment,\
+  \ and support."
+pageClass: full-page
 ---
-
 # Ticket Automation Planner — Pick Your Best Path
 
 Modernize ticket routing fast—no matter where you start. This planner helps you choose the right path based on your data reality: lots of labeled tickets, lots of unlabeled tickets, or almost no data. Each path ends in a concrete service package with clear deliverables and KPIs, so you can move from idea → pilot → production without guesswork.

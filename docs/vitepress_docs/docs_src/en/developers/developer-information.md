@@ -1,10 +1,8 @@
 ---
-description: Developer guide for the ATC Community Edition, an on-premise ticket classification
-    tool. Learn to configure the system with YAML, run it from the CLI, and extend its
-    architecture using custom Python components, pipe_ids, and ticket system adapters.
+description: Dev guide for the on-premise ATC ticket classifier. Learn to configure
+  with YAML, run from the CLI, and extend with custom Python components & adapters.
 title: Developer Information
 ---
-
 # Developer Information for the ATC Community Edition
 
 ## Overview

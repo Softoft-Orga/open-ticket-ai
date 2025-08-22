@@ -1,10 +1,8 @@
 ---
-title: Open Ticket AI Configuration
-description: Explore the Python dependency injection (DI) system at the core of Open
-  Ticket AI. This documentation covers the creation of a central registry that configures
-  and provides key services, including an OTOBO adapter, data preparers, and a local
-  Hugging Face AI inference service for automated ticket processing.
-pageClass: wide-page
+description: Configure Open Ticket AI's core services. Learn to set up the OTOBO adapter,
+  data preparers, and a local Hugging Face AI for automated ticket processing.
 layout: page
+pageClass: wide-page
+title: Open Ticket AI Configuration
 ---
 <CodeDocumentation parentPackageId="src.ce.core.config" show-all-classes show-all-functions />

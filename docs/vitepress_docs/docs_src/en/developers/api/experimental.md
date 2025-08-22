@@ -1,7 +1,8 @@
 ---
-title: Experimental API
-description: Explore the experimental API of Open Ticket AI, which includes advanced features and functionalities that are still under development. This API is designed for developers who want to experiment with cutting-edge features and contribute
-pageClass: wide-page
+description: Access the Open Ticket AI Experimental API. Explore cutting-edge features
+  and advanced functions still in development and help shape our platform's future.
 layout: page
+pageClass: wide-page
+title: Experimental API
 ---
 <CodeDocumentation parentPackageId="experimental" show-all-classes show-all-functions />

@@ -1,7 +1,7 @@
 ---
-description: "Multilingual Customer Support Tickets — synthetic dataset for queue/priority/type models. Multiple versions (v5, v4, v3); rich fields incl. subject, body, tags, and a first agent answer. Built with our Synthetic Data Generator."
+description: Train queue, priority & type models with our synthetic multilingual customer
+  support tickets. Includes rich fields & multiple versions. Available on Kaggle.
 ---
-
 # Multilingual Customer Support Tickets (Synthetic)
 
 A **fully synthetic** dataset for training and evaluating help-desk models such as **queue**, **priority**, and **type**

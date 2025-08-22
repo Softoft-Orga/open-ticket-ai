@@ -1,7 +1,6 @@
 ---
-description: Learn to integrate Zendesk with Open Ticket AI for automated ticket classification.
-  This guide shows developers how to build a custom Python adapter to auto-triage
-  tickets by priority and tags using the Zendesk REST API, improving support efficiency.
+description: Integrate Zendesk with Open Ticket AI for automated ticket classification.
+  Build a custom Python adapter to auto-triage tickets by priority via REST API.
 ---
 # Integrating Zendesk with Open Ticket AI for Automated Ticket Classification
 

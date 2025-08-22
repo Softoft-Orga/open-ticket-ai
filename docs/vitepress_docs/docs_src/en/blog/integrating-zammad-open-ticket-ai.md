@@ -1,8 +1,7 @@
 ---
-description: Learn how to integrate OpenTicketAI with Zammad for on-premise, automated
-  ticket classification and routing. This guide details creating a ZammadAdapter using
-  the REST API to fetch tickets, run them through an AI pipeline, and automatically
-  update their queue, priority, and notes.
+description: Learn to integrate OpenTicketAI with Zammad for on-premise AI ticket
+  classification. Use the REST API to fetch, classify, and update ticket queues &
+  priorities.
 ---
 # Integrating OpenTicketAI with Zammad for Automated Ticket Classification
 

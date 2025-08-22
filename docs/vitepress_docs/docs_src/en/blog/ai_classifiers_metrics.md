@@ -1,7 +1,7 @@
 ---
-description: Master AI ticket classification with this guide to evaluation. Learn
-  why accuracy is misleading for imbalanced data and discover the essential metrics
-  that truly matter, including precision, recall, F1-score, and multi-label strategies.
+description: 'Learn to evaluate AI ticket classifiers on real, imbalanced data. Discover
+  why accuracy is misleading and focus on metrics that matter: precision, recall &
+  F1-score.'
 ---
 # Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter
 

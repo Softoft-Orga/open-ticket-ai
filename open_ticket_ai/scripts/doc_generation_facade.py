@@ -167,7 +167,7 @@ async def _generate_reference_api_markdown(model: str):
 
 async def _create_documentation_summaries(model: str) -> dict:
     """Creates summaries for documentation files."""
-    summarizer = DocumentationSummarizer(client, docs_src_path)
+    summarizer = DocumentationSummarizer(client, docs_src_path.parent)
     summaries = await summarizer.create_summary_dict(model=model)
     summary_file_path.write_text(json.dumps(summaries, indent=2), encoding="utf-8")
     return summaries
@@ -175,7 +175,7 @@ async def _create_documentation_summaries(model: str) -> dict:
 
 def _add_frontmatter_meta_seo_descriptions(summaries: dict):
     """Updates the frontmatter of Markdown files with SEO descriptions."""
-    update_frontmatter(docs_src_path, summaries)
+    update_frontmatter(docs_src_path.parent, summaries)
 
 
 async def _translate_to_multi_lang_docs(model: str):

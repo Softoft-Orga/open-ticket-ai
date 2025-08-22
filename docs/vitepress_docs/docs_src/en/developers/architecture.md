@@ -1,10 +1,10 @@
 ---
-description: Explore the technical architecture of Open Ticket AI. Learn how its modular
-  data pipeline, dependency injection, and Hugging Face models enable intelligent
-  ticket classification and routing for help desk systems like OTOBO.
-title: Open Ticket AI Architecture Overview
+description: Learn about the Open Ticket AI architecture. Discover how its modular
+  data pipeline and Hugging Face models power intelligent ticket classification and
+  routing.
 layout: page
 pageClass: full-page
+title: Open Ticket AI Architecture Overview
 ---
 # Architecture Overview
 

@@ -49,7 +49,8 @@ class DocumentationSummarizer:
                 },
                 {
                     "role": "user",
-                    "content": f"Write a Meta SEO optimized description of this document,"
+                    "content": f"Write a Meta SEO optimized description of this document."
+                               f" It needs to have between 110 and 160 characters, "
                                f"only return the summary as a plain text and nothing else"
                                f" \n{text}",
                 },

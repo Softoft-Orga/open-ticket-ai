@@ -1,7 +1,7 @@
 ---
-description: Free German-language API that predicts Queue and Priority for support tickets. Easy integration for OTOBO, Znuny, Zammad, and custom helpdesks. No auth required.
+description: Free German API to predict Queue and Priority for support tickets. Easy
+  integration with OTOBO, Znuny, and Zammad. No authentication required.
 ---
-
 # 🇩🇪 German Ticket Classification API (Free)
 
 Predict **Queue** and **Priority** for **German-language** support tickets with a single HTTP call.

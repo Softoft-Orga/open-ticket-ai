@@ -1,8 +1,8 @@
 ---
-description: "Overview of all Open Ticket AI products: on-prem classifier, hosted prediction API & HF models, synthetic data generator, and public ticket datasets — plus what’s coming next."
-pageClass: "full-page"
+description: 'Discover Open Ticket AI''s suite: an on-prem classifier, hosted API,
+  synthetic data generator, and public models to automate your support ticket workflow.'
+pageClass: full-page
 ---
-
 # Products Overview
 
 Use this page to see what’s available today, what’s hosted by us, and what’s coming next.
@@ -21,31 +21,31 @@ Use this page to see what’s available today, what’s hosted by us, and what�
       <C><strong>Open Ticket AI (On-Prem/Main Product)</strong></C>
       <C>Local, open-source ticket classifier (queues & priority) integrated via pipelines/adapters.</C>
       <C>✅ Available</C>
-      <C><a href="/">Overview</a></C>
+      <C><Link to="/">Overview</Link></C>
     </Row>
     <Row>
       <C><strong>Hosted Prediction API (German)</strong></C>
       <C>HTTP API to classify queue & priority using our public German base model (hosted by us).</C>
       <C>✅ Free for now</C>
-      <C><a href="/products/prediction-api/overview">API Docs</a></C>
+      <C><Link to="/products/prediction-api/overview">API Docs</Link></C>
     </Row>
     <Row>
       <C><strong>Public Base Models (German)</strong></C>
       <C>Base models for queue/priority published on Hugging Face for users without their own data.</C>
       <C>✅ Available</C>
-      <C>See links in <a href="/products/prediction-api/overview">API Docs</a></C>
+      <C>See links in <Link to="/products/prediction-api/overview">API Docs</Link></C>
     </Row>
     <Row>
       <C><strong>Synthetic Data Generator</strong></C>
       <C>Python tool to create multilingual synthetic ticket datasets; planned LGPL.</C>
       <C>✅ Available</C>
-      <C><a href="/products/synthetic-data/synthetic-data-generation">Generator</a></C>
+      <C><Link to="/products/synthetic-data/synthetic-data-generation">Generator</Link></C>
     </Row>
     <Row>
       <C><strong>Ticket Datasets (v5, v4, v3)</strong></C>
       <C>Synthetic datasets made with our generator (EN/DE focus in v5/v4; more langs in v3).</C>
       <C>✅ Available</C>
-      <C><a href="/products/synthetic-data/ticket-dataset">Dataset</a></C>
+      <C><Link to="/products/synthetic-data/ticket-dataset">Dataset</Link></C>
     </Row>
     <Row>
       <C><strong>English Prediction Model</strong></C>
