@@ -88,9 +88,7 @@ class TicketSearchCriteria(BaseModel):
 
     Attributes:
         id (Optional[str]): Ticket ID to search for. Defaults to None.
-        subject (Optional[str]): Text to search in ticket subjects. Defaults to None.
         queue (Optional[UnifiedQueue]): Queue to filter by. Defaults to None.
-        user (Optional[UnifiedUser]): User to filter by (e.g., owner). Defaults to None.
     """
 
     id: Optional[str] = None

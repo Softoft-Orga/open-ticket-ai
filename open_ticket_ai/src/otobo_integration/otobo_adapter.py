@@ -11,6 +11,7 @@ seamless interaction with OTOBO's ticketing API. It handles operations such as:
 The adapter uses dependency injection for configuration and client management,
 ensuring flexibility and testability.
 """
+import logging
 
 from injector import inject
 from otobo import (
@@ -44,7 +45,7 @@ class OTOBOAdapter(TicketSystemAdapter):
     async def add_note_to_ticket(self, ticket_id: str, note: UnifiedNote) -> bool:
         try:
             update_params: TicketUpdateParams = TicketUpdateParams(
-                TicketID=ticket_id,
+                TicketID=int(ticket_id),
                 Article=ArticleDetail(
                     Subject=note.subject,
                     Body=note.body,
@@ -66,7 +67,7 @@ class OTOBOAdapter(TicketSystemAdapter):
         return "Adapter for OTOBO ticket system integration, providing methods to retrieve and update tickets."
 
     @inject
-    def __init__(self, config: SystemConfig, otobo_client: OTOBOClient):
+    def __init__(self, config: SystemConfig | None, otobo_client: OTOBOClient):
         """Initialize the OTOBO adapter with configuration and client.
 
         Args:
@@ -100,14 +101,17 @@ class OTOBOAdapter(TicketSystemAdapter):
             #   tickets[0].id, tickets[0].subject, etc.
             ```
         """
-        query: dict = {}
+        query: TicketSearchParams = TicketSearchParams()
         if criteria.id:
-            query["TicketID"] = criteria.id
-        if criteria.subject:
-            query["Title"] = criteria.subject
+            query.TicketID = criteria.id
         if criteria.queue and criteria.queue.id:
-            query["QueueIDs"] = [criteria.queue.id]
-        result = await self.otobo_client.search_and_get(query=TicketSearchParams(**query))
+            query.QueueIDs = [int(criteria.queue.id)]
+        if criteria.queue and criteria.queue.name:
+            query.Queues = [criteria.queue.name]
+        result = await self.otobo_client.search_and_get(query=query)
+        logging.info("OTOBO search result: %s", result)
+        if type(result) is list:
+            return [TicketAdapter(ticket) for ticket in result]
         if not result.Ticket:
             return []
         return [TicketAdapter(ticket) for ticket in result.Ticket]
@@ -157,7 +161,7 @@ class OTOBOAdapter(TicketSystemAdapter):
             ```
         """
         update_params: TicketUpdateParams = TicketUpdateParams(
-            TicketID=ticket_id,
+            TicketID=int(ticket_id),
             Ticket=TicketCommon(
                 Title=updates.subject,
                 QueueID=updates.queue.id if updates.queue and updates.queue.id else None,

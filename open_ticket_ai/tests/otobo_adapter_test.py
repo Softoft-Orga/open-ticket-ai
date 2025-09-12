@@ -8,11 +8,12 @@ The tests are designed to run without requiring a real OTOBO server connection.
 """
 import dataclasses
 
+import otobo
 from otobo import OTOBOClient, OTOBOClientConfig
 import pytest
 
 from open_ticket_ai.src.core.config.config_models import SystemConfig
-from open_ticket_ai.src.ticket_system_integration import OTOBOAdapter
+from open_ticket_ai.src.otobo_integration.otobo_adapter import OTOBOAdapter
 from open_ticket_ai.src.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
 
 
@@ -116,9 +117,9 @@ class MockedOTOBOClient(OTOBOClient):
                 service="GenericTicketConnector",
                 auth=None,
                 operations={
-                    "search": "/search",
-                    "update": "/update",
-                    "get": "/get",
+                    otobo.TicketOperation.SEARCH: "/search",
+                    otobo.TicketOperation.UPDATE: "/update",
+                   otobo.TicketOperation.GET: "/get",
                 },
             ),
         )

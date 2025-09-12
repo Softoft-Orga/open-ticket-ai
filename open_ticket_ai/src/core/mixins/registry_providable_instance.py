@@ -43,7 +43,8 @@ class Providable:
         Uses the `pretty_print_config` utility to display the configuration
         attributes in a structured and visually appealing way using the Rich library.
         """
-        pretty_print_config(self.config, self.console)
+        if self.config and self.console:
+            pretty_print_config(self.config, self.console)
 
     @classmethod
     def get_provider_key(cls) -> str:
