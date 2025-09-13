@@ -1,12 +1,4 @@
-"""Defines the Pipeline class for executing a sequence of pipe_ids.
-
-The Pipeline is a specialized Pipe that runs multiple pipe_ids in sequence. It manages the context
-and status throughout the execution, handling errors and stop requests appropriately.
-"""
-
-from __future__ import annotations
-
-import logging  # Use logging for errors
+import logging
 from typing import List
 
 from .context import PipelineContext
@@ -14,26 +6,18 @@ from .pipe import Pipe
 from .status import PipelineStatus  # Import the status enum
 from open_ticket_ai.src.core.config.config_models import PipelineConfig
 
-# It's good practice to have a logger
 logger = logging.getLogger(__name__)
 
 
-class Pipeline(Pipe[None, None]):
-    """A pipeline that executes a sequence of pipe_ids sequentially.
-
-    This class manages the execution flow of multiple pipe_ids, handling status transitions,
-    error propagation, and stop requests during processing.
-
-    """
-
+class Pipeline:
     def __init__(self, config: PipelineConfig, pipes: list[Pipe]):
         """Initializes the Pipeline with configuration and pipe sequence.
 
         Args:
             config: Configuration settings for the pipeline.
         """
-        super().__init__(config)
         self.config: PipelineConfig = config
+        self.pipes: List[Pipe] = pipes
 
     def execute(self, context: PipelineContext) -> PipelineContext:
         """Executes all pipe_ids sequentially with error handling and status propagation.
@@ -65,10 +49,10 @@ class Pipeline(Pipe[None, None]):
 
         context.status = PipelineStatus.RUNNING
 
-        for pipe in self.config.pipe_ids:
+        for pipe in self.pipes:
             try:
                 # Process the context with the current pipe
-                pipe_input = pipe.InputDataT.model_validate(context)
+                context.data = pipe.InputDataType.model_validate(context)
                 context = pipe.process(context)
 
                 # After processing, check if the pipe requested a stop
@@ -92,17 +76,3 @@ class Pipeline(Pipe[None, None]):
             context.status = PipelineStatus.SUCCESS
 
         return context
-
-    def process(self, context: PipelineContext) -> PipelineContext:
-        """Processes context through the entire pipeline sequence.
-
-        Implements the abstract method from the Pipe base class. Delegates to
-        the `execute()` method for actual pipeline processing.
-
-        Args:
-            context: The pipeline context containing execution state and data.
-
-        Returns:
-            Updated PipelineContext after processing through all pipe_ids.
-        """
-        return self.execute(context)

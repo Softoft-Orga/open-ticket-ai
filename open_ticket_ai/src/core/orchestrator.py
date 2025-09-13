@@ -41,23 +41,7 @@ class Orchestrator:
         self._logger = logging.getLogger(__name__)
         self._pipelines: dict[str, Pipeline] = {}
 
-    def process_ticket(self, ticket_id: str, pipeline: Pipeline) -> PipelineContext:
-        """Executes a pipeline for a specific ticket.
-
-        Creates a processing context and runs the specified pipeline to process
-        the given ticket. This is the core method for individual ticket processing.
-
-        Args:
-            ticket_id: Unique identifier of the ticket to process.
-            pipeline: Pipeline instance to execute.
-
-        Returns:
-            PipelineContext: The execution context containing results and state
-                after pipeline execution.
-        """
-        return pipeline.execute(PipelineContext(ticket_id=ticket_id))
-
-    def build_pipelines(self) -> None:
+    def _build_pipelines(self) -> None:
         """Instantiates all configured pipeline objects.
 
         Uses the dependency injection container to create pipeline instances
@@ -83,10 +67,13 @@ class Orchestrator:
         - Uses `schedule.every(interval).unit` pattern for scheduling
         - Passes an empty ticket_id context during scheduled executions
         """
-        self.build_pipelines()
+        self._build_pipelines()
         for pipeline_cfg in self.config.pipelines:
             pipeline = self._pipelines[pipeline_cfg.id]
-            sched = getattr(
-                schedule.every(pipeline_cfg.schedule.interval), pipeline_cfg.schedule.unit
+
+            def pipeline_job():
+                pipeline.execute(PipelineContext())
+
+            schedule.every(pipeline_cfg.schedule.interval).__getattribute__(pipeline_cfg.schedule.unit).do(
+                pipeline_job
             )
-            sched.do(pipeline.execute, PipelineContext(ticket_id=""))

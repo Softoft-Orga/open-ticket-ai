@@ -2,7 +2,7 @@ $schema: "./config.schema.json"
 
 open_ticket_ai:
 
-    # only one ticket‐system_id adapter
+    # only one ticket-system adapter
     system:
         id: "otobo_ticket_system_adapter"
         provider_key: "OTOBOAdapter"
@@ -12,17 +12,17 @@ open_ticket_ai:
             search_operation_url: "ticket/search"
             update_operation_url: "ticket"
             get_operation_url: "ticket/get"
-            username: "root@locallhost"
+            username: "root@localhost"
             password_env_var: "OTOBOPASS"
-    fetchers:
-        -   id: "basic_ticket"
+
+    pipes:
+        -   id: "basic_ticket_fetcher"
             provider_key: "BasicTicketFetcher"
             params:
                 filters:
                     -   attribute: "queue"
                         value: "incoming_queue"
 
-    data_preparers:
         -   id: "subject_body_preparer"
             provider_key: "SubjectBodyPreparer"
             params:
@@ -31,7 +31,6 @@ open_ticket_ai:
                 repeat_subject: 3
                 result_field: "subject_body_combined"
 
-    ai_inference_services:
         -   id: "queue_ai_inference"
             provider_key: "HFLocalAIInferenceService"
             params:
@@ -48,8 +47,6 @@ open_ticket_ai:
                 hf_token_env_var: "HUGGINGFACE_TOKEN"
                 result_field: "priority_classification"
 
-
-    modifiers:
         -   id: "queue_updater"
             provider_key: "BasicTicketModifier"
             params:
@@ -78,10 +75,9 @@ open_ticket_ai:
 
     pipelines:
         -   id: "queue_classification"
-            provider_key: "QueuePredictor"
             schedule:
-                interval: 10
-                unit: "seconds"
+                interval: "30"
+                units: seconds
             pipes:
                 - "basic_ticket_fetcher"
                 - "subject_body_preparer"
@@ -90,8 +86,8 @@ open_ticket_ai:
 
         -   id: "priority_classification"
             schedule:
-                interval: 10
-                unit: "seconds"
+                interval: "30"
+                units: seconds
             pipes:
                 - "basic_ticket_fetcher"
                 - "subject_body_preparer"

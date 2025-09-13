@@ -1,10 +1,9 @@
 # FILE_PATH: open_ticket_ai\src\ce\core\dependency_injection\create_registry.py
 from open_ticket_ai.src.core.dependency_injection.registry import Registry
-from open_ticket_ai.src.core.pipe_implementations.hf_local_ai_inference_service import (
-    HFLocalAIInferenceService,
-)
-from open_ticket_ai.src.core.pipe_implementations.subject_body_preparer import SubjectBodyPreparer
-from open_ticket_ai.src.ticket_system_integration import OTOBOAdapter
+from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
+from open_ticket_ai.src.base.pipe_implementations import SubjectBodyPreparer
+from open_ticket_ai.src.base.pipe_implementations.hf_inference_services.hf_local_ai_inference_service import \
+    HFLocalAIInferenceService
 
 
 def create_registry() -> Registry:

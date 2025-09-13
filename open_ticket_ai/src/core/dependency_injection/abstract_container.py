@@ -3,6 +3,7 @@ import abc
 from open_ticket_ai.src.core.mixins.registry_providable_instance import (
     Providable,
 )
+from open_ticket_ai.src.core.pipeline.pipeline import Pipeline
 
 
 class AbstractContainer(abc.ABC):
@@ -35,4 +36,8 @@ class AbstractContainer(abc.ABC):
             InstanceNotFoundError: If no instance matching the provider key is found.
             TypeMismatchError: If the found instance is not a subclass of the specified type.
         """
+        pass
+
+    @abc.abstractmethod
+    def get_pipeline(self, pipeline_id: str) -> Pipeline:
         pass

@@ -3,11 +3,10 @@ import logging
 import os
 import sys
 
-from otobo import OTOBOClient, OTOBOClientConfig, TicketOperation, AuthData
 
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedQueue
-from open_ticket_ai.src.otobo_integration.otobo_adapter import OTOBOAdapter
+from open_ticket_ai.src.base.otobo_integration import OTOBOAdapter
 from dotenv import load_dotenv
 
 def create_ticket_system_adapter() -> TicketSystemAdapter:
@@ -22,7 +21,7 @@ def create_ticket_system_adapter() -> TicketSystemAdapter:
             "Please set the OTOBO_BASE_URL, OTOBO_SERVICE, OTOBO_USER, and OTOBO_PASSWORD environment variables.")
         sys.exit(1)
 
-    operations: dict[TicketOperation, str] = {
+    operations: dict[TicketOper, str] = {
         TicketOperation.CREATE: "ticket-create",
         TicketOperation.SEARCH: "ticket-search",
         TicketOperation.GET: "ticket-get",
@@ -55,6 +54,7 @@ async def main():
         )
     )
     print(f"Found {len(tickets)} tickets")
+    print(tickets[0].model_dump())
 
 if __name__ == '__main__':
     asyncio.run(main())

@@ -14,7 +14,7 @@ from rich.console import Console
 
 from open_ticket_ai.src.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.src.core.config.config_validator import OpenTicketAIConfigValidator
-from open_ticket_ai.src.orchestrator import Orchestrator
+from open_ticket_ai.src.core.orchestrator import Orchestrator
 
 console = Console()
 """Global console instance for rich text output throughout the application."""

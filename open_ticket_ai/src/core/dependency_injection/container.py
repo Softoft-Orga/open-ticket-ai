@@ -17,23 +17,19 @@ from injector import Binder, Injector, Module, provider, singleton
 from open_ticket_ai.src.core.config.config_models import (
     OpenTicketAIConfig,
     PipelineConfig,
-    load_config,
-)
+    load_config, ProvidableConfig, )
 from open_ticket_ai.src.core.config.config_validator import OpenTicketAIConfigValidator
 from open_ticket_ai.src.core.dependency_injection.abstract_container import AbstractContainer
-from open_ticket_ai.src.core.dependency_injection.create_registry import create_registry
+from open_ticket_ai.src.base.create_registry import create_registry
 from open_ticket_ai.src.core.dependency_injection.registry import Registry
 from open_ticket_ai.src.core.mixins.registry_providable_instance import (
     Providable,
 )
+from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
-from open_ticket_ai.src.orchestrator import Orchestrator
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 from open_ticket_ai.src.core.pipeline.pipeline import Pipeline
-from open_ticket_ai.src.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
-from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import (
-    TicketSystemAdapter,
-)
+from open_ticket_ai.src.base.otobo_integration import OTOBOAdapterConfig
 from otobo import AuthData, OTOBOClient, OTOBOClientConfig, TicketOperation
 
 """Path to the configuration file.
@@ -139,7 +135,7 @@ class DIContainer(Injector, AbstractContainer):
         )
         self.binder.bind(TicketSystemAdapter, to=system_adapter_instance, scope=singleton)
 
-    def get_instance_config(self, id: str):
+    def get_instance_config(self, id: str) -> ProvidableConfig:
         """Retrieve the configuration for a specific instance by its ID.
 
         Args:
@@ -156,6 +152,24 @@ class DIContainer(Injector, AbstractContainer):
         if not instance_config:
             raise KeyError(f"Unknown instance ID: {id}")
         return instance_config
+
+    def get_pipeline_config(self, id: str) -> PipelineConfig:
+        """Retrieve the pipeline configuration for a specific pipeline by its ID.
+
+        Args:
+            id: The unique identifier of the pipeline configuration to retrieve.
+
+        Returns:
+            PipelineConfig: The configuration object for the specified pipeline.
+
+        Raises:
+            KeyError: If no pipeline configuration is found for the given ID.
+        """
+        pipeline_config = next(
+            (c for c in self.config.pipelines if c.id == id), None)
+        if not pipeline_config:
+            raise KeyError(f"Unknown pipeline ID: {id}")
+        return pipeline_config
 
     def get_instance[T: Providable](self, id: str, subclass_of: type[T]) -> T:
         """Retrieve a configured instance from the registry.
@@ -181,7 +195,7 @@ class DIContainer(Injector, AbstractContainer):
             raise KeyError(f"Unknown provider key: {instance_config.provider_key}")
         return self.create_object(instance_class, additional_kwargs={"config": instance_config})
 
-    def get_pipeline(self, predictor_id: str) -> Pipe:
+    def get_pipeline(self, pipeline_id: str) -> Pipeline:
         """Construct a processing pipeline instance.
 
         The pipeline is built from the configuration identified by `predictor_id`. It consists of:
@@ -191,7 +205,7 @@ class DIContainer(Injector, AbstractContainer):
         The pipeline itself is an instance of `Pipeline` (a subclass of `Pipe`), which chains the steps.
 
         Args:
-            predictor_id: The unique identifier of the pipeline configuration.
+            pipeline_id: The unique identifier of the pipeline configuration.
 
         Returns:
             Pipe: The constructed pipeline instance (a `Pipeline` object).
@@ -200,20 +214,19 @@ class DIContainer(Injector, AbstractContainer):
             KeyError: If the configuration for `predictor_id` is not found, or if the provider key
                 in the configuration is not found in the registry.
         """
-        predictor_config: PipelineConfig | None = None
+        pipeline_config: PipelineConfig | None = None
         try:
-            predictor_config = self.get_instance_config(predictor_id)
+            pipeline_config = self.get_pipeline_config(pipeline_id)
             pipe_instances = [
                 self.get_instance(pipe_id, Pipe)
-                for pipe_id in predictor_config.pipe_ids
+                for pipe_id in pipeline_config.pipe_ids
             ]
 
-            predictor_class: type[Pipeline] = self.registry.get(predictor_config.provider_key, Pipe)
         except KeyError:
-            if predictor_config:
-                raise KeyError(f"Unknown predictor key: {predictor_config.provider_key}")
-            raise KeyError(f"Unknown predictor ID: {predictor_id}")
-        return predictor_class(
-            config=predictor_config,
+            if pipeline_config:
+                raise KeyError(f"Unknown predictor key: {pipeline_config.provider_key}")
+            raise KeyError(f"Unknown predictor ID: {pipeline_id}")
+        return Pipeline(
+            config=pipeline_config,
             pipes=pipe_instances
         )

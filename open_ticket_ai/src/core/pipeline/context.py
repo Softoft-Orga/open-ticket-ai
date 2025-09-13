@@ -23,8 +23,8 @@ class PipelineContext[DataT: BaseModel](BaseModel):
             status information and operational details.
     """
 
-    data: DataT
-    meta_info: MetaInfo
+    data: DataT = None
+    meta_info: MetaInfo = MetaInfo()
 
     def stop_pipeline(self):
         """Signals the pipeline to halt processing.

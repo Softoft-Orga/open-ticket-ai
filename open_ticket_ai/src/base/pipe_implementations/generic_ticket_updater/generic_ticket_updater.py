@@ -1,13 +1,10 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\generic_ticket_updater.py
 from open_ticket_ai.src.core.config.config_models import ProvidableConfig
-
-from open_ticket_ai.src.core.pipe_implementations.empty_data_model import EmptyDataModel
 from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
-from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import (
-    TicketSystemAdapter,
-)
-from open_ticket_ai.src.ticket_system_integration.unified_models import UnifiedTicket
+from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.src.core.ticket_system_integration.unified_models import UnifiedTicket
+from open_ticket_ai.src.base.pipe_implementations.empty_data_model import EmptyDataModel
 
 
 class GenericTicketUpdater(Pipe[UnifiedTicket, EmptyDataModel]):

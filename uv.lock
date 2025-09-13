@@ -1142,7 +1142,7 @@ requires-dist = [
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.29.1" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "openai", specifier = ">=1.93.0" },
-    { name = "otobo", specifier = ">=1.1.4" },
+    { name = "otobo", specifier = ">=1.1.5" },
     { name = "pdoc3" },
     { name = "phonenumbers" },
     { name = "pluggy" },
@@ -1220,16 +1220,17 @@ wheels = [
 
 [[package]]
 name = "otobo"
-version = "1.1.4"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
+    { name = "python-dotenv" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a1/04/de1d1332a7f0643820d1dda340951c96cc0244235675dc2558abd2331f7c/otobo-1.1.4.tar.gz", hash = "sha256:1c8770efc1af16ab99cd2bd36a920ed873805ea0e0b40d6361ff3b282405d6a3", size = 15498, upload-time = "2025-06-29T09:53:16.561Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d0/fd/35456c5e2d63d4856858604c2f975cbc8e2efcd46fdd5e66fcfd256eb2b5/otobo-2.0.0.tar.gz", hash = "sha256:c64437f8a8601bd715f79e84b405b738947dd42ebdaecda073df11f7d0356952", size = 9338, upload-time = "2025-09-12T21:55:12.508Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fc/b5/f20dff2efeda8057f33a5ce5f55ade9ae5a8eb0ca1fbe5a44e6990822de6/otobo-1.1.4-py3-none-any.whl", hash = "sha256:41016b3351194db61944791c111f26a7e4fca4b04d39143a9edbf434d18be8d6", size = 13454, upload-time = "2025-06-29T09:53:15.419Z" },
+    { url = "https://files.pythonhosted.org/packages/8d/45/9fe00d3109c4ae23d9dff7bf8cd162dd7b10322e3663be62d1955e5c0369/otobo-2.0.0-py3-none-any.whl", hash = "sha256:a18ca1a1ac1c36a2678fd90d64c7e159b85679e5010c9113e294efad7eedfa74", size = 6537, upload-time = "2025-09-12T21:55:11.247Z" },
 ]
 
 [[package]]
@@ -1654,7 +1655,7 @@ wheels = [
 
 [[package]]
 name = "requests"
-version = "2.32.4"
+version = "2.32.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "certifi" },
@@ -1662,9 +1663,9 @@ dependencies = [
     { name = "idna" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e1/0a/929373653770d8a0d7ea76c37de6e41f11eb07559b103b1c02cafb3f7cf8/requests-2.32.4.tar.gz", hash = "sha256:27d0316682c8a29834d3264820024b62a36942083d52caf2f14c0591336d3422", size = 135258, upload-time = "2025-06-09T16:43:07.34Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c9/74/b3ff8e6c8446842c3f5c837e9c3dfcfe2018ea6ecef224c710c85ef728f4/requests-2.32.5.tar.gz", hash = "sha256:dbba0bac56e100853db0ea71b82b4dfd5fe2bf6d3754a8893c3af500cec7d7cf", size = 134517, upload-time = "2025-08-18T20:46:02.573Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7c/e4/56027c4a6b4ae70ca9de302488c5ca95ad4a39e190093d6c1a8ace08341b/requests-2.32.4-py3-none-any.whl", hash = "sha256:27babd3cda2a6d50b30443204ee89830707d396671944c998b5975b031ac2b2c", size = 64847, upload-time = "2025-06-09T16:43:05.728Z" },
+    { url = "https://files.pythonhosted.org/packages/1e/db/4254e3eabe8020b458f1a747140d32277ec7a271daf1d235b70dc0b4e6e3/requests-2.32.5-py3-none-any.whl", hash = "sha256:2462f94637a34fd532264295e186976db0f5d453d1cdd31473c85a6a161affb6", size = 64738, upload-time = "2025-08-18T20:46:00.542Z" },
 ]
 
 [[package]]

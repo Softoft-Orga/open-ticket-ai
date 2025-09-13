@@ -27,7 +27,7 @@ from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedNote, UnifiedTicket, UnifiedTicketUpdate,
 )
-from open_ticket_ai.src.otobo_integration.models import TicketAdapter
+from open_ticket_ai.src.base.otobo_integration.models import TicketAdapter
 
 
 class OTOBOAdapter(TicketSystemAdapter):

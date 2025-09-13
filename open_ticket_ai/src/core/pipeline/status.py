@@ -16,5 +16,5 @@ class PipelineStatus(Enum):
 
     RUNNING = auto()
     SUCCESS = auto()
-    STOPPED = auto()  # Controlled stop by a pipe
-    FAILED = auto()   # An unexpected error occurred
+    STOPPED = auto()
+    FAILED = auto()

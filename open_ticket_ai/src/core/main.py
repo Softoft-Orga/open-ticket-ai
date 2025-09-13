@@ -10,7 +10,7 @@ import logging
 import typer
 from pyfiglet import Figlet
 
-from open_ticket_ai.src.app import App
+from open_ticket_ai.src.core.app import App
 from open_ticket_ai.src.core.dependency_injection.container import DIContainer
 
 cli = typer.Typer()
