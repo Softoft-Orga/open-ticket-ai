@@ -12,7 +12,8 @@ from open_ticket_ai.src.core.pipeline.meta_info import MetaInfo
 from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 from open_ticket_ai.src.core.pipeline.pipeline import Pipeline
-from open_ticket_ai.src.core.config.config_models import ProvidableConfig, PipelineConfig, SchedulerConfig
+from open_ticket_ai.src.core.config.config_models import ProvidableConfig, PipelineConfig, ScheduleConfig
+
 
 # --- Test Data and Dummy Implementations ---
 
@@ -73,10 +74,8 @@ def pipeline_config_factory():
         pipe_ids = [p.config.id for p in pipes]
         return PipelineConfig(
             id="test_pipeline",
-            params={},
-            provider_key="core.pipeline",
-            schedule=SchedulerConfig(interval=10, unit="minutes"),
-            pipe_ids=pipe_ids,
+            schedule=ScheduleConfig(interval=10, unit="minutes"),
+            pipes=pipe_ids,
         )
     return _factory
 

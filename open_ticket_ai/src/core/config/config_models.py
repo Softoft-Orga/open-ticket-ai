@@ -1,6 +1,6 @@
 # FILE_PATH: open_ticket_ai\src\ce\core\config\config_models.py
 # In open_ticket_ai/src/ce/core/config/config_models.py
-
+from pathlib import Path
 from typing import Any, Self, Literal
 
 from pydantic import BaseModel, Field, model_validator
@@ -9,29 +9,24 @@ Unit = Literal["seconds", "minutes", "hours", "days", "weeks"]
 
 
 class ProvidableConfig(BaseModel):
-    """Base configuration for registry instances (system, pipe)."""
     id: str = Field(..., min_length=1, description="Unique identifier for the instance.")
     params: dict[str, Any] = Field(default_factory=dict)
     provider_key: str = Field(..., min_length=1, description="Key identifying the provider implementation.")
 
 
 class SystemConfig(ProvidableConfig):
-    """Configuration for the ticket system adapter."""
     pass
 
 
 class PipeConfig(ProvidableConfig):
-    """Generic configuration for any pipe (fetcher, preparer, inference, modifier, etc.)."""
     pass
 
 
 class ScheduleConfig(BaseModel):
-    """Configuration for scheduling pipeline execution."""
     interval: int = Field(..., gt=0, description="Numeric interval for scheduling.")
     unit: Unit = Field(..., description="Time unit for the interval.")
 
 class PipelineConfig(BaseModel):
-    """Configuration for a single pipeline workflow."""
     id: str = Field(..., min_length=1, description="Unique identifier for the pipeline.")
     schedule: ScheduleConfig = Field(..., description="Schedule configuration for periodic execution.")
     pipes: list[str] = Field(
@@ -60,18 +55,13 @@ class OpenTicketAIConfig(BaseModel):
         return self
 
     def get_all_register_instance_configs(self) -> list[ProvidableConfig]:
-        """Return all registered instances in the configuration.
-
-        Returns:
-            list[ProvidableConfig]: A list of all registered instance configurations.
-        """
         return (
             [self.system] +
             self.pipes
         )
 
 
-def load_config(path: str) -> OpenTicketAIConfig:
+def load_config(path: str | Path) -> OpenTicketAIConfig:
     """Load YAML config with root key 'open_ticket_ai'."""
     import yaml
 

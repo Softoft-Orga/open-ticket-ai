@@ -12,9 +12,9 @@ import otobo
 from otobo import OTOBOClient, OTOBOClientConfig
 import pytest
 
+from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
+from open_ticket_ai.src.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
 from open_ticket_ai.src.core.config.config_models import SystemConfig
-from open_ticket_ai.src.base.otobo_integration import OTOBOAdapter
-from open_ticket_ai.src.base.otobo_integration import OTOBOAdapterConfig
 
 
 @dataclasses.dataclass
@@ -84,33 +84,10 @@ TICKETS = [
 
 
 class MockedOTOBOClient(OTOBOClient):
-    """Mocked OTOBOAdapter for testing purposes.
-
-    This class is used to create an instance of OTOBOAdapter with a mocked OTOBOClient.
-    It allows testing without requiring a real OTOBO server connection.
-
-    Attributes:
-        ticket_data (list[MockedTicket]): List of mocked tickets used for testing.
-    """
-
-    @staticmethod
-    def get_description() -> str:
-        """Returns a static description string for the mocked client.
-
-        Returns:
-            str: The description string.
-        """
-        return "Mocked OTOBO adapter for testing purposes."
-
     def __init__(
         self,
         ticket_data: list[MockedTicket]
     ):
-        """Initializes the mocked OTOBO client.
-
-        Args:
-            ticket_data (list[MockedTicket]): A list of mocked tickets to be used for testing.
-        """
         super().__init__(
             OTOBOClientConfig(
                 base_url="https://mocked.otobo.example.com",
@@ -126,36 +103,14 @@ class MockedOTOBOClient(OTOBOClient):
         self.ticket_data = ticket_data
 
     async def search_and_get(self, query):
-        """Mocks the search_and_get operation.
-
-        This method is a placeholder and does nothing.
-
-        Args:
-            query: The search query.
-        """
         return
 
     async def update_ticket(self, payload):
-        """Updates a ticket by delegating to the parent class method.
-
-        Args:
-            payload (dict): The ticket update payload.
-
-        Returns:
-            The result of the update operation from the parent class.
-        """
         return await super().update_ticket(payload)
 
 
 @pytest.fixture
 def adapter_and_client():
-    """Fixture that provides an instance of OTOBOAdapter and a mocked OTOBOClient.
-
-    Returns:
-        tuple: A tuple containing:
-            adapter (OTOBOAdapter): Configured OTOBOAdapter instance
-            client (AsyncMock): Mocked OTOBOClient instance
-    """
     client = MockedOTOBOClient(TICKETS)
     config = SystemConfig(id="dummy", provider_key="dummy", params={})
     adapter = OTOBOAdapter(config=config, otobo_client=client)
@@ -163,21 +118,6 @@ def adapter_and_client():
 
 
 def test_config_str_and_password(monkeypatch):
-    """Test the string representation and password retrieval of OTOBOAdapterConfig.
-
-    This test verifies two aspects of the OTOBOAdapterConfig:
-      1. The `__str__` method returns a string that excludes the password value.
-      2. The password property correctly retrieves the password from an environment variable.
-
-    Args:
-        monkeypatch: Pytest fixture for safely patching environment variables.
-
-    Steps:
-        - Set an environment variable for the password.
-        - Create an instance of OTOBOAdapterConfig with the environment variable name for the password.
-        - Check that the string representation of the config does not include the password.
-        - Check that the password property returns the value from the environment variable.
-    """
     monkeypatch.setenv("OTOBO_PASS", "s3cret")
     cfg = OTOBOAdapterConfig(
         server_address="https://otobo.example.com",
@@ -198,19 +138,6 @@ def test_config_str_and_password(monkeypatch):
 
 
 def test_config_password_missing_env(monkeypatch):
-    """Test that OTOBOAdapterConfig raises an error when the password environment variable is missing.
-
-    This test ensures that when the environment variable specified for the password is not set,
-    accessing the password property of OTOBOAdapterConfig raises a ValueError.
-
-    Args:
-        monkeypatch: Pytest fixture for safely patching environment variables.
-
-    Steps:
-        - Ensure the environment variable (which is set to a non-existent one) is deleted.
-        - Create an instance of OTOBOAdapterConfig with the non-existent environment variable for the password.
-        - Attempt to access the password property and expect a ValueError.
-    """
     monkeypatch.delenv("MISSING_ENV", raising=False)
     cfg = OTOBOAdapterConfig(
         server_address="s",

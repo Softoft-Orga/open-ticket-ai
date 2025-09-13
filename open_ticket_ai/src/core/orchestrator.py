@@ -15,65 +15,16 @@ from open_ticket_ai.src.core.pipeline.pipeline import Pipeline
 
 
 class Orchestrator:
-    """Orchestrates the execution of ticket processing pipelines.
-
-    This class manages the lifecycle of pipelines including:
-    - Pipeline instantiation via dependency injection
-    - Individual ticket processing
-    - Scheduled execution of pipelines
-
-    Attributes:
-        config: Configuration settings for the orchestrator
-        container: Dependency injection container providing pipeline instances
-        _logger: Logger instance for orchestration operations
-        _pipelines: Dictionary mapping pipeline IDs to pipeline instances
-    """
-
-    def __init__(self, config: OpenTicketAIConfig, container: AbstractContainer):
-        """Initialize the Orchestrator with configuration and DI container.
-
-        Args:
-            config: Configuration settings for the orchestrator.
-            container: Dependency injection container providing pipeline instances.
-        """
+    def __init__(self, pipelines: list[Pipeline], config: OpenTicketAIConfig):
         self.config = config
-        self.container = container
         self._logger = logging.getLogger(__name__)
-        self._pipelines: dict[str, Pipeline] = {}
-
-    def _build_pipelines(self) -> None:
-        """Instantiates all configured pipeline objects.
-
-        Uses the dependency injection container to create pipeline instances
-        based on the configuration. Populates the internal pipeline registry
-        with pipeline ID to instance mappings.
-        """
-        for pipeline_cfg in self.config.pipelines:
-            self._pipelines[pipeline_cfg.id] = self.container.get_pipeline(pipeline_cfg.id)
+        self.pipelines = pipelines
 
     def set_schedules(self) -> None:
-        """Configures scheduled execution for all pipelines.
-
-        Performs the following operations:
-        1. Builds pipelines if not already instantiated
-        2. Configures periodic execution for each pipeline according to its
-           schedule configuration using the `schedule` library
-
-        The scheduling uses the following configuration parameters:
-        - interval: Numeric interval value
-        - unit: Time unit (e.g., minutes, hours, days)
-
-        Note:
-        - Uses `schedule.every(interval).unit` pattern for scheduling
-        - Passes an empty ticket_id context during scheduled executions
-        """
-        self._build_pipelines()
-        for pipeline_cfg in self.config.pipelines:
-            pipeline = self._pipelines[pipeline_cfg.id]
-
+        for pipeline in self.pipelines:
             def pipeline_job():
                 pipeline.execute(PipelineContext())
 
-            schedule.every(pipeline_cfg.schedule.interval).__getattribute__(pipeline_cfg.schedule.unit).do(
+            schedule.every(pipeline.config.schedule.interval).__getattribute__(pipeline.config.schedule.unit).do(
                 pipeline_job
             )

@@ -1142,7 +1142,7 @@ requires-dist = [
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.29.1" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "openai", specifier = ">=1.93.0" },
-    { name = "otobo", specifier = ">=1.1.5" },
+    { name = "otobo", specifier = ">=2.1.0" },
     { name = "pdoc3" },
     { name = "phonenumbers" },
     { name = "pluggy" },
@@ -1220,17 +1220,21 @@ wheels = [
 
 [[package]]
 name = "otobo"
-version = "2.0.0"
+version = "2.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
     { name = "python-dotenv" },
+    { name = "pyyaml" },
     { name = "requests" },
+    { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d0/fd/35456c5e2d63d4856858604c2f975cbc8e2efcd46fdd5e66fcfd256eb2b5/otobo-2.0.0.tar.gz", hash = "sha256:c64437f8a8601bd715f79e84b405b738947dd42ebdaecda073df11f7d0356952", size = 9338, upload-time = "2025-09-12T21:55:12.508Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/4a/c4a90448da5b48c0a31b58a0e67e2fab0a3112d983e2bdb74102d6603a35/otobo-2.1.0.tar.gz", hash = "sha256:ab027ddf9d7b5906db8e229ae55702249d66bd4640bef7f4d4f908932bae1b9a", size = 12099, upload-time = "2025-09-13T19:27:13.817Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8d/45/9fe00d3109c4ae23d9dff7bf8cd162dd7b10322e3663be62d1955e5c0369/otobo-2.0.0-py3-none-any.whl", hash = "sha256:a18ca1a1ac1c36a2678fd90d64c7e159b85679e5010c9113e294efad7eedfa74", size = 6537, upload-time = "2025-09-12T21:55:11.247Z" },
+    { url = "https://files.pythonhosted.org/packages/53/fa/38f7f654cf3fcea37223d2815dc3c968ae3223eac64531ebea873a9406cd/otobo-2.1.0-py3-none-any.whl", hash = "sha256:7b23b354078814e487dcf2278cfe4752b57765962c3ef5fde95ac1657b5212d7", size = 12035, upload-time = "2025-09-13T19:27:12.773Z" },
 ]
 
 [[package]]
@@ -1302,7 +1306,7 @@ wheels = [
 
 [[package]]
 name = "prefect"
-version = "3.4.8"
+version = "3.4.18"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiosqlite" },
@@ -1359,9 +1363,9 @@ dependencies = [
     { name = "websockets" },
     { name = "whenever" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5a/f4/712ba6ce86195016d159f3def1e446d1674029d388326214d71941130f7b/prefect-3.4.8.tar.gz", hash = "sha256:bbcc92c9c5589ffb165e490f9a535f9839009264ba37b93abaf1284ae725b73d", size = 5569345, upload-time = "2025-07-10T17:50:17.993Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/98/f6/e581bb9e43b43f212e08879e522a60e785b43b2678037b2e4bc9f8661594/prefect-3.4.18.tar.gz", hash = "sha256:04a5af7b5d0fcd1202315e32d46f6067dcf912bfd58d3ed113c74c0f58abd1cf", size = 5599981, upload-time = "2025-09-12T16:22:02.975Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ae/16/4967ea97e743bf398913bf6a2a95f110e9c4c4648e88171aba97c2b7f375/prefect-3.4.8-py3-none-any.whl", hash = "sha256:72c89645b5ad7391c6595d0c0e59ed3d2ea78a340eed163a77ddca788c962b2e", size = 6067976, upload-time = "2025-07-10T17:50:15.221Z" },
+    { url = "https://files.pythonhosted.org/packages/cc/f9/c5b61846b8fb33541c07e08170504c46e44a0ed45ad2b649fa15d7af11ec/prefect-3.4.18-py3-none-any.whl", hash = "sha256:a98824b91eb8de8d4fac84bd1ef08ce64564b1904b89f4c55059d30523b533ed", size = 6112304, upload-time = "2025-09-12T16:21:59.394Z" },
 ]
 
 [[package]]
@@ -1516,6 +1520,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/08/ba/45911d754e8eba3d5a841a5ce61a65a685ff1798421ac054f85aa8747dfb/pytest-8.4.1.tar.gz", hash = "sha256:7c67fd69174877359ed9371ec3af8a3d2b04741818c51e5e99cc1742251fa93c", size = 1517714, upload-time = "2025-06-18T05:48:06.109Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/29/16/c8a903f4c4dffe7a12843191437d7cd8e32751d5de349d45d3fe69544e87/pytest-8.4.1-py3-none-any.whl", hash = "sha256:539c70ba6fcead8e78eebbf1115e8b589e7565830d7d006a8723f19ac8a0afb7", size = 365474, upload-time = "2025-06-18T05:48:03.955Z" },
+]
+
+[[package]]
+name = "pytest-asyncio"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/42/86/9e3c5f48f7b7b638b216e4b9e645f54d199d7abbbab7a64a13b4e12ba10f/pytest_asyncio-1.2.0.tar.gz", hash = "sha256:c609a64a2a8768462d0c99811ddb8bd2583c33fd33cf7f21af1c142e824ffb57", size = 50119, upload-time = "2025-09-12T07:33:53.816Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/04/93/2fa34714b7a4ae72f2f8dad66ba17dd9a2c793220719e736dda28b7aec27/pytest_asyncio-1.2.0-py3-none-any.whl", hash = "sha256:8e17ae5e46d8e7efe51ab6494dd2010f4ca8dae51652aa3c8d55acf50bfb2e99", size = 15095, upload-time = "2025-09-12T07:33:52.639Z" },
 ]
 
 [[package]]
@@ -2136,7 +2152,7 @@ wheels = [
 
 [[package]]
 name = "typer"
-version = "0.16.0"
+version = "0.17.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -2144,9 +2160,9 @@ dependencies = [
     { name = "shellingham" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c5/8c/7d682431efca5fd290017663ea4588bf6f2c6aad085c7f108c5dbc316e70/typer-0.16.0.tar.gz", hash = "sha256:af377ffaee1dbe37ae9440cb4e8f11686ea5ce4e9bae01b84ae7c63b87f1dd3b", size = 102625, upload-time = "2025-05-26T14:30:31.824Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/92/e8/2a73ccf9874ec4c7638f172efc8972ceab13a0e3480b389d6ed822f7a822/typer-0.17.4.tar.gz", hash = "sha256:b77dc07d849312fd2bb5e7f20a7af8985c7ec360c45b051ed5412f64d8dc1580", size = 103734, upload-time = "2025-09-05T18:14:40.746Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/76/42/3efaf858001d2c2913de7f354563e3a3a2f0decae3efe98427125a8f441e/typer-0.16.0-py3-none-any.whl", hash = "sha256:1f79bed11d4d02d4310e3c1b7ba594183bcedb0ac73b27a9e5f28f6fb5b98855", size = 46317, upload-time = "2025-05-26T14:30:30.523Z" },
+    { url = "https://files.pythonhosted.org/packages/93/72/6b3e70d32e89a5cbb6a4513726c1ae8762165b027af569289e19ec08edd8/typer-0.17.4-py3-none-any.whl", hash = "sha256:015534a6edaa450e7007eba705d5c18c3349dcea50a6ad79a5ed530967575824", size = 46643, upload-time = "2025-09-05T18:14:39.166Z" },
 ]
 
 [[package]]

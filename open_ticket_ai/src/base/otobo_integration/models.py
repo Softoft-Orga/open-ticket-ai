@@ -1,4 +1,4 @@
-from otobo import ArticleDetail, TicketCommon, TicketDetailOutput
+from otobo.models.ticket_models import TicketBase, ArticleDetail
 
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     UnifiedNote,
@@ -9,11 +9,9 @@ from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
 
 
 class QueueAdapter(UnifiedQueue):
-    """Adapter for converting OTOBO queue details to unified queue format."""
 
     @classmethod
-    def from_otobo_ticket(cls, ticket: TicketCommon) -> 'QueueAdapter':
-        """Create a QueueAdapter from an OTOBO ticket."""
+    def from_otobo_ticket(cls, ticket: TicketBase) -> 'QueueAdapter':
         return cls(
             id=str(ticket.QueueID) if ticket.QueueID else None,
             name=ticket.Queue if ticket.Queue else "",
@@ -21,11 +19,9 @@ class QueueAdapter(UnifiedQueue):
 
 
 class PriorityAdapter(UnifiedPriority):
-    """Adapter for converting OTOBO priority details to unified priority format."""
 
     @classmethod
-    def from_otobo_ticket(cls, ticket: TicketCommon) -> 'PriorityAdapter':
-        """Create a PriorityAdapter from an OTOBO ticket."""
+    def from_otobo_ticket(cls, ticket: TicketBase) -> 'PriorityAdapter':
         return cls(
             id=str(ticket.PriorityID) if ticket.PriorityID else None,
             name=ticket.Priority if ticket.Priority else "",
@@ -33,7 +29,6 @@ class PriorityAdapter(UnifiedPriority):
 
 
 class NoteAdapter(UnifiedNote):
-    """Adapter for converting OTOBO article details to unified note format."""
 
     def __init__(self, article: ArticleDetail):
         super().__init__(
@@ -44,7 +39,7 @@ class NoteAdapter(UnifiedNote):
 
 class TicketAdapter(UnifiedTicket):
 
-    def __init__(self, ticket: TicketDetailOutput):
+    def __init__(self, ticket: TicketBase):
         super().__init__(
             id=str(ticket.TicketID),
             subject=ticket.Title or "",
@@ -58,7 +53,6 @@ class TicketAdapter(UnifiedTicket):
         return self.get_unified_notes_list(ticket)[0].body if self.get_unified_notes_list(ticket) else ""
 
     def get_unified_notes_list(self, ticket) -> list[UnifiedNote]:
-        """Convert OTOBO articles to a list of unified notes."""
         return [NoteAdapter(article) for article in self.get_otobo_articles_as_list(ticket)]
 
     def get_otobo_articles_as_list(self, ticket) -> list[ArticleDetail]:

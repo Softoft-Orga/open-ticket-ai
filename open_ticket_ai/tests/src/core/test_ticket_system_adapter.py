@@ -1,12 +1,13 @@
 import inspect
 
 import pytest
+from otobo.models.request_models import AuthData
 
+from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
 from open_ticket_ai.src.core.config.config_models import SystemConfig
-from otobo import OTOBOClient, OTOBOClientConfig, AuthData
+from otobo import OTOBOClient, OTOBOClientConfig
 
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
-from open_ticket_ai.src.base.otobo_integration import OTOBOAdapter
 
 
 class DummyClient(OTOBOClient):

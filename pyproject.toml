@@ -30,7 +30,7 @@ dependencies = [
     "openai>=1.93.0",
     "tenacity>=9.1.2",
     "prefect>=3.4.8",
-    "otobo>=1.1.5",
+    "otobo>=2.1.0",
 ]
 
 [project.optional-dependencies]
