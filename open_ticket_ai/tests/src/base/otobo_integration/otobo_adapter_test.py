@@ -1,112 +1,62 @@
-"""This module contains unit tests for the OTOBOAdapter.
-
-The tests include:
-    - Testing the configuration of the OTOBOAdapterConfig
-    - Testing the behavior of the OTOBOAdapter using a mocked OTOBO client
-
-The tests are designed to run without requiring a real OTOBO server connection.
-"""
-import dataclasses
-
-import otobo
-from otobo import OTOBOClient, OTOBOClientConfig
 import pytest
+
+from otobo import (
+    OTOBOClient,
+    OTOBOClientConfig,
+    TicketOperation,
+    TicketSearchRequest,
+    TicketUpdateRequest,
+)
+from otobo.models.ticket_models import TicketBase
 
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
 from open_ticket_ai.src.core.config.config_models import SystemConfig
+from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedQueue,
+    UnifiedPriority,
+    UnifiedTicketUpdate,
+)
 
 
-@dataclasses.dataclass
-class MockedTicket:
-    """Mocked ticket data structure for testing purposes.
-
-    This class is used to simulate a ticket object with essential attributes.
-    It is primarily used in unit tests to verify the behavior of the OTOBOAdapter.
-
-    Attributes:
-        id (str): Unique identifier for the ticket.
-        title (str): Title of the ticket.
-        description (str): Detailed description of the ticket.
-        status (str): Current status of the ticket (e.g., 'open', 'closed').
-        priority (str): Priority level of the ticket.
-        queue (str): Queue to which the ticket belongs.
-    """
-    id: str
-    title: str
-    description: str
-    status: str
-    priority: str
-    queue: str
-
-
-# List of mocked tickets used for testing
-"""List of mocked tickets used for testing.
-
-This list contains several instances of `MockedTicket` that simulate
-tickets in an OTOBO system. They are used in unit tests to verify the
-behavior of the OTOBOAdapter and its interactions with the OTOBO client.
-"""
 TICKETS = [
-    MockedTicket(
-        id="1",
-        title="Test Ticket 1",
-        description="Description 1",
-        status="open",
-        priority="high",
-        queue="default",
-    ),
-    MockedTicket(
-        id="2",
-        title="Test Ticket 2",
-        description="Description 2",
-        status="closed",
-        priority="low",
-        queue="default",
-    ),
-    MockedTicket(
-        id="3",
-        title="Test Ticket 3",
-        description="Description 3",
-        status="open",
-        priority="medium",
-        queue="default",
-    ),
-    MockedTicket(
-        id="4",
-        title="Test Ticket 4",
-        description="Description 4",
-        status="open",
-        priority="medium",
-        queue="misc",
-    ),
+    TicketBase(TicketID=1, Title="Test Ticket 1", Queue="default", QueueID=1, Priority="high", PriorityID=1),
+    TicketBase(TicketID=2, Title="Test Ticket 2", Queue="default", QueueID=1, Priority="low", PriorityID=2),
+    TicketBase(TicketID=3, Title="Test Ticket 3", Queue="misc", QueueID=2, Priority="medium", PriorityID=3),
 ]
 
 
 class MockedOTOBOClient(OTOBOClient):
-    def __init__(
-        self,
-        ticket_data: list[MockedTicket]
-    ):
+    def __init__(self, ticket_data: list[TicketBase]):
         super().__init__(
             OTOBOClientConfig(
                 base_url="https://mocked.otobo.example.com",
                 service="GenericTicketConnector",
                 auth=None,
                 operations={
-                    otobo.TicketOperation.SEARCH: "/search",
-                    otobo.TicketOperation.UPDATE: "/update",
-                   otobo.TicketOperation.GET: "/get",
+                    TicketOperation.SEARCH: "/search",
+                    TicketOperation.UPDATE: "/update",
+                    TicketOperation.GET: "/get",
                 },
-            ),
+            )
         )
         self.ticket_data = ticket_data
+        self.updated_payload: TicketUpdateRequest | None = None
 
-    async def search_and_get(self, query):
-        return
+    async def search_and_get(self, query: TicketSearchRequest):
+        results = self.ticket_data
+        if query.TicketID:
+            results = [t for t in results if t.TicketID == int(query.TicketID)]
+        if query.QueueIDs:
+            results = [t for t in results if t.QueueID in query.QueueIDs]
+        if query.Queues:
+            results = [t for t in results if t.Queue in query.Queues]
+        return results
 
-    async def update_ticket(self, payload):
-        return await super().update_ticket(payload)
+    async def update_ticket(self, payload: TicketUpdateRequest):
+        self.updated_payload = payload
+        return True
 
 
 @pytest.fixture
@@ -129,9 +79,10 @@ def test_config_str_and_password(monkeypatch):
         password_env_var="OTOBO_PASS",
     )
     expected = (
-        "OTOBOServerConfig(server_address=https://otobo.example.com, "
-        "webservice_name=GenericTicketConnector, search_operation_url=/search, "
-        "update_operation_url=/update, get_operation_url=/get, username=root)"
+        "server_address='https://otobo.example.com' "
+        "webservice_name='GenericTicketConnector' search_operation_url='/search' "
+        "update_operation_url='/update' get_operation_url='/get' "
+        "username='root' password_env_var='OTOBO_PASS'"
     )
     assert str(cfg) == expected
     assert cfg.password == "s3cret"
@@ -150,3 +101,38 @@ def test_config_password_missing_env(monkeypatch):
     )
     with pytest.raises(ValueError):
         _ = cfg.password
+
+
+@pytest.mark.asyncio
+async def test_find_tickets_filters_by_queue(adapter_and_client):
+    adapter, _ = adapter_and_client
+    criteria = TicketSearchCriteria(queue=UnifiedQueue(name="default"))
+    tickets = await adapter.find_tickets(criteria)
+    assert len(tickets) == 2
+    subjects = {t.subject for t in tickets}
+    assert subjects == {"Test Ticket 1", "Test Ticket 2"}
+
+
+@pytest.mark.asyncio
+async def test_find_first_ticket_none_for_missing(adapter_and_client):
+    adapter, _ = adapter_and_client
+    criteria = TicketSearchCriteria(id="999")
+    ticket = await adapter.find_first_ticket(criteria)
+    assert ticket is None
+
+
+@pytest.mark.asyncio
+async def test_update_ticket_payload_sent(adapter_and_client):
+    adapter, client = adapter_and_client
+    updates = UnifiedTicketUpdate(
+        subject="Updated",
+        queue=UnifiedQueue(id="2", name="misc"),
+        priority=UnifiedPriority(id="5", name="low"),
+    )
+    result = await adapter.update_ticket("1", updates)
+    assert result is True
+    assert client.updated_payload is not None
+    assert client.updated_payload.TicketID == 1
+    assert client.updated_payload.Ticket.Title == "Updated"
+    assert client.updated_payload.Ticket.QueueID == "2"
+    assert client.updated_payload.Ticket.PriorityID == "5"
