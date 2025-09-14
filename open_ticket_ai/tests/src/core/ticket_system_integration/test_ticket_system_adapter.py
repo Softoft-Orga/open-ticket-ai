@@ -52,7 +52,7 @@ def test_adapter_is_abstract():
         2. All required abstract methods exist in the class
     """
     assert inspect.isabstract(TicketSystemAdapter)
-    methods = ["find_tickets", "find_first_ticket", "create_ticket", "update_ticket", "add_note"]
+    methods = ["find_tickets", "find_first_ticket", "update_ticket"]
     for m in methods:
         assert getattr(TicketSystemAdapter, m)
 
@@ -73,8 +73,6 @@ def test_otobo_adapter_implements_interface(adapter):
     for m in [
         "find_tickets",
         "find_first_ticket",
-        "create_ticket",
         "update_ticket",
-        "add_note",
     ]:
         assert callable(getattr(adapter, m))

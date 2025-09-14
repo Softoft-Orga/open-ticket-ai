@@ -6,7 +6,7 @@ import pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from open_ticket_ai.src.core.app import App
+from open_ticket_ai.src.app import App
 
 
 def create_app():

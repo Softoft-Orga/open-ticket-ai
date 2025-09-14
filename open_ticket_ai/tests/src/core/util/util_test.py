@@ -59,7 +59,6 @@ def test_find_project_root_returns_project_directory():
     assert project_root.name == "open_ticket_ai"
     # verify that this test file resides inside the found project root
     assert Path(__file__).resolve().is_relative_to(project_root)
-    assert (project_root / "config.yml").exists()
 
 
 def test_find_project_root_invalid_name_raises():

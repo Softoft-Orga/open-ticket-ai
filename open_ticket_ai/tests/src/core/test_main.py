@@ -3,9 +3,7 @@ import sys
 import types
 from unittest.mock import Mock
 
-import pytest
-
-from open_ticket_ai.src.core import main
+from open_ticket_ai.src import main
 
 
 def reset_logging():

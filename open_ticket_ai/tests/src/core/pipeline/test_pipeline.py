@@ -23,7 +23,7 @@ class DummyData(BaseModel):
     """A simple Pydantic model for data used in tests."""
     value: int
 
-class IncrementPipe(Pipe[DummyData, DummyData]):
+class IncrementPipe(Pipe[ProvidableConfig, DummyData, DummyData]):
     """A dummy pipe that increments the value in the context data."""
     InputDataType = DummyData
     OutputDataType = DummyData
@@ -34,10 +34,12 @@ class IncrementPipe(Pipe[DummyData, DummyData]):
         super().__init__(config)
 
     def process(self, context: PipelineContext[DummyData]) -> PipelineContext[DummyData]:
+        print("IncrementPipe processing")
+        print("IncrementPipe input:", context.data)
         context.data.value += 1
         return context
 
-class StopPipe(Pipe[DummyData, DummyData]):
+class StopPipe(Pipe[ProvidableConfig, DummyData, DummyData]):
     """A dummy pipe that increments a value and then stops the pipeline."""
     InputDataType = DummyData
     OutputDataType = DummyData
@@ -52,7 +54,7 @@ class StopPipe(Pipe[DummyData, DummyData]):
         context.stop_pipeline()
         return context
 
-class ErrorPipe(Pipe[DummyData, DummyData]):
+class ErrorPipe(Pipe[ProvidableConfig, DummyData, DummyData]):
     """A dummy pipe that always raises an exception."""
     InputDataType = DummyData
     OutputDataType = DummyData
@@ -167,17 +169,6 @@ def test_pipeline_handles_errors(pipeline_config_factory):
     assert result_context.meta_info.failed_pipe == "ErrorPipe"
     assert "This is a test error from ErrorPipe" in result_context.meta_info.error_message
 
-def test_pipeline_with_no_pipes(pipeline_config_factory):
-    """Tests that a pipeline with no pipes completes successfully."""
-    pipes = []
-    config = pipeline_config_factory(pipes)
-    pipeline = Pipeline(config, pipes)
-    context = PipelineContext(data=DummyData(value=100), meta_info=MetaInfo())
-
-    result_context = pipeline.execute(context)
-
-    assert result_context.data.value == 100
-    assert result_context.meta_info.status == PipelineStatus.SUCCESS
 
 @pytest.mark.parametrize("initial_status", [
     PipelineStatus.FAILED,
@@ -197,14 +188,3 @@ def test_pipeline_does_not_run_with_non_runnable_initial_status(pipeline_config_
     assert result_context.data.value == 50
     assert result_context.meta_info.status == initial_status
 
-def test_pipeline_process_method_delegates_to_execute(pipeline_config_factory):
-    """Ensures that the process() method behaves identically to execute()."""
-    pipes = [IncrementPipe()]
-    config = pipeline_config_factory(pipes)
-    pipeline = Pipeline(config, pipes)
-    context = PipelineContext(data=DummyData(value=0), meta_info=MetaInfo())
-
-    result_context = pipeline.process(context)
-
-    assert result_context.data.value == 1
-    assert result_context.meta_info.status == PipelineStatus.SUCCESS

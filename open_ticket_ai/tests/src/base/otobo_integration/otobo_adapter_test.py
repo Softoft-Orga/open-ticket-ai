@@ -15,8 +15,7 @@ from open_ticket_ai.src.core.config.config_models import SystemConfig
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedQueue,
-    UnifiedPriority,
-    UnifiedTicketUpdate,
+    UnifiedPriority, UnifiedTicket,
 )
 
 
@@ -124,7 +123,7 @@ async def test_find_first_ticket_none_for_missing(adapter_and_client):
 @pytest.mark.asyncio
 async def test_update_ticket_payload_sent(adapter_and_client):
     adapter, client = adapter_and_client
-    updates = UnifiedTicketUpdate(
+    updates = UnifiedTicket(
         subject="Updated",
         queue=UnifiedQueue(id="2", name="misc"),
         priority=UnifiedPriority(id="5", name="low"),

@@ -40,7 +40,7 @@ def main(
 def start():
     """Start the Open Ticket AI application."""
     from pyfiglet import Figlet
-    from open_ticket_ai.src.core.app import App
+    from open_ticket_ai.src.app import App
     from open_ticket_ai.src.core.dependency_injection.container import DIContainer
 
     logger = logging.getLogger(__name__)

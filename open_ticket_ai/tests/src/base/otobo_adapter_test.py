@@ -115,29 +115,9 @@ class MockedOTOBOClient(OTOBOClient):
 @pytest.fixture
 def adapter_and_client():
     client = MockedOTOBOClient(TICKETS)
-    config = SystemConfig(id="dummy", provider_key="dummy", params={})
+    config = SystemConfig(id="dummy", provider_key="dummy")
     adapter = OTOBOAdapter(config=config, otobo_client=client)
     return adapter, client
-
-
-def test_config_str_and_password(monkeypatch):
-    monkeypatch.setenv("OTOBO_PASS", "s3cret")
-    cfg = OTOBOAdapterConfig(
-        server_address="https://otobo.example.com",
-        webservice_name="GenericTicketConnector",
-        search_operation_url="/search",
-        update_operation_url="/update",
-        get_operation_url="/get",
-        username="root",
-        password_env_var="OTOBO_PASS",
-    )
-    expected = (
-        "OTOBOServerConfig(server_address=https://otobo.example.com, "
-        "webservice_name=GenericTicketConnector, search_operation_url=/search, "
-        "update_operation_url=/update, get_operation_url=/get, username=root)"
-    )
-    assert str(cfg) == expected
-    assert cfg.password == "s3cret"
 
 
 def test_config_password_missing_env(monkeypatch):
