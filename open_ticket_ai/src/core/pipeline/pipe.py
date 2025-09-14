@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import ClassVar
 
 from pydantic import BaseModel
 
@@ -10,13 +11,13 @@ from .context import PipelineContext
 from ..config.config_models import ProvidableConfig
 
 
-class Pipe[InputDataT: BaseModel, OutputDataT: BaseModel](Providable, ABC):
-    InputDataType: type[InputDataT] = type[InputDataT]
+class Pipe[ConfigT: ProvidableConfig, InputDataT: BaseModel, OutputDataT: BaseModel](Providable, ABC):
+    InputModel: ClassVar[type[BaseModel]]
+    OutputModel: ClassVar[type[BaseModel]]
 
-    OutputDataType: type[OutputDataT] = type[OutputDataT]
-
-    def __init__(self, config: ProvidableConfig):
+    def __init__(self, config: ConfigT):
         super().__init__(config)
+        self.config: ConfigT = config
 
     @abstractmethod
     def process(self, context: PipelineContext[InputDataT]) -> PipelineContext[OutputDataT]:

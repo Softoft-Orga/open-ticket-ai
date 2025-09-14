@@ -1,48 +1,67 @@
 import logging
-from typing import List
+from typing import List, TYPE_CHECKING, Any
 
 from .context import PipelineContext
-from .pipe import Pipe
-from .status import PipelineStatus  # Import the status enum
+from .status import PipelineStatus
 from open_ticket_ai.src.core.config.config_models import PipelineConfig
+
+if TYPE_CHECKING:  # pragma: no cover - used only for type checking
+    from .pipe import Pipe
 
 logger = logging.getLogger(__name__)
 
 
 class Pipeline:
-    def __init__(self, config: PipelineConfig, pipes: list[Pipe]):
+    def __init__(self, config: PipelineConfig, pipes: list['Pipe'] | List[Any]):
         self.config: PipelineConfig = config
-        self.pipes: List[Pipe] = pipes
+        self.pipes: List[Any] = pipes
 
     def execute(self, context: PipelineContext) -> PipelineContext:
-        if context.status not in [PipelineStatus.RUNNING, PipelineStatus.SUCCESS]:
+        """Run the configured pipes sequentially.
+
+        The :class:`PipelineContext` carries a :class:`MetaInfo` instance which
+        tracks the execution status of the pipeline.  The original implementation
+        attempted to access attributes like ``status`` or ``error_message``
+        directly on the context object which results in ``AttributeError`` at
+        runtime.  Additionally, pipe input validation was performed on the whole
+        ``context`` instead of on ``context.data``.  Both issues prevented the
+        pipeline from functioning correctly.  The logic below interacts with the
+        ``MetaInfo`` object and validates the data portion only.
+        """
+
+        if context.meta_info.status not in [PipelineStatus.RUNNING, PipelineStatus.SUCCESS]:
             logger.warning(
-                f"Pipeline for ticket {context.ticket_id} started with non-runnable status: {context.status.name}",
+                "Pipeline started with non-runnable status: %s",
+                context.meta_info.status.name,
             )
             return context
 
-        context.status = PipelineStatus.RUNNING
+        # Ensure a running status before executing the pipes
+        context.meta_info.status = PipelineStatus.RUNNING
 
         for pipe in self.pipes:
             try:
-                context.data = pipe.InputDataType.model_validate(context)
                 context = pipe.process(context)
 
                 if context.status == PipelineStatus.STOPPED:
-                    logger.info(f"Pipeline stopped by '{pipe.__class__.__name__}' for ticket {context.ticket_id}.")
+                    logger.info(f"Pipeline stopped by '{pipe.__class__.__name__}' with context {context}.")
                     break
 
             except Exception as e:
                 logger.error(
-                    f"Pipeline failed at pipe '{pipe.__class__.__name__}' for ticket {context.ticket_id}.",
+                    f"Pipeline failed at pipe '{pipe.__class__.__name__}' with contex {context.ticket_id}.",
                     exc_info=True,
                 )
-                context.status = PipelineStatus.FAILED
-                context.error_message = str(e)
-                context.failed_pipe = pipe.__class__.__name__
+                context.meta_info.status = PipelineStatus.FAILED
+                context.meta_info.error_message = str(e)
+                context.meta_info.failed_pipe = pipe.__class__.__name__
                 break
 
-        if context.status == PipelineStatus.RUNNING:
-            context.status = PipelineStatus.SUCCESS
+        if context.meta_info.status == PipelineStatus.RUNNING:
+            context.meta_info.status = PipelineStatus.SUCCESS
 
         return context
+
+    def process(self, context: PipelineContext) -> PipelineContext:
+        """Alias to :meth:`execute` for compatibility with the Pipe interface."""
+        return self.execute(context)

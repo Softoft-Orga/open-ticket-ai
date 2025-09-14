@@ -8,7 +8,7 @@ from open_ticket_ai.src.core.config.config_models import SystemConfig
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
-    UnifiedNote, UnifiedTicket, UnifiedTicketUpdate,
+    UnifiedNote, UnifiedTicket, UnifiedTicketBase,
 )
 from open_ticket_ai.src.base.otobo_integration.models import TicketAdapter
 
@@ -39,7 +39,7 @@ class OTOBOAdapter(TicketSystemAdapter):
         result = await self.find_tickets(criteria)
         return result[0] if len(result) >= 1 else None
 
-    async def update_ticket(self, ticket_id: str, updates: UnifiedTicketUpdate) -> bool:
+    async def update_ticket(self, ticket_id: str, updates: UnifiedTicketBase) -> bool:
         update_params = TicketUpdateRequest(
             TicketID=int(ticket_id),
             Ticket=TicketBase(

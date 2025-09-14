@@ -1,6 +1,7 @@
 # FILE_PATH: open_ticket_ai/src/core/dependency_injection/container.py
 import os
 from injector import Binder, Injector, Module, provider, singleton
+from otobo.models.request_models import AuthData
 
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
 from open_ticket_ai.src.core.config.config_models import (
@@ -19,7 +20,7 @@ from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter imp
 from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 from open_ticket_ai.src.core.pipeline.pipeline import Pipeline
-from otobo import AuthData, OTOBOClient, OTOBOClientConfig, TicketOperation
+from otobo import OTOBOClient, OTOBOClientConfig, TicketOperation
 
 CONFIG_PATH = os.getenv("OPEN_TICKET_AI_CONFIG", find_python_code_root_path() / "config.yml")
 
@@ -91,13 +92,8 @@ class DIContainer(Injector, AbstractContainer):
         self.config: OpenTicketAIConfig = self.get(OpenTicketAIConfig)
         self.registry: Registry = self.get(Registry)
 
-        system_adapter_class = self.registry.get(self.config.system.provider_key, TicketSystemAdapter)
-        system_adapter_instance = self.create_object(system_adapter_class,
-                                                     additional_kwargs={"config": self.config.system})
-        self.binder.bind(TicketSystemAdapter, to=system_adapter_instance, scope=singleton)
-
-    def get_instance_config(self, id: str) -> ProvidableConfig:
-        cfg = next((c for c in self.config.get_all_register_instance_configs() if c.id == id), None)
+    def get_pipe_config(self, id: str) -> ProvidableConfig:
+        cfg = next((c for c in self.config.pipes if c.id == id), None)
         if not cfg:
             raise KeyError(f"Unknown instance ID: {id}")
         return cfg
@@ -108,12 +104,12 @@ class DIContainer(Injector, AbstractContainer):
             raise KeyError(f"Unknown pipeline ID: {id}")
         return pc
 
-    def get_instance[T: Providable](self, id: str, subclass_of: type[T]) -> T:
-        inst_cfg = self.get_instance_config(id)
-        cls = self.registry.get(inst_cfg.provider_key, subclass_of)
+    def get_pipe(self, id: str) -> Pipe:
+        inst_cfg = self.get_pipe_config(id)
+        cls = self.registry.get(inst_cfg.provider_key, Pipe)
         return self.create_object(cls, additional_kwargs={"config": inst_cfg})
 
     def get_pipeline(self, pipeline_id: str) -> Pipeline:
         pc = self.get_pipeline_config(pipeline_id)
-        pipes = [self.get_instance(pipe_id, Pipe) for pipe_id in pc.pipes]
+        pipes = [self.get_pipe(pipe_id) for pipe_id in pc.pipe_ids]
         return Pipeline(config=pc, pipes=pipes)

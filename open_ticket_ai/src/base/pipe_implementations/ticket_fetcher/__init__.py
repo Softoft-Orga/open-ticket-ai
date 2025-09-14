@@ -1,6 +1,6 @@
 
 """Ticket fetcher pipe implementations."""
 
-from .basic_ticket_fetcher import BasicTicketFetcher
+from .queue_ticket_fetcher import QueueTicketFetcher
 
-__all__ = ["BasicTicketFetcher"]
+__all__ = ["QueueTicketFetcher"]
