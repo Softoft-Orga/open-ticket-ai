@@ -76,7 +76,7 @@ class AppModule(Module):
         pipelines: list[Pipeline] = []
         for pc in config.pipelines:
             pipes = []
-            for pipe_id in pc.pipe_ids:
+            for pipe_id in pc.pipes:
                 inst_cfg = next((c for c in config.get_all_register_instance_configs() if c.id == pipe_id), None)
                 if not inst_cfg:
                     raise KeyError(f"Unknown instance ID: {pipe_id}")
