@@ -25,24 +25,23 @@ class Pipeline:
 
         for pipe in self.pipes:
             try:
-                context.data = pipe.InputDataType.model_validate(context)
                 context = pipe.process(context)
 
                 if context.status == PipelineStatus.STOPPED:
-                    logger.info(f"Pipeline stopped by '{pipe.__class__.__name__}' for ticket {context.ticket_id}.")
+                    logger.info(f"Pipeline stopped by '{pipe.__class__.__name__}' with context {context}.")
                     break
 
             except Exception as e:
                 logger.error(
-                    f"Pipeline failed at pipe '{pipe.__class__.__name__}' for ticket {context.ticket_id}.",
+                    f"Pipeline failed at pipe '{pipe.__class__.__name__}' with contex {context.ticket_id}.",
                     exc_info=True,
                 )
-                context.status = PipelineStatus.FAILED
-                context.error_message = str(e)
-                context.failed_pipe = pipe.__class__.__name__
+                context.meta_info.status = PipelineStatus.FAILED
+                context.meta_info.error_message = str(e)
+                context.meta_info.failed_pipe = pipe.__class__.__name__
                 break
 
-        if context.status == PipelineStatus.RUNNING:
-            context.status = PipelineStatus.SUCCESS
+        if context.meta_info.status == PipelineStatus.RUNNING:
+            context.meta_info.status = PipelineStatus.SUCCESS
 
         return context

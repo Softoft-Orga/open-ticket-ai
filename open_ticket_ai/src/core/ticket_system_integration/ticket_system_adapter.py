@@ -9,8 +9,7 @@ from open_ticket_ai.src.core.mixins.registry_providable_instance import (
 )
 from .unified_models import (
     TicketSearchCriteria,
-    UnifiedNote, UnifiedTicket, UnifiedTicketUpdate,
-)
+    UnifiedTicket, )
 
 
 class TicketSystemAdapter(Providable, ABC):
@@ -20,7 +19,7 @@ class TicketSystemAdapter(Providable, ABC):
         self.config = config
 
     @abstractmethod
-    async def update_ticket(self, ticket_id: str, updates: UnifiedTicketUpdate) -> bool:
+    async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         pass
 
     @abstractmethod
