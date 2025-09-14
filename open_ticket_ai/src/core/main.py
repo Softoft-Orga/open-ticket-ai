@@ -8,10 +8,6 @@ It configures logging levels and launches the main application.
 import logging
 
 import typer
-from pyfiglet import Figlet
-
-from open_ticket_ai.src.core.app import App
-from open_ticket_ai.src.core.dependency_injection.container import DIContainer
 
 cli = typer.Typer()
 """The main Typer CLI application instance.
@@ -42,6 +38,11 @@ def main(
 
 @cli.command()
 def start():
+    """Start the Open Ticket AI application."""
+    from pyfiglet import Figlet
+    from open_ticket_ai.src.core.app import App
+    from open_ticket_ai.src.core.dependency_injection.container import DIContainer
+
     logger = logging.getLogger(__name__)
     f = Figlet(font="slant")
     logger.info("Starting Open Ticket AI")

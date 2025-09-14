@@ -3,6 +3,8 @@ Pytest tests for the core pipeline components including Pipeline, Pipe, Pipeline
 """
 import random
 import pytest
+
+pytest.importorskip("pydantic")
 from pydantic import BaseModel
 
 # Assuming the following imports are correct based on your project structure
