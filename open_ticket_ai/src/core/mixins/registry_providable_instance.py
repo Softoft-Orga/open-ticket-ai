@@ -5,7 +5,6 @@ from injector import inject
 from rich.console import Console
 
 from open_ticket_ai.src.core.config.config_models import ProvidableConfig
-from open_ticket_ai.src.core.util.pretty_print_config import pretty_print_config
 
 
 class Providable:
@@ -19,7 +18,16 @@ class Providable:
 
     def _pretty_print(self):
         if self.config and self.console:
-            pretty_print_config(self.config, self.console)
+            try:  # pragma: no cover - presentation only
+                from open_ticket_ai.src.core.util.pretty_print_config import (
+                    pretty_print_config,
+                )
+                pretty_print_config(self.config, self.console)
+            except Exception:
+                # Pretty printing is non-essential for tests. Missing optional
+                # dependencies (like ``yaml`` or ``rich``) should not cause the
+                # object to fail during initialisation.
+                pass
 
     @classmethod
     def get_provider_key(cls) -> str:

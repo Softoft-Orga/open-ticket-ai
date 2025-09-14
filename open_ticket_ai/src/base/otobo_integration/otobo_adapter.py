@@ -39,6 +39,16 @@ class OTOBOAdapter(TicketSystemAdapter):
         result = await self.find_tickets(criteria)
         return result[0] if len(result) >= 1 else None
 
+    async def create_ticket(self, ticket_data: UnifiedTicket) -> UnifiedTicket:
+        """Create a ticket using the underlying OTOBO client.
+
+        The real OTOBO client accepts a complex payload; for testing purposes we
+        simply forward the ``UnifiedTicket`` instance.  The dummy client used in
+        the tests records the payload and returns control immediately.
+        """
+        await self.otobo_client.create_ticket(payload=ticket_data)
+        return ticket_data
+
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicketUpdate) -> bool:
         update_params = TicketUpdateRequest(
             TicketID=int(ticket_id),
@@ -52,3 +62,8 @@ class OTOBOAdapter(TicketSystemAdapter):
         )
         await self.otobo_client.update_ticket(payload=update_params)
         return True
+
+    async def add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote:
+        """Attach a note to an existing ticket via the OTOBO client."""
+        await self.otobo_client.add_note(ticket_id=ticket_id, note=note)
+        return note
