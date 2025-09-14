@@ -10,7 +10,6 @@ Unit = Literal["seconds", "minutes", "hours", "days", "weeks"]
 
 class ProvidableConfig(BaseModel):
     id: str = Field(..., min_length=1, description="Unique identifier for the instance.")
-    params: dict[str, Any] = Field(default_factory=dict)
     provider_key: str = Field(..., min_length=1, description="Key identifying the provider implementation.")
 
 

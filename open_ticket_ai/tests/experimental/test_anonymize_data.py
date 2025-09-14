@@ -12,6 +12,10 @@ and contexts to ensure comprehensive coverage of anonymization scenarios.
 
 import pytest
 
+pytest.importorskip("phonenumbers")
+pytest.importorskip("faker")
+pytest.importorskip("spacy")
+
 from open_ticket_ai.experimental.anonymize_data import anonymize_text
 
 # List of text examples containing personal identifiable information (PII) for testing.

@@ -18,42 +18,24 @@ open_ticket_ai:
     pipes:
         -   id: "basic_ticket_fetcher"
             provider_key: "BasicTicketFetcher"
-            params:
-                filters:
-                    -   attribute: "queue"
-                        value: "incoming_queue"
+            filter_by_queue: "Raw"
 
         -   id: "subject_body_preparer"
             provider_key: "SubjectBodyPreparer"
-            params:
-                subject_field: "subject"
-                body_field: "body"
-                repeat_subject: 3
-                result_field: "subject_body_combined"
 
         -   id: "queue_ai_inference"
             provider_key: "HFLocalAIInferenceService"
-            params:
-                input_field: "subject_body_combined"
-                hf_model: "open-ticket-ai/queue-classification-german-bert"
-                hf_token_env_var: "HUGGINGFACE_TOKEN"
-                result_field: "queue_classification"
-
+            hf_model: "open-ticket-ai/queue-classification-german-bert"
+            hf_token_env_var: "HUGGINGFACE_TOKEN"
 
         -   id: "queue_updater"
             provider_key: "BasicTicketModifier"
-            params:
-                confidence_threshold: 0.8
-                low_confidence_value: 5
-                ticket_system_value2model_values:
-                    1:
-                        - "IT & Technology/Security Operations"
-                    2:
-                        - "IT & Technology/Software Development"
-                    3:
-                        - "Science/*"
-                    4:
-                        - "*"
+            confidence_threshold: 0.8
+            low_confidence_queue: Junk
+            ticket_system_value2model_values:
+                Raw: Raw
+                Billing: Billing
+                Technical: Technical
 
     pipelines:
         -   id: "queue_classification"

@@ -1,58 +1,20 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\basic_ticket_fetcher.py
+from open_ticket_ai.src.base.pipe_implementations.empty_data_model import EmptyDataModel
+from open_ticket_ai.src.base.pipe_implementations.ticket_fetcher.models import QueueTicketFetcherOutput
 from open_ticket_ai.src.core.config.config_models import ProvidableConfig
 from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
-from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import (
-    TicketSystemAdapter,
-)
-from open_ticket_ai.src.ticket_system_integration.unified_models import (
-    SearchCriteria,
-    UnifiedQueue,
-    UnifiedUser,
-)
+from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
 
-class BasicTicketFetcher(Pipe):
-    """Simple fetcher that loads ticket data using the ticket system adapter.
-
-    This pipe retrieves ticket information from an external ticket system using
-    the provided adapter. It serves as a placeholder for more complex fetching
-    implementations.
-
-    Attributes:
-        fetcher_config (`open_ticket_ai.src.ce.core.config.config_models.ProvidableConfig`): Configuration instance for the fetcher.
-        ticket_system (`TicketSystemAdapter`): Adapter for interacting with the ticket system.
-    """
+class QueueTicketFetcher(Pipe[EmptyDataModel, QueueTicketFetcherOutput]):
 
     def __init__(self, config: ProvidableConfig, ticket_system: TicketSystemAdapter):
-        """Initializes the BasicTicketFetcher with configuration and ticket system adapter.
-
-        Args:
-            config (`open_ticket_ai.src.ce.core.config.config_models.ProvidableConfig`): The configuration instance for the fetcher.
-            ticket_system (`TicketSystemAdapter`): The adapter for interacting with the ticket system.
-        """
         super().__init__(config)
         self.fetcher_config = config
         self.ticket_system = ticket_system
 
     def process(self, context: PipelineContext) -> PipelineContext:
-        """Fetch ticket data using configured filters and update the context.
-
-        The fetcher reads optional `filters` from its configuration. Each filter
-        contains an `attribute` and `value` entry. Attributes must map to
-        fields supported by `TicketSearchCriteria`. Unsupported attributes
-        result in a controlled pipeline stop.
-
-        If no filters are provided, the `ticket_id` from the context is used as
-        the search criterion. When no ticket is found, the pipeline is stopped.
-
-        Args:
-            context: The current `PipelineContext`.
-
-        Returns:
-            The updated context or the original context if the pipeline was
-            stopped.
-        """
 
         filters = self.fetcher_config.params.get("filters", [])
 
