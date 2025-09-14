@@ -1,7 +1,7 @@
 import logging
 
 from injector import inject
-from otobo import TicketSearchRequest, TicketUpdateRequest, OTOBOClient
+from otobo import TicketSearchRequest, TicketUpdateRequest, OTOBOClient, TicketDetailOutput
 from otobo.models.ticket_models import TicketBase
 
 from open_ticket_ai.src.core.config.config_models import SystemConfig
@@ -25,13 +25,11 @@ class OTOBOAdapter(TicketSystemAdapter):
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         query = TicketSearchRequest()
-        if criteria.id:
-            query.TicketID = criteria.id
         if criteria.queue and criteria.queue.id:
             query.QueueIDs = [int(criteria.queue.id)]
         if criteria.queue and criteria.queue.name:
             query.Queues = [criteria.queue.name]
-        result = await self.otobo_client.search_and_get(query=query)
+        result: list[TicketDetailOutput] = await self.otobo_client.search_and_get(query=query)
         logging.info("OTOBO search result: %s", result)
         return [TicketAdapter(ticket) for ticket in result]
 

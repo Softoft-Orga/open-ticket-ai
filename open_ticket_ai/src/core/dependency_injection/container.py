@@ -110,6 +110,6 @@ class DIContainer(Injector, AbstractContainer):
         return self.create_object(cls, additional_kwargs={"config": inst_cfg})
 
     def get_pipeline(self, pipeline_id: str) -> Pipeline:
-        pc = self.get_pipeline_config(pipeline_id)
-        pipes = [self.get_pipe(pipe_id) for pipe_id in pc.pipe_ids]
+        pc: PipelineConfig = self.get_pipeline_config(pipeline_id)
+        pipes = [self.get_pipe(pipe_id) for pipe_id in pc.pipes]
         return Pipeline(config=pc, pipes=pipes)

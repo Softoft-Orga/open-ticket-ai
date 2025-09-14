@@ -4,6 +4,8 @@ import sys
 import pytest
 from pydantic import BaseModel
 
+from open_ticket_ai.src.core.config.config_models import ProvidableConfig
+
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[3]))
 
 # Stub pretty_print_config to avoid yaml dependency during imports
@@ -29,7 +31,7 @@ class DummyProvidable(Providable):
         return "dummy providable"
 
 
-class DummyPipe(Pipe[BaseModel, BaseModel]):
+class DummyPipe(Pipe[ProvidableConfig, BaseModel, BaseModel]):
     """Pipe subclass for type checking tests."""
 
     InputDataType = BaseModel

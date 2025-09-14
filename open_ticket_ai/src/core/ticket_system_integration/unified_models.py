@@ -35,5 +35,4 @@ class UnifiedTicket(UnifiedTicketBase):
 
 
 class TicketSearchCriteria(BaseModel):
-    id: Optional[str] = None
     queue: Optional[UnifiedQueue] = None

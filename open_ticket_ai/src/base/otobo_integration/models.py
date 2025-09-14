@@ -1,3 +1,4 @@
+from otobo import TicketDetailOutput
 from otobo.models.ticket_models import TicketBase, ArticleDetail
 
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
@@ -39,7 +40,7 @@ class NoteAdapter(UnifiedNote):
 
 class TicketAdapter(UnifiedTicket):
 
-    def __init__(self, ticket: TicketBase):
+    def __init__(self, ticket: TicketDetailOutput):
         super().__init__(
             id=str(ticket.TicketID),
             subject=ticket.Title or "",
@@ -55,7 +56,7 @@ class TicketAdapter(UnifiedTicket):
     def get_unified_notes_list(self, ticket) -> list[UnifiedNote]:
         return [NoteAdapter(article) for article in self.get_otobo_articles_as_list(ticket)]
 
-    def get_otobo_articles_as_list(self, ticket) -> list[ArticleDetail]:
+    def get_otobo_articles_as_list(self, ticket: TicketDetailOutput) -> list[ArticleDetail]:
         if not ticket.Article:
             return []
         elif isinstance(ticket.Article, list):

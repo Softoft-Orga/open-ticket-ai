@@ -18,7 +18,7 @@ from open_ticket_ai.src.core.config.config_models import (
     PipeConfig,
     PipelineConfig,
     ScheduleConfig,
-    SystemConfig,
+    SystemConfig, ProvidableConfig,
 )
 from open_ticket_ai.src.core.dependency_injection.registry import Registry
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
@@ -45,7 +45,7 @@ class DummyTicketSystemAdapter(TicketSystemAdapter):
         return "dummy adapter"
 
 
-class DummyPipe(Pipe[BaseModel, BaseModel]):
+class DummyPipe(Pipe[ProvidableConfig, BaseModel, BaseModel]):
     InputDataType = BaseModel
     OutputDataType = BaseModel
 
