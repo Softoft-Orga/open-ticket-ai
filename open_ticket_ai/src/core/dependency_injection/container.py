@@ -72,17 +72,17 @@ class AppModule(Module):
         config: OpenTicketAIConfig,
         registry: Registry,
     ) -> Orchestrator:
-        pipelines: dict[str, Pipeline] = {}
+        pipelines: list[Pipeline] = []
         for pc in config.pipelines:
             pipes = []
-            for pipe_id in pc.pipe_ids:
+            for pipe_id in pc.pipes:
                 inst_cfg = next((c for c in config.get_all_register_instance_configs() if c.id == pipe_id), None)
                 if not inst_cfg:
                     raise KeyError(f"Unknown instance ID: {pipe_id}")
                 cls = registry.get(inst_cfg.provider_key, Pipe)
                 pipes.append(injector.create_object(cls, additional_kwargs={"config": inst_cfg}))
-            pipelines[pc.id] = Pipeline(config=pc, pipes=pipes)
-        return Orchestrator(pipelines=pipelines)
+            pipelines.append(Pipeline(config=pc, pipes=pipes))
+        return Orchestrator(pipelines=pipelines, config=config)
 
 
 class DIContainer(Injector, AbstractContainer):
@@ -115,5 +115,5 @@ class DIContainer(Injector, AbstractContainer):
 
     def get_pipeline(self, pipeline_id: str) -> Pipeline:
         pc = self.get_pipeline_config(pipeline_id)
-        pipes = [self.get_instance(pipe_id, Pipe) for pipe_id in pc.pipe_ids]
+        pipes = [self.get_instance(pipe_id, Pipe) for pipe_id in pc.pipes]
         return Pipeline(config=pc, pipes=pipes)
