@@ -7,7 +7,9 @@ from open_ticket_ai.src.core.pipeline.pipe import Pipe
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
 
-class QueueTicketFetcher(Pipe[EmptyDataModel, QueueTicketFetcherOutput]):
+class QueueTicketFetcher(
+    Pipe[ProvidableConfig, EmptyDataModel, QueueTicketFetcherOutput]
+):
 
     def __init__(self, config: ProvidableConfig, ticket_system: TicketSystemAdapter):
         super().__init__(config)
