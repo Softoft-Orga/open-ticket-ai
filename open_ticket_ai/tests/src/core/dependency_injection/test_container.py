@@ -107,10 +107,10 @@ def test_di_container_get_pipeline(monkeypatch):
     config = OpenTicketAIConfig(
         system=SystemConfig(id="sys", provider_key="DummyTicketSystemAdapter"),
         pipes=[PipeConfig(id="pipe1", provider_key="DummyPipe")],
-        pipelines=[
+        pipeline=[
             PipelineConfig(
                 id="pl1",
-                schedule=ScheduleConfig(interval=1, unit="hours"),
+                run_every_seconds=ScheduleConfig(interval=1, unit="hours"),
                 pipes=["pipe1"],
             )
         ],

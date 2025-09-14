@@ -4,7 +4,7 @@ from injector import inject
 from otobo import TicketSearchRequest, TicketUpdateRequest, OTOBOClient, TicketDetailOutput
 from otobo.models.ticket_models import TicketBase
 
-from open_ticket_ai.src.core.config.config_models import SystemConfig
+from open_ticket_ai.src.core.config.config_models import OTOBOAdapterConfig
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -14,14 +14,10 @@ from open_ticket_ai.src.base.otobo_integration.models import TicketAdapter
 
 
 class OTOBOAdapter(TicketSystemAdapter):
-    @staticmethod
-    def get_description() -> str:
-        return "Adapter for OTOBO ticket system integration, providing methods to retrieve and update tickets."
-
     @inject
-    def __init__(self, config: SystemConfig | None, otobo_client: OTOBOClient):
-        super().__init__(config)
+    def __init__(self, config: OTOBOAdapterConfig, otobo_client: OTOBOClient):
         self.otobo_client = otobo_client
+        self.config = config
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         query = TicketSearchRequest()

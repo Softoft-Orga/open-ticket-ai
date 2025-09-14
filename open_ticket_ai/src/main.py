@@ -1,55 +1,44 @@
-# FILE_PATH: open_ticket_ai\src\ce\main.py
-"""Open Ticket AI CLI entry point.
+from __future__ import annotations
 
-This module provides the command-line interface for the Open Ticket AI application.
-It configures logging levels and launches the main application.
-"""
-
+import asyncio
 import logging
+import time
 
-import typer
+import schedule
+from injector import Injector
 
-cli = typer.Typer()
-"""The main Typer CLI application instance.
+from open_ticket_ai.src.core.dependency_injection.container import AppModule
+from open_ticket_ai.src.core.orchestrator import Orchestrator
 
-This instance is used to register commands and callbacks for the command-line interface.
-"""
+logger = logging.getLogger(__name__)
 
-@cli.callback()
-def main(
-    verbose: bool = typer.Option(False, "-v", "--verbose", help="INFO-level logging"),
-    debug:   bool = typer.Option(False, "-d", "--debug",   help="DEBUG-level logging"),
-):
-    # determine log level
-    if debug:
-        level = logging.DEBUG
-    elif verbose:
-        level = logging.INFO
-    else:
-        level = logging.WARNING
 
-    # configure root logger
+def get_container():
+    """Create the dependency injection container.
+
+    Imported lazily to avoid importing heavy dependencies during module import,
+    which also makes the function easy to patch in tests.
+    """
+    injector = Injector([AppModule()])
+
+    # 3. Get the top-level object (App)
+    return injector
+
+
+
+async def run() -> None:
+    """Initialise and start the Open Ticket AI application."""
+
     logging.basicConfig(
-        level=level,
+        level=logging.INFO,
         format="%(asctime)s %(levelname)-8s %(name)s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    logging.getLogger("urllib3").setLevel(logging.WARNING)  # example: quiet noisy libraries
 
-@cli.command()
-def start():
-    """Start the Open Ticket AI application."""
-    from pyfiglet import Figlet
-    from open_ticket_ai.src.app import App
-    from open_ticket_ai.src.core.dependency_injection.container import DIContainer
+    container = get_container()
+    orchestrator = container.get(Orchestrator)
+    await orchestrator.run()
 
-    logger = logging.getLogger(__name__)
-    f = Figlet(font="slant")
-    logger.info("Starting Open Ticket AI")
-    print(f.renderText("Open Ticket AI"))
-    container = DIContainer()
-    app: App = container.get(App)
-    app.run()
 
-if __name__ == "__main__":
-    cli()
+if __name__ == "__main__":  # pragma: no cover - manual execution
+    asyncio.run(run())

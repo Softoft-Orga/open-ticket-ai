@@ -1,63 +1,29 @@
 # FILE_PATH: open_ticket_ai\src\ce\core\config\config_models.py
 # In open_ticket_ai/src/ce/core/config/config_models.py
 from pathlib import Path
-from typing import Any, Self, Literal
+from typing import Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
-Unit = Literal["seconds", "minutes", "hours", "days", "weeks"]
-
-
-class ProvidableConfig(BaseModel):
-    id: str = Field(..., min_length=1, description="Unique identifier for the instance.")
-    provider_key: str = Field(..., min_length=1, description="Key identifying the provider implementation.")
+from open_ticket_ai.src.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
 
 
-class SystemConfig(ProvidableConfig):
-    pass
-
-
-class PipeConfig(ProvidableConfig):
-    pass
-
-
-class ScheduleConfig(BaseModel):
-    interval: int = Field(..., gt=0, description="Numeric interval for scheduling.")
-    unit: Unit = Field(..., description="Time unit for the interval.")
-
-class PipelineConfig(BaseModel):
-    id: str = Field(..., min_length=1, description="Unique identifier for the pipeline.")
-    schedule: ScheduleConfig = Field(..., description="Schedule configuration for periodic execution.")
-    pipes: list[str] = Field(
-        ...,
-        min_length=1,
-        description="Ordered list of pipe IDs to execute.",
-    )
-
-    def validate_pipes_are_registered(self, all_pipe_ids: set[str]) -> None:
-        for pid in self.pipes:
-            if pid not in all_pipe_ids:
-                raise ValueError(f"Pipeline '{self.id}' references unknown pipe '{pid}'")
 
 
 class OpenTicketAIConfig(BaseModel):
     """Root configuration model for Open Ticket AI."""
-    system: SystemConfig
-    pipes: list[PipeConfig] = Field(..., min_length=1)
-    pipelines: list[PipelineConfig] = Field(..., min_length=1)
+    system: OTOBOAdapterConfig
+    # Pipe-specific configurations (now global)
+    filter_by_queue: str = Field(..., description="The queue to fetch tickets from.")
+    hf_model: str = Field(..., description="The Hugging Face model to use for inference.")
+    hf_token_env_var: str = Field(..., description="The environment variable for the Hugging Face token.")
+    confidence_threshold: float = Field(..., gt=0, lt=1, description="The confidence threshold for AI predictions.")
+    low_confidence_queue: str = Field(...,
+                                      description="The queue to move tickets to if confidence is below the threshold.")
+    ticket_system_value2model_values: dict[str, str] = Field(...,
+                                                             description="Mapping from ticket system values to model values.")
 
-    @model_validator(mode="after")
-    def cross_validate_references(self) -> Self:
-        all_pipe_ids = {p.id for p in self.pipes}
-        for pipeline in self.pipelines:
-            pipeline.validate_pipes_are_registered(all_pipe_ids)
-        return self
-
-    def get_all_register_instance_configs(self) -> list[ProvidableConfig]:
-        return (
-            [self.system] +
-            self.pipes
-        )
+    run_every_seconds: int = Field(..., gt=0, description="Execution interval in seconds.")
 
 
 def load_config(path: str | Path) -> OpenTicketAIConfig:

@@ -6,19 +6,17 @@ from typing import ClassVar
 
 from pydantic import BaseModel
 
-from open_ticket_ai.src.core.mixins.registry_providable_instance import Providable
 from .context import PipelineContext
-from ..config.config_models import ProvidableConfig
+from ..config.config_models import OpenTicketAIConfig
 
 
-class Pipe[ConfigT: ProvidableConfig, InputDataT: BaseModel, OutputDataT: BaseModel](Providable, ABC):
+class Pipe[InputDataT: BaseModel, OutputDataT: BaseModel](ABC):
     InputModel: ClassVar[type[BaseModel]]
     OutputModel: ClassVar[type[BaseModel]]
 
-    def __init__(self, config: ConfigT):
-        super().__init__(config)
-        self.config: ConfigT = config
+    def __init__(self, config: OpenTicketAIConfig):
+        self.config: OpenTicketAIConfig = config
 
     @abstractmethod
-    def process(self, context: PipelineContext[InputDataT]) -> PipelineContext[OutputDataT]:
+    async def process(self, context: PipelineContext[InputDataT]) -> PipelineContext[OutputDataT]:
         pass

@@ -78,7 +78,7 @@ def pipeline_config_factory():
         pipe_ids = [p.config.id for p in pipes]
         return PipelineConfig(
             id="test_pipeline",
-            schedule=ScheduleConfig(interval=10, unit="minutes"),
+            run_every_seconds=ScheduleConfig(interval=10, unit="minutes"),
             pipes=pipe_ids,
         )
     return _factory

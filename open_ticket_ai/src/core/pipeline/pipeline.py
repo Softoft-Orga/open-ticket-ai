@@ -2,33 +2,28 @@ import logging
 from typing import List
 
 from .context import PipelineContext
+from .meta_info import MetaInfo
 from .pipe import Pipe
 from .status import PipelineStatus
-from open_ticket_ai.src.core.config.config_models import PipelineConfig
+from open_ticket_ai.src.core.config.config_models import OpenTicketAIConfig
+from ...base.pipe_implementations.empty_data_model import EmptyDataModel
 
 logger = logging.getLogger(__name__)
 
 
 class Pipeline:
-    def __init__(self, config: PipelineConfig, pipes: list[Pipe]):
-        self.config: PipelineConfig = config
+    def __init__(self, pipes: list[Pipe]):
         self.pipes: list[Pipe] = pipes
 
-    def execute(self, context: PipelineContext) -> PipelineContext:
-
-        if context.meta_info.status not in [PipelineStatus.RUNNING, PipelineStatus.SUCCESS]:
-            logger.warning(
-                "Pipeline started with non-runnable status: %s",
-                context.meta_info.status.name,
-            )
-            return context
-
-        # Ensure a running status before executing the pipes
-        context.meta_info.status = PipelineStatus.RUNNING
+    async def execute(self) -> PipelineContext:
+        context: PipelineContext = PipelineContext(
+            meta_info=MetaInfo(status=PipelineStatus.RUNNING),
+            data=EmptyDataModel(),
+        )
 
         for pipe in self.pipes:
             try:
-                context = pipe.process(context)
+                context = await pipe.process(context)
 
                 if context.meta_info.status == PipelineStatus.STOPPED:
                     logger.info(f"Pipeline stopped by '{pipe.__class__.__name__}' with context {context}.")

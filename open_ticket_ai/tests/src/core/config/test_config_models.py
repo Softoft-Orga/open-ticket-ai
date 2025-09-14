@@ -42,7 +42,7 @@ def test_load_config_success(tmp_path: Path) -> None:
 
     assert cfg.system.id == "system"
     assert [p.id for p in cfg.pipes] == ["p1", "p2"]
-    assert cfg.pipelines[0].schedule.unit == "seconds"
+    assert cfg.pipeline[0].run_every_seconds.unit == "seconds"
 
 
 def test_load_config_missing_root_key(tmp_path: Path) -> None:
@@ -87,9 +87,9 @@ def test_get_all_register_instance_configs() -> None:
             PipeConfig(id="p1", provider_key="Provider1"),
             PipeConfig(id="p2", provider_key="Provider2"),
         ],
-        pipelines=[
+        pipeline=[
             PipelineConfig(
-                id="pl", schedule=ScheduleConfig(interval=1, unit="seconds"), pipes=["p1", "p2"]
+                id="pl", run_every_seconds=ScheduleConfig(interval=1, unit="seconds"), pipes=["p1", "p2"]
             )
         ],
     )

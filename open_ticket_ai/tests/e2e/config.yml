@@ -39,9 +39,7 @@ open_ticket_ai:
 
     pipelines:
         -   id: "queue_classification"
-            schedule:
-                interval: "30"
-                unit: seconds
+            run_every_seconds: 10
             pipes:
                 - "basic_ticket_fetcher"
                 - "subject_body_preparer"

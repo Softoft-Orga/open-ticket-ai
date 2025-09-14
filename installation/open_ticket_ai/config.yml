@@ -1,0 +1,29 @@
+$schema: "./config.schema.json"
+
+open_ticket_ai:
+
+    # only one ticket-system adapter
+    system:
+        id: "otobo_ticket_system_adapter"
+        provider_key: "OTOBOAdapter"
+        server_address: "http://18.193.56.84"
+        webservice_name: "OTAI"
+        search_operation_url: "ticket/search"
+        update_operation_url: "ticket"
+        get_operation_url: "ticket/get"
+        username: "root@localhost"
+        password_env_var: "OTOBOPASS"
+
+    filter_by_queue: "Raw"
+
+    hf_model: "Tobi-Bueck/atc-queue-model"
+    hf_token_env_var: "HUGGINGFACE_TOKEN"
+
+    confidence_threshold: 0.8
+    low_confidence_queue: Junk
+    ticket_system_value2model_values:
+        Raw: Raw
+        Billing: Billing
+        Technical: Technical
+
+    run_every_seconds: 10

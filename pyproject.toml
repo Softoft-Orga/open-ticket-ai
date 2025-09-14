@@ -32,6 +32,7 @@ dependencies = [
     "prefect>=3.4.8",
     "otobo>=2.1.0",
     "rich",
+    "torch>=2.8.0",
 ]
 
 [project.optional-dependencies]

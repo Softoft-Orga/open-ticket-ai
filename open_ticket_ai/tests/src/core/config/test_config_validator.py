@@ -48,9 +48,9 @@ def build_config() -> OpenTicketAIConfig:
             PipeConfig(id="p1", provider_key=DummyPipe1Provider.get_provider_key()),
             PipeConfig(id="p2", provider_key=DummyPipe2Provider.get_provider_key()),
         ],
-        pipelines=[
+        pipeline=[
             PipelineConfig(
-                id="pl", schedule=ScheduleConfig(interval=1, unit="seconds"), pipes=["p1", "p2"]
+                id="pl", run_every_seconds=ScheduleConfig(interval=1, unit="seconds"), pipes=["p1", "p2"]
             )
         ],
     )
