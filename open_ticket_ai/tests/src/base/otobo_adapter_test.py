@@ -8,9 +8,12 @@ The tests are designed to run without requiring a real OTOBO server connection.
 """
 import dataclasses
 
+import pytest
+
+pytest.importorskip("otobo")
+
 import otobo
 from otobo import OTOBOClient, OTOBOClientConfig
-import pytest
 
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig

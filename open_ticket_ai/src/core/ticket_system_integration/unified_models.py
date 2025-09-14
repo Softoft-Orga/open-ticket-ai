@@ -31,14 +31,7 @@ class UnifiedTicketBase(BaseModel):
 
 
 class UnifiedTicket(UnifiedTicketBase):
-    id: Optional[str] = None
-    subject: Optional[str] = None
     body: Optional[str] = None
-    queue: Optional[UnifiedQueue] = None
-    priority: Optional[UnifiedPriority] = None
-
-class UnifiedTicketUpdate(UnifiedTicketBase):
-    pass
 
 
 class TicketSearchCriteria(BaseModel):

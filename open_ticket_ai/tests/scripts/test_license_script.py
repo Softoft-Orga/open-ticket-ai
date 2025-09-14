@@ -13,6 +13,8 @@ import os
 
 import pytest
 
+pytest.importorskip("rich")
+
 from open_ticket_ai.scripts.license_script import (
     find_start_of_code,
     new_license_notice,

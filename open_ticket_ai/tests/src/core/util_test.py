@@ -22,6 +22,11 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+
+pytest.importorskip("yaml")
+pytest.importorskip("pydantic")
+pytest.importorskip("rich")
+
 import yaml
 from pydantic import BaseModel
 from rich.syntax import Syntax

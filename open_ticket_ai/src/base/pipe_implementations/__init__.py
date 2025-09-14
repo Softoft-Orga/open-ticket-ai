@@ -1,11 +1,11 @@
 """Common pipe implementations used in the pipeline."""
 
-from .generic_ticket_updater import GenericTicketUpdater
+from .ticket_queue_updater import TicketQueueUpdater
 from .subject_body_preparer import SubjectBodyPreparer
-from .ticket_fetcher import BasicTicketFetcher
+from .ticket_fetcher import QueueTicketFetcher
 
 __all__ = [
-    "GenericTicketUpdater",
+    "TicketQueueUpdater",
     "SubjectBodyPreparer",
-    "BasicTicketFetcher",
+    "QueueTicketFetcher",
 ]
