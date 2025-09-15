@@ -25,8 +25,8 @@ class QueueTicketFetcher(Pipe[EmptyDataModel, QueueTicketFetcherOutput]):
         )
         if not ticket:
             context.stop_pipeline()
-            context.error_message = "No ticket found"
-            context.failed_pipe = self.__class__.__name__
+            context.meta_info.error_message = "No ticket found"
+            context.meta_info.failed_pipe = self.__class__.__name__
             raise RuntimeError("No ticket found")
         new_context = PipelineContext(
             meta_info=context.meta_info,

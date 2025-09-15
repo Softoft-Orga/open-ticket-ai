@@ -20,8 +20,6 @@ class OpenTicketAIConfig(BaseModel):
     confidence_threshold: float = Field(..., gt=0, lt=1, description="The confidence threshold for AI predictions.")
     low_confidence_queue: str = Field(...,
                                       description="The queue to move tickets to if confidence is below the threshold.")
-    ticket_system_value2model_values: dict[str, str] = Field(...,
-                                                             description="Mapping from ticket system values to model values.")
 
     run_every_seconds: int = Field(..., gt=0, description="Execution interval in seconds.")
 

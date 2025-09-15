@@ -1,0 +1,32 @@
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+.editorconfig
+
+# Python virtual environment and cache
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg-info/
+
+# Testing and documentation
+docs/
+tests/
+.github/
+.pytest_cache/
+pytest.ini
+
+# Other
+.git/
+.gitignore
+README.md
+AI_README.md
+LICENSE
+netlify.toml

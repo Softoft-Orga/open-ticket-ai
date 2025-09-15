@@ -2,9 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import time
-
-import schedule
 from injector import Injector
 
 from open_ticket_ai.src.core.dependency_injection.container import AppModule

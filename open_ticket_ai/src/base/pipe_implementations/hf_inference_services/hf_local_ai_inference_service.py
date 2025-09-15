@@ -1,3 +1,4 @@
+import logging
 import os
 
 from injector import inject
@@ -30,9 +31,6 @@ class HFLocalAIInferenceService(
         self.model = AutoModelForSequenceClassification.from_pretrained(config.hf_model, token=token)
         self._pipeline = pipeline("text-classification", model=self.model, tokenizer=self.tokenizer)
 
-        id2label = getattr(self.model.config, "id2label", None) or {}
-        self._label2id = {v: int(k) for k, v in id2label.items()} if id2label else {}
-
     async def process(
         self, context: PipelineContext[SubjectBodyPreparerOutput]
     ) -> PipelineContext[HFLocalAIInferenceServiceOutput]:
@@ -43,21 +41,14 @@ class HFLocalAIInferenceService(
         label = top["label"]
         score = float(top["score"])
 
-        pred_id = self._label2id.get(label)
-        if pred_id is None and isinstance(label, str) and label.startswith("LABEL_"):
-            try:
-                pred_id = int(label.split("_", 1)[1])
-            except Exception:
-                pred_id = None
-
-        prediction_value = pred_id if pred_id is not None else label
-
+        logging.info(f"Prediction: label {label} with score {score}")
         new_context = PipelineContext(
             meta_info=context.meta_info,
             data=HFLocalAIInferenceServiceOutput(
-                prediction=prediction_value,
+                prediction=label,
                 confidence=score,
                 ticket=context.data.ticket,
             ),
         )
         return new_context
+

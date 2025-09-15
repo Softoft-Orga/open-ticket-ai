@@ -62,14 +62,6 @@ class AppModule(Module):
             ticket_queue_updater,
         ])
 
-    @provider
-    @singleton
-    def provide_orchestrator(
-        self,
-        pipeline: Pipeline,
-        config: OpenTicketAIConfig,
-    ) -> Orchestrator:
-        return Orchestrator(pipeline=pipeline, config=config)
 
     @provider
     @singleton
