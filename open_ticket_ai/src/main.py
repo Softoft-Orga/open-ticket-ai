@@ -31,6 +31,7 @@ async def run() -> None:
         format="%(asctime)s %(levelname)-8s %(name)s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
+    logger.info("Starting Open Ticket AI...")
 
     container = get_container()
     orchestrator = container.get(Orchestrator)

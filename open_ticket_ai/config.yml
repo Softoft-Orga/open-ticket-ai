@@ -4,20 +4,20 @@ open_ticket_ai:
 
     # only one ticket-system adapter
     system:
-        server_address: "http://52.57.217.182/otobo/nph-genericinterface.pl"
+        server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
         webservice_name: "OpenTicketAI"
         search_operation_url: "ticket-search"
         update_operation_url: "ticket-update"
         get_operation_url: "ticket-get"
-        username: "openticketai_ws"
-        password_env_var: "OTOBO_DEMO_PASSWORD"
+        username: "open_ticket_ai"
+        password_env_var: "OTOBO_EHS_PASSWORD"
 
-    filter_by_queue: "Raw"
+    filter_by_queue: "EingangsQueue"
 
-    hf_model: "Tobi-Bueck/atc-queue-model"
-    hf_token_env_var: "HUGGINGFACE_TOKEN"
+    hf_model: "softoft/EHS_Queue_V8"
+    hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
 
     confidence_threshold: 0.8
-    low_confidence_queue: Junk
+    low_confidence_queue: Unklassifiziert
 
     run_every_seconds: 10

@@ -1,5 +1,5 @@
-
 import asyncio
+import json
 import logging
 
 from injector import inject
@@ -17,6 +17,10 @@ class Orchestrator:
 
     async def run(self) -> None:
         self._logger.info("Starting orchestrator...")
+        self._logger.info(
+            f"Configuration:" +
+            json.dumps(self.config.model_dump(), indent=4)
+        )
 
         while True:
             await self.pipeline.execute()

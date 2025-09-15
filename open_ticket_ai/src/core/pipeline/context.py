@@ -7,7 +7,7 @@ from open_ticket_ai.src.core.pipeline.status import PipelineStatus
 
 
 class PipelineContext[DataT: BaseModel](BaseModel):
-    data: DataT = None
+    data: DataT | None = None
     meta_info: MetaInfo = MetaInfo()
 
     def stop_pipeline(self):

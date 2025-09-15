@@ -182,6 +182,11 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/33/fb/53587a89fbc00799e4179796f51b3ad713c5de6bb680b2becb6d37c94649/huggingface_hub-0.33.0-py3-none-any.whl", hash = "sha256:e8668875b40c68f9929150d99727d39e5ebb8a05a98e4191b908dc7ded9074b3", size = 514799 },
 ]
 
+[package.optional-dependencies]
+hf-xet = [
+    { name = "hf-xet" },
+]
+
 [[package]]
 name = "idna"
 version = "3.10"
@@ -481,6 +486,7 @@ name = "open-ticket-ai"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "huggingface-hub", extra = ["hf-xet"] },
     { name = "injector" },
     { name = "otobo" },
     { name = "pluggy" },
@@ -502,6 +508,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "huggingface-hub", extras = ["hf-xet"], specifier = ">=0.33.0" },
     { name = "injector", specifier = "~=0.22.0" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "otobo", specifier = ">=2.1.1" },

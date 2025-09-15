@@ -6,7 +6,6 @@ from injector import inject
 from open_ticket_ai.src.base.pipe_implementations.hf_inference_services.models import HFLocalAIInferenceServiceOutput
 from open_ticket_ai.src.base.pipe_implementations.subject_body_preparer.models import SubjectBodyPreparerOutput
 from open_ticket_ai.src.core.config.config_models import OpenTicketAIConfig
-
 from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 
@@ -30,6 +29,7 @@ class HFLocalAIInferenceService(
         self.tokenizer = AutoTokenizer.from_pretrained(config.hf_model, token=token)
         self.model = AutoModelForSequenceClassification.from_pretrained(config.hf_model, token=token)
         self._pipeline = pipeline("text-classification", model=self.model, tokenizer=self.tokenizer)
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     async def process(
         self, context: PipelineContext[SubjectBodyPreparerOutput]
@@ -41,7 +41,7 @@ class HFLocalAIInferenceService(
         label = top["label"]
         score = float(top["score"])
 
-        logging.info(f"Prediction: label {label} with score {score}")
+        self.logger.info(f"Prediction: label {label} with score {score}")
         new_context = PipelineContext(
             meta_info=context.meta_info,
             data=HFLocalAIInferenceServiceOutput(
@@ -51,4 +51,3 @@ class HFLocalAIInferenceService(
             ),
         )
         return new_context
-
