@@ -202,4 +202,5 @@ storybook-static
 .netlify
 *.env
 
-*/.vitepress/cache/*
+*/.vitepress/cache/
+.idea
