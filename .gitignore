@@ -201,3 +201,5 @@ storybook-static
 # Local Netlify folder
 .netlify
 *.env
+
+*/.vitepress/cache/*
