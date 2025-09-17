@@ -1,11 +1,9 @@
 # FILE_PATH: open_ticket_ai\src\ce\ticket_system_integration\ticket_system_adapter.py
 from abc import ABC, abstractmethod
 
-from injector import inject
-
 from .unified_models import (
     TicketSearchCriteria,
-    UnifiedTicket, )
+    UnifiedTicket, UnifiedNote, )
 
 
 class TicketSystemAdapter(ABC):
@@ -20,4 +18,8 @@ class TicketSystemAdapter(ABC):
 
     @abstractmethod
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
+        pass
+
+    @abstractmethod
+    async def add_note_to_ticket(self, ticket_id: str, note: UnifiedNote) -> bool:
         pass

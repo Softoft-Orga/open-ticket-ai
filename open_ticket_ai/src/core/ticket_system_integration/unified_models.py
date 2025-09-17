@@ -36,3 +36,5 @@ class UnifiedTicket(UnifiedTicketBase):
 
 class TicketSearchCriteria(BaseModel):
     queue: Optional[UnifiedQueue] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
