@@ -14,7 +14,7 @@ dependencies = [
     "injector~=0.22.0",
     "requests~=2.32.4",
     "huggingface-hub[hf-xet]>=0.33.0",
-    "otobo>=4.1.5",
+    "otobo>=4.1.6",
 ]
 
 [project.optional-dependencies]

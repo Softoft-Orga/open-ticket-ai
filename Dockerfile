@@ -4,11 +4,11 @@ FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 WORKDIR /app
 
 # Copy only the files needed to install dependencies
-COPY pyproject.toml uv.lock* ./
+COPY pyproject.toml ./
 
 # Create a virtual environment and install dependencies into it
 # We allow caching here to speed up rebuilds
-RUN uv sync --locked
+RUN uv sync
 
 ENV PYTHONPATH="/app"
 

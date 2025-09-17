@@ -1,6 +1,7 @@
 # FILE_PATH: open_ticket_ai/src/core/dependency_injection/container.py
 import os
 
+import httpx
 from injector import Binder, Module, provider, singleton
 from otobo.clients.otobo_client import OTOBOClient
 from otobo.domain_models.basic_auth_model import BasicAuth
@@ -30,6 +31,8 @@ class AppModule(Module):
     @provider
     @singleton
     def provide_otobo_client(self, config: OpenTicketAIConfig) -> OTOBOClient:
+        limits = httpx.Limits(max_keepalive_connections=20, max_connections=100)
+        client = httpx.AsyncClient(limits=limits, timeout=30.0)
         return OTOBOClient(
             config=OTOBOClientConfig(
                 base_url=config.system.server_address,
@@ -40,7 +43,8 @@ class AppModule(Module):
                     TicketOperation.GET.value: config.system.get_operation_url,
                     TicketOperation.UPDATE.value: config.system.update_operation_url,
                 },
-            )
+            ),
+            client=client
         )
 
     # --- Pipeline and Orchestrator ---
