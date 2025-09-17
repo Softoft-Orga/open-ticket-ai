@@ -3,14 +3,14 @@ from typing import Self
 
 from injector import inject
 from otobo.clients.otobo_client import OTOBOClient
-from otobo.domain_models.ticket_models import TicketSearch, IdName, Ticket
+from otobo.domain_models.ticket_models import TicketSearch, IdName, Ticket, Article
 
 from open_ticket_ai.src.core.config.config_models import OTOBOAdapterConfig
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedTicket,
-    UnifiedTicketBase,
+    UnifiedTicketBase, UnifiedNote,
 )
 from open_ticket_ai.src.base.otobo_integration.models import TicketAdapter
 
@@ -61,10 +61,11 @@ class OTOBOAdapter(TicketSystemAdapter):
         await self.otobo_client.update_ticket(ticket)
         return True
 
-    async def add_note_to_ticket(self, ticket_id: str, note: UnifiedTicketBase) -> bool:
-        updated = await otobo_client.update_ticket(
+    async def add_note_to_ticket(self, ticket_id: str, note: UnifiedNote) -> bool:
+        updated = await self.otobo_client.update_ticket(
             Ticket(
-                id=tid,
-                articles=[Article(subject="note", body=note_body, content_type="text/plain; charset=utf-8")],
+                id=int(ticket_id),
+                articles=[Article(subject=note.subject, body=note.body, content_type="text/plain; charset=utf-8")],
             )
         )
+        return True
