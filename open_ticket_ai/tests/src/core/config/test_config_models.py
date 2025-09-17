@@ -42,7 +42,7 @@ def test_load_config_success(tmp_path: Path) -> None:
 
     assert cfg.system.id == "system"
     assert [p.id for p in cfg.pipes] == ["p1", "p2"]
-    assert cfg.pipeline[0].run_every_seconds.unit == "seconds"
+    assert cfg.pipeline[0].run_every_milli_seconds.unit == "seconds"
 
 
 def test_load_config_missing_root_key(tmp_path: Path) -> None:

@@ -20,4 +20,4 @@ open_ticket_ai:
     confidence_threshold: 0.8
     low_confidence_queue: Unklassifiziert
 
-    run_every_seconds: 10
+    run_every_milli_seconds: 1

@@ -2,11 +2,12 @@
 import os
 
 from injector import Binder, Module, provider, singleton
-from otobo import OTOBOClient, OTOBOClientConfig, TicketOperation
-from otobo.models.request_models import AuthData
+from otobo.clients.otobo_client import OTOBOClient
+from otobo.domain_models.basic_auth_model import BasicAuth
+from otobo.domain_models.otobo_client_config import OTOBOClientConfig
+from otobo.domain_models.ticket_operation import TicketOperation
 
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
-from open_ticket_ai.src.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
 from open_ticket_ai.src.base.pipe_implementations import SubjectBodyPreparer, QueueTicketFetcher, TicketQueueUpdater
 from open_ticket_ai.src.base.pipe_implementations.hf_inference_services.hf_local_ai_inference_service import \
     HFLocalAIInferenceService
@@ -14,7 +15,6 @@ from open_ticket_ai.src.core.config.config_models import (
     OpenTicketAIConfig,
     load_config,
 )
-from open_ticket_ai.src.core.orchestrator import Orchestrator
 from open_ticket_ai.src.core.pipeline.pipeline import Pipeline
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
@@ -30,16 +30,15 @@ class AppModule(Module):
     @provider
     @singleton
     def provide_otobo_client(self, config: OpenTicketAIConfig) -> OTOBOClient:
-        oc: OTOBOAdapterConfig = config.system
         return OTOBOClient(
             config=OTOBOClientConfig(
-                base_url=oc.server_address,
-                service=oc.webservice_name,
-                auth=AuthData(UserLogin=oc.username, Password=oc.password),
-                operations={
-                    TicketOperation.SEARCH.value: oc.search_operation_url,
-                    TicketOperation.GET.value: oc.get_operation_url,
-                    TicketOperation.UPDATE.value: oc.update_operation_url,
+                base_url=config.system.server_address,
+                webservice_name=config.system.webservice_name,
+                auth=BasicAuth(UserLogin=config.system.username, Password=config.system.password),
+                operation_url_map={
+                    TicketOperation.SEARCH.value: config.system.search_operation_url,
+                    TicketOperation.GET.value: config.system.get_operation_url,
+                    TicketOperation.UPDATE.value: config.system.update_operation_url,
                 },
             )
         )
@@ -54,14 +53,12 @@ class AppModule(Module):
         hf_local_ai_inference_service: HFLocalAIInferenceService,
         ticket_queue_updater: TicketQueueUpdater,
     ) -> Pipeline:
-
         return Pipeline(pipes=[
             queue_ticket_fetcher,
             subject_body_preparer,
             hf_local_ai_inference_service,
             ticket_queue_updater,
         ])
-
 
     @provider
     @singleton

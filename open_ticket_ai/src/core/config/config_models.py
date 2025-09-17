@@ -21,7 +21,7 @@ class OpenTicketAIConfig(BaseModel):
     low_confidence_queue: str = Field(...,
                                       description="The queue to move tickets to if confidence is below the threshold.")
 
-    run_every_seconds: int = Field(..., gt=0, description="Execution interval in seconds.")
+    run_every_milli_seconds: int = Field(..., gt=0, description="Execution interval in milli seconds.")
 
 
 def load_config(path: str | Path) -> OpenTicketAIConfig:

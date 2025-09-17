@@ -1,5 +1,6 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\basic_ticket_fetcher.py
 import logging
+import random
 
 from injector import inject
 
@@ -26,10 +27,12 @@ class QueueTicketFetcher(Pipe[EmptyDataModel, QueueTicketFetcherOutput]):
 
     async def process(self, context: PipelineContext[EmptyDataModel]) -> PipelineContext[QueueTicketFetcherOutput]:
         self.logger.info(f"Fetching ticket from queue {self.config.filter_by_queue}")
-        ticket = await self.ticket_system.find_first_ticket(
-            TicketSearchCriteria(queue=UnifiedQueue(name=self.config.filter_by_queue))
+        tickets = await self.ticket_system.find_tickets(
+            TicketSearchCriteria
+            (queue=UnifiedQueue(name=self.config.filter_by_queue),
+             limit=10)
         )
-        if not ticket:
+        if not tickets:
             return PipelineContext(
                 meta_info=MetaInfo(
                     status=PipelineStatus.STOPPED,
@@ -38,8 +41,10 @@ class QueueTicketFetcher(Pipe[EmptyDataModel, QueueTicketFetcherOutput]):
                 ),
                 data=None
             )
-        self.logger.info(f"Fetched ticket {ticket.id}")
+        random_ticket = random.sample(tickets, 1)[0]
+
+        self.logger.info(f"Fetched ticket {random_ticket.id}")
         return PipelineContext(
             meta_info=context.meta_info,
-            data=QueueTicketFetcherOutput(ticket=ticket)
+            data=QueueTicketFetcherOutput(ticket=random_ticket)
         )

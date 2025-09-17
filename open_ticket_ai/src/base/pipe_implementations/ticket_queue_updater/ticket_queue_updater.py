@@ -9,12 +9,13 @@ from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.meta_info import MetaInfo
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
-from open_ticket_ai.src.core.ticket_system_integration.unified_models import UnifiedTicket, UnifiedQueue
+from open_ticket_ai.src.core.ticket_system_integration.unified_models import UnifiedTicket, UnifiedQueue, UnifiedNote
 
 
 class TicketQueueUpdater(Pipe[HFLocalAIInferenceServiceOutput, EmptyDataModel]):
     InputModel = HFLocalAIInferenceServiceOutput
     OutputModel = EmptyDataModel
+
     @inject
     def __init__(self, config: OpenTicketAIConfig, ticket_system: TicketSystemAdapter):
         super().__init__(config)
@@ -30,6 +31,7 @@ class TicketQueueUpdater(Pipe[HFLocalAIInferenceServiceOutput, EmptyDataModel]):
         else:
             new_queue = context.data.prediction
         self.logger.info(f"Trying to update ticket {context.data.ticket.id} to queue {new_queue}")
+
         try:
             update_worked = await self.ticket_system.update_ticket(
                 context.data.ticket.id,
@@ -53,6 +55,15 @@ class TicketQueueUpdater(Pipe[HFLocalAIInferenceServiceOutput, EmptyDataModel]):
                 ),
                 data=None
             )
+        await (self.ticket_system
+               .add_note_to_ticket(context.data.ticket.id,
+                                   UnifiedNote(
+                                       subject="Ticket moved to new queue by OpenTicketAI",
+                                       body=f"""
+                                       Ticket moved to queue {new_queue}
+                                       by OpenTicketAI with confidence {context.data.confidence}.
+                                       """
+                                   )))
         self.logger.info(f"Ticket {context.data.ticket.id} updated to queue {new_queue}")
         new_context = PipelineContext(
             meta_info=context.meta_info,
