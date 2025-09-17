@@ -35,7 +35,7 @@ class TicketQueueUpdater(Pipe[HFLocalAIInferenceServiceOutput, EmptyDataModel]):
         try:
             update_worked = await self.ticket_system.update_ticket(
                 context.data.ticket.id,
-                UnifiedTicket(queue=UnifiedQueue(name=context.data.prediction))
+                UnifiedTicket(queue=UnifiedQueue(name=new_queue))
             )
         except Exception as e:
             return PipelineContext(
@@ -55,15 +55,13 @@ class TicketQueueUpdater(Pipe[HFLocalAIInferenceServiceOutput, EmptyDataModel]):
                 ),
                 data=None
             )
-        await (self.ticket_system
-               .add_note_to_ticket(context.data.ticket.id,
-                                   UnifiedNote(
-                                       subject="Ticket moved to new queue by OpenTicketAI",
-                                       body=f"""
-                                       Ticket moved to queue {new_queue}
-                                       by OpenTicketAI with confidence {context.data.confidence}.
-                                       """
-                                   )))
+        note = UnifiedNote(
+            subject="Ticket wurde von KI verschoben",
+            body=f"""
+            Ticket wurde von KI in die Queue: {new_queue} verschoben! Konfidenz =  {context.data.confidence:.2f}.
+            """
+        )
+        await (self.ticket_system.add_note_to_ticket(context.data.ticket.id, note))
         self.logger.info(f"Ticket {context.data.ticket.id} updated to queue {new_queue}")
         new_context = PipelineContext(
             meta_info=context.meta_info,

@@ -511,7 +511,7 @@ requires-dist = [
     { name = "huggingface-hub", extras = ["hf-xet"], specifier = ">=0.33.0" },
     { name = "injector", specifier = "~=0.22.0" },
     { name = "mypy", marker = "extra == 'dev'" },
-    { name = "otobo", specifier = ">=4.1.3" },
+    { name = "otobo", specifier = ">=4.1.5" },
     { name = "pluggy" },
     { name = "pydantic", specifier = "~=2.11.7" },
     { name = "pydantic-core" },
@@ -526,7 +526,7 @@ requires-dist = [
 
 [[package]]
 name = "otobo"
-version = "4.1.3"
+version = "4.1.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -536,9 +536,9 @@ dependencies = [
     { name = "requests" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b5/74/e1ebe11d0c8c43fa90d500a850c5a1599b820a631e033e60be6b6b825526/otobo-4.1.3.tar.gz", hash = "sha256:d017eaa281cdff537214bed76b5a07c6354f56ca95d2af9acc41e96b4af89fcd", size = 18243 }
+sdist = { url = "https://files.pythonhosted.org/packages/09/ac/c27f368c95c833e0f3a835ed3348ff8a971597dc311bdc542800824979ed/otobo-4.1.5.tar.gz", hash = "sha256:9c423ecdc16fbbd0e19f616910f1087c3da99f3afe61cfe31ac2fc1a9203ee88", size = 18128 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/30/53/071541ff1ead5fdea5e45bb3d0a4eda3a3e4236a52afbb2cb3fd50a9b04a/otobo-4.1.3-py3-none-any.whl", hash = "sha256:bea552fe44ea9419125e9350e383a485e7dddd4e820d10df17e40327d8904a3c", size = 18515 },
+    { url = "https://files.pythonhosted.org/packages/18/b4/30b90ea54cbf5e53434cec4bfa8cc3b0426e6acba10dc5c0e69a3ba89004/otobo-4.1.5-py3-none-any.whl", hash = "sha256:83874500fec72f69e3ea499c65b46bc8352e453d452644d7309ef21aade5673d", size = 18348 },
 ]
 
 [[package]]
