@@ -1,12 +1,14 @@
 ---
-description: Guía para desarrolladores del clasificador de tickets ATC on-premise. Aprenda a configurar con YAML, ejecutar desde la CLI y extender con componentes y adaptadores de Python personalizados.
+description: Guía de desarrollo para el clasificador de tickets ATC on-premise. Aprende
+  a configurar con YAML, ejecutar desde la CLI y extender con componentes y adaptadores
+  de Python personalizados.
 title: Información para Desarrolladores
 ---
 # Información para Desarrolladores de ATC Community Edition
 
-## Descripción General
+## Resumen General
 
-ATC Community Edition es una solución on-premise para la clasificación automatizada de tickets de soporte. La versión MVP actual se controla mediante un archivo de configuración YAML y se inicia a través de la CLI. No hay una API REST para cargar datos de entrenamiento o para iniciar una ejecución de entrenamiento.
+ATC Community Edition es una solución on-premise para la clasificación automatizada de tickets de soporte. La versión MVP actual se controla a través de un archivo de configuración YAML y se inicia mediante la CLI. No existe una API REST para cargar datos de entrenamiento o para iniciar una ejecución de entrenamiento.
 
 ## Arquitectura del Software
 
@@ -27,7 +29,7 @@ python -m open_ticket_ai.src.ce.main start
 
 ## Entrenamiento de Modelos Personalizados
 
-El entrenamiento directo a través de la aplicación no se proporciona en el MVP. Se pueden especificar y utilizar modelos preentrenados en la configuración. Si un modelo necesita ser ajustado o creado de nuevo, esto debe hacerse fuera de la aplicación.
+El entrenamiento directo a través de la aplicación no está disponible en el MVP. Se pueden especificar y utilizar modelos pre-entrenados en la configuración. Si un `model` necesita ser ajustado o creado de nuevo, esto debe hacerse fuera de la aplicación.
 
 ## Extensión
 
@@ -35,11 +37,14 @@ Se pueden implementar fetchers, preparers, servicios de IA o modifiers personali
 
 ## Cómo Añadir un Pipe Personalizado
 
-El pipeline de procesamiento se puede extender con sus propias clases de pipe. Un pipe es una unidad de trabajo que recibe un `PipelineContext`, lo modifica y lo devuelve. Todos los pipes heredan de la clase base `Pipe`, que ya implementa el mixin `Providable`.
+El pipeline de procesamiento se puede extender con tus propias clases de pipe. Un pipe es una
+unidad de trabajo que recibe un `PipelineContext`, lo modifica y lo devuelve. Todos
+los pipes heredan de la clase base `Pipe`, que ya
+implementa el mixin `Providable`.
 
-1. **Cree un modelo de configuración** para su pipe si necesita parámetros.
-2. **Subclase de `Pipe`** e implemente el método `process`.
-3. **Sobrescriba `get_provider_key()`** si desea una clave personalizada.
+1. **Crea un modelo de configuración** para tu pipe si necesita parámetros.
+2. **Subclasea `Pipe`** e implementa el método `process`.
+3. **Sobrescribe `get_provider_key()`** si quieres una clave personalizada.
 
 El siguiente ejemplo simplificado del `AI_README` muestra un pipe de análisis de sentimiento:
 
@@ -69,25 +74,31 @@ class SentimentAnalysisPipe(Pipe, Providable):
         return "SentimentAnalysisPipe"
 ```
 
-Después de implementar la clase, regístrela en su registro de inyección de dependencias y haga referencia a ella en `config.yml` utilizando la clave de proveedor (provider key) devuelta por `get_provider_key()`.
+Después de implementar la `class`, regístrala en tu registro de inyección de dependencias
+y haz referencia a ella en `config.yml` usando la clave de proveedor devuelta por
+`get_provider_key()`.
 
 ## Cómo Integrar un Nuevo Sistema de Tickets
 
-Para conectar otro sistema de help desk, implemente un nuevo adaptador que herede de `TicketSystemAdapter`. El adaptador realiza la conversión entre la API externa y los modelos unificados del proyecto.
+Para conectar otro sistema de help desk, implementa un nuevo adaptador que herede de
+`TicketSystemAdapter`. El adaptador convierte entre la API externa y los
+modelos unificados del proyecto.
 
-1. **Cree una clase de adaptador**, p. ej., `FreshdeskAdapter(TicketSystemAdapter)`.
-2. **Implemente todos los métodos abstractos**:
+1. **Crea una clase de adaptador**, por ejemplo, `FreshdeskAdapter(TicketSystemAdapter)`.
+2. **Implementa todos los métodos abstractos**:
     - `find_tickets`
     - `find_first_ticket`
     - `create_ticket`
     - `update_ticket`
     - `add_note`
-3. **Traduzca los datos** desde y hacia los modelos `UnifiedTicket` y `UnifiedNote`.
-4. **Proporcione un modelo de configuración** para las credenciales o la configuración de la API.
-5. **Registre el adaptador** en `create_registry.py` para que pueda ser instanciado desde la configuración YAML.
+3. **Traduce los datos** desde y hacia los modelos `UnifiedTicket` y `UnifiedNote`.
+4. **Proporciona un modelo de configuración** para las credenciales o la configuración de la API.
+5. **Registra el adaptador** en `create_registry.py` para que pueda ser instanciado
+   desde la configuración YAML.
 
-Una vez registrado, especifique el adaptador en la sección `system` de `config.yml` y el orquestador lo usará para comunicarse con el sistema de tickets.
+Una vez registrado, especifica el adaptador en la sección `system` de `config.yml` y
+el orquestador lo usará para comunicarse con el sistema de tickets.
 
 ## Resumen
 
-ATC Community Edition ofrece un flujo de trabajo ejecutado localmente para la clasificación automática de tickets en su versión MVP. Toda la configuración se gestiona a través de archivos YAML; no hay una API REST disponible. Se deben utilizar procesos o scripts externos para el entrenamiento.
+ATC Community Edition ofrece un flujo de trabajo ejecutado localmente para la clasificación automática de tickets en su versión MVP. Todas las configuraciones se gestionan a través de archivos YAML; no hay una API REST disponible. Se deben utilizar procesos o scripts externos para el entrenamiento.

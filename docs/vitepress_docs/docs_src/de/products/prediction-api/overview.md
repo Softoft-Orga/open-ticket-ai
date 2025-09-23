@@ -2,13 +2,13 @@
 description: Kostenlose deutsche API zur Vorhersage von Queue und Priorität für Support-Tickets.
   Einfache Integration mit OTOBO, Znuny und Zammad. Keine Authentifizierung erforderlich.
 ---
-# 🇩🇪 Deutsche Ticket-Klassifizierungs-API (Kostenlos)
+# 🇩🇪 Deutsche Ticket-Klassifizierungs-API (kostenlos)
 
 Sagen Sie **Queue** und **Priorität** für **deutschsprachige** Support-Tickets mit einem einzigen HTTP-Aufruf voraus.
-Diese API ist **kostenlos** nutzbar und ideal für Integrationen mit **OTOBO**, **Znuny**, **Zammad** oder benutzerdefinierten Helpdesks.
+Diese API ist **kostenlos** und ideal für Integrationen mit **OTOBO**, **Znuny**, **Zammad** oder benutzerdefinierten Helpdesks.
 
-> **Sprachunterstützung:** Optimiert für **deutsche** Texte (Betreff + Text).
-> Ein englisches Model ist in Entwicklung und wird in Kürze veröffentlicht.
+> **Sprachunterstützung:** Optimiert für **deutsche** Texte (Betreff + Inhalt).
+> Ein englisches Modell ist in Entwicklung und wird in Kürze veröffentlicht.
 
 ## Probieren Sie es aus!
 
@@ -18,9 +18,9 @@ Diese API ist **kostenlos** nutzbar und ideal für Integrationen mit **OTOBO**, 
 
 **Methode:** `POST`
 **URL:** `https://open-ticket-ai.com/api/german_prediction/v1/classify`
-**Headers:** `Content-Type: application/json`
+**Header:** `Content-Type: application/json`
 
-### Request Body
+### Request-Body
 
 ```json
 {
@@ -162,7 +162,7 @@ Die API sagt eine der folgenden **Prioritätsstufen** voraus:
 ## 🔌 Integrationsideen
 
 * **OTOBO / Znuny**: Rufen Sie die API bei der Ticketerstellung auf, um Queue + Priorität vorauszufüllen.
-* **Benutzerdefinierter Helpdesk**: Führen Sie die API in Ihrer Eingangs-Pipeline aus, bevor das Routing oder die SLAs greifen.
+* **Benutzerdefinierter Helpdesk**: Führen Sie es in Ihrer Eingangs-Pipeline vor dem Routing/den SLAs aus.
 * **Automatisierung**: Eskalieren Sie `critical`-Tickets automatisch oder leiten Sie Sicherheitsvorfälle weiter.
 * **Analyse**: Verfolgen Sie die Verteilung der Queues und die Entwicklung der Prioritäten im Zeitverlauf.
 
@@ -170,7 +170,7 @@ Die API sagt eine der folgenden **Prioritätsstufen** voraus:
 
 ## ✅ Bewährte Methoden
 
-* Verwenden Sie **prägnante, klare Betreffzeilen** und **aussagekräftige Ticket-Texte** in **deutscher Sprache**.
+* Geben Sie **prägnante, klare Betreffzeilen** und **aussagekräftige Inhalte** auf **Deutsch** an.
 * Vermeiden Sie sehr lange Eingaben; bleiben Sie unter ca. 5.000 Zeichen insgesamt.
 * Protokollieren und überwachen Sie die Ergebnisse, um nachgelagerte Regeln zu optimieren.
 
@@ -178,16 +178,16 @@ Die API sagt eine der folgenden **Prioritätsstufen** voraus:
 
 ## ❓ Fehlerbehebung
 
-* **400 Bad Request**: `subject` oder `body` fehlt.
-* **5xx-Fehler**: Das Upstream-Model ist vorübergehend nicht verfügbar – versuchen Sie es erneut mit exponentiellem Backoff.
-* Vorhersagen scheinen falsch zu sein? Stellen Sie sicher, dass der Text auf **Deutsch** ist und genügend Kontext enthält.
+* **400 Bad Request**: `subject` oder `body` fehlen.
+* **5xx-Fehler**: Das Upstream-Modell ist vorübergehend nicht verfügbar – versuchen Sie es mit Backoff erneut.
+* Sehen die Vorhersagen falsch aus? Stellen Sie sicher, dass der Text auf **Deutsch** ist und genügend Kontext enthält.
 
 ---
 
 ## 📄 Nutzungsbedingungen
 
 * **Kostenlose** Nutzung; bitte achten Sie auf das Anfragevolumen.
-* Wir behalten uns vor, Fair-Use-Limits einzuführen, um den Dienst für alle stabil zu halten.
+* Wir können Fair-Use-Limits einführen, um den Dienst für alle stabil zu halten.
 * Keine Authentifizierung erforderlich.
 
 ---

@@ -1,11 +1,12 @@
 ---
-description: Générez des jeux de données synthétiques et multilingues de tickets de support client avec
-  notre outil Python. Comprend un pipeline graphique, des assistants IA, des champs riches et un suivi des coûts.
+description: Générez des jeux de données synthétiques multilingues de tickets de support
+  client avec notre outil Python. Comprend un pipeline graphique, des assistants
+  IA, des champs riches et un suivi des coûts.
 ---
-# Génération de Données Synthétiques pour les Tickets de Support
+# Génération de données synthétiques pour les tickets de support
 
-Créez des jeux de données de tickets de support multilingues et de haute qualité pour la classification, le routage et l'automatisation des réponses.
-Cette page décrit notre **Générateur de Données Synthétiques** basé sur Python et le jeu de données public que nous avons créé avec. Elle explique également comment le générateur soutient le flux d'entraînement d'**Open Ticket AI** et nos services commerciaux de génération de données.
+Créez des jeux de données de tickets de support multilingues de haute quality pour la classification, le routage et l'automatisation des réponses.
+Cette page décrit notre **Générateur de données synthétiques** basé sur Python et le jeu de données public que nous avons créé avec. Elle explique également comment le générateur soutient le flux d'entraînement d'**Open Ticket AI** et nos services commerciaux de génération de données.
 
 ::: info
 
@@ -21,8 +22,7 @@ Cette page décrit notre **Générateur de Données Synthétiques** basé sur Py
 ## Ce qu'il génère
 
 - **Champs principaux :** `ticket_id`, `subject`, `body`
-- **Étiquettes de classification :** `type` (Incident/Demande/Problème/Changement), `queue` (ex: Support Technique, Facturation, RH),
-  `priority` (Basse/Moyenne/Haute)
+- **Étiquettes de classification :** `type` (Incident/Request/Problem/Change), `queue` (ex. Support Technique, Facturation, RH), `priority` (Low/Medium/High)
 - **Langue :** `language` (DE/EN/FR/ES/PT)
 - **Tags :** 4 à 8 tags de domaine/thème par ticket
 - **Réponse de l'agent :** un message de **première réponse** rédigé par un assistant IA
@@ -41,27 +41,25 @@ ticket_id,subject,body,language,type,queue,priority,tags,first_response
 Le générateur utilise un **pipeline basé sur un graphe** de petits « nœuds » testables. Chemin typique :
 
 ```
-Thème → Brouillon de sujet → Brouillon du corps de l'e-mail → Tagging → Paraphrase → Traduction → Première réponse
+Thème → Brouillon de sujet → Brouillon de corps d'e-mail → Tagging → Paraphrase → Traduction → Première réponse
 ```
 
-Vous pouvez réorganiser les nœuds, supprimer des étapes ou ajouter les vôtres. Chaque « assistant » est configurable (prompts système/utilisateur,
-modèle/fournisseur, limites). Cela signifie que vous pouvez rapidement produire des tickets spécifiques à un domaine (par exemple, RH, santé, commerce de détail,
-secteur public) sans réécrire de code.
+Vous pouvez réorganiser les nœuds, supprimer des étapes ou ajouter les vôtres. Chaque « assistant » est configurable (prompts système/utilisateur, modèle/fournisseur, limites). Cela signifie que vous pouvez rapidement produire des tickets spécifiques à un domaine (par ex., RH, santé, commerce de détail, secteur public) sans réécrire de code.
 
 ## Flexibilité des modèles et des fournisseurs
 
-Utilisez vos LLMs préférés :
+Apportez vos LLMs préférés :
 
-* **Fournisseurs :** OpenAI, OpenRouter, Together (et d'autres via des adaptateurs)
-* **Modèles :** Classe GPT-4, Qwen, LLaMA, etc.
-* Changez les prompts par nœud pour augmenter la diversité et contrôler le ton, la terminologie et la structure.
+*   **Fournisseurs :** OpenAI, OpenRouter, Together (et d'autres via des adaptateurs)
+*   **Modèles :** `class` GPT-4, Qwen, LLaMA, etc.
+*   Changez les prompts par nœud pour augmenter la diversité et contrôler le ton, la terminologie et la structure.
 
 ## Suivi des coûts et de l'utilisation (intégré)
 
-* **Comptabilité des tokens et des coûts par exécution** (entrée vs. sortie) pour chaque modèle
-* **Seuils configurables** qui avertissent/génèrent une erreur si une seule exécution dépasse une limite de coût
-* **Résumés monétaires** (ex: USD, EUR) pour une budgétisation claire
-* **Modes Dev vs. Prod** pour basculer entre de petites exécutions de test et la création de jeux de données complets
+*   **Comptabilité des tokens et des coûts par exécution** (entrée vs. sortie) par `model`
+*   **Seuils configurables** qui avertissent/errent si une seule exécution dépasse une limite de coût
+*   **Résumés monétaires** (par ex., USD, EUR) pour une budgétisation claire
+*   **Modes Dev vs. Prod** pour basculer entre de petites exécutions de test et des constructions complètes de jeux de données
 
 ## Démarrage rapide
 
@@ -102,46 +100,44 @@ RUN = {
 }
 ```
 
-> En pratique, vous ajusterez les prompts, choisirez différents modèles par nœud et ajouterez des tables de randomisation spécifiques au domaine (
-> files d'attente, priorités, types d'entreprise, etc.).
+> En pratique, vous ajusterez les prompts, choisirez différents modèles par nœud et ajouterez des tables de randomisation spécifiques au domaine (files d'attente, priorités, types d'entreprise, etc.).
 
 ## Schéma de sortie
 
 Colonnes courantes que vous verrez dans nos exportations CSV/Parquet générées :
 
-* `ticket_id` (chaîne de 12–13 chiffres)
-* `subject`, `body`
-* `language` (DE/EN/FR/ES/PT)
-* `type` ∈ (Incident, Demande, Problème, Changement)
-* `queue` (spécifique au domaine, ex: *Support Technique*, *Facturation*, *RH*)
-* `priority` ∈ (Basse, Moyenne, Haute)
-* `tags` (tableau/liste de 4 à 8)
-* `first_response` (réponse de l'agent)
+*   `ticket_id` (chaîne de 12–13 chiffres)
+*   `subject`, `body`
+*   `language` (DE/EN/FR/ES/PT)
+*   `type` ∈ (Incident, Request, Problem, Change)
+*   `queue` (spécifique au domaine, ex. *Support Technique*, *Facturation*, *RH*)
+*   `priority` ∈ (Low, Medium, High)
+*   `tags` (tableau/liste de 4–8)
+*   `first_response` (réponse de l'agent)
 
 ## Exemple de jeu de données sur Kaggle
 
-Nous avons utilisé ce générateur pour construire le jeu de données public **Multilingual Customer Support Tickets**, incluant les **priorités,
-files d'attente, types, tags et types d'entreprise**, idéal pour l'entraînement de modèles de classification et de priorisation de tickets.
+Nous avons utilisé ce générateur pour construire le jeu de données public **Multilingual Customer Support Tickets**, incluant **priorités, files d'attente, types, tags et types d'entreprise**, idéal pour l'entraînement de modèles de classification et de priorisation de tickets.
 ➡️ Kaggle : **Multilingual Customer Support Tickets**
 
-* Inclut plusieurs langues et toutes les étiquettes listées ci-dessus
-* Des notebooks communautaires démontrent des cas d'utilisation de classification et de routage
+*   Inclut plusieurs langues et toutes les étiquettes listées ci-dessus
+*   Des notebooks communautaires démontrent des cas d'usage de classification et de routage
 
 ## Comment cela soutient Open Ticket AI
 
-**Open Ticket AI** classifie la **file d'attente** et la **priorité** des tickets entrants. Les données synthétiques sont inestimables lorsque vous avez :
+**Open Ticket AI** classifie la **file d'attente** (`queue`) et la **priorité** (`priority`) des tickets entrants. Les données synthétiques sont inestimables lorsque vous avez :
 
-* **Pas ou peu** d'historique étiqueté
-* Des données **sensibles** qui ne peuvent pas quitter votre infrastructure
-* Un besoin de classes **équilibrées** (ex: files d'attente/priorités rares)
-* Une couverture **multilingue** dès le premier jour
+*   Un historique étiqueté **inexistant ou limité**
+*   Des données **sensibles** qui ne peuvent pas quitter votre infrastructure
+*   Un besoin de classes **équilibrées** (par ex., files d'attente/priorités rares)
+*   Une couverture **multilingue** dès le premier jour
 
 Nous utilisons régulièrement le générateur pour :
 
-1. amorcer l'entraînement des modèles,
-2. équilibrer les classes à longue traîne, et
-3. simuler des opérations multilingues.
-   Si vous souhaitez que nous générions des jeux de données sur mesure (votre domaine/files d'attente/priorités/tags, vos langues), nous le proposons en tant que **service**.
+1.  amorcer l'entraînement des modèles,
+2.  équilibrer les classes à longue traîne, et
+3.  simuler des opérations multilingues.
+    Si vous souhaitez que nous générions des jeux de données sur mesure (votre domaine/files d'attente/priorités/tags, vos langues), nous le proposons en tant que **service**.
 
 \::: tip Services
 Besoin de données synthétiques spécifiques à votre domaine pour votre service d'assistance ? Nous concevrons des prompts, des nœuds et des tables de randomisation pour votre secteur, les intégrerons à votre pipeline de données et livrerons des fichiers CSV/Parquet prêts pour l'entraînement et l'évaluation.
@@ -150,9 +146,8 @@ Besoin de données synthétiques spécifiques à votre domaine pour votre servic
 
 ## Licence et disponibilité
 
-* Il est prévu que le **Générateur de Données Synthétiques** soit publié sous licence **LGPL**.
-* Si vous souhaitez un accès anticipé, une licence privée ou des modifications/extensions personnalisées, **envoyez un e-mail à `sales@softoft.de`** et
-  nous nous en occuperons pour vous.
+*   La publication du **Générateur de données synthétiques** est prévue sous licence **LGPL**.
+*   Si vous souhaitez un accès anticipé, une licence privée ou des modifications/extensions personnalisées, **envoyez un e-mail à `sales@softoft.de`** et nous nous en occuperons for vous.
 
 ---
 
@@ -161,11 +156,11 @@ Besoin de données synthétiques spécifiques à votre domaine pour votre servic
 **Le jeu de données est-il « réel » ou « synthétique » ?**
 Entièrement synthétique, produit par un pipeline LLM configurable.
 
-**Puis-je ajouter mes propres champs (par ex., *Unité Commerciale*, *Impact*, *Urgence*) ?**
+**Puis-je ajouter mes propres champs (par ex., *Unité commerciale*, *Impact*, *Urgence*) ?**
 Oui, en étendant les tables de randomisation et en ajoutant un nœud pour émettre les champs.
 
 **Puis-je contrôler le style et le ton ?**
 Absolument. Les prompts sont définis par nœud, vous pouvez donc imposer le ton, la formalité, les régionalismes et la terminologie.
 
 **Comment maîtriser les coûts ?**
-Utilisez le mode dev (un petit nombre de `rows`, des `max_tokens` plus bas), des seuils de coût et des modèles moins chers pour les premières itérations. Passez à votre combinaison de modèles préférée une fois que les résultats sont satisfaisants.
+Utilisez le mode dev (petites `rows`, `max_tokens` plus bas), les seuils de coût et des modèles moins chers pour les premières itérations. Passez à votre mélange de modèles préféré une fois que les résultats sont corrects.

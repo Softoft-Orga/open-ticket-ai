@@ -1,14 +1,14 @@
 ---
-description: Guide de développement pour le classificateur de tickets ATC sur site.
-  Apprenez à configurer avec YAML, à exécuter depuis la CLI et à étendre avec des
-  composants et adaptateurs Python personnalisés.
+description: Guide du développeur pour le classifieur de tickets ATC sur site. Apprenez
+  à configurer avec YAML, à exécuter depuis le CLI, et à étendre avec des composants
+  et adaptateurs Python personnalisés.
 title: Informations pour les développeurs
 ---
-# Informations pour les développeurs pour l'ATC Community Edition
+# Informations pour les développeurs de l'ATC Community Edition
 
 ## Aperçu
 
-L'ATC Community Edition est une solution sur site pour la classification automatisée des tickets de support. La version MVP actuelle est contrôlée via un fichier de configuration YAML et démarrée via la CLI. Il n'y a pas d'API REST pour téléverser des données d'entraînement ou pour déclencher une session d'entraînement.
+L'ATC Community Edition est une solution sur site (on-premise) pour la classification automatisée des tickets de support. La version MVP actuelle est contrôlée via un fichier de configuration YAML et démarrée via le CLI. Il n'y a pas d'API REST pour téléverser des données d'entraînement ou déclencher une session d'entraînement.
 
 ## Architecture logicielle
 
@@ -17,11 +17,11 @@ L'application se compose essentiellement des paquets suivants :
 * **core** – classes de base, modèles de configuration et fonctions utilitaires.
 * **run** – contient le pipeline pour la classification des tickets.
 * **ticket\_system\_integration** – adaptateurs pour différents systèmes de tickets.
-* **main.py** – point d'entrée CLI qui démarre le planificateur et l'orchestrateur.
+* **main.py** – point d'entrée du CLI qui démarre le planificateur (scheduler) et l'orchestrateur.
 
 L'orchestrateur exécute des `AttributePredictors` configurables, qui sont composés de `DataFetcher`, `DataPreparer`, `AIInferenceService` et `Modifier`. Tous les composants sont définis dans `config.yml` et validés au démarrage du programme.
 
-Une commande d'exemple pour démarrer l'application :
+Un exemple de commande pour démarrer l'application :
 
 ```bash
 python -m open_ticket_ai.src.ce.main start
@@ -35,18 +35,18 @@ L'entraînement direct via l'application n'est pas fourni dans le MVP. Des modè
 
 Des fetchers, preparers, services d'IA ou modifiers personnalisés peuvent être implémentés en tant que classes Python et enregistrés via la configuration. Grâce à l'injection de dépendances, de nouveaux composants peuvent être facilement intégrés.
 
-## Comment ajouter un Pipe personnalisé
+## Comment ajouter un pipe personnalisé
 
 Le pipeline de traitement peut être étendu avec vos propres classes de pipe. Un pipe est une
 unité de travail qui reçoit un `PipelineContext`, le modifie et le retourne. Tous
 les pipes héritent de la classe de base `Pipe` qui déjà
 implémente le mixin `Providable`.
 
-1. **Créez un modèle de configuration** pour votre pipe s'il a besoin de paramètres.
+1. **Créez un modèle de configuration** pour votre pipe s'il nécessite des paramètres.
 2. **Sous-classez `Pipe`** et implémentez la méthode `process`.
-3. **Surchargez `get_provider_key()`** si vous voulez une clé personnalisée.
+3. **Surchargez `get_provider_key()`** si vous souhaitez une clé personnalisée.
 
-L'exemple simplifié suivant, provenant du `AI_README`, montre un pipe d'analyse de sentiment :
+L'exemple simplifié suivant, tiré du `AI_README`, montre un pipe d'analyse de sentiment :
 
 ```python
 class SentimentPipeConfig(BaseModel):
@@ -75,7 +75,7 @@ class SentimentAnalysisPipe(Pipe, Providable):
 ```
 
 Après avoir implémenté la classe, enregistrez-la dans votre registre d'injection de dépendances
-et référencez-la dans `config.yml` en utilisant la clé de fournisseur retournée par
+et référencez-la dans `config.yml` en utilisant la clé de fournisseur (provider key) retournée par
 `get_provider_key()`.
 
 ## Comment intégrer un nouveau système de tickets
@@ -101,4 +101,4 @@ l'orchestrateur l'utilisera pour communiquer avec le système de tickets.
 
 ## Résumé
 
-L'ATC Community Edition offre, dans sa version MVP, un flux de travail exécuté localement pour la classification automatique des tickets. Tous les paramètres sont gérés via des fichiers YAML ; aucune API REST n'est disponible. Des processus ou des scripts externes doivent être utilisés pour l'entraînement.
+L'ATC Community Edition offre un flux de travail exécuté localement pour la classification automatique des tickets dans sa version MVP. Tous les paramètres sont gérés via des fichiers YAML ; aucune API REST n'est disponible. Des processus ou des scripts externes doivent être utilisés pour l'entraînement.

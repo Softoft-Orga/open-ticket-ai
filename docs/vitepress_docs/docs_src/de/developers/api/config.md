@@ -1,5 +1,5 @@
 ---
-description: Konfigurieren Sie die Kerndienste von Open Ticket AI. Erfahren Sie, wie Sie den OTOBO-Adapter, die Datenaufbereiter und eine lokale Hugging Face AI für die automatisierte Ticketverarbeitung einrichten.
+description: Konfigurieren Sie die Kerndienste von Open Ticket AI. Lernen Sie, wie Sie den OTOBO-Adapter, Datenaufbereiter und eine lokale Hugging Face AI für die automatisierte Ticketverarbeitung einrichten.
 layout: page
 pageClass: wide-page
 title: Open Ticket AI Konfiguration

@@ -1,30 +1,33 @@
 ---
 aside: false
-description: "Planifique su proyecto de automatización de tickets. Elija la ruta correcta\
-  \ según sus datos (etiquetados, sin etiquetar o ninguno) para un entrenamiento,\
+description: "Planifica tu proyecto de automatización de tickets. Elige la ruta correcta\
+  \ según tus datos (etiquetados, no etiquetados o sin datos) para un entrenamiento,\
   \ despliegue y soporte rápidos."
 pageClass: full-page
 ---
-# Planificador de Automatización de Tickets — Elija su Mejor Ruta
+# Planificador de Automatización de Tickets — Elige tu Mejor Ruta
 
-Modernice el enrutamiento de tickets rápidamente, sin importar desde dónde empiece. Este planificador le ayuda a elegir la ruta correcta según la realidad de sus datos: muchos tickets etiquetados, muchos tickets sin etiquetar o casi ningún dato. Cada ruta finaliza en un paquete de servicios concreto con entregables y KPIs claros, para que pueda pasar de la idea → al piloto → a la producción sin conjeturas.
+Moderniza el enrutamiento de tickets rápidamente, sin importar tu punto de partida. Este planificador te ayuda a elegir la ruta correcta según la realidad de tus datos: muchos tickets etiquetados, muchos tickets sin etiquetar o casi ningún dato. Cada ruta finaliza en un paquete de servicios concreto con entregables y KPIs claros, para que puedas pasar de la idea → piloto → producción sin conjeturas.
 
-**Para quién es esto:** Equipos de TI/servicios en Znuny/OTRS/OTOBO (o similar) que deseen predicciones fiables de cola/prioridad/tags, ya sea en sus propias instalaciones (on-premise) o a través de una API alojada.
+**Para quién es esto:** Equipos de TI/servicios en Znuny/OTRS/OTOBO (o similar) que desean predicciones fiables de cola/prioridad/etiqueta, ya sea on-prem o a través de una API alojada.
 
-**Qué obtendrá:** un flujo de decisión corto, 4 rutas accionables (A–D), complementos (multilingüe, atributos adicionales), criterios/métricas para saber cuándo está listo y una lista de verificación de preparación de datos.
+**Qué obtendrás:** un flujo de decisión corto, 4 rutas accionables (A–D), complementos (multilingüe, atributos extra), puntos de control/métricas para saber cuándo estás listo y una lista de verificación de preparación de datos.
 
 **Cómo usar esta página**
 
-* Comience con el resumen en una pantalla y responda tres preguntas: **¿Etiquetados? → ¿Sin etiquetar? → ¿Rápido?**
-* Haga clic en el cuadro del **Flujo A/B/C/D** para ir a sus pasos, entregables y KPIs.
-* Use los **complementos** si necesita varios idiomas o más salidas (tags, asignatario, primera respuesta).
-* Mantenga los **criterios** estrictos (F1 por clase + KPIs de negocio) para que los pilotos se traduzcan en confianza para la producción.
+* Comienza con la vista general de una pantalla y responde tres preguntas: **¿Etiquetados? → ¿Sin etiquetar? → ¿Rápido?**
+* Haz clic en el cuadro de **Flujo A/B/C/D** para ir a sus pasos, entregables y KPIs.
+* Usa los **complementos** si necesitas varios idiomas o más salidas (etiquetas, asignado, primera respuesta).
+* Mantén los **puntos de control** estrictos (F1 por clase + KPIs de negocio) para que los pilotos se traduzcan en confianza para la producción.
 
-Ahora continúe con el diagrama de resumen y los flujos detallados a continuación.
+Ahora continúa con el diagrama general y los flujos detallados a continuación.
+Bien, aquí tienes una redacción más completa que puedes colocar debajo de tus diagramas. La mantuve fácil de escanear pero agregué orientación real y umbrales para que los lectores puedan elegir un flujo con confianza.
+
+Entendido, mantendré tus nuevos diagramas cortos y agregaré texto explicativo claro y conciso para cada sección, para que el artículo se sienta completo pero siga siendo fácil de escanear.
 
 ---
 
-## 0) Resumen en una pantalla
+## 0) Vista general en una pantalla
 
 ```mermaid
 ---
@@ -32,22 +35,22 @@ config:
   theme: 'dark'
 ---
 flowchart TD
-  S((Start)) --> Q1{Labeled?}
-  Q1 -- Yes --> A0[Flow A]
-  Q1 -- No --> Q2{Unlabeled?}
-  Q2 -- Yes --> B0[Flow B]
-  Q2 -- No --> Q3{Fast?}
-  Q3 -- Yes --> D0[Flow D]
-  Q3 -- No --> C0[Flow C]
+  S((Inicio)) --> Q1{¿Etiquetados?}
+  Q1 -- Sí --> A0[Flujo A]
+  Q1 -- No --> Q2{¿Sin etiquetar?}
+  Q2 -- Sí --> B0[Flujo B]
+  Q2 -- No --> Q3{¿Rápido?}
+  Q3 -- Sí --> D0[Flujo D]
+  Q3 -- No --> C0[Flujo C]
 
-click A0 "#flow-a-many-labeled" "Flow A"
-click B0 "#flow-b-many-unlabeled" "Flow B"
-click C0 "#flow-c-few-or-no-tickets" "Flow C"
-click D0 "#flow-d-quick-start-hosted-api" "Flow D"
+click A0 "#flow-a-many-labeled" "Flujo A"
+click B0 "#flow-b-many-unlabeled" "Flujo B"
+click C0 "#flow-c-few-or-no-tickets" "Flujo C"
+click D0 "#flow-d-quick-start-hosted-api" "Flujo D"
 ```
 
-**Cómo usar este resumen:**
-Comience desde arriba, responda las preguntas y siga la rama hasta el flujo que le corresponde. Haga clic en un flujo para ver sus detalles.
+**Cómo usar esta vista general:**
+Comienza desde arriba, responde las preguntas y sigue la rama hasta tu flujo correspondiente. Haz clic en un flujo para ver sus detalles.
 
 ---
 
@@ -59,28 +62,28 @@ config:
   theme: 'dark'
 ---
 flowchart TD
-  A[Audit/Tax] --> B[Train]
-  B --> C[Eval]
+  A[Auditoría/Taxonomía] --> B[Entrenar]
+  B --> C[Evaluar]
   C --> D[On-Prem]
-  D --> E[Pilot]
-  E --> F[Support]
+  D --> E[Piloto]
+  E --> F[Soporte]
 ```
 
-**Cuándo elegir esta opción:**
+**Cuándo elegir esto:**
 
-* Ya tiene **miles de tickets con etiquetas de cola, prioridad o tags**.
-* Desea un **modelo entrenado a medida** para obtener la máxima precisión.
+* Ya tienes **miles de tickets con etiquetas de cola, prioridad o tag**.
+* Quieres un `model` **entrenado a medida** para una máxima precisión.
 
 **Qué sucede en este flujo:**
 
 1. **Auditoría/Taxonomía** — Verificar la calidad de las etiquetas, el balance de clases y la nomenclatura.
-2. **Entrenamiento** — Realizar un ajuste fino (fine-tuning) del modelo de clasificación con sus datos.
-3. **Evaluación** — Medir la precisión/recall/F1 por clase.
-4. **On-Premise** — Desplegar dentro de su propia infraestructura.
+2. **Entrenar** — Ajustar (fine-tune) el `model` de clasificación con tus datos.
+3. **Evaluar** — Medir precisión/recall/F1 por clase.
+4. **On-Prem** — Desplegar dentro de tu propia infraestructura.
 5. **Piloto** — Probar en producción con monitorización.
 6. **Soporte** — Iterar y reentrenar según sea necesario.
 
-**Paquete recomendado:** Ajuste Fino + Instalación On-Premise.
+**Paquete recomendado:** Ajuste Fino (Fine-Tune) + Instalación On-Prem.
 
 ---
 
@@ -92,31 +95,31 @@ config:
   theme: 'dark'
 ---
 flowchart TD
-  A[Ingest] --> B[Auto-Label]
-  B --> C[QC]
-  C --> D{OK?}
+  A[Ingerir] --> B[Auto-etiquetar]
+  B --> C[Control de Calidad]
+  C --> D{¿OK?}
   D -- No --> B
-  D -- Yes --> E[Train]
-  E --> F[Eval]
+  D -- Sí --> E[Entrenar]
+  E --> F[Evaluar]
   F --> G[On-Prem]
-  G --> H[Support]
+  G --> H[Soporte]
 ```
 
-**Cuándo elegir esta opción:**
+**Cuándo elegir esto:**
 
-* Tiene **grandes archivos históricos de tickets** pero sin etiquetas.
-* Puede dedicar tiempo de revisión humana para controles de calidad.
+* Tienes **grandes archivos históricos de tickets** pero sin etiquetas.
+* Puedes dedicar algo de tiempo de revisión humana para controles de calidad.
 
 **Qué sucede en este flujo:**
 
-1. **Ingesta** — Recopilar tickets de su sistema.
-2. **Etiquetado Automático** — Usar etiquetado automático asistido por LLM.
-3. **Control de Calidad** — Revisar y corregir muestras de forma aleatoria.
-4. **¿OK?** — Repetir hasta que la calidad alcance el umbral deseado.
-5. **Entrenamiento** — Realizar un ajuste fino con el conjunto de datos curado.
-6. **Evaluación / On-Premise / Soporte** — Igual que en el Flujo A.
+1. **Ingerir** — Recopilar tickets de tu sistema.
+2. **Auto-etiquetar** — Usar auto-etiquetado asistido por LLM.
+3. **Control de Calidad** — Revisar y corregir muestras puntuales.
+4. **¿OK?** — Repetir hasta que la calidad alcance el umbral.
+5. **Entrenar** — Ajustar (fine-tune) con el conjunto de datos curado.
+6. **Evaluar / On-Prem / Soporte** — Igual que en el Flujo A.
 
-**Paquete recomendado:** Etiquetado Automático + Ajuste Fino.
+**Paquete recomendado:** Auto-etiquetado + Ajuste Fino (Fine-Tune).
 
 ---
 
@@ -128,39 +131,39 @@ config:
   theme: 'dark'
 ---
 flowchart TD
-  A[Define Tax] --> B[Synth Data]
-  B --> C[Baseline]
-  C --> D[Eval]
-  D --> E{Pilot}
-  E -- API --> H[Hosted DE]
+  A[Definir Taxonomía] --> B[Datos Sintéticos]
+  B --> C[Modelo Base]
+  C --> D[Evaluar]
+  D --> E{Piloto}
+  E -- API --> H[Alojado DE]
   E -- Local --> I[On-Prem]
-  H --> J[Collect]
+  H --> J[Recopilar]
   I --> J
-  J --> K[Fine-Tune]
-  K --> L[Prod/Support]
+  J --> K[Ajuste Fino]
+  K --> L[Prod/Soporte]
 ```
 
-**Cuándo elegir esta opción:**
+**Cuándo elegir esto:**
 
-* Está empezando **desde cero** o tiene muy pocos tickets para entrenar un modelo.
-* Desea una solución de **arranque en frío** para empezar a operar rápidamente.
+* Estás empezando **desde cero** o tienes muy pocos tickets para entrenar.
+* Quieres una solución de **arranque en frío** (cold-start) para empezar a operar rápidamente.
 
 **Qué sucede en este flujo:**
 
 1. **Definir Taxonomía** — Decidir colas, prioridades, tono.
-2. **Datos Sintéticos** — Generar tickets realistas (alemán/inglés).
-3. **Modelo Base** — Entrenar el modelo inicial con datos sintéticos.
-4. **Evaluación** — Comprobar el rendimiento antes del lanzamiento.
-5. **Piloto** — Elegir la API Alojada por velocidad o el despliegue On-Premise por control.
+2. **Datos Sintéticos** — Generar tickets realistas (DE/EN).
+3. **Modelo Base** — Entrenar el `model` inicial con datos sintéticos.
+4. **Evaluar** — Comprobar el rendimiento antes del despliegue.
+5. **Piloto** — Elegir la API alojada por velocidad o la instalación On-Prem por control.
 6. **Recopilar** — Reunir tickets reales durante el piloto.
 7. **Ajuste Fino** — Fusionar datos reales y sintéticos.
-8. **Producción/Soporte** — Puesta en marcha con iteración continua.
+8. **Prod/Soporte** — Puesta en producción con iteración continua.
 
-**Paquete recomendado:** Arranque en Frío Sintético.
+**Paquete recomendado:** Arranque en Frío Sintético (Synthetic Cold-Start).
 
 ---
 
-## <a id="flow-d-quick-start-hosted-api"></a> Flujo D — Inicio rápido mediante API Alojada
+## <a id="flow-d-quick-start-hosted-api"></a> Flujo D — Inicio rápido mediante API alojada
 
 ```mermaid
 ---
@@ -168,25 +171,25 @@ config:
   theme: 'dark'
 ---
 flowchart TD
-    A[Use API DE] --> B[Measure]
-    B --> C{Tax OK?}
-    C -- Yes --> D[Scale/Support]
-    C -- No --> E[Auto/Synth - Train]
+    A[Usar API DE] --> B[Medir]
+    B --> C{¿Taxonomía OK?}
+    C -- Sí --> D[Escalar/Soporte]
+    C -- No --> E[Auto/Sintético - Entrenar]
     E --> F[On-Prem]
 ```
 
-**Cuándo elegir esta opción:**
+**Cuándo elegir esto:**
 
-* Necesita **resultados de inmediato**.
-* Quiere probar la automatización sin un entrenamiento previo.
+* Necesitas **resultados inmediatamente**.
+* Quieres probar la automatización sin entrenar primero.
 
 **Qué sucede en este flujo:**
 
-1. **Usar API (DE)** — Clasificación instantánea mediante un modelo alojado en alemán.
-2. **Medir** — Monitorizar el impacto en el enrutamiento, los SLA y el backlog.
-3. **¿Taxonomía OK?** — Si está satisfecho, escale el uso; si no, vaya al Flujo B o C para el entrenamiento.
+1. **Usar API DE** — Clasificación instantánea a través del `model` alemán alojado.
+2. **Medir** — Seguir el impacto en el enrutamiento, SLA y backlog.
+3. **¿Taxonomía OK?** — Si estás satisfecho, escala el uso; si no, ve al Flujo B o C para entrenar.
 
-**Paquete recomendado:** Piloto con API Alojada → Ajuste Fino (opcional).
+**Paquete recomendado:** Piloto con API Alojada → Ajuste Fino (Fine-Tune) (opcional).
 
 ---
 
@@ -200,19 +203,19 @@ config:
   theme: 'dark'
 ---
 flowchart TD
-  A[More langs?] --> B{Hist per lang?}
-  B -- Yes --> C[Auto-Label]
-  B -- No --> D[Synth]
-  C --> E[Train Multi]
+  A[¿Más idiomas?] --> B{¿Historial por idioma?}
+  B -- Sí --> C[Auto-etiquetar]
+  B -- No --> D[Sintético]
+  C --> E[Entrenar Multi]
   D --> E
-  E --> F[Pilot/Eval]
+  E --> F[Piloto/Evaluar]
 ```
 
-Añada soporte para idiomas adicionales mediante etiquetado automático multilingüe o generación sintética, y luego entrene y evalúe por localidad.
+Añade soporte para idiomas adicionales mediante auto-etiquetado multilingüe o generación sintética, luego entrena y evalúa por localización.
 
 ---
 
-### Atributos adicionales
+### Atributos extra
 
 ```mermaid
 ---
@@ -220,9 +223,9 @@ config:
   theme: 'dark'
 ---
 flowchart TD
-  A[Add tags/assignee/FAA] --> B[Extend labels/gen]
-  B --> C[Multi-task/Chain]
-  C --> D[Deploy]
+  A[Añadir tags/asignado/FAA] --> B[Extender etiquetas/gen]
+  B --> C[Multitarea/Cadena]
+  C --> D[Desplegar]
 ```
 
-Prediga más que colas/prioridades (p. ej., tags, asignatario o tiempo de primera respuesta) extendiendo el etiquetado y entrenando un modelo multitarea.
+Predice más que colas/prioridades —por ejemplo, `tags`, asignado o tiempo de primera respuesta— extendiendo el etiquetado y entrenando un `model` multitarea.

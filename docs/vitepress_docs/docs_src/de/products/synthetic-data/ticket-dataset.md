@@ -1,12 +1,12 @@
 ---
-description: Trainieren Sie Modelle für Warteschlangen, Prioritäten und Ticket-Typen
-  mit unseren synthetischen, mehrsprachigen Kundensupport-Tickets. Enthält umfangreiche
-  Felder & mehrere Versionen. Verfügbar auf Kaggle.
+description: Trainieren Sie Warteschlangen-, Prioritäts- & Typ-Modelle mit unseren synthetischen,
+  mehrsprachigen Kundensupport-Tickets. Enthält umfangreiche Felder & mehrere Versionen.
+  Verfügbar auf Kaggle.
 ---
-# Mehrsprachige Kundensupport-Tickets (Synthetisch)
+# Mehrsprachige Kundensupport-Tickets (synthetisch)
 
-Ein **vollständig synthetischer** Datensatz zum Trainieren und Evaluieren von Helpdesk-Modellen, wie der Klassifizierung von **Warteschlange**, **Priorität** und **Typ**, sowie für das Pre-Training von Antwortassistenten.
-Erstellt mit unserem Python **Synthetic Data Generator** und auf **Kaggle** veröffentlicht.
+Ein **vollständig synthetischer** Datensatz zum Trainieren und Evaluieren von Helpdesk-Modellen, wie z. B. für die Klassifizierung von **Warteschlange**, **Priorität** und **Typ**, sowie für das Pretraining von Antwort-Assistenten.
+Erstellt mit unserem Python **Synthetic Data Generator** und veröffentlicht auf **Kaggle**.
 
 * **Kaggle:** [Ticket-Datensatz](https://www.kaggle.com/datasets/tobiasbueck/multilingual-customer-support-tickets/data)
 * [Synthetische Datengenerierung](synthetic-data-generation.md) (geplant **LGPL**)
@@ -20,9 +20,9 @@ Erstellt mit unserem Python **Synthetic Data Generator** und auf **Kaggle** ver�
 
 | Version | Sprachen                      | Größe (relativ) | Anmerkungen                                                              |
 |--------:|-------------------------------|-----------------|--------------------------------------------------------------------------|
-|  **v5** | **EN, DE**                    | Größte          | Neueste und verfeinerte Taxonomie/Balancing; Fokus auf EN/DE-Qualität.   |
+|  **v5** | **EN, DE**                    | Größte          | Neueste und verfeinerte Taxonomie/Balancing; Fokus auf EN/DE-Qualität.     |
 |  **v4** | **EN, DE**                    | Groß            | Ähnlicher Fokus wie v5; etwas ältere Prompts und Verteilungen.           |
-|  **v3** | EN, DE, **+ mehr (FR/ES/PT)** | Kleiner         | Frühere Pipeline; mehr Sprachen, aber insgesamt weniger vielfältiger Inhalt. |
+|  **v3** | EN, DE, **+ weitere (FR/ES/PT)** | Kleiner         | Frühere Pipeline; mehr Sprachen, aber insgesamt weniger vielfältiger Inhalt. |
 
 > Ältere Versionen enthalten **mehr Sprachen**, sind aber im Allgemeinen **kleiner** und **weniger vielfältig**.
 > Die neuesten Versionen (**v5**, **v4**) legen den Schwerpunkt auf **EN/DE**-Qualität und -Umfang.
@@ -50,17 +50,17 @@ dataset-tickets-german_normalized.csv
 
 Jedes Ticket enthält den Kerntext sowie Labels, die von **Open Ticket AI** verwendet werden.
 
-| Spalte              | Beschreibung                                               |
-|---------------------|------------------------------------------------------------|
-| `subject`           | Der E-Mail-Betreff des Kunden                              |
-| `body`              | Der E-Mail-Text des Kunden                                 |
-| `answer`            | Die erste Antwort des Agenten (KI-generiert)               |
-| `type`              | Ticket-Typ (z.B. Incident, Request, Problem, …)            |
-| `queue`             | Ziel-Warteschlange (z.B. Technical Support, Billing)       |
-| `priority`          | Priorität (z.B. low, medium, high)                         |
-| `language`          | Ticket-Sprache (z.B. `en`, `de`, …)                        |
-| `version`           | Datensatzversion (Metadaten)                               |
-| `tag_1`, `tag_2`, … | Ein oder mehrere thematische Tags (können teilweise `null` sein) |
+| Spalte              | Beschreibung                                       |
+|---------------------|----------------------------------------------------|
+| `subject`           | Der E-Mail-Betreff des Kunden                      |
+| `body`              | Der E-Mail-Text des Kunden                         |
+| `answer`            | Die erste Antwort des Agenten (KI-generiert)       |
+| `type`              | Ticket-Typ (z. B. Incident, Request, Problem, …)   |
+| `queue`             | Ziel-Warteschlange (z. B. Technical Support, Billing) |
+| `priority`          | Priorität (z. B. low, medium, high)                |
+| `language`          | Ticket-Sprache (z. B. `en`, `de`, …)               |
+| `version`           | Datensatzversion (Metadaten)                       |
+| `tag_1`, `tag_2`, … | Einer oder mehrere thematische Tags (können teilweise `null` sein) |
 
 ### Ausschnitte aus den Daten
 
@@ -83,7 +83,7 @@ Jedes Ticket enthält den Kerntext sowie Labels, die von **Open Ticket AI** verw
 
 ## Visueller Rundgang
 
-![Wortwolke der Ticket-Betreffs](/images/word_cloud.png)
+![Word-Cloud der Ticket-Betreffs](/images/word_cloud.png)
 
 ![Meistverwendete Tags](/images/tags.png)
 
@@ -96,12 +96,13 @@ Jedes Ticket enthält den Kerntext sowie Labels, die von **Open Ticket AI** verw
 **Verwendungszweck:**
 
 * Kaltstart-Training von Modellen für **Warteschlange/Priorität/Typ**
-* Experimente zum Class-Balancing
+* Experimente zum Klassen-Balancing
 * Mehrsprachiges Benchmarking (verwenden Sie **v3**, wenn Sie FR/ES/PT benötigen)
 
 **Einschränkungen:**
 
-* Synthetische Verteilungen können von Ihrem Produktions-Traffic abweichen. Validieren Sie immer mit einer kleinen, anonymisierten realen Stichprobe vor dem Deployment.
+* Synthetische Verteilungen können von Ihrem Produktions-Traffic abweichen. Validieren Sie immer auf einer kleinen, anonymisierten realen Stichprobe
+  vor dem Deployment.
 
 ---
 
@@ -135,17 +136,17 @@ Verwenden Sie ihn, um das Training und die Evaluierung zu **bootstrappen**; depl
 
 ## Lizenz & Zitat
 
-* Datensatz: Bitte fügen Sie hier Ihre gewählte Datenlizenz ein (z.B. **CC BY 4.0**).
+* Datensatz: Bitte fügen Sie hier Ihre gewählte Datenlizenz ein (z. B. **CC BY 4.0**).
 * Generator: geplant **LGPL**. Für Zugriff oder Anpassungen: **[sales@softoft.de](mailto:sales@softoft.de)**.
 
 **Zitiervorschlag:**
 
-> Bueck, T. (2025). *Multilingual Customer Support Tickets (Synthetic)*. Kaggle Dataset.
-> Generated with the Open Ticket AI Synthetic Data Generator.
+> Bueck, T. (2025). *Multilingual Customer Support Tickets (Synthetic)*. Kaggle-Datensatz.
+> Generiert mit dem Open Ticket AI Synthetic Data Generator.
 
 ---
 
-## Changelog (Übersicht)
+## Changelog (High-Level)
 
 * **v5:** Nur EN/DE; größter Satz; verbesserte Taxonomie und Balancing.
 * **v4:** EN/DE; groß; früherer Satz von Prompts.

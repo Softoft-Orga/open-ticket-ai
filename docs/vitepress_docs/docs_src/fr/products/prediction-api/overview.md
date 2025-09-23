@@ -4,10 +4,10 @@ description: API allemande gratuite pour prédire la file d'attente et la priori
 # 🇩🇪 API de Classification de Tickets Allemands (Gratuite)
 
 Prédisez la **File d'attente** et la **Priorité** pour les tickets de support en **langue allemande** avec un seul appel HTTP.
-Cette API est **gratuite** et idéale pour les intégrations avec **OTOBO**, **Znuny**, **Zammad**, ou des services d'assistance personnalisés.
+Cette API est **gratuite** et idéale pour les intégrations avec **OTOBO**, **Znuny**, **Zammad**, ou des helpdesks personnalisés.
 
-> **Support linguistique :** Optimisé pour les textes en **allemand** (sujet + corps).
-> Un modèle anglais est en cours de développement et sera bientôt disponible.
+> **Support Linguistique :** Optimisé pour les textes en **allemand** (sujet + corps).
+> Un modèle anglais est en développement et sera bientôt disponible.
 
 ## Essayez-la !
 
@@ -161,7 +161,7 @@ L'API prédit l'un des **niveaux de priorité** suivants :
 ## 🔌 Idées d'intégration
 
 * **OTOBO / Znuny** : Appelez l'API lors de la création d'un ticket pour pré-remplir la file d'attente et la priorité.
-* **Service d'assistance personnalisé** : Exécutez-le dans votre pipeline de réception avant le routage/les SLA.
+* **Helpdesk personnalisé** : Exécutez-le dans votre pipeline de réception avant le routage/SLA.
 * **Automatisation** : Escaladez automatiquement les tickets `critical` ou routez les incidents de sécurité.
 * **Analytique** : Suivez la distribution des files d'attente et les tendances de priorité dans le temps.
 
@@ -178,7 +178,7 @@ L'API prédit l'un des **niveaux de priorité** suivants :
 ## ❓ Dépannage
 
 * **400 Bad Request** : `subject` ou `body` manquant.
-* **Erreurs 5xx** : Le `model` en amont est temporairement indisponible — réessayez avec un backoff.
+* **Erreurs 5xx** : Le modèle en amont est temporairement indisponible — réessayez avec un backoff.
 * Les prédictions semblent incorrectes ? Assurez-vous que le texte est en **allemand** et contient suffisamment de contexte.
 
 ---
@@ -186,7 +186,7 @@ L'API prédit l'un des **niveaux de priorité** suivants :
 ## 📄 Conditions
 
 * Utilisation **gratuite** ; veuillez faire attention au volume de requêtes.
-* Nous pourrions introduire des limites d'utilisation équitable pour maintenir le service fonctionnel pour tout le monde.
+* Nous pourrions introduire des limites d'utilisation équitable pour maintenir le service fonctionnel pour tous.
 * Aucune authentification requise.
 
 ---

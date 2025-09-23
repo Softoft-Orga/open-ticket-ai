@@ -4,7 +4,7 @@ description: API gratuita en alemán para predecir Cola y Prioridad para tickets
 ---
 # 🇩🇪 API de Clasificación de Tickets en Alemán (Gratuita)
 
-Predice la **Cola** y la **Prioridad** para tickets de soporte **en alemán** con una sola llamada HTTP.
+Predice la **Cola** y la **Prioridad** para tickets de soporte en **idioma alemán** con una única llamada HTTP.
 Esta API es de uso **gratuito** e ideal para integraciones con **OTOBO**, **Znuny**, **Zammad** o sistemas de helpdesk personalizados.
 
 > **Soporte de Idiomas:** Optimizado para textos en **alemán** (asunto + cuerpo).
@@ -29,7 +29,7 @@ Esta API es de uso **gratuito** e ideal para integraciones con **OTOBO**, **Znun
 }
 ````
 
-### Respuesta de ejemplo
+### Ejemplo de respuesta
 
 ```json
 {
@@ -168,25 +168,25 @@ La API predice uno de los siguientes **niveles de prioridad**:
 
 ---
 
-## ✅ Buenas Prácticas
+## ✅ Mejores Prácticas
 
 * Proporciona **asuntos concisos y claros** y **cuerpos descriptivos** en **alemán**.
-* Evita entradas muy largas; mantenlas por debajo de ~5,000 caracteres en total.
+* Evita entradas muy largas; mantenlas por debajo de ~5,000 caracteres combinados.
 * Registra y monitorea los resultados para ajustar las reglas posteriores.
 
 ---
 
 ## ❓ Solución de Problemas
 
-* **400 Bad Request**: Falta el `subject` o el `body`.
-* **Errores 5xx**: El `model` principal no está disponible temporalmente — reintenta con backoff.
+* **400 Bad Request**: Falta `subject` o `body`.
+* **Errores 5xx**: El modelo upstream no está disponible temporalmente — reintenta con un backoff exponencial.
 * ¿Las predicciones parecen incorrectas? Asegúrate de que el texto esté en **alemán** y contenga suficiente contexto.
 
 ---
 
 ## 📄 Términos
 
-* **Gratuito**; por favor, ten en cuenta el volumen de solicitudes.
+* Uso **gratuito**; por favor, ten en cuenta el volumen de solicitudes.
 * Podríamos introducir límites de uso justo para mantener el servicio saludable para todos.
 * No se requiere autenticación.
 

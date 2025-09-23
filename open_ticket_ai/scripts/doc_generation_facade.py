@@ -18,11 +18,11 @@ from pathlib import Path
 from openai import AsyncOpenAI
 from rich.console import Console
 import typer
+from mdxlate.translator import Translator
 
 from open_ticket_ai.scripts import ReadmeUpdater
 from open_ticket_ai.scripts.doc_generation.add_docstrings import DocstringGenerator
 from open_ticket_ai.scripts.doc_generation.generate_api_reference import generate_documentation
-from open_ticket_ai.scripts.doc_generation.generate_multi_lang_docs import Translator
 from open_ticket_ai.scripts.doc_generation.update_frontmatter import update_frontmatter
 from open_ticket_ai.scripts.documentation_summary import DocumentationSummarizer
 from open_ticket_ai.src.core.util.path_util import find_python_code_root_path

@@ -57,9 +57,9 @@
 
 <script lang="ts" setup>
 import {ref} from 'vue'
-import TextField from './core/forms/TextField.vue'
-import TextArea from './core/forms/TextArea.vue'
-import Button from './core/basic/Button.vue'
+import TextField from '../core/forms/TextField.vue'
+import TextArea from '../core/forms/TextArea.vue'
+import Button from '../core/basic/Button.vue'
 
 const email = ref('')
 const message = ref('')
