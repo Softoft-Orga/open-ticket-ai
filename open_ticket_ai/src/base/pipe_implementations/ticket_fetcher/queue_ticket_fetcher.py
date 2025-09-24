@@ -21,7 +21,7 @@ class QueueTicketFetcher(Pipe[EmptyDataModel, QueueTicketFetcherOutput]):
 
     @inject
     def __init__(self, config: OpenTicketAIConfig, ticket_system: TicketSystemAdapter):
-        super().__init__(config)
+        self.config = config
         self.ticket_system = ticket_system
         self.logger = logging.getLogger(self.__class__.__name__)
 

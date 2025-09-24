@@ -14,11 +14,11 @@ dependencies = [
     "injector~=0.22.0",
     "requests~=2.32.4",
     "huggingface-hub[hf-xet]>=0.33.0",
-    "otobo>=4.1.6",
     "openai>=1.108.1",
     "mdxlate>=0.1.0",
     "pathspec>=0.12.1",
     "docstring-parser>=0.17.0",
+    "otobo-znuny>=1.2.5",
 ]
 
 [project.optional-dependencies]

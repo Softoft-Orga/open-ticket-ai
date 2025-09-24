@@ -14,10 +14,16 @@ open_ticket_ai:
 
     filter_by_queue: "EingangsQueue"
 
-    hf_model: "softoft/EHS_Queue_V8"
-    hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
+    hf_model_queue: "softoft/EHS_Queue_V8"
+    hf_model_queue_token_env_var: "HUGGINGFACE_EHS_TOKEN"
 
-    confidence_threshold: 0.8
+    hf_model_priority: "softoft/EHS_Queue_V8"
+    hf_model_priority_token_env_var: "HUGGINGFACE_EHS_TOKEN"
+
+    queue_confidence_threshold: 0.8
     low_confidence_queue: Unklassifiziert
+
+    priority_confidence_threshold: 0.8
+    low_confidence_priority: "3 Mittel"
 
     run_every_milli_seconds: 1

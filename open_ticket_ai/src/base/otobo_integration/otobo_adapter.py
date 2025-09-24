@@ -2,8 +2,8 @@ import logging
 from typing import Self
 
 from injector import inject
-from otobo.clients.otobo_client import OTOBOClient
-from otobo.domain_models.ticket_models import TicketSearch, IdName, Ticket, Article
+from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
+from otobo_znuny.domain_models.ticket_models import TicketSearch, IdName, Ticket, Article, TicketUpdate
 
 from open_ticket_ai.src.core.config.config_models import OTOBOAdapterConfig
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
@@ -17,7 +17,7 @@ from open_ticket_ai.src.base.otobo_integration.models import TicketAdapter
 
 class OTOBOAdapter(TicketSystemAdapter):
     @inject
-    def __init__(self, config: OTOBOAdapterConfig, otobo_client: OTOBOClient):
+    def __init__(self, config: OTOBOAdapterConfig, otobo_client: OTOBOZnunyClient):
         self.config = config
         self.otobo_client = otobo_client
 
@@ -42,7 +42,7 @@ class OTOBOAdapter(TicketSystemAdapter):
         return items[0] if items else None
 
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicketBase) -> bool:
-        ticket = Ticket(
+        ticket = TicketUpdate(
             id=int(ticket_id),
             title=updates.subject,
             queue=IdName(
@@ -63,9 +63,9 @@ class OTOBOAdapter(TicketSystemAdapter):
 
     async def add_note_to_ticket(self, ticket_id: str, note: UnifiedNote) -> bool:
         updated = await self.otobo_client.update_ticket(
-            Ticket(
+            TicketUpdate(
                 id=int(ticket_id),
-                articles=[Article(subject=note.subject, body=note.body, content_type="text/plain; charset=utf-8")],
+                article=Article(subject=note.subject, body=note.body, content_type="text/plain; charset=utf-8"),
             )
         )
         return True

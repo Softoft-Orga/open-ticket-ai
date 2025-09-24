@@ -4,7 +4,5 @@ from open_ticket_ai.src.base.pipe_implementations.models import UnifiedTicketInf
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import UnifiedTicket
 
 
-class HFLocalAIInferenceServiceOutput(UnifiedTicketInformation):
-    prediction: str | int
-    confidence: float
+class TicketUpdaterOutput(UnifiedTicketInformation):
     ticket: UnifiedTicket

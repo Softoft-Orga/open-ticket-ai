@@ -3,7 +3,7 @@ import inspect
 import pytest
 
 pytest.importorskip("otobo")
-from otobo.models.request_models import AuthData
+from otobo_znuny.models.request_models import AuthData
 
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
 from open_ticket_ai.src.core.config.config_models import SystemConfig
