@@ -58,6 +58,7 @@ class OTOBOAdapter(TicketSystemAdapter):
             if updates.priority
             else None,
         )
+        logging.info(ticket)
         await self.otobo_client.update_ticket(ticket)
         return True
 

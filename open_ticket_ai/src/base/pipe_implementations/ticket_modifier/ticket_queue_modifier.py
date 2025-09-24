@@ -9,7 +9,7 @@ class TicketQueueModifier(BaseTicketModifier):
         self, data: HFLocalAIInferenceServiceOutput, config: OpenTicketAIConfig
     ) -> UnifiedTicket | None:
         new_queue = config.low_confidence_queue if data.confidence < config.queue_confidence_threshold else data.prediction
-        return UnifiedTicket(queue=UnifiedQueue(name=new_queue))
+        return UnifiedTicket(id=data.ticket.id, queue=UnifiedQueue(name=new_queue))
 
     def build_note(self, data: HFLocalAIInferenceServiceOutput,
                    config: OpenTicketAIConfig, ticket_update: UnifiedTicket) -> UnifiedNote | None:

@@ -9,7 +9,7 @@ class TicketPriorityModifier(BaseTicketModifier):
         self, data: HFLocalAIInferenceServiceOutput, config: OpenTicketAIConfig
     ) -> UnifiedTicket | None:
         new_priority = config.low_confidence_priority if data.confidence < config.priority_confidence_threshold else data.prediction
-        return UnifiedTicket(priority=UnifiedPriority(name=new_priority))
+        return UnifiedTicket(id=data.ticket.id, priority=UnifiedPriority(name=new_priority))
 
     def build_note(self, data: HFLocalAIInferenceServiceOutput,
                    config: OpenTicketAIConfig, ticket_update: UnifiedTicket) -> UnifiedNote | None:

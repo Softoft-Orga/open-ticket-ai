@@ -56,6 +56,7 @@ class BaseTicketModifier(
             )
 
         ticket_update = self.build_ticket_update(data, self.config)
+        self.logger.info(f"Built ticket update: {ticket_update}")
         if ticket_update is None:
             return PipelineContext(meta_info=context.meta_info, data=TicketUpdaterOutput(ticket=data.ticket))
 
