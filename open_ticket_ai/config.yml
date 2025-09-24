@@ -1,5 +1,3 @@
-$schema: "./config.schema.json"
-
 open_ticket_ai:
     logging:
         version: 1
