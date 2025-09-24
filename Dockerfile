@@ -6,7 +6,6 @@ WORKDIR /app
 # Copy only the files needed to install dependencies
 COPY pyproject.toml ./
 COPY LICENSE ./
-COPY README.md ./
 
 # Create a virtual environment and install dependencies into it
 # We allow caching here to speed up rebuilds
