@@ -3,50 +3,36 @@ import os
 from functools import lru_cache
 from typing import Optional
 
-from injector import inject
-
-from open_ticket_ai.src.base.pipe_implementations.hf_inference_services.models import (
-    HFLocalAIInferenceServiceOutput,
-)
-from open_ticket_ai.src.base.pipe_implementations.subject_body_preparer.models import (
-    SubjectBodyPreparerOutput,
-)
 from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 
 
 class HFLocalAIInferenceService(
-    Pipe[SubjectBodyPreparerOutput, HFLocalAIInferenceServiceOutput]
+    Pipe
 ):
-    InputModel = SubjectBodyPreparerOutput
-    OutputModel = HFLocalAIInferenceServiceOutput
-
-    @inject
-    def __init__(self, hf_token_env_var: Optional[str], hf_model_name: str):
+    def __init__(self, config: dict):
         # No need to call super() with config anymore
-        super().__init__()
-        self.hf_token_env_var = hf_token_env_var
-        self.hf_model_name = hf_model_name
+        self.config = config
 
         self.logger = logging.getLogger(self.__class__.__name__)
         self._pipeline = None
 
     def _get_token(self) -> Optional[str]:
-        if not self.hf_token_env_var:
+        if "hf_token_env_var" not in self.config:
             self.logger.warning(
                 "No hf_token_env_var provided; proceeding without auth token"
             )
             return None
 
-        token = os.getenv(self.hf_token_env_var)
+        token = os.getenv(self.config["hf_token_env_var"], "").strip()
         if not token:
             self.logger.warning(
-                f"Environment variable '{self.hf_token_env_var}' is not set or empty; proceeding without auth token"
+                f"Environment variable '{self.config['hf_token_env_var']}' is not set or empty; proceeding without auth token"
             )
             return None
         if not token.startswith("hf_"):
             self.logger.warning(
-                f"Token from '{self.hf_token_env_var}' does not appear to be a valid HuggingFace token"
+                f"Token from '{self.config["hf_token_env_var"]}' does not appear to be a valid HuggingFace token"
             )
         return token
 
@@ -66,13 +52,13 @@ class HFLocalAIInferenceService(
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 
     async def process(
-        self, context: PipelineContext[SubjectBodyPreparerOutput]
-    ) -> PipelineContext[HFLocalAIInferenceServiceOutput]:
+        self, context: PipelineContext[dict]
+    ) -> PipelineContext[dict]:
         if self._pipeline is None:
             token = self._get_token()
-            self._pipeline = self._load_pipeline(self.hf_model_name, token)
+            self._pipeline = self._load_pipeline(self.config["hf_model"], token)
 
-        text = context.data.subject_body_combined or ""
+        text = context.data[self.config["input_field"]] or ""
         result = self._pipeline(text, truncation=True)
         top = result[0] if isinstance(result, list) else result
 
@@ -82,10 +68,10 @@ class HFLocalAIInferenceService(
         self.logger.info(f"Prediction: label {label} with score {score}")
         new_context = PipelineContext(
             meta_info=context.meta_info,
-            data=HFLocalAIInferenceServiceOutput(
-                prediction=label,
-                confidence=score,
-                ticket=context.data.ticket,
-            ),
+            data=context.data
+                 | {
+                     self.config["output_structure"]["label_field"]: label,
+                     self.config["output_structure"]["confidence_field"]: score
+                 }
         )
         return new_context

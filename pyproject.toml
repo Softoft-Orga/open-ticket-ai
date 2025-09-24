@@ -1,8 +1,15 @@
 [project]
 name = "open-ticket-ai"
-version = "0.1.0"
+version = "1.0.0rc1"
 description = "AI enhancements for open source ticket systems"
 requires-python = ">=3.13"
+
+# ADDED: Author and license information
+authors = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
+license = { text = "LGPL-2.1-only" } # Using the standard SPDX identifier
+
 dependencies = [
     "pydantic~=2.11.7",
     "pydantic_core",
@@ -19,7 +26,12 @@ dependencies = [
     "pathspec>=0.12.1",
     "docstring-parser>=0.17.0",
     "otobo-znuny>=1.2.5",
+    "pyfiglet>=1.0.4",
 ]
+
+# ADDED: Project URLs
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
 
 [project.optional-dependencies]
 dev = [
@@ -36,7 +48,6 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
-# Add specific lint configurations here if needed in the future
 
 [tool.mypy]
 python_version = "3.13"

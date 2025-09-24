@@ -12,6 +12,11 @@ open_ticket_ai:
         username: "openticketai_ws"
         password_env_var: "OTOBO_DEMO_PASSWORD"
 
+    ticket_fetcher:
+        filters:
+            -   field: "queue"
+                operator: "equals"
+                value: "Raw"
     filter_by_queue: "Raw"
 
     hf_model: "Tobi-Bueck/atc-queue-model"

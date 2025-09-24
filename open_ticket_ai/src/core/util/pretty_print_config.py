@@ -7,6 +7,7 @@ from rich.syntax import Syntax
 
 logger = logging.getLogger(__name__)
 
+
 def pretty_print_config(config: BaseModel, console: Console):
     # turn your BaseModel into a dict
     cfg_dict = config.model_dump()

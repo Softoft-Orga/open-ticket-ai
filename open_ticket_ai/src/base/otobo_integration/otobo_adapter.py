@@ -1,10 +1,10 @@
 import logging
-from typing import Self
 
 from injector import inject
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import TicketSearch, IdName, Ticket, Article, TicketUpdate
 
+from open_ticket_ai.src.base.otobo_integration.models import TicketAdapter
 from open_ticket_ai.src.core.config.config_models import OTOBOAdapterConfig
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
@@ -12,7 +12,6 @@ from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
     UnifiedTicketBase, UnifiedNote,
 )
-from open_ticket_ai.src.base.otobo_integration.models import TicketAdapter
 
 
 class OTOBOAdapter(TicketSystemAdapter):
@@ -20,6 +19,7 @@ class OTOBOAdapter(TicketSystemAdapter):
     def __init__(self, config: OTOBOAdapterConfig, otobo_client: OTOBOZnunyClient):
         self.config = config
         self.otobo_client = otobo_client
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         search = TicketSearch(
@@ -33,6 +33,7 @@ class OTOBOAdapter(TicketSystemAdapter):
             else None,
             limit=criteria.limit
         )
+        self.logger.debug("OTOBO search criteria: %s", search)
         tickets: list[Ticket] = await self.otobo_client.search_and_get(search)
         logging.info("OTOBO search returned %d tickets", len(tickets))
         return [TicketAdapter(t) for t in tickets]

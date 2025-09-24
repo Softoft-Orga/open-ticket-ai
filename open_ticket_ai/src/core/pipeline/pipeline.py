@@ -4,7 +4,6 @@ from .context import PipelineContext
 from .meta_info import MetaInfo
 from .pipe import Pipe
 from .status import PipelineStatus
-from ...base.pipe_implementations.empty_data_model import EmptyDataModel
 
 logger = logging.getLogger(__name__)
 
@@ -12,15 +11,18 @@ logger = logging.getLogger(__name__)
 class Pipeline:
     def __init__(self, pipes: list[Pipe]):
         self.pipes: list[Pipe] = pipes
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     async def execute(self) -> PipelineContext:
         context: PipelineContext = PipelineContext(
             meta_info=MetaInfo(status=PipelineStatus.RUNNING),
-            data=EmptyDataModel(),
+            data={},
         )
 
         for pipe in self.pipes:
             try:
+                self.logger.info(f"Executing pipe {pipe.__class__.__name__}")
+                self.logger.debug(f"{context}")
                 context = await pipe.process(context)
             except Exception as e:
                 logger.error(

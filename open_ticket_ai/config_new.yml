@@ -1,0 +1,91 @@
+open_ticket_ai:
+    system:
+        ticket_system_type: "otrs_fork"
+        server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
+        webservice_name: "OpenTicketAI"
+        search_operation_url: "ticket-search"
+        update_operation_url: "ticket-update"
+        get_operation_url: "ticket-get"
+        username: "open_ticket_ai"
+        password_env_var: "OTOBO_EHS_PASSWORD"
+
+    pipes:
+        -   id: "basic_ticket_fetcher"
+            provider_key: "BasicTicketFetcher"
+            filters:
+                -   field: "queue"
+                    operator: "equals"
+                    value: "EingangsQueue"
+
+        -   id: "subject_body_preparer"
+            provider_key: "SubjectBodyPreparer"
+
+        -   id: "queue_ai_inference"
+            provider_key: "HFLocalAIInferenceService"
+            hf_model: "open-ticket-ai/queue-classification-german-bert"
+            hf_token_env_var: "HUGGINGFACE_TOKEN"
+
+        -   id: "priority_ai_inference"
+            provider_key: "HFLocalAIInferenceService"
+            hf_model: "open-ticket-ai/priority-classification-german-bert"
+            hf_token_env_var: "HUGGINGFACE_TOKEN"
+
+        -   id: "queue_mapper"
+            provider_key: "RegexValueMapper"
+            to_values_from_list:
+                "IT & Technology/Security Operations": [ "IT & Technology/Security Operations", "IT & Technology/Security" ]
+                "IT & Technology/Software Development": [ "IT & Technology/Software Development" ]
+
+        -   id: "priority_mapper"
+            provider_key: "RegexValueMapper"
+            to_value_from_list:
+                "niedrig": [ "sehr niedrig", "niedrig" ]
+                "mittel": [ "mittel" ]
+                "hoch": [ "hoch", "sehr hoch" ]
+
+        -   id: "queue_updater"
+            provider_key: "BasicTicketModifier"
+            confidence_threshold: 0.8
+            low_confidence_value: "IT & Technology/Security Operations"
+            update_operations:
+                -   ticket_field: "queue"
+                    from_pipe: "queue_mapper"
+
+        -   id: "priority_updater"
+            provider_key: "BasicTicketModifier"
+            confidence_threshold: 0.6
+            low_confidence_value: "mittel"
+
+    pipelines:
+        -   id: "queue_classification"
+            schedule:
+                interval: "30"
+                units: seconds
+            pipes:
+                - "basic_ticket_fetcher"
+                - "subject_body_preparer"
+                - "queue_ai_inference"
+                - "queue_updater"
+    ticket_filter:
+        filters:
+            -   field: "queue"
+                operator: "equals"
+                value: "EingangsQueue"
+
+    queue_inference_model:
+        hf_model_queue: "softoft/EHS_Queue_V8"
+        hf_model_queue_token_env_var: "HUGGINGFACE_EHS_TOKEN"
+
+    priority_inference_model:
+        hf_model_priority: "softoft/EHS_Queue_V8"
+        hf_model_priority_token_env_var: "HUGGINGFACE_EHS_TOKEN"
+
+    queue_modifier:
+        low_confidence_threshold: 0.8
+        low_confidence_value: Unklassifiziert
+
+    priority_modifier:
+        low_confidence_threshold: 0.8
+        low_confidence_value: "3 Mittel"
+
+    run_every_milli_seconds: 1

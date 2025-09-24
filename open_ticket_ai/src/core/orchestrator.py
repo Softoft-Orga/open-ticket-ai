@@ -24,4 +24,4 @@ class Orchestrator:
 
         while True:
             await self.pipeline.execute()
-            await asyncio.sleep(self.config.run_every_milli_seconds / 1000)
+            await asyncio.sleep(self.config.orchestrator.run_every_milli_seconds / 1000)

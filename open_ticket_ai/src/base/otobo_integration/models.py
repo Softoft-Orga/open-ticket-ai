@@ -1,6 +1,7 @@
 from typing import Self
 
 from otobo_znuny.domain_models.ticket_models import (Ticket, Article)
+
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     UnifiedNote,
     UnifiedPriority,

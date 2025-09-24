@@ -1,8 +1,30 @@
 $schema: "./config.schema.json"
 
 open_ticket_ai:
+    logging:
+        version: 1
+        disable_existing_loggers: false # Add this to prevent disabling loggers from other libraries
 
-    # only one ticket-system adapter
+        formatters:
+            standard:
+                format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s' # Added %(name)s to see which logger is used
+
+        handlers:
+            console:
+                class: logging.StreamHandler
+                formatter: standard
+                stream: ext://sys.stdout
+
+        # ADDED: A specific logger for your application
+        loggers:
+            open_ticket_ai: # This will catch logs from all submodules
+                handlers: ["console"]
+                level: INFO
+                propagate: false # Prevents logs from being sent to the root logger and printed twice
+
+        root:
+            level: WARNING # Set root logger to WARNING to reduce noise from third-party libraries
+            handlers: [ "console" ]
     system:
         server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
         webservice_name: "OpenTicketAI"
@@ -11,19 +33,117 @@ open_ticket_ai:
         get_operation_url: "ticket-get"
         username: "open_ticket_ai"
         password_env_var: "OTOBO_EHS_PASSWORD"
+    pipes:
+        ticket_fetcher:
+            filters:
+                -   field: "queue_name"
+                    operator: "equals"
+                    value: "EingangsQueue"
+            output_field: "ticket"
 
-    filter_by_queue: "EingangsQueue"
+        subject_body_preparer:
+            subject_field: "ticket.subject"
+            body_field: "ticket.body"
+            output_field: "prepared_text"
+        queue_ai_model:
+            hf_model: "softoft/EHS_Queue_V8"
+            hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
+            input_field: "prepared_text"
+            output_structure:
+                label_field: "predicted_queue"
+                confidence_field: "queue_confidence"
 
-    hf_model_queue: "softoft/EHS_Queue_V8"
-    hf_model_queue_token_env_var: "HUGGINGFACE_EHS_TOKEN"
 
-    hf_model_priority: "softoft/EHS_Queue_V8"
-    hf_model_priority_token_env_var: "HUGGINGFACE_EHS_TOKEN"
+        priority_ai_model:
+            hf_model: "softoft/EHS_Priority_Prediction"
+            hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
+            input_field: "prepared_text"
+            output_structure:
+                label_field: "predicted_priority"
+                confidence_field: "priority_confidence"
 
-    queue_confidence_threshold: 0.8
-    low_confidence_queue: Unklassifiziert
+        queue_mapper:
+            input_field: "predicted_queue"
+            to_values_from_list:
+                "Anfrage an die IT::Backup/Rücksicherung": [ "Anfrage an die IT::Backup/Rücksicherung" ]
+                "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen": [ "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen" ]
+                "Anfrage an die IT::DMS-System (d.3)": [ "Anfrage an die IT::DMS-System (d.3)" ]
+                "Anfrage an die IT::Drucker": [ "Anfrage an die IT::Drucker" ]
+                "Anfrage an die IT::ERP-System (Wilken/eGecko)": [ "Anfrage an die IT::ERP-System (Wilken/eGecko)" ]
+                "Anfrage an die IT::Fachsystem Pflege": [ "Anfrage an die IT::Fachsystem Pflege" ]
+                "Anfrage an die IT::Homeoffice": [ "Anfrage an die IT::Homeoffice" ]
+                "Anfrage an die IT::Logbuch/Sharepoint": [ "Anfrage an die IT::Logbuch/Sharepoint" ]
+                "Anfrage an die IT::Mail/Outlook": [ "Anfrage an die IT::Mail/Outlook" ]
+                "Anfrage an die IT::PC/Hardware": [ "Anfrage an die IT::PC/Hardware" ]
+                "Anfrage an die IT::Smartphone/Tablet": [ "Anfrage an die IT::Smartphone/Tablet" ]
+                "Anfrage an die IT::Software-Bestellungen": [ "Anfrage an die IT::Software-Bestellungen" ]
+                "Anfrage an die IT::Sonstige Systeme/Anwendungen": [ "Anfrage an die IT::Sonstige Systeme/Anwendungen" ]
+                "Anfrage an die IT::TK-Anlagen/Nebenstellen": [ "Anfrage an die IT::TK-Anlagen/Nebenstellen" ]
+                "Anfrage an die IT::Netzwerk/Internet": [ "Anfrage an die IT::Netzwerk/Internet" ]
+                "Assistenzsysteme": [ "Assistenzsysteme" ]
+                "Bewerbungsmanagement": [ "Bewerbungsmanagement" ]
+                "Hausnotruf": [ "Hausnotruf" ]
+                "Hauswirtschaft": [ "Hauswirtschaft" ]
+                "Hygiene": [ "Hygiene" ]
+                "Lernwelt": [ "Lernwelt" ]
+                "Personal Office": [ "Personal Office" ]
+                "Pflege und Alltagsbegleitung": [ "Pflege und Alltagsbegleitung" ]
 
-    priority_confidence_threshold: 0.8
-    low_confidence_priority: "3 Mittel"
+            output_field: "mapped_queue"
 
-    run_every_milli_seconds: 1
+        priority_mapper:
+            input_field: "predicted_priority"
+            to_value_from_list:
+                "1 Kritisch": [ "1 Kritisch" ]
+                "3 Mittel": [ "3 Mittel" ]
+                "5 Sehr niedrig": [ "5 Sehr niedrig" ]
+
+            output_field: "mapped_priority"
+
+        queue_low_confidence_handler:
+            label_field: "mapped_queue"
+            low_confidence_value: "Unklassifiziert"
+            confidence_field: "queue_confidence"
+            threshold: 0.8
+            output_field: "final_queue"
+
+
+        priority_low_confidence_handler:
+            label_field: "mapped_priority"
+            low_confidence_value: "mittel"
+            confidence_field: "priority_confidence"
+            threshold: 0.6
+            output_field: "final_priority"
+
+        queue_updater:
+            ticket_id_field: "ticket.id"
+            update_operations:
+                -   operation: "Set"
+                    ticket_field: "queue_name"
+                    value: "final_queue"
+
+        queue_note_adder:
+            ticket_id_field: "ticket.id"
+
+            update_operations:
+                -   operation: "AddNote"
+                    subject: "Automatische Klassifizierung"
+                    body: "Das Ticket wurde automatisch der Queue {final_queue} zugeordnet; mit der Konfidenz {queue_confidence:2f}"
+
+        priority_updater:
+            ticket_id_field: "ticket.id"
+
+            update_operations:
+                -   operation: "Set"
+                    ticket_field: "priority_name"
+                    value: "final_priority"
+
+        priority_note_adder:
+            ticket_id_field: "ticket.id"
+
+            update_operations:
+                -   operation: "AddNote"
+                    subject: "Automatische Priorisierung"
+                    body: "Das Ticket wurde automatisch der Priorität {final_priority} zugeordnet; mit der Konfidenz {priority_confidence:2f}"
+    orchestrator:
+        run_every_milli_seconds: 1

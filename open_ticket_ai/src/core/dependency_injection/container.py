@@ -10,12 +10,13 @@ from otobo_znuny.domain_models.ticket_operation import TicketOperation
 from pydantic import SecretStr
 
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
-from open_ticket_ai.src.base.pipe_implementations.hf_inference_services.hf_local_ai_inference_service import \
+from open_ticket_ai.src.base.pipe_implementations.base_ticket_modifier import TicketModifier
+from open_ticket_ai.src.base.pipe_implementations.hf_local_ai_inference_service import \
     HFLocalAIInferenceService
+from open_ticket_ai.src.base.pipe_implementations.list_value_mapper import ListValueMapper
+from open_ticket_ai.src.base.pipe_implementations.low_confidence_handler import LowConfidenceHandler
 from open_ticket_ai.src.base.pipe_implementations.subject_body_preparer import SubjectBodyPreparer
-from open_ticket_ai.src.base.pipe_implementations.ticket_fetcher import QueueTicketFetcher
-from open_ticket_ai.src.base.pipe_implementations.ticket_modifier.ticket_priority_modifier import TicketPriorityModifier
-from open_ticket_ai.src.base.pipe_implementations.ticket_modifier.ticket_queue_modifier import TicketQueueModifier
+from open_ticket_ai.src.base.pipe_implementations.ticket_fetcher import TicketFetcher
 from open_ticket_ai.src.core.config.config_models import (
     OpenTicketAIConfig,
     load_config,
@@ -25,6 +26,15 @@ from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter imp
 from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
 
 CONFIG_PATH = os.getenv("OPEN_TICKET_AI_CONFIG", find_python_code_root_path() / "config.yml")
+
+PIPE_REGISTRY = {
+    "TicketFetcher": TicketFetcher,
+    "SubjectBodyPreparer": SubjectBodyPreparer,
+    "HFLocalAIInferenceService": HFLocalAIInferenceService,
+    "ListValueMapper": ListValueMapper,
+    "LowConfidenceHandler": LowConfidenceHandler,
+    "TicketModifier": TicketModifier,
+}
 
 
 class AppModule(Module):
@@ -63,28 +73,80 @@ class AppModule(Module):
     def provide_pipeline(
         self,
         config: OpenTicketAIConfig,
-        queue_ticket_fetcher: QueueTicketFetcher,
-        subject_body_preparer: SubjectBodyPreparer,
-        ticket_queue_modifier: TicketQueueModifier,
-        ticket_priority_modifier: TicketPriorityModifier,
+        ticket_system_adapter: TicketSystemAdapter,
     ) -> Pipeline:
-        queue_hf = HFLocalAIInferenceService(
-            hf_model_name=config.hf_model_queue,
-            hf_token_env_var=config.hf_model_queue_token_env_var,
+        ticket_fetcher = TicketFetcher(
+            config=config.pipes['ticket_fetcher'],
+            ticket_system=ticket_system_adapter
         )
 
-        priority_hf = HFLocalAIInferenceService(
-            hf_model_name=config.hf_model_priority,
-            hf_token_env_var=config.hf_model_priority_token_env_var
+        subject_body_preparer = SubjectBodyPreparer(
+            config=config.pipes['subject_body_preparer']
         )
+
+        queue_ai_model = HFLocalAIInferenceService(
+            config=config.pipes['queue_ai_model']
+        )
+
+        priority_ai_model = HFLocalAIInferenceService(
+            config=config.pipes['priority_ai_model']
+        )
+
+        queue_mapper = ListValueMapper(
+            config=config.pipes['queue_mapper']
+        )
+
+        priority_mapper = ListValueMapper(
+            config=config.pipes['priority_mapper']
+        )
+
+        queue_low_confidence_handler = LowConfidenceHandler(
+            config=config.pipes['queue_low_confidence_handler']
+        )
+
+        priority_low_confidence_handler = LowConfidenceHandler(
+            config=config.pipes['priority_low_confidence_handler']
+        )
+
+        queue_updater = TicketModifier(
+            config=config.pipes['queue_updater'],
+            ticket_system=ticket_system_adapter
+        )
+
+        queue_note_adder = TicketModifier(
+            config=config.pipes['queue_note_adder'],
+            ticket_system=ticket_system_adapter
+        )
+
+        priority_updater = TicketModifier(
+            config=config.pipes['priority_updater'],
+            ticket_system=ticket_system_adapter
+        )
+
+        priority_note_adder = TicketModifier(
+            config=config.pipes['priority_note_adder'],
+            ticket_system=ticket_system_adapter
+        )
+
+        # --- 2. Assemble the single pipeline in the correct order ---
+
         return Pipeline(pipes=[
-            queue_ticket_fetcher,
+            ticket_fetcher,
             subject_body_preparer,
-            queue_hf,
-            ticket_queue_modifier,
-            subject_body_preparer,
-            priority_hf,
-            ticket_priority_modifier,
+
+            # Queue classification branch
+            queue_ai_model,
+            queue_mapper,
+            queue_low_confidence_handler,
+            queue_updater,
+            queue_note_adder,
+
+            # Priority classification branch
+            priority_ai_model,
+            priority_mapper,
+            priority_low_confidence_handler,
+            priority_updater,
+            priority_note_adder,
         ])
 
     @provider

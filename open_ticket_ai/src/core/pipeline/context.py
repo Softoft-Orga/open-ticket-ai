@@ -6,7 +6,7 @@ from open_ticket_ai.src.core.pipeline.meta_info import MetaInfo
 from open_ticket_ai.src.core.pipeline.status import PipelineStatus
 
 
-class PipelineContext[DataT: BaseModel](BaseModel):
+class PipelineContext[DataT](BaseModel):
     data: DataT | None = None
     meta_info: MetaInfo = MetaInfo()
 
