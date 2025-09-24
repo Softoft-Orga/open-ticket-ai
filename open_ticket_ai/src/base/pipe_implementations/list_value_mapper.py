@@ -2,20 +2,21 @@
 import logging
 
 from open_ticket_ai.src.base.pipe_implementations.context_helper import get_value_from_context
+from open_ticket_ai.src.core.config.pipe_configs import ListValueMapperConfig
 from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 
 
 class ListValueMapper(Pipe):
-    def __init__(self, config: dict):
+    def __init__(self, config: ListValueMapperConfig):
         self.config = config
         self.logger = logging.getLogger(self.__class__.__name__)
 
     async def process(self, context: PipelineContext[dict]) -> PipelineContext[dict]:
         # Safely get configuration parameters
-        input_field = self.config.get("input_field")
-        output_field = self.config.get("output_field")
-        mapping_rules = self.config.get("to_value_from_list", {})
+        input_field = self.config.input_field
+        output_field = self.config.output_field
+        mapping_rules = self.config.mapping_rules
 
         if not all([input_field, output_field]):
             self.logger.error("Pipe is misconfigured. Missing 'input_field' or 'output_field'.")
