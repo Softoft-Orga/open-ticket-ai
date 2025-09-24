@@ -76,55 +76,55 @@ class AppModule(Module):
         ticket_system_adapter: TicketSystemAdapter,
     ) -> Pipeline:
         ticket_fetcher = TicketFetcher(
-            config=config.pipes['ticket_fetcher'],
+            config=config.pipes.ticket_fetcher,
             ticket_system=ticket_system_adapter
         )
 
         subject_body_preparer = SubjectBodyPreparer(
-            config=config.pipes['subject_body_preparer']
+            config=config.pipes.subject_body_preparer
         )
 
         queue_ai_model = HFLocalAIInferenceService(
-            config=config.pipes['queue_ai_model']
+            config=config.pipes.queue_ai_model
         )
 
         priority_ai_model = HFLocalAIInferenceService(
-            config=config.pipes['priority_ai_model']
+            config=config.pipes.priority_ai_model
         )
 
         queue_mapper = ListValueMapper(
-            config=config.pipes['queue_mapper']
+            config=config.pipes.queue_mapper
         )
 
         priority_mapper = ListValueMapper(
-            config=config.pipes['priority_mapper']
+            config=config.pipes.priority_mapper
         )
 
         queue_low_confidence_handler = LowConfidenceHandler(
-            config=config.pipes['queue_low_confidence_handler']
+            config=config.pipes.queue_low_confidence_handler
         )
 
         priority_low_confidence_handler = LowConfidenceHandler(
-            config=config.pipes['priority_low_confidence_handler']
+            config=config.pipes.priority_low_confidence_handler
         )
 
         queue_updater = TicketModifier(
-            config=config.pipes['queue_updater'],
+            config=config.pipes.queue_updater,
             ticket_system=ticket_system_adapter
         )
 
         queue_note_adder = TicketModifier(
-            config=config.pipes['queue_note_adder'],
+            config=config.pipes.queue_note_adder,
             ticket_system=ticket_system_adapter
         )
 
         priority_updater = TicketModifier(
-            config=config.pipes['priority_updater'],
+            config=config.pipes.priority_updater,
             ticket_system=ticket_system_adapter
         )
 
         priority_note_adder = TicketModifier(
-            config=config.pipes['priority_note_adder'],
+            config=config.pipes.priority_note_adder,
             ticket_system=ticket_system_adapter
         )
 

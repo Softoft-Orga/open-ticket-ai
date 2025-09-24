@@ -3,6 +3,7 @@ import os
 from functools import lru_cache
 from typing import Optional
 
+from open_ticket_ai.src.core.config.pipe_configs import HFLocalAIInferenceServiceConfig
 from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 
@@ -10,7 +11,7 @@ from open_ticket_ai.src.core.pipeline.pipe import Pipe
 class HFLocalAIInferenceService(
     Pipe
 ):
-    def __init__(self, config: dict):
+    def __init__(self, config: HFLocalAIInferenceServiceConfig):
         # No need to call super() with config anymore
         self.config = config
 
@@ -18,21 +19,21 @@ class HFLocalAIInferenceService(
         self._pipeline = None
 
     def _get_token(self) -> Optional[str]:
-        if "hf_token_env_var" not in self.config:
+        if not self.config.hf_token_env_var:
             self.logger.warning(
                 "No hf_token_env_var provided; proceeding without auth token"
             )
             return None
 
-        token = os.getenv(self.config["hf_token_env_var"], "").strip()
+        token = os.getenv(self.config.hf_token_env_var, "").strip()
         if not token:
             self.logger.warning(
-                f"Environment variable '{self.config['hf_token_env_var']}' is not set or empty; proceeding without auth token"
+                f"Environment variable '{self.config.hf_token_env_var}' is not set or empty; proceeding without auth token"
             )
             return None
         if not token.startswith("hf_"):
             self.logger.warning(
-                f"Token from '{self.config["hf_token_env_var"]}' does not appear to be a valid HuggingFace token"
+                f"Token from '{self.config.hf_token_env_var}' does not appear to be a valid HuggingFace token"
             )
         return token
 
@@ -56,9 +57,9 @@ class HFLocalAIInferenceService(
     ) -> PipelineContext[dict]:
         if self._pipeline is None:
             token = self._get_token()
-            self._pipeline = self._load_pipeline(self.config["hf_model"], token)
+            self._pipeline = self._load_pipeline(self.config.hf_model, token)
 
-        text = context.data[self.config["input_field"]] or ""
+        text = context.data.get(self.config.input_field, "") or ""
         result = self._pipeline(text, truncation=True)
         top = result[0] if isinstance(result, list) else result
 
@@ -69,9 +70,9 @@ class HFLocalAIInferenceService(
         new_context = PipelineContext(
             meta_info=context.meta_info,
             data=context.data
-                 | {
-                     self.config["output_structure"]["label_field"]: label,
-                     self.config["output_structure"]["confidence_field"]: score
-                 }
+                | {
+                    self.config.output_structure.label_field: label,
+                    self.config.output_structure.confidence_field: score,
+                }
         )
         return new_context

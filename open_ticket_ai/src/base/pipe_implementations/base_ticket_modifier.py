@@ -2,6 +2,12 @@
 import logging
 
 from open_ticket_ai.src.base.pipe_implementations.context_helper import get_value_from_context
+from open_ticket_ai.src.core.config.pipe_configs import (
+    TicketModifierAddNoteOperation,
+    TicketModifierConfig,
+    TicketModifierOperation,
+    TicketModifierSetOperation,
+)
 from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
@@ -9,38 +15,34 @@ from open_ticket_ai.src.core.ticket_system_integration.unified_models import Uni
     UnifiedPriority, UnifiedTicket
 
 
-def operations_to_ticket_update(operations: list[dict], context_data: dict) -> UnifiedTicket:
+def operations_to_ticket_update(
+    operations: list[TicketModifierOperation],
+    context_data: dict,
+) -> UnifiedTicket:
     """
     Converts a list of 'Set' operations from the config into a TicketUpdate object.
     """
     ticket_update = UnifiedTicket()
-    set_operations = [op for op in operations if op.get("operation") == "Set"]
+    for op in operations:
+        if isinstance(op, TicketModifierSetOperation):
+            value = get_value_from_context(context_data, op.value)
 
-    for op in set_operations:
-        field_to_update = op.get("ticket_field")
-        value_key = op.get("value")
-
-        if not field_to_update or not value_key:
-            continue
-
-        value = get_value_from_context(context_data, value_key)
-
-        if field_to_update == "queue_name":
-            ticket_update.queue = UnifiedQueue(name=value)
-        elif field_to_update == "priority_name":
-            ticket_update.priority = UnifiedPriority(name=value)
+            if op.ticket_field == "queue_name" and value is not None:
+                ticket_update.queue = UnifiedQueue(name=value)
+            elif op.ticket_field == "priority_name" and value is not None:
+                ticket_update.priority = UnifiedPriority(name=value)
 
     return ticket_update
 
 
 class TicketModifier(Pipe):
-    def __init__(self, config: dict, ticket_system: TicketSystemAdapter):
+    def __init__(self, config: TicketModifierConfig, ticket_system: TicketSystemAdapter):
         self.config = config
         self.ticket_system = ticket_system
         self.logger = logging.getLogger(self.__class__.__name__)
 
     async def process(self, context: PipelineContext[dict]) -> PipelineContext[dict]:
-        ticket_id_field = self.config.get("ticket_id_field")
+        ticket_id_field = self.config.ticket_id_field
         ticket_id = get_value_from_context(context.data, ticket_id_field)
 
         if not ticket_id:
@@ -50,7 +52,7 @@ class TicketModifier(Pipe):
 
         self.logger.info(f"Modifying ticket with ID: {ticket_id}")
 
-        operations = self.config.get("update_operations", [])
+        operations = self.config.update_operations
 
         # Handle 'Set' operations
         ticket_update = operations_to_ticket_update(operations, context.data)
@@ -60,9 +62,9 @@ class TicketModifier(Pipe):
 
         # Handle 'AddNote' operations
         for op in operations:
-            if op.get("operation") == "AddNote":
-                subject = op.get("subject", "").format(**context.data)
-                body = op.get("body", "").format(**context.data)
+            if isinstance(op, TicketModifierAddNoteOperation):
+                subject = op.subject.format(**context.data)
+                body = op.body.format(**context.data)
                 note = UnifiedNote(subject=subject, body=body)
                 await self.ticket_system.add_note_to_ticket(ticket_id, note)
                 self.logger.info(f"Added note to ticket {ticket_id}: {subject}")
