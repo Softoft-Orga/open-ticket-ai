@@ -11,7 +11,7 @@ from open_ticket_ai.src.core.pipeline.meta_info import MetaInfo
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
 from open_ticket_ai.src.core.pipeline.status import PipelineStatus
 from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
-from open_ticket_ai.src.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedQueue
+from open_ticket_ai.src.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedEntity
 
 
 def ticket_filters_to_search_criteria(
@@ -36,7 +36,7 @@ def ticket_filters_to_search_criteria(
 
     # Instantiate the UnifiedQueue Pydantic model
     unified_queue_filter = (
-        UnifiedQueue(
+        UnifiedEntity(
             name=equal_filters_dict.get('queue_name'),
             id=equal_filters_dict.get('queue_id'),
         )
@@ -44,7 +44,6 @@ def ticket_filters_to_search_criteria(
         else None
     )
 
-    # Instantiate and return the TicketSearchCriteria Pydantic model
     return TicketSearchCriteria(
         queue=unified_queue_filter,
         limit=1
@@ -53,25 +52,22 @@ def ticket_filters_to_search_criteria(
 
 class TicketFetcher(Pipe):
     def __init__(self, config: TicketFetcherConfig, ticket_system: TicketSystemAdapter):
-        self.config = config
+        super().__init__(config)
         self.ticket_system = ticket_system
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    async def process(self, context: PipelineContext[dict]) -> PipelineContext[dict]:
-        filters = self.config.filters
-        output_field = self.config.output_field
-
-        self.logger.info(f"Fetching tickets with filters: {filters}")
-        search_criteria = ticket_filters_to_search_criteria(filters)
+    async def _process(self, context: PipelineContext, rendered_config: TicketFetcherConfig) -> PipelineContext:
+        self.logger.info(f"Fetching tickets with filters: {rendered_config.filters}")
+        search_criteria = ticket_filters_to_search_criteria(rendered_config.filters)
         self.logger.info(f"Search criteria: {search_criteria}")
         tickets = await self.ticket_system.find_tickets(search_criteria)
 
         if not tickets:
-            self.logger.warning(f"No tickets found for filters: {filters}")
+            self.logger.debug(f"No tickets found for filters: {rendered_config.filters}")
             return PipelineContext(
                 meta_info=MetaInfo(
                     status=PipelineStatus.STOPPED,
-                    error_message=f"No ticket found for filters: '{filters}'",
+                    error_message=f"No ticket found for filters: '{rendered_config.filters}'",
                     failed_pipe=self.__class__.__name__
                 ),
                 data=context.data
@@ -82,5 +78,5 @@ class TicketFetcher(Pipe):
         self.logger.info(f"Fetched ticket {ticket_dict['subject']}")
         return PipelineContext(
             meta_info=context.meta_info,
-            data=context.data | {output_field: ticket_dict}
+            data=context.data | {rendered_config.output_field: ticket_dict}
         )

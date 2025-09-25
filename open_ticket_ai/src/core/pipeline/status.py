@@ -6,4 +6,6 @@ class PipelineStatus(Enum):
     RUNNING = auto()
     SUCCESS = auto()
     STOPPED = auto()
+    PARTIAL_FAILURE = auto()
     FAILED = auto()
+

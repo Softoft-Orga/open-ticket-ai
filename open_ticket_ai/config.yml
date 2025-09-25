@@ -33,34 +33,33 @@ open_ticket_ai:
         password_env_var: "OTOBO_EHS_PASSWORD"
     pipes:
         ticket_fetcher:
+            class: "open_ai.src.base.TicketFetcher"
             filters:
                 -   field: "queue_name"
                     operator: "equals"
                     value: "EingangsQueue"
             output_field: "ticket"
 
-        subject_body_preparer:
-            subject_field: "ticket.subject"
-            body_field: "ticket.body"
-            output_field: "prepared_text"
         queue_ai_model:
+            class: "open_ai.src.base.HFLocalAIInferenceService"
+            input_value: "prepared_text"
             hf_model: "softoft/EHS_Queue_V8"
             hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
-            input_field: "prepared_text"
             output_structure:
                 label_field: "predicted_queue"
                 confidence_field: "queue_confidence"
 
-
         priority_ai_model:
+            class: "open_ai.src.base.HFLocalAIInferenceService"
+            input_value: "prepared_text"
             hf_model: "softoft/EHS_Priority_Prediction"
             hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
-            input_field: "prepared_text"
             output_structure:
                 label_field: "predicted_priority"
                 confidence_field: "priority_confidence"
 
         queue_mapper:
+            class: "open_ai.src.base.ListValueMapper"
             input_field: "predicted_queue"
             to_values_from_list:
                 "Anfrage an die IT::Backup/Rücksicherung": [ "Anfrage an die IT::Backup/Rücksicherung" ]
@@ -90,58 +89,49 @@ open_ticket_ai:
             output_field: "mapped_queue"
 
         priority_mapper:
-            input_field: "predicted_priority"
+            class: "open_ai.src.base.ListValueMapper"
+            input_value: "predicted_priority"
             to_value_from_list:
                 "1 Kritisch": [ "1 Kritisch" ]
                 "3 Mittel": [ "3 Mittel" ]
                 "5 Sehr niedrig": [ "5 Sehr niedrig" ]
 
-            output_field: "mapped_priority"
+            output_field: "mapped_priority"er
 
-        queue_low_confidence_handler:
-            label_field: "mapped_queue"
-            low_confidence_value: "Unklassifiziert"
-            confidence_field: "queue_confidence"
-            threshold: 0.8
-            output_field: "final_queue"
-
-
-        priority_low_confidence_handler:
-            label_field: "mapped_priority"
-            low_confidence_value: "mittel"
-            confidence_field: "priority_confidence"
-            threshold: 0.6
-            output_field: "final_priority"
 
         queue_updater:
-            ticket_id_field: "ticket.id"
+            class: "open_ai.src.base.TicketModifier"
+            ticket_id: "ticket.id"
             update_operations:
-                -   operation: "Set"
-                    ticket_field: "queue_name"
+                -   ticket_field: "queue_name"
                     value: "final_queue"
 
         queue_note_adder:
-            ticket_id_field: "ticket.id"
+            class: "open_ai.src.base.TicketModifier"
+            ticket_id: "ticket.id"
 
             update_operations:
-                -   operation: "AddNote"
-                    subject: "Automatische Klassifizierung"
-                    body: "Das Ticket wurde automatisch der Queue {final_queue} zugeordnet; mit der Konfidenz {queue_confidence:2f}"
+                -   ticket_field: "article"
+                    value:
+                        subject: "Automatische Klassifizierung"
+                        body: "Das Ticket wurde automatisch der Queue {final_queue} zugeordnet; mit der Konfidenz {queue_confidence:2f}"
 
         priority_updater:
-            ticket_id_field: "ticket.id"
+            class: "open_ai.src.base.TicketModifier"
+            ticket_id: "ticket.id"
 
             update_operations:
-                -   operation: "Set"
-                    ticket_field: "priority_name"
+                -   ticket_field: "priority_name"
                     value: "final_priority"
 
         priority_note_adder:
-            ticket_id_field: "ticket.id"
+            class: "open_ai.src.base.TicketModifier"
+            ticket_id: "ticket.id"
 
             update_operations:
-                -   operation: "AddNote"
-                    subject: "Automatische Priorisierung"
-                    body: "Das Ticket wurde automatisch der Priorität {final_priority} zugeordnet; mit der Konfidenz {priority_confidence:2f}"
+                -   ticket_field: "article"
+                    value:
+                        subject: "Automatische Priorisierung"
+                        body: "Das Ticket wurde automatisch der Priorität {final_priority} zugeordnet; mit der Konfidenz {priority_confidence:2f}"
     orchestrator:
         run_every_milli_seconds: 1

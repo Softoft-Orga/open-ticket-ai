@@ -7,7 +7,7 @@ import yaml
 from pydantic import BaseModel, Field
 
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
-from open_ticket_ai.src.core.config.pipe_configs import PipesConfig
+from open_ticket_ai.src.core.config.base_pipe_config import BasePipeConfig
 
 
 class SystemConfig(BaseModel):
@@ -38,7 +38,7 @@ class OpenTicketAIConfig(BaseModel):
 
     system: OTOBOAdapterConfig
     orchestrator: OrchestratorConfig
-    pipes: PipesConfig
+    pipes: list[BasePipeConfig]
     logging: dict[str, Any] = Field(default_factory=dict)
 
 

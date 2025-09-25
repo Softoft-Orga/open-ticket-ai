@@ -1,40 +1,26 @@
-from typing import Self
-
-from otobo_znuny.domain_models.ticket_models import (Ticket, Article)
+from otobo_znuny.domain_models.ticket_models import (Ticket, Article, IdName)
 
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     UnifiedNote,
-    UnifiedPriority,
-    UnifiedQueue,
-    UnifiedTicket,
+    UnifiedTicket, UnifiedEntity,
 )
 
 
-class QueueAdapter(UnifiedQueue):
-    @classmethod
-    def from_ticket(cls, ticket: Ticket) -> Self:
-        q = ticket.queue
-        return cls(
-            id=str(q.id) if q and q.id is not None else None,
-            name=q.name if q and q.name else "",
-        )
+def _to_unified_entity(id_name: IdName | None) -> UnifiedEntity | None:
+    if id_name is None:
+        return None
+    return UnifiedEntity(
+        id=id_name.id,
+        name=id_name.name,
+    )
 
-
-class PriorityAdapter(UnifiedPriority):
-    @classmethod
-    def from_ticket(cls, ticket: Ticket) -> Self:
-        p = ticket.priority
-        return cls(
-            id=str(p.id) if p and p.id is not None else None,
-            name=p.name if p and p.name else "",
-        )
 
 
 class NoteAdapter(UnifiedNote):
     def __init__(self, article: Article):
         super().__init__(
             body=article.body or "",
-            subject=article.subject or "",
+            subject=article.subject,
         )
 
 
@@ -44,8 +30,8 @@ class TicketAdapter(UnifiedTicket):
             id=str(ticket.id) if ticket.id is not None else "",
             subject=ticket.title or "",
             body=self._get_unified_body(ticket),
-            queue=QueueAdapter.from_ticket(ticket),
-            priority=PriorityAdapter.from_ticket(ticket),
+            queue=_to_unified_entity(ticket.queue),
+            priority=_to_unified_entity(ticket.priority),
             notes=self._get_unified_notes_list(ticket),
         )
 

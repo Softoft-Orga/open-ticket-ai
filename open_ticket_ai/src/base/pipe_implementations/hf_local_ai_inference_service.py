@@ -3,6 +3,8 @@ import os
 from functools import lru_cache
 from typing import Optional
 
+from pydantic import BaseModel
+
 from open_ticket_ai.src.core.config.pipe_configs import HFLocalAIInferenceServiceConfig
 from open_ticket_ai.src.core.pipeline.context import PipelineContext
 from open_ticket_ai.src.core.pipeline.pipe import Pipe
@@ -11,10 +13,10 @@ from open_ticket_ai.src.core.pipeline.pipe import Pipe
 class HFLocalAIInferenceService(
     Pipe
 ):
-    def __init__(self, config: HFLocalAIInferenceServiceConfig):
-        # No need to call super() with config anymore
-        self.config = config
 
+
+    def __init__(self, config: HFLocalAIInferenceServiceConfig):
+        super().__init__(config)
         self.logger = logging.getLogger(self.__class__.__name__)
         self._pipeline = None
 
@@ -47,19 +49,14 @@ class HFLocalAIInferenceService(
         )
 
         tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)
-        model = AutoModelForSequenceClassification.from_pretrained(
-            model_name, token=token
-        )
+        model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 
-    async def process(
-        self, context: PipelineContext[dict]
-    ) -> PipelineContext[dict]:
+    async def _process(self, context: PipelineContext, rendered_config: BaseModel) -> PipelineContext:
         if self._pipeline is None:
             token = self._get_token()
             self._pipeline = self._load_pipeline(self.config.hf_model, token)
 
-        text = context.data.get(self.config.input_field, "") or ""
         result = self._pipeline(text, truncation=True)
         top = result[0] if isinstance(result, list) else result
 
@@ -70,9 +67,9 @@ class HFLocalAIInferenceService(
         new_context = PipelineContext(
             meta_info=context.meta_info,
             data=context.data
-                | {
-                    self.config.output_structure.label_field: label,
-                    self.config.output_structure.confidence_field: score,
-                }
+                 | {
+                     self.config.output_structure.label_field: label,
+                     self.config.output_structure.confidence_field: score,
+                 }
         )
         return new_context

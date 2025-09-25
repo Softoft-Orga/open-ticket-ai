@@ -10,8 +10,17 @@ from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter imp
 from open_ticket_ai.src.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedTicket,
-    UnifiedTicketBase, UnifiedNote,
+    UnifiedTicketBase, UnifiedNote, UnifiedEntity,
 )
+
+
+def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
+    if entity is None:
+        return None
+    return IdName(
+        id=entity.id,
+        name=entity.name,
+    )
 
 
 class OTOBOAdapter(TicketSystemAdapter):
@@ -24,12 +33,9 @@ class OTOBOAdapter(TicketSystemAdapter):
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         search = TicketSearch(
             queues=[
-                IdName(
-                    id=int(criteria.queue.id) if criteria.queue and criteria.queue.id else None,
-                    name=criteria.queue.name if criteria.queue and criteria.queue.name else None,
-                )
+                _to_id_name(criteria.queue)
             ]
-            if getattr(criteria, "queue", None)
+            if criteria.queue
             else None,
             limit=criteria.limit
         )
@@ -46,28 +52,10 @@ class OTOBOAdapter(TicketSystemAdapter):
         ticket = TicketUpdate(
             id=int(ticket_id),
             title=updates.subject,
-            queue=IdName(
-                id=int(updates.queue.id) if updates.queue and updates.queue.id else None,
-                name=updates.queue.name if updates.queue and updates.queue.name else None,
-            )
-            if updates.queue
-            else None,
-            priority=IdName(
-                id=int(updates.priority.id) if updates.priority and updates.priority.id else None,
-                name=updates.priority.name if updates.priority and updates.priority.name else None,
-            )
-            if updates.priority
-            else None,
+            queue=_to_id_name(updates.queue),
+            priority=_to_id_name(updates.priority),
+            article=Article(subject=updates.note.subject, body=updates.note.body)
         )
         logging.info(ticket)
         await self.otobo_client.update_ticket(ticket)
-        return True
-
-    async def add_note_to_ticket(self, ticket_id: str, note: UnifiedNote) -> bool:
-        updated = await self.otobo_client.update_ticket(
-            TicketUpdate(
-                id=int(ticket_id),
-                article=Article(subject=note.subject, body=note.body, content_type="text/plain; charset=utf-8"),
-            )
-        )
         return True

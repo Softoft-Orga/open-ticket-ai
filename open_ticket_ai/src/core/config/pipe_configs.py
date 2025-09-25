@@ -1,62 +1,35 @@
-"""Pydantic models describing the configuration for individual pipes.
+from pydantic import AliasChoices, ConfigDict, Field
 
-Having dedicated models for every pipe makes it easier to validate the
-configuration on start-up and provides typed access to the settings from the
-pipe implementations.
-"""
-
-from __future__ import annotations
-
-from typing import Annotated, Literal
-
-from pydantic import AliasChoices, BaseModel, ConfigDict, Field
+from open_ticket_ai.src.core.config.base_pipe_config import BasePipeConfig
 
 
-class TicketFilterConfig(BaseModel):
-    """Configuration of a single ticket search filter."""
-
+class TicketFilterConfig(BasePipeConfig):
     field: str
     operator: str
     value: str
 
 
-class TicketFetcherConfig(BaseModel):
-    """Configuration for the ``TicketFetcher`` pipe."""
-
+class TicketFetcherConfig(BasePipeConfig):
     filters: list[TicketFilterConfig] = Field(default_factory=list)
     output_field: str = "ticket"
 
 
-class SubjectBodyPreparerConfig(BaseModel):
-    """Configuration for the ``SubjectBodyPreparer`` pipe."""
-
-    subject_field: str
-    body_field: str
-    output_field: str
-
-
-class HFOutputStructureConfig(BaseModel):
-    """Configuration describing how model outputs should be stored."""
-
+class HFOutputStructureConfig(BasePipeConfig):
     label_field: str
     confidence_field: str
 
 
-class HFLocalAIInferenceServiceConfig(BaseModel):
-    """Configuration for the ``HFLocalAIInferenceService`` pipe."""
-
+class HFLocalAIInferenceServiceConfig(BasePipeConfig):
+    input_value: str
     hf_model: str
     hf_token_env_var: str | None = None
-    input_field: str
     output_structure: HFOutputStructureConfig
 
 
-class ListValueMapperConfig(BaseModel):
-    """Configuration for the ``ListValueMapper`` pipe."""
-
+class ListValueMapperConfig(BasePipeConfig):
     model_config = ConfigDict(populate_by_name=True)
 
-    input_field: str
+    input_value: str
     output_field: str
     mapping_rules: dict[str, list[str]] = Field(
         default_factory=dict,
@@ -65,58 +38,19 @@ class ListValueMapperConfig(BaseModel):
     )
 
 
-class LowConfidenceHandlerConfig(BaseModel):
-    """Configuration for the ``LowConfidenceHandler`` pipe."""
-
-    label_field: str
-    confidence_field: str
+class LowConfidenceHandlerConfig(BasePipeConfig):
+    label: str
+    confidence: str
     output_field: str
-    threshold: float
+    min_confidence: float
     low_confidence_value: str
 
 
-class TicketModifierSetOperation(BaseModel):
-    """"Set" ticket update operation."""
-
-    operation: Literal["Set"]
+class TicketModifierSetOperation(BasePipeConfig):
     ticket_field: str
-    value: str
+    value: str | int | float | bool | dict[str, str] | None
 
 
-class TicketModifierAddNoteOperation(BaseModel):
-    """"AddNote" ticket update operation."""
-
-    operation: Literal["AddNote"]
-    subject: str
-    body: str
-
-
-TicketModifierOperation = Annotated[
-    TicketModifierSetOperation | TicketModifierAddNoteOperation,
-    Field(discriminator="operation"),
-]
-
-
-class TicketModifierConfig(BaseModel):
-    """Configuration for the ``TicketModifier`` pipe."""
-
-    ticket_id_field: str
-    update_operations: list[TicketModifierOperation] = Field(default_factory=list)
-
-
-class PipesConfig(BaseModel):
-    """Container model holding the configuration for every pipe."""
-
-    ticket_fetcher: TicketFetcherConfig
-    subject_body_preparer: SubjectBodyPreparerConfig
-    queue_ai_model: HFLocalAIInferenceServiceConfig
-    priority_ai_model: HFLocalAIInferenceServiceConfig
-    queue_mapper: ListValueMapperConfig
-    priority_mapper: ListValueMapperConfig
-    queue_low_confidence_handler: LowConfidenceHandlerConfig
-    priority_low_confidence_handler: LowConfidenceHandlerConfig
-    queue_updater: TicketModifierConfig
-    queue_note_adder: TicketModifierConfig
-    priority_updater: TicketModifierConfig
-    priority_note_adder: TicketModifierConfig
-
+class TicketModifierConfig(BasePipeConfig):
+    ticket_id: str
+    update_operations: list[TicketModifierSetOperation] = Field(default_factory=list)

@@ -10,7 +10,7 @@ from otobo_znuny.domain_models.ticket_operation import TicketOperation
 from pydantic import SecretStr
 
 from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
-from open_ticket_ai.src.base.pipe_implementations.base_ticket_modifier import TicketModifier
+from open_ticket_ai.src.base.pipe_implementations.ticket_modifier import TicketModifier
 from open_ticket_ai.src.base.pipe_implementations.hf_local_ai_inference_service import \
     HFLocalAIInferenceService
 from open_ticket_ai.src.base.pipe_implementations.list_value_mapper import ListValueMapper

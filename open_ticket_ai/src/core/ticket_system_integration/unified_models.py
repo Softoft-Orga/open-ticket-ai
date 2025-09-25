@@ -6,29 +6,22 @@ from pydantic import BaseModel
 
 
 class UnifiedNote(BaseModel):
-    id: Optional[str] = None
-    subject: Optional[str] = None
+    id: int | None = None
+    subject: str | None = None
     body: str = ""
 
 
 class UnifiedEntity(BaseModel):
-    id: Optional[str] = None
-    name: Optional[str] = None
-
-
-class UnifiedQueue(UnifiedEntity):
-    pass
-
-
-class UnifiedPriority(UnifiedEntity):
-    pass
+    id: int | None = None
+    name: str | None = None
 
 
 class UnifiedTicketBase(BaseModel):
-    id: Optional[str] = None
-    subject: Optional[str] = None
-    queue: Optional[UnifiedQueue] = None
-    priority: Optional[UnifiedPriority] = None
+    id: int | None = None
+    subject: str | None = None
+    queue: UnifiedEntity | None = None
+    priority: UnifiedEntity | None = None
+    note: UnifiedNote | None = None
 
 
 class UnifiedTicket(UnifiedTicketBase):
@@ -36,6 +29,6 @@ class UnifiedTicket(UnifiedTicketBase):
 
 
 class TicketSearchCriteria(BaseModel):
-    queue: Optional[UnifiedQueue] = None
-    limit: Optional[int] = None
-    offset: Optional[int] = None
+    queue: UnifiedEntity | None = None
+    limit: int | None = None
+    offset: int | None = None
