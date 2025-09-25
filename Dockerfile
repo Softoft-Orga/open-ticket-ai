@@ -17,7 +17,7 @@ ENV PYTHONPATH="/app"
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy the application source code
-COPY open_ticket_ai ./open_ticket_ai
+COPY src ./open_ticket_ai
 
 # Command to run your application
 CMD ["python", "-m", "open_ticket_ai.src.main"]

@@ -13,16 +13,17 @@ dummy_pp = types.ModuleType("open_ticket_ai.src.core.util.pretty_print_config")
 dummy_pp.pretty_print_config = lambda config, console: None
 sys.modules["open_ticket_ai.src.core.util.pretty_print_config"] = dummy_pp
 
-from open_ticket_ai.src.core.config.config_models import (
+from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,
     PipeConfig,
     PipelineConfig,
     ScheduleConfig,
-    SystemConfig, ProvidableConfig,
+    SystemConfig,
+    ProvidableConfig,
 )
-from open_ticket_ai.src.core.dependency_injection.registry import Registry
-from open_ticket_ai.src.core.pipeline.pipe import Pipe
-from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import (
+from open_ticket_ai.core.dependency_injection.registry import Registry
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import (
     TicketSystemAdapter,
 )
 
@@ -99,9 +100,7 @@ def test_di_container_get_pipeline(monkeypatch):
     dummy_create_registry.create_registry = lambda: Registry()
     sys.modules["open_ticket_ai.src.base.create_registry"] = dummy_create_registry
 
-    container_module = importlib.import_module(
-        "open_ticket_ai.src.core.dependency_injection.container"
-    )
+    container_module = importlib.import_module("open_ticket_ai.src.core.dependency_injection.container")
 
     # Build minimal config and registry
     config = OpenTicketAIConfig(

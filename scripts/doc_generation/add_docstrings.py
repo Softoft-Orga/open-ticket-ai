@@ -63,10 +63,7 @@ class DocstringGenerator:
         """
         py_files = []
         for item in self.base_path.rglob("*.py"):
-            if (
-                not any(part in self.exclude_dirs for part in item.parts)
-                and item.name not in self.exclude_files
-            ):
+            if not any(part in self.exclude_dirs for part in item.parts) and item.name not in self.exclude_files:
                 py_files.append(item)
         print(f"Found {len(py_files)} Python files to process.")
         return py_files
@@ -141,9 +138,7 @@ class DocstringGenerator:
                 messages=[
                     {
                         "role": "system",
-                        "content": (
-                            "You are a helpful Python assistant that adds docstrings to code."
-                        ),
+                        "content": ("You are a helpful Python assistant that adds docstrings to code."),
                     },
                     {"role": "user", "content": prompt},
                 ],

@@ -18,6 +18,7 @@ The tests are organized into three main sections:
 
 These tests use `pytest` and rely on fixtures for temporary directories and environment patching.
 """
+
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -31,7 +32,7 @@ import yaml
 from pydantic import BaseModel
 from rich.syntax import Syntax
 
-from open_ticket_ai.src.core.util import create_json_config_schema, path_util, pretty_print_config
+from open_ticket_ai.core.util import create_json_config_schema, path_util, pretty_print_config
 
 
 class DummyModel(BaseModel):
@@ -41,11 +42,13 @@ class DummyModel(BaseModel):
         foo (int): An integer attribute for testing.
         bar (str): A string attribute for testing.
     """
+
     foo: int
     bar: str
 
 
 # --- Tests for path_util.find_project_root ---
+
 
 def test_find_project_root_returns_project_directory():
     """Tests that find_project_root correctly identifies the project root directory.
@@ -73,6 +76,7 @@ def test_find_project_root_invalid_name_raises():
 
 # --- Tests for pretty_print_config.pretty_print_config ---
 
+
 def test_pretty_print_config_outputs_yaml():
     """Tests that pretty_print_config outputs configuration as expected YAML.
 
@@ -95,6 +99,7 @@ def test_pretty_print_config_outputs_yaml():
 
 
 # --- Tests for create_json_config_schema ---
+
 
 def test_root_config_schema_contains_open_ticket_ai():
     """Tests that the generated JSON schema contains the expected 'open_ticket_ai' property.

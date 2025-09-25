@@ -4,11 +4,12 @@ This script walks through all Python files in a given directory and replaces
 any existing license notice at the top of the file with a new license notice.
 Non-comment code and empty/whitespace-only files are handled appropriately.
 """
+
 import datetime
 import os
 
 # Path to the directory containing Python files to update
-directory_path = 'src'
+directory_path = "src"
 """str: Path to the directory containing Python files to update."""
 
 # The new license notice text to insert at the top of files
@@ -36,7 +37,7 @@ def find_start_of_code(lines):
             Returns len(lines) if no such line exists.
     """
     for i, line in enumerate(lines):
-        if line.strip() and not line.strip().startswith('#'):
+        if line.strip() and not line.strip().startswith("#"):
             return i
     return len(lines)
 
@@ -65,7 +66,7 @@ def write_file(filepath, lines):
         filepath (str): Path to the file to write.
         lines (list): List of strings to write to the file.
     """
-    with open(filepath, 'w') as file:
+    with open(filepath, "w") as file:
         file.writelines(lines)
 
 
@@ -100,16 +101,16 @@ def update_license_in_files(directory):
 
             if start_of_code == len(lines) and not is_empty_or_whitespace_only:
                 # File contains only comments (and possibly blank lines)
-                updated_lines = [new_license_notice + '\n'] + lines
+                updated_lines = [new_license_notice + "\n"] + lines
             else:
                 # File has executable code, or is empty/whitespace only
                 # For empty/whitespace only files, lines[start_of_code:] will be empty,
                 # so only license notice is added, which is correct.
-                updated_lines = [new_license_notice + '\n'] + lines[start_of_code:]
+                updated_lines = [new_license_notice + "\n"] + lines[start_of_code:]
 
             write_file(filepath, updated_lines)
-            print(f'Updated license in {filepath}')
+            print(f"Updated license in {filepath}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     update_license_in_files(directory_path)

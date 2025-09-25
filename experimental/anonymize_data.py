@@ -16,6 +16,7 @@ Example:
 Note:
     Uses German locale for generating fake data and models optimized for German text.
 """
+
 import re
 
 import phonenumbers
@@ -75,7 +76,8 @@ def anonymize_text(text):
             fake_city = fake.city_name()
             new_text = new_text[:start] + fake_city + new_text[end:]
     # E-Mail-Adressen maskieren (Regex)
-    new_text = re.sub(r'\b[\w.+-]+@[\w-]+\.\w+\b', lambda m: fake.ascii_email(), new_text)
+    new_text = re.sub(r"\b[\w.+-]+@[\w-]+\.\w+\b", lambda m: fake.ascii_email(), new_text)
+
     # Telefonnummern erkennen und ersetzen
     def replace_phone(match):
         """Replaces a matched phone number with a fake German phone number if valid.
@@ -94,7 +96,8 @@ def anonymize_text(text):
         except phonenumbers.NumberParseException:
             pass
         return num_str
-    new_text = re.sub(r'\+?\d[\d\s\-\(\)]{7,}\d', replace_phone, new_text)
+
+    new_text = re.sub(r"\+?\d[\d\s\-\(\)]{7,}\d", replace_phone, new_text)
     # IBAN erkennen und ersetzen
     new_text = re.sub(
         r"\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b",
@@ -103,18 +106,16 @@ def anonymize_text(text):
     )
     # (Optional) Einfache Erkennung von Adressen mit Straßenname und Nummer
     new_text = re.sub(
-        r'\b[A-ZÄÖÜ][a-zäöüß]+(?:straße|Str\.|Weg|Platz)\s*\d+[a-zA-Z]?\b',
-        lambda m: fake.street_address(),
-        new_text
+        r"\b[A-ZÄÖÜ][a-zäöüß]+(?:straße|Str\.|Weg|Platz)\s*\d+[a-zA-Z]?\b", lambda m: fake.street_address(), new_text
     )
     return new_text
+
 
 # Beispieltext mit PII
 text = (
     "Herr Dr. Max Mustermann wohnt in der Musterstraße 5 in 55122 Mainz. "
     "Er arbeitet bei der Musterfirma GmbH. Kontakt: max@mustermann.de, +49 170 1234567."
 )
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     print("Original:", text)
     print("Anonymisiert:", anonymize_text(text))

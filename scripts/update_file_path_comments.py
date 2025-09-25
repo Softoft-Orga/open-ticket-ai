@@ -6,12 +6,13 @@ This script walks through all Python files in a given directory tree
 starting with ``# FILE_PATH:`` and inserts a new comment as the very
 first line with the relative path of the file to the project root.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
 import re
 
-from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
+from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
 FILE_PATH_PATTERN = re.compile(r"^\s*#\s*FILE_PATH:.*$")
 """re.Pattern: Regular expression to match lines that are FILE_PATH comments.

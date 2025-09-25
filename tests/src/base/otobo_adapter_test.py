@@ -6,6 +6,7 @@ The tests include:
 
 The tests are designed to run without requiring a real OTOBO server connection.
 """
+
 import dataclasses
 
 import pytest
@@ -15,9 +16,9 @@ pytest.importorskip("otobo")
 import otobo
 from otobo import OTOBOClient, OTOBOClientConfig
 
-from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
-from open_ticket_ai.src.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
-from open_ticket_ai.src.core.config.config_models import SystemConfig
+from open_ticket_ai.base.otobo_integration.otobo_adapter import OTOBOAdapter
+from open_ticket_ai.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
+from open_ticket_ai.core.config.config_models import SystemConfig
 
 
 @dataclasses.dataclass
@@ -35,6 +36,7 @@ class MockedTicket:
         priority (str): Priority level of the ticket.
         queue (str): Queue to which the ticket belongs.
     """
+
     id: str
     title: str
     description: str
@@ -87,10 +89,7 @@ TICKETS = [
 
 
 class MockedOTOBOClient(OTOBOClient):
-    def __init__(
-        self,
-        ticket_data: list[MockedTicket]
-    ):
+    def __init__(self, ticket_data: list[MockedTicket]):
         super().__init__(
             OTOBOClientConfig(
                 base_url="https://mocked.otobo.example.com",
@@ -99,7 +98,7 @@ class MockedOTOBOClient(OTOBOClient):
                 operations={
                     otobo.TicketOperation.SEARCH: "/search",
                     otobo.TicketOperation.UPDATE: "/update",
-                   otobo.TicketOperation.GET: "/get",
+                    otobo.TicketOperation.GET: "/get",
                 },
             ),
         )

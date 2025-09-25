@@ -4,7 +4,7 @@ import sys
 import pytest
 from pydantic import BaseModel
 
-from open_ticket_ai.src.core.config.config_models import ProvidableConfig
+from open_ticket_ai.core.config.config_models import ProvidableConfig
 
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[3]))
 
@@ -15,9 +15,9 @@ dummy_pp = types.ModuleType("open_ticket_ai.src.core.util.pretty_print_config")
 dummy_pp.pretty_print_config = lambda config, console: None
 sys.modules["open_ticket_ai.src.core.util.pretty_print_config"] = dummy_pp
 
-from open_ticket_ai.src.core.dependency_injection.registry import Registry
-from open_ticket_ai.src.core.mixins.registry_providable_instance import Providable
-from open_ticket_ai.src.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.dependency_injection.registry import Registry
+from open_ticket_ai.core.mixins.registry_providable_instance import Providable
+from open_ticket_ai.core.pipeline.pipe import Pipe
 
 
 class DummyProvidable(Providable):

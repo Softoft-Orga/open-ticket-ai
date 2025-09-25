@@ -1,6 +1,7 @@
 """
 Pytest tests for the core pipeline components including Pipeline, Pipe, PipelineContext, MetaInfo, and PipelineStatus.
 """
+
 import random
 import pytest
 
@@ -9,28 +10,32 @@ from pydantic import BaseModel
 
 # Assuming the following imports are correct based on your project structure
 # You may need to adjust them based on your PYTHONPATH
-from open_ticket_ai.src.core.pipeline.status import PipelineStatus
-from open_ticket_ai.src.core.pipeline.meta_info import MetaInfo
-from open_ticket_ai.src.core.pipeline.context import PipelineContext
-from open_ticket_ai.src.core.pipeline.pipe import Pipe
-from open_ticket_ai.src.core.pipeline.pipeline import Pipeline
-from open_ticket_ai.src.core.config.config_models import ProvidableConfig, PipelineConfig, ScheduleConfig
+from open_ticket_ai.core.pipeline.status import PipelineStatus
+from open_ticket_ai.core.pipeline.meta_info import MetaInfo
+from open_ticket_ai.core.pipeline.context import PipelineContext
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipeline import Pipeline
+from open_ticket_ai.core.config.config_models import ProvidableConfig, PipelineConfig, ScheduleConfig
 
 
 # --- Test Data and Dummy Implementations ---
 
+
 class DummyData(BaseModel):
     """A simple Pydantic model for data used in tests."""
+
     value: int
+
 
 class IncrementPipe(Pipe[ProvidableConfig, DummyData, DummyData]):
     """A dummy pipe that increments the value in the context data."""
+
     InputDataType = DummyData
     OutputDataType = DummyData
 
     def __init__(self, config: ProvidableConfig = None):
         if config is None:
-            config = ProvidableConfig(id='increment_pipe', provider_key='increment_pipe')
+            config = ProvidableConfig(id="increment_pipe", provider_key="increment_pipe")
         super().__init__(config)
 
     def process(self, context: PipelineContext[DummyData]) -> PipelineContext[DummyData]:
@@ -39,14 +44,16 @@ class IncrementPipe(Pipe[ProvidableConfig, DummyData, DummyData]):
         context.data.value += 1
         return context
 
+
 class StopPipe(Pipe[ProvidableConfig, DummyData, DummyData]):
     """A dummy pipe that increments a value and then stops the pipeline."""
+
     InputDataType = DummyData
     OutputDataType = DummyData
 
     def __init__(self, config: ProvidableConfig = None):
         if config is None:
-            config = ProvidableConfig(id='stop_pipe', provider_key='stop_pipe')
+            config = ProvidableConfig(id="stop_pipe", provider_key="stop_pipe")
         super().__init__(config)
 
     def process(self, context: PipelineContext[DummyData]) -> PipelineContext[DummyData]:
@@ -54,24 +61,29 @@ class StopPipe(Pipe[ProvidableConfig, DummyData, DummyData]):
         context.stop_pipeline()
         return context
 
+
 class ErrorPipe(Pipe[ProvidableConfig, DummyData, DummyData]):
     """A dummy pipe that always raises an exception."""
+
     InputDataType = DummyData
     OutputDataType = DummyData
 
     def __init__(self, config: ProvidableConfig = None):
         if config is None:
-            config = ProvidableConfig(id='error_pipe', provider_key='error_pipe')
+            config = ProvidableConfig(id="error_pipe", provider_key="error_pipe")
         super().__init__(config)
 
     def process(self, context: PipelineContext[DummyData]) -> PipelineContext[DummyData]:
         raise RuntimeError("This is a test error from ErrorPipe.")
 
+
 # --- Pytest Fixtures ---
+
 
 @pytest.fixture
 def pipeline_config_factory():
     """A factory fixture to create PipelineConfig instances."""
+
     def _factory(pipes: list[Pipe]):
         # The actual pipe_ids in config don't matter as much when we inject instances,
         # but we'll keep it consistent.
@@ -81,17 +93,21 @@ def pipeline_config_factory():
             run_every_seconds=ScheduleConfig(interval=10, unit="minutes"),
             pipes=pipe_ids,
         )
+
     return _factory
+
 
 # --- Test Cases ---
 
+
 def test_pipeline_status_enum():
     """Tests that the PipelineStatus enum has the correct members."""
-    assert hasattr(PipelineStatus, 'RUNNING')
-    assert hasattr(PipelineStatus, 'SUCCESS')
-    assert hasattr(PipelineStatus, 'STOPPED')
-    assert hasattr(PipelineStatus, 'FAILED')
+    assert hasattr(PipelineStatus, "RUNNING")
+    assert hasattr(PipelineStatus, "SUCCESS")
+    assert hasattr(PipelineStatus, "STOPPED")
+    assert hasattr(PipelineStatus, "FAILED")
     assert len(PipelineStatus) == 4
+
 
 def test_meta_info_defaults():
     """Tests that MetaInfo initializes with correct default values."""
@@ -100,16 +116,14 @@ def test_meta_info_defaults():
     assert meta.error_message is None
     assert meta.failed_pipe is None
 
+
 def test_meta_info_custom_values():
     """Tests creating a MetaInfo object with non-default values."""
-    meta = MetaInfo(
-        status=PipelineStatus.FAILED,
-        error_message="Something went wrong",
-        failed_pipe="ErrorPipe"
-    )
+    meta = MetaInfo(status=PipelineStatus.FAILED, error_message="Something went wrong", failed_pipe="ErrorPipe")
     assert meta.status == PipelineStatus.FAILED
     assert meta.error_message == "Something went wrong"
     assert meta.failed_pipe == "ErrorPipe"
+
 
 def test_pipeline_context_creation():
     """Tests the basic creation of a PipelineContext."""
@@ -119,12 +133,14 @@ def test_pipeline_context_creation():
     assert context.data.value == 42
     assert context.meta_info.status == PipelineStatus.RUNNING
 
+
 def test_context_stop_pipeline():
     """Tests the stop_pipeline method in PipelineContext."""
     context = PipelineContext(data=DummyData(value=0), meta_info=MetaInfo())
     assert context.meta_info.status == PipelineStatus.RUNNING
     context.stop_pipeline()
     assert context.meta_info.status == PipelineStatus.STOPPED
+
 
 def test_pipeline_successful_execution(pipeline_config_factory):
     """Tests a pipeline that should execute all its pipes successfully."""
@@ -140,6 +156,7 @@ def test_pipeline_successful_execution(pipeline_config_factory):
     assert result_context.meta_info.error_message is None
     assert result_context.meta_info.failed_pipe is None
 
+
 def test_pipeline_stops_execution_on_request(pipeline_config_factory):
     """Tests that a pipeline correctly stops when a pipe requests it."""
     pipes = [IncrementPipe(), StopPipe(), IncrementPipe()]
@@ -153,6 +170,7 @@ def test_pipeline_stops_execution_on_request(pipeline_config_factory):
     assert result_context.data.value == 12
     assert result_context.meta_info.status == PipelineStatus.STOPPED
     assert result_context.meta_info.failed_pipe is None
+
 
 def test_pipeline_handles_errors(pipeline_config_factory):
     """Tests that a pipeline handles exceptions from a pipe and sets the FAILED status."""
@@ -170,10 +188,13 @@ def test_pipeline_handles_errors(pipeline_config_factory):
     assert "This is a test error from ErrorPipe" in result_context.meta_info.error_message
 
 
-@pytest.mark.parametrize("initial_status", [
-    PipelineStatus.FAILED,
-    PipelineStatus.STOPPED,
-])
+@pytest.mark.parametrize(
+    "initial_status",
+    [
+        PipelineStatus.FAILED,
+        PipelineStatus.STOPPED,
+    ],
+)
 def test_pipeline_does_not_run_with_non_runnable_initial_status(pipeline_config_factory, initial_status):
     """Tests that the pipeline does not execute if the initial context status is not runnable."""
     pipes = [IncrementPipe()]
@@ -187,4 +208,3 @@ def test_pipeline_does_not_run_with_non_runnable_initial_status(pipeline_config_
     # The value should not change
     assert result_context.data.value == 50
     assert result_context.meta_info.status == initial_status
-

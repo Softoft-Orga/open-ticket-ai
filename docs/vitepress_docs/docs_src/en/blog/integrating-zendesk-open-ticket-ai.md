@@ -61,7 +61,7 @@ use `httpx`/`aiohttp` for async) and handle errors as needed:
 
 ```python
 import requests
-from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
 
 class ZendeskAdapter(TicketSystemAdapter):

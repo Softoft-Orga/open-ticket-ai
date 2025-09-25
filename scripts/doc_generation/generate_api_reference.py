@@ -5,6 +5,7 @@ This script uses Python's `ast` module and dataclasses to create a typed,
 structured representation of the source code. The final output is a JSON file
 ready for consumption by front-end frameworks like VitePress/Vue.
 """
+
 import ast
 from dataclasses import asdict, dataclass, field
 import json
@@ -16,9 +17,11 @@ from docstring_parser import Docstring, DocstringParam, DocstringRaises, parse
 
 # --- Data Models (using Dataclasses) ---
 
+
 @dataclass
 class ParameterData:
     """Represents a single parameter from a docstring."""
+
     name: Optional[str] = None
     type: Optional[str] = None
     default: Optional[str] = None
@@ -29,6 +32,7 @@ class ParameterData:
 @dataclass
 class ReturnsData:
     """Represents the returns section of a docstring."""
+
     type: Optional[str] = None
     description: Optional[str] = None
     name: Optional[str] = None
@@ -37,6 +41,7 @@ class ReturnsData:
 @dataclass
 class DocstringData:
     """Represents a parsed docstring."""
+
     short_description: Optional[str] = None
     long_description: Optional[str] = None
     params: list[ParameterData] = field(default_factory=list)
@@ -47,6 +52,7 @@ class DocstringData:
 @dataclass
 class FunctionData:
     """Represents a parsed function or method."""
+
     name: str
     signature: str
     is_async: bool
@@ -56,6 +62,7 @@ class FunctionData:
 @dataclass
 class ClassData:
     """Represents a parsed class."""
+
     name: str
     docstring: DocstringData
     methods: list[FunctionData] = field(default_factory=list)
@@ -64,6 +71,7 @@ class ClassData:
 @dataclass
 class ModuleData:
     """Represents a single parsed Python file."""
+
     module_path: str
     module_docstring: DocstringData
     classes: list[ClassData] = field(default_factory=list)
@@ -72,13 +80,14 @@ class ModuleData:
 
 # --- Custom JSON Encoder for Dataclasses ---
 
+
 class DataClassJSONEncoder(json.JSONEncoder):
     """A JSON encoder that can handle dataclasses."""
 
     def default(self, o):
         if isinstance(o, Path):
             return str(o)
-        if hasattr(o, '__dict__'):
+        if hasattr(o, "__dict__"):
             return o.__dict__
         try:
             return super().default(o)
@@ -87,6 +96,7 @@ class DataClassJSONEncoder(json.JSONEncoder):
 
 
 # --- AST Visitor ---
+
 
 class JsonVisitor(ast.NodeVisitor):
     """
@@ -112,7 +122,7 @@ class JsonVisitor(ast.NodeVisitor):
             args_list.append(f"*{node.args.vararg.arg}")
         if node.args.kwonlyargs:
             if not node.args.vararg:
-                args_list.append('*')
+                args_list.append("*")
             for kw_arg in node.args.kwonlyargs:
                 kw_arg_str = kw_arg.arg
                 if kw_arg.annotation:
@@ -187,9 +197,7 @@ class JsonVisitor(ast.NodeVisitor):
         """Processes an async function or method definition."""
         self._process_function_node(node, is_async=True)
 
-    def _process_function_node(
-        self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef], is_async: bool = False
-    ):
+    def _process_function_node(self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef], is_async: bool = False):
         """Processes a function/method node into a FunctionData instance."""
         func_name = node.name
         if func_name.startswith("_") and not func_name.startswith("__"):
@@ -209,6 +217,7 @@ class JsonVisitor(ast.NodeVisitor):
 
 
 # --- Main Orchestration Logic ---
+
 
 def parse_python_file(file_path: Path) -> tuple[DocstringData, list[ClassData], list[FunctionData]]:
     """Parses a Python file and returns its documentation components."""
@@ -246,8 +255,7 @@ def generate_documentation(
 
     # Filter out excluded files
     filtered_files = [
-        py_file for py_file in all_python_files
-        if not any(py_file.match(pattern) for pattern in exclude_patterns)
+        py_file for py_file in all_python_files if not any(py_file.match(pattern) for pattern in exclude_patterns)
     ]
 
     all_module_data = []
@@ -277,5 +285,6 @@ def generate_documentation(
         json.dump(all_module_data, f, indent=2, cls=DataClassJSONEncoder)
 
     print(f"\n✅ JSON documentation successfully generated at: {output_path.resolve()}")
+
 
 # --- Example Usage ---

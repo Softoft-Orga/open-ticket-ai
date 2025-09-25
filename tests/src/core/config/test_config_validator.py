@@ -1,14 +1,14 @@
 import pytest
 
-from open_ticket_ai.src.core.config.config_models import (
+from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,
     PipeConfig,
     PipelineConfig,
     ScheduleConfig,
     SystemConfig,
 )
-from open_ticket_ai.src.core.config.config_validator import OpenTicketAIConfigValidator
-from open_ticket_ai.src.core.dependency_injection.registry import Registry
+from open_ticket_ai.core.config.config_validator import OpenTicketAIConfigValidator
+from open_ticket_ai.core.dependency_injection.registry import Registry
 
 
 class DummySystemProvider:
@@ -49,9 +49,7 @@ def build_config() -> OpenTicketAIConfig:
             PipeConfig(id="p2", provider_key=DummyPipe2Provider.get_provider_key()),
         ],
         pipeline=[
-            PipelineConfig(
-                id="pl", run_every_seconds=ScheduleConfig(interval=1, unit="seconds"), pipes=["p1", "p2"]
-            )
+            PipelineConfig(id="pl", run_every_seconds=ScheduleConfig(interval=1, unit="seconds"), pipes=["p1", "p2"])
         ],
     )
 

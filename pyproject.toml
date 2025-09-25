@@ -41,6 +41,7 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["open_ticket_ai*"]
 
 [tool.ruff]

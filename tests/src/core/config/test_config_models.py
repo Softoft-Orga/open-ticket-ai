@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from open_ticket_ai.src.core.config.config_models import (
+from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,
     PipeConfig,
     PipelineConfig,
@@ -88,9 +88,7 @@ def test_get_all_register_instance_configs() -> None:
             PipeConfig(id="p2", provider_key="Provider2"),
         ],
         pipeline=[
-            PipelineConfig(
-                id="pl", run_every_seconds=ScheduleConfig(interval=1, unit="seconds"), pipes=["p1", "p2"]
-            )
+            PipelineConfig(id="pl", run_every_seconds=ScheduleConfig(interval=1, unit="seconds"), pipes=["p1", "p2"])
         ],
     )
 

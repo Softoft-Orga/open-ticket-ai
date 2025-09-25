@@ -5,11 +5,11 @@ import pytest
 pytest.importorskip("otobo")
 from otobo_znuny.models.request_models import AuthData
 
-from open_ticket_ai.src.base.otobo_integration.otobo_adapter import OTOBOAdapter
-from open_ticket_ai.src.core.config.config_models import SystemConfig
+from open_ticket_ai.base.otobo_integration.otobo_adapter import OTOBOAdapter
+from open_ticket_ai.core.config.config_models import SystemConfig
 from otobo import OTOBOClient, OTOBOClientConfig
 
-from open_ticket_ai.src.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
 
 class DummyClient(OTOBOClient):

@@ -20,12 +20,12 @@ from rich.console import Console
 import typer
 from mdxlate.translator import Translator
 
-from open_ticket_ai.scripts import ReadmeUpdater
-from open_ticket_ai.scripts.doc_generation.add_docstrings import DocstringGenerator
-from open_ticket_ai.scripts.doc_generation.generate_api_reference import generate_documentation
-from open_ticket_ai.scripts.doc_generation.update_frontmatter import update_frontmatter
-from open_ticket_ai.scripts.documentation_summary import DocumentationSummarizer
-from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
+from src.scripts import ReadmeUpdater
+from src.scripts.doc_generation.add_docstrings import DocstringGenerator
+from src.scripts.doc_generation.generate_api_reference import generate_documentation
+from src.scripts.doc_generation.update_frontmatter import update_frontmatter
+from src.scripts.documentation_summary import DocumentationSummarizer
+from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
 # --- CLI Setup ---
 app = typer.Typer(
@@ -126,8 +126,15 @@ docs_src_path = root_project_path / "docs" / "vitepress_docs" / "docs_src" / "en
 summary_file_path = root_project_path / "docs" / "_documentation_summaries.json"
 
 EXCLUDE_DIRS = {
-    ".venv", "__pycache__", "build", "dist", "docs_api",
-    "vitepress-atc-docs_api", ".idea", ".github", "node_modules",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "docs_api",
+    "vitepress-atc-docs_api",
+    ".idea",
+    ".github",
+    "node_modules",
 }
 EXCLUDE_FILES = {"__init__.py"}
 DEFAULT_MODEL = "google/gemini-2.5-pro"
@@ -160,7 +167,10 @@ def generate_markdown():
 async def _generate_reference_api_markdown(model: str):
     """Generates API reference documentation in Markdown format."""
     await generator.generate_docstrings(
-        find_python_code_root_path(), EXCLUDE_DIRS, EXCLUDE_FILES, model=model,
+        find_python_code_root_path(),
+        EXCLUDE_DIRS,
+        EXCLUDE_FILES,
+        model=model,
     )
     generate_markdown()
 
@@ -181,7 +191,11 @@ def _add_frontmatter_meta_seo_descriptions(summaries: dict):
 async def _translate_to_multi_lang_docs(model: str):
     """Translates documentation files to multiple languages."""
     await generator.translate_docs(
-        docs_src_path, "en", ["de", "fr", "es"], model, docs_src_path.parent,
+        docs_src_path,
+        "en",
+        ["de", "fr", "es"],
+        model,
+        docs_src_path.parent,
     )
 
 
@@ -206,8 +220,11 @@ def generate_markdown_from_docstrings():
 @app.command(name="api-docs")
 def generate_api_docs_command(
     model: str = typer.Option(
-        DEFAULT_MODEL, "--model", "-m", help="AI model for docstring generation.",
-    )
+        DEFAULT_MODEL,
+        "--model",
+        "-m",
+        help="AI model for docstring generation.",
+    ),
 ):
     """Generates docstrings and converts them to API reference markdown files."""
     console.print(f"Generating API docs using [bold cyan]{model}[/bold cyan]...")
@@ -218,8 +235,11 @@ def generate_api_docs_command(
 @app.command(name="create-summaries")
 def create_summaries_command(
     model: str = typer.Option(
-        DEFAULT_MODEL, "--model", "-m", help="AI model for creating summaries.",
-    )
+        DEFAULT_MODEL,
+        "--model",
+        "-m",
+        help="AI model for creating summaries.",
+    ),
 ):
     """Creates SEO-optimized summaries for all documentation files."""
     console.print(f"Creating summaries using [bold cyan]{model}[/bold cyan]...")
@@ -244,8 +264,11 @@ def add_frontmatter_command():
 @app.command(name="translate")
 def translate_command(
     model: str = typer.Option(
-        DEFAULT_MODEL, "--model", "-m", help="AI model for translation.",
-    )
+        DEFAULT_MODEL,
+        "--model",
+        "-m",
+        help="AI model for translation.",
+    ),
 ):
     """Translates documentation into multiple languages (en, de)."""
     console.print(f"Translating docs using [bold cyan]{model}[/bold cyan]...")
@@ -256,8 +279,11 @@ def translate_command(
 @app.command(name="update-readme")
 def update_readme_command(
     model: str = typer.Option(
-        DEFAULT_MODEL, "--model", "-m", help="AI model to update the README.",
-    )
+        DEFAULT_MODEL,
+        "--model",
+        "-m",
+        help="AI model to update the README.",
+    ),
 ):
     """Updates the main AI_README.md file based on current docs."""
     console.print(f"Updating AI_README.md using [bold cyan]{model}[/bold cyan]...")
@@ -268,8 +294,11 @@ def update_readme_command(
 @app.command(name="all")
 def run_all_pipeline(
     model: str = typer.Option(
-        DEFAULT_MODEL, "--model", "-m", help="AI model to use for all steps.",
-    )
+        DEFAULT_MODEL,
+        "--model",
+        "-m",
+        help="AI model to use for all steps.",
+    ),
 ):
     """Runs the entire documentation generation and translation pipeline."""
     console.rule(f"[bold yellow]🚀 Starting Full Documentation Pipeline ({model}) 🚀[/bold yellow]")

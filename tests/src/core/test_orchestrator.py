@@ -12,17 +12,15 @@ import sys
 # package can be imported when tests are executed from the ``tests`` directory.
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from open_ticket_ai.src.core.orchestrator import Orchestrator
-from open_ticket_ai.src.core.pipeline.context import PipelineContext
+from open_ticket_ai.core.orchestrator import Orchestrator
+from open_ticket_ai.core.pipeline.context import PipelineContext
 
 
 def _make_pipeline(interval: int, unit: str) -> MagicMock:
     """Create a mock pipeline with a minimal schedule configuration."""
 
     pipeline = MagicMock()
-    pipeline.config = SimpleNamespace(
-        schedule=SimpleNamespace(interval=interval, unit=unit)
-    )
+    pipeline.config = SimpleNamespace(schedule=SimpleNamespace(interval=interval, unit=unit))
     return pipeline
 
 
@@ -66,4 +64,3 @@ def test_set_schedules_passes_pipeline_context_and_config() -> None:
     assert isinstance(context, PipelineContext)
 
     schedule.clear()
-

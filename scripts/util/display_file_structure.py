@@ -4,6 +4,7 @@ This module provides functionality to traverse a directory hierarchy, exclude fi
 and directories specified in a `.gitignore` file, and generate a visual tree
 representation of the structure using the `rich` library.
 """
+
 from io import StringIO
 from pathlib import Path
 
@@ -14,7 +15,7 @@ from rich import print
 from rich.console import Console
 from rich.tree import Tree
 
-from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
+from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
 
 def load_gitignore(base_path: Path) -> PathSpec:

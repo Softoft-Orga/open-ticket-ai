@@ -43,16 +43,14 @@ class DocumentationSummarizer:
             messages=[
                 {
                     "role": "system",
-                    "content": (
-                        "You are a helpful assistant that summarizes documentation files."
-                    ),
+                    "content": ("You are a helpful assistant that summarizes documentation files."),
                 },
                 {
                     "role": "user",
                     "content": f"Write a Meta SEO optimized description of this document."
-                               f" It needs to have between 110 and 160 characters, "
-                               f"only return the summary as a plain text and nothing else"
-                               f" \n{text}",
+                    f" It needs to have between 110 and 160 characters, "
+                    f"only return the summary as a plain text and nothing else"
+                    f" \n{text}",
                 },
             ],
             temperature=0.2,
@@ -81,7 +79,5 @@ class DocumentationSummarizer:
             paths.append(md_file)
             tasks.append(self.summarize_file(md_file, model))
         summaries = await asyncio.gather(*tasks)
-        summary_dict = {
-            str(p.relative_to(self.docs_dir)): s for p, s in zip(paths, summaries)
-        }
+        summary_dict = {str(p.relative_to(self.docs_dir)): s for p, s in zip(paths, summaries)}
         return summary_dict

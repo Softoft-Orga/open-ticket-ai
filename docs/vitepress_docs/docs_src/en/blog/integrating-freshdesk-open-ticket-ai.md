@@ -12,7 +12,7 @@ Open Ticket AI (OTAI) is a local, on-premise **ticket classification** system (a
 ```python
 import aiohttp
 
-from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
 
 class FreshdeskAdapter(TicketSystemAdapter):

@@ -8,7 +8,7 @@ import yaml
 from pydantic import BaseModel
 from rich.syntax import Syntax
 
-from open_ticket_ai.src.core.util import path_util, pretty_print_config, create_json_config_schema
+from open_ticket_ai.core.util import path_util, pretty_print_config, create_json_config_schema
 
 
 class DummyModel(BaseModel):
