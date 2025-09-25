@@ -1,56 +1,40 @@
-from pydantic import AliasChoices, ConfigDict, Field
+from typing import Any, Dict, List, Optional, Union
+from pydantic import Field, ConfigDict, AliasChoices
 
 from open_ticket_ai.src.core.config.base_pipe_config import BasePipeConfig
 
 
-class TicketFilterConfig(BasePipeConfig):
-    field: str
-    operator: str
-    value: str
+class TicketSearchCriteria(BasePipeConfig):
+    queue: Dict[str, str]
+    limit: int
 
 
-class TicketFetcherConfig(BasePipeConfig):
-    filters: list[TicketFilterConfig] = Field(default_factory=list)
-    output_field: str = "ticket"
-
-
-class HFOutputStructureConfig(BasePipeConfig):
-    label_field: str
-    confidence_field: str
+class TicketSystemServiceConfig(BasePipeConfig):
+    operation: str
+    ticket_search_criteria: Optional[TicketSearchCriteria] = None
+    ticket_id: Optional[str] = None
+    ticket: Optional[Dict[str, Any]] = None
 
 
 class HFLocalAIInferenceServiceConfig(BasePipeConfig):
-    input_value: str
+    prompt: str
     hf_model: str
-    hf_token_env_var: str | None = None
-    output_structure: HFOutputStructureConfig
+    hf_token_env_var: str
 
 
 class ListValueMapperConfig(BasePipeConfig):
-    model_config = ConfigDict(populate_by_name=True)
-
-    input_value: str
-    output_field: str
-    mapping_rules: dict[str, list[str]] = Field(
-        default_factory=dict,
-        alias="to_value_from_list",
-        validation_alias=AliasChoices("to_value_from_list", "to_values_from_list"),
-    )
+    from_key: str
+    key_to_value_map: Dict[str, str]
 
 
-class LowConfidenceHandlerConfig(BasePipeConfig):
-    label: str
-    confidence: str
-    output_field: str
-    min_confidence: float
-    low_confidence_value: str
-
-
-class TicketModifierSetOperation(BasePipeConfig):
-    ticket_field: str
-    value: str | int | float | bool | dict[str, str] | None
+class ContextModifierConfig(BasePipeConfig):
+    pass  # No additional fields needed as it only uses the base config with output
 
 
 class TicketModifierConfig(BasePipeConfig):
     ticket_id: str
-    update_operations: list[TicketModifierSetOperation] = Field(default_factory=list)
+    ticket: Dict[str, Any]
+
+
+# Alias for backward compatibility
+TicketFetcherConfig = TicketSystemServiceConfig

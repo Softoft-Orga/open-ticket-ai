@@ -89,3 +89,21 @@ open_ticket_ai:
         low_confidence_value: "3 Mittel"
 
     run_every_milli_seconds: 1
+
+
+queue_updater:
+    type: open_ticket_ai.ticket_system.TicketSystemService
+    operation: update
+    ticket_id: "{{ context.data.ticket.id }}"
+    ticket:
+        queue:
+            name: "{{ context.data.final_queue }}"
+
+
+ticket-fetcher:
+    type: open_ticket_ai.ticket_system.TicketSystemService
+    operation: find
+    ticket_search_criteria:
+        queue:
+            name: "{{ context.pipeline_config.filter_by_queue_name }}"
+        limit: 1

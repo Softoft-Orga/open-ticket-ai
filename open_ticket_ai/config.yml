@@ -1,137 +1,190 @@
 open_ticket_ai:
-    logging:
-        version: 1
-        disable_existing_loggers: false # Add this to prevent disabling loggers from other libraries
+  logging:
+    version: 1
+    disable_existing_loggers: false # Add this to prevent disabling loggers from other libraries
 
-        formatters:
-            standard:
-                format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s' # Added %(name)s to see which logger is used
+    formatters:
+      standard:
+        format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s' # Added %(name)s to see which logger is used
 
-        handlers:
-            console:
-                class: logging.StreamHandler
-                formatter: standard
-                stream: ext://sys.stdout
+    handlers:
+      console:
+        class: "logging.StreamHandler"
+        formatter: "standard"
+        stream: "ext://sys.stdout"
 
-        # ADDED: A specific logger for your application
-        loggers:
-            open_ticket_ai: # This will catch logs from all submodules
-                handlers: ["console"]
-                level: INFO
-                propagate: false # Prevents logs from being sent to the root logger and printed twice
+    # ADDED: A specific logger for your application
+    loggers:
+      open_ticket_ai: # This will catch logs from all submodules
+        handlers: [ "console" ]
+        level: "INFO"
+        propagate: false # Prevents logs from being sent to the root logger and printed twice
 
-        root:
-            level: WARNING # Set root logger to WARNING to reduce noise from third-party libraries
-            handlers: [ "console" ]
-    system:
-        server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
-        webservice_name: "OpenTicketAI"
-        search_operation_url: "ticket-search"
-        update_operation_url: "ticket-update"
-        get_operation_url: "ticket-get"
-        username: "open_ticket_ai"
-        password_env_var: "OTOBO_EHS_PASSWORD"
-    pipes:
-        ticket_fetcher:
-            class: "open_ai.src.base.TicketFetcher"
-            filters:
-                -   field: "queue_name"
-                    operator: "equals"
-                    value: "EingangsQueue"
-            output_field: "ticket"
+    root:
+      level: "WARNING" # Set root logger to WARNING to reduce noise from third-party libraries
+      handlers: [ "console" ]
+  system:
+    server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
+    webservice_name: "OpenTicketAI"
+    search_operation_url: "ticket-search"
+    update_operation_url: "ticket-update"
+    get_operation_url: "ticket-get"
+    username: "open_ticket_ai"
+    password_env_var: "OTOBO_EHS_PASSWORD"
+  pipelines:
+    - id: "ticket-routing"
+      pipeline_config:
+        min_priority_confidence: 0.8
+        min_queue_confidence: 0.8
+        filter_by_queue_name: "EingangsQueue"
+        queue_model: "softoft/EHS_Queue_V8"
+        priority_model: "softoft/EHS_Priority_Prediction"
+        low_confidence_queue_name: "Unklassifiziert"
+        low_confidence_priority_name: "3 Mittel"
 
-        queue_ai_model:
-            class: "open_ai.src.base.HFLocalAIInferenceService"
-            input_value: "prepared_text"
-            hf_model: "softoft/EHS_Queue_V8"
-            hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
-            output_structure:
-                label_field: "predicted_queue"
-                confidence_field: "queue_confidence"
+      steps:
+        - name: "ticket_fetcher"
+          type: "open_ticket_ai.ticket_system.TicketSystemService"
+          operation: "find"
+          ticket_search_criteria:
+            queue:
+              name: "{{ pipeline_config.filter_by_queue_name }}"
+            limit: 1
 
-        priority_ai_model:
-            class: "open_ai.src.base.HFLocalAIInferenceService"
-            input_value: "prepared_text"
-            hf_model: "softoft/EHS_Priority_Prediction"
-            hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
-            output_structure:
-                label_field: "predicted_priority"
-                confidence_field: "priority_confidence"
+          output:
+            data:
+              ticket: "{{ context.current_state.found_tickets | first }}"
 
-        queue_mapper:
-            class: "open_ai.src.base.ListValueMapper"
-            input_field: "predicted_queue"
-            to_values_from_list:
-                "Anfrage an die IT::Backup/Rücksicherung": [ "Anfrage an die IT::Backup/Rücksicherung" ]
-                "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen": [ "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen" ]
-                "Anfrage an die IT::DMS-System (d.3)": [ "Anfrage an die IT::DMS-System (d.3)" ]
-                "Anfrage an die IT::Drucker": [ "Anfrage an die IT::Drucker" ]
-                "Anfrage an die IT::ERP-System (Wilken/eGecko)": [ "Anfrage an die IT::ERP-System (Wilken/eGecko)" ]
-                "Anfrage an die IT::Fachsystem Pflege": [ "Anfrage an die IT::Fachsystem Pflege" ]
-                "Anfrage an die IT::Homeoffice": [ "Anfrage an die IT::Homeoffice" ]
-                "Anfrage an die IT::Logbuch/Sharepoint": [ "Anfrage an die IT::Logbuch/Sharepoint" ]
-                "Anfrage an die IT::Mail/Outlook": [ "Anfrage an die IT::Mail/Outlook" ]
-                "Anfrage an die IT::PC/Hardware": [ "Anfrage an die IT::PC/Hardware" ]
-                "Anfrage an die IT::Smartphone/Tablet": [ "Anfrage an die IT::Smartphone/Tablet" ]
-                "Anfrage an die IT::Software-Bestellungen": [ "Anfrage an die IT::Software-Bestellungen" ]
-                "Anfrage an die IT::Sonstige Systeme/Anwendungen": [ "Anfrage an die IT::Sonstige Systeme/Anwendungen" ]
-                "Anfrage an die IT::TK-Anlagen/Nebenstellen": [ "Anfrage an die IT::TK-Anlagen/Nebenstellen" ]
-                "Anfrage an die IT::Netzwerk/Internet": [ "Anfrage an die IT::Netzwerk/Internet" ]
-                "Assistenzsysteme": [ "Assistenzsysteme" ]
-                "Bewerbungsmanagement": [ "Bewerbungsmanagement" ]
-                "Hausnotruf": [ "Hausnotruf" ]
-                "Hauswirtschaft": [ "Hauswirtschaft" ]
-                "Hygiene": [ "Hygiene" ]
-                "Lernwelt": [ "Lernwelt" ]
-                "Personal Office": [ "Personal Office" ]
-                "Pflege und Alltagsbegleitung": [ "Pflege und Alltagsbegleitung" ]
+        - name: "queue_ai_model"
+          type: "open_ai.src.base.HFLocalAIInferenceService"
+          prompt: "{{ context.ticket.subject }} {{ context.ticket.body }}"
+          hf_model: "{{ pipeline_config.queue_model }}"
+          hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
+          output:
+            data:
+              queue_prediction:
+                prediction: "{{ context.current_state.prediction }}"
+                confidence: "{{ context.current_state.confidence }}"
 
-            output_field: "mapped_queue"
+        - name: "priority_ai_model"
+          type: "open_ai.src.base.HFLocalAIInferenceService"
+          prompt: "{{ context.ticket.subject }} {{ context.ticket.body }}"
+          hf_model: "{{ pipeline_config.priority_model }}"
+          hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
+          output:
+            data:
+              priority_prediction:
+                prediction: "{{ context.current_state.prediction }}"
+                confidence: "{{ context.current_state.confidence }}"
 
-        priority_mapper:
-            class: "open_ai.src.base.ListValueMapper"
-            input_value: "predicted_priority"
-            to_value_from_list:
-                "1 Kritisch": [ "1 Kritisch" ]
-                "3 Mittel": [ "3 Mittel" ]
-                "5 Sehr niedrig": [ "5 Sehr niedrig" ]
+        - name: "queue_mapper"
+          type: "open_ai.src.base.ListValueMapper"
+          from_key: "{{ ccontext.data.queue_prediction.prediction }}"
+          key_to_value_map:
+            "Anfrage an die IT::Backup/Rücksicherung": "Anfrage an die IT::Backup/Rücksicherung"
+            "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen": "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen"
+            "Anfrage an die IT::DMS-System (d.3)": "Anfrage an die IT::DMS-System (d.3)"
+            "Anfrage an die IT::Drucker": "Anfrage an die IT::Drucker"
+            "Anfrage an die IT::ERP-System (Wilken/eGecko)": "Anfrage an die IT::ERP-System (Wilken/eGecko)"
+            "Anfrage an die IT::Fachsystem Pflege": "Anfrage an die IT::Fachsystem Pflege"
+            "Anfrage an die IT::Homeoffice": "Anfrage an die IT::Homeoffice"
+            "Anfrage an die IT::Logbuch/Sharepoint": "Anfrage an die IT::Logbuch/Sharepoint"
+            "Anfrage an die IT::Mail/Outlook": "Anfrage an die IT::Mail/Outlook"
+            "Anfrage an die IT::PC/Hardware": "Anfrage an die IT::PC/Hardware"
+            "Anfrage an die IT::Smartphone/Tablet": "Anfrage an die IT::Smartphone/Tablet"
+            "Anfrage an die IT::Software-Bestellungen": "Anfrage an die IT::Software-Bestellungen"
+            "Anfrage an die IT::Sonstige Systeme/Anwendungen": "Anfrage an die IT::Sonstige Systeme/Anwendungen"
+            "Anfrage an die IT::TK-Anlagen/Nebenstellen": "Anfrage an die IT::TK-Anlagen/Nebenstellen"
+            "Anfrage an die IT::Netzwerk/Internet": "Anfrage an die IT::Netzwerk/Internet"
+            "Assistenzsysteme": "Assistenzsysteme"
+            "Bewerbungsmanagement": "Bewerbungsmanagement"
+            "Hausnotruf": "Hausnotruf"
+            "Hauswirtschaft": "Hauswirtschaft"
+            "Hygiene": "Hygiene"
+            "Lernwelt": "Lernwelt"
+            "Personal Office": "Personal Office"
+            "Pflege und Alltagsbegleitung": "Pflege und Alltagsbegleitung"
+          output:
+            mapped_queue: "{{ context.current_state.to_value }}"
 
-            output_field: "mapped_priority"er
+        - name: "priority_mapper"
+          type: "open_ai.src.base.ListValueMapper"
+          from_key: "{{ context.priority_prediction.prediction }}"
+          key_to_value_map:
+            "1 Kritisch": "1 Kritisch"
+            "3 Mittel": "3 Mittel"
+            "5 Sehr niedrig": "5 Sehr niedrig"
+          output:
+            data:
+              mapped_priority: "{{ context.current_state.to_value }}"
 
 
-        queue_updater:
-            class: "open_ai.src.base.TicketModifier"
-            ticket_id: "ticket.id"
-            update_operations:
-                -   ticket_field: "queue_name"
-                    value: "final_queue"
+        - name: "final_queue_low_confidence"
+          type: "open_ai.src.base.ContextModifier"
+          output:
+            data:
+              final_queue: |
+                {% if context.data.queue_prediction.confidence >= context.pipeline_config.min_queue_confidence %}
+                  {{ context.data.queue_prediction.prediction }}
+                {% else %}
+                  {{ context.pipeline_config.low_confidence_queue_name }}
+                {% endif %}
 
-        queue_note_adder:
-            class: "open_ai.src.base.TicketModifier"
-            ticket_id: "ticket.id"
+        - name: "queue_updater"
+          type: "open_ticket_ai.ticket_system.TicketSystemService"
+          operation: "update"
+          ticket_id: "{{ context.data.ticket.id }}"
+          ticket:
+            queue:
+              name: "{{ context.data.final_queue }}"
+          output:
+            meta:
+              events:
+                queue_update_operation:
+                  success: "{{ context.current_state.success }}"
 
-            update_operations:
-                -   ticket_field: "article"
-                    value:
-                        subject: "Automatische Klassifizierung"
-                        body: "Das Ticket wurde automatisch der Queue {final_queue} zugeordnet; mit der Konfidenz {queue_confidence:2f}"
+        - name: "queue_note_adder"
+          type: "open_ticket_ai.ticket_system.TicketSystemService"
+          operation: "update"
+          ticket_id: "{{ context.data.ticket.id }}"
+          ticket:
+            article:
+              subject: "Automatische Klassifizierung"
+              body: |
+                Das Ticket wurde automatisch der Queue {{ context.data.final_queue }} zugeordnet;
+                mit der Konfidenz {{ context.data.queue_prediction.confidence }}
 
-        priority_updater:
-            class: "open_ai.src.base.TicketModifier"
-            ticket_id: "ticket.id"
+        - name: "final_priority_low_confidence"
+          type: "open_ai.src.base.ContextModifier"
+          output:
+            data:
+              final_priority: |
+                {% if context.data.priority_prediction.confidence >= context.pipeline_config.min_priority_confidence %}
+                  {{ context.data.priority_prediction.prediction }}
+                {% else %}
+                  {{ context.pipeline_config.low_confidence_priority_name }}
+                {% endif %}
 
-            update_operations:
-                -   ticket_field: "priority_name"
-                    value: "final_priority"
 
-        priority_note_adder:
-            class: "open_ai.src.base.TicketModifier"
-            ticket_id: "ticket.id"
 
-            update_operations:
-                -   ticket_field: "article"
-                    value:
-                        subject: "Automatische Priorisierung"
-                        body: "Das Ticket wurde automatisch der Priorität {final_priority} zugeordnet; mit der Konfidenz {priority_confidence:2f}"
-    orchestrator:
-        run_every_milli_seconds: 1
+        - name: "priority_updater"
+          type: "open_ticket_ai.ticket_system.TicketSystemService"
+          operation: "update"
+          ticket_id: "{{ context.data.ticket.id }}"
+          ticket:
+            priority:
+              name: "{{ context.data.final_priority }}"
+
+        - name: "priority_note_adder"
+          type: "open_ai.src.base.TicketModifier"
+          ticket_id: "{{ context.data.ticket.id }}"
+          ticket:
+            article:
+              subject: "Automatische Priorisierung"
+              body: |
+                Das Ticket wurde automatisch der Priorität {{ context.data.final_priority }} zugeordnet;
+                mit der Konfidenz {{ context.data.priority_prediction.confidence }}
+
+
+  orchestrator:
+    run_every_milli_seconds: 1
