@@ -31,6 +31,13 @@ export default defineConfig({
                 href: 'https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=84&q=90&lightness=100&colorlevel.white=100'
             }
         ],
+        ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=AW-474755810' }],
+        ['script', {}, `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-474755810');
+        `],
         ['script', {}, `
             (() => {
               let id='${gaId}'

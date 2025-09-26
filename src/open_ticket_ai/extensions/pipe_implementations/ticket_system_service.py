@@ -1,14 +1,13 @@
 import logging
 from typing import Any, Dict
 
-from open_ticket_ai.core.config.pipe_configs import TicketSystemServiceConfig
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedTicket,
-    UnifiedEntity,
 )
+from open_ticket_ai.extensions.pipe_implementations.pipe_configs import TicketSystemServiceConfig
 
 
 class TicketSystemService(Pipe[TicketSystemServiceConfig]):
@@ -20,6 +19,7 @@ class TicketSystemService(Pipe[TicketSystemServiceConfig]):
         self.logger = logging.getLogger(self.__class__.__name__)
 
     async def _process(self, rendered_config: TicketSystemServiceConfig) -> Dict[str, Any]:
+        self.logger.info(f"Running {self.__class__.__name__}")
         operation = rendered_config.operation.lower()
 
         if operation == "find":

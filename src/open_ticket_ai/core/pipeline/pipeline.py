@@ -1,10 +1,8 @@
 import logging
 from typing import List, Dict, Any
 
-from .context import PipelineContext
-from .meta_info import MetaInfo
+from .context import PipelineContext, MetaInfo
 from .pipe import Pipe
-from .status import PipelineStatus
 
 
 class Pipeline:
@@ -25,8 +23,5 @@ class Pipeline:
         for pipe in self.pipes:
             self.logger.info(f"Executing pipe {pipe.__class__.__name__}")
             context = await pipe.process(context)
-
-        if context.meta_info.status == PipelineStatus.RUNNING:
-            self.logger.info("Pipeline completed successfully.")
-
+        self.logger.info(f"Pipeline completed successfully.")
         return context

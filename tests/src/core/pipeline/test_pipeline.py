@@ -10,9 +10,7 @@ from pydantic import BaseModel
 
 # Assuming the following imports are correct based on your project structure
 # You may need to adjust them based on your PYTHONPATH
-from open_ticket_ai.core.pipeline.status import PipelineStatus
-from open_ticket_ai.core.pipeline.meta_info import MetaInfo
-from open_ticket_ai.core.pipeline.context import PipelineContext
+from open_ticket_ai.core.pipeline.context import PipelineContext, MetaInfo, PipelineStatus
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipeline import Pipeline
 from open_ticket_ai.core.config.config_models import ProvidableConfig, PipelineConfig, ScheduleConfig

@@ -1,6 +1,6 @@
 from typing import Dict, Any
-from open_ticket_ai.core.config.pipe_configs import ContextModifierConfig
 from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.extensions.pipe_implementations.pipe_configs import ContextModifierConfig
 
 
 class ContextModifier(Pipe[ContextModifierConfig]):
@@ -12,14 +12,6 @@ class ContextModifier(Pipe[ContextModifierConfig]):
     ConfigModel = ContextModifierConfig
 
     async def _process(self, rendered_config: ContextModifierConfig) -> Dict[str, Any]:
-        """
-        Process the context modification.
-
-        Args:
-            rendered_config: The rendered configuration for the context modification
-
-        Returns:
-            An empty dictionary as this is a no-op implementation
-        """
+        self._logger.info(f"Running {self.__class__.__name__}")
         # Base implementation does nothing and returns an empty dict
         return {}

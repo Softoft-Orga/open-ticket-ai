@@ -8,13 +8,15 @@ from rich.syntax import Syntax
 logger = logging.getLogger(__name__)
 
 
-def pretty_print_config(config: BaseModel, console: Console):
+def prettify_dict(config: BaseModel | dict):
     # turn your BaseModel into a dict
-    cfg_dict = config.model_dump()
+
+    cfg_dict = config.model_dump() if isinstance(config, BaseModel) else config
 
     # render YAML
-    yaml_str = yaml.safe_dump(cfg_dict, sort_keys=False)
-    syntax = Syntax(yaml_str, "yaml")
-
-    # print with rich directly (bypasses standard logger)
-    console.print(syntax)
+    try:
+        yaml_str = yaml.safe_dump(cfg_dict, sort_keys=False)
+    except Exception as e:
+        logger.warning(f"Failed to prettify config: {e}")
+        return str(cfg_dict)
+    return yaml_str

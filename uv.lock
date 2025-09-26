@@ -607,6 +607,7 @@ dependencies = [
     { name = "pygments" },
     { name = "pytest" },
     { name = "requests" },
+    { name = "tenacity" },
     { name = "transformers", extra = ["torch"] },
     { name = "typing-extensions" },
 ]
@@ -637,6 +638,7 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'dev'", specifier = "~=8.4.0" },
     { name = "requests", specifier = "~=2.32.4" },
     { name = "ruff", marker = "extra == 'dev'" },
+    { name = "tenacity", specifier = ">=9.0.0" },
     { name = "transformers", extras = ["torch"], specifier = "~=4.52.4" },
     { name = "typing-extensions" },
 ]

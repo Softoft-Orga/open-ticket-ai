@@ -3,11 +3,8 @@ import os
 from functools import lru_cache
 from typing import Optional, Dict, Any
 
-from pydantic import BaseModel
-
-from open_ticket_ai.core.config.pipe_configs import HFLocalAIInferenceServiceConfig
-from open_ticket_ai.core.pipeline.context import PipelineContext
 from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.extensions.pipe_implementations.pipe_configs import HFLocalAIInferenceServiceConfig
 
 
 class HFLocalAIInferenceService(Pipe[HFLocalAIInferenceServiceConfig]):
@@ -49,6 +46,7 @@ class HFLocalAIInferenceService(Pipe[HFLocalAIInferenceServiceConfig]):
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 
     async def _process(self, rendered_config: HFLocalAIInferenceServiceConfig) -> Dict[str, Any]:
+        self._logger.info(f"Running {self.__class__.__name__}")
         if self._pipeline is None:
             token = self._get_token()
             self._pipeline = self._load_pipeline(rendered_config.hf_model, token)

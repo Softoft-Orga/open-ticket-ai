@@ -17,20 +17,22 @@ open_ticket_ai:
     loggers:
       open_ticket_ai: # This will catch logs from all submodules
         handlers: [ "console" ]
-        level: "DEBUG"
+        level: "INFO"
         propagate: false # Prevents logs from being sent to the root logger and printed twice
 
     root:
-      level: "DEBUG" # Set root logger to WARNING to reduce noise from third-party libraries
+      level: "INFO" # Set root logger to WARNING to reduce noise from third-party libraries
       handlers: [ "console" ]
   system:
-    server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
-    webservice_name: "OpenTicketAI"
-    search_operation_url: "ticket-search"
-    update_operation_url: "ticket-update"
-    get_operation_url: "ticket-get"
-    username: "open_ticket_ai"
-    password_env_var: "OTOBO_EHS_PASSWORD"
+    type: "otobo"
+    config:
+      server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
+      webservice_name: "OpenTicketAI"
+      search_operation_url: "ticket-search"
+      update_operation_url: "ticket-update"
+      get_operation_url: "ticket-get"
+      username: "open_ticket_ai"
+      password_env_var: "OTOBO_EHS_PASSWORD"
   pipelines:
     - id: "ticket-routing"
       pipeline_config:
@@ -44,7 +46,7 @@ open_ticket_ai:
 
       steps:
         - name: "ticket_fetcher"
-          type: "open_ticket_ai.base.TicketSystemService"
+          type: "open_ticket_ai.extensions.TicketSystemService"
           operation: "find"
           ticket_search_criteria:
             queue:
@@ -56,7 +58,7 @@ open_ticket_ai:
               ticket: "{{ current_state.found_tickets | first }}"
 
         - name: "queue_ai_model"
-          type: "open_ticket_ai.base.HFLocalAIInferenceService"
+          type: "open_ticket_ai.extensions.HFLocalAIInferenceService"
           prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
           hf_model: "{{ pipeline_config.queue_model }}"
           hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
@@ -67,7 +69,7 @@ open_ticket_ai:
                 confidence: "{{ current_state.confidence }}"
 
         - name: "priority_ai_model"
-          type: "open_ticket_ai.base.HFLocalAIInferenceService"
+          type: "open_ticket_ai.extensions.HFLocalAIInferenceService"
           prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
           hf_model: "{{ pipeline_config.priority_model }}"
           hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
@@ -78,7 +80,7 @@ open_ticket_ai:
                 confidence: "{{ current_state.confidence }}"
 
         - name: "queue_mapper"
-          type: "open_ticket_ai.base.SimpleKeyValueMapper"
+          type: "open_ticket_ai.extensions.SimpleKeyValueMapper"
           from_key: "{{ data.queue_prediction.prediction }}"
           key_to_value_map:
             "Anfrage an die IT::Backup/Rücksicherung": "Anfrage an die IT::Backup/Rücksicherung"
@@ -108,7 +110,7 @@ open_ticket_ai:
             mapped_queue: "{{ current_state.to_value }}"
 
         - name: "priority_mapper"
-          type: "open_ticket_ai.base.SimpleKeyValueMapper"
+          type: "open_ticket_ai.extensions.SimpleKeyValueMapper"
           from_key: "{{ data.priority_prediction.prediction }}"
           key_to_value_map:
             "1 Kritisch": "1 Kritisch"
@@ -120,18 +122,18 @@ open_ticket_ai:
 
 
         - name: "final_queue_low_confidence"
-          type: "open_ticket_ai.base.ContextModifier"
+          type: "open_ticket_ai.extensions.ContextModifier"
           output:
             data:
               final_queue: |
                 {% if data.queue_prediction.confidence | float >= pipeline_config.min_queue_confidence %}
-                  {{ data.queue_prediction.prediction }}
+                  {{ data.mapped_queue }}
                 {% else %}
                   {{ pipeline_config.low_confidence_queue_name }}
                 {% endif %}
 
         - name: "queue_updater"
-          type: "open_ticket_ai.base.TicketSystemService"
+          type: "open_ticket_ai.extensions.TicketSystemService"
           operation: "update"
           ticket_id: "{{ data.ticket.id }}"
           ticket:
@@ -139,7 +141,7 @@ open_ticket_ai:
               name: "{{ data.final_queue }}"
 
         - name: "queue_note_adder"
-          type: "open_ticket_ai.base.TicketSystemService"
+          type: "open_ticket_ai.extensions.TicketSystemService"
           operation: "update"
           ticket_id: "{{ data.ticket.id }}"
           ticket:
@@ -150,7 +152,7 @@ open_ticket_ai:
                 mit der Konfidenz {{ data.queue_prediction.confidence }}
 
         - name: "final_priority_low_confidence"
-          type: "open_ticket_ai.base.ContextModifier"
+          type: "open_ticket_ai.extensions.ContextModifier"
           output:
             data:
               final_priority: |
@@ -163,7 +165,7 @@ open_ticket_ai:
 
 
         - name: "priority_updater"
-          type: "open_ticket_ai.base.TicketSystemService"
+          type: "open_ticket_ai.extensions.TicketSystemService"
           operation: "update"
           ticket_id: "{{ data.ticket.id }}"
           ticket:
@@ -171,7 +173,7 @@ open_ticket_ai:
               name: "{{ data.final_priority }}"
 
         - name: "priority_note_adder"
-          type: "open_ticket_ai.base.TicketSystemService"
+          type: "open_ticket_ai.extensions.TicketSystemService"
           operation: "update"
           ticket_id: "{{ data.ticket.id }}"
           ticket:
@@ -183,4 +185,4 @@ open_ticket_ai:
 
 
   orchestrator:
-    run_every_milli_seconds: 1
+    run_every_milli_seconds: 10000

@@ -89,7 +89,7 @@ def test_pretty_print_config_outputs_yaml():
     fake_console = SimpleNamespace(print=lambda x: printed.append(x))
 
     cfg = DummyModel(foo=1, bar="baz")
-    pretty_print_config.pretty_print_config(cfg, fake_console)
+    pretty_print_config.prettify_dict(cfg, fake_console)
 
     assert len(printed) == 1
     arg = printed[0]

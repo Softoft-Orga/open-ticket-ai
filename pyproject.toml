@@ -27,6 +27,7 @@ dependencies = [
     "docstring-parser>=0.17.0",
     "otobo-znuny>=1.2.5",
     "pyfiglet>=1.0.4",
+    "tenacity>=9.0.0",
 ]
 
 # ADDED: Project URLs

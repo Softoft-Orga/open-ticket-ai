@@ -4,9 +4,9 @@ from typing import Any, Dict, List, Annotated, Union
 import yaml
 from pydantic import BaseModel, Field
 
-from open_ticket_ai.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
-from open_ticket_ai.core.config.pipe_configs import ContextModifierConfig, HFLocalAIInferenceServiceConfig, \
-    TicketSystemServiceConfig, SimpleKeyValueMapperConfig
+from open_ticket_ai.extensions.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
+from open_ticket_ai.extensions.pipe_implementations.pipe_configs import TicketSystemServiceConfig, \
+    HFLocalAIInferenceServiceConfig, ContextModifierConfig, SimpleKeyValueMapperConfig
 
 
 class PipelineStepOutput(BaseModel):
@@ -42,9 +42,9 @@ class LoggingConfig(BaseModel):
     root: Dict[str, Any]
 
 
-class SystemConfig(OTOBOAdapterConfig):
-    """Configuration for the ticket system connection."""
-
+class SystemConfig(BaseModel):
+    type: str
+    config: Dict[str, str]
 
 class OrchestratorConfig(BaseModel):
     """Configuration for the main orchestrator."""

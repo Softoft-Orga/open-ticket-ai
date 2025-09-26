@@ -1,10 +1,20 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipeline\context.py
-import functools
+from collections import defaultdict
+from enum import Enum, auto
+from typing import Dict, Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from open_ticket_ai.core.pipeline.meta_info import MetaInfo
-from open_ticket_ai.core.pipeline.status import PipelineStatus
+class PipeEvent(BaseModel):
+    is_success: bool | None = None
+    error_message: str | None = None
+    error_name: str | None = None
+
+class MetaInfo(BaseModel):
+    events: Dict[str, Any] = Field(
+        default_factory=lambda: defaultdict(dict),
+        description="Nested dictionary for tracking pipeline events and their statuses",
+    )
 
 
 class PipelineContext(BaseModel):
@@ -12,13 +22,3 @@ class PipelineContext(BaseModel):
     meta_info: MetaInfo = MetaInfo()
     current_state: dict = {}
     pipeline_config: dict = {}
-
-    def stop_pipeline(self):
-        self.meta_info.status = PipelineStatus.STOPPED
-
-    def get_value_from_context(self, key_string: str):
-        keys = key_string.split(".")
-        try:
-            return functools.reduce(lambda d, key: d[key], keys, self.data)
-        except (KeyError, TypeError):
-            return None

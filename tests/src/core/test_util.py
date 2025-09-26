@@ -32,7 +32,7 @@ def test_pretty_print_config_outputs_yaml():
     fake_console = SimpleNamespace(print=lambda x: printed.append(x))
 
     cfg = DummyModel(foo=1, bar="baz")
-    pretty_print_config.pretty_print_config(cfg, fake_console)
+    pretty_print_config.prettify_dict(cfg, fake_console)
 
     assert len(printed) == 1
     arg = printed[0]
@@ -44,7 +44,7 @@ def test_pretty_print_config_outputs_yaml():
 def test_pretty_print_config_non_model_raises():
     fake_console = SimpleNamespace(print=lambda x: None)
     with pytest.raises(AttributeError):
-        pretty_print_config.pretty_print_config({"foo": 1}, fake_console)
+        pretty_print_config.prettify_dict({"foo": 1}, fake_console)
 
 
 def test_root_config_schema_contains_open_ticket_ai():
