@@ -81,8 +81,6 @@ fi
 # endregion
 
 
-# shellcheck disable=SC1090
-source ~/.bashrc || true
 # region setting DB root password
 if [ -z "${OTOBO_DB_ROOT_PASSWORD:-}" ]; then
     if [ "$OVERWRITE" -eq 1 ]; then

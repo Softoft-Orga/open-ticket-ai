@@ -1,45 +1,48 @@
 [project]
 name = "open-ticket-ai"
-version = "0.1.0"
+version = "1.0.0rc1"
 description = "AI enhancements for open source ticket systems"
 requires-python = ">=3.13"
+
+# ADDED: Author and license information
+authors = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
+license = { text = "LGPL-2.1-only" } # Using the standard SPDX identifier
+
 dependencies = [
-    "huggingface-hub~=0.33.0",
     "pydantic~=2.11.7",
     "pydantic_core",
     "typing_extensions",
-    "spacy",
-    "Faker",
-    "phonenumbers",
     "pytest~=8.4.0",
     "pluggy",
     "pygments",
-    "iniconfig",
-    "pdoc3",
-    "PyYAML~=6.0.2",
-    "transformers~=4.52.4",
+    "transformers[torch]~=4.52.4",
     "injector~=0.22.0",
-    "schedule~=1.2.2",
     "requests~=2.32.4",
-    "pyfiglet>=1.0.3",
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.6.14",
-    "mkdocstrings[python]>=0.29.1",
-    "mkdocs-gen-files>=0.5.0",
-    "docstring-parser>=0.16",
-    "openai>=1.93.0",
-    "tenacity>=9.1.2",
-    "prefect>=3.4.8",
-    "otobo>=1.1.5",
+    "huggingface-hub[hf-xet]>=0.33.0",
+    "openai>=1.108.1",
+    "mdxlate>=0.1.0",
+    "pathspec>=0.12.1",
+    "docstring-parser>=0.17.0",
+    "otobo-znuny>=1.2.5",
+    "pyfiglet>=1.0.4",
+    "tenacity>=9.0.0",
 ]
+
+# ADDED: Project URLs
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
 
 [project.optional-dependencies]
 dev = [
     "ruff",
     "mypy",
+    "pytest~=8.4.0",
 ]
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["open_ticket_ai*"]
 
 [tool.ruff]
@@ -47,7 +50,6 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
-# Add specific lint configurations here if needed in the future
 
 [tool.mypy]
 python_version = "3.13"

@@ -1,5 +1,5 @@
 ---
-description: Augmentez l'efficacité de votre service d'assistance avec Open Ticket AI, la solution sécurisée, open-source et sur site pour automatiser la classification des tickets de support.
+description: Augmentez l'efficacité de votre service d'assistance avec Open Ticket AI, la solution open-source, sécurisée et sur site pour automatiser la classification des tickets de support.
 features:
 - details: Installez facilement Open Ticket AI sur votre propre serveur en utilisant Docker.
   icon:

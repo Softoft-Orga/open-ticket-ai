@@ -88,5 +88,11 @@ export default {
         message_label: 'Your message',
         submit_text: 'Send',
         email_us_text: 'or Email us at',
-    }
+    },
+    sdg_waitlist: {
+        title: 'Join the Synthetic Ticket Generator Waitlist',
+        email_label: 'Your email',
+        submit_text: 'Join Waitlist',
+        privacy_note: 'We’ll only use your email to notify you about the launch.',
+    },
 }

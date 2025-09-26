@@ -21,7 +21,7 @@ Los sistemas de tickets tradicionales han dependido durante mucho tiempo de proc
 Los modelos de IA pueden analizar las descripciones de los tickets en tiempo real y determinar:
 
 - **Nivel de Prioridad:** Al evaluar palabras clave, sentimiento y datos históricos, la IA puede identificar qué incidencias necesitan atención inmediata.
-- **Categorización:** Usando el procesamiento del lenguaje natural (PLN), el sistema puede clasificar los tickets en categorías como hardware, software, seguridad, red, cuenta o solicitud de servicio.
+- **Categorización:** Usando procesamiento de lenguaje natural (NLP), el sistema puede clasificar los tickets en categorías como hardware, software, seguridad, red, cuenta o solicitud de servicio.
 
 Esta automatización no solo reduce la carga de trabajo manual, sino que también garantiza que las incidencias de alto impacto se aborden con prontitud.
 
@@ -29,13 +29,13 @@ Esta automatización no solo reduce la carga de trabajo manual, sino que tambié
 
 Con el enrutamiento inteligente, la IA dirige los tickets a los agentes de soporte mejor equipados para manejarlos. Esto minimiza el tiempo que los tickets pasan en las colas y mejora la velocidad de resolución. Además, las sugerencias impulsadas por IA pueden ofrecer a los agentes posibles soluciones basadas en tickets anteriores, reduciendo aún más los tiempos de resolución.
 
-### 3. **Informes y Analíticas Mejorados**
+### 3. **Informes y Analíticas Mejoradas**
 
 Los sistemas de IA recopilan y analizan datos de todas las interacciones de los tickets, proporcionando información detallada que ayuda a las organizaciones a:
 
 - Identificar incidencias recurrentes y cuellos de botella
 - Hacer seguimiento de las métricas de rendimiento y la satisfacción del cliente
-- Optimizar los flujos de trabajo de soporte a lo largo del tiempo
+- Optimizar los flujos de trabajo de soporte con el tiempo
 
 ### 4. **Integración Fluida con Sistemas Existentes**
 
@@ -45,20 +45,20 @@ Los sistemas de tickets modernos impulsados por IA están diseñados para integr
 
 - **Soporte de TI Interno:** Las empresas pueden implementar sistemas de tickets mejorados con IA localmente para priorizar automáticamente las solicitudes de soporte de TI, asegurando que las incidencias críticas se resuelvan rápidamente.
 - **Servicio al Cliente:** Las empresas utilizan chatbots impulsados por IA para proporcionar respuestas instantáneas, reduciendo el volumen de tickets al dirigir las consultas comunes a recursos de autoservicio.
-- **Proveedores de Servicios Gestionados (MSP):** Con una solución autoalojada, los MSP pueden ofrecer a los clientes un sistema de tickets robusto y personalizable que aprovecha la IA para mejorar la calidad del servicio y la eficiencia operativa.
+- **Proveedores de Servicios Gestionados (MSPs):** Con una solución autoalojada, los MSPs pueden ofrecer a los clientes un sistema de tickets robusto y personalizable que aprovecha la IA para mejorar la calidad del servicio y la eficiencia operativa.
 
 ## Construyendo su Propio Sistema de Tickets con IA
 
-Si está considerando construir un producto de tickets impulsado por IA, aquí hay algunos pasos clave:
+Si está considerando construir un producto de ticketing impulsado por IA, aquí hay algunos pasos clave:
 
-1. **Desarrolle una `REST API`:** Cree una imagen de `Docker` autoalojada que proporcione una `REST API` para la priorización y categorización de tickets.
-2. **Integre modelos de IA:** Use modelos de PLN y aprendizaje automático para analizar el contenido de los tickets, asignar prioridades y categorizar incidencias.
-3. **Personalice y extienda:** Permita integraciones con herramientas ITSM populares y proporcione una `API` flexible para características adicionales.
-4. **Enfóquese en la UX:** Diseñe una interfaz intuitiva tanto para los usuarios del servicio como para los agentes de soporte, con paneles de control y herramientas de informes que resalten la información generada por la IA.
+1. **Desarrollar una REST API:** Crear una imagen de `Docker` autoalojada que proporcione una `REST API` para la priorización y categorización de tickets.
+2. **Integrar Modelos de IA:** Usar modelos de NLP y aprendizaje automático para analizar el contenido de los tickets, asignar prioridades y categorizar incidencias.
+3. **Personalizar y Extender:** Permitir integraciones con herramientas ITSM populares y proporcionar una `API` flexible para funcionalidades adicionales.
+4. **Enfocarse en la UX:** Diseñar una interfaz intuitiva tanto para los usuarios del servicio como para los agentes de soporte, con paneles de control y herramientas de informes que resalten la información generada por la IA.
 
 ## Tendencias Futuras
 
-A medida que la tecnología de IA avanza, podemos esperar sistemas de tickets aún más sofisticados que ofrezcan:
+A medida que avanza la tecnología de IA, podemos esperar sistemas de tickets aún más sofisticados que ofrezcan:
 
 - **Análisis Predictivo:** Anticipar posibles incidencias antes de que se vuelvan críticas.
 - **Aprendizaje Adaptativo:** Mejorar continuamente la precisión basándose en la retroalimentación y los datos históricos.

@@ -1,13 +1,13 @@
 ---
-description: Intégrez Python avec OTOBO, Znuny et OTRS en utilisant une bibliothèque client asynchrone. Ce guide fournit des exemples de code pour gérer les tickets de helpdesk via l'API REST.
+description: Intégrez Python avec OTOBO, Znuny et OTRS en utilisant une bibliothèque client asynchrone. Ce guide fournit des exemples de code pour gérer les tickets du centre d'assistance via l'API REST.
 ---
 # Guide d'intégration OTOBO Znuny OTRS
 
-Pour l'intégration avec OTOBO, Znuny ou OTRS, nous utilisons notre bibliothèque client Python otobo.
+Pour l'intégration dans OTOBO, Znuny ou OTRS, nous utilisons notre bibliothèque client python otobo.
 
 ## Bibliothèque Client Python OTOBO
 
-Un client Python asynchrone pour interagir avec l'API REST d'OTOBO. Construit avec `httpx` et `pydantic` pour la sécurité des types et la facilité d'utilisation.
+Un client Python asynchrone pour interagir avec l'API REST d'OTOBO. Conçu avec `httpx` et `pydantic` pour la sécurité des types et la facilité d'utilisation.
 
 ### Fonctionnalités
 
@@ -20,7 +20,7 @@ Un client Python asynchrone pour interagir avec l'API REST d'OTOBO. Construit av
     *   `TicketGet`
     *   `TicketUpdate`
     *   `TicketHistoryGet`
-*   **Gestion des erreurs** via `OTOBOError` pour les erreurs de l'API
+*   **Gestion des erreurs** via `OTOBOError` pour les erreurs d'API
 *   Méthode utilitaire `search_and_get` pour combiner les résultats de recherche avec une récupération détaillée
 
 ### Installation
@@ -33,14 +33,14 @@ pip install otobo
 
 ### Démarrage rapide
 
-#### Configurer les services web OTOBO :
+#### Configuration des Webservices OTOBO :
 
 Créez un nouveau service web dans OTOBO avec la configuration suivante :
-Voir le guide d'installation.
+Voir le Guide d'installation.
 
-#### Créer un nouvel agent
+#### Créer un nouvel Agent
 
-Créez un nouvel agent Otobo avec un mot de passe sécurisé et donnez-lui les permissions nécessaires pour ce que vous voulez accomplir.
+Créez un nouvel Agent Otobo avec un mot de passe sécurisé et donnez-lui les permissions nécessaires pour ce que vous voulez accomplir.
 
 
 #### 1. Configurer le client

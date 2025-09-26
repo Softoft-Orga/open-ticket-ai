@@ -1,0 +1,137 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "open-ticket-ai-config",
+    "type": "object",
+    "required": [
+        "open_ticket_ai"
+    ],
+    "properties": {
+        "open_ticket_ai": {
+            "type": "object",
+            "required": [
+                "system",
+                "pipes",
+                "pipelines"
+            ],
+            "properties": {
+                "system": {
+                    "type": "object",
+                    "required": [
+                        "id",
+                        "provider_key",
+                        "params"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "provider_key": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "params": {
+                            "type": "object",
+                            "properties": {
+                                "server_address": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "webservice_name": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "search_operation_url": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "update_operation_url": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "get_operation_url": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "password_env_var": {
+                                    "type": "string",
+                                    "minLength": 1
+                                }
+                            },
+                            "additionalProperties": true
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "pipes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "provider_key"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "pattern": "^[a-zA-Z0-9._-]+$",
+                                "minLength": 1
+                            },
+                            "provider_key": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "params": {
+                                "type": "object",
+                                "additionalProperties": true
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "uniqueItems": true
+                },
+                "pipelines": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "run_every",
+                            "pipes"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "pattern": "^[a-zA-Z0-9._-]+$",
+                                "minLength": 1
+                            },
+                            "run_every": {
+                                "type": "string",
+                                "pattern": "^[1-9][0-9]*(s|m|h|d)$"
+                            },
+                            "pipes": {
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "uniqueItems": true
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "uniqueItems": true
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

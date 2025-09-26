@@ -1,27 +1,27 @@
 ---
-description: Integra Python con OTOBO, Znuny y OTRS usando una librería de cliente asíncrona. Esta guía proporciona ejemplos de código para gestionar tickets de helpdesk a través de la API REST.
+description: Integra Python con OTOBO, Znuny y OTRS usando una biblioteca de cliente asíncrona. Esta guía proporciona ejemplos de código para gestionar tickets de helpdesk a través de la API REST.
 ---
 # Guía de Integración de OTOBO, Znuny y OTRS
 
-Para la integración con OTOBO, Znuny u OTRS, utilizamos nuestra librería de cliente python otobo
+Para la integración con OTOBO, Znuny u OTRS, estamos utilizando nuestra biblioteca de cliente python otobo.
 
-## Librería de Cliente Python para OTOBO
+## Biblioteca de Cliente Python para OTOBO
 
 Un cliente Python asíncrono para interactuar con la API REST de OTOBO. Construido con `httpx` y `pydantic` para seguridad de tipos y facilidad de uso.
 
 ### Características
 
-*   Peticiones HTTP **asíncronas** usando `httpx.AsyncClient`
-*   Modelos **Pydantic** para la validación de datos de petición y respuesta
-*   Operaciones CRUD completas para tickets:
+* Peticiones HTTP **asíncronas** usando `httpx.AsyncClient`
+* Modelos **Pydantic** para la validación de datos de petición y respuesta
+* Operaciones CRUD completas para tickets:
 
-    *   `TicketCreate`
-    *   `TicketSearch`
-    *   `TicketGet`
-    *   `TicketUpdate`
-    *   `TicketHistoryGet`
-*   **Manejo de errores** a través de `OTOBOError` para errores de la API
-*   Método de utilidad `search_and_get` para combinar resultados de búsqueda con una recuperación detallada
+  * `TicketCreate`
+  * `TicketSearch`
+  * `TicketGet`
+  * `TicketUpdate`
+  * `TicketHistoryGet`
+* **Manejo de errores** a través de `OTOBOError` para errores de la API
+* Método de utilidad `search_and_get` para combinar resultados de búsqueda con una recuperación detallada
 
 ### Instalación
 
