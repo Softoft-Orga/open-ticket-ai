@@ -1,5 +1,5 @@
-import FeatureGrid from '../.vitepress/components/core/FeatureGrid.vue'
-import Card from '../.vitepress/components/core/Card.vue'
+import FeatureGrid from '../.vitepress/components/core/basic/FeatureGrid.vue'
+import Card from '../.vitepress/components/core/basic/Card.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 const meta: Meta<typeof FeatureGrid> = {

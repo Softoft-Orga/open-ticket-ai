@@ -1,10 +1,7 @@
 ---
-description: Discover how to bridge the intelligence gap in open-source help desks
-    like osTicket and Zammad. This guide explores using AI tools like Open Ticket AI
-    to automate ticket classification, routing, and workflows, creating a powerful,
-    cost-effective alternative to enterprise SaaS.
+description: Bridge the intelligence gap in open-source help desks like osTicket &
+  Zammad. This guide shows how to use AI to automate ticket classification and workflows.
 ---
-
 # Open Source Ticket Systems, AI, and Automation: The Ultimate 2025 Guide to Transforming Support Workflows
 
 ## The Foundation: Why Smart Teams Still Bet on Open Source Help Desks
@@ -163,5 +160,5 @@ enterprise-level automation and intelligence without the SaaS price tag or loss 
 workflow, empower your team, and maintain complete sovereignty over your data.
 
 Ready to transform your support workflow?
-Visit [Open Ticket AI Demo](https://open-ticket-ai.com) to see a demo and bridge your
+Visit [Open Ticket AI Demo](../index.md) to see a demo and bridge your
 intelligence gap.

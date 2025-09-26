@@ -1,30 +1,27 @@
 ---
-description: Aprenda a integrar aplicaciones Python con OTOBO, Znuny y OTRS utilizando
-  una biblioteca de cliente asíncrona. Esta guía proporciona instrucciones paso a paso y
-  ejemplos de código para gestionar tickets de soporte técnico a través de la REST API,
-  incluyendo la creación, búsqueda, actualización y recuperación del historial de tickets.
+description: Integra Python con OTOBO, Znuny y OTRS usando una biblioteca de cliente asíncrona. Esta guía proporciona ejemplos de código para gestionar tickets de helpdesk a través de la API REST.
 ---
 # Guía de Integración de OTOBO, Znuny y OTRS
 
-Para la integración con OTOBO, Znuny u OTRS, utilizamos nuestra biblioteca de cliente de Python otobo.
+Para la integración con OTOBO, Znuny u OTRS, estamos utilizando nuestra biblioteca de cliente python otobo.
 
-## Biblioteca de Cliente de Python para OTOBO
+## Biblioteca de Cliente Python para OTOBO
 
-Un cliente asíncrono de Python para interactuar con la REST API de OTOBO. Construido con `httpx` y `pydantic` para seguridad de tipos y facilidad de uso.
+Un cliente Python asíncrono para interactuar con la API REST de OTOBO. Construido con `httpx` y `pydantic` para seguridad de tipos y facilidad de uso.
 
 ### Características
 
-*   Peticiones HTTP **asíncronas** usando `httpx.AsyncClient`
-*   Modelos de **Pydantic** para la validación de datos de solicitud y respuesta
-*   Operaciones CRUD completas para tickets:
+* Peticiones HTTP **asíncronas** usando `httpx.AsyncClient`
+* Modelos **Pydantic** para la validación de datos de petición y respuesta
+* Operaciones CRUD completas para tickets:
 
-    *   `TicketCreate`
-    *   `TicketSearch`
-    *   `TicketGet`
-    *   `TicketUpdate`
-    *   `TicketHistoryGet`
-*   **Manejo de errores** a través de `OTOBOError` para errores de la API
-*   Método de utilidad `search_and_get` para combinar resultados de búsqueda con una recuperación detallada
+  * `TicketCreate`
+  * `TicketSearch`
+  * `TicketGet`
+  * `TicketUpdate`
+  * `TicketHistoryGet`
+* **Manejo de errores** a través de `OTOBOError` para errores de la API
+* Método de utilidad `search_and_get` para combinar resultados de búsqueda con una recuperación detallada
 
 ### Instalación
 
@@ -38,12 +35,12 @@ pip install otobo
 
 #### Configurar los Webservices de OTOBO:
 
-Cree un nuevo servicio web en OTOBO con la siguiente configuración:
-Consulte la Guía de Instalación.
+Crea un nuevo servicio web en OTOBO con la siguiente configuración:
+Consulta la Guía de Instalación.
 
 #### Crear un nuevo Agente
 
-Cree un nuevo Agente de Otobo con una contraseña segura y otórguele los permisos necesarios para la tarea que desea realizar.
+Crea un nuevo Agente de Otobo con una contraseña segura y otórgale los permisos necesarios para la tarea que deseas realizar.
 
 
 #### 1. Configurar el cliente

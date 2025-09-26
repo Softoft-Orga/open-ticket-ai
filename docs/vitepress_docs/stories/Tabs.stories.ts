@@ -1,4 +1,4 @@
-import Tabs from '../.vitepress/components/core/Tabs.vue'
+import Tabs from '../.vitepress/components/core/basic/Tabs.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 const meta: Meta<typeof Tabs> = {

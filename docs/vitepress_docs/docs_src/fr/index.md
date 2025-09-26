@@ -1,74 +1,68 @@
 ---
-description: Améliorez l'efficacité de votre service d'assistance avec Open Ticket AI, la solution open-source, sécurisée et sur site pour automatiser la classification des tickets de support. Conçue pour être flexible, elle peut être intégrée à n'importe quel système de tickets.
+description: Augmentez l'efficacité de votre service d'assistance avec Open Ticket AI, la solution open-source, sécurisée et sur site pour automatiser la classification des tickets de support.
 features:
 - details: Installez facilement Open Ticket AI sur votre propre serveur en utilisant Docker.
   icon:
-    alt: Icône de serveur
-    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/server.svg&filt=negate
-    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/server.svg
+    alt: Icône de Serveur
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/server.svg&filt=negate&w=48
   title: Installation Facile
-- details: Grâce à son architecture basée sur des adaptateurs, Open Ticket AI peut se connecter à pratiquement n'importe quel système de helpdesk comme OTOBO, Znuny ou OTRS.
+- details: Grâce à son architecture basée sur des adaptateurs, Open Ticket AI peut se connecter à pratiquement n'importe quel système de service d'assistance comme OTOBO, Znuny ou OTRS.
   icon:
-    alt: Icône de prise
-    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/plug.svg&filt=negate
-    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/plug.svg
+    alt: Icône de Prise
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/plug.svg&filt=negate&w=48
   title: Intégration Flexible
 - details: Automatisez la classification des tickets de support par file d'attente et par priorité pour optimiser votre flux de travail.
   icon:
-    alt: Icône de robot
-    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/robot.svg&filt=negate
-    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/robot.svg
+    alt: Icône de Robot
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/robot.svg&filt=negate&w=48
   title: Classification Automatisée
 - details: En tant que solution entièrement sur site, toutes vos données sont traitées localement sur votre infrastructure, garantissant une confidentialité et une sécurité maximales.
   icon:
-    alt: Icône de cadenas
-    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/lock.svg&filt=negate
-    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/lock.svg
+    alt: Icône de Cadenas
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/lock.svg&filt=negate&w=48
   title: Haute Sécurité
 - details: Open Ticket AI est gratuit et open-source. Bénéficiez d'un développement communautaire et d'une transparence totale.
   icon:
     alt: Icône Open Source
-    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/code-branch.svg&filt=negate
-    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/code-branch.svg
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/code-branch.svg&filt=negate&w=48
   title: Open Source
 - details: Personnalisez les pipelines de traitement, les modèles et les connexions système via un fichier de configuration simple mais puissant.
   icon:
-    alt: Icône d'engrenage
-    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/gear.svg&filt=negate
-    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/gear.svg
+    alt: Icône d'Engrenage
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/gear.svg&filt=negate&w=48
   title: Hautement Personnalisable
 hero:
   actions:
-  - link: /get-started
+  - link: /fr/products/overview
     text: Démarrer
     theme: brand
-  - link: /concepts/community-edition-overview
-    text: Aperçu des fonctionnalités
+  - link: /fr/products/overview
+    text: Aperçu des Fonctionnalités
     theme: alt
   image:
     alt: Logo Open Ticket AI
-    dark: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100
-    light: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100
+    dark: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=120&q=80
   name: Open Ticket AI
   tagline: Automatisez Votre Service d'Assistance. De Manière Sécurisée et Sur Site.
   text: ''
 layout: home
 ---
-<OTAIPredictionDemo/>
+## Vidéo d'Explication
 
-<ServicePackagesComponent/>
+<YoutubeVideo
+videoId="Kz5kWb8w5Bg"
+title="Open Ticket AI — La Solution Open-Source pour la Classification Automatisée des Tickets"
+/>
 
-<SupportPlansComponent/>
+<OTAIPredictionDemo api-link="products/prediction-api/overview"/>
+<ClientOnly>
+<AIClassificationAnimation/>
+</ClientOnly>
 
 
+<ServicePackages/>
 
+<SyntheticDataPackages/>
+<SupportPlans/>
 
-## Contact
-
-<div class="text-center mt-8">
-  <p class="text-lg font-semibold">Intéressé par nos services ?</p>
-  <p class="text-gray-600">Contactez-nous pour une offre personnalisée.</p>
-  <a href="mailto:sales@softoft.de" class="mt-4 inline-block bg-vp-brand text-white px-6 py-3 rounded hover:bg-vp-brand-light transition-colors">
-    Envoyez-nous un e-mail à sales@softoft.de
-  </a>
-</div>
+<ContactForm/>

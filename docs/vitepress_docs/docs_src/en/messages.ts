@@ -16,6 +16,7 @@ export default {
         confidenceColumnHeader: 'Confidence',
         queueRowHeader: 'Queue',
         priorityRowHeader: 'Priority',
+        apiText: 'You can use the Model that powers this demo through our API'
     },
     otai_animation: {
         startAnimationText: 'Send Email',
@@ -23,7 +24,7 @@ export default {
         title: 'OTAI Animation',
     },
     servicePackages: {
-        title: 'Support Packages',
+        title: 'Services',
         buttonText: 'Choose Plan',
         essential: {
             name: 'Essential Launch',
@@ -51,7 +52,7 @@ export default {
         }
     },
     supportPlans: {
-        title: 'Services',
+        title: 'Support Packages',
         buttonText: 'Choose Plan',
         pricePeriod: 'month',
         basic: {
@@ -80,5 +81,18 @@ export default {
             strategicReview: 'Strategic AI Review & Optimization',
             guaranteedResponse: 'Guaranteed Response Time: Within 1 Business Day',
         },
+    },
+    otai_contact_form: {
+        title: 'Contact',
+        email_label: 'Your email',
+        message_label: 'Your message',
+        submit_text: 'Send',
+        email_us_text: 'or Email us at',
+    },
+    sdg_waitlist: {
+        title: 'Join the Synthetic Ticket Generator Waitlist',
+        email_label: 'Your email',
+        submit_text: 'Join Waitlist',
+        privacy_note: 'We’ll only use your email to notify you about the launch.',
     },
 }

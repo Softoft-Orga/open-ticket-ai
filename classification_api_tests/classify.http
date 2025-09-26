@@ -1,0 +1,37 @@
+### Test: Predict queue and priority
+POST https://open-ticket-ai.com/.netlify/functions/classify
+Content-Type: application/json
+
+{
+  "subject": "VPN Verbindungsproblem",
+  "body": "Kann nach dem Update keine Verbindung zum Unternehmens-VPN herstellen. Vor dem letzten Update funktionierte es einwandfrei."
+}
+
+
+
+### Test: Predict queue and priority
+POST https://open-ticket-ai.com/api/german_prediction/v1/classify
+Content-Type: application/json
+
+{
+  "subject": "VPN Verbindungsproblem",
+  "body": "Kann nach dem Update keine Verbindung zum Unternehmens-VPN herstellen. Vor dem letzten Update funktionierte es einwandfrei."
+}
+
+
+### Local test (Netlify dev server)
+POST http://localhost:8888/.netlify/functions/classify
+Content-Type: application/json
+
+{
+  "subject": "Email delivery problem",
+  "body": "Customer reports that order confirmation emails are not being sent after purchase."
+}
+
+### Missing fields test (should return 400 Bad Request)
+POST https://open-ticket-ai.com/.netlify/functions/classify
+Content-Type: application/json
+
+{
+  "subject": "Only subject, missing body"
+}

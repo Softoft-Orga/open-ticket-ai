@@ -1,8 +1,6 @@
 ---
-description: Learn to integrate Python applications with OTOBO, Znuny, and OTRS using
-  an asynchronous client library. This guide provides step-by-step instructions and
-  code examples for managing helpdesk tickets via the REST API, including creating,
-  searching, updating, and retrieving ticket history.
+description: Integrate Python with OTOBO, Znuny, & OTRS using an async client library.
+  This guide provides code examples for managing helpdesk tickets via REST API.
 ---
 # OTOBO Znuny OTRS Integration Guide
 

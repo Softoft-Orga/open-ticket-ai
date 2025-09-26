@@ -1,13 +1,26 @@
-import {generateNavbar} from './navbarUtil.js'
 import {defineConfig} from "vitepress";
-import {generateMultiSidebar} from "./siedebarUtil";
-import {withMermaid} from "vitepress-plugin-mermaid";
+import {NavGenerator, NavGeneratorOptions} from "./util/navgen.ts";
+import viteCompression from 'vite-plugin-compression'
 
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
-export default withMermaid(defineConfig({
+const navGeneratorOptions: NavGeneratorOptions = {
+    rootPath: './docs_src',
+    allowedExtensions: ['.md'],
+    excludePatterns: [/^_/, /\/_/, /\/\./],
+    hideHiddenEntries: true,
+    includeIndexAsFolderLink: false,
+    includeEmptyDirectories: false,
+    stripExtensionsInLinks: true,
+    sidebarCollapsible: true,
+    sidebarCollapsed: true,
+    sortComparator: (a: string, b: string) => a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'})
+}
+const navGenerator = new NavGenerator(navGeneratorOptions);
+const gaId = 'G-FBWC3JDZJ4'
+export default defineConfig({
 
-    title: 'AI Ticket Classification',
+    title: 'Open Ticket AI',
     srcDir: './docs_src',
     appearance: 'force-dark',
     head: [
@@ -15,20 +28,37 @@ export default withMermaid(defineConfig({
             'link',
             {
                 rel: 'icon',
-                href: 'https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100&lightness=100&colorlevel.white=100'
+                href: 'https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=84&q=90&lightness=100&colorlevel.white=100'
             }
         ],
-        [
-            'link',
-            {
-                rel: 'stylesheet',
-                href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
-                integrity: 'sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==',
-                crossorigin: 'anonymous'
-            }
-        ],
+        ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=AW-474755810' }],
+        ['script', {}, `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-474755810');
+        `],
+        ['script', {}, `
+            (() => {
+              let id='${gaId}'
+              let loaded=false
+              function load(){
+                if(loaded) return; loaded=true
+                let s=document.createElement('script'); s.src='https://www.googletagmanager.com/gtag/js?id='+id; s.async=true; document.head.appendChild(s)
+                window.dataLayer=window.dataLayer||[]
+                function gtag(){dataLayer.push(arguments)}
+                gtag('js', new Date())
+                gtag('config', id, {send_page_view:false})
+              }
+              if('requestIdleCallback' in window) requestIdleCallback(load,{timeout:4000}); else setTimeout(load,2000)
+              let fired=false;
+              ['scroll','pointerdown','keydown','touchstart'].forEach((ev) =>{
+                addEventListener(ev,function(){ if(fired) return; fired=true; load() },{passive:true, once:true})
+              })
+            })();
+    `]
     ],
-    description: '',
+    description: 'Open Ticket AI is an open-source, on-premise solution that auto-classifies support tickets by queue and priority—integrates with OTOBO, Znuny, and OTRS.',
     lastUpdated: true,
     cleanUrls: true,
     sitemap: {
@@ -41,9 +71,9 @@ export default withMermaid(defineConfig({
             link: '/en/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar('en'),
+                    ...navGenerator.generateNavbar('en'),
                 ],
-                sidebar: generateMultiSidebar("en")
+                sidebar: navGenerator.generateSidebar("en")
             }
         },
         de: {
@@ -52,9 +82,9 @@ export default withMermaid(defineConfig({
             link: '/de/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar('de'),
+                    ...navGenerator.generateNavbar('de'),
                 ],
-                sidebar: generateMultiSidebar("de")
+                sidebar: navGenerator.generateSidebar("de")
             }
         },
         fr: {
@@ -63,9 +93,9 @@ export default withMermaid(defineConfig({
             link: '/fr/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar('fr'),
+                    ...navGenerator.generateNavbar('fr'),
                 ],
-                sidebar: generateMultiSidebar("fr")
+                sidebar: navGenerator.generateSidebar("fr")
             }
         },
         es: {
@@ -74,9 +104,9 @@ export default withMermaid(defineConfig({
             link: '/es/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar('es'),
+                    ...navGenerator.generateNavbar('es'),
                 ],
-                sidebar: generateMultiSidebar("es")
+                sidebar: navGenerator.generateSidebar("es")
             }
         }
 
@@ -88,6 +118,13 @@ export default withMermaid(defineConfig({
         }
     },
     vite: {
+        build: {
+            cssCodeSplit: true,
+        },
+        plugins: [
+            viteCompression({algorithm: 'brotliCompress'}),
+            viteCompression({algorithm: 'gzip'})
+        ],
         define: {
             __VUE_PROD_DEVTOOLS__: 'false',
         },
@@ -98,5 +135,5 @@ export default withMermaid(defineConfig({
                 '@intlify/shared'
             ]
         },
-    }
-}))
+    },
+})

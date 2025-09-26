@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import type {FunctionData} from '../../composables/useApiDocs'
-import Badge from '../core/Badge.vue'
+import Badge from '../core/basic/Badge.vue'
 import Docstring from './Docstring.vue'
 
 defineProps<{ func: FunctionData }>()

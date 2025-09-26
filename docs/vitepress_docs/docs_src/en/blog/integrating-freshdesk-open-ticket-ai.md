@@ -1,10 +1,7 @@
 ---
-description: Learn how to integrate the on-premise Open Ticket AI (OTAI) with Freshdesk
-  for powerful, automated ticket classification. This document details creating a
-  custom Python `TicketSystemAdapter` to connect OTAI's AI models with the Freshdesk
-  REST API. Automate ticket triage by updating Freshdesk tickets with AI-predicted
-  categories and priorities, embedding intelligent classification directly into your
-  support workflow.
+description: Integrate on-premise Open Ticket AI with Freshdesk for automated ticket
+  classification. Learn to create a custom Python adapter to update tickets via the
+  REST API.
 ---
 # Freshdesk AI Integration with Open Ticket AI
 
@@ -15,7 +12,7 @@ Open Ticket AI (OTAI) is a local, on-premise **ticket classification** system (a
 ```python
 import aiohttp
 
-from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
 
 class FreshdeskAdapter(TicketSystemAdapter):

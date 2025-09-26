@@ -1,5 +1,5 @@
 /** @type { import('@storybook/vue3-vite').Preview } */
-import '../.vitepress/theme/styles/index.scss';
+import '../.vitepress/theme/styles/index.css';
 
 
 const preview = {

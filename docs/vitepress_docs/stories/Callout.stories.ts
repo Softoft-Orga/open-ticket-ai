@@ -1,4 +1,4 @@
-import Callout from '../.vitepress/components/core/Callout.vue'
+import Callout from '../.vitepress/components/core/basic/Callout.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 const meta: Meta<typeof Callout> = {

@@ -1,9 +1,9 @@
 <template>
-    <h2 class="mb-4 w-full text-center text-vp-text">{{
-            t('otai_prediction_demo_component.title')
-        }}</h2>
-    <section class="max-w-3xl mx-auto my-6 px-4">
 
+    <section class="w-100 pt-1 pb-5 lg:pb-10 px-5 lg:px-14 bg-gray-900 rounded-lg">
+        <h2 class="!mt-1 !mb-6 w-full text-center text-vp-text border-0 !border-t-0">{{
+                t('otai_prediction_demo_component.title')
+            }}</h2>
         <div class="mb-3">
             <SelectComponent
                 v-model="selected"
@@ -59,6 +59,9 @@
         </Callout>
 
         <ResultTable v-if="queueResult && prioResult" :prio-result="prioResult" :queue-result="queueResult"/>
+        <p>{{ t('otai_prediction_demo_component.apiText') }}<span v-if="apiLink != ''">:</span> <a v-if="apiLink != ''"
+                                                                                                   :href="apiLink">German
+            Ticket Classification API</a></p>
 
     </section>
 </template>
@@ -66,16 +69,19 @@
 <script lang="ts" setup>
 
 import {onMounted, ref} from 'vue'
-import Button from '../core/Button.vue'
+import Button from '../core/basic/Button.vue'
 import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
 import ResultTable from "./ResultTable.vue";
 import SelectComponent from "../core/forms/SelectComponent.vue";
 import TextField from "../core/forms/TextField.vue";
 import TextArea from "../core/forms/TextArea.vue";
-import Callout from "../core/Callout.vue";
+import Callout from "../core/basic/Callout.vue";
 import {useHumanLoadedPage} from "../../composables/useHumanLoadedPage";
 
+const {apiLink = ''} = defineProps<{
+    apiLink?: string
+}>()
 const {t} = useI18n()
 const QUEUE_EP = 'https://uwlzdugezcmrk5vk.eu-west-1.aws.endpoints.huggingface.cloud'
 const PRIORITY_EP = 'https://rxnypflnfgdbgoxr.us-east-1.aws.endpoints.huggingface.cloud'
@@ -129,7 +135,7 @@ const queueResult = ref<any>(null)
 const prioResult = ref<any>(null)
 
 // select logic
-const selected = ref(exampleOptions[0].value)
+const selected = ref('')
 
 function applyExample() {
     const selectedOption = exampleOptions.find(opt => opt.value === selected.value)

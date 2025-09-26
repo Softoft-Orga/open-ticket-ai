@@ -25,8 +25,8 @@
 </template>
 
 <script lang="ts" setup>
-import Card from '../core/Card.vue'
-import Badge from '../core/Badge.vue'
+import Card from '../core/basic/Card.vue'
+import Badge from '../core/basic/Badge.vue'
 
 const props = defineProps<{
   heading: string

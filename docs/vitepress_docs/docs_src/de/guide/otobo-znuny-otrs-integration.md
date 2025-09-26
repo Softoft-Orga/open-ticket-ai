@@ -1,17 +1,13 @@
 ---
-description: Erfahren Sie, wie Sie Python-Anwendungen mit OTOBO, Znuny und OTRS mithilfe
-  einer asynchronen Client-Bibliothek integrieren. Diese Anleitung bietet schrittweise
-  Anweisungen und Codebeispiele für die Verwaltung von Helpdesk-Tickets über die REST
-  API, einschließlich Erstellen, Suchen, Aktualisieren und Abrufen des Ticket-Verlaufs.
+description: Integrieren Sie Python mit OTOBO, Znuny & OTRS mithilfe einer asynchronen Client-Bibliothek. Diese Anleitung enthält Codebeispiele für die Verwaltung von Helpdesk-Tickets über die REST API.
 ---
 # OTOBO Znuny OTRS Integrationsanleitung
 
-Für die Integration in OTOBO, Znuny oder OTRS verwenden wir unsere otobo Python Client-Bibliothek.
+Für die Integration in OTOBO, Znuny oder OTRS verwenden wir unsere otobo python client library.
 
 ## Python OTOBO Client-Bibliothek
 
-Ein asynchroner Python-Client zur Interaktion mit der OTOBO REST API. Entwickelt mit `httpx` und `pydantic` für Typsicherheit
-und einfache Bedienung.
+Ein asynchroner Python-Client zur Interaktion mit der OTOBO REST API. Entwickelt mit `httpx` und `pydantic` für Typsicherheit und einfache Bedienung.
 
 ### Funktionen
 
@@ -25,7 +21,7 @@ und einfache Bedienung.
   * `TicketUpdate`
   * `TicketHistoryGet`
 * **Fehlerbehandlung** über `OTOBOError` für API-Fehler
-* Hilfsmethode `search_and_get` zur Kombination von Suchergebnissen mit detailliertem Abruf
+* Hilfsmethode `search_and_get`, um Suchergebnisse mit detailliertem Abruf zu kombinieren
 
 ### Installation
 
@@ -39,12 +35,12 @@ pip install otobo
 
 #### OTOBO Webservices einrichten:
 
-Erstellen Sie einen neuen Web-Service in OTOBO mit der folgenden Konfiguration:
+Erstellen Sie einen neuen Webservice in OTOBO mit der folgenden Konfiguration:
 Siehe Installationsanleitung.
 
 #### Einen neuen Agenten erstellen
 
-Erstellen Sie einen neuen Otobo-Agenten mit einem sicheren Passwort und geben Sie ihm die Berechtigungen, die für die zu erledigende Aufgabe erforderlich sind.
+Erstellen Sie einen neuen Otobo-Agenten mit einem sicheren Passwort und geben Sie ihm die Berechtigungen, die für die gewünschte Aufgabe erforderlich sind.
 
 
 #### 1. Den Client konfigurieren

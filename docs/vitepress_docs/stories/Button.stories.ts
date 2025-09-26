@@ -1,4 +1,4 @@
-import Button from '../.vitepress/components/core/Button.vue'
+import Button from '../.vitepress/components/core/basic/Button.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof Button> = {

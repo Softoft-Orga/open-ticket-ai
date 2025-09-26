@@ -1,7 +1,6 @@
 ---
-description: Save time and cost labeling thousands of tickets. Learn how to use GPT
-  for semi-automated, zero-shot pre-labeling and tools like Label Studio for efficient
-  human review. Includes Python examples.
+description: Save time labeling thousands of tickets. Learn a semi-automated workflow
+  using GPT for zero-shot pre-labeling and Label Studio for efficient review.
 ---
 # Labeling 10,000 Tickets Efficiently: Semi-Automated Labeling Strategies
 

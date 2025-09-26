@@ -197,3 +197,10 @@ node_modules/
 
 *storybook.log
 storybook-static
+
+# Local Netlify folder
+.netlify
+*.env
+
+*/.vitepress/cache/
+.idea
