@@ -27,13 +27,9 @@ open_ticket_ai:
     - id: otobo
       driver: otobo
       config:
-        server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
-        webservice_name: "OpenTicketAI"
-        search_operation_url: "ticket-search"
-        update_operation_url: "ticket-update"
-        get_operation_url: "ticket-get"
+        server_address: "{{ OTAI_OTOBO_SERVER_ADDRESS }}"
         username: "open_ticket_ai"
-        password_env_var: "OTOBO_EHS_PASSWORD"
+        password: "{{ OTAI_OTOBO_PASSWORD }}"
 
     - id: hf_local
       implements: TextClassifier
@@ -212,31 +208,10 @@ open_ticket_ai:
           low_confidence_queue_name: "Unklassifiziert"
           low_confidence_priority_name: "3 Mittel"
           queue_map:
-            "Anfrage an die IT::Backup/Rücksicherung": "Anfrage an die IT::Backup/Rücksicherung"
-            "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen": "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen"
-            "Anfrage an die IT::DMS-System (d.3)": "Anfrage an die IT::DMS-System (d.3)"
-            "Anfrage an die IT::Drucker": "Anfrage an die IT::Drucker"
-            "Anfrage an die IT::ERP-System (Wilken/eGecko)": "Anfrage an die IT::ERP-System (Wilken/eGecko)"
-            "Anfrage an die IT::Fachsystem Pflege": "Anfrage an die IT::Fachsystem Pflege"
-            "Anfrage an die IT::Homeoffice": "Anfrage an die IT::Homeoffice"
-            "Anfrage an die IT::Logbuch/Sharepoint": "Anfrage an die IT::Logbuch/Sharepoint"
-            "Anfrage an die IT::Mail/Outlook": "Anfrage an die IT::Mail/Outlook"
-            "Anfrage an die IT::PC/Hardware": "Anfrage an die IT::PC/Hardware"
-            "Anfrage an die IT::Smartphone/Tablet": "Anfrage an die IT::Smartphone/Tablet"
-            "Anfrage an die IT::Software-Bestellungen": "Anfrage an die IT::Software-Bestellungen"
-            "Anfrage an die IT::Sonstige Systeme/Anwendungen": "Anfrage an die IT::Sonstige Systeme/Anwendungen"
-            "Anfrage an die IT::TK-Anlagen/Nebenstellen": "Anfrage an die IT::TK-Anlagen/Nebenstellen"
-            "Anfrage an die IT::Netzwerk/Internet": "Anfrage an die IT::Netzwerk/Internet"
-            "Assistenzsysteme": "Assistenzsysteme"
-            "Bewerbungsmanagement": "Bewerbungsmanagement"
-            "Hausnotruf": "Hausnotruf"
-            "Hauswirtschaft": "Hauswirtschaft"
-            "Hygiene": "Hygiene"
-            "Lernwelt": "Lernwelt"
-            "Personal Office": "Personal Office"
-            "Pflege und Alltagsbegleitung": "Pflege und Alltagsbegleitung"
+            Raw: "Raw"
           priority_map:
-            "1 Kritisch": "1 Kritisch"
+            "1 Sehr Hoch": "1 Sehr Hoch"
+            2
             "3 Mittel": "3 Mittel"
             "5 Sehr niedrig": "5 Sehr niedrig"
 
