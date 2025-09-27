@@ -178,7 +178,6 @@ open_ticket_ai:
             Raw: "Raw"
           priority_map:
             "1 Sehr Hoch": "1 Sehr Hoch"
-            2
             "3 Mittel": "3 Mittel"
             "5 Sehr niedrig": "5 Sehr niedrig"
 

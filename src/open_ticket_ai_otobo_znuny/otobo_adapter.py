@@ -30,7 +30,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
     UnifiedTicketBase,
 )
-from open_ticket_ai.extensions.otobo_integration.models import TicketAdapter
+from open_ticket_ai_otobo_znuny.models import TicketAdapter
 
 
 def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
@@ -74,7 +74,7 @@ def otobo_retry() -> Callable[[F], F]:
     return decorator
 
 
-@TicketSystemRegistry.register("otobo")
+@TicketSystemRegistry.register("OTOBOZnunyTicketSystemService")
 class OTOBOAdapter(TicketSystemAdapter):
     @inject
     def __init__(self, config: dict[str, Any]):
