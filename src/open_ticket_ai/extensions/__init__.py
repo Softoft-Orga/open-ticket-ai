@@ -1,5 +1,4 @@
 from .pipe_implementations.context_modifier import ContextModifier
-from .pipe_implementations.hf_local_ai_inference_service import HFLocalAIInferenceService
 from .pipe_implementations.simple_key_value_mapper import SimpleKeyValueMapper
 from .pipe_implementations.ticket_system_service import TicketSystemService
 

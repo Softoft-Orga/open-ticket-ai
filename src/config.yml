@@ -22,17 +22,11 @@ open_ticket_ai:
           username: "open_ticket_ai"
           password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 
-      - name: hf_local
-        use: HFLocalTextClassifierService
-        config: {
-          token: "{{ OTAI_HUGGINGFACE_EHS_TOKEN }}"
-        }
-
     pipe_definitions:
       - name: ticket_classifier
-        type: ClassifierPipe
-        services: { classifier: hf_local }
+        type: HfLocalTextClassificationPipe
         config:
+          token: "{{ OTAI_HUGGINGFACE_EHS_TOKEN }}"
           prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
 
       - name: classification_generic
@@ -43,6 +37,7 @@ open_ticket_ai:
                 use: "def:ticket_classifier"
                 config:
                   model: "{{ config.model }}"
+
 
               - name: map_value
                 config:
