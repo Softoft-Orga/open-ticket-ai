@@ -18,3 +18,7 @@ class TicketSystemAdapter(ABC):
     @abstractmethod
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         pass
+
+    @abstractmethod
+    async def add_note(self, ticket_id: str, note: str) -> bool:
+        pass

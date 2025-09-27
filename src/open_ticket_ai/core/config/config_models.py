@@ -1,69 +1,41 @@
 from pathlib import Path
-from typing import Annotated, Any, Dict, List, Union
+from typing import Any, Optional, Literal
 
 import yaml
-from pydantic import BaseModel, Field
-
-from open_ticket_ai.extensions.pipe_implementations.pipe_configs import (
-    ContextModifierConfig,
-    HFLocalAIInferenceServiceConfig,
-    SimpleKeyValueMapperConfig,
-    TicketSystemServiceConfig,
-)
+from pydantic import BaseModel
 
 
-class PipelineConfig(BaseModel):
-    """Configuration for a pipeline."""
-
+class PipeConfig(BaseModel):
     id: str
-    pipeline_config: Dict[str, Any]
-    steps: list[Annotated[
-        Union[
-            TicketSystemServiceConfig,
-            HFLocalAIInferenceServiceConfig,
-            ContextModifierConfig,
-            SimpleKeyValueMapperConfig,
-        ],
-        Field(discriminator="type"),
-    ]]
-
-
-class LoggingConfig(BaseModel):
-    """Configuration for logging."""
-
-    version: int = 1
-    disable_existing_loggers: bool = False
-    formatters: Dict[str, Dict[str, str]]
-    handlers: Dict[str, Dict[str, Any]]
-    loggers: Dict[str, Dict[str, Any]]
-    root: Dict[str, Any]
+    use: str
+    config: dict[str, Any] = {}
+    when: str = "True"
+    on_failure: Literal["continue", "finish_container", "fail_container"] = "fail_container"
+    on_success: Literal["continue", "finish_container", "fail_container"] = "continue"
+    steps: list['PipeConfig'] = []
 
 
 class SystemConfig(BaseModel):
-    type: str
-    config: Dict[str, str]
-
-class OrchestratorConfig(BaseModel):
-    """Configuration for the main orchestrator."""
-
-    run_every_milli_seconds: int = Field(..., gt=0)
+    id: str
+    provider_key: str
+    config: dict[str, Any] = {}
 
 
 class OpenTicketAIConfig(BaseModel):
-    """Root configuration model for Open Ticket AI."""
-
-    logging: LoggingConfig
-    system: SystemConfig
-    pipelines: List[PipelineConfig]
-    orchestrator: OrchestratorConfig
+    version: str = "1.0.0"
+    plugins: list[str] = []
+    general_config: dict[str, Any] = {}
+    defs: dict[str, Any] = {}
+    orchestrator: dict[str, Any] = {}
+    system: Optional[SystemConfig] = None
+    pipe: Optional[PipeConfig] = None
+    interval_seconds: float = 60.0
 
 
 def load_config(path: str | Path) -> OpenTicketAIConfig:
-    """Load YAML config with root key 'open_ticket_ai'."""
     with open(path, encoding="utf-8") as fh:
         data = yaml.safe_load(fh)
-
+    
     if "open_ticket_ai" not in data:
-        raise KeyError("Missing 'open_ticket_ai' root key in YAML configuration.")
-
+        raise ValueError("Config file must have 'open_ticket_ai' as root key")
     return OpenTicketAIConfig(**data["open_ticket_ai"])

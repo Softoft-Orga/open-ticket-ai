@@ -19,9 +19,9 @@ class HFLocalAIInferenceServiceConfig(BasePipeConfig):
     hf_token_env_var: str
 
 
-class ContextModifierConfig(BasePipeConfig):
-    type: Literal["open_ticket_ai.extensions.ContextModifier"]
-    # keine extra Felder, nur output vom BasePipeConfig
+class JinjaExpressionPipeConfig(BasePipeConfig):
+    type: Literal["open_ticket_ai.extensions.JinjaExpressionPipe"]
+    # Base config for Jinja expression processing pipes
 
 
 class TicketModifierConfig(BasePipeConfig):
@@ -34,3 +34,27 @@ class SimpleKeyValueMapperConfig(BasePipeConfig):
     type: Literal["open_ticket_ai.extensions.SimpleKeyValueMapper"]
     from_key: str
     key_to_value_map: Dict[str, Any]
+
+
+class HFLocalAiInferencePipeConfig(BasePipeConfig):
+    type: Literal["open_ticket_ai.extensions.HFLocalAiInferencePipe"]
+    prompt: str
+    hf_model: str
+    hf_token_env_var: str
+
+
+class FetchTicketsPipeConfig(BasePipeConfig):
+    type: Literal["open_ticket_ai.extensions.FetchTicketsPipe"]
+    ticket_search_criteria: Optional["TicketSearchCriteria"] = None
+
+
+class UpdateTicketPipeConfig(BasePipeConfig):
+    type: Literal["open_ticket_ai.extensions.UpdateTicketPipe"]
+    ticket_id: str
+    ticket: Dict[str, Any]
+
+
+class AddNotePipeConfig(BasePipeConfig):
+    type: Literal["open_ticket_ai.extensions.AddNotePipe"]
+    ticket_id: str
+    note: str

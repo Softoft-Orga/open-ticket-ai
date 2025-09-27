@@ -30,15 +30,45 @@ _env = SandboxedEnvironment(
     undefined=LoggingUndefined
 )
 
+class LazyTemplate:
+    def __init__(self, template_str: str, scope: dict):
+        self.template_str = template_str
+        self.scope = scope
+        self._rendered_value = None
+        self._is_rendered = False
+    
+    def render(self):
+        if not self._is_rendered:
+            try:
+                template = _env.from_string(self.template_str)
+                rendered = template.render(self.scope)
+                self._rendered_value = _parse_rendered_value(rendered)
+                self._is_rendered = True
+            except Exception as e:
+                logging.warning(f"Template rendering error: {str(e)}")
+                self._rendered_value = self.template_str
+                self._is_rendered = True
+        return self._rendered_value
+    
+    def __str__(self):
+        return str(self.render())
+    
+    def __getitem__(self, key):
+        value = self.render()
+        if isinstance(value, dict):
+            return value.get(key)
+        raise TypeError(f"'{type(value).__name__}' object is not subscriptable")
+    
+    def get(self, key, default=None):
+        value = self.render()
+        if isinstance(value, dict):
+            return value.get(key, default)
+        return default
+
 def render_text(val: Any, scope: dict):
     if not isinstance(val, str):
         return val
-    try:
-        template = _env.from_string(val)
-        return template.render(scope)
-    except Exception as e:
-        logging.warning(f"Template rendering error: {str(e)}")
-        return val
+    return LazyTemplate(val, scope)
 
 def _parse_rendered_value(s: str) -> Any:
     if not s.strip():

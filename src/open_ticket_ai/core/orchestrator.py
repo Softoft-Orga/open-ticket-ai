@@ -1,24 +1,32 @@
 import asyncio
-import json
 import logging
+from typing import Any, Dict
 
-from injector import inject
-
-from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
-from open_ticket_ai.core.pipeline.pipeline import Pipeline
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.context import PipelineContext
+from open_ticket_ai.core.pipeline.base_pipe_config import BasePipeConfig
 
 
 class Orchestrator:
-    @inject
-    def __init__(self, pipeline: Pipeline, config: OpenTicketAIConfig):
-        self.config = config
+    def __init__(self, pipe_config: BasePipeConfig, interval_seconds: float = 60.0):
+        self.pipe_config = pipe_config
+        self.interval_seconds = interval_seconds
         self._logger = logging.getLogger(__name__)
-        self.pipeline = pipeline
+        self._pipe = Pipe(pipe_config)
 
-    async def run(self) -> None:
-        self._logger.info("Starting orchestrator...")
-        self._logger.info("Configuration:" + json.dumps(self.config.model_dump(), indent=4))
+    async def run(self, initial_context: Dict[str, Any] = None) -> None:
+        self._logger.info(f"Starting orchestrator with interval: {self.interval_seconds}s")
+        
+        context = PipelineContext()
+        if initial_context:
+            context.config.update(initial_context)
 
         while True:
-            await self.pipeline.execute()
-            await asyncio.sleep(self.config.orchestrator.run_every_milli_seconds / 1000)
+            try:
+                context = await self._pipe.process(context)
+                self._logger.debug("Pipe execution completed successfully")
+                await asyncio.sleep(self.interval_seconds)
+                
+            except Exception as e:
+                self._logger.error(f"Error in pipe execution: {e}", exc_info=True)
+                raise

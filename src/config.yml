@@ -31,7 +31,7 @@ open_ticket_ai:
 
       - name: classification_generic
         steps:
-          - config: "{{ container.config }}"
+          - config: "{{ config }}"
             steps:
               - name: classify
                 use: "def:ticket_classifier"
@@ -41,7 +41,7 @@ open_ticket_ai:
 
               - name: map_value
                 config:
-                  expression: "{{ config.map_obj[data.pipes.classify.label] }}"
+                  expression: "{{ config.map_obj[pipes.classify.label] }}"
                 on_failure: "continue"
 
               - name: select_final
@@ -59,20 +59,20 @@ open_ticket_ai:
                 use: TicketUpdatePipe
                 services: { target_ts: otobo }
                 config:
-                  ticket_id: "{{ container.config.ticket_id }}"
-                  updated_ticket: "{{ data.pipes.select_final | at_path(container.config.ticket_field) }}"
+                  ticket_id: "{{ config.ticket_id }}"
+                  updated_ticket: "{{ pipes.select_final | at_path(config.ticket_field) }}"
 
               - use: TicketAddNotePipe
                 services: { target_ts: otobo }
                 config:
-                  ticket_id: "{{ container.config.ticket_id }}"
+                  ticket_id: "{{ config.ticket_id }}"
                   note: |
                     {{ 
-                    container.config.note_high.body if data.pipes.classify.confidence >= config.min_conf
-                    else container.config.note_low.body
+                    config.note_high.body if pipes.classify.confidence >= config.min_conf
+                    else config.note_low.body
                     }}
-                on_success: "finish_container"
-            on_success: "finish_container"
+                on_success: "finish_"
+            on_success: "finish_"
             on_failure: "continue"
 
           - name: update_ticket_error_fallback
@@ -82,7 +82,7 @@ open_ticket_ai:
                 services: { target_ts: otobo }
                 config:
                   ticket_id: "{{ config.ticket_id }}"
-                  updated_ticket: "{{ config.on_error_update_value | at_path(container.config.ticket_field) }}"
+                  updated_ticket: "{{ config.on_error_update_value | at_path(config.ticket_field) }}"
 
               - name: add_error_note
                 when: "{{ config.error_note }}"
@@ -103,10 +103,10 @@ open_ticket_ai:
           - name: queue_classification
             use: "def:classification_generic"
             config:
-              model: "{{ pipeline_config.queue_model }}"
-              map_obj: "{{ pipeline_config.queue_map }}"
-              min_conf: "{{ pipeline_config.min_queue_confidence }}"
-              low_conf_name: "{{ pipeline_config.low_confidence_queue_name }}"
+              model: "{{ config.queue_model }}"
+              map_obj: "{{ config.queue_map }}"
+              min_conf: "{{ config.min_queue_confidence }}"
+              low_conf_name: "{{ config.low_confidence_queue_name }}"
               ticket_field: "queue.name"
               success_full_high_confidence_note:
                 subject: "Automatische Klassifizierung"
@@ -121,7 +121,7 @@ open_ticket_ai:
                   Mindest Konfidenz {{ config.min_queue_confidence }}
 
               update_on_error: true
-              on_error_update_value: "{{ pipeline_config.error_queue_name }}"
+              on_error_update_value: "{{ config.error_queue_name }}"
               error_note:
                 subject: ""
                 body: |
@@ -133,10 +133,10 @@ open_ticket_ai:
           - name: priority_classification
             use: Composite
             config:
-              model: "{{ pipeline_config.priority_model }}"
-              map_obj: "{{ pipeline_config.priority_map }}"
-              min_conf: "{{ pipeline_config.min_priority_confidence }}"
-              low_conf_name: "{{ pipeline_config.low_confidence_priority_name }}"
+              model: "{{ config.priority_model }}"
+              map_obj: "{{ config.priority_map }}"
+              min_conf: "{{ config.min_priority_confidence }}"
+              low_conf_name: "{{ config.low_confidence_priority_name }}"
               ticket_field: "priority.name"
               success_full_high_confidence_note:
                 subject: "Automatische Priorisierung"
@@ -148,7 +148,7 @@ open_ticket_ai:
                 body: |
                   Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
                   da die Konfidenz {{ current_state.cls.confidence }} zu gering ist.
-                  Mindest Konfidenz {{ pipeline_config.min_priority_confidence }}
+                  Mindest Konfidenz {{ config.min_priority_confidence }}
               error_note:
                 subject: "Automatische Priorisierung"
                 body: |
