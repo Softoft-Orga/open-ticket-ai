@@ -8,7 +8,7 @@ from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,
     load_config,
 )
-from open_ticket_ai.core.dependency_injection.registry import TicketSystemRegistry
+from open_ticket_ai.core.dependency_injection.registry import PipeRegistry, TicketSystemRegistry
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipeline import Pipeline
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
@@ -40,7 +40,10 @@ class AppModule(Module):
         pipes = []
 
         for pipe_config in config.pipelines[0].steps:
-            pipe_class: type[Pipe] = self._import_pipe_class(pipe_config.type)
+            try:
+                pipe_class: type[Pipe] = PipeRegistry.get(pipe_config.type)
+            except ValueError:
+                pipe_class = self._import_pipe_class(pipe_config.type)
 
             # Get the ConfigT from the Pipe class
             pipe_instance = pipe_class(config=pipe_config, ticket_system=ticket_system_adapter)

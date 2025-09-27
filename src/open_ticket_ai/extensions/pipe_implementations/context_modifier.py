@@ -1,9 +1,11 @@
 from typing import Any, Dict
 
+from open_ticket_ai.core.dependency_injection.registry import PipeRegistry
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.extensions.pipe_implementations.pipe_configs import ContextModifierConfig
 
 
+@PipeRegistry.register("open_ticket_ai.extensions.ContextModifier")
 class ContextModifier(Pipe[ContextModifierConfig]):
     """
     A pipe implementation that modifies the pipeline context.

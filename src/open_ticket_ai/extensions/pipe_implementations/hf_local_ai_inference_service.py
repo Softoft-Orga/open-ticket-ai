@@ -3,10 +3,12 @@ import os
 from functools import lru_cache
 from typing import Any, Dict, Optional
 
+from open_ticket_ai.core.dependency_injection.registry import PipeRegistry
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.extensions.pipe_implementations.pipe_configs import HFLocalAIInferenceServiceConfig
 
 
+@PipeRegistry.register("open_ticket_ai.extensions.HFLocalAIInferenceService")
 class HFLocalAIInferenceService(Pipe[HFLocalAIInferenceServiceConfig]):
     ConfigModel = HFLocalAIInferenceServiceConfig
 

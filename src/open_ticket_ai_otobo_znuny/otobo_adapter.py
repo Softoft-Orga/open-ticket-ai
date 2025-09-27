@@ -21,7 +21,6 @@ F = TypeVar('F', bound=Callable[..., Any])
 retry_logger = logging.getLogger("tenacity.retry")
 retry_logger.setLevel(logging.WARNING)
 
-from open_ticket_ai.core.config.config_models import OTOBOAdapterConfig
 from open_ticket_ai.core.dependency_injection.registry import TicketSystemRegistry
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
@@ -31,6 +30,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicketBase,
 )
 from open_ticket_ai_otobo_znuny.models import TicketAdapter
+from open_ticket_ai_otobo_znuny.otobo_adapter_config import OTOBOAdapterConfig
 
 
 def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
@@ -74,7 +74,7 @@ def otobo_retry() -> Callable[[F], F]:
     return decorator
 
 
-@TicketSystemRegistry.register("OTOBOZnunyTicketSystemService")
+@TicketSystemRegistry.register("otobo")
 class OTOBOAdapter(TicketSystemAdapter):
     @inject
     def __init__(self, config: dict[str, Any]):
