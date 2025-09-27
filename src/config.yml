@@ -1,88 +1,217 @@
 open_ticket_ai:
-  logging:
-    version: 1
-    disable_existing_loggers: false # Add this to prevent disabling loggers from other libraries
+  version: 1
 
-    formatters:
-      standard:
-        format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s' # Added %(name)s to see which logger is used
-
-    handlers:
-      console:
-        class: "logging.StreamHandler"
-        formatter: "standard"
-        stream: "ext://sys.stdout"
-
-    # ADDED: A specific logger for your application
-    loggers:
-      open_ticket_ai: # This will catch logs from all submodules
-        handlers: [ "console" ]
+  general_config:
+    logging:
+      version: 1
+      disable_existing_loggers: false
+      formatters:
+        standard:
+          format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+      handlers:
+        console:
+          class: "logging.StreamHandler"
+          formatter: "standard"
+          stream: "ext://sys.stdout"
+      loggers:
+        open_ticket_ai:
+          handlers: [ "console" ]
+          level: "INFO"
+          propagate: false
+      root:
         level: "INFO"
-        propagate: false # Prevents logs from being sent to the root logger and printed twice
+        handlers: [ "console" ]
 
-    root:
-      level: "INFO" # Set root logger to WARNING to reduce noise from third-party libraries
-      handlers: [ "console" ]
-  system:
-    type: "otobo"
-    config:
-      server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
-      webservice_name: "OpenTicketAI"
-      search_operation_url: "ticket-search"
-      update_operation_url: "ticket-update"
-      get_operation_url: "ticket-get"
-      username: "open_ticket_ai"
-      password_env_var: "OTOBO_EHS_PASSWORD"
-  pipelines:
-    - id: "ticket-routing"
-      pipeline_config:
-        min_priority_confidence: 0.8
-        min_queue_confidence: 0.8
-        filter_by_queue_name: "EingangsQueue"
-        queue_model: "softoft/EHS_Queue_V8"
-        priority_model: "softoft/EHS_Priority_Prediction"
-        low_confidence_queue_name: "Unklassifiziert"
-        low_confidence_priority_name: "3 Mittel"
 
+  services:
+    - id: otobo
+      driver: otobo
+      config:
+        server_address: "http://212.19.58.44/znuny/nph-genericinterface.pl"
+        webservice_name: "OpenTicketAI"
+        search_operation_url: "ticket-search"
+        update_operation_url: "ticket-update"
+        get_operation_url: "ticket-get"
+        username: "open_ticket_ai"
+        password_env_var: "OTOBO_EHS_PASSWORD"
+
+    - id: hf_local
+      implements: TextClassifier
+      driver: hf_local
+      config: { }
+
+  pipe_definitions:
+    - name: classification_generic
       steps:
-        - name: "ticket_fetcher"
-          type: "open_ticket_ai.extensions.TicketSystemService"
-          operation: "find"
+        - name: calculating_new_value
+          config: "{{ container.config }}"
+          steps:
+            - name: classify
+              type: ClassifierPipe
+              services: { classifier: hf_local }
+              config:
+                model: "{{ container.config.model }}"
+                token: "{{ container.config.token }}"
+                prompt: "{{ container.config.prompt }}"
+              on_failure: "fail_container"
+
+            - name: map_value
+              config:
+                expression: "{{ container.config.map_obj[data.pipes.classify.label] }}"
+              on_failure: "continue"
+
+            - name: select_final
+              config:
+                expression: |-
+                  {% if data.pipes.classify.confidence|float >= container.config.min_conf %}
+                    {{ pipes.map_value.value }}
+                  {% else %}
+                    {{ container.config.low_conf_name }}
+                  {% endif %}
+          on_failure: "continue"
+
+        - name: update_ticket_add_note
+          config: "{{ container.config }}"
+          steps:
+            - name: update_ticket
+              use: TicketUpdatePipe
+              services: { target_ts: otobo }
+              config:
+                ticket_id: "{{ dcontainer.config.ticket_id }}"
+                updated_ticket:
+                  "{{ container.config.ticket_field }}": "{{ data.final_value }}"
+              on_failure: "fail_container"
+
+            - name: add_note_success
+              use: TicketAddNotePipe
+              services: { target_ts: otobo }
+              when: |-
+                {{ 
+                  data.pipes.classify.confidence|float >= container.config.min_conf and
+                  meta.pipes.update_ticket.success
+                }}
+              params:
+                ticket_id: "{{ container.config.ticket_id }}"
+                note: |
+                  {% if data.pipes.classify.confidence|float >= container.config.min_conf %}
+                    {{ container.config.note_high.body }}
+                  {% else %}
+                    {{ container.config.note_low.body }}
+                  {% endif %}
+              on_success: "finish_container"
+          on_success: "finish_container"
+          on_failure: "continue"
+
+        - name: update_ticket_error_fallback
+          config: "{{ container.config }}"
+
+          steps:
+            - name: update_on_error
+              when: "{{ container.config.update_on_error }}"
+              use: TicketUpdatePipe
+              services: { target_ts: otobo }
+              params:
+                ticket_id: "{{ container.config.ticket_id }}"
+                updated_ticket:
+                  "{{ container.config.ticket_field }}": "{{ container.config.on_error_update_value }}"
+              on_failure: "fail_container"
+
+            - name: add_error_note
+              when: "{{ container.config.error_note }}"
+              use: TicketAddNotePipe
+              services: { target_ts: otobo }
+              params:
+                ticket_id: "{{ container.config.ticket_id }}"
+                note: "{{ container.config.error_note }}"
+
+    - name: ticket-routing
+      steps:
+        - name: ticket_fetcher
+          use: TicketFetchPipe
+          services: { target_ts: otobo }
+          params:
+            ticket_search_criteria: "{{ pipeline_config.ticket_search_criteria }}"
+
+        - name: queue_classification
+          use_def: classification_generic
+          config:
+            service_alias: otobo
+            classifier_alias: hf_local
+            model: "{{ pipeline_config.queue_model }}"
+            token: "{{ env.OTAI_HUGGINGFACE_EHS_TOKEN }}"
+            prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
+            map_obj: "{{ pipeline_config.queue_map }}"
+            min_conf: "{{ pipeline_config.min_queue_confidence }}"
+            low_conf_name: "{{ pipeline_config.low_confidence_queue_name }}"
+            ticket_field: "queue.name"
+            success_full_high_confidence_note:
+              subject: "Automatische Klassifizierung"
+              body: |
+                Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
+                mit der Konfidenz {{ data.queue_prediction.confidence }}
+            success_full_low_confidence_note:
+              subject: "Automatische Klassifizierung"
+              body: |
+                Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
+                da die Konfidenz {{ data.queue_prediction.confidence }} zu gering ist.
+                Mindest Konfidenz {{ pipeline_config.min_queue_confidence }}
+
+            update_on_error: true
+            on_error_update_value: "{{ pipeline_config.error_queue_name }}"
+            error_note:
+              subject: ""
+              body: |
+                Das Ticket konnte nicht automatisch der Queue zugeordnet werden;
+                Da ein Fehler aufgetreten ist.
+                Wurde in die Queue {{ pipeline_config.error_queue_name }} verschoben.
+
+
+        - name: priority_classification
+          use: Composite
+          use_def: classification_generic
+          params:
+            service_alias: otobo
+            classifier_alias: hf_local
+            model: "{{ pipeline_config.priority_model }}"
+            token_env: "HUGGINGFACE_EHS_TOKEN"
+            prompt_tmpl: "{{ data.ticket.subject }} {{ data.ticket.body }}"
+            map_obj: "{{ pipeline_config.priority_map }}"
+            min_conf: "{{ pipeline_config.min_priority_confidence }}"
+            low_conf_name: "{{ pipeline_config.low_confidence_priority_name }}"
+            ticket_field: "priority.name"
+            success_full_high_confidence_note:
+              subject: "Automatische Priorisierung"
+              body: |
+                Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
+                mit der Konfidenz {{ current_state.cls.confidence }}"
+            success_full_low_confidence_note:
+              subject: "Automatische Priorisierung"
+              body: |
+                Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
+                da die Konfidenz {{ current_state.cls.confidence }} zu gering ist.
+                Mindest Konfidenz {{ pipeline_config.min_priority_confidence }}
+            update_on_error: false
+            error_note:
+              subject: "Automatische Priorisierung"
+              body: |
+                Das Ticket konnte nicht automatisch der Priorität zugeordnet werden;
+                Da ein Fehler aufgetreten ist.
+
+  orchestrator:
+    runners:
+      - run_every_milli_seconds: 10000
+        use: ticket-routing
+        config:
           ticket_search_criteria:
-            queue:
-              name: "{{ pipeline_config.filter_by_queue_name }}"
+            queue.name: "EingangsQueue"
             limit: 1
-
-          output:
-            data:
-              ticket: "{{ current_state.found_tickets | first }}"
-
-        - name: "queue_ai_model"
-          type: "open_ticket_ai.extensions.HFLocalAIInferenceService"
-          prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
-          hf_model: "{{ pipeline_config.queue_model }}"
-          hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
-          output:
-            data:
-              queue_prediction:
-                prediction: "{{ current_state.label }}"
-                confidence: "{{ current_state.confidence }}"
-
-        - name: "priority_ai_model"
-          type: "open_ticket_ai.extensions.HFLocalAIInferenceService"
-          prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
-          hf_model: "{{ pipeline_config.priority_model }}"
-          hf_token_env_var: "HUGGINGFACE_EHS_TOKEN"
-          output:
-            data:
-              priority_prediction:
-                prediction: "{{ current_state.label }}"
-                confidence: "{{ current_state.confidence }}"
-
-        - name: "queue_mapper"
-          type: "open_ticket_ai.extensions.SimpleKeyValueMapper"
-          from_key: "{{ data.queue_prediction.prediction }}"
-          key_to_value_map:
+          min_queue_confidence: 0.8
+          min_priority_confidence: 0.8
+          queue_model: "softoft/EHS_Queue_V8"
+          priority_model: "softoft/EHS_Priority_Prediction"
+          low_confidence_queue_name: "Unklassifiziert"
+          low_confidence_priority_name: "3 Mittel"
+          queue_map:
             "Anfrage an die IT::Backup/Rücksicherung": "Anfrage an die IT::Backup/Rücksicherung"
             "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen": "Anfrage an die IT::Benutzer/Passwörter/Berechtigungen"
             "Anfrage an die IT::DMS-System (d.3)": "Anfrage an die IT::DMS-System (d.3)"
@@ -106,83 +235,8 @@ open_ticket_ai:
             "Lernwelt": "Lernwelt"
             "Personal Office": "Personal Office"
             "Pflege und Alltagsbegleitung": "Pflege und Alltagsbegleitung"
-          output:
-            mapped_queue: "{{ current_state.to_value }}"
-
-        - name: "priority_mapper"
-          type: "open_ticket_ai.extensions.SimpleKeyValueMapper"
-          from_key: "{{ data.priority_prediction.prediction }}"
-          key_to_value_map:
+          priority_map:
             "1 Kritisch": "1 Kritisch"
             "3 Mittel": "3 Mittel"
             "5 Sehr niedrig": "5 Sehr niedrig"
-          output:
-            data:
-              mapped_priority: "{{ current_state.to_value }}"
 
-
-        - name: "final_queue_low_confidence"
-          type: "open_ticket_ai.extensions.ContextModifier"
-          output:
-            data:
-              final_queue: |
-                {% if data.queue_prediction.confidence | float >= pipeline_config.min_queue_confidence %}
-                  {{ data.mapped_queue }}
-                {% else %}
-                  {{ pipeline_config.low_confidence_queue_name }}
-                {% endif %}
-
-        - name: "queue_updater"
-          type: "open_ticket_ai.extensions.TicketSystemService"
-          operation: "update"
-          ticket_id: "{{ data.ticket.id }}"
-          ticket:
-            queue:
-              name: "{{ data.final_queue }}"
-
-        - name: "queue_note_adder"
-          type: "open_ticket_ai.extensions.TicketSystemService"
-          operation: "update"
-          ticket_id: "{{ data.ticket.id }}"
-          ticket:
-            article:
-              subject: "Automatische Klassifizierung"
-              body: |
-                Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
-                mit der Konfidenz {{ data.queue_prediction.confidence }}
-
-        - name: "final_priority_low_confidence"
-          type: "open_ticket_ai.extensions.ContextModifier"
-          output:
-            data:
-              final_priority: |
-                {% if data.priority_prediction.confidence | float >= pipeline_config.min_priority_confidence %}
-                  {{ data.priority_prediction.prediction }}
-                {% else %}
-                  {{ pipeline_config.low_confidence_priority_name }}
-                {% endif %}
-
-
-
-        - name: "priority_updater"
-          type: "open_ticket_ai.extensions.TicketSystemService"
-          operation: "update"
-          ticket_id: "{{ data.ticket.id }}"
-          ticket:
-            priority:
-              name: "{{ data.final_priority }}"
-
-        - name: "priority_note_adder"
-          type: "open_ticket_ai.extensions.TicketSystemService"
-          operation: "update"
-          ticket_id: "{{ data.ticket.id }}"
-          ticket:
-            article:
-              subject: "Automatische Priorisierung"
-              body: |
-                Das Ticket wurde automatisch der Priorität {{ data.final_priority }} zugeordnet;
-                mit der Konfidenz {{ data.priority_prediction.confidence }}
-
-
-  orchestrator:
-    run_every_milli_seconds: 10000
