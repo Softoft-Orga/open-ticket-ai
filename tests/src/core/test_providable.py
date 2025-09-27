@@ -7,8 +7,8 @@ from unittest.mock import patch
 
 from rich.console import Console
 
-from open_ticket_ai.core.mixins.registry_providable_instance import Providable
 from open_ticket_ai.core.config.config_models import ProvidableConfig
+from open_ticket_ai.core.mixins.registry_providable_instance import Providable
 
 
 class DummyProvidable(Providable):

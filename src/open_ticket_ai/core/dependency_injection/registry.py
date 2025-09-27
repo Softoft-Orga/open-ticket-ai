@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Type, Optional, Any
+from typing import Any, Dict, Optional, Type
 
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 

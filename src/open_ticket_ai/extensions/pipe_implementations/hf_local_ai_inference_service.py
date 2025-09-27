@@ -1,7 +1,7 @@
 import logging
 import os
 from functools import lru_cache
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.extensions.pipe_implementations.pipe_configs import HFLocalAIInferenceServiceConfig

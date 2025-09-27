@@ -1,14 +1,13 @@
-from pathlib import Path
-from types import SimpleNamespace
 import json
 import runpy
+from types import SimpleNamespace
 
 import pytest
 import yaml
 from pydantic import BaseModel
 from rich.syntax import Syntax
 
-from open_ticket_ai.core.util import path_util, pretty_print_config, create_json_config_schema
+from open_ticket_ai.core.util import create_json_config_schema, path_util, pretty_print_config
 
 
 class DummyModel(BaseModel):

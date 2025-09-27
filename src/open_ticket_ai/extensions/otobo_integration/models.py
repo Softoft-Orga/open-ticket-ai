@@ -1,9 +1,9 @@
-from otobo_znuny.domain_models.ticket_models import Ticket, Article, IdName
+from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
+    UnifiedEntity,
     UnifiedNote,
     UnifiedTicket,
-    UnifiedEntity,
 )
 
 

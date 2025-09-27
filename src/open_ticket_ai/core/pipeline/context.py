@@ -1,9 +1,9 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipeline\context.py
 from collections import defaultdict
-from enum import Enum, auto
-from typing import Dict, Any
+from typing import Any, Dict
 
 from pydantic import BaseModel, Field
+
 
 class PipeEvent(BaseModel):
     is_success: bool | None = None

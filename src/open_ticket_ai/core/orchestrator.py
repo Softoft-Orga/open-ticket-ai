@@ -17,7 +17,7 @@ class Orchestrator:
 
     async def run(self) -> None:
         self._logger.info("Starting orchestrator...")
-        self._logger.info(f"Configuration:" + json.dumps(self.config.model_dump(), indent=4))
+        self._logger.info("Configuration:" + json.dumps(self.config.model_dump(), indent=4))
 
         while True:
             await self.pipeline.execute()

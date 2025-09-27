@@ -1,5 +1,4 @@
 import pytest
-
 from otobo import (
     OTOBOClient,
     OTOBOClientConfig,
@@ -8,18 +7,17 @@ from otobo import (
     TicketUpdateRequest,
 )
 from otobo_znuny.models.request_models import AuthData
-from otobo_znuny.models.ticket_models import TicketBase, TicketDetailOutput, ArticleDetail
+from otobo_znuny.models.ticket_models import ArticleDetail, TicketBase, TicketDetailOutput
 
 from open_ticket_ai.base.otobo_integration.otobo_adapter import OTOBOAdapter
 from open_ticket_ai.base.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
 from open_ticket_ai.core.config.config_models import SystemConfig
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
-    UnifiedQueue,
     UnifiedPriority,
+    UnifiedQueue,
     UnifiedTicket,
 )
-
 
 TICKETS = [
     TicketDetailOutput(

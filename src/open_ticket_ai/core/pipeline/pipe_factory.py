@@ -3,7 +3,7 @@ from typing import Any
 
 from injector import Injector
 
-from open_ticket_ai.core.config.base_pipe_config import BasePipeConfig
+from open_ticket_ai.core.pipeline.base_pipe_config import BasePipeConfig
 from open_ticket_ai.core.pipeline.pipe import Pipe
 
 

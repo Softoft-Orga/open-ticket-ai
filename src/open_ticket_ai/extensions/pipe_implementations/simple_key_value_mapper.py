@@ -1,7 +1,7 @@
-from typing import Dict, Any, TypeVar
+from typing import Any, Dict, TypeVar
 
+from open_ticket_ai.core.pipeline.base_pipe_config import BasePipeConfig
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.config.base_pipe_config import BasePipeConfig
 from open_ticket_ai.extensions.pipe_implementations.pipe_configs import SimpleKeyValueMapperConfig
 
 ConfigT = TypeVar("ConfigT", bound=BasePipeConfig)

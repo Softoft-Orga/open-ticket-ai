@@ -7,13 +7,12 @@ ready for consumption by front-end frameworks like VitePress/Vue.
 """
 
 import ast
-from dataclasses import asdict, dataclass, field
 import json
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Optional, Union
 
 from docstring_parser import Docstring, DocstringParam, DocstringRaises, parse
-
 
 # --- Data Models (using Dataclasses) ---
 

@@ -1,12 +1,11 @@
 """Unit tests for the :mod:`orchestrator` module."""
 
+import sys
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
 import schedule
-
-from pathlib import Path
-import sys
 
 # Ensure the project root is on the import path so the ``open_ticket_ai``
 # package can be imported when tests are executed from the ``tests`` directory.

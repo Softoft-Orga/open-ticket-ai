@@ -1,6 +1,6 @@
-from typing import Any, Dict, Optional, Literal
+from typing import Any, Dict, Literal, Optional
 
-from open_ticket_ai.core.config.base_pipe_config import BasePipeConfig
+from open_ticket_ai.core.pipeline.base_pipe_config import BasePipeConfig
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
 
 

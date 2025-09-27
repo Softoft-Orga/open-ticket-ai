@@ -1,6 +1,7 @@
 import logging
 from typing import Any, Dict
 
+from open_ticket_ai.core.pipeline.base_pipe_state import BasePipeState
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
@@ -10,7 +11,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 from open_ticket_ai.extensions.pipe_implementations.pipe_configs import TicketSystemServiceConfig
 
 
-class TicketSystemService(Pipe[TicketSystemServiceConfig]):
+class TicketSystemService(Pipe[TicketSystemServiceConfig, BasePipeState]):
     ConfigModel = TicketSystemServiceConfig
 
     def __init__(self, config: TicketSystemServiceConfig, ticket_system: TicketSystemAdapter):

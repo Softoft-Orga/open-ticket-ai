@@ -1,9 +1,11 @@
+import ast
+import json
 import logging
 from typing import Any
-import json
-import ast
+
 from jinja2 import Undefined
 from jinja2.sandbox import SandboxedEnvironment
+
 from open_ticket_ai.core.pipeline.context import PipelineContext
 
 

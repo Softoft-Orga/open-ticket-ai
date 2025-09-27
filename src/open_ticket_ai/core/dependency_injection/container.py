@@ -2,14 +2,7 @@
 import importlib
 import os
 
-import httpx
 from injector import Binder, Module, provider, singleton
-from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
-from otobo_znuny.domain_models.basic_auth_model import BasicAuth
-from otobo_znuny.domain_models.otobo_client_config import ClientConfig
-from otobo_znuny.domain_models.ticket_operation import TicketOperation
-from pydantic import SecretStr
-from open_ticket_ai.extensions.otobo_integration.otobo_adapter import OTOBOAdapter
 
 from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,

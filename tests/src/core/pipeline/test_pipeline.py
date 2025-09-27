@@ -2,19 +2,18 @@
 Pytest tests for the core pipeline components including Pipeline, Pipe, PipelineContext, MetaInfo, and PipelineStatus.
 """
 
-import random
 import pytest
 
 pytest.importorskip("pydantic")
 from pydantic import BaseModel
 
+from open_ticket_ai.core.config.config_models import PipelineConfig, ProvidableConfig, ScheduleConfig
+
 # Assuming the following imports are correct based on your project structure
 # You may need to adjust them based on your PYTHONPATH
-from open_ticket_ai.core.pipeline.context import PipelineContext, MetaInfo, PipelineStatus
+from open_ticket_ai.core.pipeline.context import MetaInfo, PipelineContext, PipelineStatus
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipeline import Pipeline
-from open_ticket_ai.core.config.config_models import ProvidableConfig, PipelineConfig, ScheduleConfig
-
 
 # --- Test Data and Dummy Implementations ---
 

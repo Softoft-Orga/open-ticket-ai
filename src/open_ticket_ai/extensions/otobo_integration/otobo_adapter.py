@@ -1,23 +1,17 @@
 import logging
 import os
 from functools import wraps
-from typing import Any, Optional, Callable, TypeVar, cast
+from typing import Any, Callable, Optional, TypeVar, cast
 
 import httpx
 from injector import inject
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.basic_auth_model import BasicAuth
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig
-from otobo_znuny.domain_models.ticket_models import TicketSearch, IdName, Ticket, Article, TicketUpdate
+from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket, TicketSearch, TicketUpdate
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
 from pydantic import SecretStr
-from tenacity import (
-    retry,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-    before_sleep_log
-)
+from tenacity import before_sleep_log, retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 # Type variable for generic return type
 T = TypeVar('T')
@@ -32,9 +26,9 @@ from open_ticket_ai.core.dependency_injection.registry import TicketSystemRegist
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
+    UnifiedEntity,
     UnifiedTicket,
     UnifiedTicketBase,
-    UnifiedEntity,
 )
 from open_ticket_ai.extensions.otobo_integration.models import TicketAdapter
 

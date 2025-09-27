@@ -2,20 +2,17 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Generic, TypeVar, Type
+from typing import Any, Dict
 
-from ..config.base_pipe_config import BasePipeConfig
+from open_ticket_ai.core.pipeline.base_pipe_config import BasePipeConfig
+
 from ..util.pretty_print_config import prettify_dict
-
-ConfigT = TypeVar("ConfigT", bound=BasePipeConfig)
-
+from .base_pipe_state import BasePipeState
 from .context import PipelineContext
 from .jinja2_env import render_any
-from ..config.base_pipe_config import BasePipeConfig
 
 
-class Pipe(ABC, Generic[ConfigT]):
-    ConfigModel: Type[ConfigT] = BasePipeConfig  # type: ignore
+class Pipe[ConfigT: BasePipeConfig, StateT: BasePipeState](ABC):
 
     def __init__(self, config: ConfigT, *args, **kwargs):
         self.config: ConfigT = config
@@ -26,6 +23,7 @@ class Pipe(ABC, Generic[ConfigT]):
         new_context.current_state = state
         rendered_output = {k: render_any(v, new_context) for k, v in self.config.output.items()}
         self._logger.info(f"Rendered output: {rendered_output}\n\n")
+
         def deep_merge(d1, d2):
             for k, v in d2.items():
                 if k in d1 and isinstance(d1[k], dict) and isinstance(v, dict):
@@ -33,10 +31,11 @@ class Pipe(ABC, Generic[ConfigT]):
                 else:
                     d1[k] = v
             return d1
-            
+
         data_merged = deep_merge(new_context.model_dump(), rendered_output)
         new_context = PipelineContext.model_validate(data_merged)
         return new_context
+
     async def process(self, context: PipelineContext) -> PipelineContext:
         context.current_state = {}
         self._logger.info(f"Current context: {prettify_dict(context)}\n\n")

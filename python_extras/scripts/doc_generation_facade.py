@@ -15,17 +15,17 @@ import json
 import os
 from pathlib import Path
 
-from openai import AsyncOpenAI
-from rich.console import Console
 import typer
 from mdxlate.translator import Translator
+from openai import AsyncOpenAI
+from rich.console import Console
 
+from open_ticket_ai.core.util.path_util import find_python_code_root_path
 from src.scripts import ReadmeUpdater
 from src.scripts.doc_generation.add_docstrings import DocstringGenerator
 from src.scripts.doc_generation.generate_api_reference import generate_documentation
 from src.scripts.doc_generation.update_frontmatter import update_frontmatter
 from src.scripts.documentation_summary import DocumentationSummarizer
-from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
 # --- CLI Setup ---
 app = typer.Typer(

@@ -17,9 +17,9 @@ from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,
     PipeConfig,
     PipelineConfig,
+    ProvidableConfig,
     ScheduleConfig,
     SystemConfig,
-    ProvidableConfig,
 )
 from open_ticket_ai.core.dependency_injection.registry import Registry
 from open_ticket_ai.core.pipeline.pipe import Pipe

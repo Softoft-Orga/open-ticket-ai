@@ -1,18 +1,15 @@
 from pathlib import Path
-from typing import Any, Dict, List, Annotated, Union
+from typing import Annotated, Any, Dict, List, Union
 
 import yaml
 from pydantic import BaseModel, Field
 
-from open_ticket_ai.extensions.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
-from open_ticket_ai.extensions.pipe_implementations.pipe_configs import TicketSystemServiceConfig, \
-    HFLocalAIInferenceServiceConfig, ContextModifierConfig, SimpleKeyValueMapperConfig
-
-
-class PipelineStepOutput(BaseModel):
-    """Output configuration for a pipeline step."""
-
-    data: Dict[str, Any] = Field(default_factory=dict)
+from open_ticket_ai.extensions.pipe_implementations.pipe_configs import (
+    ContextModifierConfig,
+    HFLocalAIInferenceServiceConfig,
+    SimpleKeyValueMapperConfig,
+    TicketSystemServiceConfig,
+)
 
 
 class PipelineConfig(BaseModel):

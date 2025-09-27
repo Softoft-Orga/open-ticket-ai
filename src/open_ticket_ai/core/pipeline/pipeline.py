@@ -1,7 +1,7 @@
 import logging
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
-from .context import PipelineContext, MetaInfo
+from .context import MetaInfo, PipelineContext
 from .pipe import Pipe
 
 
@@ -23,5 +23,5 @@ class Pipeline:
         for pipe in self.pipes:
             self.logger.info(f"Executing pipe {pipe.__class__.__name__}")
             context = await pipe.process(context)
-        self.logger.info(f"Pipeline completed successfully.")
+        self.logger.info("Pipeline completed successfully.")
         return context
