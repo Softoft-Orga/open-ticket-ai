@@ -74,16 +74,3 @@ def render_recursive(obj: Any, scope: BaseModel | dict[str, Any]) -> Any:
         return {key: render_recursive(value, scope_dict) for key, value in obj.items()}
     else:
         return obj
-
-
-# Backward compatibility aliases
-render_any = render_recursive
-render_text = render
-
-
-class LazyTemplate:
-    def __init__(self, template_str: str):
-        self.template_str = template_str
-    
-    def render(self, scope: BaseModel | dict[str, Any]) -> Any:
-        return render(self.template_str, scope)

@@ -3,11 +3,11 @@ import logging
 from typing import Any
 
 from open_ticket_ai.core.pipeline.context import PipelineContext
-from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.base_pipe import BasePipe
 
 
 class Orchestrator:
-    def __init__(self, pipes: list[Pipe], interval_seconds: float = 60.0):
+    def __init__(self, pipes: list[BasePipe], interval_seconds: float = 60.0):
         """Initialize Orchestrator with injected Pipe instances.
 
         Args:

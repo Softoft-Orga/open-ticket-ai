@@ -7,12 +7,12 @@ from open_ticket_ai.base_extensions.pipe_configs import (
     UpdateTicketPipeModel,
 )
 from open_ticket_ai.core.pipeline.context import PipelineContext
-from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.base_pipe import BasePipe
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
 
 
-class UpdateTicketPipe(Pipe[UpdateTicketPipeModel]):
+class UpdateTicketPipe(BasePipe[UpdateTicketPipeModel]):
     """
     A pipe that updates an existing ticket in the ticket system.
     """

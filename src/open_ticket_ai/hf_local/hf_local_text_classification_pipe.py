@@ -3,12 +3,11 @@ import os
 from functools import cache
 from typing import Any
 
-from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.base_pipe import BasePipe
 from open_ticket_ai.base_extensions.pipe_configs import HFLocalAIInferenceServiceConfig
 
 
-class HFLocalAIInferenceService(Pipe[HFLocalAIInferenceServiceConfig]):
-    ConfigModel = HFLocalAIInferenceServiceConfig
+class HFLocalAIInferenceService(BasePipe):
 
     def __init__(self, config: HFLocalAIInferenceServiceConfig, *args, **kwargs):
         super().__init__(config)

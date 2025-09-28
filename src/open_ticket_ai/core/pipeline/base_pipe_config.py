@@ -14,28 +14,30 @@ class OnType(enum.StrEnum):
     FAIL_CONTAINER = "fail_container"
 
 
-ConfigModelType = TypeVar("ConfigModelType", bound=BaseModel)
 
 
-class RenderedPipeConfig(BaseModel):
+class _BasePipeConfig(BaseModel):
     name: str | None = None
     use: str
-    services: dict[str, str] | None = None
+    services: dict[str, str] | str | None = None
 
+    steps: list[Self] | str = Field(default_factory=list)
+
+    when: str = "True"
+
+    on_failure: str | None = None
+    on_success: str | None = None
+
+
+class RenderedPipeConfig(_BasePipeConfig):
+    name: str = "anonymous"
+    services: dict[str, str] | None = None
+    steps: list[_BasePipeConfig] = Field(default_factory=list)
     when: bool
 
     on_failure: OnType = OnType.FAIL_CONTAINER
     on_success: OnType = OnType.CONTINUE
 
 
-class RawPipeConfig(RawConfig[RenderedPipeConfig]):
-    name: str | None = None
-    use: str
-    services: dict[str, str] | None = None
-
-    steps: list[Self] = Field(default_factory=list)
-
-    when: str = "True"
-
-    on_failure: str | None = None
-    on_success: str | None = None
+class RawPipeConfig(RawConfig[RenderedPipeConfig], _BasePipeConfig):
+    pass

@@ -18,6 +18,7 @@ from tenacity import (
 )
 
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
+from open_ticket_ai.core.config.template_configured_class import TemplateConfiguredClass
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -26,8 +27,9 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
     UnifiedTicketBase,
 )
-from open_ticket_ai_otobo_znuny.models import TicketAdapter
-from open_ticket_ai_otobo_znuny.otobo_znuny_ticket_system_service_config import (
+from open_ticket_ai.otobo_znuny.models import TicketAdapter
+from open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service_config import (
+    RawOTOBOZnunyTicketsystemServiceConfig,
     RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
 
@@ -68,13 +70,13 @@ def otobo_retry() -> Callable[[F], F]:
             wait=wait_exponential(multiplier=1, max=10),
             retry=retry_if_exception_type(
                 (
-                    httpx.ConnectError,
-                    httpx.RemoteProtocolError,
-                    httpx.ReadTimeout,
-                    httpx.WriteTimeout,
-                    httpx.PoolTimeout,
-                    httpx.HTTPStatusError,
-                    httpx.TransportError,
+                        httpx.ConnectError,
+                        httpx.RemoteProtocolError,
+                        httpx.ReadTimeout,
+                        httpx.WriteTimeout,
+                        httpx.PoolTimeout,
+                        httpx.HTTPStatusError,
+                        httpx.TransportError,
                 )
             ),
             before_sleep=_before_sleep_recreate_client,
@@ -92,8 +94,20 @@ def otobo_retry() -> Callable[[F], F]:
     return decorator
 
 
-@UnifiedRegistry.register_service_class()
-class OTOBOZnunyTicketSystemService(TicketSystemService):
+@UnifiedRegistry.register
+class OTOBOZnunyTicketSystemService(TicketSystemService, TemplateConfiguredClass):
+    @staticmethod
+    def get_raw_config_model_type() -> type[RawOTOBOZnunyTicketsystemServiceConfig]:
+        return RawOTOBOZnunyTicketsystemServiceConfig
+
+    @staticmethod
+    def get_rendered_config_model_type() -> type[RenderedOTOBOZnunyTicketsystemServiceConfig]:
+        return RenderedOTOBOZnunyTicketsystemServiceConfig
+
+    @staticmethod
+    def needs_raw_config() -> bool:
+        return False
+
     @inject
     def __init__(self, config: RenderedOTOBOZnunyTicketsystemServiceConfig):
         self.config = config
