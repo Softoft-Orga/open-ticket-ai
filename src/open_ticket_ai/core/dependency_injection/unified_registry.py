@@ -1,126 +1,75 @@
 from __future__ import annotations
 
-import logging
-from typing import Any, TypeVar
+from dataclasses import dataclass
+from typing import Any, Dict, Type, Self
 
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
-T = TypeVar("T")
-PipeType = TypeVar("PipeType", bound=Pipe)
-ServiceType = TypeVar("ServiceType", bound=TicketSystemAdapter)
+class NotRegistered(Exception):
+    pass
+
+
+class ServiceNotRegistered(NotRegistered):
+    pass
+
+
+class PipeNotRegistered(NotRegistered):
+    pass
+
+
+class ConflictingClassRegistration(Exception):
+    pass
+
+class ConflictingInstanceRegistration(Exception):
+    pass
 
 
 class UnifiedRegistry:
-    """Unified registry for pipes, services, and other components from plugins."""
+    """Holds registered TYPES and per-run service INSTANCES."""
+    _singleton: Self | None = None
 
-    _instance: UnifiedRegistry | None = None
-
-    def __init__(self):
-        self.logger = logging.getLogger(__name__)
-        self._pipes: dict[str, type[Pipe]] = {}
-        self._services: dict[str, type[TicketSystemAdapter]] = {}
-        self._components: dict[str, type[Any]] = {}
-
-    def __new__(cls) -> UnifiedRegistry:
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
+    def __init__(self) -> None:
+        self.class_registry: dict[str, type] = {}
+        self.instances: Dict[str, Any] = {}
 
     @classmethod
-    def get_instance(cls) -> UnifiedRegistry:
-        """Get the singleton instance of the registry."""
-        if cls._instance is None:
-            cls._instance = cls()
-        return cls._instance
+    def instance(cls) -> Self:
+        if cls._singleton is None:
+            cls._singleton = UnifiedRegistry()
+        return cls._singleton
 
-    def register_pipe(self, name: str, pipe_class: type[Pipe]) -> None:
-        """Register a pipe class with the given name."""
-        if name in self._pipes:
-            self.logger.warning(f"Pipe '{name}' is already registered, overwriting")
-        self._pipes[name] = pipe_class
-        self.logger.debug(f"Registered pipe: {name} -> {pipe_class.__name__}")
+    def register(self, name: str, pipe_class: Type) -> None:
+        def _register(_cls: type):
+            self.class_registry[_cls.__class__.__name__] = _cls
 
-    def register_service(self, name: str, service_class: type[TicketSystemAdapter]) -> None:
-        """Register a service class with the given name."""
-        if name in self._services:
-            self.logger.warning(f"Service '{name}' is already registered, overwriting")
-        self._services[name] = service_class
-        self.logger.debug(f"Registered service: {name} -> {service_class.__name__}")
+        self.pipe_types[name] = PipeDescriptor(pipe_class)
 
-    def register_component(self, name: str, component_class: type[Any]) -> None:
-        """Register a generic component class with the given name."""
-        if name in self._components:
-            self.logger.warning(f"Component '{name}' is already registered, overwriting")
-        self._components[name] = component_class
-        self.logger.debug(f"Registered component: {name} -> {component_class.__name__}")
+    def register(self, name: str, service_class: Type) -> None:
+        self.service_types[name] = ServiceDescriptor(service_class)
 
-    def get_pipe(self, name: str) -> type[Pipe] | None:
-        """Get a pipe class by name."""
-        return self._pipes.get(name)
+    # ---- TYPE lookup (no dotted-path fallback) ----
+    def get_registered_pipe_class(self, name: str) -> Type:
+        meta = self.pipe_types.get(name)
+        if meta is None:
+            raise PipeNotRegistered(f"Unknown pipe '{name}'. Registered pipes: {list(self.pipe_types)}")
+        return meta.cls
 
-    def get_service(self, name: str) -> type[TicketSystemAdapter] | None:
-        """Get a service class by name."""
-        return self._services.get(name)
+    def get_registered_service_class(self, name: str) -> Type:
+        meta = self.service_types.get(name)
+        if meta is None:
+            raise ServiceNotRegistered(
+                f"Unknown service type '{name}'. Registered service types: {list(self.service_types)}"
+            )
+        return meta.cls
 
-    def get_component(self, name: str) -> type[Any] | None:
-        """Get a component class by name."""
-        return self._components.get(name)
+    # ---- INSTANCE management (built from config.yml) ----
+    def clear_service_instances(self) -> None:
+        self.service_instances.clear()
 
-    def get_all_pipes(self) -> dict[str, type[Pipe]]:
-        """Get all registered pipes."""
-        return self._pipes.copy()
+    def add_service_instance(self, service_id: str, instance: Any) -> None:
+        self.service_instances[service_id] = instance
 
-    def get_all_services(self) -> dict[str, type[TicketSystemAdapter]]:
-        """Get all registered services."""
-        return self._services.copy()
-
-    def get_all_components(self) -> dict[str, type[Any]]:
-        """Get all registered components."""
-        return self._components.copy()
-
-    def clear_all(self) -> None:
-        """Clear all registrations (mainly for testing)."""
-        self._pipes.clear()
-        self._services.clear()
-        self._components.clear()
-        self.logger.debug("Cleared all registrations")
-
-    def list_registered(self) -> dict[str, dict[str, str]]:
-        """List all registered components by category."""
-        return {
-            "pipes": {name: cls.__name__ for name, cls in self._pipes.items()},
-            "services": {name: cls.__name__ for name, cls in self._services.items()},
-            "components": {name: cls.__name__ for name, cls in self._components.items()},
-        }
-
-
-# Convenience functions for registration
-def register_pipe(name: str) -> callable:
-    """Decorator to register a pipe class."""
-
-    def decorator(pipe_class: type[Pipe]) -> type[Pipe]:
-        UnifiedRegistry.get_instance().register_pipe(name, pipe_class)
-        return pipe_class
-
-    return decorator
-
-
-def register_service(name: str) -> callable:
-    """Decorator to register a service class."""
-
-    def decorator(service_class: type[TicketSystemAdapter]) -> type[TicketSystemAdapter]:
-        UnifiedRegistry.get_instance().register_service(name, service_class)
-        return service_class
-
-    return decorator
-
-
-def register_component(name: str) -> callable:
-    """Decorator to register a generic component class."""
-
-    def decorator(component_class: type[Any]) -> type[Any]:
-        UnifiedRegistry.get_instance().register_component(name, component_class)
-        return component_class
-
-    return decorator
+    def get_service_instance(self, service_id: str) -> Any:
+        try:
+            return self.service_instances[service_id]
+        except KeyError:
+            raise KeyError(f"Service instance '{service_id}' not found. Available: {list(self.service_instances)}")

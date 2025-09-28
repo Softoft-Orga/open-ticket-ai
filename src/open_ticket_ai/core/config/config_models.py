@@ -1,34 +1,43 @@
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
 import yaml
 from pydantic import BaseModel
 
-
-class PipeConfig(BaseModel):
-    id: str
-    use: str
-    config: dict[str, Any] = {}
-    when: str = "True"
-    on_failure: Literal["continue", "finish_container", "fail_container"] = "fail_container"
-    on_success: Literal["continue", "finish_container", "fail_container"] = "continue"
-    steps: list["PipeConfig"] = []
+from open_ticket_ai.core.config.raw_config import RawConfig
 
 
-class SystemConfig(BaseModel):
+class RenderedSystemConfig(BaseModel):
     id: str
     provider_key: str
     config: dict[str, Any] = {}
 
 
-class OpenTicketAIConfig(BaseModel):
+class SystemConfig(RawConfig[RenderedSystemConfig]):
+    id: str
+    provider_key: str
+    config: dict[str, Any] = {}
+
+
+class RenderedOpenTicketAIConfig(BaseModel):
+    version: str = "1.0.0"
+    plugins: list[str] = []
+    general_config: dict[str, Any] = {}
+    defs: dict[str, Any] = {}
+    orchestrator: dict[str, Any] = {}
+    system: RenderedSystemConfig | None = None
+    pipe: Any | None = None  # Will be RenderedPipeConfig[Any]
+    interval_seconds: float = 60.0
+
+
+class OpenTicketAIConfig(RawConfig[RenderedOpenTicketAIConfig]):
     version: str = "1.0.0"
     plugins: list[str] = []
     general_config: dict[str, Any] = {}
     defs: dict[str, Any] = {}
     orchestrator: dict[str, Any] = {}
     system: SystemConfig | None = None
-    pipe: PipeConfig | None = None
+    pipe: Any | None = None  # Will be PipeConfig[Any]
     interval_seconds: float = 60.0
 
 

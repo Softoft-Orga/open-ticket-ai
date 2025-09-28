@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 
 from .unified_models import (
     TicketSearchCriteria,
-    UnifiedTicket,
+    UnifiedTicket, UnifiedNote,
 )
 
 
-class TicketSystemAdapter(ABC):
+class TicketSystemService(ABC):
     @abstractmethod
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         pass
@@ -20,5 +20,5 @@ class TicketSystemAdapter(ABC):
         pass
 
     @abstractmethod
-    async def add_note(self, ticket_id: str, note: str) -> bool:
+    async def add_note(self, ticket_id: str, note: UnifiedNote) -> bool:
         pass

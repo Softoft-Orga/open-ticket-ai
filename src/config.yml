@@ -1,6 +1,6 @@
 open_ticket_ai:
-  version: 1.0.0
-  plugins:
+  imports:
+    - "open_ticket_ai ~= 1.0.0"
     - "open_ticket_ai_otobo_znuny ~= 1.0.0"
     - "open_ticket_ai_hf_local ~= 1.0.0"
 
@@ -15,164 +15,151 @@ open_ticket_ai:
 
   defs:
     services:
-      - name: otobo_znuny
+      otobo_znuny:
         use: OTOBOZnunyTicketSystemService
-        config:
-          server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
-          username: "open_ticket_ai"
-          password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
+        server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
+        password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 
-    pipe_definitions:
-      - name: ticket_classifier
-        type: HfLocalTextClassificationPipe
-        config:
-          token: "{{ OTAI_HUGGINGFACE_EHS_TOKEN }}"
-          prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
+    pipes:
+      default_ticket_update: &default_ticket_update
+        use: TicketUpdatePipe
+        services: { ticket_system_service: "otobo_znuny" }
+        ticket_id: "{{ config.ticket_id }}"
 
-      - name: classification_generic
+      default_ticket_add_note: &default_ticket_add_note
+        use: TicketAddNotePipe
+        services: { ticket_system_service: "otobo_znuny" }
+        ticket_id: "{{ config.ticket_id }}"
+
+      ticket_classifier: &ticket_classifier
+        use: HfLocalTextClassificationPipe
+        token: "{{ env.OTAI_HUGGINGFACE_EHS_TOKEN }}"
+        prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
+
+      classification_generic: &classification_generic
         steps:
-          - config: "{{ config }}"
+          - id: classification_mapping
             steps:
-              - name: classify
-                use: "def:ticket_classifier"
-                config:
-                  model: "{{ config.model }}"
-
-
-              - name: map_value
-                config:
-                  expression: "{{ config.map_obj[pipes.classify.label] }}"
+              - id: classify
+                <<: *ticket_classifier
+                model: "{{ config.model }}"
+              - id: map_value
+                expression: "{{ config.map_obj[pipes.classify.label] }}"
                 on_failure: "continue"
 
-              - name: select_final
-                config:
-                  expression: |-
-                    {{ 
-                    pipes.map_value.value if data.pipes.classify.confidence >= config.min_conf
-                    else config.low_conf_name
-                    }}
+              - id: select_final
+                expression: |-
+                  {{ 
+                  pipes.map_value.value if data.pipes.classify.confidence >= config.min_conf
+                  else config.low_conf_name
+                  }}
             on_failure: "continue"
 
-          - name: update_ticket_add_note
+          - id: update_ticket_add_note
             steps:
-              - name: update_ticket
-                use: TicketUpdatePipe
-                services: { target_ts: otobo }
-                config:
-                  ticket_id: "{{ config.ticket_id }}"
-                  updated_ticket: "{{ pipes.select_final | at_path(config.ticket_field) }}"
+              - id: update_ticket
+                <<: *default_ticket_update
+                updated_ticket: "{{ pipes.select_final | at_path(config.ticket_field) }}"
 
-              - use: TicketAddNotePipe
-                services: { target_ts: otobo }
-                config:
-                  ticket_id: "{{ config.ticket_id }}"
-                  note: |
-                    {{ 
-                    config.note_high.body if pipes.classify.confidence >= config.min_conf
-                    else config.note_low.body
-                    }}
+              - id: add_note
+                <<: *default_ticket_add_note
+                note: |
+                  {{ 
+                  config.note_high.body if pipes.classify.confidence >= config.min_conf
+                  else config.note_low.body
+                  }}
                 on_success: "finish_"
             on_success: "finish_"
             on_failure: "continue"
 
-          - name: update_ticket_error_fallback
+          - id: update_ticket_error_fallback
             steps:
               - when: "{{ config.update_on_error }}"
-                use: TicketUpdatePipe
-                services: { target_ts: otobo }
-                config:
-                  ticket_id: "{{ config.ticket_id }}"
-                  updated_ticket: "{{ config.on_error_update_value | at_path(config.ticket_field) }}"
+                <<: *default_ticket_update
+                updated_ticket: "{{ config.on_error_update_value | at_path(config.ticket_field) }}"
 
-              - name: add_error_note
+              - id: add_error_note
                 when: "{{ config.error_note }}"
-                use: TicketAddNotePipe
-                services: { target_ts: otobo }
-                config:
-                  ticket_id: "{{ config.ticket_id }}"
-                  note: "{{ config.error_note }}"
+                <<: *default_ticket_add_note
+                note: "{{ config.error_note }}"
 
-      - name: ticket-routing
+      ticket-routing: &ticket-routing
         steps:
-          - name: ticket_fetcher
+          - id: ticket_fetcher
             use: TicketFetchPipe
-            services: { target_ts: otobo }
-            config:
-              ticket_search_criteria: "{{ config.ticket_search_criteria }}"
+            services: { ticket_system_service: "otobo_znuny" }
+            ticket_search_criteria: "{{ config.ticket_search_criteria }}"
 
-          - name: queue_classification
-            use: "def:classification_generic"
-            config:
-              model: "{{ config.queue_model }}"
-              map_obj: "{{ config.queue_map }}"
-              min_conf: "{{ config.min_queue_confidence }}"
-              low_conf_name: "{{ config.low_confidence_queue_name }}"
-              ticket_field: "queue.name"
-              success_full_high_confidence_note:
-                subject: "Automatische Klassifizierung"
-                body: |
-                  Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
-                  mit der Konfidenz {{ data.queue_prediction.confidence }}
-              success_full_low_confidence_note:
-                subject: "Automatische Klassifizierung"
-                body: |
-                  Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
-                  da die Konfidenz {{ data.queue_prediction.confidence }} zu gering ist.
-                  Mindest Konfidenz {{ config.min_queue_confidence }}
+          - id: queue_classification
+            <<: *classification_generic
+            model: "{{ config.queue_model }}"
+            map_obj: "{{ config.queue_map }}"
+            min_conf: "{{ config.min_queue_confidence }}"
+            low_conf_name: "{{ config.low_confidence_queue_name }}"
+            ticket_field: "queue.name"
+            success_full_high_confidence_note:
+              subject: "Automatische Klassifizierung"
+              body: |
+                Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
+                mit der Konfidenz {{ data.queue_prediction.confidence }}
+            success_full_low_confidence_note:
+              subject: "Automatische Klassifizierung"
+              body: |
+                Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
+                da die Konfidenz {{ data.queue_prediction.confidence }} zu gering ist.
+                Mindest Konfidenz {{ config.min_queue_confidence }}
 
-              update_on_error: true
-              on_error_update_value: "{{ config.error_queue_name }}"
-              error_note:
-                subject: ""
-                body: |
-                  Das Ticket konnte nicht automatisch der Queue zugeordnet werden;
-                  Da ein Fehler aufgetreten ist.
-                  Wurde in die Queue {{ config.error_queue_name }} verschoben.
+            update_on_error: true
+            on_error_update_value: "{{ config.error_queue_name }}"
+            error_note:
+              subject: ""
+              body: |
+                Das Ticket konnte nicht automatisch der Queue zugeordnet werden;
+                Da ein Fehler aufgetreten ist.
+                Wurde in die Queue {{ config.error_queue_name }} verschoben.
 
 
-          - name: priority_classification
-            use: Composite
-            config:
-              model: "{{ config.priority_model }}"
-              map_obj: "{{ config.priority_map }}"
-              min_conf: "{{ config.min_priority_confidence }}"
-              low_conf_name: "{{ config.low_confidence_priority_name }}"
-              ticket_field: "priority.name"
-              success_full_high_confidence_note:
-                subject: "Automatische Priorisierung"
-                body: |
-                  Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
-                  mit der Konfidenz {{ current_state.cls.confidence }}"
-              success_full_low_confidence_note:
-                subject: "Automatische Priorisierung"
-                body: |
-                  Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
-                  da die Konfidenz {{ current_state.cls.confidence }} zu gering ist.
-                  Mindest Konfidenz {{ config.min_priority_confidence }}
-              error_note:
-                subject: "Automatische Priorisierung"
-                body: |
-                  Das Ticket konnte nicht automatisch der Priorität zugeordnet werden;
-                  Da ein Fehler aufgetreten ist.
+          - id: priority_classification
+            <<: *classification_generic
+            model: "{{ config.priority_model }}"
+            map_obj: "{{ config.priority_map }}"
+            min_conf: "{{ config.min_priority_confidence }}"
+            low_conf_name: "{{ config.low_confidence_priority_name }}"
+            ticket_field: "priority.name"
+            success_full_high_confidence_note:
+              subject: "Automatische Priorisierung"
+              body: |
+                Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
+                mit der Konfidenz {{ current_state.cls.confidence }}"
+            success_full_low_confidence_note:
+              subject: "Automatische Priorisierung"
+              body: |
+                Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
+                da die Konfidenz {{ current_state.cls.confidence }} zu gering ist.
+                Mindest Konfidenz {{ config.min_priority_confidence }}
+            error_note:
+              subject: "Automatische Priorisierung"
+              body: |
+                Das Ticket konnte nicht automatisch der Priorität zugeordnet werden;
+                Da ein Fehler aufgetreten ist.
 
   orchestrator:
     runners:
       - run_every_milli_seconds: 10000
-        use: ticket-routing
-        config:
-          ticket_search_criteria:
-            queue.name: "EingangsQueue"
-            limit: 1
-          min_queue_confidence: 0.8
-          min_priority_confidence: 0.8
-          queue_model: "softoft/EHS_Queue_V8"
-          priority_model: "softoft/EHS_Priority_Prediction"
-          low_confidence_queue_name: "Unklassifiziert"
-          low_confidence_priority_name: "3 Mittel"
-          queue_map:
-            Raw: "Raw"
-          priority_map:
-            "1 Sehr Hoch": "1 Sehr Hoch"
-            "3 Mittel": "3 Mittel"
-            "5 Sehr niedrig": "5 Sehr niedrig"
+        <<: *ticket-routing
+        ticket_search_criteria:
+          queue.name: "EingangsQueue"
+          limit: 1
+        min_queue_confidence: 0.8
+        min_priority_confidence: 0.8
+        queue_model: "softoft/EHS_Queue_V8"
+        priority_model: "softoft/EHS_Priority_Prediction"
+        low_confidence_queue_name: "Unklassifiziert"
+        low_confidence_priority_name: "3 Mittel"
+        queue_map:
+          Raw: "Raw"
+        priority_map:
+          "1 Sehr Hoch": "1 Sehr Hoch"
+          "3 Mittel": "3 Mittel"
+          "5 Sehr niedrig": "5 Sehr niedrig"
 

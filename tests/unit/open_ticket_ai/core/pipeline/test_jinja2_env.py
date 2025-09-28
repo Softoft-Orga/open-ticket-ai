@@ -1,6 +1,5 @@
-
 from open_ticket_ai.core.pipeline.context import PipelineContext
-from open_ticket_ai.core.pipeline.jinja2_env import LazyTemplate, render_any, render_text
+from open_ticket_ai.core.config.jinja2_env import LazyTemplate, render_any, render_text
 
 
 def test_render_text_returns_lazy_template():
@@ -67,7 +66,7 @@ def test_render_any_with_dict():
     scope = {"var": "value"}
     input_dict = {"key1": "{{ var }}", "nested": {"key2": "nested {{ var }}"}, "list": ["{{ var }}", "static"]}
 
-    result = render_any(input_dict, PipelineContext())
+    result = render_any(input_dict, PipelineContext(data=scope))
 
     # Top level
     assert isinstance(result["key1"], LazyTemplate)
@@ -88,21 +87,12 @@ def test_render_any_with_list():
     scope = {"items": [1, 2, 3]}
     input_list = ["{{ items[0] }}", "{{ items[1] }}", "static"]
 
-    result = render_any(input_list, PipelineContext())
+    result = render_any(input_list, PipelineContext(data=scope))
 
     assert len(result) == 3
     assert str(result[0]) == "1"
     assert str(result[1]) == "2"
     assert result[2] == "static"  # Non-template strings unchanged
-
-
-def test_render_any_with_pipeline_context():
-    """Test that render_any works with PipelineContext objects."""
-    context = PipelineContext()
-    context.data = {"user": "test_user"}
-
-    result = render_any("Hello {{ data.user }}", context)
-    assert str(result) == "Hello test_user"
 
 
 def test_lazy_template_error_handling(caplog):
@@ -112,5 +102,5 @@ def test_lazy_template_error_handling(caplog):
     # Access should not raise but log a warning
     result = str(template)
 
-    assert "Undefined variable accessed: undefined_var" in caplog.text
+    assert "'undefined_var' is undefined" in caplog.text
     assert result == "{{ undefined_var }}"  # Returns original string on error

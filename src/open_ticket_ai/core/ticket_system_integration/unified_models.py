@@ -5,17 +5,17 @@ from pydantic import BaseModel
 
 class UnifiedNote(BaseModel):
     id: int | None = None
-    subject: str | None = None
+    subject: str = ""
     body: str = ""
 
 
 class UnifiedEntity(BaseModel):
-    id: int | None = None
+    id: int | str | None = None
     name: str | None = None
 
 
 class UnifiedTicketBase(BaseModel):
-    id: int | None = None
+    id: int | str | None = None
     subject: str | None = None
     queue: UnifiedEntity | None = None
     priority: UnifiedEntity | None = None
@@ -28,5 +28,5 @@ class UnifiedTicket(UnifiedTicketBase):
 
 class TicketSearchCriteria(BaseModel):
     queue: UnifiedEntity | None = None
-    limit: int | None = None
-    offset: int | None = None
+    limit: int | None = 10
+    offset: int | None = 0

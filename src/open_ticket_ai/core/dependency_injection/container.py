@@ -11,7 +11,7 @@ from open_ticket_ai.core.config.config_models import (
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.orchestrator import Orchestrator
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
 CONFIG_PATH = os.getenv("OPEN_TICKET_AI_CONFIG", find_python_code_root_path() / "config.yml")
@@ -29,7 +29,7 @@ class AppModule(Module):
     def provide_pipes(
             self,
             config: OpenTicketAIConfig,
-            ticket_system_adapter: TicketSystemAdapter,
+            ticket_system_adapter: TicketSystemService,
             registry: UnifiedRegistry,
     ) -> list[Pipe]:
         """Provide all configured pipe instances."""
@@ -77,7 +77,7 @@ class AppModule(Module):
             self,
             config: OpenTicketAIConfig,
             registry: UnifiedRegistry,
-    ) -> TicketSystemAdapter:
+    ) -> TicketSystemService:
         """Provide the ticket system adapter from registry."""
         # Get the ticket system adapter from registry
         adapter_class = registry.get_service(config.system.type)

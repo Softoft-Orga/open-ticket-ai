@@ -4,7 +4,7 @@ from functools import cache
 from typing import Any
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.base_extensions.pipe_implementations.pipe_configs import HFLocalAIInferenceServiceConfig
+from open_ticket_ai.base_extensions.pipe_configs import HFLocalAIInferenceServiceConfig
 
 
 class HFLocalAIInferenceService(Pipe[HFLocalAIInferenceServiceConfig]):

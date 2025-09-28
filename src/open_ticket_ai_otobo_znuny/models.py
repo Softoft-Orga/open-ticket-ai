@@ -29,18 +29,19 @@ class TicketAdapter(UnifiedTicket):
         super().__init__(
             id=str(ticket.id) if ticket.id is not None else "",
             subject=ticket.title or "",
-            body=self._get_unified_body(ticket),
             queue=_to_unified_entity(ticket.queue),
             priority=_to_unified_entity(ticket.priority),
-            notes=self._get_unified_notes_list(ticket),
+            notes=self._get_unified_notes_list(),
         )
+        self._ticket = ticket
 
-    def _get_unified_body(self, ticket: Ticket) -> str:
-        notes = self._get_unified_notes_list(ticket)
-        return notes[0].body if notes else ""
+    @property
+    def body(self) -> str:
+        return self.notes[0].body if self.notes else ""
 
-    def _get_unified_notes_list(self, ticket: Ticket) -> list[UnifiedNote]:
-        return [NoteAdapter(a) for a in self._articles_as_list(ticket)]
+    @property
+    def notes(self) -> list[UnifiedNote]:
+        return [NoteAdapter(a) for a in self._articles_as_list(self._ticket)]
 
     def _articles_as_list(self, ticket: Ticket) -> list[Article]:
         return ticket.articles or []
