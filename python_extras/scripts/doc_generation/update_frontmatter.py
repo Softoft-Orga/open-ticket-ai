@@ -19,14 +19,13 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Dict, Tuple
 
 import yaml
 
 _FRONTMATTER_PATTERN = re.compile(r"^---\n(.*?)\n---\n?", re.DOTALL)
 
 
-def _parse_frontmatter(content: str) -> Tuple[dict, str]:
+def _parse_frontmatter(content: str) -> tuple[dict, str]:
     """Return the frontmatter and remaining Markdown body from ``content``.
 
     Args:
@@ -67,7 +66,7 @@ def _dump_frontmatter(data: dict) -> str:
     return f"---\n{dumped}\n---\n"
 
 
-def update_frontmatter(docs_path: Path, summaries: Dict[str, str]) -> None:
+def update_frontmatter(docs_path: Path, summaries: dict[str, str]) -> None:
     """Update the ``description`` key of Markdown frontmatters.
 
     Iterates through provided summaries, updating each corresponding Markdown file's

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from pydantic import BaseModel
 
 
@@ -25,7 +23,7 @@ class UnifiedTicketBase(BaseModel):
 
 
 class UnifiedTicket(UnifiedTicketBase):
-    body: Optional[str] = None
+    body: str | None = None
 
 
 class TicketSearchCriteria(BaseModel):

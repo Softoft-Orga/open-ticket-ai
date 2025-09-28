@@ -8,9 +8,9 @@ from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,
     load_config,
 )
-from open_ticket_ai.core.dependency_injection.registry import TicketSystemRegistry
+from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
+from open_ticket_ai.core.orchestrator import Orchestrator
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipeline import Pipeline
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
@@ -21,42 +21,75 @@ class AppModule(Module):
     def configure(self, binder: Binder):
         config = load_config(CONFIG_PATH)
         binder.bind(OpenTicketAIConfig, to=config, scope=singleton)
+        binder.bind(UnifiedRegistry, to=UnifiedRegistry.get_instance(), scope=singleton)
 
-
-
-    def _import_pipe_class(self, class_path: str):
-        module_name, class_name = class_path.rsplit(".", 1)
-        module = importlib.import_module(module_name)
-        return getattr(module, class_name)
-
-    # --- Pipeline and Orchestrator ---
+    # --- Pipes Provider ---
     @provider
     @singleton
-    def provide_pipeline(
+    def provide_pipes(
             self,
             config: OpenTicketAIConfig,
             ticket_system_adapter: TicketSystemAdapter,
-    ) -> Pipeline:
+            registry: UnifiedRegistry,
+    ) -> list[Pipe]:
+        """Provide all configured pipe instances."""
         pipes = []
 
         for pipe_config in config.pipelines[0].steps:
-            pipe_class: type[Pipe] = self._import_pipe_class(pipe_config.type)
+            # Get pipe class from registry or import it
+            pipe_name = pipe_config.type.split(".")[-1]
+            pipe_class = registry.get_pipe(pipe_name)
 
-            # Get the ConfigT from the Pipe class
+            if not pipe_class:
+                # Fall back to dynamic import if not in registry
+                module_name, class_name = pipe_config.type.rsplit(".", 1)
+                module = importlib.import_module(module_name)
+                pipe_class = getattr(module, class_name)
+                # Register it for future use
+                registry.register_pipe(pipe_name, pipe_class)
+
+            # Create pipe instance with dependencies
             pipe_instance = pipe_class(config=pipe_config, ticket_system=ticket_system_adapter)
-
             pipes.append(pipe_instance)
 
-        return Pipeline(pipes=pipes, config=config.pipelines[0].pipeline_config)
+        return pipes
+
+    # --- Orchestrator Provider ---
+    @provider
+    @singleton
+    def provide_orchestrator(
+            self,
+            config: OpenTicketAIConfig,
+            pipes: list[Pipe],
+    ) -> Orchestrator:
+        """Provide the orchestrator with configured pipes."""
+        # Get interval from pipeline configuration if available
+        interval_seconds = 60.0  # default
+        if config.pipelines and config.pipelines[0].pipeline_config:
+            interval_seconds = config.pipelines[0].pipeline_config.get("interval_seconds", 60.0)
+
+        # Create orchestrator with injected pipes
+        return Orchestrator(pipes=pipes, interval_seconds=interval_seconds)
 
     @provider
     @singleton
     def provide_ticket_system_adapter(
             self,
             config: OpenTicketAIConfig,
+            registry: UnifiedRegistry,
     ) -> TicketSystemAdapter:
-        ticket_system = TicketSystemRegistry.create(
-            system_type=config.system.type,
-            config=config.system.config
-        )
+        """Provide the ticket system adapter from registry."""
+        # Get the ticket system adapter from registry
+        adapter_class = registry.get_service(config.system.type)
+
+        if not adapter_class:
+            # Fall back to dynamic import if not in registry
+            module_name, class_name = config.system.type.rsplit(".", 1)
+            module = importlib.import_module(module_name)
+            adapter_class = getattr(module, class_name)
+            # Register it for future use
+            registry.register_service(config.system.type, adapter_class)
+
+        # Create instance with configuration
+        ticket_system = adapter_class(config=config.system.config)
         return ticket_system

@@ -23,12 +23,8 @@ class LoggingUndefined(Undefined):
         return self._fail_with_undefined_error()
 
 
-_env = SandboxedEnvironment(
-    autoescape=False,
-    trim_blocks=True,
-    lstrip_blocks=True,
-    undefined=LoggingUndefined
-)
+_env = SandboxedEnvironment(autoescape=False, trim_blocks=True, lstrip_blocks=True, undefined=LoggingUndefined)
+
 
 class LazyTemplate:
     def __init__(self, template_str: str, scope: dict):
@@ -36,7 +32,7 @@ class LazyTemplate:
         self.scope = scope
         self._rendered_value = None
         self._is_rendered = False
-    
+
     def render(self):
         if not self._is_rendered:
             try:
@@ -49,26 +45,28 @@ class LazyTemplate:
                 self._rendered_value = self.template_str
                 self._is_rendered = True
         return self._rendered_value
-    
+
     def __str__(self):
         return str(self.render())
-    
+
     def __getitem__(self, key):
         value = self.render()
         if isinstance(value, dict):
             return value.get(key)
         raise TypeError(f"'{type(value).__name__}' object is not subscriptable")
-    
+
     def get(self, key, default=None):
         value = self.render()
         if isinstance(value, dict):
             return value.get(key, default)
         return default
 
+
 def render_text(val: Any, scope: dict):
     if not isinstance(val, str):
         return val
     return LazyTemplate(val, scope)
+
 
 def _parse_rendered_value(s: str) -> Any:
     if not s.strip():
@@ -82,6 +80,7 @@ def _parse_rendered_value(s: str) -> Any:
         except Exception as e:
             logging.warning(f"Failed to parse literal: {str(e)}")
             return s
+
 
 def render_any(obj: Any, scope: PipelineContext) -> Any:
     if isinstance(obj, str):

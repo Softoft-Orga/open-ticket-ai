@@ -10,7 +10,6 @@ import ast
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Optional, Union
 
 from docstring_parser import Docstring, DocstringParam, DocstringRaises, parse
 
@@ -21,31 +20,31 @@ from docstring_parser import Docstring, DocstringParam, DocstringRaises, parse
 class ParameterData:
     """Represents a single parameter from a docstring."""
 
-    name: Optional[str] = None
-    type: Optional[str] = None
-    default: Optional[str] = None
-    is_optional: Optional[bool] = None
-    description: Optional[str] = None
+    name: str | None = None
+    type: str | None = None
+    default: str | None = None
+    is_optional: bool | None = None
+    description: str | None = None
 
 
 @dataclass
 class ReturnsData:
     """Represents the returns section of a docstring."""
 
-    type: Optional[str] = None
-    description: Optional[str] = None
-    name: Optional[str] = None
+    type: str | None = None
+    description: str | None = None
+    name: str | None = None
 
 
 @dataclass
 class DocstringData:
     """Represents a parsed docstring."""
 
-    short_description: Optional[str] = None
-    long_description: Optional[str] = None
+    short_description: str | None = None
+    long_description: str | None = None
     params: list[ParameterData] = field(default_factory=list)
     raises: list[ParameterData] = field(default_factory=list)
-    returns: Optional[ReturnsData] = None
+    returns: ReturnsData | None = None
 
 
 @dataclass
@@ -106,9 +105,9 @@ class JsonVisitor(ast.NodeVisitor):
     def __init__(self):
         self.classes: list[ClassData] = []
         self.functions: list[FunctionData] = []
-        self.current_class_context: Optional[ClassData] = None
+        self.current_class_context: ClassData | None = None
 
-    def _format_signature(self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef]) -> str:
+    def _format_signature(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> str:
         """Formats a function/method signature into a readable string."""
         # This implementation remains the same
         args_list = []
@@ -134,14 +133,14 @@ class JsonVisitor(ast.NodeVisitor):
             signature += f" -> {ast.unparse(node.returns)}"
         return signature
 
-    def _process_docstring(self, docstring_raw: Optional[str]) -> DocstringData:
+    def _process_docstring(self, docstring_raw: str | None) -> DocstringData:
         """Parses a docstring and returns a DocstringData instance."""
         if not docstring_raw:
             return DocstringData()
 
         docstring: Docstring = parse(docstring_raw)
 
-        def param_to_dataclass(p: Union[DocstringParam, DocstringRaises]) -> ParameterData:
+        def param_to_dataclass(p: DocstringParam | DocstringRaises) -> ParameterData:
             # --- START OF FIX ---
             # Check if we are processing a 'Raises' entry instead of a 'Param' entry
             if isinstance(p, DocstringRaises):
@@ -196,7 +195,7 @@ class JsonVisitor(ast.NodeVisitor):
         """Processes an async function or method definition."""
         self._process_function_node(node, is_async=True)
 
-    def _process_function_node(self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef], is_async: bool = False):
+    def _process_function_node(self, node: ast.FunctionDef | ast.AsyncFunctionDef, is_async: bool = False):
         """Processes a function/method node into a FunctionData instance."""
         func_name = node.name
         if func_name.startswith("_") and not func_name.startswith("__"):
@@ -235,7 +234,7 @@ def parse_python_file(file_path: Path) -> tuple[DocstringData, list[ClassData], 
 def generate_documentation(
     src_path: Path,
     output_path: Path,
-    exclude_patterns: Optional[list[str]] = None,
+    exclude_patterns: list[str] | None = None,
 ) -> None:
     """
     Generates structured JSON documentation for an entire Python project.

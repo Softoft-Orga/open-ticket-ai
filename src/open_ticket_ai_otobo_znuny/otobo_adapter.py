@@ -1,7 +1,8 @@
 import logging
 import os
+from collections.abc import Callable
 from functools import wraps
-from typing import Any, Callable, Optional, TypeVar, cast
+from typing import Any, TypeVar, cast
 
 import httpx
 from injector import inject
@@ -14,8 +15,8 @@ from pydantic import SecretStr
 from tenacity import before_sleep_log, retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 # Type variable for generic return type
-T = TypeVar('T')
-F = TypeVar('F', bound=Callable[..., Any])
+T = TypeVar("T")
+F = TypeVar("F", bound=Callable[..., Any])
 
 # Configure retry logger
 retry_logger = logging.getLogger("tenacity.retry")
@@ -50,22 +51,24 @@ def otobo_retry() -> Callable[[F], F]:
         @retry(
             stop=stop_after_attempt(3),  # 3 retries
             wait=wait_exponential(multiplier=1, max=10),  # 1s, 2s, 4s, 8s, max 10s
-            retry=retry_if_exception_type((
+            retry=retry_if_exception_type(
+                (
                     httpx.ConnectError,
                     httpx.RemoteProtocolError,
                     httpx.ReadTimeout,
                     httpx.WriteTimeout,
-                    httpx.PoolTimeout
-            )),
+                    httpx.PoolTimeout,
+                )
+            ),
             before_sleep=before_sleep_log(retry_logger, logging.WARNING),
-            reraise=True
+            reraise=True,
         )
-        async def wrapper(self: 'OTOBOAdapter', *args, **kwargs):
+        async def wrapper(self: "OTOBOAdapter", *args, **kwargs):
             try:
                 return await func(self, *args, **kwargs)
             except Exception as e:
                 self.logger.warning(f"Error in {func.__name__}: {str(e)}")
-                if hasattr(self, '_recreate_client'):
+                if hasattr(self, "_recreate_client"):
                     await self._recreate_client()
                 raise
 
@@ -79,7 +82,7 @@ class OTOBOAdapter(TicketSystemAdapter):
     @inject
     def __init__(self, config: dict[str, Any]):
         self.config = OTOBOAdapterConfig.model_validate(config)
-        self._client: Optional[OTOBOZnunyClient] = None
+        self._client: OTOBOZnunyClient | None = None
         self.logger = logging.getLogger(self.__class__.__name__)
 
     @property
@@ -93,7 +96,7 @@ class OTOBOAdapter(TicketSystemAdapter):
         """Recreate the OTOBO client."""
         if self._client is not None:
             # Close existing client session if it exists
-            if hasattr(self._client, '_client') and self._client._client:
+            if hasattr(self._client, "_client") and self._client._client:
                 try:
                     await self._client._client.aclose()
                 except Exception as e:

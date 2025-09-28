@@ -168,7 +168,7 @@ class DocstringGenerator:
         """
         print(f"-> Processing: {file_path}")
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 original_content = f.read()
 
             if not original_content.strip():

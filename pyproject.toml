@@ -47,7 +47,9 @@ include = ["open_ticket_ai*"]
 line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I"]
+select = ["E", "F", "I", "UP", "B", "SIM", "PL", "PERF", "TRY"]
+ignore = []
+fixable = ["ALL"]
 
 [tool.mypy]
 python_version = "3.13"
