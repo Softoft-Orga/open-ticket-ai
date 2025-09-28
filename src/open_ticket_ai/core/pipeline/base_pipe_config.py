@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import enum
-from typing import Self, TypeVar
+from typing import Any, ClassVar, Self
 
 from pydantic import BaseModel, Field
 
@@ -40,4 +40,12 @@ class RenderedPipeConfig(_BasePipeConfig):
 
 
 class RawPipeConfig(RawConfig[RenderedPipeConfig], _BasePipeConfig):
-    pass
+    rendered_config_type: ClassVar[type[RenderedPipeConfig]] = RenderedPipeConfig
+
+    def render(self, scope: dict[str, Any] | BaseModel) -> RenderedPipeConfig:
+        rendered_data = super().render(scope)
+        if rendered_data.get("on_failure") is None:
+            rendered_data["on_failure"] = OnType.FAIL_CONTAINER
+        if rendered_data.get("on_success") is None:
+            rendered_data["on_success"] = OnType.CONTINUE
+        return self.rendered_config_type.model_validate(rendered_data)

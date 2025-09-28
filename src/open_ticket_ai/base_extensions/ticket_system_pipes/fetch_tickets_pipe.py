@@ -3,9 +3,8 @@ from typing import Any
 from injector import inject
 
 from open_ticket_ai.base_extensions.pipe_configs import RawTicketFetchPipeConfig
-from open_ticket_ai.core.pipeline.base_pipe_config import RawPipeConfig
-from open_ticket_ai.core.pipeline.context import PipelineContext
 from open_ticket_ai.core.pipeline.base_pipe import BasePipe
+from open_ticket_ai.core.pipeline.base_pipe_config import RawPipeConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
 
@@ -23,7 +22,14 @@ class FetchTicketsPipe(BasePipe[RawTicketFetchPipeConfig]):
         self.ticket_system = ticket_system
 
     async def _process(self) -> dict[str, Any]:
-        tickets = await self.ticket_system.find_tickets(self.config.)
+        config = self.config
+        raw_criteria = getattr(config, "ticket_search_criteria", None)
+
+        if raw_criteria is None:
+            return {"_status": "error", "_error": "No search criteria provided"}
+
+        criteria = self._convert_to_search_criteria(raw_criteria)
+        tickets = await self.ticket_system.find_tickets(criteria)
 
         if not tickets:
             return {"found_tickets": []}
@@ -36,4 +42,6 @@ class FetchTicketsPipe(BasePipe[RawTicketFetchPipeConfig]):
     ) -> TicketSearchCriteria:
         if isinstance(criteria, TicketSearchCriteria):
             return criteria
-        return TicketSearchCriteria(**criteria)
+        if isinstance(criteria, dict):
+            return TicketSearchCriteria.model_validate(criteria)
+        raise TypeError("Unsupported ticket search criteria type")
