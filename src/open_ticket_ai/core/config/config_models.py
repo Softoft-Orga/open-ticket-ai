@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 import yaml
 from pydantic import BaseModel
@@ -14,6 +14,7 @@ class RenderedSystemConfig(BaseModel):
 
 
 class SystemConfig(RawConfig[RenderedSystemConfig]):
+    rendered_model_type: ClassVar[type[RenderedSystemConfig]] = RenderedSystemConfig
     id: str
     provider_key: str
     config: dict[str, Any] = {}
@@ -31,6 +32,7 @@ class RenderedOpenTicketAIConfig(BaseModel):
 
 
 class OpenTicketAIConfig(RawConfig[RenderedOpenTicketAIConfig]):
+    rendered_model_type: ClassVar[type[RenderedOpenTicketAIConfig]] = RenderedOpenTicketAIConfig
     version: str = "1.0.0"
     plugins: list[str] = []
     general_config: dict[str, Any] = {}
