@@ -8,7 +8,10 @@ from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,
     load_config,
 )
-from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
+from open_ticket_ai.core.dependency_injection.unified_registry import (
+    NotRegistered,
+    UnifiedRegistry,
+)
 from open_ticket_ai.core.orchestrator import Orchestrator
 from open_ticket_ai.core.pipeline.base_pipe import BasePipe
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
@@ -38,15 +41,16 @@ class AppModule(Module):
         for pipe_config in config.pipelines[0].steps:
             # Get pipe class from registry or import it
             pipe_name = pipe_config.type.split(".")[-1]
-            pipe_class = registry.get_pipe(pipe_name)
-
-            if not pipe_class:
+            try:
+                pipe_class = registry.get_class(pipe_name)
+            except NotRegistered:
                 # Fall back to dynamic import if not in registry
                 module_name, class_name = pipe_config.type.rsplit(".", 1)
                 module = importlib.import_module(module_name)
                 pipe_class = getattr(module, class_name)
-                # Register it for future use
-                registry.register_pipe(pipe_name, pipe_class)
+                # Register it for future use under both short and full names
+                registry.register_class(pipe_class)
+                registry.register_class(pipe_class, name=pipe_config.type)
 
             # Create pipe instance with dependencies
             pipe_instance = pipe_class(config=pipe_config, ticket_system=ticket_system_adapter)
@@ -80,16 +84,18 @@ class AppModule(Module):
     ) -> TicketSystemService:
         """Provide the ticket system adapter from registry."""
         # Get the ticket system adapter from registry
-        adapter_class = registry.get_service(config.system.type)
-
-        if not adapter_class:
+        try:
+            adapter_class = registry.get_class(config.system.type)
+        except NotRegistered:
             # Fall back to dynamic import if not in registry
             module_name, class_name = config.system.type.rsplit(".", 1)
             module = importlib.import_module(module_name)
             adapter_class = getattr(module, class_name)
             # Register it for future use
-            registry.register_service(config.system.type, adapter_class)
+            registry.register_class(adapter_class)
+            registry.register_class(adapter_class, name=config.system.type)
 
         # Create instance with configuration
         ticket_system = adapter_class(config=config.system.config)
+        registry.set_instance(config.system.type, ticket_system)
         return ticket_system
