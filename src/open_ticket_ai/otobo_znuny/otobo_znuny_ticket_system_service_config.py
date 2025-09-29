@@ -3,10 +3,8 @@ from otobo_znuny.domain_models.otobo_client_config import ClientConfig
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
 from pydantic import SecretStr
 
-from open_ticket_ai.core.config.registerable import RawRegisterableConfig, RenderedRegistrableConfig
 
-
-class RawOTOBOZnunyTicketsystemServiceConfig(RawRegisterableConfig):
+class RawOTOBOZnunyTicketsystemServiceConfig:
     password: str
     base_url: str
     username: str = "open_ticket_ai"
@@ -18,7 +16,7 @@ class RawOTOBOZnunyTicketsystemServiceConfig(RawRegisterableConfig):
     }
 
 
-class RenderedOTOBOZnunyTicketsystemServiceConfig(RenderedRegistrableConfig):
+class RenderedOTOBOZnunyTicketsystemServiceConfig:
     password: SecretStr
     base_url: str
     username: str = "open_ticket_ai"

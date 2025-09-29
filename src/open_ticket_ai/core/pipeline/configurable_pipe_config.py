@@ -30,6 +30,3 @@ class RawPipeConfig(RegisterableConfig):
     on_failure: str | None = None
     on_success: str | None = None
 
-
-class PipeConfig(RenderableConfig[RawPipeConfig, RenderedPipeConfig]):
-    pass

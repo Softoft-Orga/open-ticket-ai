@@ -1,12 +1,8 @@
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from pydantic import ImportString
 
-from open_ticket_ai.core.config.renderable_config import (
-    RawConfig,
-    RenderedConfig,
-    RenderableConfig,
-)
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.pipeline.configurable_pipe_config import (
     RenderedPipeConfig,
@@ -14,10 +10,6 @@ from open_ticket_ai.core.pipeline.configurable_pipe_config import (
 from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
-)
-from tests.conftest import (
-    FrozenRenderableConfig,
-    create_frozen_renderable_config,
 )
 
 
@@ -51,7 +43,7 @@ def rendered_pipe_config_factory():
 
         return CustomRenderedPipeConfig(
             id=defaults["id"],
-            use=defaults["use"],
+            use=ImportString(defaults["use"]),
             when=defaults.get("when", True)
         )
 

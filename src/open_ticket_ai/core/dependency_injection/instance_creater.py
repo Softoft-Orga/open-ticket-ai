@@ -1,12 +1,11 @@
-import typing
+
+from pydoc import locate
 
 from injector import inject
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
-from open_ticket_ai.core.config.registerable_config import RegisterableConfig
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 
-from pydoc import locate
 
 class InstanceCreator:
 

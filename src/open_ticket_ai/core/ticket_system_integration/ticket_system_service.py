@@ -1,17 +1,13 @@
 from abc import ABC, abstractmethod
 
-from ..config.registerable import RegisterableClass
 from .unified_models import (
     TicketSearchCriteria,
     UnifiedNote,
     UnifiedTicket,
 )
-from ..config.registerable_config import RegisterableConfig
 
 
-class TicketSystemService[RawConfigT: RegisterableConfig, RenderedConfigT: RegisterableConfig](
-    RegisterableClass[RawConfigT, RenderedConfigT], ABC
-):
+class TicketSystemService(ABC):
     @abstractmethod
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         pass

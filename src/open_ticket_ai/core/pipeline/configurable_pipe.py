@@ -5,11 +5,9 @@ import typing
 from abc import abstractmethod
 from typing import Any, Self
 
-from pydantic import BaseModel
-
-from .context import Context
 from ..config import jinja2_env
 from ..config.registerable_config import RegisterableConfig
+from .context import Context
 
 
 class ConfigurablePipe:

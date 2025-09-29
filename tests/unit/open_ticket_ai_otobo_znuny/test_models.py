@@ -5,7 +5,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedEntity,
     UnifiedNote,
 )
-from open_ticket_ai.otobo_znuny.models import _to_unified_entity, NoteAdapter, TicketAdapter
+from open_ticket_ai.otobo_znuny.models import NoteAdapter, TicketAdapter, _to_unified_entity
 
 
 class TestToUnifiedEntity:

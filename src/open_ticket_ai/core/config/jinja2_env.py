@@ -6,9 +6,6 @@ from typing import Any
 from jinja2.sandbox import SandboxedEnvironment
 from pydantic import BaseModel
 
-from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
-
-
 _env = SandboxedEnvironment(autoescape=False, trim_blocks=True, lstrip_blocks=True)
 
 

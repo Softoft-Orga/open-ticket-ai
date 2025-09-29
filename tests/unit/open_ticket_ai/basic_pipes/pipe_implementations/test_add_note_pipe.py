@@ -1,19 +1,18 @@
 import asyncio
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
 from open_ticket_ai.basic_pipes.ticket_system_pipes.add_note_pipe import (
     AddNotePipe,
-    RenderedTicketAddNotePipeConfig,
 )
+from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
-from tests.conftest import create_frozen_renderable_config
-RenderedTicketAddNotePipeConfig.model_rebuild()
+
 
 @pytest.fixture
 def mock_ticket_system() -> MagicMock:
@@ -24,38 +23,27 @@ def mock_ticket_system() -> MagicMock:
 
 @pytest.fixture
 def sample_note() -> UnifiedNote:
-    return UnifiedNote(subject="Test Subject", body="Test Body")
+    return UnifiedNote(content="Test Note Content")
 
 
 @pytest.fixture
-def mock_config(sample_note: UnifiedNote, mock_ticket_system: MagicMock) -> MagicMock:
-    rendered_config = RenderedTicketAddNotePipeConfig(
-        id="test_add_note",
-        use="open_ticket_ai.basic_pipes.ticket_system_pipes.add_note_pipe.AddNotePipe",
-        when=True,
-        ticket_id="TCK-123",
-        note=sample_note,
-        ticket_system=mock_ticket_system,
-    )
-
-    mock = MagicMock()
-    mock.get_rendered_config.return_value = rendered_config
-    return mock
+def pipe_config_dict(sample_note: UnifiedNote) -> dict:
+    return {
+        "name": "test_add_note",
+        "use": "open_ticket_ai.basic_pipes.ticket_system_pipes.add_note_pipe.AddNotePipe",
+        "when": True,
+        "steps": [],
+        "ticket_system_id": "test_ticket_system",
+        "ticket_id": "TCK-123",
+        "note": sample_note.model_dump(),
+    }
 
 
 @pytest.fixture
-def frozen_config(
-        sample_note: UnifiedNote, mock_ticket_system: MagicMock
-):
-    rendered_config = RenderedTicketAddNotePipeConfig(
-        id="test_add_note",
-        use="open_ticket_ai.basic_pipes.ticket_system_pipes.add_note_pipe.AddNotePipe",
-        when=True,
-        ticket_id="TCK-123",
-        note=sample_note,
-        ticket_system=mock_ticket_system,
-    )
-    return create_frozen_renderable_config(rendered_config)
+def mock_registry(mock_ticket_system: MagicMock) -> MagicMock:
+    mock_reg = MagicMock(spec=UnifiedRegistry)
+    mock_reg.get_instance.return_value = mock_ticket_system
+    return mock_reg
 
 
 @pytest.fixture
@@ -65,70 +53,87 @@ def sample_context() -> Context:
 
 
 def test_add_note_pipe_calls_ticket_system(
-        mock_config: MagicMock,
+        pipe_config_dict: dict,
         sample_context: Context,
         mock_ticket_system: MagicMock,
         sample_note: UnifiedNote,
+        mock_registry: MagicMock,
 ) -> None:
-    pipe = AddNotePipe(mock_config)
+    with patch.object(UnifiedRegistry, "get_registry_instance", return_value=mock_registry):
+        pipe = AddNotePipe(pipe_config_dict)
 
-    result_context = asyncio.run(pipe.process(sample_context))
+        result_context = asyncio.run(pipe.process(sample_context))
 
-    mock_ticket_system.add_note.assert_awaited_once_with("TCK-123", sample_note)
+        mock_registry.get_instance.assert_called_once_with("test_ticket_system")
+        mock_ticket_system.add_note.assert_awaited_once()
 
-    assert result_context.pipes["test_add_note"] == {}
+        # Check the note argument - it should be a UnifiedNote instance
+        call_args = mock_ticket_system.add_note.call_args
+        assert call_args[0][0] == "TCK-123"
+        assert isinstance(call_args[0][1], UnifiedNote)
+
+        assert result_context.pipes["test_add_note"] == {}
 
 
 def test_add_note_pipe_handles_failure(
-        mock_config: MagicMock,
+        pipe_config_dict: dict,
         sample_context: Context,
         mock_ticket_system: MagicMock,
+        mock_registry: MagicMock,
 ) -> None:
     mock_ticket_system.add_note.side_effect = RuntimeError("Service unavailable")
 
-    pipe = AddNotePipe(mock_config)
+    with patch.object(UnifiedRegistry, "get_registry_instance", return_value=mock_registry):
+        pipe = AddNotePipe(pipe_config_dict)
 
-    # Verify the exception bubbles up
-    with pytest.raises(RuntimeError, match="Service unavailable"):
-        asyncio.run(pipe.process(sample_context))
+        # Verify the exception bubbles up
+        with pytest.raises(RuntimeError, match="Service unavailable"):
+            asyncio.run(pipe.process(sample_context))
 
-    mock_ticket_system.add_note.assert_awaited_once()
+        mock_ticket_system.add_note.assert_awaited_once()
 
 
-def test_add_note_pipe_with_frozen_config(
-        frozen_config,
+def test_add_note_pipe_with_string_note(
         sample_context: Context,
         mock_ticket_system: MagicMock,
-        sample_note: UnifiedNote,
+        mock_registry: MagicMock,
 ) -> None:
-    pipe = AddNotePipe(frozen_config)
+    config = {
+        "name": "test_add_note",
+        "use": "AddNotePipe",
+        "when": True,
+        "steps": [],
+        "ticket_system_id": "test_ticket_system",
+        "ticket_id": "TCK-123",
+        "note": "Simple string note",
+    }
 
-    result_context = asyncio.run(pipe.process(sample_context))
+    with patch.object(UnifiedRegistry, "get_registry_instance", return_value=mock_registry):
+        pipe = AddNotePipe(config)
 
-    mock_ticket_system.add_note.assert_awaited_once_with("TCK-123", sample_note)
-    assert result_context.pipes["test_add_note"] == {}
+        result_context = asyncio.run(pipe.process(sample_context))
+
+        # Check the note was converted to UnifiedNote
+        call_args = mock_ticket_system.add_note.call_args
+        assert isinstance(call_args[0][1], UnifiedNote)
+        assert call_args[0][1].content == "Simple string note"
+
+        assert result_context.pipes["test_add_note"] == {}
 
 
 def test_add_note_pipe_skips_when_disabled(
-        mock_config: MagicMock,
+        pipe_config_dict: dict,
         sample_context: Context,
         mock_ticket_system: MagicMock,
-        sample_note: UnifiedNote,
+        mock_registry: MagicMock,
 ) -> None:
-    disabled_config = RenderedTicketAddNotePipeConfig(
-        id="test_add_note",
-        use="open_ticket_ai.basic_pipes.ticket_system_pipes.add_note_pipe.AddNotePipe",
-        when=False,
-        ticket_id="TCK-123",
-        note=sample_note,
-        ticket_system=mock_ticket_system,
-    )
-    mock_config.get_rendered_config.return_value = disabled_config
+    pipe_config_dict["when"] = False
 
-    pipe = AddNotePipe(mock_config)
+    with patch.object(UnifiedRegistry, "get_registry_instance", return_value=mock_registry):
+        pipe = AddNotePipe(pipe_config_dict)
 
-    result_context = asyncio.run(pipe.process(sample_context))
+        result_context = asyncio.run(pipe.process(sample_context))
 
-    mock_ticket_system.add_note.assert_not_called()
+        mock_ticket_system.add_note.assert_not_called()
 
-    assert result_context is sample_context
+        assert result_context is sample_context

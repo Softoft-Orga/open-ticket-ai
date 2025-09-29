@@ -1,0 +1,106 @@
+{
+  "$defs": {
+    "RawOpenTicketAIConfig": {
+      "properties": {
+        "plugins": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": [],
+          "title": "Plugins"
+        },
+        "general_config": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": {},
+          "title": "General Config"
+        },
+        "defs": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "items": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": true,
+                      "type": "object"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": {},
+          "title": "Defs"
+        },
+        "orchestrator": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": {},
+          "title": "Orchestrator"
+        }
+      },
+      "title": "RawOpenTicketAIConfig",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "open_ticket_ai": {
+      "$ref": "#/$defs/RawOpenTicketAIConfig"
+    }
+  },
+  "required": [
+    "open_ticket_ai"
+  ],
+  "title": "RootConfig",
+  "type": "object"
+}

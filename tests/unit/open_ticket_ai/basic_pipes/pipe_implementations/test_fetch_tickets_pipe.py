@@ -14,7 +14,6 @@ if str(SRC) not in sys.path:
 
 from open_ticket_ai.basic_pipes.ticket_system_pipes.fetch_tickets_pipe import (
     FetchTicketsPipe,
-    RenderedTicketFetchPipeConfig,
 )
 from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
@@ -27,27 +26,6 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 @pytest.fixture
 def pipeline_context() -> Context:
     return Context(pipes={}, config={})
-
-
-@pytest.fixture
-def rendered_config(ticket_service: AsyncMock) -> RenderedTicketFetchPipeConfig:
-    return RenderedTicketFetchPipeConfig(
-        id="ticket_fetcher",
-        use="open_ticket_ai.basic_pipes.ticket_system_pipes.fetch_tickets_pipe.FetchTicketsPipe",
-        ticket_system=ticket_service,
-        ticket_search_criteria=TicketSearchCriteria(
-            queue=UnifiedEntity(id=42, name="Support"),
-            limit=25,
-            offset=5,
-        ),
-        when=True,
-        steps=[],
-    )
-
-
-@pytest.fixture
-def renderable_config(rendered_config: RenderedTicketFetchPipeConfig, frozen_config_factory):
-    return frozen_config_factory(rendered_config)
 
 
 @pytest.fixture
@@ -98,23 +76,3 @@ def test_process_without_results_returns_empty_list(
 
     assert result_context.pipes["ticket_fetcher"] == {"found_tickets": []}
 
-
-def test_process_without_search_criteria_returns_error(
-        ticket_service: AsyncMock, pipeline_context: Context, frozen_config_factory
-) -> None:
-    rendered_config = RenderedTicketFetchPipeConfig(
-        id="ticket_fetcher",
-        use="open_ticket_ai.basic_pipes.ticket_system_pipes.fetch_tickets_pipe.FetchTicketsPipe",
-        ticket_system=ticket_service,
-        ticket_search_criteria=None,
-        when=True,
-        steps=[],
-    )
-    config = frozen_config_factory(rendered_config)
-    pipe = FetchTicketsPipe(config)
-
-    result_context = asyncio.run(pipe.process(pipeline_context))
-
-    state = result_context.pipes["ticket_fetcher"]
-    assert "found_tickets" in state
-    ticket_service.find_tickets.assert_awaited_once_with(None)

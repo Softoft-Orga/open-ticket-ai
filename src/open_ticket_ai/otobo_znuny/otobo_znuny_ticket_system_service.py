@@ -4,7 +4,6 @@ from injector import inject
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket, TicketSearch, TicketUpdate
 
-from open_ticket_ai.core.config.renderable_config import RenderableConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -14,7 +13,6 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 )
 from open_ticket_ai.otobo_znuny.models import TicketAdapter
 from open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service_config import (
-    RawOTOBOZnunyTicketsystemServiceConfig,
     RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
 
@@ -30,8 +28,9 @@ def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
-    def __init__(self, config: RenderedOTOBOZnunyTicketsystemServiceConfig,):
+    def __init__(self, config: RenderedOTOBOZnunyTicketsystemServiceConfig, ):
         super().__init__(config)
+        self.config = config
         self._client: OTOBOZnunyClient | None = None
         self.logger = logging.getLogger(self.__class__.__name__)
 
@@ -42,9 +41,9 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         return self._client
 
     async def _recreate_client(self) -> OTOBOZnunyClient:
-        self._client = OTOBOZnunyClient(config=self._rendered_config.to_client_config())
+        self._client = OTOBOZnunyClient(config=self.config.to_client_config())
         self.logger.info("Recreated OTOBO client")
-        self._client.login(self._rendered_config.get_basic_auth())
+        self._client.login(self.config.get_basic_auth())
         return self._client
 
     async def initialize(self) -> None:

@@ -4,8 +4,6 @@ from typing import Any
 import yaml
 from pydantic import BaseModel
 
-from open_ticket_ai.core.config.registerable_config import RegisterableConfig
-
 
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = []
