@@ -7,8 +7,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from open_ticket_ai.base_extensions.hf_local_ai_inference_pipe import HFLocalAiInferencePipe
-from open_ticket_ai.base_extensions.pipe_configs import (
+from open_ticket_ai.basic_pipes.hf_local_ai_inference_pipe import HFLocalAiInferencePipe
+from open_ticket_ai.basic_pipes.pipe_configs import (
     HFLocalAIInferencePipeConfig,
     HFLocalAIInferencePipeModel,
 )

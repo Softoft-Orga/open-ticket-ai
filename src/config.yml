@@ -1,9 +1,8 @@
 open_ticket_ai:
   imports:
-    - "open_ticket_ai ~= 1.0.0"
-    - "open_ticket_ai_otobo_znuny ~= 1.0.0"
-    - "open_ticket_ai_hf_local ~= 1.0.0"
-
+    - "open_ticket_ai.baseic_pipes"
+    - "open_ticket_ai.hf_local"
+    - "open_ticket_ai.otobo_znuny"
 
   general_config:
     logging:
@@ -14,138 +13,141 @@ open_ticket_ai:
       root: { level: INFO, handlers: [ console ] }
 
   defs:
-    services:
-      otobo_znuny:
-        use: OTOBOZnunyTicketSystemService
-        server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
-        password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
+    - id: otobo_znuny
+      use: OTOBOZnunyTicketSystemService
+      server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
+      password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 
-    pipes:
-      default_ticket_update: &default_ticket_update
-        use: TicketUpdatePipe
-        services: { ticket_system_service: "otobo_znuny" }
-        ticket_id: "{{ config.ticket_id }}"
+    - &default_ticket_update
+      id: default_ticket_update
+      use: TicketUpdatePipe
+      services: { ticket_system_service: "otobo_znuny" }
+      ticket_id: "{{ config.ticket_id }}"
 
-      default_ticket_add_note: &default_ticket_add_note
-        use: TicketAddNotePipe
-        services: { ticket_system_service: "otobo_znuny" }
-        ticket_id: "{{ config.ticket_id }}"
+    - &default_ticket_add_note
+      id: default_ticket_add_note
+      use: TicketAddNotePipe
+      services: { ticket_system_service: "otobo_znuny" }
+      ticket_id: "{{ config.ticket_id }}"
 
-      ticket_classifier: &ticket_classifier
-        use: HfLocalTextClassificationPipe
-        token: "{{ env.OTAI_HUGGINGFACE_EHS_TOKEN }}"
-        prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
+    - &ticket_classifier
+      id: ticket_classifier
+      use: HfLocalTextClassificationPipe
+      token: "{{ env.OTAI_HUGGINGFACE_EHS_TOKEN }}"
+      prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
 
-      classification_generic: &classification_generic
-        steps:
-          - id: classification_mapping
-            steps:
-              - id: classify
-                <<: *ticket_classifier
-                model: "{{ config.model }}"
-              - id: map_value
-                expression: "{{ config.map_obj[pipes.classify.label] }}"
-                on_failure: "continue"
+    - &classification_generic
+      id: classification_generic
+      steps:
+        - id: classification_mapping
+          steps:
+            - id: classify
+              <<: *ticket_classifier
+              model: "{{ config.model }}"
+            - id: map_value
+              expression: "{{ config.map_obj[pipes.classify.label] }}"
+              on_failure: "continue"
 
-              - id: select_final
-                expression: |-
-                  {{ 
-                  pipes.map_value.value if data.pipes.classify.confidence >= config.min_conf
-                  else config.low_conf_name
-                  }}
-            on_failure: "continue"
+            - id: select_final
+              expression: |-
+                {{ 
+                pipes.map_value.value if data.pipes.classify.confidence >= config.min_conf
+                else config.low_conf_name
+                }}
+          on_failure: "continue"
 
-          - id: update_ticket_add_note
-            steps:
-              - id: update_ticket
-                <<: *default_ticket_update
-                updated_ticket: "{{ pipes.select_final | at_path(config.ticket_field) }}"
+        - id: update_ticket_add_note
+          steps:
+            - id: update_ticket
+              <<: *default_ticket_update
+              updated_ticket: "{{ pipes.select_final | at_path(config.ticket_field) }}"
 
-              - id: add_note
-                <<: *default_ticket_add_note
-                note: |
-                  {{ 
-                  config.note_high.body if pipes.classify.confidence >= config.min_conf
-                  else config.note_low.body
-                  }}
-                on_success: "finish_"
-            on_success: "finish_"
-            on_failure: "continue"
+            - id: add_note
+              <<: *default_ticket_add_note
+              note: |
+                {{ 
+                config.note_high.body if pipes.classify.confidence >= config.min_conf
+                else config.note_low.body
+                }}
+              on_success: "finish_"
+          on_success: "finish_"
+          on_failure: "continue"
 
-          - id: update_ticket_error_fallback
-            steps:
-              - when: "{{ config.update_on_error }}"
-                <<: *default_ticket_update
-                updated_ticket: "{{ config.on_error_update_value | at_path(config.ticket_field) }}"
+        - id: update_ticket_error_fallback
+          steps:
+            - when: "{{ config.update_on_error }}"
+              <<: *default_ticket_update
+              updated_ticket: "{{ config.on_error_update_value | at_path(config.ticket_field) }}"
 
-              - id: add_error_note
-                when: "{{ config.error_note }}"
-                <<: *default_ticket_add_note
-                note: "{{ config.error_note }}"
+            - id: add_error_note
+              when: "{{ config.error_note }}"
+              <<: *default_ticket_add_note
+              note: "{{ config.error_note }}"
 
-      ticket-routing: &ticket-routing
-        steps:
-          - id: ticket_fetcher
-            use: TicketFetchPipe
-            services: { ticket_system_service: "otobo_znuny" }
-            ticket_search_criteria: "{{ config.ticket_search_criteria }}"
+    - &ticket-routing
+      id: ticket-routing
+      steps:
+        - id: ticket_fetcher
+          use: TicketFetchPipe
+          services: { ticket_system_service: "otobo_znuny" }
+          ticket_search_criteria: "{{ config.ticket_search_criteria }}"
 
-          - id: queue_classification
-            <<: *classification_generic
-            model: "{{ config.queue_model }}"
-            map_obj: "{{ config.queue_map }}"
-            min_conf: "{{ config.min_queue_confidence }}"
-            low_conf_name: "{{ config.low_confidence_queue_name }}"
-            ticket_field: "queue.name"
-            success_full_high_confidence_note:
-              subject: "Automatische Klassifizierung"
-              body: |
-                Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
-                mit der Konfidenz {{ data.queue_prediction.confidence }}
-            success_full_low_confidence_note:
-              subject: "Automatische Klassifizierung"
-              body: |
-                Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
-                da die Konfidenz {{ data.queue_prediction.confidence }} zu gering ist.
-                Mindest Konfidenz {{ config.min_queue_confidence }}
+        - id: queue_classification
+          <<: *classification_generic
+          model: "{{ config.queue_model }}"
+          map_obj: "{{ config.queue_map }}"
+          min_conf: "{{ config.min_queue_confidence }}"
+          low_conf_name: "{{ config.low_confidence_queue_name }}"
+          ticket_field: "queue.name"
+          success_full_high_confidence_note:
+            subject: "Automatische Klassifizierung"
+            body: |
+              Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
+              mit der Konfidenz {{ data.queue_prediction.confidence }}
+          success_full_low_confidence_note:
+            subject: "Automatische Klassifizierung"
+            body: |
+              Das Ticket wurde automatisch der Queue {{ data.final_queue }} zugeordnet;
+              da die Konfidenz {{ data.queue_prediction.confidence }} zu gering ist.
+              Mindest Konfidenz {{ config.min_queue_confidence }}
 
-            update_on_error: true
-            on_error_update_value: "{{ config.error_queue_name }}"
-            error_note:
-              subject: ""
-              body: |
-                Das Ticket konnte nicht automatisch der Queue zugeordnet werden;
-                Da ein Fehler aufgetreten ist.
-                Wurde in die Queue {{ config.error_queue_name }} verschoben.
+          update_on_error: true
+          on_error_update_value: "{{ config.error_queue_name }}"
+          error_note:
+            subject: ""
+            body: |
+              Das Ticket konnte nicht automatisch der Queue zugeordnet werden;
+              Da ein Fehler aufgetreten ist.
+              Wurde in die Queue {{ config.error_queue_name }} verschoben.
 
 
-          - id: priority_classification
-            <<: *classification_generic
-            model: "{{ config.priority_model }}"
-            map_obj: "{{ config.priority_map }}"
-            min_conf: "{{ config.min_priority_confidence }}"
-            low_conf_name: "{{ config.low_confidence_priority_name }}"
-            ticket_field: "priority.name"
-            success_full_high_confidence_note:
-              subject: "Automatische Priorisierung"
-              body: |
-                Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
-                mit der Konfidenz {{ current_state.cls.confidence }}"
-            success_full_low_confidence_note:
-              subject: "Automatische Priorisierung"
-              body: |
-                Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
-                da die Konfidenz {{ current_state.cls.confidence }} zu gering ist.
-                Mindest Konfidenz {{ config.min_priority_confidence }}
-            error_note:
-              subject: "Automatische Priorisierung"
-              body: |
-                Das Ticket konnte nicht automatisch der Priorität zugeordnet werden;
-                Da ein Fehler aufgetreten ist.
+        - id: priority_classification
+          <<: *classification_generic
+          model: "{{ config.priority_model }}"
+          map_obj: "{{ config.priority_map }}"
+          min_conf: "{{ config.min_priority_confidence }}"
+          low_conf_name: "{{ config.low_confidence_priority_name }}"
+          ticket_field: "priority.name"
+          success_full_high_confidence_note:
+            subject: "Automatische Priorisierung"
+            body: |
+              Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
+              mit der Konfidenz {{ current_state.cls.confidence }}"
+          success_full_low_confidence_note:
+            subject: "Automatische Priorisierung"
+            body: |
+              Das Ticket wurde automatisch der Priorität {{ data.final_value }} zugeordnet;
+              da die Konfidenz {{ current_state.cls.confidence }} zu gering ist.
+              Mindest Konfidenz {{ config.min_priority_confidence }}
+          error_note:
+            subject: "Automatische Priorisierung"
+            body: |
+              Das Ticket konnte nicht automatisch der Priorität zugeordnet werden;
+              Da ein Fehler aufgetreten ist.
 
   orchestrator:
-    runners:
-      - run_every_milli_seconds: 10000
+    - run_every_milli_seconds: 10000
+      pipe:
         <<: *ticket-routing
         ticket_search_criteria:
           queue.name: "EingangsQueue"
@@ -162,4 +164,3 @@ open_ticket_ai:
           "1 Sehr Hoch": "1 Sehr Hoch"
           "3 Mittel": "3 Mittel"
           "5 Sehr niedrig": "5 Sehr niedrig"
-

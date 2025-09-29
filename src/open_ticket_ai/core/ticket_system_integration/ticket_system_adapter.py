@@ -4,9 +4,12 @@ from .unified_models import (
     TicketSearchCriteria,
     UnifiedTicket, UnifiedNote,
 )
+from ..config.raw_config import RegisterableConfig
+from ..config.registerable_class import RegisterableClass
 
 
-class TicketSystemService(ABC):
+class TicketSystemService[RawConfigT: RegisterableConfig, RenderedConfigT: RegisterableConfig](
+    RegisterableClass[RawConfigT, RenderedConfigT], ABC):
     @abstractmethod
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         pass

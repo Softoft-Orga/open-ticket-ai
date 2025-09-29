@@ -6,31 +6,23 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
-from open_ticket_ai.core.pipeline.base_pipe_config import RawPipeConfig
+from .base_pipe_config import PipeConfig
 from .context import PipelineContext
-from ..config.template_configured_class import TemplateConfiguredClass
+from ..config.registerable_class import RegisterableClass
 
 
-class BasePipe[RawConfigT: RawPipeConfig](ABC, TemplateConfiguredClass):
-    @staticmethod
-    @abstractmethod
-    def get_raw_config_model_type() -> type[RawPipeConfig]:
-        pass
+class BasePipe[ConfigT: PipeConfig](ABC, RegisterableClass[ConfigT]):
 
-    def __init__(
-            self,
-            config: RawPipeConfig[RawConfigT],
-            registry: UnifiedRegistry | None = None,
-            *args: Any,
-            **kwargs: Any
-    ) -> None:
-        self.__raw_pipe_config: RawPipeConfig[RawConfigT] = config
+    def __init__(self, config: ConfigT, registry: UnifiedRegistry | None = None, *args: Any,
+                 **kwargs: Any) -> None:
+        super().__init__()
+        self.__raw_pipe_config: ConfigT = config
         self._registry = registry
         self._logger = logging.getLogger(__name__)
         self._current_context: PipelineContext = PipelineContext()
 
     @property
-    def config(self) :
+    def config(self):
         return self.__raw_pipe_config.render(self._current_context)
 
     def _build_output(self, state: dict[str, Any]) -> PipelineContext:
@@ -59,7 +51,7 @@ class BasePipe[RawConfigT: RawPipeConfig](ABC, TemplateConfiguredClass):
             return self._build_output(result)
         except Exception as e:
             self._logger.error(f"Error in pipe {self.config.name}: {str(e)}", exc_info=True)
-            raise
+            raise e
 
     @abstractmethod
     async def _process(self) -> dict[str, Any]:

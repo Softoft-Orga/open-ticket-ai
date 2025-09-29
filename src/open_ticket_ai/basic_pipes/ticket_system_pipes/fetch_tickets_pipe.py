@@ -2,10 +2,9 @@ from typing import Any
 
 from injector import inject
 
-from open_ticket_ai.base_extensions.pipe_configs import RawTicketFetchPipeConfig
-from open_ticket_ai.core.pipeline.base_pipe_config import RawPipeConfig
-from open_ticket_ai.core.pipeline.context import PipelineContext
+from open_ticket_ai.basic_pipes.pipe_configs import RawTicketFetchPipeConfig
 from open_ticket_ai.core.pipeline.base_pipe import BasePipe
+from open_ticket_ai.core.pipeline.base_pipe_config import RawPipeConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
 
@@ -32,7 +31,7 @@ class FetchTicketsPipe(BasePipe[RawTicketFetchPipeConfig]):
         return {"found_tickets": [ticket.model_dump() for ticket in tickets]}
 
     def _convert_to_search_criteria(
-        self, criteria: dict[str, Any] | TicketSearchCriteria
+            self, criteria: dict[str, Any] | TicketSearchCriteria
     ) -> TicketSearchCriteria:
         if isinstance(criteria, TicketSearchCriteria):
             return criteria

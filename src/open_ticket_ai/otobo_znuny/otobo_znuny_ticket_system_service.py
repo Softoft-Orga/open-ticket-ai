@@ -17,8 +17,8 @@ from tenacity import (
     wait_exponential,
 )
 
+from open_ticket_ai.core.config.raw_config import RenderableConfig
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
-from open_ticket_ai.core.config.template_configured_class import TemplateConfiguredClass
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -95,22 +95,17 @@ def otobo_retry() -> Callable[[F], F]:
 
 
 @UnifiedRegistry.register
-class OTOBOZnunyTicketSystemService(TicketSystemService, TemplateConfiguredClass):
-    @staticmethod
-    def get_raw_config_model_type() -> type[RawOTOBOZnunyTicketsystemServiceConfig]:
-        return RawOTOBOZnunyTicketsystemServiceConfig
-
-    @staticmethod
-    def get_rendered_config_model_type() -> type[RenderedOTOBOZnunyTicketsystemServiceConfig]:
-        return RenderedOTOBOZnunyTicketsystemServiceConfig
-
-    @staticmethod
-    def needs_raw_config() -> bool:
-        return False
+class OTOBOZnunyTicketSystemService(
+    TicketSystemService[
+        RawOTOBOZnunyTicketsystemServiceConfig,
+        RenderedOTOBOZnunyTicketsystemServiceConfig
+    ]
+):
 
     @inject
-    def __init__(self, config: RenderedOTOBOZnunyTicketsystemServiceConfig):
-        self.config = config
+    def __init__(self, config: RenderableConfig[
+        RawOTOBOZnunyTicketsystemServiceConfig, RenderedOTOBOZnunyTicketsystemServiceConfig]):
+        super().__init__(config)
         self._client: OTOBOZnunyClient | None = None
         self.logger = logging.getLogger(self.__class__.__name__)
 

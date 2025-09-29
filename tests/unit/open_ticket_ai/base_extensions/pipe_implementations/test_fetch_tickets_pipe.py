@@ -2,11 +2,11 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from open_ticket_ai.base_extensions.pipe_configs import (
+from open_ticket_ai.basic_pipes.pipe_configs import (
     FetchTicketsPipeConfig,
     FetchTicketsPipeModel,
 )
-from open_ticket_ai.base_extensions.ticket_system_pipes.fetch_tickets_pipe import FetchTicketsPipe
+from open_ticket_ai.basic_pipes.ticket_system_pipes.fetch_tickets_pipe import FetchTicketsPipe
 from open_ticket_ai.core.pipeline.context import PipelineContext
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (

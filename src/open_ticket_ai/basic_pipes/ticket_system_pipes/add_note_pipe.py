@@ -2,7 +2,7 @@ from typing import Any
 
 from injector import inject
 
-from open_ticket_ai.base_extensions.pipe_configs import RawTicketAddNotePipeConfig
+from open_ticket_ai.basic_pipes.pipe_configs import RawTicketAddNotePipeConfig
 from open_ticket_ai.core.pipeline.base_pipe import BasePipe
 from open_ticket_ai.core.pipeline.base_pipe_config import RawPipeConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import enum
-from typing import Self, TypeVar
+from typing import Self
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
-from open_ticket_ai.core.config.raw_config import RawConfig
+from open_ticket_ai.core.config.raw_config import RawRegisterableConfig, RenderableConfig, BaseRegisterableConfig, \
+    RenderedRegistrableConfig
 
 
 class OnType(enum.StrEnum):
@@ -14,13 +15,7 @@ class OnType(enum.StrEnum):
     FAIL_CONTAINER = "fail_container"
 
 
-
-
-class _BasePipeConfig(BaseModel):
-    name: str | None = None
-    use: str
-    services: dict[str, str] | str | None = None
-
+class _BasePipeConfig(BaseRegisterableConfig):
     steps: list[Self] | str = Field(default_factory=list)
 
     when: str = "True"
@@ -29,9 +24,7 @@ class _BasePipeConfig(BaseModel):
     on_success: str | None = None
 
 
-class RenderedPipeConfig(_BasePipeConfig):
-    name: str = "anonymous"
-    services: dict[str, str] | None = None
+class RenderedPipeConfig(RenderedRegistrableConfig):
     steps: list[_BasePipeConfig] = Field(default_factory=list)
     when: bool
 
@@ -39,5 +32,9 @@ class RenderedPipeConfig(_BasePipeConfig):
     on_success: OnType = OnType.CONTINUE
 
 
-class RawPipeConfig(RawConfig[RenderedPipeConfig], _BasePipeConfig):
+class RawPipeConfig(RawRegisterableConfig, _BasePipeConfig):
+    pass
+
+
+class PipeConfig(RenderableConfig[RawPipeConfig, RenderedPipeConfig]):
     pass

@@ -3,8 +3,8 @@ import os
 from functools import cache
 from typing import Any
 
+from open_ticket_ai.basic_pipes.pipe_configs import HFLocalAIInferenceServiceConfig
 from open_ticket_ai.core.pipeline.base_pipe import BasePipe
-from open_ticket_ai.base_extensions.pipe_configs import HFLocalAIInferenceServiceConfig
 
 
 class HFLocalAIInferenceService(BasePipe):

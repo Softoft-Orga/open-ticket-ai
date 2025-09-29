@@ -1,12 +1,13 @@
 from otobo_znuny.domain_models.basic_auth_model import BasicAuth
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
-from pydantic import BaseModel, SecretStr
+from pydantic import SecretStr
 
-from open_ticket_ai.core.config.raw_config import RawConfig
+from open_ticket_ai.core.config.raw_config import RawRegisterableConfig, RegisterableConfig, BaseRegisterableConfig, \
+    RenderedRegistrableConfig
 
 
-class _OTOBOZnunyTicketsystemServiceBaseConfig(BaseModel):
+class _OTOBOZnunyTicketsystemServiceBaseConfig(BaseRegisterableConfig):
     password: str
     base_url: str
     username: str = "open_ticket_ai"
@@ -18,7 +19,7 @@ class _OTOBOZnunyTicketsystemServiceBaseConfig(BaseModel):
     }
 
 
-class RenderedOTOBOZnunyTicketsystemServiceConfig(_OTOBOZnunyTicketsystemServiceBaseConfig):
+class RenderedOTOBOZnunyTicketsystemServiceConfig(RenderedRegistrableConfig, _OTOBOZnunyTicketsystemServiceBaseConfig):
     password: SecretStr
 
     @property
@@ -35,6 +36,17 @@ class RenderedOTOBOZnunyTicketsystemServiceConfig(_OTOBOZnunyTicketsystemService
         )
 
     def to_client_config(self) -> ClientConfig:
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+    """
+    Convert the rendered config to a client config.
+
+    This method takes the rendered config and converts it into a client config
+    that can be used to initialize the otobo client.
+
+    Returns:
+        ClientConfig: The client config that can be used to initialize the otobo client.
+    """
+/* <<<<<<<<<<  cfc74101-3770-41a7-b32b-1bc5ce449759  >>>>>>>>>>> */
         return ClientConfig(
             base_url=self.base_url,
             webservice_name=self.webservice_name,
@@ -42,6 +54,6 @@ class RenderedOTOBOZnunyTicketsystemServiceConfig(_OTOBOZnunyTicketsystemService
         )
 
 
-class RawOTOBOZnunyTicketsystemServiceConfig(
-    RawConfig[RenderedOTOBOZnunyTicketsystemServiceConfig], _OTOBOZnunyTicketsystemServiceBaseConfig):
+class RawOTOBOZnunyTicketsystemServiceConfig(RawRegisterableConfig, _OTOBOZnunyTicketsystemServiceBaseConfig):
     pass
+

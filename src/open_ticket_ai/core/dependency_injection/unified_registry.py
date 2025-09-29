@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import inspect
-from typing import Type, Self, Callable, Any, Dict, Iterable, Mapping
+from typing import Self, Any, Dict, Iterable
 
-from open_ticket_ai.core.config.template_configured_class import TemplateConfiguredClass
+from open_ticket_ai.core.config.registerable_class import RegisterableClass
 
 
 class NotRegistered(Exception):
@@ -19,7 +18,7 @@ class UnifiedRegistry:
     _singleton: Self | None = None
 
     def __init__(self) -> None:
-        self.class_registry: dict[str, type[TemplateConfiguredClass]] = {}
+        self.class_registry: dict[str, type[RegisterableClass]] = {}
         self.service_instances: dict[str, Any] = {}
 
     @classmethod
@@ -29,7 +28,7 @@ class UnifiedRegistry:
         return cls._singleton
 
     @classmethod
-    def register(cls, _cls: type[TemplateConfiguredClass]) -> type[TemplateConfiguredClass]:
+    def register(cls, _cls: type[RegisterableClass]) -> type[RegisterableClass]:
         instance = cls.instance()
         class_name = _cls.__name__
         if class_name in instance.class_registry:
@@ -37,12 +36,11 @@ class UnifiedRegistry:
         instance.class_registry[class_name] = _cls
         return _cls
 
-    def get_class(self, name: str) -> type[TemplateConfiguredClass]:
+    def get_class(self, name: str) -> type[RegisterableClass]:
         try:
             return self.class_registry[name]
         except KeyError:
             raise NotRegistered(f"Class '{name}' not found. Available: {list(self.class_registry)}")
-
 
     def get_service_instance(self, service_id: str) -> Any:
         try:
@@ -93,7 +91,7 @@ class UnifiedRegistry:
 
     def _create_config_instance(
             self,
-            configurable_class: type[TemplateConfiguredClass],
+            configurable_class: type[RegisterableClass],
             raw_config: dict[str, Any],
             render_scope: dict[str, Any]
     ) -> Any:

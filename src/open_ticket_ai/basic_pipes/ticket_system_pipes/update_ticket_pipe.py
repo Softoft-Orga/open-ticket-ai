@@ -2,12 +2,12 @@ from typing import Any
 
 from injector import inject
 
-from open_ticket_ai.base_extensions.pipe_configs import (
+from open_ticket_ai.basic_pipes.pipe_configs import (
     UpdateTicketPipeConfig,
     UpdateTicketPipeModel,
 )
-from open_ticket_ai.core.pipeline.context import PipelineContext
 from open_ticket_ai.core.pipeline.base_pipe import BasePipe
+from open_ticket_ai.core.pipeline.context import PipelineContext
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
 
@@ -23,7 +23,7 @@ class UpdateTicketPipe(BasePipe[UpdateTicketPipeModel]):
         self.ticket_system = ticket_system
 
     async def _process(
-        self, context: PipelineContext, config: UpdateTicketPipeModel
+            self, context: PipelineContext, config: UpdateTicketPipeModel
     ) -> dict[str, Any]:
         self._logger.info(f"Running {self.__class__.__name__}")
 

@@ -2,43 +2,22 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel
 
-from open_ticket_ai.core.config.raw_config import RawConfig
-
-
-class RenderedSystemConfig(BaseModel):
-    id: str
-    provider_key: str
-    config: dict[str, Any] = {}
+from open_ticket_ai.core.config.raw_config import RawRegisterableConfig, RenderedConfig
 
 
-class SystemConfig(RawConfig[RenderedSystemConfig]):
-    id: str
-    provider_key: str
-    config: dict[str, Any] = {}
-
-
-class RenderedOpenTicketAIConfig(BaseModel):
-    version: str = "1.0.0"
-    plugins: list[str] = []
-    general_config: dict[str, Any] = {}
+class RenderedOpenTicketAIConfig(RenderedConfig):
+    imports: list[str] = []
+    general_config: dict[str, dict[str, Any] | str | int | float | bool] = {}
     defs: dict[str, Any] = {}
     orchestrator: dict[str, Any] = {}
-    system: RenderedSystemConfig | None = None
-    pipe: Any | None = None  # Will be RenderedPipeConfig[Any]
-    interval_seconds: float = 60.0
 
 
-class OpenTicketAIConfig(RawConfig[RenderedOpenTicketAIConfig]):
-    version: str = "1.0.0"
-    plugins: list[str] = []
-    general_config: dict[str, Any] = {}
-    defs: dict[str, Any] = {}
-    orchestrator: dict[str, Any] = {}
-    system: SystemConfig | None = None
-    pipe: Any | None = None  # Will be PipeConfig[Any]
-    interval_seconds: float = 60.0
+class OpenTicketAIConfig(RawRegisterableConfig[RenderedOpenTicketAIConfig]):
+    imports: list[str] | str = []
+    general_config: dict[str, dict[str, Any] | str | int | float | bool] | str = {}
+    defs: dict[str, Any] | str = {}
+    orchestrator: dict[str, Any] | str = {}
 
 
 def load_config(path: str | Path) -> OpenTicketAIConfig:

@@ -23,37 +23,6 @@ class AppModule(Module):
         binder.bind(OpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(UnifiedRegistry, to=UnifiedRegistry.get_instance(), scope=singleton)
 
-    # --- Pipes Provider ---
-    @provider
-    @singleton
-    def provide_pipes(
-            self,
-            config: OpenTicketAIConfig,
-            ticket_system_adapter: TicketSystemService,
-            registry: UnifiedRegistry,
-    ) -> list[BasePipe]:
-        """Provide all configured pipe instances."""
-        pipes = []
-
-        for pipe_config in config.pipelines[0].steps:
-            # Get pipe class from registry or import it
-            pipe_name = pipe_config.type.split(".")[-1]
-            pipe_class = registry.get_pipe(pipe_name)
-
-            if not pipe_class:
-                # Fall back to dynamic import if not in registry
-                module_name, class_name = pipe_config.type.rsplit(".", 1)
-                module = importlib.import_module(module_name)
-                pipe_class = getattr(module, class_name)
-                # Register it for future use
-                registry.register_pipe(pipe_name, pipe_class)
-
-            # Create pipe instance with dependencies
-            pipe_instance = pipe_class(config=pipe_config, ticket_system=ticket_system_adapter)
-            pipes.append(pipe_instance)
-
-        return pipes
-
     # --- Orchestrator Provider ---
     @provider
     @singleton
