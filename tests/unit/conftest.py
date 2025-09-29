@@ -1,24 +1,14 @@
+from __future__ import annotations
+
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from open_ticket_ai.core.config.raw_config import (
-    RawConfig,
-    RenderedConfig,
-    RenderableConfig,
-)
+from open_ticket_ai.core.config.raw_config import RawConfig, RenderableConfig, RenderedConfig
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
-from open_ticket_ai.core.pipeline.configurable_pipe_config import (
-    RenderedPipeConfig,
-)
 from open_ticket_ai.core.pipeline.context import PipelineContext
-from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import (
-    TicketSystemService,
-)
-from tests.conftest import (
-    FrozenRenderableConfig,
-    create_frozen_renderable_config,
-)
+from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
+from tests.helpers import FrozenRenderableConfig, PipeConfigFactory, create_frozen_renderable_config
 
 
 @pytest.fixture
@@ -37,25 +27,13 @@ def mock_ticket_system_service() -> MagicMock:
 
 
 @pytest.fixture
-def rendered_pipe_config_factory():
-    def factory(**kwargs) -> RenderedPipeConfig:
-        defaults = {
-            "id": "test_pipe",
-            "use": "open_ticket_ai.basic_pipes.DefaultPipe",
-            "when": True,
-        }
-        defaults.update(kwargs)
+def pipe_config_factory() -> PipeConfigFactory:
+    return PipeConfigFactory()
 
-        class CustomRenderedPipeConfig(RenderedPipeConfig):
-            pass
 
-        return CustomRenderedPipeConfig(
-            id=defaults["id"],
-            use=defaults["use"],
-            when=defaults.get("when", True)
-        )
-
-    return factory
+@pytest.fixture
+def rendered_pipe_config_factory(pipe_config_factory: PipeConfigFactory):
+    return pipe_config_factory
 
 
 @pytest.fixture
@@ -87,7 +65,7 @@ def rendered_config_sample():
     return TestRenderedConfig(
         name="Test Name",
         value="TEST VALUE",
-        items=["item_one", "item_two"]
+        items=["item_one", "item_two"],
     )
 
 
@@ -123,8 +101,8 @@ def renderable_config_assertions():
 
         @staticmethod
         def assert_config_equals(
-                config: RenderableConfig,
-                expected_rendered: RenderedConfig
+            config: RenderableConfig,
+            expected_rendered: RenderedConfig,
         ) -> None:
             actual = config.get_rendered()
             assert actual.model_dump() == expected_rendered.model_dump()
