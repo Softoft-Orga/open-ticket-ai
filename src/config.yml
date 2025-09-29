@@ -9,15 +9,15 @@ open_ticket_ai:
 
     pipe_classes:
       - &ticket_fetch_pipe
-        use: "open_ticket_ai.basic_pipes:FetchTicketsPipe"
+        use: "open_ticket_ai.base:FetchTicketsPipe"
       - &ticket_update_pipe
-        use: "open_ticket_ai.basic_pipes:UpdateTicketsPipe"
+        use: "open_ticket_ai.base:UpdateTicketsPipe"
       - &ticket_add_note_pipe
-        use: "open_ticket_ai.basic_pipes:AddNoteTicketsPipe"
+        use: "open_ticket_ai.base:AddNoteTicketsPipe"
       - &ticket_classifier_pipe
         use: "open_ticket_ai.hf_local:HFLocalTextClassificationPipe"
       - &jinja_expression_pipe
-        use: "open_ticket_ai.basic_pipes:JinjaExpressionPipe"
+        use: "open_ticket_ai.base:JinjaExpressionPipe"
 
   defs:
     - id: "otobo_znuny"

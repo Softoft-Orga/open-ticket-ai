@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from open_ticket_ai.basic_pipes.ticket_system_pipes.fetch_tickets_pipe import (
+from open_ticket_ai.base.ticket_system_pipes.fetch_tickets_pipe import (
     FetchTicketsPipe,
 )
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
@@ -52,7 +52,7 @@ def mock_registry(ticket_service: MagicMock) -> MagicMock:
 def pipe_config_dict(search_criteria: TicketSearchCriteria) -> dict:
     return {
         "name": "ticket_fetcher",
-        "use": "open_ticket_ai.basic_pipes.ticket_system_pipes.fetch_tickets_pipe.FetchTicketsPipe",
+        "use": "open_ticket_ai.base.ticket_system_pipes.fetch_tickets_pipe.FetchTicketsPipe",
         "ticket_system_id": "test_ticket_system",
         "ticket_search_criteria": search_criteria.model_dump(),
         "when": True,

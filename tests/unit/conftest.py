@@ -1,4 +1,6 @@
-from unittest.mock import AsyncMock, MagicMock
+import asyncio
+from contextlib import contextmanager
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -29,7 +31,7 @@ def pipe_config_factory():
     def factory(**kwargs) -> dict:
         defaults = {
             "name": "test_pipe",
-            "use": "open_ticket_ai.basic_pipes.DefaultPipe",
+            "use": "open_ticket_ai.base.DefaultPipe",
             "when": True,
             "steps": [],
         }
@@ -56,3 +58,41 @@ def mock_ticket_system_pipe_config():
         "steps": [],
         "ticket_system_id": "mock_ticket_system",
     }
+
+
+@contextmanager
+def patched_registry(mock_registry):
+    """Context manager to patch UnifiedRegistry for pipe testing."""
+    with patch.object(UnifiedRegistry, "get_registry_instance", return_value=mock_registry):
+        yield
+
+
+@pytest.fixture
+def pipe_runner(mock_registry):
+    """Factory to run pipes with mocked registry."""
+    def _run_pipe(pipe_class, config, context):
+        with patched_registry(mock_registry):
+            pipe = pipe_class(config)
+            return asyncio.run(pipe.process(context))
+    return _run_pipe
+
+
+@pytest.fixture
+def ticket_system_pipe_factory(mock_ticket_system_service, mock_registry):
+    """Factory for creating ticket system pipes with common setup."""
+    def _create_pipe(pipe_class, **config_overrides):
+        base_config = {
+            "name": "test_pipe",
+            "use": pipe_class.__name__,
+            "when": True,
+            "steps": [],
+            "ticket_system_id": "test_system",
+        }
+        base_config.update(config_overrides)
+        
+        mock_registry.get_instance.return_value = mock_ticket_system_service
+        
+        with patched_registry(mock_registry):
+            return pipe_class(base_config)
+    
+    return _create_pipe
