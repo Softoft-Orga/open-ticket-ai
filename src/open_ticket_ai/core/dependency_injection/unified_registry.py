@@ -1,109 +1,98 @@
 from __future__ import annotations
 
-import inspect
-from typing import Type, Self, Callable, Any, Dict, Iterable, Mapping
-
-from open_ticket_ai.core.config.template_configured_class import TemplateConfiguredClass
+from typing import Any, Callable, TypeVar
 
 
 class NotRegistered(Exception):
-    pass
+    """Raised when attempting to access a class or instance that was not registered."""
 
 
-class ConflictingClassRegistration(Exception):
-    pass
-
+T = TypeVar("T")
 
 class UnifiedRegistry:
-    """Holds registered TYPES and per-run service INSTANCES."""
-    _singleton: Self | None = None
+    """A very small registry to track classes and their instances."""
+
+    _singleton: "UnifiedRegistry | None" = None
 
     def __init__(self) -> None:
-        self.class_registry: dict[str, type[TemplateConfiguredClass]] = {}
-        self.service_instances: dict[str, Any] = {}
+        self._classes: dict[str, type[Any]] = {}
+        self._instances: dict[str, Any] = {}
 
+    # ------------------------------------------------------------------
+    # Singleton helpers
+    # ------------------------------------------------------------------
     @classmethod
-    def instance(cls) -> Self:
+    def get_instance(cls) -> "UnifiedRegistry":
         if cls._singleton is None:
-            cls._singleton = UnifiedRegistry()
+            cls._singleton = cls()
         return cls._singleton
 
+    # Keep backwards compatibility with previous API that exposed ``instance``
+    instance = get_instance
+
+    # ------------------------------------------------------------------
+    # Class registration
+    # ------------------------------------------------------------------
     @classmethod
-    def register(cls, _cls: type[TemplateConfiguredClass]) -> type[TemplateConfiguredClass]:
-        instance = cls.instance()
-        class_name = _cls.__name__
-        if class_name in instance.class_registry:
-            raise ConflictingClassRegistration(f"Class '{class_name}' is already registered.")
-        instance.class_registry[class_name] = _cls
-        return _cls
+    def register(
+        cls,
+        target: type[Any] | None = None,
+        *,
+        name: str | None = None,
+    ) -> Callable[[type[T]], type[T]] | type[Any]:
+        """Register a class either directly or via decorator usage.
 
-    def get_class(self, name: str) -> type[TemplateConfiguredClass]:
+        This supports both ``@UnifiedRegistry.register`` and
+        ``@UnifiedRegistry.register(name="Alias")`` forms.
+        """
+
+        registry = cls.get_instance()
+
+        def decorator(obj: type[T]) -> type[T]:
+            registry.register_class(obj, name=name)
+            return obj
+
+        if target is None:
+            return decorator
+
+        return decorator(target)
+
+    def register_class(self, obj: type[Any], name: str | None = None) -> None:
+        key = name or obj.__name__
+        self._classes[key] = obj
+        # Always allow lookups via the fully-qualified name as well
+        fq_name = f"{obj.__module__}.{obj.__name__}"
+        self._classes.setdefault(fq_name, obj)
+
+    # ------------------------------------------------------------------
+    # Class retrieval / instantiation
+    # ------------------------------------------------------------------
+    def get_class(self, name: str) -> type[Any]:
         try:
-            return self.class_registry[name]
+            return self._classes[name]
         except KeyError:
-            raise NotRegistered(f"Class '{name}' not found. Available: {list(self.class_registry)}")
-
-
-    def get_service_instance(self, service_id: str) -> Any:
-        try:
-            return self.service_instances[service_id]
-        except KeyError:
-            raise NotRegistered(f"Service instance '{service_id}' not found. Available: {list(self.service_instances)}")
-
-    def instantiate_services_from_config(
-            self,
-            services_spec: Iterable[dict[str, Any]],
-            render_scope: dict[str, Any],
-    ) -> None:
-        for item in services_spec or []:
-            service_id: str = str(item["id"])
-            service_type_name: str = str(item["use"])
-
-            service_class = self.get_class(service_type_name)
-
-            config_instance = self._create_config_instance(service_class, item, render_scope)
-
+            short_name = name.rsplit(".", 1)[-1]
             try:
-                instance = service_class(config=config_instance)
-            except TypeError:
-                instance = service_class(**item)
+                return self._classes[short_name]
+            except KeyError as exc:
+                raise NotRegistered(f"Class '{name}' is not registered.") from exc
 
-            self.add_service_instance(service_id, instance)
+    def create_instance(self, name: str, *args: Any, **kwargs: Any) -> Any:
+        cls = self.get_class(name)
+        return cls(*args, **kwargs)
 
-    def build_pipe_instance(
-            self,
-            pipe_type_name: str,
-            raw_step_config: dict[str, Any],
-            service_bindings: dict[str, str] | None = None,
-            extra_kwargs: dict[str, Any] | None = None,
-    ):
-        pipe_class = self.get_registered_pipe_class(pipe_type_name)
-        self._validate_pipe_constructor_accepts_services(pipe_class, service_bindings)
+    # ------------------------------------------------------------------
+    # Instance storage helpers
+    # ------------------------------------------------------------------
+    def set_instance(self, instance_id: str, instance: Any) -> None:
+        self._instances[instance_id] = instance
 
-        config_instance = self._create_config_instance(pipe_class, raw_step_config, {})
+    def get_instance_by_id(self, instance_id: str) -> Any:
+        try:
+            return self._instances[instance_id]
+        except KeyError as exc:
+            raise NotRegistered(f"Instance '{instance_id}' is not registered.") from exc
 
-        injected_kwargs: Dict[str, Any] = {}
-        for constructor_param, service_id in (service_bindings or {}).items():
-            injected_kwargs[constructor_param] = self.get_service_instance(service_id)
-
-        if extra_kwargs:
-            injected_kwargs.update(extra_kwargs)
-
-        return pipe_class(config=config_instance, **injected_kwargs)
-
-    def _create_config_instance(
-            self,
-            configurable_class: type[TemplateConfiguredClass],
-            raw_config: dict[str, Any],
-            render_scope: dict[str, Any]
-    ) -> Any:
-        if configurable_class.needs_raw_config():
-            config_model_type = configurable_class.get_raw_config_model_type()
-            return config_model_type(**raw_config)
-        else:
-            rendered_config_type = configurable_class.get_rendered_config_model_type()
-            if rendered_config_type is None:
-                raise ValueError(f"Class {configurable_class.__name__} needs rendered config but doesn't specify type")
-
-            rendered_config = self._render_recursive(raw_config, render_scope)
-            return rendered_config_type(**rendered_config)
+    # Convenience aliases for older naming used across the project
+    add_service_instance = set_instance
+    get_service_instance = get_instance_by_id
