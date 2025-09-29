@@ -27,7 +27,7 @@ open_ticket_ai:
     - &default_ticket_add_note
       id: default_ticket_add_note
       use: TicketAddNotePipe
-      services: { ticket_system_service: "otobo_znuny" }
+      ticket_system: "{{ "
       ticket_id: "{{ config.ticket_id }}"
 
     - &ticket_classifier

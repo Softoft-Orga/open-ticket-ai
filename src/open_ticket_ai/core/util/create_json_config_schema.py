@@ -2,12 +2,12 @@ import json
 
 from pydantic import BaseModel
 
-from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
 
 class RootConfig(BaseModel):
-    open_ticket_ai: OpenTicketAIConfig
+    open_ticket_ai: RawOpenTicketAIConfig
 
 
 if __name__ == "__main__":

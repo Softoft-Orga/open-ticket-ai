@@ -7,6 +7,7 @@ from pydantic import Field
 
 from open_ticket_ai.core.config.raw_config import RawRegisterableConfig, RenderableConfig, BaseRegisterableConfig, \
     RenderedRegistrableConfig
+from open_ticket_ai.core.pipeline.base_pipe import BasePipe
 
 
 class OnType(enum.StrEnum):
@@ -25,7 +26,7 @@ class _BasePipeConfig(BaseRegisterableConfig):
 
 
 class RenderedPipeConfig(RenderedRegistrableConfig):
-    steps: list[_BasePipeConfig] = Field(default_factory=list)
+    steps: list[BasePipe[RawPipeConfig, Self]] = Field(default_factory=list)
     when: bool
 
     on_failure: OnType = OnType.FAIL_CONTAINER

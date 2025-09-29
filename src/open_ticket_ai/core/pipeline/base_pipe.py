@@ -6,41 +6,34 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
-from .base_pipe_config import PipeConfig
+from .base_pipe_config import RawPipeConfig, RenderedPipeConfig, PipeConfig
 from .context import PipelineContext
+from ..config.raw_config import RenderableConfig
 from ..config.registerable_class import RegisterableClass
 
 
-class BasePipe[ConfigT: PipeConfig](ABC, RegisterableClass[ConfigT]):
+class BasePipe[RawPipeConfigT: RawPipeConfig, RenderedPipeConfigT: RenderedPipeConfig](
+    RegisterableClass[RawPipeConfigT, RenderedPipeConfigT]
+):
 
-    def __init__(self, config: ConfigT, registry: UnifiedRegistry | None = None, *args: Any,
+    def __init__(self, config: PipeConfig, *args: Any,
                  **kwargs: Any) -> None:
-        super().__init__()
-        self.__raw_pipe_config: ConfigT = config
-        self._registry = registry
+        super().__init__(config, *args, **kwargs)
         self._logger = logging.getLogger(__name__)
         self._current_context: PipelineContext = PipelineContext()
 
     @property
     def config(self):
-        return self.__raw_pipe_config.render(self._current_context)
+        self._config.save_rendered(self._current_context)
+        return super().config
 
     def _build_output(self, state: dict[str, Any]) -> PipelineContext:
         self._current_context.pipes[self.config.name] = state
         return self._current_context
 
     async def _process_steps(self):
-        for step_config in self.__raw_pipe_config.steps:
-            rendered_step = step_config.render(self._current_context)
-            if not rendered_step.use:
-                raise ValueError("Each pipeline step must define a 'use' value")
-
-            pipe_class = self._get_pipe_class(rendered_step.use)
-            pipe_instance = pipe_class(config=step_config, registry=self._registry)
-            self._current_context = await pipe_instance.process(self._current_context)
-
-    def _get_pipe_class(self, pipe_type: str) -> type[BasePipe[Any]]:
-        return typing.cast(type[BasePipe[Any]], self._registry.get_class(pipe_type))
+        for step_pipe in self.config.steps:
+            self._current_context = await step_pipe.process(self._current_context)
 
     async def process(self, context: PipelineContext) -> PipelineContext:
         self._current_context = context

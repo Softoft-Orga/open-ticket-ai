@@ -6,8 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from open_ticket_ai.base_extensions.pipe_configs import RawTicketAddNotePipeConfig
-from open_ticket_ai.base_extensions.ticket_system_pipes.add_note_pipe import AddNotePipe
+from open_ticket_ai.basic_pipes.ticket_system_pipes.add_note_pipe import RawTicketAddNotePipeConfig
 from open_ticket_ai.core.pipeline.context import PipelineContext
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
@@ -25,7 +24,7 @@ def sample_config(sample_note: UnifiedNote) -> RawTicketAddNotePipeConfig:
     """Return a raw pipe config for the add note pipe."""
 
     return RawTicketAddNotePipeConfig(
-        name="test_add_note",
+        id="test_add_note",
         use="open_ticket_ai.base_extensions.ticket_system_pipes.add_note_pipe.AddNotePipe",
         ticket_id="TCK-123",
         note=sample_note,

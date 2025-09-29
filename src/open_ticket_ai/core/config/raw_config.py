@@ -1,20 +1,15 @@
 import uuid
-from typing import Any
+from typing import Any, Self
 
 from pydantic import BaseModel
 
 from open_ticket_ai.core.config.jinja2_env import render_recursive
 
-
-class BaseConfig(BaseModel):
+class RawConfig(BaseModel):
     pass
 
 
-class RawConfig(BaseConfig):
-    pass
-
-
-class RenderedConfig(BaseConfig):
+class RenderedConfig(BaseModel):
     pass
 
 
@@ -37,20 +32,15 @@ class RenderableConfig[RawConfigT: RawConfig, RenderedConfigT: RenderedConfig]:
         return self.rendered_config
 
 
-class BaseRegisterableConfig(BaseConfig):
+class RawRegisterableConfig(RawConfig):
     id: str | None = None
     use: str | None = None
-    services: dict[str, str] | str | None = None
 
 
-class RenderedRegistrableConfig(BaseRegisterableConfig):
+class RenderedRegistrableConfig(RenderedConfig):
     id: str = uuid.uuid4().hex
     use: str = "DefaultPipe"
-    services: dict[str, str] = {}
 
-
-class RawRegisterableConfig(BaseRegisterableConfig):
-    pass
 
 
 class RegisterableConfig[RawConfigT: RawRegisterableConfig, RenderedConfigT: RenderedRegistrableConfig](

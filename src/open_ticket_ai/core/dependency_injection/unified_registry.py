@@ -20,7 +20,7 @@ class UnifiedRegistry:
 
     def __init__(self) -> None:
         self.class_registry: dict[str, type[RegisterableClass]] = {}
-        self.service_instances: dict[str, Any] = {}
+        self.instances_registry: dict[str, RegisterableClass] = {}
 
     @classmethod
     def instance(cls) -> Self:
@@ -37,17 +37,17 @@ class UnifiedRegistry:
         instance.class_registry[class_name] = _cls
         return _cls
 
-    def get_class(self, name: str) -> type[RegisterableClass]:
+    def get_class(self, class_name: str) -> type[RegisterableClass]:
         try:
-            return self.class_registry[name]
+            return self.class_registry[class_name]
         except KeyError:
-            raise NotRegistered(f"Class '{name}' not found. Available: {list(self.class_registry)}")
+            raise NotRegistered(f"Class '{class_name}' not found. Available: {list(self.class_registry)}")
 
     def get_service_instance(self, service_id: str) -> Any:
         try:
-            return self.service_instances[service_id]
+            return self.instances_registry[service_id]
         except KeyError:
-            raise NotRegistered(f"Service instance '{service_id}' not found. Available: {list(self.service_instances)}")
+            raise NotRegistered(f"Service instance '{service_id}' not found. Available: {list(self.instances_registry)}")
 
     def instantiate_services_from_config(
             self,

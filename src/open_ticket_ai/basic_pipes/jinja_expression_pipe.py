@@ -1,7 +1,11 @@
 from typing import Any
 
-from open_ticket_ai.basic_pipes.pipe_configs import RawJinjaExpressionPipeConfig
 from open_ticket_ai.core.pipeline.base_pipe import BasePipe
+from open_ticket_ai.core.pipeline.base_pipe_config import _BasePipeConfig, RenderedPipeConfig, RawPipeConfig, PipeConfig
+
+
+class RawJinjaExpressionPipeConfig(RawPipeConfig, BaseJinjaExpressionPipeConfig):
+    pass
 
 
 class JinjaExpressionPipe(BasePipe[RawJinjaExpressionPipeConfig]):
@@ -14,3 +18,15 @@ class JinjaExpressionPipe(BasePipe[RawJinjaExpressionPipeConfig]):
 
     async def _process(self) -> dict[str, Any]:
         return {}
+
+
+class BaseJinjaExpressionPipeConfig(_BasePipeConfig):
+    expression: str
+
+
+class RenderedJinjaExpressionPipeConfig(RenderedPipeConfig, BaseJinjaExpressionPipeConfig):
+    pass
+
+
+class JinjaExpressionPipeConfig(PipeConfig[RawJinjaExpressionPipeConfig, RenderedJinjaExpressionPipeConfig]):
+    pass

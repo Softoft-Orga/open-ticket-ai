@@ -3,7 +3,6 @@ import logging
 import threading
 from typing import Any, Iterable
 
-from open_ticket_ai.core.config.config_models import OrchestratorRunnerConfig
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.pipeline.base_pipe import BasePipe
 from open_ticket_ai.core.pipeline.base_pipe_config import RawPipeConfig

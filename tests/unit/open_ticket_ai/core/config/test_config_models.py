@@ -15,7 +15,7 @@ if "yaml" not in sys.modules:
 from pydantic import BaseModel
 
 from open_ticket_ai.core.config.config_models import (
-    OpenTicketAIConfig,
+    RawOpenTicketAIConfig,
     RenderedOpenTicketAIConfig,
     RenderedSystemConfig,
     SystemConfig,
@@ -69,7 +69,7 @@ def test_open_ticket_ai_config_render_with_base_model_scope():
         },
     )
 
-    raw_config = OpenTicketAIConfig(
+    raw_config = RawOpenTicketAIConfig(
         version="2.0.0",
         plugins=["core", "{{ defs.extra_plugin }}"],
         general_config={
