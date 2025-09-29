@@ -1,10 +1,21 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 import yaml
 from pydantic import BaseModel
 
 from open_ticket_ai.core.config.raw_config import RawConfig
+from open_ticket_ai.core.pipeline.base_pipe_config import RawPipeConfig, RenderedPipeConfig
+
+
+class RenderedOrchestratorRunnerConfig(BaseModel):
+    run_every_milli_seconds: int
+    pipe: RenderedPipeConfig
+
+
+class OrchestratorRunnerConfig(RawConfig[RenderedOrchestratorRunnerConfig]):
+    run_every_milli_seconds: int
+    pipe: RawPipeConfig
 
 
 class RenderedSystemConfig(BaseModel):
@@ -14,6 +25,7 @@ class RenderedSystemConfig(BaseModel):
 
 
 class SystemConfig(RawConfig[RenderedSystemConfig]):
+    rendered_model_type: ClassVar[type[RenderedSystemConfig]] = RenderedSystemConfig
     id: str
     provider_key: str
     config: dict[str, Any] = {}
@@ -24,18 +36,19 @@ class RenderedOpenTicketAIConfig(BaseModel):
     plugins: list[str] = []
     general_config: dict[str, Any] = {}
     defs: dict[str, Any] = {}
-    orchestrator: dict[str, Any] = {}
+    orchestrator: list[RenderedOrchestratorRunnerConfig] = []
     system: RenderedSystemConfig | None = None
     pipe: Any | None = None  # Will be RenderedPipeConfig[Any]
     interval_seconds: float = 60.0
 
 
 class OpenTicketAIConfig(RawConfig[RenderedOpenTicketAIConfig]):
+    rendered_model_type: ClassVar[type[RenderedOpenTicketAIConfig]] = RenderedOpenTicketAIConfig
     version: str = "1.0.0"
     plugins: list[str] = []
     general_config: dict[str, Any] = {}
     defs: dict[str, Any] = {}
-    orchestrator: dict[str, Any] = {}
+    orchestrator: list[OrchestratorRunnerConfig] = []
     system: SystemConfig | None = None
     pipe: Any | None = None  # Will be PipeConfig[Any]
     interval_seconds: float = 60.0

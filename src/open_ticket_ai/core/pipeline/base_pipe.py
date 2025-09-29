@@ -39,7 +39,11 @@ class BasePipe[RawConfigT: RawPipeConfig](ABC, TemplateConfiguredClass):
 
     async def _process_steps(self):
         for step_config in self.__raw_pipe_config.steps:
-            pipe_class = self._get_pipe_class(step_config.render(self._current_context).use)
+            rendered_step = step_config.render(self._current_context)
+            if not rendered_step.use:
+                raise ValueError("Each pipeline step must define a 'use' value")
+
+            pipe_class = self._get_pipe_class(rendered_step.use)
             pipe_instance = pipe_class(config=step_config, registry=self._registry)
             self._current_context = await pipe_instance.process(self._current_context)
 

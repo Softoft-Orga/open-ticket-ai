@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import enum
 from typing import Any, ClassVar, Self
-
 from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.config.raw_config import RawConfig
@@ -18,7 +17,7 @@ class OnType(enum.StrEnum):
 
 class _BasePipeConfig(BaseModel):
     name: str | None = None
-    use: str
+    use: str | None = None
     services: dict[str, str] | str | None = None
 
     steps: list[Self] | str = Field(default_factory=list)
@@ -49,3 +48,25 @@ class RawPipeConfig(RawConfig[RenderedPipeConfig], _BasePipeConfig):
         if rendered_data.get("on_success") is None:
             rendered_data["on_success"] = OnType.CONTINUE
         return self.rendered_config_type.model_validate(rendered_data)
+    rendered_model_type: ClassVar[type[RenderedPipeConfig]] = RenderedPipeConfig
+
+    def _render_model_dump(self) -> dict[str, Any]:
+        data = super().model_dump(exclude={"steps"})
+        steps_value = self.steps
+
+        if isinstance(steps_value, list):
+            data["steps"] = list(steps_value)
+        else:
+            data["steps"] = steps_value
+
+        return data
+
+    def _post_render_transform(self, rendered: Any) -> Any:
+        if isinstance(rendered, dict):
+            return {
+                key: value
+                for key, value in rendered.items()
+                if not (key in {"on_failure", "on_success"} and value is None)
+            }
+
+        return rendered
