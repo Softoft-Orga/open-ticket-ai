@@ -13,7 +13,6 @@ from open_ticket_ai.core.dependency_injection.unified_registry import (
     UnifiedRegistry,
 )
 from open_ticket_ai.core.orchestrator import Orchestrator
-from open_ticket_ai.core.pipeline.base_pipe import BasePipe
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
@@ -25,55 +24,16 @@ class AppModule(Module):
         config = load_config(CONFIG_PATH)
         binder.bind(OpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(UnifiedRegistry, to=UnifiedRegistry.get_instance(), scope=singleton)
-
-    # --- Pipes Provider ---
-    @provider
-    @singleton
-    def provide_pipes(
-            self,
-            config: OpenTicketAIConfig,
-            ticket_system_adapter: TicketSystemService,
-            registry: UnifiedRegistry,
-    ) -> list[BasePipe]:
-        """Provide all configured pipe instances."""
-        pipes = []
-
-        for pipe_config in config.pipelines[0].steps:
-            # Get pipe class from registry or import it
-            pipe_name = pipe_config.type.split(".")[-1]
-            try:
-                pipe_class = registry.get_class(pipe_name)
-            except NotRegistered:
-                # Fall back to dynamic import if not in registry
-                module_name, class_name = pipe_config.type.rsplit(".", 1)
-                module = importlib.import_module(module_name)
-                pipe_class = getattr(module, class_name)
-                # Register it for future use under both short and full names
-                registry.register_class(pipe_class)
-                registry.register_class(pipe_class, name=pipe_config.type)
-
-            # Create pipe instance with dependencies
-            pipe_instance = pipe_class(config=pipe_config, ticket_system=ticket_system_adapter)
-            pipes.append(pipe_instance)
-
-        return pipes
-
     # --- Orchestrator Provider ---
     @provider
     @singleton
     def provide_orchestrator(
             self,
             config: OpenTicketAIConfig,
-            pipes: list[BasePipe],
+            registry: UnifiedRegistry,
     ) -> Orchestrator:
         """Provide the orchestrator with configured pipes."""
-        # Get interval from pipeline configuration if available
-        interval_seconds = 60.0  # default
-        if config.pipelines and config.pipelines[0].pipeline_config:
-            interval_seconds = config.pipelines[0].pipeline_config.get("interval_seconds", 60.0)
-
-        # Create orchestrator with injected pipes
-        return Orchestrator(pipes=pipes, interval_seconds=interval_seconds)
+        return Orchestrator(runners=config.orchestrator, registry=registry)
 
     @provider
     @singleton

@@ -18,7 +18,7 @@ class OnType(enum.StrEnum):
 
 class _BasePipeConfig(BaseModel):
     name: str | None = None
-    use: str
+    use: str | None = None
     services: dict[str, str] | str | None = None
 
     steps: list[Self] | str = Field(default_factory=list)

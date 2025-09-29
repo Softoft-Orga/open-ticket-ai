@@ -144,8 +144,8 @@ open_ticket_ai:
                 Da ein Fehler aufgetreten ist.
 
   orchestrator:
-    runners:
-      - run_every_milli_seconds: 10000
+    - run_every_milli_seconds: 10000
+      pipe:
         <<: *ticket-routing
         ticket_search_criteria:
           queue.name: "EingangsQueue"
