@@ -51,6 +51,8 @@ class BasePipe[RawConfigT: RawPipeConfig](ABC, TemplateConfiguredClass):
         return typing.cast(type[BasePipe[Any]], self._registry.get_class(pipe_type))
 
     async def process(self, context: PipelineContext) -> PipelineContext:
+        self._current_context = context
+
         if not self.config.when:
             self._logger.info(
                 f"Skipping pipe '{self.config.name}' of type '{self.__class__.__name__}' as 'when' condition is False")
