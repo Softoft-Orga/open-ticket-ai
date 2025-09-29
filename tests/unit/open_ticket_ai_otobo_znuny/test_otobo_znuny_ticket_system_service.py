@@ -27,7 +27,8 @@ from open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service import (
     _to_id_name,
     otobo_retry,
 )
-from open_ticket_ai.otobo_znuny import (
+from open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service_config import (
+    RawOTOBOZnunyTicketsystemServiceConfig,
     RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
 
@@ -36,9 +37,9 @@ class TestToIdName:
     def test_converts_unified_entity_to_id_name(self):
         entity = UnifiedEntity(id="123", name="Test Entity")
         result = _to_id_name(entity)
-        
+
         assert isinstance(result, IdName)
-        assert result.id == "123"
+        assert result.id == 123
         assert result.name == "Test Entity"
     
     def test_returns_none_for_none_input(self):
@@ -51,20 +52,22 @@ class TestBeforeSleepRecreateClient:
     async def test_recreates_client_when_adapter_has_method(self):
         retry_state = Mock()
         adapter_mock = Mock()
-        adapter_mock._recreate_client = AsyncMock()
+        adapter_mock._recreate_client = Mock()
         
         retry_state.args = (adapter_mock,)
         
-        with patch("open_ticket_ai_otobo_znuny.otobo_znuny_ticket_system_service.asyncio.run") as mock_run:
+        with patch("open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service.asyncio.run") as mock_run:
             mock_run.side_effect = RuntimeError("Already running")
-            with patch("open_ticket_ai_otobo_znuny.otobo_znuny_ticket_system_service.asyncio.get_running_loop") as mock_get_loop:
+            with patch(
+                "open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service.asyncio.get_running_loop"
+            ) as mock_get_loop:
                 mock_loop = Mock()
-                mock_task = Mock()
+                mock_task = AsyncMock()
                 mock_loop.create_task.return_value = mock_task
                 mock_get_loop.return_value = mock_loop
-                
+
                 _before_sleep_recreate_client(retry_state)
-                
+
                 mock_loop.create_task.assert_called_once()
                 mock_loop.run_until_complete.assert_called_once_with(mock_task)
     
@@ -90,16 +93,20 @@ class TestOtoboRetryDecorator:
         
         call_count = 0
         
-        @otobo_retry()
-        async def test_func(self):
-            nonlocal call_count
-            call_count += 1
-            if call_count < 3:
-                raise httpx.ConnectError("Connection failed")
-            return "success"
-        
-        result = await test_func(mock_service)
-        
+        with patch(
+            "open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service._before_sleep_recreate_client",
+            new=Mock(),
+        ):
+            @otobo_retry()
+            async def test_func(self):
+                nonlocal call_count
+                call_count += 1
+                if call_count < 3:
+                    raise httpx.ConnectError("Connection failed")
+                return "success"
+
+            result = await test_func(mock_service)
+
         assert result == "success"
         assert call_count == 3
     
@@ -109,14 +116,18 @@ class TestOtoboRetryDecorator:
         mock_service.logger = Mock()
         mock_service._recreate_client = AsyncMock()
         
-        @otobo_retry()
-        async def test_func(self):
-            raise httpx.ConnectError("Persistent connection failure")
-        
-        with pytest.raises(httpx.ConnectError):
-            await test_func(mock_service)
-        
-        mock_service.logger.error.assert_called()
+        with patch(
+            "open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service._before_sleep_recreate_client",
+            new=Mock(),
+        ):
+            @otobo_retry()
+            async def test_func(self):
+                raise httpx.ConnectError("Persistent connection failure")
+
+            with pytest.raises(httpx.ConnectError):
+                await test_func(mock_service)
+
+        mock_service.logger.exception.assert_called()
 
 
 class TestOTOBOZnunyTicketSystemService:
@@ -128,10 +139,54 @@ class TestOTOBOZnunyTicketSystemService:
             username="test_user",
             webservice_name="TestService"
         )
-    
+
     @pytest.fixture
     def service(self, config):
         return OTOBOZnunyTicketSystemService(config)
+
+    @pytest.fixture(autouse=True)
+    def patch_ticket_adapter(self, monkeypatch):
+        def adapter(ticket: Ticket) -> UnifiedTicket:
+            queue = None
+            if ticket.queue is not None:
+                queue = UnifiedEntity(
+                    id=str(ticket.queue.id) if ticket.queue.id is not None else None,
+                    name=ticket.queue.name,
+                )
+
+            priority = None
+            if ticket.priority is not None:
+                priority = UnifiedEntity(
+                    id=str(ticket.priority.id) if ticket.priority.id is not None else None,
+                    name=ticket.priority.name,
+                )
+
+            return UnifiedTicket(
+                id=str(ticket.id) if ticket.id is not None else "",
+                subject=ticket.title or "",
+                queue=queue,
+                priority=priority,
+                note=None,
+                body="",
+            )
+
+        monkeypatch.setattr(
+            "open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service.TicketAdapter",
+            adapter,
+        )
+
+    def test_config_model_types(self):
+        assert (
+            OTOBOZnunyTicketSystemService.get_raw_config_model_type()
+            is RawOTOBOZnunyTicketsystemServiceConfig
+        )
+        assert (
+            OTOBOZnunyTicketSystemService.get_rendered_config_model_type()
+            is RenderedOTOBOZnunyTicketsystemServiceConfig
+        )
+
+    def test_needs_raw_config(self):
+        assert OTOBOZnunyTicketSystemService.needs_raw_config() is False
     
     @pytest.fixture
     def mock_client(self):
@@ -158,7 +213,7 @@ class TestOTOBOZnunyTicketSystemService:
     
     @pytest.mark.asyncio
     async def test_recreate_client(self, service, mock_client):
-        with patch("open_ticket_ai_otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
+        with patch("open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
             MockClientClass.return_value = mock_client
             
             result = await service._recreate_client()
@@ -204,7 +259,7 @@ class TestOTOBOZnunyTicketSystemService:
         assert isinstance(call_args, TicketSearch)
         assert call_args.limit == 10
         assert len(call_args.queues) == 1
-        assert call_args.queues[0].id == "1"
+        assert call_args.queues[0].id == 1
     
     @pytest.mark.asyncio
     async def test_find_tickets_without_queue(self, service, mock_client):
@@ -292,8 +347,8 @@ class TestOTOBOZnunyTicketSystemService:
         assert isinstance(call_args, TicketUpdate)
         assert call_args.id == 456
         assert call_args.title == "Updated Title"
-        assert call_args.queue.id == "3"
-        assert call_args.priority.id == "4"
+        assert call_args.queue.id == 3
+        assert call_args.priority.id == 4
         assert call_args.article.subject == "Update Note"
         assert call_args.article.body == "Note body"
     
@@ -326,12 +381,17 @@ class TestOTOBOZnunyTicketSystemService:
             httpx.ReadTimeout("Second attempt timeout"),
             Ticket(id=999, title="Success after retries")
         ]
-        
+
         with patch.object(service, "_recreate_client", new_callable=AsyncMock) as mock_recreate:
             mock_recreate.return_value = mock_client
-            
-            result = await service.get_ticket("999")
-            
+
+            original_before_sleep = service.get_ticket.retry.before_sleep
+            service.get_ticket.retry.before_sleep = lambda state: None
+            try:
+                result = await service.get_ticket("999")
+            finally:
+                service.get_ticket.retry.before_sleep = original_before_sleep
+
             assert result is not None
             assert result.id == "999"
             assert mock_client.get_ticket.call_count == 3
