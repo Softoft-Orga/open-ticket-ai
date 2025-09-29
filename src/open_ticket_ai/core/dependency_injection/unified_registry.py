@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Any, Callable, TypeVar
 from typing import Self, Any, Dict, Iterable
 
 from open_ticket_ai.core.config.registerable_class import RegisterableClass

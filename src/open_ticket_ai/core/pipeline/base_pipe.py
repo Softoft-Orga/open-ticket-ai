@@ -31,7 +31,11 @@ class BasePipe[ConfigT: PipeConfig](ABC, RegisterableClass[ConfigT]):
 
     async def _process_steps(self):
         for step_config in self.__raw_pipe_config.steps:
-            pipe_class = self._get_pipe_class(step_config.render(self._current_context).use)
+            rendered_step = step_config.render(self._current_context)
+            if not rendered_step.use:
+                raise ValueError("Each pipeline step must define a 'use' value")
+
+            pipe_class = self._get_pipe_class(rendered_step.use)
             pipe_instance = pipe_class(config=step_config, registry=self._registry)
             self._current_context = await pipe_instance.process(self._current_context)
 
@@ -39,6 +43,7 @@ class BasePipe[ConfigT: PipeConfig](ABC, RegisterableClass[ConfigT]):
         return typing.cast(type[BasePipe[Any]], self._registry.get_class(pipe_type))
 
     async def process(self, context: PipelineContext) -> PipelineContext:
+        self._current_context = context
         if not self.config.when:
             self._logger.info(
                 f"Skipping pipe '{self.config.name}' of type '{self.__class__.__name__}' as 'when' condition is False")
