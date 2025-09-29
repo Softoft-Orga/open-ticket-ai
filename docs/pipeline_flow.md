@@ -54,6 +54,28 @@ flowchart TD
 
 ## Key Components
 
+## Pipeline Architecture Concepts
+
+### Configuration Layers
+- **Root Configuration**: `RawOpenTicketAIConfig` groups the YAML input into `plugins`, `general_config`, reusable definition `defs`, and the `orchestrator` pipeline specification that drives execution.
+- **Service Definitions (`defs`)**: The `InstanceCreator` walks over each definition, instantiates the configured class (via dotted import in the `use` field), and registers the object with the global `UnifiedRegistry` for later lookup inside templates and pipes.
+- **Dependency Container**: The dependency injector binds the loaded configuration, registry, and instance creator as singletons so that every pipe can resolve shared services without rebuilding them.
+
+### Pipe Construction
+- **Config Normalization**: Each pipeline entry is wrapped in a `RegisterableConfig`, giving it a generated `id`, a display `name`, the Python class to `use`, a `when` flag, and nested `steps` to execute before the main pipe logic.
+- **Rendered Pipe Config**: During execution the raw dictionaries are rendered into `RenderedPipeConfig` objects, computing boolean `when` conditions and optional `on_success`/`on_failure` policies before any code runs.
+- **Jinja-Rendered Steps**: `ConfigurablePipe._build_pipe_from_step_config` runs each step configuration through the shared Jinja2 environment so that templates can reference context data or registered services when resolving the class in the `use` field.
+- **Sequential Execution**: `_process_steps` walks the rendered list of step pipes and awaits their `process` methods, allowing complex behavior to be composed out of smaller reusable units before the main pipe executes.
+
+### Context Handling
+- **Execution Context**: The lightweight `Context` model carries a shared `pipes` dictionary for storing results and an optional `config` block for pipeline-wide settings.
+- **State Propagation**: After `_process` finishes, `_save_state` writes its return payload under the pipe's configured name so that later steps can read it via Jinja expressions like `{{ pipes.my_pipe.some_value }}`.
+- **Conditional Execution**: Pipes whose rendered `when` evaluates to `False` are skipped with a log message, allowing declarative feature toggles without changing code.
+
+### Error Strategy
+- **Centralized Logging**: Exceptions raised inside `_process` are logged with the pipe name before being re-raised, ensuring orchestration layers can react while preserving tracebacks.
+- **Default Behavior**: `DefaultPipe` provides a no-op implementation that simply returns an empty state, useful for scaffolding new pipeline entries while their real logic is under development.
+
 ### Context Flow
 - **Initial State**: Empty context with `pipes={}` and `config={}`
 - **State Accumulation**: Each pipe saves results to `context.pipes[pipe_name]`

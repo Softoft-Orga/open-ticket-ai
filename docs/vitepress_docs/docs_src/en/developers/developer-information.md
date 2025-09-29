@@ -29,6 +29,25 @@ An example command to start the application:
 python -m open_ticket_ai.src.ce.main start
 ```
 
+## Pipeline Architecture
+
+The runtime pipeline is driven entirely by YAML. `RawOpenTicketAIConfig` collects plug-ins, global configuration, re-usable
+`defs`, and the `orchestrator` sequence that describes which pipes should run. When the application boots, the dependency
+injection container loads this file, constructs singleton service instances declared under `defs`, and registers them in the
+`UnifiedRegistry`. Pipes and templates can then reference these shared services by class name.
+
+Every pipeline entry is normalized into a `RegisterableConfig`. It carries metadata such as the pipe's `name`, the class to
+`use`, optional nested `steps`, and a `when` expression. At execution time the configuration is rendered with the current
+`Context`, so Jinja2 expressions can pull values from previous steps (for example `{{ pipes.fetch_ticket.ticket_id }}`) or from
+registered services. The `_process_steps` helper instantiates each declared step pipe, waits for it to finish, and only then
+invokes the main pipe's `_process` method.
+
+The `Context` object is intentionally small: it maintains a `pipes` dictionary for results and an optional `config` block for
+pipeline-wide settings. After `_process` returns a dictionary, it is saved under the pipe's name and becomes available to the
+rest of the pipeline. Setting `when: false` in the rendered configuration skips a pipe entirely, making it easy to switch
+features on or off without editing Python code. Because errors bubble up after being logged with the pipe name, the
+orchestrator (or higher-level scheduler) can decide whether to continue, retry, or abort the current container run.
+
 ## Training Custom Models
 
 Direct training through the application is not provided in the MVP. Pre-trained models can be specified and used in the
