@@ -1,22 +1,18 @@
 from typing import Any
 
+from pydantic import BaseModel
+
 from open_ticket_ai.core.pipeline.configurable_pipe import ConfigurablePipe
-from open_ticket_ai.core.pipeline.configurable_pipe_config import PipeConfig, RawPipeConfig, RenderedPipeConfig
 
 
-class RawJinjaExpressionPipeConfig(RawPipeConfig):
-    expression: str
-
-
-class RenderedJinjaExpressionPipeConfig(RenderedPipeConfig):
+class JinjaExpressionPipeConfig(BaseModel):
     expression: Any
 
 
-class JinjaExpressionPipeConfig(PipeConfig[RawJinjaExpressionPipeConfig, RenderedJinjaExpressionPipeConfig]):
-    pass
-
-
-class JinjaExpressionPipe(ConfigurablePipe[RawJinjaExpressionPipeConfig, RenderedJinjaExpressionPipeConfig]):
+class JinjaExpressionPipe(ConfigurablePipe):
+    def __init__(self, config: dict[str, Any]) -> None:
+        super().__init__(config)
+        self.config = JinjaExpressionPipeConfig(**config)
 
     async def _process(self) -> dict[str, Any]:
         return {"value": self.config.expression}

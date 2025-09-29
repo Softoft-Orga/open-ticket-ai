@@ -1,6 +1,4 @@
 open_ticket_ai:
-  plugins:
-
   general_config:
     logging:
       version: 1
@@ -98,7 +96,7 @@ open_ticket_ai:
       steps:
         - id: ticket_fetcher
           use: TicketFetchPipe
-          ticket_system: "{{ get_instance('otobo_znuny') }}"
+          ticket_system: "{{ create_instance('otobo_znuny') }}"
           ticket_search_criteria: "{{ config.ticket_search_criteria }}"
 
         - id: queue_classification

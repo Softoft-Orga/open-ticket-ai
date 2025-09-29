@@ -6,7 +6,7 @@ import sys
 from dotenv import load_dotenv
 
 from open_ticket_ai.base.otobo_integration import OTOBOAdapter
-from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedQueue
 
 

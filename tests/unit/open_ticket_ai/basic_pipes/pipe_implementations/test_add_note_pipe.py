@@ -7,8 +7,8 @@ from open_ticket_ai.basic_pipes.ticket_system_pipes.add_note_pipe import (
     AddNotePipe,
     RenderedTicketAddNotePipeConfig,
 )
-from open_ticket_ai.core.pipeline.context import PipelineContext
-from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import (
+from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
@@ -59,14 +59,14 @@ def frozen_config(
 
 
 @pytest.fixture
-def sample_context() -> PipelineContext:
+def sample_context() -> Context:
     """Return an empty pipeline context."""
-    return PipelineContext(pipes={}, config={})
+    return Context(pipes={}, config={})
 
 
 def test_add_note_pipe_calls_ticket_system(
         mock_config: MagicMock,
-        sample_context: PipelineContext,
+        sample_context: Context,
         mock_ticket_system: MagicMock,
         sample_note: UnifiedNote,
 ) -> None:
@@ -81,7 +81,7 @@ def test_add_note_pipe_calls_ticket_system(
 
 def test_add_note_pipe_handles_failure(
         mock_config: MagicMock,
-        sample_context: PipelineContext,
+        sample_context: Context,
         mock_ticket_system: MagicMock,
 ) -> None:
     mock_ticket_system.add_note.side_effect = RuntimeError("Service unavailable")
@@ -97,7 +97,7 @@ def test_add_note_pipe_handles_failure(
 
 def test_add_note_pipe_with_frozen_config(
         frozen_config,
-        sample_context: PipelineContext,
+        sample_context: Context,
         mock_ticket_system: MagicMock,
         sample_note: UnifiedNote,
 ) -> None:
@@ -111,7 +111,7 @@ def test_add_note_pipe_with_frozen_config(
 
 def test_add_note_pipe_skips_when_disabled(
         mock_config: MagicMock,
-        sample_context: PipelineContext,
+        sample_context: Context,
         mock_ticket_system: MagicMock,
         sample_note: UnifiedNote,
 ) -> None:

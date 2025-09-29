@@ -7,18 +7,16 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from open_ticket_ai.basic_pipes.ticket_system_pipes.fetch_tickets_pipe import (
-    FetchTicketsPipe,
-    RawTicketFetchPipeConfig,
-    RenderedTicketFetchPipeConfig,
-)
-
 ROOT = Path(__file__).resolve().parents[5]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.append(str(SRC))
 
-from open_ticket_ai.core.pipeline.context import PipelineContext
+from open_ticket_ai.basic_pipes.ticket_system_pipes.fetch_tickets_pipe import (
+    FetchTicketsPipe,
+    RenderedTicketFetchPipeConfig,
+)
+from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedEntity,
@@ -27,8 +25,8 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 
 
 @pytest.fixture
-def pipeline_context() -> PipelineContext:
-    return PipelineContext(pipes={}, config={})
+def pipeline_context() -> Context:
+    return Context(pipes={}, config={})
 
 
 @pytest.fixture
@@ -69,7 +67,7 @@ def _build_ticket(ticket_id: int, subject: str) -> UnifiedTicket:
 
 
 def test_process_serializes_results(
-    renderable_config, ticket_service: AsyncMock, pipeline_context: PipelineContext
+        renderable_config, ticket_service: AsyncMock, pipeline_context: Context
 ) -> None:
     expected_tickets = [_build_ticket(1, "First"), _build_ticket(2, "Second")]
     ticket_service.find_tickets.return_value = expected_tickets
@@ -91,7 +89,7 @@ def test_process_serializes_results(
 
 
 def test_process_without_results_returns_empty_list(
-    renderable_config, ticket_service: AsyncMock, pipeline_context: PipelineContext
+        renderable_config, ticket_service: AsyncMock, pipeline_context: Context
 ) -> None:
     ticket_service.find_tickets.return_value = []
     pipe = FetchTicketsPipe(renderable_config)
@@ -102,7 +100,7 @@ def test_process_without_results_returns_empty_list(
 
 
 def test_process_without_search_criteria_returns_error(
-    ticket_service: AsyncMock, pipeline_context: PipelineContext, frozen_config_factory
+        ticket_service: AsyncMock, pipeline_context: Context, frozen_config_factory
 ) -> None:
     rendered_config = RenderedTicketFetchPipeConfig(
         id="ticket_fetcher",
@@ -120,5 +118,3 @@ def test_process_without_search_criteria_returns_error(
     state = result_context.pipes["ticket_fetcher"]
     assert "found_tickets" in state
     ticket_service.find_tickets.assert_awaited_once_with(None)
-
-

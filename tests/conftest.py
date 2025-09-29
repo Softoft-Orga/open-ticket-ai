@@ -6,11 +6,6 @@ from unittest.mock import MagicMock
 import pytest
 from pydantic import BaseModel
 
-from open_ticket_ai.core.config.raw_config import (
-    RawConfig,
-    RenderedConfig,
-    RenderableConfig,
-)
 
 
 def pytest_collection_modifyitems(config, items):
@@ -130,7 +125,7 @@ def create_renderable_from_rendered(
     
     raw_config = create_mock_raw_config(rendered_config)
     config_instance = config_class(raw_config)
-    config_instance.rendered_config = rendered_config
+    config_instance.__rendered_config = rendered_config
     return config_instance
 
 

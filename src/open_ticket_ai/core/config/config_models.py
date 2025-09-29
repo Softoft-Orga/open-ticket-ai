@@ -2,49 +2,16 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from pydantic import BaseModel
 
-from open_ticket_ai.core.config.raw_config import (
-    RawConfig,
-    RenderableConfig,
-    RenderedConfig,
-)
-from open_ticket_ai.core.config.registerable import RenderedRegistrableConfig
+from open_ticket_ai.core.config.registerable_config import RegisterableConfig
 
 
-class RenderedOpenTicketAIConfig(RenderedConfig):
-    imports: list[str] = []
-    general_config: dict[str, dict[str, Any] | str | int | float | bool] = {}
-    defs: list[RenderedRegistrableConfig] = []
-    orchestrator: dict[str, Any] = {}
-
-
-class RawOpenTicketAIConfig(RawConfig):
-    imports: list[str] | str = []
-    general_config: dict[str, dict[str, Any] | str | int | float | bool] | str = {}
-    defs: dict[str, list[dict | str]] | str = {}
-    orchestrator: dict[str, Any] | str = {}
-
-
-class OpenTicketAIConfig(RenderableConfig[RawOpenTicketAIConfig, RenderedOpenTicketAIConfig]):
-    pass
-
-
-class RenderedSystemConfig(RenderedConfig):
-    """Rendered system configuration."""
-
-    pass
-
-
-class RawSystemConfig(RawConfig):
-    """Raw system configuration."""
-
-    pass
-
-
-class SystemConfig(RenderableConfig[RawSystemConfig, RenderedSystemConfig]):
-    """System configuration wrapper."""
-
-    pass
+class RawOpenTicketAIConfig(BaseModel):
+    plugins: list[str] = []
+    general_config: dict[str, dict[str, Any] | Any] = {}
+    defs: list[dict[str, Any]] = []
+    orchestrator: list[dict[str, Any]] = []
 
 
 def load_config(path: str | Path) -> RawOpenTicketAIConfig:

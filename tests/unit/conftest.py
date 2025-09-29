@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from open_ticket_ai.core.config.raw_config import (
+from open_ticket_ai.core.config.renderable_config import (
     RawConfig,
     RenderedConfig,
     RenderableConfig,
@@ -11,8 +11,8 @@ from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedReg
 from open_ticket_ai.core.pipeline.configurable_pipe_config import (
     RenderedPipeConfig,
 )
-from open_ticket_ai.core.pipeline.context import PipelineContext
-from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import (
+from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
 from tests.conftest import (
@@ -22,8 +22,8 @@ from tests.conftest import (
 
 
 @pytest.fixture
-def empty_pipeline_context() -> PipelineContext:
-    return PipelineContext(pipes={}, config={})
+def empty_pipeline_context() -> Context:
+    return Context(pipes={}, config={})
 
 
 @pytest.fixture
