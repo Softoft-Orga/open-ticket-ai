@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, Callable, TypeVar
-from typing import Self, Any, Dict, Iterable
+from collections.abc import Iterable
+from typing import Any, Self
 
-from open_ticket_ai.core.config.registerable_class import RegisterableClass
+from open_ticket_ai.core.config.registerable import RegisterableClass
 
 
 class NotRegistered(Exception):
@@ -16,6 +16,7 @@ class ConflictingClassRegistration(Exception):
 
 class UnifiedRegistry:
     """Holds registered TYPES and per-run service INSTANCES."""
+
     _singleton: Self | None = None
 
     def __init__(self) -> None:
@@ -47,12 +48,14 @@ class UnifiedRegistry:
         try:
             return self.instances_registry[service_id]
         except KeyError:
-            raise NotRegistered(f"Service instance '{service_id}' not found. Available: {list(self.instances_registry)}")
+            raise NotRegistered(
+                f"Service instance '{service_id}' not found. Available: {list(self.instances_registry)}"
+            )
 
     def instantiate_services_from_config(
-            self,
-            services_spec: Iterable[dict[str, Any]],
-            render_scope: dict[str, Any],
+        self,
+        services_spec: Iterable[dict[str, Any]],
+        render_scope: dict[str, Any],
     ) -> None:
         for item in services_spec or []:
             service_id: str = str(item["id"])
@@ -70,18 +73,18 @@ class UnifiedRegistry:
             self.add_service_instance(service_id, instance)
 
     def build_pipe_instance(
-            self,
-            pipe_type_name: str,
-            raw_step_config: dict[str, Any],
-            service_bindings: dict[str, str] | None = None,
-            extra_kwargs: dict[str, Any] | None = None,
+        self,
+        pipe_type_name: str,
+        raw_step_config: dict[str, Any],
+        service_bindings: dict[str, str] | None = None,
+        extra_kwargs: dict[str, Any] | None = None,
     ):
         pipe_class = self.get_registered_pipe_class(pipe_type_name)
         self._validate_pipe_constructor_accepts_services(pipe_class, service_bindings)
 
         config_instance = self._create_config_instance(pipe_class, raw_step_config, {})
 
-        injected_kwargs: Dict[str, Any] = {}
+        injected_kwargs: dict[str, Any] = {}
         for constructor_param, service_id in (service_bindings or {}).items():
             injected_kwargs[constructor_param] = self.get_service_instance(service_id)
 
@@ -91,10 +94,7 @@ class UnifiedRegistry:
         return pipe_class(config=config_instance, **injected_kwargs)
 
     def _create_config_instance(
-            self,
-            configurable_class: type[RegisterableClass],
-            raw_config: dict[str, Any],
-            render_scope: dict[str, Any]
+        self, configurable_class: type[RegisterableClass], raw_config: dict[str, Any], render_scope: dict[str, Any]
     ) -> Any:
         if configurable_class.needs_raw_config():
             config_model_type = configurable_class.get_raw_config_model_type()

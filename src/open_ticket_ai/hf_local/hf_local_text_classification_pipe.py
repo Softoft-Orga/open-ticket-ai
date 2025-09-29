@@ -4,11 +4,10 @@ from functools import cache
 from typing import Any
 
 from open_ticket_ai.basic_pipes.pipe_configs import HFLocalAIInferenceServiceConfig
-from open_ticket_ai.core.pipeline.base_pipe import BasePipe
+from open_ticket_ai.core.pipeline.configurable_pipe import ConfigurablePipe
 
 
-class HFLocalAIInferenceService(BasePipe):
-
+class HFLocalTextClassificationPipe(ConfigurablePipe):
     def __init__(self, config: HFLocalAIInferenceServiceConfig, *args, **kwargs):
         super().__init__(config)
         self.logger = logging.getLogger(self.__class__.__name__)

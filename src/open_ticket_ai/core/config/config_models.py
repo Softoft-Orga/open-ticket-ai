@@ -3,8 +3,12 @@ from typing import Any
 
 import yaml
 
-from open_ticket_ai.core.config.raw_config import RawRegisterableConfig, RenderedConfig, RawConfig, RenderableConfig, \
-    RenderedRegistrableConfig
+from open_ticket_ai.core.config.raw_config import (
+    RawConfig,
+    RenderableConfig,
+    RenderedConfig,
+)
+from open_ticket_ai.core.config.registerable import RenderedRegistrableConfig
 
 
 class RenderedOpenTicketAIConfig(RenderedConfig):
@@ -23,6 +27,25 @@ class RawOpenTicketAIConfig(RawConfig):
 
 class OpenTicketAIConfig(RenderableConfig[RawOpenTicketAIConfig, RenderedOpenTicketAIConfig]):
     pass
+
+
+class RenderedSystemConfig(RenderedConfig):
+    """Rendered system configuration."""
+
+    pass
+
+
+class RawSystemConfig(RawConfig):
+    """Raw system configuration."""
+
+    pass
+
+
+class SystemConfig(RenderableConfig[RawSystemConfig, RenderedSystemConfig]):
+    """System configuration wrapper."""
+
+    pass
+
 
 def load_config(path: str | Path) -> RawOpenTicketAIConfig:
     with open(path, encoding="utf-8") as fh:

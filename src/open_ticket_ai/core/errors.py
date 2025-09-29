@@ -259,6 +259,7 @@ def create_error_class(name: str, base_class=OpenTicketAIError, docstring: str =
     """
     return type(name, (base_class,), {"__doc__": docstring})
 
+
 # Example usage of dynamic error creation:
 # DataParsingError = create_error_class(
 #     "DataParsingError",

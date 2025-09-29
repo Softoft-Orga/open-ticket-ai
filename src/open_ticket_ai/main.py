@@ -10,7 +10,6 @@ from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.container import AppModule
 from open_ticket_ai.core.pipeline.orchestrator import Orchestrator
 
-
 # Create the banner text
 # Print the banner
 

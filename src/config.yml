@@ -1,8 +1,5 @@
 open_ticket_ai:
-  imports:
-    - "open_ticket_ai.baseic_pipes"
-    - "open_ticket_ai.hf_local"
-    - "open_ticket_ai.otobo_znuny"
+  plugins:
 
   general_config:
     logging:
@@ -12,26 +9,36 @@ open_ticket_ai:
       formatters: { std: { format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s' } }
       root: { level: INFO, handlers: [ console ] }
 
+    pipe_classes:
+      - &ticket_fetch_pipe
+        use: "open_ticket_ai.basic_pipes:FetchTicketsPipe"
+      - &ticket_update_pipe
+        use: "open_ticket_ai.basic_pipes:UpdateTicketsPipe"
+      - &ticket_add_note_pipe
+        use: "open_ticket_ai.basic_pipes:AddNoteTicketsPipe"
+      - &ticket_classifier_pipe
+        use: "open_ticket_ai.hf_local:HFLocalTextClassificationPipe"
+      - &jinja_expression_pipe
+        use: "open_ticket_ai.basic_pipes:JinjaExpressionPipe"
+
   defs:
-    - id: otobo_znuny
-      use: OTOBOZnunyTicketSystemService
+    - id: "otobo_znuny"
+      use: "open_ticket_ai.otobo_znuny.OToboZnunyTicketSystemService"
       server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
       password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 
     - &default_ticket_update
-      id: default_ticket_update
-      use: TicketUpdatePipe
-      services: { ticket_system_service: "otobo_znuny" }
+      <<: *ticket_update_pipe
+      ticket_system: "{{ get_instance('otobo_znuny') }}"
       ticket_id: "{{ config.ticket_id }}"
 
     - &default_ticket_add_note
-      id: default_ticket_add_note
-      use: TicketAddNotePipe
-      ticket_system: "{{ "
+      <<: *ticket_add_note_pipe
+      ticket_system: "{{ get_instance('otobo_znuny') }}"
       ticket_id: "{{ config.ticket_id }}"
 
     - &ticket_classifier
-      id: ticket_classifier
+      <<: *ticket_classifier_pipe
       use: HfLocalTextClassificationPipe
       token: "{{ env.OTAI_HUGGINGFACE_EHS_TOKEN }}"
       prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
@@ -45,10 +52,12 @@ open_ticket_ai:
               <<: *ticket_classifier
               model: "{{ config.model }}"
             - id: map_value
+              <<: *jinja_expression_pipe
               expression: "{{ config.map_obj[pipes.classify.label] }}"
               on_failure: "continue"
 
             - id: select_final
+              <<: *jinja_expression_pipe
               expression: |-
                 {{ 
                 pipes.map_value.value if data.pipes.classify.confidence >= config.min_conf
@@ -89,7 +98,7 @@ open_ticket_ai:
       steps:
         - id: ticket_fetcher
           use: TicketFetchPipe
-          services: { ticket_system_service: "otobo_znuny" }
+          ticket_system: "{{ get_instance('otobo_znuny') }}"
           ticket_search_criteria: "{{ config.ticket_search_criteria }}"
 
         - id: queue_classification

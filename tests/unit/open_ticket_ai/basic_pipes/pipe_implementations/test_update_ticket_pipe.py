@@ -9,10 +9,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from open_ticket_ai.base_extensions import pipe_configs
 from open_ticket_ai.core.pipeline.context import PipelineContext
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedEntity, UnifiedTicket
-
-import open_ticket_ai.base_extensions.pipe_configs as pipe_configs
 
 
 @dataclass
@@ -35,9 +34,7 @@ if not hasattr(pipe_configs, "UpdateTicketPipeConfig"):
 if not hasattr(pipe_configs, "UpdateTicketPipeModel"):
     pipe_configs.UpdateTicketPipeModel = UpdateTicketPipeModelStub  # type: ignore[attr-defined]
 
-update_ticket_module = importlib.import_module(
-    "open_ticket_ai.base_extensions.ticket_system_pipes.update_ticket_pipe"
-)
+update_ticket_module = importlib.import_module("open_ticket_ai.base_extensions.ticket_system_pipes.update_ticket_pipe")
 UpdateTicketPipe = update_ticket_module.UpdateTicketPipe
 
 

@@ -1,4 +1,5 @@
 import asyncio
+
 import pytest
 
 from open_ticket_ai.base_extensions.jinja_expression_pipe import JinjaExpressionPipe
@@ -11,7 +12,7 @@ def raw_config() -> RawJinjaExpressionPipeConfig:
     """Provide a baseline raw configuration for the pipe."""
     return RawJinjaExpressionPipeConfig(
         name="jinja_expression",
-        use="\"open_ticket_ai.base_extensions.jinja_expression_pipe.JinjaExpressionPipe\"",
+        use='"open_ticket_ai.base_extensions.jinja_expression_pipe.JinjaExpressionPipe"',
         expression="{{ 1 + 1 }}",
     )
 
@@ -37,7 +38,7 @@ def test_config_expression_renders_with_context() -> None:
     """The expression string should render against the pipeline context."""
     config = RawJinjaExpressionPipeConfig(
         name="jinja_expression",
-        use="\"open_ticket_ai.base_extensions.jinja_expression_pipe.JinjaExpressionPipe\"",
+        use='"open_ticket_ai.base_extensions.jinja_expression_pipe.JinjaExpressionPipe"',
         expression="{{ pipes.previous.value + config.offset }}",
     )
     pipe = JinjaExpressionPipe(config)

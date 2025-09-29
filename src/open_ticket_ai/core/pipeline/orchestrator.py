@@ -1,11 +1,12 @@
 import asyncio
 import logging
 import threading
-from typing import Any, Iterable
+from collections.abc import Iterable
+from typing import Any
 
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
-from open_ticket_ai.core.pipeline.base_pipe import BasePipe
-from open_ticket_ai.core.pipeline.base_pipe_config import RawPipeConfig
+from open_ticket_ai.core.pipeline.configurable_pipe import ConfigurablePipe
+from open_ticket_ai.core.pipeline.configurable_pipe_config import RawPipeConfig
 from open_ticket_ai.core.pipeline.context import PipelineContext
 
 
@@ -80,9 +81,7 @@ class Orchestrator:
         try:
             while not self._stop_event.is_set():
                 try:
-                    context = loop.run_until_complete(
-                        self._execute_pipe_config(runner_config.pipe, context)
-                    )
+                    context = loop.run_until_complete(self._execute_pipe_config(runner_config.pipe, context))
                 except Exception as exc:  # pragma: no cover - defensive logging
                     self._logger.error(
                         "Runner for interval %sms failed: %s",
@@ -102,9 +101,7 @@ class Orchestrator:
             asyncio.set_event_loop(None)
             loop.close()
 
-    async def _execute_pipe_config(
-        self, pipe_config: RawPipeConfig, context: PipelineContext
-    ) -> PipelineContext:
+    async def _execute_pipe_config(self, pipe_config: RawPipeConfig, context: PipelineContext) -> PipelineContext:
         if pipe_config.use:
             pipe_instance = self._build_pipe_instance(pipe_config)
             return await pipe_instance.process(context)
@@ -114,15 +111,13 @@ class Orchestrator:
 
         return await self._execute_steps(pipe_config.steps, context)
 
-    async def _execute_steps(
-        self, steps: Iterable[RawPipeConfig], context: PipelineContext
-    ) -> PipelineContext:
+    async def _execute_steps(self, steps: Iterable[RawPipeConfig], context: PipelineContext) -> PipelineContext:
         current_context = context
         for step in steps:
             current_context = await self._execute_pipe_config(step, current_context)
         return current_context
 
-    def _build_pipe_instance(self, pipe_config: RawPipeConfig) -> BasePipe[Any]:
+    def _build_pipe_instance(self, pipe_config: RawPipeConfig) -> ConfigurablePipe[Any]:
         pipe_class = self._registry.get_class(pipe_config.use)
 
         signature = inspect.signature(pipe_class.__init__)
@@ -136,8 +131,6 @@ class Orchestrator:
                 if param_name in signature.parameters:
                     constructor_kwargs[param_name] = self._registry.get_service_instance(service_id)
                 else:
-                    self._logger.debug(
-                        "Service binding '%s' ignored for pipe %s", param_name, pipe_class.__name__
-                    )
+                    self._logger.debug("Service binding '%s' ignored for pipe %s", param_name, pipe_class.__name__)
 
         return pipe_class(config=pipe_config, **constructor_kwargs)

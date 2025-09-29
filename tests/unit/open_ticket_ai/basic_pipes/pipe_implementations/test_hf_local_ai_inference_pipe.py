@@ -17,7 +17,10 @@ from open_ticket_ai.core.pipeline.context import PipelineContext
 
 @pytest.fixture
 def sample_config() -> HFLocalAIInferencePipeConfig:
-    """Create a sample HFLocalAiInferencePipeConfig for testing.""""""Create a sample HFLocalAiInferencePipeConfig for testing."""
+    (
+        """Create a sample HFLocalAiInferencePipeConfig for testing."""
+        """Create a sample HFLocalAiInferencePipeConfig for testing."""
+    )
     return HFLocalAIInferencePipeConfig(
         name="test_hf_inference",
         use="open_ticket_ai.base_extensions.hf_local_ai_inference_pipe.HFLocalAiInferencePipe",
@@ -54,7 +57,11 @@ class TestHFLocalAiInferencePipe:
 
     @patch("open_ticket_ai.base_extensions.hf_local_ai_inference_pipe.HFLocalAiInferencePipe._load_pipeline")
     async def test_process_success(
-        self, mock_load_pipeline: MagicMock, sample_config: HFLocalAIInferencePipeConfig, sample_context: PipelineContext, mock_pipeline: MagicMock
+        self,
+        mock_load_pipeline: MagicMock,
+        sample_config: HFLocalAIInferencePipeConfig,
+        sample_context: PipelineContext,
+        mock_pipeline: MagicMock,
     ) -> None:
         """Test successful processing."""
         mock_load_pipeline.return_value = mock_pipeline
@@ -72,7 +79,11 @@ class TestHFLocalAiInferencePipe:
 
     @patch("open_ticket_ai.base_extensions.hf_local_ai_inference_pipe.HFLocalAiInferencePipe._load_pipeline")
     async def test_process_with_cached_pipeline(
-        self, mock_load_pipeline: MagicMock, sample_config: HFLocalAIInferencePipeConfig, sample_context: PipelineContext, mock_pipeline: MagicMock
+        self,
+        mock_load_pipeline: MagicMock,
+        sample_config: HFLocalAIInferencePipeConfig,
+        sample_context: PipelineContext,
+        mock_pipeline: MagicMock,
     ) -> None:
         """Test processing with already cached pipeline."""
         pipe = HFLocalAiInferencePipe(sample_config)
@@ -85,7 +96,9 @@ class TestHFLocalAiInferencePipe:
         mock_load_pipeline.assert_not_called()
         mock_pipeline.assert_called_once_with("Test prompt for classification", truncation=True)
 
-    async def test_process_empty_prompt(self, sample_config: HFLocalAIInferencePipeConfig, sample_context: PipelineContext) -> None:
+    async def test_process_empty_prompt(
+        self, sample_config: HFLocalAIInferencePipeConfig, sample_context: PipelineContext
+    ) -> None:
         """Test processing with empty prompt."""
         sample_config.config.prompt = ""
         pipe = HFLocalAiInferencePipe(sample_config)

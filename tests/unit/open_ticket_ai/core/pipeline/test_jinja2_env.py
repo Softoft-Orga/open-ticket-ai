@@ -1,5 +1,5 @@
-from open_ticket_ai.core.pipeline.context import PipelineContext
 from open_ticket_ai.core.config.jinja2_env import LazyTemplate, render_any, render_text
+from open_ticket_ai.core.pipeline.context import PipelineContext
 
 
 def test_render_text_returns_lazy_template():

@@ -3,8 +3,8 @@ from __future__ import annotations
 import asyncio
 import copy
 
-from open_ticket_ai.core.pipeline.base_pipe import BasePipe
-from open_ticket_ai.core.pipeline.base_pipe_config import (
+from open_ticket_ai.core.pipeline.configurable_pipe import ConfigurablePipe
+from open_ticket_ai.core.pipeline.configurable_pipe_config import (
     OnType,
     RawPipeConfig,
     RenderedPipeConfig,
@@ -13,14 +13,14 @@ from open_ticket_ai.core.pipeline.context import PipelineContext
 
 
 class FakeRegistry:
-    def __init__(self, mapping: dict[str, type[BasePipe]]):
+    def __init__(self, mapping: dict[str, type[ConfigurablePipe]]):
         self._mapping = mapping
 
-    def get_class(self, name: str) -> type[BasePipe]:
+    def get_class(self, name: str) -> type[ConfigurablePipe]:
         return self._mapping[name]
 
 
-class TrackingStepPipe(BasePipe[RawPipeConfig]):
+class TrackingStepPipe(ConfigurablePipe[RawPipeConfig]):
     call_count = 0
 
     @staticmethod
@@ -32,7 +32,7 @@ class TrackingStepPipe(BasePipe[RawPipeConfig]):
         return {"step": self.config.name}
 
 
-class TrackingMainPipe(BasePipe[RawPipeConfig]):
+class TrackingMainPipe(ConfigurablePipe[RawPipeConfig]):
     def __init__(self, config: RawPipeConfig, registry: FakeRegistry, result: dict[str, object] | None = None):
         super().__init__(config=config, registry=registry)
         self._result = copy.deepcopy(result) if result is not None else {"status": "ok"}

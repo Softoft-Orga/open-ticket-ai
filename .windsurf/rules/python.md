@@ -35,3 +35,5 @@ globs: **/*.py
 - Secrets/config: via env or `.env` loader; never hardcode.
 - Concurrency: prefer `asyncio` for I/O-bound work; keep boundaries clear.
 - Patterns: use structural pattern matching where it improves clarity.
+
+Use uv run !

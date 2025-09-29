@@ -6,12 +6,12 @@ import asyncio
 import logging
 import sys
 import types
-from pathlib import Path
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
+from unittest.mock import MagicMock
 
 import pytest
-from unittest.mock import MagicMock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "src"))
 
@@ -72,12 +72,13 @@ if pipe_configs_module is None:
     pipe_configs_module = importlib.import_module("open_ticket_ai.base_extensions.pipe_configs")
 
 if not hasattr(pipe_configs_module, "HFLocalAIInferenceServiceConfig"):
+
     class _StubHFLocalConfig:  # pragma: no cover - simple shim
         pass
 
     pipe_configs_module.HFLocalAIInferenceServiceConfig = _StubHFLocalConfig
 
-from open_ticket_ai.hf_local.hf_local_text_classification_pipe import HFLocalAIInferenceService
+from open_ticket_ai.hf_local.hf_local_text_classification_pipe import HFLocalTextClassificationPipe
 
 
 @dataclass
@@ -104,8 +105,8 @@ class _RawConfig:
 
 
 @pytest.fixture()
-def service() -> HFLocalAIInferenceService:
-    class _TestableHFLocalService(HFLocalAIInferenceService):
+def service() -> HFLocalTextClassificationPipe:
+    class _TestableHFLocalService(HFLocalTextClassificationPipe):
         @staticmethod
         def get_raw_config_model_type():  # pragma: no cover - testing shim
             return _RawConfig
@@ -114,27 +115,33 @@ def service() -> HFLocalAIInferenceService:
 
 
 class TestGetToken:
-    def test_returns_none_when_env_var_missing(self, service: HFLocalAIInferenceService, caplog: pytest.LogCaptureFixture) -> None:
+    def test_returns_none_when_env_var_missing(
+        self, service: HFLocalTextClassificationPipe, caplog: pytest.LogCaptureFixture
+    ) -> None:
         service.config.hf_token_env_var = None
         with caplog.at_level(logging.WARNING):
             token = service._get_token()
         assert token is None
         assert "No hf_token_env_var provided" in caplog.text
 
-    def test_reads_token_from_environment(self, service: HFLocalAIInferenceService) -> None:
+    def test_reads_token_from_environment(self, service: HFLocalTextClassificationPipe) -> None:
         with pytest.MonkeyPatch.context() as monkeypatch:
             monkeypatch.setenv("HF_TOKEN", "hf_secret")
             token = service._get_token()
         assert token == "hf_secret"
 
-    def test_warns_when_token_looks_invalid(self, service: HFLocalAIInferenceService, caplog: pytest.LogCaptureFixture) -> None:
+    def test_warns_when_token_looks_invalid(
+        self, service: HFLocalTextClassificationPipe, caplog: pytest.LogCaptureFixture
+    ) -> None:
         with pytest.MonkeyPatch.context() as monkeypatch, caplog.at_level(logging.WARNING):
             monkeypatch.setenv("HF_TOKEN", "not_a_valid_token")
             token = service._get_token()
         assert token == "not_a_valid_token"
         assert "does not appear to be a valid HuggingFace token" in caplog.text
 
-    def test_missing_env_value_triggers_warning(self, service: HFLocalAIInferenceService, caplog: pytest.LogCaptureFixture) -> None:
+    def test_missing_env_value_triggers_warning(
+        self, service: HFLocalTextClassificationPipe, caplog: pytest.LogCaptureFixture
+    ) -> None:
         with pytest.MonkeyPatch.context() as monkeypatch, caplog.at_level(logging.WARNING):
             monkeypatch.delenv("HF_TOKEN", raising=False)
             token = service._get_token()
@@ -143,7 +150,7 @@ class TestGetToken:
 
 
 class TestProcess:
-    def test_process_loads_pipeline_when_missing(self, service: HFLocalAIInferenceService) -> None:
+    def test_process_loads_pipeline_when_missing(self, service: HFLocalTextClassificationPipe) -> None:
         rendered = service.config
         rendered.prompt = "Classify this sample"
         mock_pipeline = MagicMock(return_value=[{"label": "POSITIVE", "score": 0.95}])
@@ -158,7 +165,7 @@ class TestProcess:
         mock_pipeline.assert_called_once_with("Classify this sample", truncation=True)
         assert service._pipeline is mock_pipeline
 
-    def test_process_reuses_cached_pipeline(self, service: HFLocalAIInferenceService) -> None:
+    def test_process_reuses_cached_pipeline(self, service: HFLocalTextClassificationPipe) -> None:
         rendered = service.config
         rendered.prompt = "Classify cached"
         mock_pipeline = MagicMock(return_value=[{"label": "NEGATIVE", "score": 0.4}])
@@ -171,7 +178,7 @@ class TestProcess:
         service._load_pipeline.assert_not_called()  # type: ignore[attr-defined]
         mock_pipeline.assert_called_once_with("Classify cached", truncation=True)
 
-    def test_process_accepts_dict_response(self, service: HFLocalAIInferenceService) -> None:
+    def test_process_accepts_dict_response(self, service: HFLocalTextClassificationPipe) -> None:
         rendered = service.config
         rendered.prompt = "Dict response"
         service._pipeline = MagicMock(return_value={"label": "POSITIVE", "score": "0.7"})
@@ -180,7 +187,7 @@ class TestProcess:
 
         assert result == {"label": "POSITIVE", "confidence": 0.7}
 
-    def test_process_raises_on_empty_prompt(self, service: HFLocalAIInferenceService) -> None:
+    def test_process_raises_on_empty_prompt(self, service: HFLocalTextClassificationPipe) -> None:
         rendered = service.config
         rendered.prompt = ""
         service._pipeline = MagicMock()

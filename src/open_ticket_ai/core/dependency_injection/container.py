@@ -9,8 +9,8 @@ from open_ticket_ai.core.config.config_models import (
     load_config,
 )
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
+from open_ticket_ai.core.pipeline.configurable_pipe import ConfigurablePipe
 from open_ticket_ai.core.pipeline.orchestrator import Orchestrator
-from open_ticket_ai.core.pipeline.base_pipe import BasePipe
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
@@ -27,9 +27,9 @@ class AppModule(Module):
     @provider
     @singleton
     def provide_orchestrator(
-            self,
-            config: RawOpenTicketAIConfig,
-            pipes: list[BasePipe],
+        self,
+        config: RawOpenTicketAIConfig,
+        pipes: list[ConfigurablePipe],
     ) -> Orchestrator:
         """Provide the orchestrator with configured pipes."""
         # Get interval from pipeline configuration if available
@@ -43,9 +43,9 @@ class AppModule(Module):
     @provider
     @singleton
     def provide_ticket_system_adapter(
-            self,
-            config: RawOpenTicketAIConfig,
-            registry: UnifiedRegistry,
+        self,
+        config: RawOpenTicketAIConfig,
+        registry: UnifiedRegistry,
     ) -> TicketSystemService:
         """Provide the ticket system adapter from registry."""
         # Get the ticket system adapter from registry

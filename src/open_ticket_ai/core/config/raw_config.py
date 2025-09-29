@@ -1,9 +1,9 @@
-import uuid
-from typing import Any, Self
+from typing import Any
 
 from pydantic import BaseModel
 
 from open_ticket_ai.core.config.jinja2_env import render_recursive
+
 
 class RawConfig(BaseModel):
     pass
@@ -32,18 +32,3 @@ class RenderableConfig[RawConfigT: RawConfig, RenderedConfigT: RenderedConfig]:
         return self.rendered_config
 
 
-class RawRegisterableConfig(RawConfig):
-    id: str | None = None
-    use: str | None = None
-
-
-class RenderedRegistrableConfig(RenderedConfig):
-    id: str = uuid.uuid4().hex
-    use: str = "DefaultPipe"
-
-
-
-class RegisterableConfig[RawConfigT: RawRegisterableConfig, RenderedConfigT: RenderedRegistrableConfig](
-    RenderableConfig[RawConfigT, RenderedConfigT]
-):
-    pass

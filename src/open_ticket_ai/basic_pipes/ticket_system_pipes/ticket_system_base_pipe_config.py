@@ -1,4 +1,4 @@
-from open_ticket_ai.core.pipeline.base_pipe_config import RenderedPipeConfig, RawPipeConfig
+from open_ticket_ai.core.pipeline.configurable_pipe_config import RawPipeConfig, RenderedPipeConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemService
 
 

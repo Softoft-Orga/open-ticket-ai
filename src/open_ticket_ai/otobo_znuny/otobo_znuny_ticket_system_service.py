@@ -70,13 +70,13 @@ def otobo_retry() -> Callable[[F], F]:
             wait=wait_exponential(multiplier=1, max=10),
             retry=retry_if_exception_type(
                 (
-                        httpx.ConnectError,
-                        httpx.RemoteProtocolError,
-                        httpx.ReadTimeout,
-                        httpx.WriteTimeout,
-                        httpx.PoolTimeout,
-                        httpx.HTTPStatusError,
-                        httpx.TransportError,
+                    httpx.ConnectError,
+                    httpx.RemoteProtocolError,
+                    httpx.ReadTimeout,
+                    httpx.WriteTimeout,
+                    httpx.PoolTimeout,
+                    httpx.HTTPStatusError,
+                    httpx.TransportError,
                 )
             ),
             before_sleep=_before_sleep_recreate_client,
@@ -96,15 +96,13 @@ def otobo_retry() -> Callable[[F], F]:
 
 @UnifiedRegistry.register
 class OTOBOZnunyTicketSystemService(
-    TicketSystemService[
-        RawOTOBOZnunyTicketsystemServiceConfig,
-        RenderedOTOBOZnunyTicketsystemServiceConfig
-    ]
+    TicketSystemService[RawOTOBOZnunyTicketsystemServiceConfig, RenderedOTOBOZnunyTicketsystemServiceConfig]
 ):
-
     @inject
-    def __init__(self, config: RenderableConfig[
-        RawOTOBOZnunyTicketsystemServiceConfig, RenderedOTOBOZnunyTicketsystemServiceConfig]):
+    def __init__(
+        self,
+        config: RenderableConfig[RawOTOBOZnunyTicketsystemServiceConfig, RenderedOTOBOZnunyTicketsystemServiceConfig],
+    ):
         super().__init__(config)
         self._client: OTOBOZnunyClient | None = None
         self.logger = logging.getLogger(self.__class__.__name__)

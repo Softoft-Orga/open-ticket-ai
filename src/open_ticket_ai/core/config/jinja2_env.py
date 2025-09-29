@@ -53,10 +53,10 @@ def render(template_str: str, scope: BaseModel | dict[str, Any]) -> Any:
         rendered = template.render(scope_dict)
         return _parse_rendered_value(rendered)
     except UndefinedError as e:
-        logging.error(f"Template variable not defined: {e}")
+        logging.exception(f"Template variable not defined: {e}")
         raise
     except Exception as e:
-        logging.error(f"Template rendering failed: {e}")
+        logging.exception(f"Template rendering failed: {e}")
         raise
 
 
@@ -74,3 +74,34 @@ def render_recursive(obj: Any, scope: BaseModel | dict[str, Any]) -> Any:
         return {key: render_recursive(value, scope_dict) for key, value in obj.items()}
     else:
         return obj
+
+
+class LazyTemplate:
+    """Lazy-evaluated template that renders on first access."""
+
+    def __init__(self, template_str: str, scope: dict[str, Any]):
+        self._template_str = template_str
+        self._scope = scope
+        self._is_rendered = False
+        self._value: Any = None
+
+    def __str__(self) -> str:
+        if not self._is_rendered:
+            self._value = render(self._template_str, self._scope)
+            self._is_rendered = True
+        return str(self._value)
+
+    def __repr__(self) -> str:
+        return f"LazyTemplate({self._template_str!r})"
+
+
+def render_text(value: Any, scope: dict[str, Any]) -> Any:
+    """Render text value, returning LazyTemplate for strings."""
+    if isinstance(value, str):
+        return LazyTemplate(value, scope)
+    return value
+
+
+def render_any(value: Any, scope: dict[str, Any]) -> Any:
+    """Render any value recursively."""
+    return render_recursive(value, scope)
