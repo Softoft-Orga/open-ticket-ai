@@ -16,14 +16,14 @@ class FetchTicketsPipeConfig(BaseModel):
 class FetchTicketsPipe(ConfigurablePipe):
     def __init__(self, config: dict[str, Any]) -> None:
         super().__init__(config)
-        self.config = FetchTicketsPipeConfig(**config)
+        pipe_config = FetchTicketsPipeConfig(**config)
         registry = UnifiedRegistry.get_registry_instance()
-        self.ticket_system: TicketSystemService = registry.get_instance(self.config.ticket_system_id)
+        self.ticket_system: TicketSystemService = registry.get_instance(pipe_config.ticket_system_id)
 
-        if isinstance(self.config.ticket_search_criteria, dict):
-            self.search_criteria = TicketSearchCriteria.model_validate(self.config.ticket_search_criteria)
+        if isinstance(pipe_config.ticket_search_criteria, dict):
+            self.search_criteria = TicketSearchCriteria.model_validate(pipe_config.ticket_search_criteria)
         else:
-            self.search_criteria = self.config.ticket_search_criteria
+            self.search_criteria = pipe_config.ticket_search_criteria
 
     async def _process(self) -> dict[str, Any]:
         tickets = await self.ticket_system.find_tickets(self.search_criteria) or []

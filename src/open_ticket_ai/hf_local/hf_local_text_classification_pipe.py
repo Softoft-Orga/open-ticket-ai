@@ -16,7 +16,10 @@ class HFLocalTextClassificationPipeConfig(BaseModel):
 class HFLocalTextClassificationPipe(ConfigurablePipe):
     def __init__(self, config: dict[str, Any]):
         super().__init__(config)
-        self.config = HFLocalTextClassificationPipeConfig(**config)
+        pipe_config = HFLocalTextClassificationPipeConfig(**config)
+        self.model = pipe_config.model
+        self.token = pipe_config.token
+        self.prompt = pipe_config.prompt
         self.logger = logging.getLogger(self.__class__.__name__)
         self._pipeline = None
 
@@ -36,9 +39,9 @@ class HFLocalTextClassificationPipe(ConfigurablePipe):
     async def _process(self) -> dict[str, Any]:
         self.logger.info(f"Running {self.__class__.__name__}")
         if self._pipeline is None:
-            self._pipeline = self._load_pipeline(self.config.model, self.config.token)
+            self._pipeline = self._load_pipeline(self.model, self.token)
 
-        result = self._pipeline(self.config.prompt, truncation=True)
+        result = self._pipeline(self.prompt, truncation=True)
         top = result[0] if isinstance(result, list) else result
 
         label = top["label"]

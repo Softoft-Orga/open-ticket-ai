@@ -100,7 +100,7 @@ def test_add_note_pipe_with_string_note(
 ) -> None:
     config = {
         "name": "test_add_note",
-        "use": "AddNotePipe",
+        "use": "open_ticket_ai.basic_pipes.ticket_system_pipes.add_note_pipe.AddNotePipe",
         "when": True,
         "steps": [],
         "ticket_system_id": "test_ticket_system",
@@ -116,7 +116,7 @@ def test_add_note_pipe_with_string_note(
         # Check the note was converted to UnifiedNote
         call_args = mock_ticket_system.add_note.call_args
         assert isinstance(call_args[0][1], UnifiedNote)
-        assert call_args[0][1].content == "Simple string note"
+        assert call_args[0][1].body == "Simple string note"
 
         assert result_context.pipes["test_add_note"] == {}
 

@@ -1,12 +1,8 @@
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from pydantic import ImportString
 
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
-from open_ticket_ai.core.pipeline.configurable_pipe_config import (
-    RenderedPipeConfig,
-)
 from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
@@ -29,102 +25,34 @@ def mock_ticket_system_service() -> MagicMock:
 
 
 @pytest.fixture
-def rendered_pipe_config_factory():
-    def factory(**kwargs) -> RenderedPipeConfig:
+def pipe_config_factory():
+    def factory(**kwargs) -> dict:
         defaults = {
-            "id": "test_pipe",
+            "name": "test_pipe",
             "use": "open_ticket_ai.basic_pipes.DefaultPipe",
             "when": True,
+            "steps": [],
         }
         defaults.update(kwargs)
-
-        class CustomRenderedPipeConfig(RenderedPipeConfig):
-            pass
-
-        return CustomRenderedPipeConfig(
-            id=defaults["id"],
-            use=ImportString(defaults["use"]),
-            when=defaults.get("when", True)
-        )
+        return defaults
 
     return factory
-
-
-@pytest.fixture
-def frozen_pipe_config_factory(rendered_pipe_config_factory):
-    def factory(**kwargs) -> FrozenRenderableConfig:
-        rendered_config = rendered_pipe_config_factory(**kwargs)
-        return create_frozen_renderable_config(rendered_config)
-
-    return factory
-
-
-@pytest.fixture
-def raw_config_with_jinja():
-    class TestRawConfig(RawConfig):
-        name: str = "{{ test_name }}"
-        value: str = "{{ test_value | upper }}"
-        items: list[str] = ["{{ item1 }}", "{{ item2 }}"]
-
-    return TestRawConfig()
-
-
-@pytest.fixture
-def rendered_config_sample():
-    class TestRenderedConfig(RenderedConfig):
-        name: str
-        value: str
-        items: list[str]
-
-    return TestRenderedConfig(
-        name="Test Name",
-        value="TEST VALUE",
-        items=["item_one", "item_two"]
-    )
-
-
-@pytest.fixture
-def create_frozen_config():
-    return create_frozen_renderable_config
 
 
 @pytest.fixture
 def mock_registry():
     mock = MagicMock(spec=UnifiedRegistry)
-    mock.get_pipe_class.return_value = MagicMock()
-    mock.get_service_class.return_value = MagicMock()
-    mock.build_pipe_instance.return_value = MagicMock()
     mock.get_instance.return_value = MagicMock()
-
+    mock.register_instance.return_value = MagicMock()
     return mock
 
 
 @pytest.fixture
-def renderable_config_assertions():
-    class ConfigAssertions:
-        @staticmethod
-        def assert_is_frozen(config: RenderableConfig) -> None:
-            assert isinstance(config, FrozenRenderableConfig)
-            assert config._frozen is True
-
-            with pytest.raises(RuntimeError, match="cannot be re-rendered"):
-                config.render({})
-
-            with pytest.raises(RuntimeError, match="cannot be re-rendered"):
-                config.save_rendered({})
-
-        @staticmethod
-        def assert_config_equals(
-                config: RenderableConfig,
-                expected_rendered: RenderedConfig
-        ) -> None:
-            actual = config.get_rendered()
-            assert actual.model_dump() == expected_rendered.model_dump()
-
-        @staticmethod
-        def assert_can_get_rendered(config: RenderableConfig) -> None:
-            rendered = config.get_rendered()
-            assert rendered is not None
-            assert isinstance(rendered, RenderedConfig)
-
-    return ConfigAssertions()
+def mock_ticket_system_pipe_config():
+    return {
+        "name": "test_ticket_pipe",
+        "use": "TestTicketPipe",
+        "when": True,
+        "steps": [],
+        "ticket_system_id": "mock_ticket_system",
+    }

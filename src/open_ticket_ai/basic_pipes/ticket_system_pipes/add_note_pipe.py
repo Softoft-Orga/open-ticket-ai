@@ -17,17 +17,18 @@ class AddNotePipeConfig(BaseModel):
 class AddNotePipe(ConfigurablePipe):
     def __init__(self, config: dict[str, Any]) -> None:
         super().__init__(config)
-        self.config = AddNotePipeConfig(**config)
+        pipe_config = AddNotePipeConfig(**config)
         registry = UnifiedRegistry.get_registry_instance()
-        self.ticket_system: TicketSystemService = registry.get_instance(self.config.ticket_system_id)
+        self.ticket_system: TicketSystemService = registry.get_instance(pipe_config.ticket_system_id)
+        self.ticket_id = pipe_config.ticket_id
         
-        if isinstance(self.config.note, dict):
-            self.note = UnifiedNote.model_validate(self.config.note)
-        elif isinstance(self.config.note, str):
-            self.note = UnifiedNote(content=self.config.note)
+        if isinstance(pipe_config.note, dict):
+            self.note = UnifiedNote.model_validate(pipe_config.note)
+        elif isinstance(pipe_config.note, str):
+            self.note = UnifiedNote(body=pipe_config.note)
         else:
-            self.note = self.config.note
+            self.note = pipe_config.note
 
     async def _process(self) -> dict[str, Any]:
-        await self.ticket_system.add_note(self.config.ticket_id, self.note)
+        await self.ticket_system.add_note(self.ticket_id, self.note)
         return {}

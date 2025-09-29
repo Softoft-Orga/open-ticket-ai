@@ -11,7 +11,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
     UnifiedTicket,
 )
-from open_ticket_ai.otobo_znuny.models import TicketAdapter
+from open_ticket_ai.otobo_znuny.models import otobo_ticket_to_unified_ticket
 from open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service_config import (
     RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
@@ -54,14 +54,14 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         self.logger.debug("OTOBO search criteria: %s", search)
         tickets: list[Ticket] = await self.client.search_and_get(search)
         self.logger.info("OTOBO search returned %d tickets", len(tickets))
-        return [TicketAdapter(t) for t in tickets]
+        return [otobo_ticket_to_unified_ticket(t) for t in tickets]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         items = await self.find_tickets(criteria)
         return items[0] if items else None
 
     async def get_ticket(self, ticket_id: str) -> UnifiedTicket | None:
-        return TicketAdapter(await self.client.get_ticket(int(ticket_id)))
+        return otobo_ticket_to_unified_ticket(await self.client.get_ticket(int(ticket_id)))
 
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         ticket = TicketUpdate(
@@ -69,7 +69,7 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
             title=updates.subject,
             queue=_to_id_name(updates.queue),
             priority=_to_id_name(updates.priority),
-            article=Article(subject=updates.note.subject, body=updates.note.body),
+            article=Article(subject=updates.notes[-1].subject, body=updates.notes[-1].body),
         )
         logging.info(ticket)
         await self.client.update_ticket(ticket)
@@ -77,4 +77,4 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
     async def add_note(self, ticket_id: str, note: UnifiedNote) -> bool:
         return await self.update_ticket(ticket_id,
-                                        UnifiedTicket(note=UnifiedNote(subject=note.subject, body=note.body)))
+                                        UnifiedTicket(notes=[UnifiedNote(subject=note.subject, body=note.body)]))

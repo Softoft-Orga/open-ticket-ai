@@ -17,20 +17,21 @@ class UpdateTicketPipeConfig(BaseModel):
 class UpdateTicketPipe(ConfigurablePipe):
     def __init__(self, config: dict[str, Any]) -> None:
         super().__init__(config)
-        self.config = UpdateTicketPipeConfig(**config)
+        pipe_config = UpdateTicketPipeConfig(**config)
         registry = UnifiedRegistry.get_registry_instance()
-        self.ticket_system: TicketSystemService = registry.get_instance(self.config.ticket_system_id)
+        self.ticket_system: TicketSystemService = registry.get_instance(pipe_config.ticket_system_id)
+        self.ticket_id = pipe_config.ticket_id
 
-        if isinstance(self.config.updated_ticket, dict):
-            self.updated_ticket = UnifiedTicket.model_validate(self.config.updated_ticket)
-        elif isinstance(self.config.updated_ticket, str):
-            self.updated_ticket = UnifiedTicket(subject=self.config.updated_ticket)
+        if isinstance(pipe_config.updated_ticket, dict):
+            self.updated_ticket = UnifiedTicket.model_validate(pipe_config.updated_ticket)
+        elif isinstance(pipe_config.updated_ticket, str):
+            self.updated_ticket = UnifiedTicket(subject=pipe_config.updated_ticket)
         else:
-            self.updated_ticket = self.config.updated_ticket
+            self.updated_ticket = pipe_config.updated_ticket
 
     async def _process(self) -> dict[str, Any]:
         await self.ticket_system.update_ticket(
-            self.config.ticket_id,
+            self.ticket_id,
             self.updated_ticket
         )
         return {}

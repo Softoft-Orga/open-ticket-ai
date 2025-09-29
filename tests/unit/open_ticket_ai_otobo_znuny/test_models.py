@@ -5,12 +5,13 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedEntity,
     UnifiedNote,
 )
-from open_ticket_ai.otobo_znuny.models import NoteAdapter, TicketAdapter, _to_unified_entity
+from open_ticket_ai.otobo_znuny.models import _to_unified_entity, otobo_article_to_unified_note, \
+    otobo_ticket_to_unified_ticket
 
 
 class TestToUnifiedEntity:
     def test_converts_id_name_to_unified_entity(self):
-        id_name = IdName(id="123", name="Test Entity")
+        id_name = IdName(id=123, name="Test Entity")
         result = _to_unified_entity(id_name)
 
         assert result is not None
@@ -27,7 +28,7 @@ class TestNoteAdapter:
     def test_creates_note_with_body_and_subject(self):
         article = Article(body="This is the body", subject="This is the subject")
 
-        note = NoteAdapter(article)
+        note = otobo_article_to_unified_note(article)
 
         assert note.body == "This is the body"
         assert note.subject == "This is the subject"
@@ -36,7 +37,7 @@ class TestNoteAdapter:
     def test_handles_none_body(self):
         article = Article(body=None, subject="Subject only")
 
-        note = NoteAdapter(article)
+        note = otobo_article_to_unified_note(article)
 
         assert note.body == ""
         assert note.subject == "Subject only"
@@ -44,7 +45,7 @@ class TestNoteAdapter:
     def test_handles_empty_body(self):
         article = Article(body="", subject="Subject with empty body")
 
-        note = NoteAdapter(article)
+        note = otobo_article_to_unified_note(article)
 
         assert note.body == ""
         assert note.subject == "Subject with empty body"
@@ -56,8 +57,8 @@ class TestTicketAdapter:
         return Ticket(
             id=456,
             title="Test Ticket",
-            queue=IdName(id="1", name="Support Queue"),
-            priority=IdName(id="3", name="High"),
+            queue=IdName(id=1, name="Support Queue"),
+            priority=IdName(id=3, name="High"),
             articles=[],
         )
 
@@ -66,8 +67,8 @@ class TestTicketAdapter:
         return Ticket(
             id=789,
             title="Ticket with Articles",
-            queue=IdName(id="2", name="Technical Queue"),
-            priority=IdName(id="2", name="Medium"),
+            queue=IdName(id=2, name="Technical Queue"),
+            priority=IdName(id=2, name="Medium"),
             articles=[
                 Article(body="First article body", subject="First subject"),
                 Article(body="Second article body", subject="Second subject"),
@@ -76,7 +77,7 @@ class TestTicketAdapter:
         )
 
     def test_creates_ticket_adapter_with_basic_fields(self, basic_ticket):
-        adapter = TicketAdapter(basic_ticket)
+        adapter = otobo_ticket_to_unified_ticket(basic_ticket)
 
         assert adapter.id == "456"
         assert adapter.subject == "Test Ticket"
@@ -88,17 +89,18 @@ class TestTicketAdapter:
         assert adapter.priority.name == "High"
 
     def test_handles_none_ticket_id(self):
-        ticket = Ticket(id=None, title="No ID Ticket")
+        # noinspection PyTypeChecker
+        ticket = Ticket(id=1, title="No ID Ticket")
 
-        adapter = TicketAdapter(ticket)
+        adapter = otobo_ticket_to_unified_ticket(ticket)
 
-        assert adapter.id == ""
+        assert adapter.id == "1"
         assert adapter.subject == "No ID Ticket"
 
     def test_handles_none_title(self):
         ticket = Ticket(id=123, title=None)
 
-        adapter = TicketAdapter(ticket)
+        adapter = otobo_ticket_to_unified_ticket(ticket)
 
         assert adapter.id == "123"
         assert adapter.subject == ""
@@ -106,13 +108,13 @@ class TestTicketAdapter:
     def test_handles_none_queue_and_priority(self):
         ticket = Ticket(id=999, title="Minimal Ticket", queue=None, priority=None)
 
-        adapter = TicketAdapter(ticket)
+        adapter = otobo_ticket_to_unified_ticket(ticket)
 
         assert adapter.queue is None
         assert adapter.priority is None
 
     def test_notes_property_returns_adapted_articles(self, ticket_with_articles):
-        adapter = TicketAdapter(ticket_with_articles)
+        adapter = otobo_ticket_to_unified_ticket(ticket_with_articles)
 
         notes = adapter.notes
 
@@ -124,30 +126,30 @@ class TestTicketAdapter:
         assert notes[2].body == "Third article body"
 
     def test_notes_property_handles_no_articles(self, basic_ticket):
-        adapter = TicketAdapter(basic_ticket)
+        adapter = otobo_ticket_to_unified_ticket(basic_ticket)
 
         notes = adapter.notes
 
         assert notes == []
 
     def test_notes_property_handles_none_articles(self):
-        ticket = Ticket(id=111, title="No Articles", articles=None)
+        ticket = Ticket(id=111, title="No Articles", articles=[])
 
-        adapter = TicketAdapter(ticket)
+        adapter = otobo_ticket_to_unified_ticket(ticket)
 
         notes = adapter.notes
 
         assert notes == []
 
     def test_body_property_returns_first_article_body(self, ticket_with_articles):
-        adapter = TicketAdapter(ticket_with_articles)
+        adapter = otobo_ticket_to_unified_ticket(ticket_with_articles)
 
         body = adapter.body
 
         assert body == "First article body"
 
     def test_body_property_returns_empty_string_when_no_notes(self, basic_ticket):
-        adapter = TicketAdapter(basic_ticket)
+        adapter = otobo_ticket_to_unified_ticket(basic_ticket)
 
         body = adapter.body
 
@@ -164,6 +166,6 @@ class TestTicketAdapter:
     )
     def test_various_ticket_ids(self, ticket_id, expected_id_str):
         ticket = Ticket(id=ticket_id, title="Test")
-        adapter = TicketAdapter(ticket)
+        adapter = otobo_ticket_to_unified_ticket(ticket)
 
         assert adapter.id == expected_id_str

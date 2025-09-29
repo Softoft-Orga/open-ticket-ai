@@ -12,7 +12,8 @@ class JinjaExpressionPipeConfig(BaseModel):
 class JinjaExpressionPipe(ConfigurablePipe):
     def __init__(self, config: dict[str, Any]) -> None:
         super().__init__(config)
-        self.config = JinjaExpressionPipeConfig(**config)
+        pipe_config = JinjaExpressionPipeConfig(**config)
+        self.expression = pipe_config.expression
 
     async def _process(self) -> dict[str, Any]:
-        return {"value": self.config.expression}
+        return {"value": self.expression}
