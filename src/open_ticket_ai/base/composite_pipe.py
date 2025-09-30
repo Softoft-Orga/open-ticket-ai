@@ -12,7 +12,7 @@ class CompositePipe(Pipe):
                                          context.model_dump())
 
     async def _process_steps(self, context: Context) -> list[PipeResult]:
-        results = []
+        results: list[PipeResult] = []
         for step_pipe_config_raw in self.config.steps:
             step_pipe_id = step_pipe_config_raw["id"]
             step_pipe = self._build_pipe_from_step_config(step_pipe_config_raw, context)
@@ -26,7 +26,6 @@ class CompositePipe(Pipe):
             steps_result: list[PipeResult] = await self._process_steps(context)
             composite_result: PipeResult = PipeResult.union(steps_result)
             new_context = context.model_copy()
-            new_context.pipes[self.config.id] = composite_result
-            return new_context
+            return self._save_pipe_result(new_context, composite_result)
 
         return context
