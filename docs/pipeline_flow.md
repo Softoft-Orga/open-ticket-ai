@@ -69,7 +69,7 @@ flowchart TD
 
 ### Context Handling
 - **Execution Context**: The lightweight `Context` model carries a shared `pipes` dictionary for storing results and an optional `config` block for pipeline-wide settings.
-- **State Propagation**: After `_process` finishes, `_save_state` writes its return payload under the pipe's configured name so that later steps can read it via Jinja expressions like `{{ pipes.my_pipe.some_value }}`.
+- **State Propagation**: After `_process` finishes, `_save_pipe_result` stores the emitted `PipeResult` under the pipe's configured identifier so that later steps can read it via Jinja expressions like `{{ pipes.my_pipe.some_value }}`.
 - **Conditional Execution**: Pipes whose rendered `when` evaluates to `False` are skipped with a log message, allowing declarative feature toggles without changing code.
 
 ### Error Strategy
@@ -78,7 +78,7 @@ flowchart TD
 
 ### Context Flow
 - **Initial State**: Empty context with `pipes={}` and `config={}`
-- **State Accumulation**: Each pipe saves results to `context.pipes[pipe_name]`
+- **State Accumulation**: Each pipe saves results to `context.pipes[pipe_id]`
 - **Template Access**: Subsequent steps access previous results via `{{ pipes.* }}`
 
 ### Configuration Rendering

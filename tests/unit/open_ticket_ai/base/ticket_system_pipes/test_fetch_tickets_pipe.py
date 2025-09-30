@@ -10,6 +10,7 @@ from open_ticket_ai.base.ticket_system_pipes.fetch_tickets_pipe import (
 )
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
@@ -86,8 +87,11 @@ def test_process_serializes_results(
 
         mock_registry.get_instance.assert_called_once_with("test_ticket_system")
 
-        state = result_context.pipes["ticket_fetcher"]
-        assert state["found_tickets"] == [ticket.model_dump() for ticket in expected_tickets]
+        pipe_result = result_context.pipes["ticket_fetcher"]
+        assert isinstance(pipe_result, PipeResult)
+        assert pipe_result.data["found_tickets"] == [ticket.model_dump() for ticket in expected_tickets]
+        assert pipe_result.success is True
+        assert pipe_result.failed is False
 
         assert ticket_service.find_tickets.await_count == 1
         args, _ = ticket_service.find_tickets.await_args
@@ -111,4 +115,6 @@ def test_process_without_results_returns_empty_list(
 
         result_context = asyncio.run(pipe.process(pipeline_context))
 
-        assert result_context.pipes["ticket_fetcher"] == {"found_tickets": []}
+        pipe_result = result_context.pipes["ticket_fetcher"]
+        assert isinstance(pipe_result, PipeResult)
+        assert pipe_result.data == {"found_tickets": []}
