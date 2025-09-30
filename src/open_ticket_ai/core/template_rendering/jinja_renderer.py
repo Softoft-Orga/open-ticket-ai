@@ -56,7 +56,16 @@ class JinjaRenderer(TemplateRenderer):
         def has_failed(pipe_id: str):
             return scope.pipes[pipe_id].failed if pipe_id in scope.pipes else False
 
-        self.env.filters.setdefault("has_failed", has_failed)
+        def get_pipe_result(pipe_id: str, data_key: str = 'value'):
+            if not pipe_id in scope.pipes:
+                return None
+            pipe = scope.pipes[pipe_id]
+            if not data_key in pipe.data:
+                return None
+            return pipe.data[data_key]
+
+        self.env.globals["has_failed"] = has_failed
+        self.env.globals["get_pipe_result"] = get_pipe_result
         scope_dict = self._normalize_scope(scope)
         try:
             template = self.env.from_string(template_str)
