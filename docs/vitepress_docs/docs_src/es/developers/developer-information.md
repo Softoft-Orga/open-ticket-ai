@@ -99,6 +99,49 @@ modelos unificados del proyecto.
 Una vez registrado, especifica el adaptador en la sección `system` de `config.yml` y
 el orquestador lo usará para comunicarse con el sistema de tickets.
 
+## Ejemplos de Configuración
+
+Para ayudarte a comenzar rápidamente, hemos creado una colección de ejemplos de configuración listos para usar
+que demuestran varios casos de uso. Estos ejemplos se encuentran en el directorio `docs/config_examples/`.
+
+### Ejemplos Disponibles
+
+1. **IA Añade Nota al Ticket** (`add_note_when_in_queue.yml`)
+   - Añade automáticamente notas generadas por IA a tickets en colas específicas
+   - Caso de uso: Agregar análisis o sugerencias a tickets en revisión
+
+2. **Creación Condicional de Ticket** (`create_ticket_on_condition.yml`)
+   - Crea automáticamente nuevos tickets basándose en condiciones detectadas
+   - Caso de uso: Auto-crear tickets de escalación para problemas urgentes
+
+3. **Clasificación de Cola** (`queue_classification.yml`)
+   - Enruta tickets a colas apropiadas mediante análisis de IA
+   - Caso de uso: Enrutamiento automático por departamento (IT, RRHH, Finanzas, etc.)
+
+4. **Clasificación de Prioridad** (`priority_classification.yml`)
+   - Asigna niveles de prioridad basados en análisis de urgencia del ticket
+   - Caso de uso: Asegurar que los problemas críticos reciban atención inmediata
+
+5. **Flujo de Trabajo Completo** (`complete_workflow.yml`)
+   - Ejemplo completo que combina múltiples operaciones de IA
+   - Caso de uso: Automatización completa con clasificación, notas y manejo de errores
+
+### Uso de los Ejemplos
+
+Cada ejemplo incluye:
+- Configuración completa con todas las secciones requeridas
+- Comentarios detallados explicando cada paso
+- Parámetros personalizables para tu entorno
+- Mejores prácticas para manejo de errores y mecanismos de respaldo
+
+Para usar un ejemplo:
+1. Explora los ejemplos en `docs/config_examples/`
+2. Copia la configuración relevante a tu `config.yml`
+3. Actualiza las variables de entorno y personaliza la configuración
+4. Prueba primero con un subconjunto limitado de tickets
+
+Para más detalles, consulta el [README en el directorio config_examples](../../config_examples/README.md).
+
 ## Resumen
 
 ATC Community Edition ofrece un flujo de trabajo ejecutado localmente para la clasificación automática de tickets en su versión MVP. Todas las configuraciones se gestionan a través de archivos YAML; no hay una API REST disponible. Se deben utilizar procesos o scripts externos para el entrenamiento.
