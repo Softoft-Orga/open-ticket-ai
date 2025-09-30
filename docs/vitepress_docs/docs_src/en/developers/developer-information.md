@@ -15,19 +15,43 @@ data or triggering a training run.
 
 The application essentially consists of the following packages:
 
-* **core** – base classes, configuration models, and helper functions.
-* **run** – contains the pipeline for ticket classification.
+* **core** – configuration models, dependency injection helpers, the pipeline engine, and template rendering utilities.
+* **base** – reusable pipe implementations (e.g. ticket fetch/update pipes and composite helpers).
+* **hf_local** – HuggingFace-powered inference pipes shipped as examples.
 * **ticket\_system\_integration** – adapters for different ticket systems.
-* **main.py** – CLI entry point that starts the scheduler and the orchestrator.
+* **main.py** – CLI entry point that wires the injector, scheduler, and orchestrator.
 
-The orchestrator executes configurable `AttributePredictors`, which are composed of `DataFetcher`, `DataPreparer`,
-`AIInferenceService`, and `Modifier`. All components are defined in `config.yml` and validated at program startup.
+The orchestrator now executes YAML-defined `Pipe` graphs. Definitions are composed from reusable `defs`, rendered with the
+current scope, and resolved through the dependency-injection container at runtime. Each scheduled entry declares which pipe tree
+should run and how often the orchestrator should trigger it.
 
 An example command to start the application:
 
 ```bash
 python -m open_ticket_ai.src.ce.main start
 ```
+
+## Pipeline Architecture
+
+The runtime pipeline is described in YAML. `RawOpenTicketAIConfig` collects plug-ins, global configuration, reusable `defs`,
+and the `orchestrator` schedule that instructs which pipes should run and in which interval. When the application boots, the
+dependency-injection container loads this file, constructs singleton services declared under `defs`, and registers them in the
+`UnifiedRegistry`. Pipes and templates can then reference these shared services by ID.
+
+Every pipeline entry is normalised into a `RegisterableConfig` with an `id`, the target class in `use`, optional nested `steps`,
+and optional orchestration metadata like `_if` and `depends_on`. At execution time the configuration is rendered against the
+current `Context`, so Jinja2 expressions can pull values from previous results via helper functions such as
+`get_pipe_result('classify', 'label')`. `_if` expressions (configured in YAML as `if:`) toggle pipes on or off per run, and
+`depends_on` ensures that a pipe only executes after the listed dependencies have produced successful results.
+
+The `Context` carries two dictionaries: `pipes` holds each step's `PipeResult` (success/failed/message/data), and `config`
+exposes the rendered configuration for the active schedule entry. Pipes read from this context, perform their work inside the
+asynchronous `_process()` method, and return data that becomes the `PipeResult.data` payload. Because every result shares the
+same structure, downstream pipes and templates can easily react to failures or reuse earlier outputs.
+
+The `orchestrator` field in YAML is a list of schedule entries. Each entry provides `run_every_milli_seconds` and a `pipe`
+definition that can itself be a composite pipe (with nested `steps`) built from the reusable `defs`. The scheduler walks this
+list, triggers runs when intervals elapse, and hands the orchestrator a fresh `Context` seeded with the schedule configuration.
 
 ## Training Custom Models
 
@@ -42,46 +66,57 @@ configuration. Thanks to dependency injection, new components can be easily inte
 ## How to Add a Custom Pipe
 
 The processing pipeline can be extended with your own pipe classes. A pipe is a
-unit of work that receives a `PipelineContext`, modifies it and returns it. All
-pipes inherit from the `Pipe` base class which already
-implements the `Providable` mixin.
+unit of work that receives a `Context`, inspects previously stored `PipeResult`
+objects, and emits a new `PipeResult` with the latest data and status flags.
 
-1. **Create a configuration model** for your pipe if it needs parameters.
-2. **Subclass `Pipe`** and implement the `process` method.
-3. **Override `get_provider_key()`** if you want a custom key.
+1. **Define a configuration model** (optional) for your pipe parameters.
+2. **Subclass `Pipe`** and implement the asynchronous `_process()` method.
+3. **Return a dictionary** shaped like `PipeResult` (or call `PipeResult(...).model_dump()`).
 
-The following simplified example from the `AI_README` shows a sentiment analysis
-pipe:
+The following simplified example shows a sentiment analysis pipe that uses
+HuggingFace locally:
 
 ```python
+from typing import Any
+
+from pydantic import BaseModel
+from transformers import pipeline
+
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+
+
 class SentimentPipeConfig(BaseModel):
     model_name: str = "distilbert/distilbert-base-uncased-finetuned-sst-2-english"
+    text: str
 
 
-class SentimentAnalysisPipe(Pipe, Providable):
-    def __init__(self, config: SentimentPipeConfig):
+class SentimentAnalysisPipe(Pipe):
+    def __init__(self, config: dict[str, Any]):
         super().__init__(config)
-        self.classifier = pipeline("sentiment-analysis", model=config.model_name)
+        self.cfg = SentimentPipeConfig(**config)
+        self.classifier = pipeline("sentiment-analysis", model=self.cfg.model_name)
 
-    def process(self, context: PipelineContext) -> PipelineContext:
-        ticket_text = context.data.get("combined_text")
-        if not ticket_text:
-            context.stop_pipeline()
-            return context
+    async def _process(self) -> dict[str, Any]:
+        if not self.cfg.text:
+            return PipeResult(success=False, failed=True, message="No text available", data={}).model_dump()
 
-        sentiment = self.classifier(ticket_text)[0]
-        context.data["sentiment"] = sentiment["label"]
-        context.data["sentiment_confidence"] = sentiment["score"]
-        return context
-
-    @classmethod
-    def get_provider_key(cls) -> str:
-        return "SentimentAnalysisPipe"
+        sentiment = self.classifier(self.cfg.text)[0]
+        return PipeResult(
+            success=True,
+            failed=False,
+            data={
+                "label": sentiment["label"],
+                "confidence": sentiment["score"],
+            },
+        ).model_dump()
 ```
 
-After implementing the class, register it in your dependency injection registry
-and reference it in `config.yml` using the provider key returned by
-`get_provider_key()`.
+After implementing the class, register it under `open_ticket_ai.defs` (or
+`general_config.pipe_classes`) so that the YAML pipeline can reference it via its
+`id`. Because the orchestrator renders configuration through Jinja2, you can use
+template expressions in your definitions to inject environment variables or
+results from previous pipes.
 
 ## How to Integrate a New Ticket System
 
@@ -103,6 +138,49 @@ project's unified models.
 
 Once registered, specify the adapter in the `system` section of `config.yml` and
 the orchestrator will use it to communicate with the ticket system.
+
+## Configuration Examples
+
+To help you get started quickly, we've created a collection of ready-to-use configuration examples
+demonstrating various use cases. These examples are located in the `docs/config_examples/` directory.
+
+### Available Examples
+
+1. **AI Adds Note to Ticket** (`add_note_when_in_queue.yml`)
+   - Automatically add AI-generated notes to tickets in specific queues
+   - Use case: Add analysis or suggestions to tickets under review
+
+2. **Conditional Ticket Creation** (`create_ticket_on_condition.yml`)
+   - Create new tickets automatically based on detected conditions
+   - Use case: Auto-create escalation tickets for urgent issues
+
+3. **Queue Classification** (`queue_classification.yml`)
+   - Route tickets to appropriate queues using AI analysis
+   - Use case: Automatic departmental routing (IT, HR, Finance, etc.)
+
+4. **Priority Classification** (`priority_classification.yml`)
+   - Assign priority levels based on ticket urgency analysis
+   - Use case: Ensure critical issues get immediate attention
+
+5. **Complete Workflow** (`complete_workflow.yml`)
+   - Comprehensive example combining multiple AI operations
+   - Use case: Full automation with classification, notes, and error handling
+
+### Using the Examples
+
+Each example includes:
+- Complete configuration with all required sections
+- Detailed comments explaining each step
+- Customizable parameters for your environment
+- Best practices for error handling and fallback mechanisms
+
+To use an example:
+1. Browse the examples in `docs/config_examples/`
+2. Copy the relevant configuration to your `config.yml`
+3. Update environment variables and customize settings
+4. Test with a limited subset of tickets first
+
+For more details, see the [README in the config_examples directory](../../config_examples/README.md).
 
 ## Summary
 

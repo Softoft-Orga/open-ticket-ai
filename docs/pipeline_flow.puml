@@ -1,0 +1,105 @@
+@startuml Pipeline Flow Diagram
+
+!theme plain
+skinparam activity {
+    BackgroundColor lightblue
+    BorderColor black
+    FontSize 11
+}
+skinparam note {
+    BackgroundColor lightyellow
+    BorderColor orange
+}
+
+title Pipeline Execution Flow
+
+start
+
+:Load Config (config.yml);
+note right: RawOpenTicketAIConfig\nloads orchestrator steps
+
+:Initialize Context;
+note right: Context(pipes={}, config={})
+
+:Create Dependency Container;
+note right: Register services\n(OTOBO/Znuny, etc.)
+
+partition "Orchestrator Loop" {
+    :Get Next Pipeline Config;
+
+    :Render Pipeline Config\nwith Jinja2;
+    note right: Template variables:\n- {{ config.* }}\n- {{ env.* }}\n- {{ get_instance() }}
+
+    :Create ConfigurablePipe\nfrom rendered config;
+
+    partition "Pipe Processing" {
+        :Check 'when' condition;
+
+        if (when == True?) then (yes)
+            :Process pipe steps;
+
+            partition "Step Processing Loop" {
+                :Get next step config;
+
+                :Render step config\nwith current context;
+                note right: Template variables:\n- {{ pipes.* }}\n- {{ config.* }}\n- Current execution state
+
+                :Build pipe instance\nfrom step config;
+                note right: _build_pipe_from_step_config()\nuses registry to get pipe class
+
+                :Execute step pipe.process(context);
+
+                partition "Individual Pipe Execution" {
+                    :Call pipe._process();
+                    note right: Pipe-specific logic:\n- Fetch tickets\n- Add notes\n- Update tickets\n- Classify text
+
+                    :Get pipe result;
+
+                    :Save state to context;
+                    note right: context.pipes[pipe.name] = result
+                }
+
+                :Update context with result;
+
+                if (More steps?) then (yes)
+                    :Continue to next step;
+                else (no)
+                    :Steps complete;
+                endif
+            }
+
+            :Execute main pipe._process();
+
+            :Save pipe state to context;
+            note right: context.pipes[pipe_name] = state
+
+        else (no)
+            :Skip pipe (when=False);
+        endif
+    }
+
+    :Context updated with\npipe results;
+
+    if (More pipelines?) then (yes)
+        :Continue orchestration;
+    else (no)
+        :Orchestration complete;
+    endif
+}
+
+:Final Context State;
+note right: Contains all pipe results\nand execution state
+
+stop
+
+note bottom
+**Key Components:**
+- **Context**: Carries state between pipes (pipes={}, config={})
+- **ConfigurablePipe**: Base class with process() and _process_steps()
+- **RegisterableConfig**: Pipe configuration with steps, when conditions
+- **Jinja2 Rendering**: Template variables resolved at runtime
+- **UnifiedRegistry**: Service instance management
+- **Step Processing**: Nested pipe execution with context updates
+end note
+
+@enduml

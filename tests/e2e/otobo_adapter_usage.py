@@ -3,14 +3,14 @@ import logging
 import os
 import sys
 
-
-from open_ticket_ai.core.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
-from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedQueue
-from open_ticket_ai.base.otobo_integration import OTOBOAdapter
 from dotenv import load_dotenv
 
+from open_ticket_ai.base.otobo_integration import OTOBOAdapter
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
+from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedQueue
 
-def create_ticket_system_adapter() -> TicketSystemAdapter:
+
+def create_ticket_system_adapter() -> TicketSystemService:
     load_dotenv()
     base_url = os.environ.get("OTOBO_BASE_URL")
     service = os.environ.get("OTOBO_SERVICE")

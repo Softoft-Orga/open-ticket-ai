@@ -2,8 +2,6 @@ import logging
 
 import yaml
 from pydantic import BaseModel
-from rich.console import Console
-from rich.syntax import Syntax
 
 logger = logging.getLogger(__name__)
 

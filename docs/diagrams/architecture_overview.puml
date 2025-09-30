@@ -1,0 +1,201 @@
+@startuml Architecture Overview
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+skinparam packageFontSize 14
+
+package "Core Pipeline" {
+    abstract class ConfigurablePipe {
+        +config: RegisterableConfig
+        --
+        +process(ctx: Context)
+        +_process_steps(ctx)
+        +_build_pipe_from_step_config()
+        #{abstract} _process()
+    }
+    
+    class RegisterableConfig {
+        +id: str
+        +name: str
+        +use: ImportString
+        +when: bool
+        +steps: list
+    }
+    
+    class Context {
+        +pipes: dict
+        +config: dict
+    }
+    
+    class DefaultPipe {
+        +_process()
+    }
+    
+    class JinjaExpressionPipe {
+        +expr: str
+        --
+        +_process()
+    }
+}
+
+package "Config System" {
+    class RawOpenTicketAIConfig {
+        +plugins: list
+        +general_config: dict
+        +defs: list
+        +orchestrator: list
+    }
+    
+    class Jinja2Env {
+        --
+        +render(tmpl: str, scope)
+        +render_recursive(obj, scope)
+    }
+}
+
+package "Dependency Injection" {
+    class UnifiedRegistry {
+        +instances_registry: dict
+        --
+        +get_registry_instance()
+        +register_instance(inst)
+        +get_instance(id: str)
+    }
+    
+    class Container {
+        --
+        +bind()
+        +get()
+    }
+    
+    class InstanceCreator {
+        --
+        +create_instance()
+    }
+}
+
+package "Ticket System Integration" {
+    abstract class TicketSystemService {
+        #{abstract} update_ticket(id, updates)
+        #{abstract} find_tickets(criteria)
+        #{abstract} find_first_ticket(criteria)
+        #{abstract} add_note(id, note)
+    }
+    
+    class UnifiedTicket {
+        +id: str
+        +title: str
+        +state
+        +priority
+        +queue
+        +customer
+    }
+    
+    class UnifiedNote {
+        +body: str
+        +subject: str
+        +article_type
+    }
+    
+    class TicketSearchCriteria {
+        +title: str
+        +state
+        +queue
+        +customer_user
+    }
+}
+
+package "OTOBO/Znuny Implementation" {
+    class OTOBOZnunyTicketSystemService {
+        +client: OTOBOZnunyClient
+        --
+        +update_ticket(id, updates)
+        +find_tickets(criteria)
+        +add_note(id, note)
+    }
+    
+    class RawOTOBOZnunyConfig {
+        +password: str
+        +base_url: str
+        +username: str
+        +webservice_name: str
+        +operation_urls: dict
+    }
+    
+    class RenderedOTOBOZnunyConfig {
+        +password: SecretStr
+        +base_url: str
+        +username: str
+        --
+        +to_client_config()
+    }
+}
+
+package "Ticket System Pipes" {
+    class AddNotePipe {
+        +ticket_id: str
+        +note
+        --
+        +_process()
+    }
+    
+    class FetchTicketsPipe {
+        +criteria
+        --
+        +_process()
+    }
+    
+    class UpdateTicketPipe {
+        +ticket_id: str
+        +updates
+        --
+        +_process()
+    }
+    
+    class RawTicketSystemBasePipeConfig {
+        +ticket_system: str
+    }
+    
+    class RenderedTicketSystemBasePipeConfig {
+        +ticket_system: TicketSystemService
+    }
+}
+
+' Core relationships
+ConfigurablePipe --> RegisterableConfig : uses
+ConfigurablePipe --> Context : processes
+DefaultPipe --|> ConfigurablePipe
+JinjaExpressionPipe --|> ConfigurablePipe
+
+' Config relationships
+ConfigurablePipe --> Jinja2Env : renders with
+RawOpenTicketAIConfig --> ConfigurablePipe : configures
+
+' Registry relationships
+UnifiedRegistry --> Container : manages
+Container --> InstanceCreator : uses
+ConfigurablePipe --> UnifiedRegistry : registers with
+
+' Ticket system relationships
+OTOBOZnunyTicketSystemService --|> TicketSystemService
+TicketSystemService --> UnifiedTicket : works with
+TicketSystemService --> UnifiedNote : works with
+TicketSystemService --> TicketSearchCriteria : uses
+
+' OTOBO config relationships
+OTOBOZnunyTicketSystemService --> RenderedOTOBOZnunyConfig : configured by
+RawOTOBOZnunyConfig --> RenderedOTOBOZnunyConfig : renders to
+
+' Pipe config relationships
+AddNotePipe --> RenderedTicketSystemBasePipeConfig : configured by
+FetchTicketsPipe --> RenderedTicketSystemBasePipeConfig : configured by
+UpdateTicketPipe --> RenderedTicketSystemBasePipeConfig : configured by
+RawTicketSystemBasePipeConfig --> RenderedTicketSystemBasePipeConfig : renders to
+RenderedTicketSystemBasePipeConfig --> TicketSystemService : contains
+
+' Pipe inheritance
+AddNotePipe --|> ConfigurablePipe
+FetchTicketsPipe --|> ConfigurablePipe
+UpdateTicketPipe --|> ConfigurablePipe
+
+@enduml

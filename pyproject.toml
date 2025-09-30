@@ -4,22 +4,24 @@ version = "1.0.0rc1"
 description = "AI enhancements for open source ticket systems"
 requires-python = ">=3.13"
 
-# ADDED: Author and license information
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
-license = { text = "LGPL-2.1-only" } # Using the standard SPDX identifier
+license = { text = "LGPL-2.1-only" }
 
 dependencies = [
     "pydantic~=2.11.7",
     "pydantic_core",
     "typing_extensions",
     "pytest~=8.4.0",
+    "pytest-asyncio~=0.24.0",
     "pluggy",
     "pygments",
     "transformers[torch]~=4.52.4",
     "injector~=0.22.0",
     "requests~=2.32.4",
+    "httpx>=0.28.1",
+    "jinja2>=3.1.6",
     "huggingface-hub[hf-xet]>=0.33.0",
     "openai>=1.108.1",
     "mdxlate>=0.1.0",
@@ -30,7 +32,6 @@ dependencies = [
     "tenacity>=9.0.0",
 ]
 
-# ADDED: Project URLs
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
 
@@ -49,9 +50,11 @@ include = ["open_ticket_ai*"]
 line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I"]
+select = ["E", "F", "I", "UP", "B", "SIM", "PL", "PERF", "TRY"]
+ignore = []
+fixable = ["ALL"]
 
 [tool.mypy]
 python_version = "3.13"
 strict = true
-ignore_missing_imports = true
+plugins = ['pydantic.mypy']

@@ -14,18 +14,29 @@ L'ATC Community Edition est une solution sur site (on-premise) pour la classific
 
 L'application se compose essentiellement des paquets suivants :
 
-* **core** – classes de base, modèles de configuration et fonctions utilitaires.
-* **run** – contient le pipeline pour la classification des tickets.
+* **core** – modèles de configuration, utilitaires d'injection de dépendances, moteur de pipeline et rendu de templates.
+* **base** – implémentations de pipes réutilisables (par ex. récupération/mise à jour de tickets et pipes composites).
+* **hf_local** – pipes d'inférence HuggingFace fournies en exemples.
 * **ticket\_system\_integration** – adaptateurs pour différents systèmes de tickets.
-* **main.py** – point d'entrée du CLI qui démarre le planificateur (scheduler) et l'orchestrateur.
+* **main.py** – point d'entrée CLI qui relie injecteur, planificateur et orchestrateur.
 
-L'orchestrateur exécute des `AttributePredictors` configurables, qui sont composés de `DataFetcher`, `DataPreparer`, `AIInferenceService` et `Modifier`. Tous les composants sont définis dans `config.yml` et validés au démarrage du programme.
+L'orchestrateur exécute désormais des graphes de `Pipe` décrits en YAML. Les définitions sont assemblées à partir de `defs` réutilisables, rendues avec le contexte courant, puis résolues à l'exécution via le conteneur d'injection de dépendances. Chaque entrée du planning précise quel arbre de pipes doit s'exécuter et à quel intervalle l'orchestrateur le déclenche.
 
 Un exemple de commande pour démarrer l'application :
 
 ```bash
 python -m open_ticket_ai.src.ce.main start
 ```
+
+## Architecture du pipeline
+
+Le pipeline d'exécution est décrit en YAML. `RawOpenTicketAIConfig` regroupe les plugins, la configuration globale, les `defs` réutilisables et le planning `orchestrator` qui indique quelles pipes doivent s'exécuter et à quel intervalle. Au démarrage, le conteneur d'injection de dépendances charge ce fichier, instancie les services singletons définis dans `defs` et les enregistre dans le `UnifiedRegistry`. Les pipes et les templates peuvent ensuite référencer ces services par identifiant.
+
+Chaque entrée du pipeline est normalisée en `RegisterableConfig` avec un `id`, la classe ciblée dans `use`, des `steps` optionnels et des métadonnées d'orchestration telles que `_if` et `depends_on`. À l'exécution, la configuration est rendue avec le `Context` courant, ce qui permet aux expressions Jinja2 (par exemple `get_pipe_result('classify', 'label')`) de réutiliser les résultats précédents. Les expressions `if:` activent ou désactivent une pipe pour un run donné et `depends_on` garantit qu'une pipe n'est lancée qu'après le succès de ses dépendances.
+
+Le `Context` conserve deux dictionnaires : `pipes` stocke pour chaque étape un `PipeResult` (success/failed/message/data) et `config` expose la configuration rendue pour l'entrée de planning active. Les pipes lisent ce contexte, exécutent leur logique dans la méthode asynchrone `_process()` et renvoient des données qui deviennent `PipeResult.data`. Les pipes et templates suivants peuvent ainsi détecter des erreurs ou réutiliser des données.
+
+Le champ `orchestrator` de la YAML est une liste d'entrées de planning. Chaque entrée fournit `run_every_milli_seconds` et une définition `pipe` qui peut être une pipe composite avec des `steps` imbriqués. Le planificateur parcourt cette liste, déclenche les exécutions lorsque les intervalles expirent et remet à l'orchestrateur un `Context` neuf initialisé avec la configuration correspondante.
 
 ## Entraînement de modèles personnalisés
 
@@ -37,46 +48,51 @@ Des fetchers, preparers, services d'IA ou modifiers personnalisés peuvent être
 
 ## Comment ajouter un pipe personnalisé
 
-Le pipeline de traitement peut être étendu avec vos propres classes de pipe. Un pipe est une
-unité de travail qui reçoit un `PipelineContext`, le modifie et le retourne. Tous
-les pipes héritent de la classe de base `Pipe` qui déjà
-implémente le mixin `Providable`.
+Le pipeline de traitement peut être enrichi avec vos propres classes de pipe. Un pipe est une unité de travail qui exploite le `Context`, consulte les `PipeResult` déjà stockés et produit un nouveau `PipeResult` avec des données et indicateurs de succès à jour.
 
-1. **Créez un modèle de configuration** pour votre pipe s'il nécessite des paramètres.
-2. **Sous-classez `Pipe`** et implémentez la méthode `process`.
-3. **Surchargez `get_provider_key()`** si vous souhaitez une clé personnalisée.
+1. **Définissez éventuellement un modèle de configuration** pour les paramètres du pipe.
+2. **Héritez de `Pipe`** et implémentez la méthode asynchrone `_process()`.
+3. **Retournez un dictionnaire** au format `PipeResult` (ou utilisez `PipeResult(...).model_dump()`).
 
-L'exemple simplifié suivant, tiré du `AI_README`, montre un pipe d'analyse de sentiment :
+L'exemple simplifié suivant illustre un pipe d'analyse de sentiment HuggingFace exécuté localement :
 
 ```python
+from typing import Any
+
+from pydantic import BaseModel
+from transformers import pipeline
+
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+
+
 class SentimentPipeConfig(BaseModel):
     model_name: str = "distilbert/distilbert-base-uncased-finetuned-sst-2-english"
+    text: str
 
 
-class SentimentAnalysisPipe(Pipe, Providable):
-    def __init__(self, config: SentimentPipeConfig):
+class SentimentAnalysisPipe(Pipe):
+    def __init__(self, config: dict[str, Any]):
         super().__init__(config)
-        self.classifier = pipeline("sentiment-analysis", model=config.model_name)
+        self.cfg = SentimentPipeConfig(**config)
+        self.classifier = pipeline("sentiment-analysis", model=self.cfg.model_name)
 
-    def process(self, context: PipelineContext) -> PipelineContext:
-        ticket_text = context.data.get("combined_text")
-        if not ticket_text:
-            context.stop_pipeline()
-            return context
+    async def _process(self) -> dict[str, Any]:
+        if not self.cfg.text:
+            return PipeResult(success=False, failed=True, message="Aucun texte disponible", data={}).model_dump()
 
-        sentiment = self.classifier(ticket_text)[0]
-        context.data["sentiment"] = sentiment["label"]
-        context.data["sentiment_confidence"] = sentiment["score"]
-        return context
-
-    @classmethod
-    def get_provider_key(cls) -> str:
-        return "SentimentAnalysisPipe"
+        sentiment = self.classifier(self.cfg.text)[0]
+        return PipeResult(
+            success=True,
+            failed=False,
+            data={
+                "label": sentiment["label"],
+                "confidence": sentiment["score"],
+            },
+        ).model_dump()
 ```
 
-Après avoir implémenté la classe, enregistrez-la dans votre registre d'injection de dépendances
-et référencez-la dans `config.yml` en utilisant la clé de fournisseur (provider key) retournée par
-`get_provider_key()`.
+Après implémentation, enregistrez la classe dans `open_ticket_ai.defs` (ou `general_config.pipe_classes`) afin que la pipeline YAML puisse la référencer via son `id`. Comme l'orchestrateur rend la configuration avec Jinja2, il est possible d'inclure des expressions réutilisant des variables d'environnement ou les résultats de pipes précédentes.
 
 ## Comment intégrer un nouveau système de tickets
 
@@ -98,6 +114,49 @@ modèles unifiés du projet.
 
 Une fois enregistré, spécifiez l'adaptateur dans la section `system` de `config.yml` et
 l'orchestrateur l'utilisera pour communiquer avec le système de tickets.
+
+## Exemples de Configuration
+
+Pour vous aider à démarrer rapidement, nous avons créé une collection d'exemples de configuration prêts à l'emploi
+démontrant divers cas d'utilisation. Ces exemples se trouvent dans le répertoire `docs/config_examples/`.
+
+### Exemples Disponibles
+
+1. **L'IA Ajoute une Note au Ticket** (`add_note_when_in_queue.yml`)
+   - Ajout automatique de notes générées par l'IA aux tickets dans des files spécifiques
+   - Cas d'utilisation : Ajouter des analyses ou des suggestions aux tickets en révision
+
+2. **Création Conditionnelle de Ticket** (`create_ticket_on_condition.yml`)
+   - Création automatique de nouveaux tickets en fonction de conditions détectées
+   - Cas d'utilisation : Créer automatiquement des tickets d'escalade pour les problèmes urgents
+
+3. **Classification de File** (`queue_classification.yml`)
+   - Acheminement des tickets vers les files appropriées via analyse IA
+   - Cas d'utilisation : Routage automatique par département (IT, RH, Finance, etc.)
+
+4. **Classification de Priorité** (`priority_classification.yml`)
+   - Attribution de niveaux de priorité basée sur l'analyse d'urgence des tickets
+   - Cas d'utilisation : S'assurer que les problèmes critiques reçoivent une attention immédiate
+
+5. **Workflow Complet** (`complete_workflow.yml`)
+   - Exemple complet combinant plusieurs opérations IA
+   - Cas d'utilisation : Automatisation complète avec classification, notes et gestion des erreurs
+
+### Utilisation des Exemples
+
+Chaque exemple comprend :
+- Configuration complète avec toutes les sections requises
+- Commentaires détaillés expliquant chaque étape
+- Paramètres personnalisables pour votre environnement
+- Meilleures pratiques pour la gestion des erreurs et les mécanismes de repli
+
+Pour utiliser un exemple :
+1. Parcourez les exemples dans `docs/config_examples/`
+2. Copiez la configuration pertinente dans votre `config.yml`
+3. Mettez à jour les variables d'environnement et personnalisez les paramètres
+4. Testez d'abord avec un sous-ensemble limité de tickets
+
+Pour plus de détails, consultez le [README dans le répertoire config_examples](../../config_examples/README.md).
 
 ## Résumé
 
