@@ -90,6 +90,48 @@ Um ein anderes Helpdesk-System anzubinden, implementieren Sie einen neuen Adapte
 
 Nach der Registrierung geben Sie den Adapter im `system`-Abschnitt der `config.yml` an, und der Orchestrator wird ihn zur Kommunikation mit dem Ticketsystem verwenden.
 
+## Konfigurationsbeispiele
+
+Um Ihnen den Einstieg zu erleichtern, haben wir eine Sammlung gebrauchsfertiger Konfigurationsbeispiele erstellt, die verschiedene Anwendungsfälle demonstrieren. Diese Beispiele befinden sich im Verzeichnis `docs/config_examples/`.
+
+### Verfügbare Beispiele
+
+1. **KI fügt Notiz zu Ticket hinzu** (`add_note_when_in_queue.yml`)
+   - Automatisches Hinzufügen von KI-generierten Notizen zu Tickets in bestimmten Queues
+   - Anwendungsfall: Hinzufügen von Analysen oder Vorschlägen zu Tickets in Überprüfung
+
+2. **Bedingte Ticket-Erstellung** (`create_ticket_on_condition.yml`)
+   - Automatisches Erstellen neuer Tickets basierend auf erkannten Bedingungen
+   - Anwendungsfall: Auto-Erstellung von Eskalations-Tickets für dringende Probleme
+
+3. **Queue-Klassifizierung** (`queue_classification.yml`)
+   - Weiterleitung von Tickets an entsprechende Queues mittels KI-Analyse
+   - Anwendungsfall: Automatische Abteilungsweiterleitung (IT, HR, Finanzen, etc.)
+
+4. **Prioritäts-Klassifizierung** (`priority_classification.yml`)
+   - Zuweisung von Prioritätsstufen basierend auf Ticket-Dringlichkeitsanalyse
+   - Anwendungsfall: Sicherstellen, dass kritische Probleme sofortige Aufmerksamkeit erhalten
+
+5. **Vollständiger Workflow** (`complete_workflow.yml`)
+   - Umfassendes Beispiel, das mehrere KI-Operationen kombiniert
+   - Anwendungsfall: Vollständige Automatisierung mit Klassifizierung, Notizen und Fehlerbehandlung
+
+### Verwendung der Beispiele
+
+Jedes Beispiel enthält:
+- Vollständige Konfiguration mit allen erforderlichen Abschnitten
+- Detaillierte Kommentare zur Erklärung jedes Schritts
+- Anpassbare Parameter für Ihre Umgebung
+- Best Practices für Fehlerbehandlung und Fallback-Mechanismen
+
+Um ein Beispiel zu verwenden:
+1. Durchsuchen Sie die Beispiele in `docs/config_examples/`
+2. Kopieren Sie die relevante Konfiguration in Ihre `config.yml`
+3. Aktualisieren Sie Umgebungsvariablen und passen Sie Einstellungen an
+4. Testen Sie zunächst mit einer begrenzten Anzahl von Tickets
+
+Weitere Details finden Sie in der [README im config_examples-Verzeichnis](../../config_examples/README.md).
+
 ## Zusammenfassung
 
 Die ATC Community Edition bietet in ihrer MVP-Version einen lokal ausgeführten Workflow zur automatischen Ticket-Klassifizierung. Alle Einstellungen werden über YAML-Dateien verwaltet; es ist keine REST API verfügbar. Für das Training müssen externe Prozesse oder Skripte verwendet werden.
