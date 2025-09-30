@@ -6,6 +6,7 @@ import pytest
 from open_ticket_ai.core.config import jinja2_env
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 
 
 class DummyChildPipe(Pipe):
@@ -16,25 +17,40 @@ class DummyChildPipe(Pipe):
         self.__class__.processed_contexts.append(context)
         return await super().process(context)
 
-    async def _process(self) -> dict[str, Any]:
+    async def _process(self) -> PipeResult:
         self.__class__.process_count += 1
-        return {"value": self.config.name}
+        return PipeResult(
+            success=True,
+            failed=False,
+            message="Dummy child processed",
+            data={"value": self.config.name},
+        )
 
 
 class DummyParentPipe(Pipe):
-    async def _process(self) -> dict[str, Any]:
-        return {
-            "child_names": list(self._current_context.pipes.keys()),
-            "context_id": id(self._current_context),
-        }
+    async def _process(self) -> PipeResult:
+        return PipeResult(
+            success=True,
+            failed=False,
+            message="Dummy parent processed",
+            data={
+                "child_names": list(self._current_context.pipes.keys()),
+                "context_id": id(self._current_context),
+            },
+        )
 
 
 class SkipPipe(Pipe):
     executed: bool = False
 
-    async def _process(self) -> dict[str, Any]:
+    async def _process(self) -> PipeResult:
         self.__class__.executed = True
-        return {"value": "should not run"}
+        return PipeResult(
+            success=True,
+            failed=False,
+            message="Skip pipe executed",
+            data={"value": "should not run"},
+        )
 
 
 @pytest.fixture(autouse=True)
@@ -90,14 +106,27 @@ async def test_process_executes_child_pipes_and_updates_context(resolve_step_imp
     assert result_context is context
     assert DummyChildPipe.processed_contexts == [context]
     assert DummyChildPipe.process_count == 1
-    assert result_context.pipes["child"] == {"value": "child"}
-    assert result_context.pipes["parent"]["child_names"] == ["child"]
-    assert result_context.pipes["parent"]["context_id"] == id(context)
+    assert result_context.pipes["child"].data == {"value": "child"}
+    assert result_context.pipes["child"].success
+    assert not result_context.pipes["child"].failed
+    assert result_context.pipes["parent"].data["child_names"] == ["child"]
+    assert result_context.pipes["parent"].data["context_id"] == id(context)
+    assert result_context.pipes["parent"].success
 
 
 @pytest.mark.asyncio
 async def test_process_skips_pipe_when_condition_is_false():
-    context = Context(pipes={"existing": {"value": 1}}, config={})
+    context = Context(
+        pipes={
+            "existing": PipeResult(
+                success=True,
+                failed=False,
+                message="Existing pipe",
+                data={"value": 1},
+            )
+        },
+        config={},
+    )
     skip_pipe = SkipPipe({"name": "skip", "when": False})
 
     result_context = await skip_pipe.process(context)

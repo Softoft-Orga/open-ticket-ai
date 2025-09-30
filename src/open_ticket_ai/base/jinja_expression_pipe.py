@@ -3,6 +3,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 
 
 class JinjaExpressionPipeConfig(BaseModel):
@@ -15,5 +16,10 @@ class JinjaExpressionPipe(Pipe):
         pipe_config = JinjaExpressionPipeConfig(**config)
         self.expression = pipe_config.expression
 
-    async def _process(self) -> dict[str, Any]:
-        return {"value": self.expression}
+    async def _process(self) -> PipeResult:
+        return PipeResult(
+            success=True,
+            failed=False,
+            message="Expression evaluated successfully",
+            data={"value": self.expression},
+        )

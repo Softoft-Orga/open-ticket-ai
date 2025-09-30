@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 
@@ -29,6 +30,11 @@ class AddNotePipe(Pipe):
         else:
             self.note = pipe_config.note
 
-    async def _process(self) -> dict[str, Any]:
+    async def _process(self) -> PipeResult:
         await self.ticket_system.add_note(self.ticket_id, self.note)
-        return {}
+        return PipeResult(
+            success=True,
+            failed=False,
+            message=f"Note added to ticket {self.ticket_id}",
+            data={},
+        )
