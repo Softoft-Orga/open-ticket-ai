@@ -14,18 +14,29 @@ Die ATC Community Edition ist eine On-Premise-Lösung zur automatisierten Klassi
 
 Die Anwendung besteht im Wesentlichen aus den folgenden Paketen:
 
-* **core** – Basisklassen, Konfigurationsmodelle und Hilfsfunktionen.
-* **run** – enthält die Pipeline für die Ticket-Klassifizierung.
+* **core** – Konfigurationsmodelle, Dependency-Injection-Hilfen, Pipeline-Engine und Template-Rendering.
+* **base** – Wiederverwendbare Pipe-Implementierungen (z. B. Ticket-Fetch/Update und Composite-Hilfen).
+* **hf_local** – Beispielhafte HuggingFace-Inferenz-Pipes.
 * **ticket\_system\_integration** – Adapter für verschiedene Ticketsysteme.
-* **main.py** – CLI-Einstiegspunkt, der den Scheduler und den Orchestrator startet.
+* **main.py** – CLI-Einstiegspunkt, der Injector, Scheduler und Orchestrator verbindet.
 
-Der Orchestrator führt konfigurierbare `AttributePredictors` aus, die sich aus `DataFetcher`, `DataPreparer`, `AIInferenceService` und `Modifier` zusammensetzen. Alle Komponenten werden in der `config.yml` definiert und beim Programmstart validiert.
+Der Orchestrator verarbeitet jetzt YAML-definierte `Pipe`-Graphen. Definitionen werden aus wiederverwendbaren `defs` zusammengesetzt, mit dem aktuellen Kontext gerendert und zur Laufzeit über den Dependency-Injection-Container aufgelöst. Jeder Zeitplaneintrag legt fest, welcher Pipe-Baum ausgeführt wird und in welchem Intervall der Orchestrator ihn startet.
 
 Ein Beispielbefehl zum Starten der Anwendung:
 
 ```bash
 python -m open_ticket_ai.src.ce.main start
 ```
+
+## Pipeline-Architektur
+
+Die Laufzeit-Pipeline wird in YAML beschrieben. `RawOpenTicketAIConfig` bündelt Plug-ins, globale Konfiguration, wiederverwendbare `defs` und den `orchestrator`-Zeitplan, der vorgibt, welche Pipes in welchem Intervall laufen. Beim Start lädt der Dependency-Injection-Container diese Datei, erstellt Singleton-Services aus den `defs` und registriert sie im `UnifiedRegistry`. Pipes und Templates können diese Dienste anschließend per ID referenzieren.
+
+Jeder Pipeline-Eintrag wird in ein `RegisterableConfig` mit einer `id`, der Zielklasse in `use`, optionalen verschachtelten `steps` sowie Orchestrierungs-Metadaten wie `_if` und `depends_on` normalisiert. Zur Laufzeit wird die Konfiguration gegen den aktuellen `Context` gerendert, sodass Jinja2-Ausdrücke über Hilfsfunktionen wie `get_pipe_result('classify', 'label')` auf vorherige Ergebnisse zugreifen können. `if:`-Ausdrücke schalten Pipes pro Durchlauf an oder aus und `depends_on` stellt sicher, dass eine Pipe erst ausgeführt wird, wenn alle abhängigen Schritte erfolgreich waren.
+
+Der `Context` enthält zwei Dictionaries: `pipes` speichert für jeden Schritt das `PipeResult` (success/failed/message/data) und `config` stellt die gerenderte Konfiguration für den aktiven Zeitplaneintrag bereit. Pipes lesen aus diesem Kontext, führen ihre Arbeit in der asynchronen `_process()`-Methode aus und geben Daten zurück, die als `PipeResult.data` abgelegt werden. So können nachfolgende Pipes und Templates Fehler erkennen oder Ergebnisse wiederverwenden.
+
+Das Feld `orchestrator` in der YAML ist eine Liste von Zeitplaneinträgen. Jeder Eintrag enthält `run_every_milli_seconds` und eine `pipe`-Definition, die selbst eine Composite-Pipe mit verschachtelten `steps` sein kann. Der Scheduler läuft diese Liste durch, löst Durchläufe nach Ablauf der Intervalle aus und übergibt dem Orchestrator einen frischen `Context`, der mit der Zeitplan-Konfiguration vorbelegt ist.
 
 ## Training benutzerdefinierter Modelle
 
@@ -37,41 +48,51 @@ Benutzerdefinierte Fetcher, Preparer, KI-Dienste oder Modifier können als Pytho
 
 ## Wie man eine benutzerdefinierte Pipe hinzufügt
 
-Die Verarbeitungs-Pipeline kann mit eigenen Pipe-Klassen erweitert werden. Eine Pipe ist eine Arbeitseinheit, die einen `PipelineContext` empfängt, diesen modifiziert und zurückgibt. Alle Pipes erben von der `Pipe`-Basisklasse, die bereits das `Providable`-Mixin implementiert.
+Die Verarbeitungs-Pipeline lässt sich mit eigenen Pipe-Klassen erweitern. Eine Pipe ist eine Arbeitseinheit, die einen `Context` nutzt, zuvor gespeicherte `PipeResult`-Objekte auswertet und ein neues `PipeResult` mit aktuellen Daten und Statusinformationen zurückliefert.
 
-1. **Erstellen Sie ein Konfigurationsmodell** für Ihre Pipe, falls diese Parameter benötigt.
-2. **Leiten Sie von `Pipe` ab** und implementieren Sie die `process`-Methode.
-3. **Überschreiben Sie `get_provider_key()`**, wenn Sie einen benutzerdefinierten Schlüssel wünschen.
+1. **Definieren Sie optional ein Konfigurationsmodell** für die Parameter Ihrer Pipe.
+2. **Leiten Sie von `Pipe` ab** und implementieren Sie die asynchrone Methode `_process()`.
+3. **Geben Sie ein Dictionary** im `PipeResult`-Format zurück (oder verwenden Sie `PipeResult(...).model_dump()`).
 
-Das folgende vereinfachte Beispiel aus der `AI_README` zeigt eine Pipe für die Sentiment-Analyse:
+Das folgende vereinfachte Beispiel zeigt eine lokale Sentiment-Analyse-Pipe mit HuggingFace:
 
 ```python
+from typing import Any
+
+from pydantic import BaseModel
+from transformers import pipeline
+
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+
+
 class SentimentPipeConfig(BaseModel):
     model_name: str = "distilbert/distilbert-base-uncased-finetuned-sst-2-english"
+    text: str
 
 
-class SentimentAnalysisPipe(Pipe, Providable):
-    def __init__(self, config: SentimentPipeConfig):
+class SentimentAnalysisPipe(Pipe):
+    def __init__(self, config: dict[str, Any]):
         super().__init__(config)
-        self.classifier = pipeline("sentiment-analysis", model=config.model_name)
+        self.cfg = SentimentPipeConfig(**config)
+        self.classifier = pipeline("sentiment-analysis", model=self.cfg.model_name)
 
-    def process(self, context: PipelineContext) -> PipelineContext:
-        ticket_text = context.data.get("combined_text")
-        if not ticket_text:
-            context.stop_pipeline()
-            return context
+    async def _process(self) -> dict[str, Any]:
+        if not self.cfg.text:
+            return PipeResult(success=False, failed=True, message="Kein Text vorhanden", data={}).model_dump()
 
-        sentiment = self.classifier(ticket_text)[0]
-        context.data["sentiment"] = sentiment["label"]
-        context.data["sentiment_confidence"] = sentiment["score"]
-        return context
-
-    @classmethod
-    def get_provider_key(cls) -> str:
-        return "SentimentAnalysisPipe"
+        sentiment = self.classifier(self.cfg.text)[0]
+        return PipeResult(
+            success=True,
+            failed=False,
+            data={
+                "label": sentiment["label"],
+                "confidence": sentiment["score"],
+            },
+        ).model_dump()
 ```
 
-Nach der Implementierung der Klasse registrieren Sie diese in Ihrer Dependency-Injection-Registry und referenzieren sie in der `config.yml` über den von `get_provider_key()` zurückgegebenen Provider-Schlüssel.
+Registrieren Sie die neue Klasse anschließend unter `open_ticket_ai.defs` (oder in `general_config.pipe_classes`), damit die YAML-Pipeline sie über ihre `id` referenzieren kann. Da der Orchestrator die Konfiguration per Jinja2 rendert, lassen sich in den Definitionen auch Umgebungsvariablen oder Ergebnisse vorheriger Pipes einbinden.
 
 ## Wie man ein neues Ticketsystem integriert
 
