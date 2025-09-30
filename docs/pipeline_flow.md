@@ -95,3 +95,44 @@ flowchart TD
 - **Registry Pattern**: Services accessed via `{{ get_instance('service_id') }}`
 - **Template Functions**: Jinja2 functions for dynamic service resolution
 - **Stateless Pipes**: Pipes recreated for each execution with fresh context
+
+## Dependency Injection Lifecycle
+
+Open Ticket AI keeps object wiring out of the pipeline code by funnelling all
+instantiation through a lightweight dependency injection (DI) layer.
+
+### 1. Container bootstrapping
+- The application entry point builds an `Injector` with `AppModule` and uses it
+  to resolve the orchestrator, configuration, and instance factory during
+  startup.
+- `AppModule` reads the YAML configuration, exposes it as a singleton, and
+  shares a process-wide `UnifiedRegistry` plus an `InstanceCreator` that knows
+  how to populate that registry.
+
+### 2. Registering configured services
+- Configuration blocks placed under `open_ticket_ai.defs` are modelled by the
+  `RawOpenTicketAIConfig` schema and describe reusable services with a `use`
+  import path and arbitrary keyword arguments.
+- During startup `InstanceCreator.create_instances()` walks over each `defs`
+  entry, locates the referenced class, instantiates it with the configuration
+  mapping, and registers the resulting object inside the shared registry so it
+  can be reused later.
+- The registry enforces singleton semantics by raising if the same identifier
+  is registered twice and exposes `get_instance` to fetch stored services by
+  their class name.
+
+### 3. Consuming dependencies inside pipes
+- Pipeline definitions reference registered services by identifier. For
+  example, the bundled configuration creates an `otobo_znuny` ticket system
+  service once and reuses its identifier within downstream pipe definitions to
+  link to that adapter.
+- When a configurable pipe is constructed, it resolves its dependencies through
+  the registry. `FetchTicketsPipe`, `UpdateTicketsPipe`, and
+  `AddNoteTicketsPipe` all take the configured ticket-system identifier and call
+  `UnifiedRegistry.get_instance` to receive the shared service instance before
+  performing their work.
+
+This flow allows integrators to swap or extend services purely through YAML
+configuration—new adapters only need to be registered in `defs`, and any pipe
+that relies on them can look them up by identifier without importing concrete
+classes.
