@@ -10,6 +10,7 @@ authors = [
 license = { text = "LGPL-2.1-only" }
 
 dependencies = [
+    "pyyaml>=6.0.2",
     "pydantic~=2.11.7",
     "pydantic_core",
     "typing_extensions",
