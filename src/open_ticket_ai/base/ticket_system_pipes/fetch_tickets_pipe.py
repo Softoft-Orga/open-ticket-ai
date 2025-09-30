@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
-from open_ticket_ai.core.pipeline.configurable_pipe import ConfigurablePipe
+from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
 
@@ -13,7 +13,7 @@ class FetchTicketsPipeConfig(BaseModel):
     ticket_search_criteria: str | TicketSearchCriteria | dict[str, Any] | None = None
 
 
-class FetchTicketsPipe(ConfigurablePipe):
+class FetchTicketsPipe(Pipe):
     def __init__(self, config: dict[str, Any]) -> None:
         super().__init__(config)
         pipe_config = FetchTicketsPipeConfig(**config)

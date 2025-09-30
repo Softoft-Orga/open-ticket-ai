@@ -4,7 +4,7 @@ from otobo_znuny.domain_models.otobo_client_config import ClientConfig
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
 from pydantic import SecretStr
 
-from open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service_config import (
+from open_ticket_ai.otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import (
     RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
 

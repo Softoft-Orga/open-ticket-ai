@@ -5,8 +5,8 @@ import importlib
 import pytest
 from pydantic import ValidationError
 
-from open_ticket_ai.core.pipeline.configurable_pipe_config import (
-    OnType,
+from open_ticket_ai.core.pipeline.pipe_config import (
+    FlowAction,
     RawPipeConfig,
     RenderedPipeConfig,
 )
@@ -35,10 +35,10 @@ def test_rendered_pipe_config_requires_boolean_when() -> None:
     with pytest.raises(ValidationError):
         RenderedPipeConfig()
 
-    config = RenderedPipeConfig(when=True)
-    assert config.when is True
-    assert config.on_failure is OnType.FAIL_CONTAINER
-    assert config.on_success is OnType.CONTINUE
+    config = RenderedPipeConfig(_if=True)
+    assert config._if is True
+    assert config.on_failure is FlowAction.FAIL_CONTAINER
+    assert config.on_success is FlowAction.CONTINUE
 
 
 @pytest.mark.parametrize(
@@ -51,9 +51,9 @@ def test_rendered_pipe_config_requires_boolean_when() -> None:
 def test_raw_pipe_config_accepts_optional_strings(field: str, value: str) -> None:
     config = RawPipeConfig(**{field: value})
     assert getattr(config, field) == value
-    assert config.when == "True"
+    assert config._if == "True"
 
 
 def test_raw_pipe_config_requires_string_when() -> None:
     with pytest.raises(ValidationError):
-        RawPipeConfig(when=False)
+        RawPipeConfig(_if=False)

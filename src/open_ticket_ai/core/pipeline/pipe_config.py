@@ -1,0 +1,53 @@
+from __future__ import annotations
+
+import enum
+from typing import Any, Self, Iterable
+
+from pydantic import BaseModel, ConfigDict
+
+from open_ticket_ai.core.config.registerable_config import RegisterableConfig
+
+
+class FlowAction(enum.StrEnum):
+    CONTINUE = "continue"
+    FINISH_CONTAINER = "finish_container"
+    FAIL_CONTAINER = "fail_container"
+
+
+class RenderedPipeConfig(RegisterableConfig):
+    _if: bool
+    depends_on: list[str] = []
+
+
+class RawPipeConfig(RegisterableConfig):
+    _if: str | bool = "True"
+    depends_on: str | list[str] = []
+
+
+from typing import Any
+from functools import reduce
+from pydantic import BaseModel, ConfigDict
+
+
+class PipeResult(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    success: bool
+    failed: bool
+    message: str = ""
+    data: dict[str, Any] = {}
+
+    def __and__(self, other: Self) -> Self:
+        merged_data = {**self.data, **other.data}
+        merged_msg = " ".join([m for m in [self.message, other.message] if m])
+        return PipeResult(
+            success=self.success and other.success,
+            failed=self.failed and other.failed,
+            message=merged_msg,
+            data=merged_data,
+        )
+
+    @classmethod
+    def union(cls, results: Iterable[PipeResult]) -> PipeResult:
+        if not results:
+            return PipeResult(success=True, failed=False, data={})
+        return reduce(lambda a, b: a & b, results)

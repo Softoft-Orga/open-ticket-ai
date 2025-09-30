@@ -11,8 +11,8 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
     UnifiedTicket,
 )
-from open_ticket_ai.otobo_znuny.models import otobo_ticket_to_unified_ticket
-from open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service_config import (
+from open_ticket_ai.otobo_znuny_plugin.models import otobo_ticket_to_unified_ticket
+from open_ticket_ai.otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import (
     RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
 

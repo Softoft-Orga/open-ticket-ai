@@ -70,13 +70,18 @@ class TicketSearchCriteriaFactory:
         return TicketSearchCriteria(**defaults)
 
 
+class TestPipe:
+    def __init__(self, config):
+        self.config = config
+
+    async def process(self, context):
+        return context
 class PipeConfigFactory:
-    """Factory for creating pipe configuration dictionaries."""
 
     @staticmethod
     def build(
             name: str = "test_pipe",
-            pipe_class: str = "TestPipe",
+            pipe_class: str = TestPipe.__module__ + "." + TestPipe.__qualname__,
             ticket_system_id: str = "test_system",
             **kwargs: Any,
     ) -> dict[str, Any]:

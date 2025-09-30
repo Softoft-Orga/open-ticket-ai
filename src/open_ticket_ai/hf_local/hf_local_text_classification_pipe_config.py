@@ -1,4 +1,4 @@
-from open_ticket_ai.core.pipeline.configurable_pipe_config import RawPipeConfig, RenderedPipeConfig
+from open_ticket_ai.core.pipeline.pipe_config import RawPipeConfig, RenderedPipeConfig
 
 
 class RawHFLocalTextClassificationPipeConfig(RawPipeConfig):

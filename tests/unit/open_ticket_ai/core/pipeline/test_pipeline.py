@@ -4,11 +4,11 @@ from typing import Any
 import pytest
 
 from open_ticket_ai.core.config import jinja2_env
-from open_ticket_ai.core.pipeline.configurable_pipe import ConfigurablePipe
+from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.context import Context
 
 
-class DummyChildPipe(ConfigurablePipe):
+class DummyChildPipe(Pipe):
     processed_contexts: list[Context] = []
     process_count: int = 0
 
@@ -21,7 +21,7 @@ class DummyChildPipe(ConfigurablePipe):
         return {"value": self.config.name}
 
 
-class DummyParentPipe(ConfigurablePipe):
+class DummyParentPipe(Pipe):
     async def _process(self) -> dict[str, Any]:
         return {
             "child_names": list(self._current_context.pipes.keys()),
@@ -29,7 +29,7 @@ class DummyParentPipe(ConfigurablePipe):
         }
 
 
-class SkipPipe(ConfigurablePipe):
+class SkipPipe(Pipe):
     executed: bool = False
 
     async def _process(self) -> dict[str, Any]:
@@ -63,7 +63,7 @@ def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
         return pipe_class(resolved_config)
 
     monkeypatch.setattr(
-        ConfigurablePipe,
+        Pipe,
         "_build_pipe_from_step_config",
         _build_pipe_from_step_config,
         raising=False,

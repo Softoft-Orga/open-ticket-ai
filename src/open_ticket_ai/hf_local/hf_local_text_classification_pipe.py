@@ -4,7 +4,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from open_ticket_ai.core.pipeline.configurable_pipe import ConfigurablePipe
+from open_ticket_ai.core.pipeline.pipe import Pipe
 
 
 class HFLocalTextClassificationPipeConfig(BaseModel):
@@ -13,7 +13,7 @@ class HFLocalTextClassificationPipeConfig(BaseModel):
     prompt: str
 
 
-class HFLocalTextClassificationPipe(ConfigurablePipe):
+class HFLocalTextClassificationPipe(Pipe):
     def __init__(self, config: dict[str, Any]):
         super().__init__(config)
         pipe_config = HFLocalTextClassificationPipeConfig(**config)

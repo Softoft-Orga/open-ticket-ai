@@ -21,85 +21,81 @@ open_ticket_ai:
 
   defs:
     - id: "otobo_znuny"
-      use: "open_ticket_ai.otobo_znuny.OToboZnunyTicketSystemService"
+      use: "open_ticket_ai.otobo_znuny_plugin.OToboZnunyTicketSystemService"
       server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
       password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 
     - &default_ticket_update
       <<: *ticket_update_pipe
-      ticket_system: "{{ get_instance('otobo_znuny') }}"
-      ticket_id: "{{ config.ticket_id }}"
+      injects: { ticket_system: "otobo_znuny"}
+      ticket_id: "{{ (pipes.ticket_fetcher | first).id }}"
 
     - &default_ticket_add_note
       <<: *ticket_add_note_pipe
-      ticket_system: "{{ get_instance('otobo_znuny') }}"
-      ticket_id: "{{ config.ticket_id }}"
+      injects: { ticket_system: "otobo_znuny"}
+      ticket_id: "{{ (pipes.ticket_fetcher | first).id }}"
 
     - &ticket_classifier
       <<: *ticket_classifier_pipe
-      use: HfLocalTextClassificationPipe
       token: "{{ env.OTAI_HUGGINGFACE_EHS_TOKEN }}"
       prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
 
     - &classification_generic
       id: classification_generic
       steps:
-        - id: classification_mapping
-          steps:
-            - id: classify
-              <<: *ticket_classifier
-              model: "{{ config.model }}"
-            - id: map_value
-              <<: *jinja_expression_pipe
-              expression: "{{ config.map_obj[pipes.classify.label] }}"
-              on_failure: "continue"
+        - id: classify
+          <<: *ticket_classifier
+          model: "{{ config.model }}"
 
-            - id: select_final
-              <<: *jinja_expression_pipe
-              expression: |-
-                {{ 
-                pipes.map_value.value if data.pipes.classify.confidence >= config.min_conf
-                else config.low_conf_name
-                }}
-          on_failure: "continue"
+        - id: map_value
+          <<: *jinja_expression_pipe
+          expression: "{{ config.map_obj[pipes.classify.label] }}"
+          depends_on: [ "classify" ]
 
-        - id: update_ticket_add_note
-          steps:
-            - id: update_ticket
-              <<: *default_ticket_update
-              updated_ticket: "{{ pipes.select_final | at_path(config.ticket_field) }}"
+        - id: select_final
+          <<: *jinja_expression_pipe
+          expression: |-
+            {{ 
+            pipes.map_value.value if pipes.classify.confidence >= config.min_conf
+            else config.low_conf_name
+            }}
+          depends_on: [ "map_value" ]
 
-            - id: add_note
-              <<: *default_ticket_add_note
-              note: |
-                {{ 
-                config.note_high.body if pipes.classify.confidence >= config.min_conf
-                else config.note_low.body
-                }}
-              on_success: "finish_"
-          on_success: "finish_"
-          on_failure: "continue"
+        - id: update_ticket
+          <<: *default_ticket_update
+          updated_ticket: "{{ pipes.select_final.value | at_path(config.ticket_field) }}"
+          depends_on: [ "select_final" ]
 
-        - id: update_ticket_error_fallback
-          steps:
-            - when: "{{ config.update_on_error }}"
-              <<: *default_ticket_update
-              updated_ticket: "{{ config.on_error_update_value | at_path(config.ticket_field) }}"
+        - id: add_note
+          <<: *default_ticket_add_note
+          note: |
+            {{ 
+            config.note_high.body if pipes.classify.confidence >= config.min_conf
+            else config.note_low.body
+            }}
+          depends_on: [ "update_ticket" ]
 
-            - id: add_error_note
-              when: "{{ config.error_note }}"
-              <<: *default_ticket_add_note
-              note: "{{ config.error_note }}"
+
+        - if: "{{ has_failed('update_ticket') and config.update_on_error }}"
+          <<: *default_ticket_update
+          updated_ticket: "{{ config.on_error_update_value | at_path(config.ticket_field) }}"
+          depends_on: [ "update_ticket" ]
+
+        - if: "{{ has_failed('update_ticket') and config.error_note }}"
+          <<: *default_ticket_add_note
+          note: "{{ config.error_note }}"
+          depends_on: [ "update_ticket" ]
 
     - &ticket-routing
       id: ticket-routing
       steps:
         - id: ticket_fetcher
-          use: TicketFetchPipe
-          ticket_system: "{{ create_instance('otobo_znuny') }}"
+          <<: *ticket_fetch_pipe
+          injects: { ticket_system: "otobo_znuny"}
           ticket_search_criteria: "{{ config.ticket_search_criteria }}"
 
-        - id: queue_classification
+        - if: "{{ pipes.ticket_fetcher.fetched_tickets | length > 0 }}"
+          id: queue_classification
           <<: *classification_generic
           model: "{{ config.queue_model }}"
           map_obj: "{{ config.queue_map }}"
@@ -128,7 +124,8 @@ open_ticket_ai:
               Wurde in die Queue {{ config.error_queue_name }} verschoben.
 
 
-        - id: priority_classification
+        - if: "{{ pipes.ticket_fetcher.fetched_tickets | length > 0 }}"
+          id: priority_classification
           <<: *classification_generic
           model: "{{ config.priority_model }}"
           map_obj: "{{ config.priority_map }}"

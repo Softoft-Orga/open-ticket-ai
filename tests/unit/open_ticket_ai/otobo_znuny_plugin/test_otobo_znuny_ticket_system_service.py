@@ -21,11 +21,11 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
     UnifiedTicketBase,
 )
-from open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service import (
+from open_ticket_ai.otobo_znuny_plugin.otobo_znuny_ticket_system_service import (
     OTOBOZnunyTicketSystemService,
     _to_id_name,
 )
-from open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service_config import (
+from open_ticket_ai.otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import (
     RawOTOBOZnunyTicketsystemServiceConfig,
     RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
@@ -86,7 +86,7 @@ class TestOTOBOZnunyTicketSystemService:
             )
 
         monkeypatch.setattr(
-            "open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service.TicketAdapter",
+            "open_ticket_ai.otobo_znuny_plugin.otobo_znuny_ticket_system_service.TicketAdapter",
             adapter,
         )
 
@@ -125,7 +125,7 @@ class TestOTOBOZnunyTicketSystemService:
 
     @pytest.mark.asyncio
     async def test_recreate_client(self, service, mock_client):
-        with patch("open_ticket_ai.otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
+        with patch("open_ticket_ai.otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
             MockClientClass.return_value = mock_client
 
             result = await service._recreate_client()
