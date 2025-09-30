@@ -7,16 +7,24 @@ on:
     pull_request:
         types: [ opened, synchronize, reopened ]
 jobs:
-    sonarqube:
-        name: SonarQube
-        runs-on: ubuntu-latest
-        environment: GH-Action-OTAI   # <<< Wichtig
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+      - name: Install dependencies
+        run: |
+          uv pip install pytest pytest-cov
+          if [ -f requirements.txt ]; then uv pip install -r requirements.txt; fi
+      - name: Run tests with coverage
+        run: |
+          pytest --cov=src --cov-report=xml:coverage.xml
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-        steps:
-            -   uses: actions/checkout@v4
-                with:
-                    fetch-depth: 0
-            -   name: SonarQube Scan
-                uses: SonarSource/sonarqube-scan-action@v6
-                env:
-                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
