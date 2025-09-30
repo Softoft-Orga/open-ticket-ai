@@ -123,6 +123,49 @@ project's unified models.
 Once registered, specify the adapter in the `system` section of `config.yml` and
 the orchestrator will use it to communicate with the ticket system.
 
+## Configuration Examples
+
+To help you get started quickly, we've created a collection of ready-to-use configuration examples
+demonstrating various use cases. These examples are located in the `docs/config_examples/` directory.
+
+### Available Examples
+
+1. **AI Adds Note to Ticket** (`add_note_when_in_queue.yml`)
+   - Automatically add AI-generated notes to tickets in specific queues
+   - Use case: Add analysis or suggestions to tickets under review
+
+2. **Conditional Ticket Creation** (`create_ticket_on_condition.yml`)
+   - Create new tickets automatically based on detected conditions
+   - Use case: Auto-create escalation tickets for urgent issues
+
+3. **Queue Classification** (`queue_classification.yml`)
+   - Route tickets to appropriate queues using AI analysis
+   - Use case: Automatic departmental routing (IT, HR, Finance, etc.)
+
+4. **Priority Classification** (`priority_classification.yml`)
+   - Assign priority levels based on ticket urgency analysis
+   - Use case: Ensure critical issues get immediate attention
+
+5. **Complete Workflow** (`complete_workflow.yml`)
+   - Comprehensive example combining multiple AI operations
+   - Use case: Full automation with classification, notes, and error handling
+
+### Using the Examples
+
+Each example includes:
+- Complete configuration with all required sections
+- Detailed comments explaining each step
+- Customizable parameters for your environment
+- Best practices for error handling and fallback mechanisms
+
+To use an example:
+1. Browse the examples in `docs/config_examples/`
+2. Copy the relevant configuration to your `config.yml`
+3. Update environment variables and customize settings
+4. Test with a limited subset of tickets first
+
+For more details, see the [README in the config_examples directory](../../config_examples/README.md).
+
 ## Summary
 
 The ATC Community Edition offers a locally executed workflow for automatic ticket classification in its MVP version. All
