@@ -5,6 +5,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 
 
 class HFLocalTextClassificationPipeConfig(BaseModel):
@@ -36,7 +37,7 @@ class HFLocalTextClassificationPipe(Pipe):
         model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 
-    async def _process(self) -> dict[str, Any]:
+    async def _process(self) -> PipeResult:
         self.logger.info(f"Running {self.__class__.__name__}")
         if self._pipeline is None:
             self._pipeline = self._load_pipeline(self.model, self.token)
@@ -49,4 +50,4 @@ class HFLocalTextClassificationPipe(Pipe):
 
         self.logger.info(f"Prediction: label {label} with score {score}")
 
-        return {"label": label, "confidence": score}
+        return PipeResult(success=True, failed=False, data={"label": label, "confidence": score})
