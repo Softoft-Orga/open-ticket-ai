@@ -1,11 +1,11 @@
 name: Quality Assurance SonarQube
 on:
-  push:
-    branches:
-      - dev
-      - mvp-01
-  pull_request:
-    types: [ opened, synchronize, reopened ]
+    push:
+        branches:
+            - dev
+            - mvp-01
+    pull_request:
+        types: [ opened, synchronize, reopened ]
 jobs:
   sonarqube:
     name: SonarQube
@@ -27,3 +27,4 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
