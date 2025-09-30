@@ -50,5 +50,8 @@ class Pipe(RegisterableClass):
         return updated_context
 
     @abstractmethod
+            self._logger.error(f"Error in pipe {self.config.name}: {str(e)}", exc_info=True)
+        return new_context
+
     async def _process(self) -> PipeResult:
         pass
