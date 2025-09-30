@@ -2,6 +2,8 @@
 
 This directory contains example configurations demonstrating various use cases for Open Ticket AI.
 
+> 📚 **Quick Reference**: See [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) for a comparison table and quick start guide.
+
 ## Available Examples
 
 ### 1. AI Adds Note to Ticket (`add_note_when_in_queue.yml`)
