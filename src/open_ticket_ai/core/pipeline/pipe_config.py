@@ -3,7 +3,7 @@ from __future__ import annotations
 import enum
 from typing import Any, Self, Iterable
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.registerable_config import RegisterableConfig
 
@@ -34,7 +34,7 @@ class PipeResult(BaseModel):
     success: bool
     failed: bool
     message: str = ""
-    data: dict[str, Any] = {}
+    data: dict[str, Any] = Field(default_factory=dict)
 
     def __and__(self, other: Self) -> Self:
         merged_data = {**self.data, **other.data}

@@ -2,7 +2,7 @@ import pytest
 
 from open_ticket_ai.base.ticket_system_pipes.add_note_pipe import AddNotePipe
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
-from tests.unit.factories import UnifiedNoteFactory, PipeConfigFactory
+from tests.unit.factories import PipeConfigFactory, UnifiedNoteFactory
 
 
 def test_add_note_pipe_calls_ticket_system(
@@ -23,6 +23,10 @@ def test_add_note_pipe_calls_ticket_system(
     assert call_args[0][0] == "TCK-123"
     assert isinstance(call_args[0][1], UnifiedNote)
     assert "test_pipe" in result_context.pipes
+    state = result_context.pipes["test_pipe"]
+    assert state.success is True
+    assert state.failed is False
+    assert state.data == {}
 
 
 @pytest.mark.parametrize("note_input,expected_body", [
@@ -62,8 +66,13 @@ def test_add_note_pipe_handles_failure(
         "note": "Test note",
     }
     
-    with pytest.raises(RuntimeError, match="Service unavailable"):
-        pipe_runner(AddNotePipe, config, empty_pipeline_context)
+    result_context = pipe_runner(AddNotePipe, config, empty_pipeline_context)
+
+    state = result_context.pipes["test_pipe"]
+    assert state.success is False
+    assert state.failed is True
+    assert "Service unavailable" in state.message
+    mock_ticket_system_service.add_note.assert_awaited_once()
 
 
 def test_add_note_pipe_skips_when_disabled(

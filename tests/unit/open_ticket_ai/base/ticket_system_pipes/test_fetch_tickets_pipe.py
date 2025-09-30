@@ -87,7 +87,11 @@ def test_process_serializes_results(
         mock_registry.get_instance.assert_called_once_with("test_ticket_system")
 
         state = result_context.pipes["ticket_fetcher"]
-        assert state["found_tickets"] == [ticket.model_dump() for ticket in expected_tickets]
+        assert state.success is True
+        assert state.failed is False
+        assert state.data["found_tickets"] == [
+            ticket.model_dump() for ticket in expected_tickets
+        ]
 
         assert ticket_service.find_tickets.await_count == 1
         args, _ = ticket_service.find_tickets.await_args
@@ -111,4 +115,7 @@ def test_process_without_results_returns_empty_list(
 
         result_context = asyncio.run(pipe.process(pipeline_context))
 
-        assert result_context.pipes["ticket_fetcher"] == {"found_tickets": []}
+        state = result_context.pipes["ticket_fetcher"]
+        assert state.success is True
+        assert state.failed is False
+        assert state.data == {"found_tickets": []}
