@@ -5,7 +5,7 @@ from abc import abstractmethod
 from typing import Any
 
 from .context import Context
-from .pipe_config import RenderedPipeConfig
+from .pipe_config import RenderedPipeConfig, PipeResult
 from .pipe_factory import PipeFactory
 from ..config.registerable_class import RegisterableClass
 from ..config.registerable_config import RegisterableConfig
@@ -44,5 +44,5 @@ class Pipe(RegisterableClass):
             self._logger.error(f"Error in pipe {self.config.name}: {str(e)}", exc_info=True)
         return new_context
 
-    async def _process(self) -> dict[str, Any]:
+    async def _process(self) -> PipeResult:
         pass
