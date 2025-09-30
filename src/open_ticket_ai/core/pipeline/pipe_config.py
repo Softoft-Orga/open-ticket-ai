@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import enum
-from typing import Any, Self, Iterable
+from functools import reduce
+from typing import Any, Iterable, Self
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.registerable_config import RegisterableConfig
 
@@ -24,17 +25,12 @@ class RawPipeConfig(RegisterableConfig):
     depends_on: str | list[str] = []
 
 
-from typing import Any
-from functools import reduce
-from pydantic import BaseModel, ConfigDict
-
-
 class PipeResult(BaseModel):
     model_config = ConfigDict(extra="ignore")
     success: bool
     failed: bool
     message: str = ""
-    data: dict[str, Any] = {}
+    data: dict[str, Any] = Field(default_factory=dict)
 
     def __and__(self, other: Self) -> Self:
         merged_data = {**self.data, **other.data}
@@ -49,5 +45,5 @@ class PipeResult(BaseModel):
     @classmethod
     def union(cls, results: Iterable[PipeResult]) -> PipeResult:
         if not results:
-            return PipeResult(success=True, failed=False, data={})
+            return PipeResult(success=True, failed=False)
         return reduce(lambda a, b: a & b, results)
