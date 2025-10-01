@@ -37,6 +37,22 @@
           "default": [],
           "items": {
             "additionalProperties": true,
+            "properties": {
+              "pipe": {
+                "additionalProperties": true,
+                "title": "Pipe",
+                "type": "object"
+              },
+              "run_every_milli_seconds": {
+                "minimum": 1,
+                "title": "Run Every Milli Seconds",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "run_every_milli_seconds",
+              "pipe"
+            ],
             "type": "object"
           },
           "title": "Orchestrator",
