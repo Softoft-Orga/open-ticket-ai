@@ -21,24 +21,23 @@ open_ticket_ai:
   
   defs:
     - id: "otobo_znuny"
-      use: "open_ticket_ai.otobo_znuny_plugin:OToboZnunyTicketSystemService"
-      server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
+      use: "open_ticket_ai.otobo_znuny_plugin:OTOBOZnunyTicketSystemService"
+      server_address: "http://52.57.217.182/otobo/nph-genericinterface.pl"
       password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
     
     - &default_ticket_update
       <<: *ticket_update_pipe
       injects: { ticket_system: "otobo_znuny" }
-      ticket_id: "{{ (pipe_result('ticket_fetcher','fetched_tickets') | first).id }}"
+      ticket_id: "{{ config.ticket.id }}"
     
     - &default_ticket_add_note
       <<: *ticket_add_note_pipe
       injects: { ticket_system: "otobo_znuny" }
-      ticket_id: "{{ (pipe_result('ticket_fetcher','fetched_tickets') | first).id }}"
+      ticket_id: "{{ config.ticket.id }}"
     
     - &ticket_classifier
       <<: *ticket_classifier_pipe
-      token: "{{ env.OTAI_HUGGINGFACE_EHS_TOKEN }}"
-      prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
+      prompt: "{{ config.ticket.subject }} {{ config.ticket.body }}"
     
     - &classification_generic
       id: classification_generic
@@ -93,6 +92,7 @@ open_ticket_ai:
           depends_on: [ "ticket_fetcher" ]
           <<: *classification_generic
           model: "{{ config.queue_model }}"
+          ticket: "{{ pipe_result('ticket_fetcher','fetched_tickets') | first }}"
           min_conf: "{{ config.min_queue_confidence }}"
           low_conf_name: "{{ config.low_confidence_queue_name }}"
           ticket_field: "queue.name"
@@ -147,11 +147,12 @@ open_ticket_ai:
       pipe:
         <<: *ticket-routing
         ticket_search_criteria:
-          queue.name: "EingangsQueue"
+          queue.name: "OpenTicketAI::Incoming"
           limit: 1
         min_queue_confidence: 0.8
         min_priority_confidence: 0.8
-        queue_model: "softoft/EHS_Queue_V8"
-        priority_model: "softoft/EHS_Priority_Prediction"
-        low_confidence_queue_name: "Unklassifiziert"
-        low_confidence_priority_name: "3 Mittel"
+        queue_model: "softoft/otai-queue-de-bert-v1"
+        priority_model: "softoft/otai-priority-de-bert-v1"
+        low_confidence_queue_name: "OpenTicketAI::Unclassified"
+        error_queue_name: "OpenTicketAI::Error"
+        low_confidence_priority_name: "medium"
