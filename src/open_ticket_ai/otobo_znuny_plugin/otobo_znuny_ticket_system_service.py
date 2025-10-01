@@ -28,7 +28,10 @@ def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
-    def __init__(self, config: RenderedOTOBOZnunyTicketsystemServiceConfig, ):
+    def __init__(
+        self,
+        config: RenderedOTOBOZnunyTicketsystemServiceConfig,
+    ):
         super().__init__(config)
         self.config = config
         self._client: OTOBOZnunyClient | None = None
@@ -76,5 +79,6 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         return True
 
     async def add_note(self, ticket_id: str, note: UnifiedNote) -> bool:
-        return await self.update_ticket(ticket_id,
-                                        UnifiedTicket(notes=[UnifiedNote(subject=note.subject, body=note.body)]))
+        return await self.update_ticket(
+            ticket_id, UnifiedTicket(notes=[UnifiedNote(subject=note.subject, body=note.body)])
+        )

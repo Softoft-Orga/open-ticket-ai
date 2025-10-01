@@ -1,7 +1,9 @@
 # FILE_PATH: open_ticket_ai\scripts\doc_generation\add_docstrings.py
 """Automatically adds long Google style docstrings to Python files using AI."""
 
+import argparse
 import asyncio
+import os
 import re
 from pathlib import Path
 

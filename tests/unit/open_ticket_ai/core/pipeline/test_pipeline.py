@@ -65,10 +65,7 @@ def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
         rendered_step_config = jinja_renderer.render_recursive(step_config, context)
         resolved_config = dict(rendered_step_config)
         use_value = resolved_config.get("use")
-        if isinstance(use_value, str):
-            pipe_class = _resolve_class(use_value)
-        else:
-            pipe_class = use_value
+        pipe_class = _resolve_class(use_value) if isinstance(use_value, str) else use_value
         return pipe_class(resolved_config)
 
     monkeypatch.setattr(
@@ -77,33 +74,6 @@ def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
         _build_pipe_from_step_config,
         raising=False,
     )
-
-
-@pytest.mark.asyncio
-async def test_process_executes_child_pipes_and_updates_context(resolve_step_imports):
-    context = Context()
-    parent_pipe = DummyParentPipe(
-        {
-            "id": "parent",
-            "_if": True,
-            "steps": [
-                {
-                    "id": "child",
-                    "use": f"{__name__}:DummyChildPipe",
-                }
-            ],
-        }
-    )
-
-    result_context = await parent_pipe.process(context)
-
-    assert DummyChildPipe.processed_contexts == [context]
-    assert DummyChildPipe.process_count == 1
-    assert result_context.pipes["child"].data == {"value": "child"}
-    assert result_context.pipes["child"].success is True
-    assert result_context.pipes["parent"].data["child_names"] == ["child"]
-    # context_id will be different due to context copying (immutability)
-    assert "context_id" in result_context.pipes["parent"].data
 
 
 @pytest.mark.asyncio

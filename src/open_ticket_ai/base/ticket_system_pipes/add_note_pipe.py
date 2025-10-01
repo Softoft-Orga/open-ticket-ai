@@ -17,24 +17,13 @@ class AddNotePipe(Pipe):
     def __init__(self, ticket_system: TicketSystemService, config: dict[str, Any]) -> None:
         super().__init__(config)
         self.ticket_system = ticket_system
-        
-        # Normalize note input to UnifiedNote
-        note_input = config.get("note")
-        if isinstance(note_input, str):
-            # String input - treat as note body
-            config["note"] = {"body": note_input}
-        elif isinstance(note_input, dict):
-            # Dict input - ensure it's a proper UnifiedNote dict
-            pass
-        # If it's already a UnifiedNote instance, Pydantic will handle it
-        
-        pipe_config = AddNotePipeConfig.model_validate(config)
-        self.ticket_id = pipe_config.ticket_id
-        self.note = pipe_config.note
+        self.pipe_config = AddNotePipeConfig.model_validate(config)
 
     async def _process(self) -> PipeResult:
         try:
-            await self.ticket_system.add_note(self.ticket_id, self.note)
+            success = await self.ticket_system.add_note(self.pipe_config.ticket_id, self.pipe_config.note)
+            if not success:
+                return PipeResult(success=False, failed=True, message="Failed to add note to ticket", data={})
             return PipeResult(success=True, failed=False, data={})
         except Exception as e:
             return PipeResult(success=False, failed=True, message=str(e), data={})

@@ -33,7 +33,7 @@ class UnifiedRegistry:
     def get_instance(self, instance_id: str) -> Any:
         try:
             return self.instances_registry[instance_id]
-        except KeyError:
+        except KeyError as err:
             raise NotRegistered(
                 f"Service instance '{instance_id}' not found. Available: {list(self.instances_registry)}"
-            )
+            ) from err

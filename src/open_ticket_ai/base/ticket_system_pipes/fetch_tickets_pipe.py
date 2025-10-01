@@ -16,16 +16,15 @@ class FetchTicketsPipe(Pipe):
     def __init__(self, ticket_system: TicketSystemService, config: dict[str, Any]) -> None:
         super().__init__(config)
         self.ticket_system = ticket_system
-        pipe_config = FetchTicketsPipeConfig.model_validate(config)
-        self.search_criteria = pipe_config.ticket_search_criteria
+        self.pipe_config = FetchTicketsPipeConfig.model_validate(config)
 
     async def _process(self) -> PipeResult:
         try:
-            tickets = await self.ticket_system.find_tickets(self.search_criteria) or []
+            tickets = await self.ticket_system.find_tickets(self.pipe_config.ticket_search_criteria) or []
             return PipeResult(
                 success=True,
                 failed=False,
                 data={"found_tickets": [ticket.model_dump() for ticket in tickets]},
             )
         except Exception as e:
-            return PipeResult(success=False, failed=True, data={"error": str(e)})
+            return PipeResult(success=False, failed=True, message=str(e), data={})

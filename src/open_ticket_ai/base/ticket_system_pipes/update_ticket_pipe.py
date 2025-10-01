@@ -17,13 +17,13 @@ class UpdateTicketPipe(Pipe):
     def __init__(self, ticket_system: TicketSystemService, config: dict[str, Any]) -> None:
         super().__init__(config)
         self.ticket_system = ticket_system
-        pipe_config = UpdateTicketPipeConfig.model_validate(config)
-        self.ticket_id = pipe_config.ticket_id
-        self.updated_ticket = pipe_config.updated_ticket
+        self.pipe_config = UpdateTicketPipeConfig.model_validate(config)
 
     async def _process(self) -> PipeResult:
         try:
-            await self.ticket_system.update_ticket(self.ticket_id, self.updated_ticket)
+            success = await self.ticket_system.update_ticket(self.pipe_config.ticket_id, self.pipe_config.updated_ticket)
+            if not success:
+                return PipeResult(success=False, failed=True, message="Failed to update ticket", data={})
             return PipeResult(success=True, failed=False, data={})
         except Exception as e:
-            return PipeResult(success=False, failed=True, data={"error": str(e)})
+            return PipeResult(success=False, failed=True, message=str(e), data={})

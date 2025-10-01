@@ -1,10 +1,3 @@
-"""
-Error hierarchy for the Open Ticket AI application.
-
-This module defines a comprehensive set of custom exceptions organized in a hierarchical structure
-to provide detailed error handling across the application.
-"""
-
 
 class OpenTicketAIError(Exception):
     """Base exception for all custom exceptions in the Open Ticket AI application."""
@@ -243,26 +236,3 @@ class ServiceUnavailableError(NetworkError):
     """Raised when a required service is unavailable."""
 
     pass
-
-
-# Utility function to create custom error classes dynamically
-def create_error_class(name: str, base_class=OpenTicketAIError, docstring: str = None):
-    """Dynamically create a new error class.
-
-    Args:
-        name: The name of the new error class
-        base_class: The base class to inherit from (default: OpenTicketAIError)
-        docstring: Optional docstring for the new error class
-
-    Returns:
-        A new exception class
-    """
-    return type(name, (base_class,), {"__doc__": docstring})
-
-
-# Example usage of dynamic error creation:
-# DataParsingError = create_error_class(
-#     "DataParsingError",
-#     base_class=DataProcessingError,
-#     docstring="Raised when there's an error parsing data"
-# )

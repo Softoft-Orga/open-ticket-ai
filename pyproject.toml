@@ -51,10 +51,20 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "PL", "PERF", "TRY"]
-ignore = []
+ignore = ["TRY003"]
 fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["PLR2004"]
 
 [tool.mypy]
 python_version = "3.13"
 strict = true
 plugins = ['pydantic.mypy']
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "python_extras.*"]
+ignore_errors = true

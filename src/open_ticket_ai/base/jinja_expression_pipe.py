@@ -13,8 +13,7 @@ class JinjaExpressionPipeConfig(BaseModel):
 class JinjaExpressionPipe(Pipe):
     def __init__(self, config: dict[str, Any]) -> None:
         super().__init__(config)
-        pipe_config = JinjaExpressionPipeConfig(**config)
-        self.expression = pipe_config.expression
+        self.expression = JinjaExpressionPipeConfig.model_validate(config).expression
 
     async def _process(self) -> PipeResult:
         return PipeResult(success=True, failed=False, data={"value": self.expression})

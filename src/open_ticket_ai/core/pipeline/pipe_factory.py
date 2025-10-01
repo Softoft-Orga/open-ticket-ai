@@ -19,8 +19,16 @@ def _locate(use: str) -> type:
 
 
 CONTROL_KEYS = {
-    "id", "uid", "use", "steps", "when", "run_before_children",
-    "on_failure", "on_success", "depends_on", "if"
+    "id",
+    "uid",
+    "use",
+    "steps",
+    "when",
+    "run_before_children",
+    "on_failure",
+    "on_success",
+    "depends_on",
+    "if",
 }
 
 
@@ -52,8 +60,9 @@ class PipeFactory:
         self._app_config: RawOpenTicketAIConfig = app_config
         self._template_renderer = template_renderer
 
-    def create_pipe(self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any],
-                    scope: dict[str, Any]) -> Any:
+    def create_pipe(
+        self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any], scope: dict[str, Any]
+    ) -> Any:
         pipe_config = resolve_config(parent_config_raw, pipe_config_raw)
         return self.create_registerable_instance(pipe_config, scope)
 

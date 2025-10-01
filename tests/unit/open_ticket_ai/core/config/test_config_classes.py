@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pytest
-from pydantic import ValidationError
 
 from open_ticket_ai.core.config.registerable_config import RegisterableConfig
 from open_ticket_ai.core.pipeline.pipe_config import (

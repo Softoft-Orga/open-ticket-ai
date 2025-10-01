@@ -24,10 +24,7 @@ class Pipe(RegisterableClass):
         return context
 
     def have_dependent_pipes_been_run(self, context: Context) -> bool:
-        for dependency_id in self.config.depends_on:
-            if not context.has_succeeded(dependency_id):
-                return False
-        return True
+        return all(context.has_succeeded(dependency_id) for dependency_id in self.config.depends_on)
 
     async def process(self, context: Context) -> Context:
         self._current_context = context

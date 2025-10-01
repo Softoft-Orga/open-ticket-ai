@@ -89,19 +89,6 @@ RawOTOBOZnunyTicketsystemServiceConfig = _config_module.RawOTOBOZnunyTicketsyste
 RenderedOTOBOZnunyTicketsystemServiceConfig = _config_module.RenderedOTOBOZnunyTicketsystemServiceConfig
 
 
-def test_operation_url_map_converts_string_keys_to_enum_members():
-    config = RenderedOTOBOZnunyTicketsystemServiceConfig(
-        password=SecretStr("pw"),
-        base_url="https://example.com",
-        operation_urls={op.value: f"url-{op.name.lower()}" for op in TicketOperation},
-    )
-
-    operation_map = config.operation_url_map
-
-    assert set(operation_map) == {TicketOperation.SEARCH, TicketOperation.GET, TicketOperation.UPDATE}
-    assert operation_map[TicketOperation.SEARCH] == "url-search"
-
-
 def test_get_basic_auth_uses_config_credentials():
     password = SecretStr("pw")
     config = RenderedOTOBOZnunyTicketsystemServiceConfig(

@@ -12,16 +12,14 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 
 class JinjaRenderer(TemplateRenderer):
     def __init__(self, env: SandboxedEnvironment | None = None):
-        self.env = env or SandboxedEnvironment(
-            autoescape=False, trim_blocks=True, lstrip_blocks=True
-        )
+        self.env = env or SandboxedEnvironment(autoescape=False, trim_blocks=True, lstrip_blocks=True)
         self.env.filters.setdefault("at_path", self._at_path)
 
     @staticmethod
     def _coerce_path(path: Any) -> list[str]:
         if path is None:
             return []
-        if isinstance(path, (list, tuple)):
+        if isinstance(path, list | tuple):
             return [str(p) for p in path if str(p)]
         if not isinstance(path, str):
             return [str(path)]
@@ -33,7 +31,7 @@ class JinjaRenderer(TemplateRenderer):
         if p.startswith(("[", "(")) and p.endswith(("]", ")")):
             try:
                 seq = ast.literal_eval(p)
-                if isinstance(seq, (list, tuple)):
+                if isinstance(seq, list | tuple):
                     return [str(x) for x in seq]
             except Exception:
                 pass
@@ -69,8 +67,8 @@ class JinjaRenderer(TemplateRenderer):
             template = self.env.from_string(template_str)
             rendered = template.render(self._normalize_scope(scope))
             return self._parse_rendered_value(rendered)
-        except Exception as e:
-            logging.exception(f"Template rendering failed: {e}")
+        except Exception:
+            logging.exception("Template rendering failed")
             if fail_silently:
                 return template_str
             raise
