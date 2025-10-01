@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai/src/core/dependency_injection/container.py
 import os
 
 from injector import Binder, Module, singleton
@@ -7,7 +6,6 @@ from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
     load_config,
 )
-from open_ticket_ai.core.dependency_injection.instance_creater import InstanceCreator
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 from open_ticket_ai.core.util.path_util import find_python_code_root_path
@@ -21,5 +19,4 @@ class AppModule(Module):
         registry = UnifiedRegistry.get_registry_instance()
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(UnifiedRegistry, to=registry, scope=singleton)
-        binder.bind(InstanceCreator, to=InstanceCreator(config, registry), scope=singleton)
         binder.bind(PipeFactory, scope=singleton)

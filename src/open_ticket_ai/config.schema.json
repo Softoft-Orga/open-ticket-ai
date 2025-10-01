@@ -1,0 +1,60 @@
+{
+  "$defs": {
+    "RawOpenTicketAIConfig": {
+      "properties": {
+        "plugins": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Plugins",
+          "type": "array"
+        },
+        "general_config": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {}
+            ]
+          },
+          "default": {},
+          "title": "General Config",
+          "type": "object"
+        },
+        "defs": {
+          "default": [],
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Defs",
+          "type": "array"
+        },
+        "orchestrator": {
+          "default": [],
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Orchestrator",
+          "type": "array"
+        }
+      },
+      "title": "RawOpenTicketAIConfig",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "open_ticket_ai": {
+      "$ref": "#/$defs/RawOpenTicketAIConfig"
+    }
+  },
+  "required": [
+    "open_ticket_ai"
+  ],
+  "title": "RootConfig",
+  "type": "object"
+}

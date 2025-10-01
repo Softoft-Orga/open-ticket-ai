@@ -1,15 +1,11 @@
 import asyncio
 import tomllib
-from logging.config import dictConfig
 from pathlib import Path
 
 import pyfiglet
 from injector import Injector
 
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.container import AppModule
-from open_ticket_ai.core.dependency_injection.instance_creater import InstanceCreator
-from open_ticket_ai.core.pipeline.orchestrator import Orchestrator
 
 # Create the banner text
 # Print the banner
@@ -83,14 +79,6 @@ async def run() -> None:
     print(f" License: {project_info['license']}")
     print(f" Author:  {project_info['author_name']} <{project_info['author_email']}>")
     print(f" Website: {project_info['homepage']}\n")
-
-    container = get_container()
-    orchestrator = container.get(Orchestrator)
-    config = container.get(RawOpenTicketAIConfig)
-    dictConfig(config.general_config["logging"])
-    instance_creator = container.get(InstanceCreator)
-    instance_creator.create_instances()
-    await orchestrator.run()
 
 
 if __name__ == "__main__":  # pragma: no cover - manual execution

@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import logging
-from abc import abstractmethod
 from typing import Any
 
+from ..config.registerable_class import RegisterableClass
+from ..config.registerable_config import RegisterableConfig
 from .context import Context
 from .pipe_config import PipeResult, RenderedPipeConfig
 from .pipe_factory import PipeFactory
-from ..config.registerable_class import RegisterableClass
-from ..config.registerable_config import RegisterableConfig
 
 
 class Pipe(RegisterableClass):
@@ -31,8 +30,8 @@ class Pipe(RegisterableClass):
         return True
 
     async def process(self, context: Context) -> Context:
-        # noinspection PyProtectedMember
         self._current_context = context
+        # noinspection PyProtectedMember
         if self.config._if and self.have_dependent_pipes_been_run(context):
             return await self.__process_and_save(context)
         return context
@@ -48,7 +47,6 @@ class Pipe(RegisterableClass):
         updated_context = self._save_pipe_result(new_context, pipe_result)
         self._current_context = updated_context
         return updated_context
-            self._logger.error(f"Error in pipe {self.config.name}: {str(e)}", exc_info=True)
-        return new_context
+
     async def _process(self) -> PipeResult:
         pass

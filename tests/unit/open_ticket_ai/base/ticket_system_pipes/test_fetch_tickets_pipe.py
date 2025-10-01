@@ -52,11 +52,11 @@ def mock_registry(ticket_service: MagicMock) -> MagicMock:
 @pytest.fixture
 def pipe_config_dict(search_criteria: TicketSearchCriteria) -> dict:
     return {
-        "name": "ticket_fetcher",
+        "id": "ticket_fetcher",
         "use": "open_ticket_ai.base.ticket_system_pipes.fetch_tickets_pipe.FetchTicketsPipe",
         "ticket_system_id": "test_ticket_system",
         "ticket_search_criteria": search_criteria.model_dump(),
-        "when": True,
+        "_if": True,
         "steps": [],
     }
 
@@ -81,11 +81,9 @@ def test_process_serializes_results(
     ticket_service.find_tickets.return_value = expected_tickets
 
     with patch.object(UnifiedRegistry, "get_registry_instance", return_value=mock_registry):
-        pipe = FetchTicketsPipe(pipe_config_dict)
+        pipe = FetchTicketsPipe(ticket_service, pipe_config_dict)
 
         result_context = asyncio.run(pipe.process(pipeline_context))
-
-        mock_registry.get_instance.assert_called_once_with("test_ticket_system")
 
         pipe_result = result_context.pipes["ticket_fetcher"]
         assert isinstance(pipe_result, PipeResult)
@@ -111,7 +109,7 @@ def test_process_without_results_returns_empty_list(
     ticket_service.find_tickets.return_value = []
 
     with patch.object(UnifiedRegistry, "get_registry_instance", return_value=mock_registry):
-        pipe = FetchTicketsPipe(pipe_config_dict)
+        pipe = FetchTicketsPipe(ticket_service, pipe_config_dict)
 
         result_context = asyncio.run(pipe.process(pipeline_context))
 

@@ -1,10 +1,10 @@
 from typing import Any
 
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
     UnifiedEntity,
     UnifiedNote,
     UnifiedTicket,
-    TicketSearchCriteria,
 )
 
 
@@ -76,19 +76,21 @@ class TestPipe:
 
     async def process(self, context):
         return context
+
+
 class PipeConfigFactory:
 
     @staticmethod
     def build(
-            name: str = "test_pipe",
+            id: str = "test_pipe",
             pipe_class: str = TestPipe.__module__ + "." + TestPipe.__qualname__,
             ticket_system_id: str = "test_system",
             **kwargs: Any,
     ) -> dict[str, Any]:
         defaults = {
-            "name": name,
+            "id": id,
             "use": pipe_class,
-            "when": True,
+            "_if": True,
             "steps": [],
             "ticket_system_id": ticket_system_id,
         }

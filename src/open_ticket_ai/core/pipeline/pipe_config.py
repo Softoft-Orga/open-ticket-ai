@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import enum
+from collections.abc import Iterable
 from functools import reduce
-from typing import Any, Iterable, Self
+from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -16,13 +17,25 @@ class FlowAction(enum.StrEnum):
 
 
 class RenderedPipeConfig(RegisterableConfig):
-    _if: bool
+    model_config = ConfigDict(extra="allow")
+    if_: bool = Field(default=True, alias="_if")
     depends_on: list[str] = []
+
+    @property
+    def _if(self) -> bool:
+        """Property for backward compatibility."""
+        return self.if_
 
 
 class RawPipeConfig(RegisterableConfig):
-    _if: str | bool = "True"
+    model_config = ConfigDict(extra="allow")
+    if_: str | bool = Field(default="True", alias="_if")
     depends_on: str | list[str] = []
+
+    @property
+    def _if(self) -> str | bool:
+        """Property for backward compatibility."""
+        return self.if_
 
 
 class PipeResult(BaseModel):
