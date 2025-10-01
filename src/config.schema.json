@@ -78,14 +78,33 @@
         "orchestrator": {
           "anyOf": [
             {
-              "additionalProperties": true,
-              "type": "object"
+              "items": {
+                "additionalProperties": true,
+                "properties": {
+                  "pipe": {
+                    "additionalProperties": true,
+                    "title": "Pipe",
+                    "type": "object"
+                  },
+                  "run_every_milli_seconds": {
+                    "minimum": 1,
+                    "title": "Run Every Milli Seconds",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "run_every_milli_seconds",
+                  "pipe"
+                ],
+                "type": "object"
+              },
+              "type": "array"
             },
             {
               "type": "string"
             }
           ],
-          "default": {},
+          "default": [],
           "title": "Orchestrator"
         }
       },
