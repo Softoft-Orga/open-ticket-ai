@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import asyncio
 import logging
-import threading
 
-from injector import inject
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from injector import inject, singleton
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 
@@ -12,55 +14,85 @@ from .pipe_factory import PipeFactory
 from .scheduled_runner import ScheduledPipeRunner
 
 
+@singleton
 class Orchestrator:
-    """Launches scheduled runners for configured pipelines."""
+    """Manages scheduled pipeline execution using APScheduler."""
 
     @inject
     def __init__(self, pipe_factory: PipeFactory, app_config: RawOpenTicketAIConfig) -> None:
         self._pipe_factory = pipe_factory
         self._config = OrchestratorConfig.from_raw(app_config.orchestrator)
         self._logger = logging.getLogger(self.__class__.__name__)
-        self._runner_threads: list[threading.Thread] = []
-        self._runners: list[ScheduledPipeRunner] = []
-        self._running = False
+        self._scheduler = AsyncIOScheduler()
+        self._runners: dict[str, ScheduledPipeRunner] = {}
 
     def _create_runner(self, definition: RunnerDefinition) -> ScheduledPipeRunner:
         return ScheduledPipeRunner(definition, self._pipe_factory)
 
-    def run(self) -> None:
-        """Start all configured runners in dedicated daemon threads."""
-        if self._running:
+    async def start(self) -> None:
+        """Start the orchestrator and all scheduled runners."""
+        if self._scheduler.running:
             self._logger.debug("Orchestrator already running")
             return
 
         self._logger.info("Starting orchestrator with %d runner(s)", len(self._config.runners))
-        self._runner_threads.clear()
-        self._runners.clear()
 
         for index, definition in enumerate(self._config.runners):
             runner = self._create_runner(definition)
-            thread_name = f"ScheduledPipeRunner-{definition.pipe_id}-{index}"
-            thread = threading.Thread(target=runner.run, name=thread_name, daemon=True)
-            thread.start()
-            self._logger.debug("Started runner thread %s", thread_name)
-            self._runner_threads.append(thread)
-            self._runners.append(runner)
+            job_id = f"{definition.pipe_id}_{index}"
+            self._runners[job_id] = runner
 
-        self._running = True
+            # Schedule the runner
+            interval_seconds = definition.interval_seconds
+            if interval_seconds > 0:
+                trigger = IntervalTrigger(seconds=int(interval_seconds))
+                self._scheduler.add_job(
+                    runner.execute,
+                    trigger=trigger,
+                    id=job_id,
+                    name=f"Pipe: {definition.pipe_id}",
+                    max_instances=1,  # Prevent concurrent runs of same job
+                    coalesce=True,  # Combine missed runs into one
+                )
+                self._logger.info(
+                    "Scheduled pipe '%s' to run every %.2f seconds",
+                    definition.pipe_id,
+                    interval_seconds,
+                )
+            else:
+                # Run once immediately if interval is 0
+                self._scheduler.add_job(
+                    runner.execute,
+                    id=job_id,
+                    name=f"Pipe: {definition.pipe_id} (one-time)",
+                )
+                self._logger.info("Scheduled pipe '%s' for one-time execution", definition.pipe_id)
 
-    def stop(self) -> None:
-        """Stop all running runners and wait for their threads to finish."""
-        if not self._running:
+        # Start the scheduler
+        self._scheduler.start()
+        self._logger.info("Orchestrator started successfully")
+
+    async def stop(self) -> None:
+        """Stop the orchestrator and all scheduled runners gracefully."""
+        if not self._scheduler.running:
             self._logger.debug("Orchestrator stop requested but it is not running")
             return
 
         self._logger.info("Stopping orchestrator")
-        for runner in self._runners:
-            runner.stop()
-
-        for thread in self._runner_threads:
-            thread.join()
-
-        self._runner_threads.clear()
+        self._scheduler.shutdown()
         self._runners.clear()
-        self._running = False
+        self._logger.info("Orchestrator stopped successfully")
+
+    async def run(self) -> None:
+        """Start the orchestrator and keep it running. Blocks until shutdown."""
+        await self.start()
+
+        # Keep running until externally stopped
+        try:
+            # APScheduler runs in the background, so we just wait
+            while self._scheduler.running:
+                await asyncio.sleep(1)
+        except (KeyboardInterrupt, SystemExit):
+            self._logger.info("Shutdown signal received")
+        finally:
+            await self.stop()

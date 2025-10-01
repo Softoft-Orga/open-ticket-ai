@@ -14,10 +14,10 @@ class AddNotePipeConfig(BaseModel):
 
 
 class AddNotePipe(Pipe):
-    def __init__(self, ticket_system: TicketSystemService, config: dict[str, Any]) -> None:
-        super().__init__(config)
+    def __init__(self, ticket_system: TicketSystemService, config_raw: dict[str, Any], *args, **kwargs) -> None:
+        super().__init__(config_raw)
         self.ticket_system = ticket_system
-        self.pipe_config = AddNotePipeConfig.model_validate(config)
+        self.pipe_config = AddNotePipeConfig.model_validate(config_raw)
 
     async def _process(self) -> PipeResult:
         try:

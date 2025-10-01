@@ -1,4 +1,6 @@
 import asyncio
+import logging
+from logging.config import dictConfig
 import os
 import tomllib
 from pathlib import Path
@@ -10,6 +12,7 @@ from injector import Injector
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.container import AppModule
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
+from open_ticket_ai.core.pipeline import Orchestrator
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 
 
@@ -55,6 +58,9 @@ class OpenTicketAIApp:
     def __init__(self, config_path: str | Path | None = None):
         self._config_path = config_path
         self._injector = Injector([AppModule(config_path)])
+        self.print_info()
+
+        dictConfig(self.config.general_config["logging"])
 
     @property
     def config(self) -> RawOpenTicketAIConfig:
@@ -72,7 +78,7 @@ class OpenTicketAIApp:
     def injector(self) -> Injector:
         return self._injector
 
-    async def print_info(self) -> None:
+    def print_info(self) -> None:
         project_info = get_project_info()
         banner = pyfiglet.figlet_format(project_info["name"])
         print(banner)
@@ -86,17 +92,15 @@ class OpenTicketAIApp:
         print(f"📄 Config loaded from: {self._config_path or 'default location'}")
         print(f"📦 Loaded {len(self.config.defs)} definitions")
         print(f"🔧 Orchestrator has {len(self.config.orchestrator)} step(s)\n")
-
-        context: dict[str, Any] = {}
-        for idx, step in enumerate(self.config.orchestrator, 1):
-            print(f"🔄 Executing step {idx}/{len(self.config.orchestrator)}...")
-            pipe = self.pipe_factory.create_pipe({}, step, context)
-            result = await pipe.execute(context)
-
-            if result:
-                context.update(result)
-            print(f"✓ Step {idx} completed\n")
-
+        
+        orchestrator = self._injector.get(Orchestrator)
+        
+        try:
+            await orchestrator.run()
+        except KeyboardInterrupt:
+            print("\n⚠️  Shutdown requested...")
+            await orchestrator.stop()
+        
         print("✅ Orchestration complete")
 
 

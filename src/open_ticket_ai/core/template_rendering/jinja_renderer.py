@@ -7,6 +7,7 @@ from jinja2.sandbox import SandboxedEnvironment
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 import os
 from types import MappingProxyType
@@ -25,6 +26,7 @@ class JinjaRenderer(TemplateRenderer):
             env_provider: Callable[[], Mapping[str, str]] | None = None,
             refresh_env_on_each_render: bool = False,
     ):
+        self._logger = logging.getLogger(__name__)
         self.env = env or SandboxedEnvironment(autoescape=False, trim_blocks=True, lstrip_blocks=True)
         self.env.filters.setdefault("at_path", self._at_path)
 
@@ -97,20 +99,33 @@ class JinjaRenderer(TemplateRenderer):
         except Exception:
             return str(nested)
 
-    def render(self, template_str: str, scope: Context, fail_silently: bool = False) -> Any:
-        self.env.globals["has_failed"] = lambda pipe_id: (
-            scope.pipes[pipe_id].failed if pipe_id in scope.pipes else False
-        )
-        self.env.globals["get_pipe_result"] = lambda pipe_id, data_key="value": (
-            scope.pipes[pipe_id].data.get(data_key) if pipe_id in scope.pipes else None
-        )
+    def render(self, template_str: str, scope: dict[str, Any], fail_silently: bool = False) -> Any:
+        def has_failed(pipe_id: str) -> bool:
+            pipes = scope.get("pipes", {})
+            pipe = pipes.get(pipe_id)
+            if pipe is None:
+                return False
+            return pipe.failed or pipe.get("failed")
+
+        def pipe_result(pipe_id: str, data_key: str = "value") -> Any:
+            pipes = scope.get("pipes", {})
+            pipe = pipes.get(pipe_id)
+            if pipe is None:
+                return None
+            pipe_data = pipe.data if isinstance(pipe, PipeResult) else pipe.get("data")
+            return pipe_data.get(data_key)
+
+        self.env.globals["has_failed"] = has_failed
+        self.env.globals["pipe_result"] = pipe_result
 
         try:
             template = self.env.from_string(template_str)
             rendered = template.render(self._normalize_scope(scope))
             return self._parse_rendered_value(rendered)
         except Exception:
-            logging.exception("Template rendering failed")
+            self._logger.warning("Failed to render template '%s'", template_str)
+            self._logger.warning("context: %s", scope)
+            self._logger.exception("Template rendering failed")
             if fail_silently:
                 return template_str
             raise

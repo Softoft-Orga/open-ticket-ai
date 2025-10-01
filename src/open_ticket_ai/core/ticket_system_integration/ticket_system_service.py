@@ -5,9 +5,10 @@ from .unified_models import (
     UnifiedNote,
     UnifiedTicket,
 )
+from ..config.registerable_class import RegisterableClass
 
 
-class TicketSystemService(ABC):
+class TicketSystemService(RegisterableClass, ABC):
     @abstractmethod
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         pass

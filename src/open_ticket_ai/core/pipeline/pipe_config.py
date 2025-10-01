@@ -18,23 +18,21 @@ class FlowAction(enum.StrEnum):
 
 class RenderedPipeConfig(RegisterableConfig):
     model_config = ConfigDict(extra="allow")
-    if_: bool = Field(default=True, alias="_if")
+    if_: bool = Field(default=True, alias="if")
     depends_on: list[str] = []
 
     @property
     def _if(self) -> bool:
-        """Property for backward compatibility."""
         return self.if_
 
 
 class RawPipeConfig(RegisterableConfig):
     model_config = ConfigDict(extra="allow")
-    if_: str | bool = Field(default="True", alias="_if")
+    if_: str | bool = Field(default="True", alias="if")
     depends_on: str | list[str] = []
 
     @property
     def _if(self) -> str | bool:
-        """Property for backward compatibility."""
         return self.if_
 
 

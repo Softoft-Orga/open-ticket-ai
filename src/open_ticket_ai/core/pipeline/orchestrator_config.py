@@ -15,12 +15,10 @@ class RunnerDefinition(BaseModel):
 
     @property
     def interval_seconds(self) -> float:
-        """Return the configured interval as seconds."""
         return self.run_every_milli_seconds / 1000.0
 
     @property
     def pipe_id(self) -> str:
-        """Return the configured pipe identifier if available."""
         pipe_id = self.pipe.get("id")
         if pipe_id:
             return str(pipe_id)
@@ -28,12 +26,10 @@ class RunnerDefinition(BaseModel):
 
 
 class OrchestratorConfig(BaseModel):
-    """Typed representation of orchestrator configuration entries."""
-
     runners: list[RunnerDefinition] = Field(default_factory=list)
 
     @classmethod
-    def from_raw(cls, raw_config: Iterable[dict[str, Any]] | None) -> "OrchestratorConfig":
+    def from_raw(cls, raw_config: Iterable[dict[str, Any]] | None) -> OrchestratorConfig:
         if not raw_config:
             return cls()
         runners = [RunnerDefinition.model_validate(entry) for entry in raw_config]

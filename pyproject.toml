@@ -30,6 +30,7 @@ dependencies = [
     "otobo-znuny>=1.2.5",
     "pyfiglet>=1.0.4",
     "tenacity>=9.0.0",
+    "apscheduler>=3.10.0",
 ]
 
 [project.urls]

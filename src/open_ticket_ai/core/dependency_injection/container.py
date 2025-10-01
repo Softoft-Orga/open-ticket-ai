@@ -1,6 +1,6 @@
 import os
 
-from injector import Binder, Module, singleton
+from injector import Binder, Module, singleton, provider
 
 from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
@@ -8,6 +8,8 @@ from open_ticket_ai.core.config.config_models import (
 )
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
+from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
 
@@ -32,3 +34,12 @@ class AppModule(Module):
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(UnifiedRegistry, to=registry, scope=singleton)
         binder.bind(PipeFactory, scope=singleton)
+
+    @provider
+    def provide_template_renderer(self, config: RawOpenTicketAIConfig) -> TemplateRenderer:
+        renderer_config = config.general_config.get("template_renderer", {})
+        renderer_type = renderer_config.get("type", "jinja")
+        if renderer_type != "jinja":
+            raise ValueError(f"Unsupported template renderer type: {renderer_type}")
+        params = renderer_config.get("params", {})
+        return JinjaRenderer(**params)

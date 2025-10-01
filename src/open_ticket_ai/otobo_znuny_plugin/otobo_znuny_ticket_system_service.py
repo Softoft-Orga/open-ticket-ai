@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from injector import inject
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
@@ -29,13 +30,15 @@ def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
     def __init__(
-        self,
-        config: RenderedOTOBOZnunyTicketsystemServiceConfig,
+            self,
+            config_raw: dict[str, Any],
+            *args, **kwargs
     ):
-        super().__init__(config)
-        self.config = config
+        super().__init__(config_raw, *args, **kwargs)
+        self.config = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(config_raw)
         self._client: OTOBOZnunyClient | None = None
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.initialize()
 
     @property
     def client(self) -> OTOBOZnunyClient:
@@ -43,14 +46,15 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
             raise RuntimeError("Client not initialized. Call initialize() first.")
         return self._client
 
-    async def _recreate_client(self) -> OTOBOZnunyClient:
+    def _recreate_client(self) -> OTOBOZnunyClient:
         self._client = OTOBOZnunyClient(config=self.config.to_client_config())
         self.logger.info("Recreated OTOBO client")
+        self.logger.info(self.config.get_basic_auth().model_dump(with_secrets=True))
         self._client.login(self.config.get_basic_auth())
         return self._client
 
-    async def initialize(self) -> None:
-        await self._recreate_client()
+    def initialize(self) -> None:
+        self._recreate_client()
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         search = TicketSearch(queues=[_to_id_name(criteria.queue)] if criteria.queue else None, limit=criteria.limit)

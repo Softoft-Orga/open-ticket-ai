@@ -15,9 +15,9 @@ class HFLocalTextClassificationPipeConfig(BaseModel):
 
 
 class HFLocalTextClassificationPipe(Pipe):
-    def __init__(self, config: dict[str, Any]):
-        super().__init__(config)
-        pipe_config = HFLocalTextClassificationPipeConfig(**config)
+    def __init__(self, config_raw: dict[str, Any], *args, **kwargs):
+        super().__init__(config_raw)
+        pipe_config = HFLocalTextClassificationPipeConfig(**config_raw)
         self.model = pipe_config.model
         self.token = pipe_config.token
         self.prompt = pipe_config.prompt

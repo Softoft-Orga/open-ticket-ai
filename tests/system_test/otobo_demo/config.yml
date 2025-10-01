@@ -7,6 +7,12 @@ open_ticket_ai:
       formatters: { std: { format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s" } }
       root: { level: INFO, handlers: [ console ] }
     
+    template_renderer:
+      type: "jinja"
+      params:
+        env_prefix: "OTAI_"
+        env_key: "env"
+    
     pipe_classes:
       - &ticket_fetch_pipe
         use: "open_ticket_ai.base:FetchTicketsPipe"
@@ -22,7 +28,7 @@ open_ticket_ai:
   defs:
     - id: "otobo_znuny"
       use: "open_ticket_ai.otobo_znuny_plugin:OTOBOZnunyTicketSystemService"
-      server_address: "http://52.57.217.182/otobo/nph-genericinterface.pl"
+      base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
       password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
     
     - &default_ticket_update
@@ -37,7 +43,7 @@ open_ticket_ai:
     
     - &ticket_classifier
       <<: *ticket_classifier_pipe
-      prompt: "{{ config.ticket.subject }} {{ config.ticket.body }}"
+      
     
     - &classification_generic
       id: classification_generic
@@ -45,6 +51,7 @@ open_ticket_ai:
         - id: classify
           <<: *ticket_classifier
           model: "{{ config.model }}"
+          prompt: "{{ config.ticket.subject }} {{ config.ticket.body }}"
         
         - id: select_final
           <<: *jinja_expression_pipe
@@ -87,12 +94,12 @@ open_ticket_ai:
           injects: { ticket_system: "otobo_znuny" }
           ticket_search_criteria: "{{ config.ticket_search_criteria }}"
         
-        - if: "{{ (pipe_result('ticket_fetcher','fetched_tickets') | length) > 0 }}"
+        - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
           id: queue_classification
           depends_on: [ "ticket_fetcher" ]
           <<: *classification_generic
           model: "{{ config.queue_model }}"
-          ticket: "{{ pipe_result('ticket_fetcher','fetched_tickets') | first }}"
+          ticket: "{{ pipe_result('ticket_fetcher') | first }}"
           min_conf: "{{ config.min_queue_confidence }}"
           low_conf_name: "{{ config.low_confidence_queue_name }}"
           ticket_field: "queue.name"
@@ -117,10 +124,11 @@ open_ticket_ai:
               Da ein Fehler aufgetreten ist.
               Wurde in die Queue {{ config.error_queue_name }} verschoben.
         
-        - if: "{{ (pipe_result('ticket_fetcher','fetched_tickets') | length) > 0 }}"
+        - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
           id: priority_classification
           depends_on: [ "ticket_fetcher" ]
           <<: *classification_generic
+          ticket: "{{ pipe_result('ticket_fetcher') | first }}"
           model: "{{ config.priority_model }}"
           min_conf: "{{ config.min_priority_confidence }}"
           low_conf_name: "{{ config.low_confidence_priority_name }}"
@@ -143,7 +151,7 @@ open_ticket_ai:
               Da ein Fehler aufgetreten ist.
   
   orchestrator:
-    - run_every_milli_seconds: 10000
+    - run_every_milli_seconds: 10
       pipe:
         <<: *ticket-routing
         ticket_search_criteria:

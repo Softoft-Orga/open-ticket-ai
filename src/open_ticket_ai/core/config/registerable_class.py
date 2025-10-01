@@ -1,6 +1,8 @@
-from open_ticket_ai.core.config.registerable_config import RegisterableConfig
+from typing import Any
+
+from pydantic import BaseModel
 
 
 class RegisterableClass:
-    def __init__(self, config: RegisterableConfig, *args, **kwargs):
-        self.config = config
+    def __init__(self, config: dict[str, Any] | BaseModel, *args, **kwargs):
+        self.__config = config

@@ -14,9 +14,3 @@ class Context(BaseModel):
         if pipe_result is None:
             return False
         return pipe_result.success and not pipe_result.failed
-
-    def has_failed(self, pipe_id: str) -> bool:
-        pipe_result = self.pipes.get(pipe_id)
-        if pipe_result is None:
-            return False
-        return pipe_result.failed

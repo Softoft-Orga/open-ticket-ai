@@ -376,4 +376,10 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry point
-    sys.exit(main())
+    project_dir = Path("../../../tests/system_test/otobo_demo/")
+    config = load_config(project_dir / "config.yml")
+    diagram = generate_mermaid_diagram(
+        config,
+    )
+    with open(project_dir / "diagram.md", "w") as fh:
+        fh.write(diagram)
