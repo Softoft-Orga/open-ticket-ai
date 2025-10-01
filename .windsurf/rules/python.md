@@ -1,39 +1,27 @@
 ---
 trigger: glob
-description: 
-globs: **/*.py
+description: Python coding conventions for Open Ticket AI.
+globs: ["**/*.py"]
 ---
 
-# Python Codebase Rules
+# Python Code Guidelines
 
-- Python: **3.13** target.
-- Strings: **double quotes**.
-- Naming: Classes UpperCamelCase, functions/vars snake_case.
-- **No comments in code.**
-- Typing (modern):
-  - Use builtins: `list`, `dict`, `set`, `tuple` (not `List`, `Dict`, …).
-  - Use unions: `T | None` (not `Optional[T]`).
-  - Prefer `typing.Self`, `typing.Literal`, `typing.TypedDict | dataclass` where helpful.
-  - Use `@typing.override` when overriding methods.
-- Imports: absolute over relative where possible.
-- I/O & paths: **pathlib** over `os.*` where possible.
-- Time: timezone-aware `datetime` (`from datetime import UTC`; store in UTC).
-- Errors: fail fast, raise specific exceptions; keep messages actionable.
-- Structure:
-  - Small pure functions; early returns > nested `if`.
-  - Keep modules cohesive; avoid god-objects.
-- Lint/format: Ruff (line length 100), `ruff format` for formatting.
-- Type-check: MyPy (strict-ish): disallow untyped defs; no implicit optional.
-- Testing: **pytest**
-  - Put tests in `tests/`, named `test_*.py`.
-  - Use fixtures, `pytest.mark.parametrize`, and tmp_path for FS.
-  - Prefer assert style, no print.
-  - Keep tests independent and fast.
-- Packaging:
-  - Use `pyproject.toml` for tool config.
-  - Avoid runtime side-effects on import.
-- Secrets/config: via env or `.env` loader; never hardcode.
-- Concurrency: prefer `asyncio` for I/O-bound work; keep boundaries clear.
-- Patterns: use structural pattern matching where it improves clarity.
-
-Use uv run !
+- Target Python **3.13**.
+- Keep string literals in **double quotes**.
+- Follow `snake_case` for functions and variables, `UpperCamelCase` for classes.
+- Typing:
+  - Prefer standard builtins (`list`, `dict`, `set`, `tuple`).
+  - Use unions with the `|` operator (`T | None`).
+  - Apply `@typing.override` when overriding.
+  - Lean on `TypedDict`, dataclasses, or `pydantic` models for structured data.
+- Imports: prefer absolute over relative when reasonable.
+- Paths and files: use `pathlib`.
+- Dates: use timezone-aware `datetime` (e.g. `from datetime import UTC`).
+- Errors: raise specific exceptions with actionable messages.
+- Formatting & linting:
+  - Use `uv run ruff format` (line length **120**).
+  - Use `uv run ruff check` and `uv run mypy` (strict mode enabled via `pyproject.toml`).
+- Structure: keep modules cohesive, favour small pure functions and early returns.
+- Testing: write `pytest` tests under `tests/` using fixtures and parametrisation.
+- Comments & docs: concise comments and module docstrings are fine when they add context.
+- Configuration lives under `src/open_ticket_ai/core/config`; prefer updating models there when adding settings.
