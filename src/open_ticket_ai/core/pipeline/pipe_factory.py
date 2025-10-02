@@ -52,9 +52,8 @@ def resolve_config(parent_config: dict[str, Any] | None, node_raw: dict[str, Any
 @singleton
 class PipeFactory:
     @inject
-    def __init__(self, injector: Injector, app_config: RawOpenTicketAIConfig, template_renderer: TemplateRenderer):
+    def __init__(self, app_config: RawOpenTicketAIConfig, template_renderer: TemplateRenderer):
         self._logger = logging.getLogger(self.__class__.__name__)
-        self._injector = injector
         self._app_config: RawOpenTicketAIConfig = app_config
         self._template_renderer = template_renderer
 
@@ -86,7 +85,7 @@ class PipeFactory:
         kwargs |= self._resolve_injects(registerable_config.injects, scope)
         kwargs["config_raw"] = registerable_config_raw
         kwargs["factory"] = self
-        return self._injector.create_object(cls, additional_kwargs=kwargs)
+        return cls(**kwargs)
 
     def _resolve_injects(self, injects: dict[str, Any], scope: dict[str, Any]) -> dict[str, Any]:
         out: dict[str, Any] = {}

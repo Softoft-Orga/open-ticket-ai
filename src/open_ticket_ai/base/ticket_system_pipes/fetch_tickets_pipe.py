@@ -24,7 +24,7 @@ class FetchTicketsPipe(Pipe):
             return PipeResult(
                 success=True,
                 failed=False,
-                data={"found_tickets": [ticket.model_dump() for ticket in tickets]},
+                data={"value": [ticket.model_dump() for ticket in tickets]},
             )
         except Exception as e:
-            return PipeResult(success=False, failed=True, message=str(e), data={"found_tickets": []})
+            return PipeResult(success=False, failed=True, message=str(e), data={"value": []})

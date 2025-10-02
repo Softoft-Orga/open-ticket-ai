@@ -92,15 +92,15 @@ class OpenTicketAIApp:
         print(f"📄 Config loaded from: {self._config_path or 'default location'}")
         print(f"📦 Loaded {len(self.config.defs)} definitions")
         print(f"🔧 Orchestrator has {len(self.config.orchestrator)} step(s)\n")
-        
+
         orchestrator = self._injector.get(Orchestrator)
-        
+
         try:
             await orchestrator.run()
         except KeyboardInterrupt:
             print("\n⚠️  Shutdown requested...")
             await orchestrator.stop()
-        
+
         print("✅ Orchestration complete")
 
 

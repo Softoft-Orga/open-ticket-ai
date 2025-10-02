@@ -27,10 +27,10 @@ dependencies = [
     "mdxlate>=0.1.0",
     "pathspec>=0.12.1",
     "docstring-parser>=0.17.0",
-    "otobo-znuny>=1.2.5",
+    "otobo-znuny>=1.4.0",
     "pyfiglet>=1.0.4",
     "tenacity>=9.0.0",
-    "apscheduler>=3.10.0",
+    "prefect~=3.4.20",
 ]
 
 [project.urls]
