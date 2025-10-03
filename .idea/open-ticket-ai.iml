@@ -9,7 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress_docs/docs_src/es" />
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress_docs/docs_src/fr" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.13 (open-ticket-ai)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="uv (open-ticket-ai)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">
@@ -19,5 +19,8 @@
     <option name="format" value="GOOGLE" />
     <option name="myDocStringFormat" value="Google" />
     <option name="renderExternalDocumentation" value="true" />
+  </component>
+  <component name="TestRunnerService">
+    <option name="PROJECT_TEST_RUNNER" value="py.test" />
   </component>
 </module>

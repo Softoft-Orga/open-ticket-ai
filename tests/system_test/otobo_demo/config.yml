@@ -1,4 +1,6 @@
+$schema: "./config.schema.json"
 open_ticket_ai:
+    test: dhdd
     general_config:
         logging:
             version: 1

@@ -19,7 +19,7 @@ class Node:
 
     identifier: str
     label: str
-    shape: str  # process | decision | start
+    shape: str  # process | start
 
 
 class ScopedIdMap:
@@ -56,7 +56,7 @@ class GraphBuilder:
             return
         if label and label != node.label:
             node.label = label
-        if node.shape != "decision" and shape == "decision":
+        if shape == "start":
             node.shape = shape
 
     def append_to_label(self, identifier: str, extra: str) -> None:
@@ -112,9 +112,6 @@ def _format_label(display_name: str, step: dict[str, object]) -> str:
     use = step.get("use")
     if isinstance(use, str) and use and use != display_name:
         parts.append(use)
-    condition = step.get("if")
-    if isinstance(condition, str) and condition:
-        parts.append(f"if {condition}")
     depends_on = step.get("depends_on")
     if isinstance(depends_on, Sequence) and not isinstance(depends_on, (str, bytes)) and depends_on:
         deps_list = ", ".join(str(dep) for dep in depends_on)
@@ -163,9 +160,6 @@ def _build_steps(
             step_id = step.get("id")
             if isinstance(step_id, str) and step_id:
                 builder.append_to_label(child_first, f"Group: {step_id}")
-            condition = step.get("if")
-            if isinstance(condition, str) and condition:
-                builder.append_to_label(child_first, f"Condition: {condition}")
 
             previous_last = child_last
             if first_node is None:
@@ -176,7 +170,7 @@ def _build_steps(
 
         display_name = _determine_display_name(step, index)
         node_identifier = _make_node_identifier(step_prefix)
-        shape = "decision" if isinstance(step.get("if"), str) else "process"
+        shape = "process"
         builder.add_node(node_identifier, _format_label(display_name, step), shape)
 
         depends_on = step.get("depends_on")
@@ -223,11 +217,9 @@ def _sanitize_label_text(text: str) -> str:
 
 def _render_node(node: Node) -> str:
     label = _sanitize_label_text(node.label)
-    if node.shape == "decision":
-        return f"    {node.identifier}{{{label}}}"
     if node.shape == "start":
-        return f"    {node.identifier}([{label}])"
-    return f"    {node.identifier}[{label}]"
+        return f"    {node.identifier}([\"{label}\"])"
+    return f"    {node.identifier}[\"{label}\"]"
 
 
 def _render_edge(source: str, target: str, label: str | None) -> str:
