@@ -82,24 +82,41 @@ class Traverser:
         return created_identifiers
 
     def build_pipelines_from_config(self, config_data: dict[str, Any]) -> GraphBuilder:
-        defs = ((config_data.get("open_ticket_ai") or {}).get("defs") or [])
-        for def_entry in defs:
-            if not isinstance(def_entry, dict):
+        orchestrator_entries = (config_data.get("orchestrator") or [])
+
+        for orch_index, orch_entry in enumerate(orchestrator_entries):
+            if not isinstance(orch_entry, dict):
                 continue
-            pipeline_id_value = str(def_entry.get("id") or "pipeline")
+
+            pipe_config = orch_entry.get("pipe")
+            if not isinstance(pipe_config, dict):
+                continue
+
+            pipeline_id_value = str(pipe_config.get("id") or f"pipeline_{orch_index}")
+            run_every = orch_entry.get("run_every_milli_seconds")
+
             pipeline_identifier = make_global_identifier([pipeline_id_value])
             pipeline_subgraph = self.graph.create_subgraph(pipeline_identifier, pipeline_id_value)
             self.graph.root_subgraphs.append(pipeline_subgraph)
+
             start_identifier = make_global_identifier([pipeline_id_value, "start"])
-            self.graph.add_node(start_identifier, f"Start {pipeline_id_value}", "start")
+            start_label = f"Start {pipeline_id_value}"
+            if isinstance(run_every, (int, float)):
+                start_label += f"<br/>Every {run_every} ms"
+
+            self.graph.add_node(start_identifier, start_label, "start")
             self.graph.append_node_to_subgraph(pipeline_identifier, start_identifier)
-            steps = def_entry.get("steps") or []
+
+            steps = pipe_config.get("steps") or []
             scoped_map = ScopedIdentifierMap()
             inner_nodes = self.traverse_steps(scoped_map, pipeline_subgraph, [pipeline_id_value], steps)
+
             indegree: dict[str, int] = {nid: 0 for nid in inner_nodes}
             for e in self.graph.edges:
                 if e.target in indegree:
                     indegree[e.target] += 1
+
             for root_id in [nid for nid, d in indegree.items() if d == 0]:
                 self.graph.add_edge(start_identifier, root_id, None)
+
         return self.graph
