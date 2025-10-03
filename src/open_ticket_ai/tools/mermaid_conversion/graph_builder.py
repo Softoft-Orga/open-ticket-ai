@@ -1,9 +1,11 @@
 import dataclasses
 
-from open_ticket_ai.tools.mermaid_conversion.models import NodeDef, EdgeDef, SubgraphDef
+from open_ticket_ai.tools.mermaid_conversion.models import EdgeDef, SubgraphDef
+from open_ticket_ai.tools.mermaid_conversion.node import NodeDef
+
 
 @dataclasses.dataclass
-class GraphBuilder:
+class Graph:
     nodes: dict[str, NodeDef] = dataclasses.field(default_factory=dict)
     edges: list[EdgeDef] = dataclasses.field(default_factory=list)
     root_subgraphs: list[SubgraphDef] = dataclasses.field(default_factory=list)
@@ -13,7 +15,7 @@ class GraphBuilder:
         if identifier in self.nodes:
             current = self.nodes[identifier]
             if label and label != current.label:
-                self.nodes[identifier] = NodeDef(identifier, label, kind if current.kind != "decision" else current.kind)
+                self.nodes[identifier] = NodeDef(identifier, label, kind)
             return
         self.nodes[identifier] = NodeDef(identifier, label, kind)
 
@@ -33,3 +35,17 @@ class GraphBuilder:
             return
         if node_identifier not in subgraph.nodes:
             subgraph.nodes.append(node_identifier)
+
+    def collect_internal_roots(self, node_identifiers: list[str]) -> list[str]:
+        indegree: dict[str, int] = {nid: 0 for nid in node_identifiers}
+        for e in self.edges:
+            if e.target in indegree:
+                indegree[e.target] += 1
+        return [nid for nid, d in indegree.items() if d == 0]
+
+    def collect_internal_sinks(self, node_identifiers: list[str]) -> list[str]:
+        outdegree: dict[str, int] = {nid: 0 for nid in node_identifiers}
+        for e in self.edges:
+            if e.source in outdegree:
+                outdegree[e.source] += 1
+        return [nid for nid, d in outdegree.items() if d == 0]

@@ -3,12 +3,6 @@ from typing import Self
 
 
 @dataclass
-class NodeDef:
-    identifier: str
-    label: str
-    kind: str
-
-@dataclass
 class EdgeDef:
     source: str
     target: str

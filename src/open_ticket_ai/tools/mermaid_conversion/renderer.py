@@ -1,11 +1,13 @@
 from __future__ import annotations
-from .models import NodeDef, SubgraphDef, EdgeDef
+from .models import SubgraphDef, EdgeDef
+from .node import NodeDef
 from .utils import sanitize_for_mermaid_label
+
 
 def render_node_to_mermaid(node: NodeDef) -> str:
     label = sanitize_for_mermaid_label(node.label or " ")
     if node.kind == "decision":
-        return f'    {node.identifier}{{"{label}"}}'
+        return f'    {node.identifier}"{label}"'
     if node.kind == "start":
         return f'    {node.identifier}(["{label}"])'
     if node.kind == "hidden":
@@ -32,7 +34,6 @@ def build_mermaid_diagram(nodes: dict[str, NodeDef], edges: list[EdgeDef], roots
         f"flowchart {direction}",
         "  classDef start fill:#0ea5e9,stroke:#0e7490,color:#fff",
         "  classDef step fill:#1f2937,stroke:#475569,color:#e5e7eb",
-        "  classDef decision fill:#b45309,stroke:#92400e,color:#fff",
         "  classDef hidden fill:none,stroke:none,color:transparent",
     ]
     lines: list[str] = []
