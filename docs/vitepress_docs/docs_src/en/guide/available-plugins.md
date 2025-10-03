@@ -34,7 +34,7 @@ open_ticket_ai:
   general_config:
     pipe_classes:
       - &ticket_classifier_pipe
-        use: "open_ticket_ai.hf_local:HFLocalTextClassificationPipe"
+        use: "open_ticket_ai.open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
   defs:
     - &ticket_classifier
       <<: *ticket_classifier_pipe
@@ -74,7 +74,7 @@ The default config file registers the adapter as `otobo_znuny` and sources secre
 open_ticket_ai:
   defs:
     - id: "otobo_znuny"
-      use: "open_ticket_ai.otobo_znuny_plugin:OToboZnunyTicketSystemService"
+      use: "open_ticket_ai.open_ticket_ai_otobo_znuny_plugin:OToboZnunyTicketSystemService"
       server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
       password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 ```

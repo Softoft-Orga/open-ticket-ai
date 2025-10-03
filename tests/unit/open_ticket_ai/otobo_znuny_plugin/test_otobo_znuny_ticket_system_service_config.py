@@ -73,7 +73,7 @@ def _load_config_module():
         .parents[4]
         / "src"
         / "open_ticket_ai"
-        / "otobo_znuny_plugin"
+        / "open_ticket_ai_otobo_znuny_plugin"
         / "otobo_znuny_ticket_system_service_config.py"
     )
     spec = spec_from_file_location("_otobo_config_module", module_path)
