@@ -2,7 +2,7 @@
 name = "open-ticket-ai"
 version = "1.0.0rc1"
 description = "AI enhancements for open source ticket systems"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
