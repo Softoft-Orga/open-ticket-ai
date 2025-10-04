@@ -1,19 +1,8 @@
 from __future__ import annotations
 
-import asyncio
 import pytest
 
 from open_ticket_ai.base.ticket_system_pipes.fetch_tickets_pipe import FetchTicketsPipe
-from open_ticket_ai.core.pipeline.context import Context
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
-from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
-    TicketSystemService,
-)
-from open_ticket_ai.core.ticket_system_integration.unified_models import (
-    TicketSearchCriteria,
-    UnifiedEntity,
-    UnifiedTicket,
-)
 
 
 @pytest.mark.asyncio
@@ -31,15 +20,15 @@ async def test_fetch_tickets_finds_tickets_by_queue(
             "limit": 10,
         }
     }
-    
+
     pipe = FetchTicketsPipe(mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)
-    
+
     # Verify pipe result
     pipe_result = result_context.pipes["test_fetch"]
     assert pipe_result.success is True
     assert pipe_result.failed is False
-    
+
     # Verify found tickets
     found_tickets = pipe_result.data["found_tickets"]
     assert len(found_tickets) == 2  # TICKET-1 and TICKET-3 are in Support queue
@@ -61,10 +50,10 @@ async def test_fetch_tickets_with_pagination(
             "offset": 1,
         }
     }
-    
+
     pipe = FetchTicketsPipe(mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)
-    
+
     # Verify pagination worked
     pipe_result = result_context.pipes["test_fetch"]
     found_tickets = pipe_result.data["found_tickets"]
@@ -85,10 +74,10 @@ async def test_fetch_tickets_returns_empty_when_no_matches(
             "queue": {"id": "999", "name": "Nonexistent"},
         }
     }
-    
+
     pipe = FetchTicketsPipe(mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)
-    
+
     # Verify empty result
     pipe_result = result_context.pipes["test_fetch"]
     assert pipe_result.success is True

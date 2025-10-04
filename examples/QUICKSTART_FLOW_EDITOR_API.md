@@ -3,6 +3,7 @@
 ## For Vue Frontend Developers
 
 ### API Base URL
+
 ```
 http://localhost:8000
 ```
@@ -10,11 +11,13 @@ http://localhost:8000
 ### Available Endpoints
 
 #### 1. Health Check
+
 ```http
 GET /health
 ```
 
 Response:
+
 ```json
 {
   "status": "ok"
@@ -22,11 +25,13 @@ Response:
 ```
 
 #### 2. Get Configuration
+
 ```http
 GET /config
 ```
 
 Response:
+
 ```json
 {
   "yaml": "open_ticket_ai:\n  defs: [...]\n  orchestrator: [...]"
@@ -34,6 +39,7 @@ Response:
 ```
 
 #### 3. Update Configuration
+
 ```http
 PUT /config
 Content-Type: application/json
@@ -44,6 +50,7 @@ Content-Type: application/json
 ```
 
 Response:
+
 ```json
 {
   "yaml": "open_ticket_ai:\n  defs: [...]\n  orchestrator: [...]"
@@ -51,6 +58,7 @@ Response:
 ```
 
 #### 4. Convert to Mermaid Diagram
+
 ```http
 POST /convert
 Content-Type: application/json
@@ -63,6 +71,7 @@ Content-Type: application/json
 ```
 
 Response:
+
 ```json
 {
   "mermaid": "flowchart TD\n  A --> B\n  ..."
@@ -72,6 +81,7 @@ Response:
 ### CORS Configuration
 
 The API is pre-configured to accept requests from:
+
 - `http://localhost:5173` (Vue dev server default port)
 
 ### Example JavaScript/TypeScript Usage
@@ -122,21 +132,25 @@ const mermaidInlineData = await convertInlineResponse.json();
 ### Starting the API
 
 **Development:**
+
 ```bash
 python examples/run_flow_editor_api.py
 ```
 
 Or:
+
 ```bash
 python -m open_ticket_ai.tools.flow_editor_api.main
 ```
 
 Or with uvicorn:
+
 ```bash
 uvicorn open_ticket_ai.tools.flow_editor_api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 **Production:**
+
 ```bash
 uvicorn open_ticket_ai.tools.flow_editor_api.main:app --host 0.0.0.0 --port 8000 --workers 4
 ```
@@ -146,6 +160,7 @@ uvicorn open_ticket_ai.tools.flow_editor_api.main:app --host 0.0.0.0 --port 8000
 - `CONFIG_PATH`: Path to config.yml (default: `src/config.yml`)
 
 Example:
+
 ```bash
 export CONFIG_PATH=/path/to/custom/config.yml
 python examples/run_flow_editor_api.py
@@ -164,6 +179,7 @@ pytest tests/integration/test_flow_editor_api.py
 ### API Documentation
 
 Once the server is running, visit:
+
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
 
@@ -189,11 +205,13 @@ src/open_ticket_ai/tools/flow_editor_api/
 - PyYAML >= 6.0.2
 
 Install with:
+
 ```bash
 pip install fastapi uvicorn pydantic pydantic-settings pyyaml
 ```
 
 Or install the full project:
+
 ```bash
 pip install -e .
 ```
@@ -203,6 +221,7 @@ pip install -e .
 ### CORS Issues
 
 If you encounter CORS errors:
+
 1. Check that the Vue dev server is running on `http://localhost:5173`
 2. If using a different port, update `cors_origins` in `settings.py`
 3. Restart the API server after making changes
@@ -210,6 +229,7 @@ If you encounter CORS errors:
 ### Config File Not Found
 
 If you get a 404 error on `/config`:
+
 1. Ensure the config file exists at the path specified by `CONFIG_PATH`
 2. Default path is `src/config.yml` relative to the project root
 3. Set `CONFIG_PATH` environment variable to point to your config file
@@ -217,6 +237,7 @@ If you get a 404 error on `/config`:
 ### Invalid YAML
 
 If you get a 400 error when updating config:
+
 1. Validate your YAML syntax using an online validator
 2. Ensure proper indentation (2 spaces, not tabs)
 3. Check for missing colons or quotes
@@ -224,6 +245,7 @@ If you get a 400 error when updating config:
 ## Support
 
 For issues or questions:
+
 - Check the main README: `src/open_ticket_ai/tools/flow_editor_api/README.md`
 - Review the test files for usage examples
 - Open an issue on GitHub

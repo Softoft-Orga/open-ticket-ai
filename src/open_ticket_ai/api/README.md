@@ -4,7 +4,8 @@ A minimal, production-ready FastAPI REST API for the otai-flow-editor Vue web ap
 
 ## Overview
 
-This API provides endpoints for managing Open Ticket AI configuration files and converting them to Mermaid diagrams for visualization in the flow editor.
+This API provides endpoints for managing Open Ticket AI configuration files and converting them to Mermaid diagrams for
+visualization in the flow editor.
 
 ## Installation
 
@@ -27,6 +28,7 @@ The API can be configured via environment variables:
 - `CONFIG_PATH`: Path to the config.yml file (default: `src/config.yml`)
 
 Example:
+
 ```bash
 export CONFIG_PATH=/path/to/your/config.yml
 ```
@@ -58,9 +60,10 @@ uvicorn open_ticket_ai.tools.flow_editor_api.main:app --host 0.0.0.0 --port 8000
 Health check endpoint.
 
 **Response:**
+
 ```json
 {
-  "status": "ok"
+    "status": "ok"
 }
 ```
 
@@ -69,9 +72,10 @@ Health check endpoint.
 Get the current configuration as YAML.
 
 **Response:**
+
 ```json
 {
-  "yaml": "<yaml content>"
+    "yaml": "<yaml content>"
 }
 ```
 
@@ -80,16 +84,18 @@ Get the current configuration as YAML.
 Update the configuration.
 
 **Request:**
+
 ```json
 {
-  "yaml": "<yaml content>"
+    "yaml": "<yaml content>"
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "yaml": "<yaml content>"
+    "yaml": "<yaml content>"
 }
 ```
 
@@ -98,24 +104,30 @@ Update the configuration.
 Convert YAML configuration to Mermaid diagram.
 
 **Request:**
+
 ```json
 {
-  "yaml": "<yaml content>",  // Optional, uses current config if not provided
-  "direction": "TD",          // TD (top-down) or LR (left-right)
-  "wrap": false               // Whether to wrap long labels
+    "yaml": "<yaml content>",
+    // Optional, uses current config if not provided
+    "direction": "TD",
+    // TD (top-down) or LR (left-right)
+    "wrap": false
+    // Whether to wrap long labels
 }
 ```
 
 **Response:**
+
 ```json
 {
-  "mermaid": "<mermaid diagram>"
+    "mermaid": "<mermaid diagram>"
 }
 ```
 
 ## CORS
 
 The API is configured to allow requests from:
+
 - `http://localhost:5173` (Vue dev server)
 
 To add additional origins, modify the `cors_origins` setting in `settings.py`.

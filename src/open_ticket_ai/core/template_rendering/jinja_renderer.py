@@ -1,30 +1,29 @@
 import ast
 import json
 import logging
+import os
+from types import MappingProxyType
 from typing import Any
+from typing import Mapping, Callable
 
 from jinja2.sandbox import SandboxedEnvironment
 from pydantic import BaseModel
 
-from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-import os
-from types import MappingProxyType
-from typing import Mapping, Callable
 
 
 class JinjaRenderer(TemplateRenderer):
     def __init__(
-            self,
-            env: SandboxedEnvironment | None = None,
-            env_prefix: str = "OTAI_",
-            env_extra_prefixes: tuple[str, ...] = (),
-            env_allowlist: set[str] | None = None,
-            env_denylist: set[str] | None = None,
-            env_key: str = "env",
-            env_provider: Callable[[], Mapping[str, str]] | None = None,
-            refresh_env_on_each_render: bool = False,
+        self,
+        env: SandboxedEnvironment | None = None,
+        env_prefix: str = "OTAI_",
+        env_extra_prefixes: tuple[str, ...] = (),
+        env_allowlist: set[str] | None = None,
+        env_denylist: set[str] | None = None,
+        env_key: str = "env",
+        env_provider: Callable[[], Mapping[str, str]] | None = None,
+        refresh_env_on_each_render: bool = False,
     ):
         self._logger = logging.getLogger(__name__)
         self.env = env or SandboxedEnvironment(autoescape=False, trim_blocks=True, lstrip_blocks=True)

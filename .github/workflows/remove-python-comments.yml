@@ -1,48 +1,48 @@
 name: Remove Python comments
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 3 * * 1'
+    workflow_dispatch:
+    schedule:
+        -   cron: '0 3 * * 1'
 
 jobs:
-  strip-comments:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+    strip-comments:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+            -   name: Check out repository
+                uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
+            -   name: Set up Python
+                uses: actions/setup-python@v5
+                with:
+                    python-version: '3.x'
 
-      - name: Remove Python comments
-        run: python scripts/remove_python_comments.py --root .
+            -   name: Remove Python comments
+                run: python scripts/remove_python_comments.py --root .
 
-      - name: Detect changes
-        id: git-status
-        run: |
-          if git diff --quiet; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
+            -   name: Detect changes
+                id: git-status
+                run: |
+                    if git diff --quiet; then
+                      echo "changed=false" >> "$GITHUB_OUTPUT"
+                    else
+                      echo "changed=true" >> "$GITHUB_OUTPUT"
+                    fi
 
-      - name: Create Pull Request
-        if: steps.git-status.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          branch: automation/remove-python-comments
-          commit-message: 'chore: remove Python comments'
-          title: 'Remove Python comments'
-          body: |
-            ## Summary
-            - Remove Python comments using `scripts/remove_python_comments.py`
+            -   name: Create Pull Request
+                if: steps.git-status.outputs.changed == 'true'
+                uses: peter-evans/create-pull-request@v6
+                with:
+                    branch: automation/remove-python-comments
+                    commit-message: 'chore: remove Python comments'
+                    title: 'Remove Python comments'
+                    body: |
+                        ## Summary
+                        - Remove Python comments using `scripts/remove_python_comments.py`
 
-            ## Testing
-            - Workflow run
-          delete-branch: true
+                        ## Testing
+                        - Workflow run
+                    delete-branch: true

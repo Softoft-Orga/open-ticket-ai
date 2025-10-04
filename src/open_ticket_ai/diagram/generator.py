@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence
 
@@ -237,4 +237,3 @@ class ConfigFlowDiagramGenerator:
         diagrams = extractor.extract()
 
         return {diagram.name: self._renderer.render(diagram) for diagram in diagrams}
-

@@ -10,17 +10,17 @@ from pathlib import Path
 try:
     import pytest
     from fastapi.testclient import TestClient
-    
+
     DEPENDENCIES_AVAILABLE = True
 except ImportError:
     DEPENDENCIES_AVAILABLE = False
     pytest = None  # type: ignore
     TestClient = None  # type: ignore
 
-
 if DEPENDENCIES_AVAILABLE:
-    from open_ticket_ai.tools.flow_editor_api.main import app
-    from open_ticket_ai.tools.flow_editor_api.settings import Settings
+    from open_ticket_ai.api.app import app
+    from open_ticket_ai.api.settings import Settings
+
 
     @pytest.fixture
     def temp_config_file():
@@ -36,23 +36,25 @@ open_ticket_ai:
           depends_on: [step1]
 """)
             tmp_path = Path(tmp.name)
-        
+
         yield tmp_path
-        
+
         # Cleanup
         tmp_path.unlink(missing_ok=True)
+
 
     @pytest.fixture
     def client(temp_config_file, monkeypatch):
         """Create a test client with a temporary config file."""
         # Override the settings to use our temp config
         monkeypatch.setenv("CONFIG_PATH", str(temp_config_file))
-        
+
         # Recreate the app with new settings
-        from open_ticket_ai.tools.flow_editor_api import main as api_main
+        from open_ticket_ai.api import app as api_main
         api_main.settings = Settings()
-        
+
         return TestClient(app)
+
 
     def test_health_check(client):
         """Test the health check endpoint."""
@@ -61,6 +63,7 @@ open_ticket_ai:
         data = response.json()
         assert data["status"] == "ok"
 
+
     def test_get_config(client):
         """Test getting the configuration."""
         response = client.get("/config")
@@ -68,6 +71,7 @@ open_ticket_ai:
         data = response.json()
         assert "yaml" in data
         assert "open_ticket_ai" in data["yaml"]
+
 
     def test_update_config(client, temp_config_file):
         """Test updating the configuration."""
@@ -82,10 +86,11 @@ open_ticket_ai:
         assert response.status_code == 200
         data = response.json()
         assert data["yaml"] == new_yaml
-        
+
         # Verify the file was actually updated
         content = temp_config_file.read_text(encoding="utf-8")
         assert content == new_yaml
+
 
     def test_update_config_invalid_yaml(client):
         """Test updating config with invalid YAML."""
@@ -93,6 +98,7 @@ open_ticket_ai:
         response = client.put("/config", json={"yaml": invalid_yaml})
         assert response.status_code == 400
         assert "Invalid YAML" in response.json()["detail"]
+
 
     def test_convert_without_yaml(client):
         """Test converting current config to Mermaid."""
@@ -102,6 +108,7 @@ open_ticket_ai:
         assert "mermaid" in data
         assert "flowchart TD" in data["mermaid"]
         assert "test_pipeline" in data["mermaid"]
+
 
     def test_convert_with_inline_yaml(client):
         """Test converting inline YAML to Mermaid."""
@@ -125,6 +132,7 @@ open_ticket_ai:
         assert "flowchart TD" in data["mermaid"]
         assert "inline_test" in data["mermaid"]
 
+
     def test_convert_with_lr_direction(client):
         """Test converting with LR direction."""
         response = client.post("/convert", json={"direction": "LR", "wrap": False})
@@ -132,11 +140,13 @@ open_ticket_ai:
         data = response.json()
         assert "flowchart LR" in data["mermaid"]
 
+
     def test_convert_invalid_direction(client):
         """Test converting with invalid direction."""
         response = client.post("/convert", json={"direction": "INVALID", "wrap": False})
         assert response.status_code == 400
         assert "Invalid direction" in response.json()["detail"]
+
 
     def test_cors_headers(client):
         """Test that CORS headers are set correctly."""

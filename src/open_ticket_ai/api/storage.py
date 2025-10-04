@@ -17,10 +17,10 @@ def read_text_file(file_path: Path | str) -> str:
         IOError: If there's an error reading the file
     """
     path = Path(file_path)
-    
+
     if not path.exists():
         raise FileNotFoundError(f"File not found: {file_path}")
-    
+
     with path.open("r", encoding="utf-8") as f:
         return f.read()
 
@@ -36,9 +36,9 @@ def write_text_file(file_path: Path | str, content: str) -> None:
         IOError: If there's an error writing the file
     """
     path = Path(file_path)
-    
+
     # Ensure parent directory exists
     path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     with path.open("w", encoding="utf-8") as f:
         f.write(content)

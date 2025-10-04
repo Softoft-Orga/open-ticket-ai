@@ -53,6 +53,7 @@ hero:
   text: ''
 layout: home
 ---
+
 ## Explanation Video
 
 <YoutubeVideo

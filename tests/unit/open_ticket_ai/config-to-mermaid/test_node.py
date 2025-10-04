@@ -1,4 +1,3 @@
-import pytest
 from open_ticket_ai.tools.mermaid_conversion.node import (
     NodeDef,
     NodeRenderer,
@@ -9,9 +8,7 @@ from open_ticket_ai.tools.mermaid_conversion.node import (
 )
 from open_ticket_ai.tools.mermaid_conversion.utils import (
     sanitize_token,
-    _sanitize_token,
     _make_global_identifier,
-    _sanitize_mermaid_label,
     sanitize_for_mermaid_label,
 )
 

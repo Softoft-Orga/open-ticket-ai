@@ -1,9 +1,8 @@
 """Tests for the flow editor API settings."""
 
-import os
 from pathlib import Path
 
-from open_ticket_ai.tools.flow_editor_api.settings import Settings, get_settings
+from open_ticket_ai.api.settings import Settings, get_settings
 
 
 def test_settings_defaults():
@@ -17,7 +16,7 @@ def test_settings_with_env_var(monkeypatch):
     """Test settings with CONFIG_PATH environment variable."""
     custom_path = "/custom/config.yml"
     monkeypatch.setenv("CONFIG_PATH", custom_path)
-    
+
     settings = Settings()
     assert settings.config_path == Path(custom_path)
 

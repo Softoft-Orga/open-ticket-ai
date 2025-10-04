@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from open_ticket_ai.tools.flow_editor_api.service import (
+from open_ticket_ai.api.service import (
     convert_yaml_to_mermaid,
     load_config_yaml,
     save_config_yaml,
@@ -18,7 +18,7 @@ def test_load_config_yaml():
         config_path = Path(tmpdir) / "config.yml"
         yaml_content = "key: value"
         config_path.write_text(yaml_content, encoding="utf-8")
-        
+
         loaded = load_config_yaml(config_path)
         assert loaded == yaml_content
 
@@ -34,9 +34,9 @@ def test_save_config_yaml():
     with tempfile.TemporaryDirectory() as tmpdir:
         config_path = Path(tmpdir) / "config.yml"
         yaml_content = "key: new_value"
-        
+
         save_config_yaml(config_path, yaml_content)
-        
+
         assert config_path.exists()
         assert config_path.read_text(encoding="utf-8") == yaml_content
 
@@ -55,9 +55,9 @@ open_ticket_ai:
           depends_on: [step1]
 """
         config_path.write_text(yaml_content, encoding="utf-8")
-        
+
         result = convert_yaml_to_mermaid(None, config_path)
-        
+
         assert "flowchart TD" in result or "flowchart LR" in result
         assert "test_pipeline" in result
 
@@ -74,7 +74,7 @@ open_ticket_ai:
           depends_on: [step1]
 """
     result = convert_yaml_to_mermaid(yaml_content, Path("dummy.yml"), direction="TD")
-    
+
     assert "flowchart TD" in result
     assert "inline_pipeline" in result
 
@@ -91,7 +91,7 @@ open_ticket_ai:
           depends_on: [step1]
 """
     result = convert_yaml_to_mermaid(yaml_content, Path("dummy.yml"), direction="LR")
-    
+
     assert "flowchart LR" in result
     assert "lr_pipeline" in result
 
@@ -103,5 +103,5 @@ open_ticket_ai:
   defs: []
 """
     result = convert_yaml_to_mermaid(yaml_content, Path("dummy.yml"))
-    
+
     assert "No pipelines found" in result

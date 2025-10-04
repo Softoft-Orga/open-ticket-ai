@@ -1,11 +1,14 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
+
 
 @dataclass
 class EdgeDef:
     source: str
     target: str
     label: str | None = None
+
 
 def _sanitize_mermaid_label(text: str) -> str:
     s = text.replace("\\", "\\\\")
@@ -14,6 +17,7 @@ def _sanitize_mermaid_label(text: str) -> str:
     s = s.replace("{", "&#123;").replace("}", "&#125;")
     s = s.replace("|", "&#124;")
     return s
+
 
 class EdgeRenderer:
     @staticmethod

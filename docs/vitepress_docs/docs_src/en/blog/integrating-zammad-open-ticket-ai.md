@@ -3,11 +3,21 @@ description: Learn to integrate OpenTicketAI with Zammad for on-premise AI ticke
   classification. Use the REST API to fetch, classify, and update ticket queues &
   priorities.
 ---
+
 # Integrating OpenTicketAI with Zammad for Automated Ticket Classification
 
-OpenTicketAI is an on-premise **AI ticket classifier** that automates categorization, routing, and prioritization of support tickets. To integrate it with Zammad, we implement a **ZammadAdapter** that extends OpenTicketAI’s `TicketSystemAdapter` interface. This adapter uses Zammad’s REST API to *fetch* tickets from Zammad, *run them through OpenTicketAI’s pipeline*, and *update* the ticket (queue, priority, comments) based on the AI predictions. The key components are illustrated in the architecture: OpenTicketAI’s **AdapterFactory** creates the appropriate adapter (e.g. ZammadAdapter) to communicate via REST with the ticket system. The pipeline fetches tickets, classifies them, and finally the ticket system adapter updates Zammad via its API.
+OpenTicketAI is an on-premise **AI ticket classifier** that automates categorization, routing, and prioritization of
+support tickets. To integrate it with Zammad, we implement a **ZammadAdapter** that extends OpenTicketAI’s
+`TicketSystemAdapter` interface. This adapter uses Zammad’s REST API to *fetch* tickets from Zammad, *run them through
+OpenTicketAI’s pipeline*, and *update* the ticket (queue, priority, comments) based on the AI predictions. The key
+components are illustrated in the architecture: OpenTicketAI’s **AdapterFactory** creates the appropriate adapter (e.g.
+ZammadAdapter) to communicate via REST with the ticket system. The pipeline fetches tickets, classifies them, and
+finally the ticket system adapter updates Zammad via its API.
 
-OpenTicketAI’s architecture uses a modular pipeline where each ticket is processed by a series of pipes. The final *Ticket System Adapter* stage applies updates (queue, priority, notes) to the external system via REST API. In practice, you register your `ZammadAdapter` in the dependency-injection configuration so that the **BasicTicketFetcher** pipe uses it to load tickets, and the **GenericTicketUpdater** pipe uses it to apply updates.
+OpenTicketAI’s architecture uses a modular pipeline where each ticket is processed by a series of pipes. The final
+*Ticket System Adapter* stage applies updates (queue, priority, notes) to the external system via REST API. In practice,
+you register your `ZammadAdapter` in the dependency-injection configuration so that the **BasicTicketFetcher** pipe uses
+it to load tickets, and the **GenericTicketUpdater** pipe uses it to apply updates.
 
 ## OpenTicketAI Pipeline Overview
 
@@ -20,17 +30,27 @@ OpenTicketAI runs in a *pipeline* that transforms ticket data step by step. A si
 5. **Postprocessor** – applies thresholds, chooses actions.
 6. **Ticket System Adapter** – updates the ticket in Zammad via REST API.
 
-Each stage operates on the shared `Context`, which keeps a `pipes` dictionary of `PipeResult` objects and a rendered configuration for the current run. After the classifiers finish, the result stored under their pipe IDs can expose fields like `new_queue`, `new_priority`, or an `article` (comment) to add. The **GenericTicketUpdater** pipe then reads from those `PipeResult.data` entries and calls the adapter to apply the updates. Because the orchestrator executes a YAML-defined `Pipe` graph on a fixed schedule, you can add extra steps (for example a pseudonymisation pipe) or tweak decision logic without touching Python code—just update the definitions in `defs` or the scheduled entry in `orchestrator`.
+Each stage operates on the shared `Context`, which keeps a `pipes` dictionary of `PipeResult` objects and a rendered
+configuration for the current run. After the classifiers finish, the result stored under their pipe IDs can expose
+fields like `new_queue`, `new_priority`, or an `article` (comment) to add. The **GenericTicketUpdater** pipe then reads
+from those `PipeResult.data` entries and calls the adapter to apply the updates. Because the orchestrator executes a
+YAML-defined `Pipe` graph on a fixed schedule, you can add extra steps (for example a pseudonymisation pipe) or tweak
+decision logic without touching Python code—just update the definitions in `defs` or the scheduled entry in
+`orchestrator`.
 
 ## TicketSystemAdapter and ZammadAdapter
 
-OpenTicketAI defines an abstract base class `TicketSystemAdapter` that all integrations must extend. It declares core methods like:
+OpenTicketAI defines an abstract base class `TicketSystemAdapter` that all integrations must extend. It declares core
+methods like:
 
-* `async update_ticket(ticket_id: str, data: dict) -> dict | None`: **Update** a ticket’s fields (e.g. queue, priority, add note). Must handle partial updates and return the updated ticket object.
-* `async find_tickets(query: dict) -> list[dict]`: **Search** for tickets matching a query. The query format is adapter-specific, but this should return a list of matching tickets.
+* `async update_ticket(ticket_id: str, data: dict) -> dict | None`: **Update** a ticket’s fields (e.g. queue, priority,
+  add note). Must handle partial updates and return the updated ticket object.
+* `async find_tickets(query: dict) -> list[dict]`: **Search** for tickets matching a query. The query format is
+  adapter-specific, but this should return a list of matching tickets.
 * `async find_first_ticket(query: dict) -> dict | None`: Convenience to return only the first match.
 
-A **ZammadAdapter** will subclass this and implement these methods using Zammad’s API. It will typically hold configuration (base URL, credentials) injected via a `SystemConfig`. For example:
+A **ZammadAdapter** will subclass this and implement these methods using Zammad’s API. It will typically hold
+configuration (base URL, credentials) injected via a `SystemConfig`. For example:
 
 ```python
 from open_ticket_ai.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
@@ -66,14 +86,18 @@ class ZammadAdapter(TicketSystemAdapter):
             return None
 ```
 
-*Citation:* The base class requires these methods. In this example we use `httpx.AsyncClient` (since the methods are async), but you could similarly use `requests` in a synchronous context. For instance, fetching all tickets might be as simple as `requests.get(f"{base_url}/api/v1/tickets", auth=(user, pwd))`.
+*Citation:* The base class requires these methods. In this example we use `httpx.AsyncClient` (since the methods are
+async), but you could similarly use `requests` in a synchronous context. For instance, fetching all tickets might be as
+simple as `requests.get(f"{base_url}/api/v1/tickets", auth=(user, pwd))`.
 
 ### Fetching Tickets from Zammad
 
-Zammad’s REST API provides endpoints to list and search tickets. A simple way to fetch recent or matching tickets is via:
+Zammad’s REST API provides endpoints to list and search tickets. A simple way to fetch recent or matching tickets is
+via:
 
 * **List All (paginated)**: `GET /api/v1/tickets` returns an array of ticket objects.
-* **Search**: `GET /api/v1/tickets/search?query=...` supports full-text or field queries, returning matching tickets in JSON form (and `expand=true` can resolve related fields).
+* **Search**: `GET /api/v1/tickets/search?query=...` supports full-text or field queries, returning matching tickets in
+  JSON form (and `expand=true` can resolve related fields).
 
 Your `find_tickets` implementation can use these. For example, to filter by state or subject:
 
@@ -84,11 +108,14 @@ async with httpx.AsyncClient(auth=self.auth) as client:
     tickets = res.json()  # a list of dicts
 ```
 
-Then wrap or return those in the format OpenTicketAI expects (a list of ticket dicts). The `BasicTicketFetcher` pipe will call this using the ticket ID from the `PipelineContext` to load a ticket before processing.
+Then wrap or return those in the format OpenTicketAI expects (a list of ticket dicts). The `BasicTicketFetcher` pipe
+will call this using the ticket ID from the `PipelineContext` to load a ticket before processing.
 
 ### Updating Zammad Tickets
 
-After classification, we update Zammad using its **Update Ticket** API. Zammad supports changing fields like group (queue) and priority, and even adding an internal note or article in one call. For example, the following payload (sent via `PUT /api/v1/tickets/{id}`) sets a new group and priority and appends an internal article:
+After classification, we update Zammad using its **Update Ticket** API. Zammad supports changing fields like group (
+queue) and priority, and even adding an internal note or article in one call. For example, the following payload (sent
+via `PUT /api/v1/tickets/{id}`) sets a new group and priority and appends an internal article:
 
 ```json
 {
@@ -103,7 +130,8 @@ After classification, we update Zammad using its **Update Ticket** API. Zammad s
 }
 ```
 
-This would reassign the ticket to the “Sales” group, set it to high priority, and attach a new note (internal comment) with AI insights. In code, our `update_ticket` could do:
+This would reassign the ticket to the “Sales” group, set it to high priority, and attach a new note (internal comment)
+with AI insights. In code, our `update_ticket` could do:
 
 ```python
 await client.put(f"{base_url}/api/v1/tickets/{ticket_id}", json={
@@ -117,16 +145,20 @@ await client.put(f"{base_url}/api/v1/tickets/{ticket_id}", json={
 })
 ```
 
-The response will be the full updated ticket JSON if status 200. If you only need to post a comment or note, include the `article` block as above. Alternatively, smaller updates (like just setting a note) can use the ticket “note” field or a separate articles endpoint, but the bundled `article` in the PUT is convenient.
+The response will be the full updated ticket JSON if status 200. If you only need to post a comment or note, include the
+`article` block as above. Alternatively, smaller updates (like just setting a note) can use the ticket “note” field or a
+separate articles endpoint, but the bundled `article` in the PUT is convenient.
 
 ## Pipeline Integration in OpenTicketAI
 
 To wire this into OpenTicketAI’s pipeline, you add **pipes** in `config.yml`. For example:
 
-* **BasicTicketFetcher**: configured with `ticket_system: ZammadAdapter`. It calls `find_tickets`/`find_first_ticket` and populates `context.data` with the ticket fields.
+* **BasicTicketFetcher**: configured with `ticket_system: ZammadAdapter`. It calls `find_tickets`/`find_first_ticket`
+  and populates `context.data` with the ticket fields.
 * **Preparer**: e.g. `SubjectBodyPreparer` to combine subject/body text.
 * **AI Inference Services**: your custom queue/priority classifiers (e.g. a HuggingFace model).
-* **GenericTicketUpdater**: configured with `ticket_system: ZammadAdapter`. It looks for `context.data["update_data"]` after inference and calls `update_ticket`.
+* **GenericTicketUpdater**: configured with `ticket_system: ZammadAdapter`. It looks for `context.data["update_data"]`
+  after inference and calls `update_ticket`.
 
 For example, a custom pipe might do:
 
@@ -152,19 +184,31 @@ class QueuePriorityPredictor(Pipe):
 
 This sets up the `update_data` that GenericTicketUpdater will use.
 
-Finally, the **AdapterFactory** (configured via DI) ensures that `ticket_system: Zammad` creates an instance of your `ZammadAdapter` class, injecting the base URL and auth from `config.yml`. The **GenericTicketUpdater** pipe then calls `await adapter.update_ticket(id, update_data)`, applying your AI-driven changes.
+Finally, the **AdapterFactory** (configured via DI) ensures that `ticket_system: Zammad` creates an instance of your
+`ZammadAdapter` class, injecting the base URL and auth from `config.yml`. The **GenericTicketUpdater** pipe then calls
+`await adapter.update_ticket(id, update_data)`, applying your AI-driven changes.
 
 ## Enhancements: Classification, Pseudonymization, and Notes
 
 Beyond basic queue/priority, OpenTicketAI offers features to enrich the Zammad integration:
 
-* **Queue & Priority Classification:** You can train custom models for specific Zammad queues or priority schemes. The predicted values map to Zammad’s groups and priorities (for example, the priority API uses `"priority": "2 normal"` format). By adjusting thresholds in the **postprocessor**, you can also automatically drop low-confidence predictions or escalate tickets.
+* **Queue & Priority Classification:** You can train custom models for specific Zammad queues or priority schemes. The
+  predicted values map to Zammad’s groups and priorities (for example, the priority API uses `"priority": "2 normal"`
+  format). By adjusting thresholds in the **postprocessor**, you can also automatically drop low-confidence predictions
+  or escalate tickets.
 
-* **Pseudonymization Connectors:** To protect user privacy, you can insert a custom *pipeline pipe* before inference that **pseudonymizes** or masks sensitive data (e.g. names, emails) in the ticket text. This could use regex or external services to replace PII with tokens. The masked text is then classified, and the original ticket is updated, ensuring no sensitive content leaves your system.
+* **Pseudonymization Connectors:** To protect user privacy, you can insert a custom *pipeline pipe* before inference
+  that **pseudonymizes** or masks sensitive data (e.g. names, emails) in the ticket text. This could use regex or
+  external services to replace PII with tokens. The masked text is then classified, and the original ticket is updated,
+  ensuring no sensitive content leaves your system.
 
-* **Note/Article Creation:** You can leverage Zammad’s article API to log AI insights or sentiment. As shown above, include an `article` in the update payload to add comments. Alternatively, you could configure a separate **note-creation pipe** that, regardless of updating queue/priority, always appends a ticket note with model confidence scores or sentiment analysis. These notes help agents understand *why* a decision was made.
+* **Note/Article Creation:** You can leverage Zammad’s article API to log AI insights or sentiment. As shown above,
+  include an `article` in the update payload to add comments. Alternatively, you could configure a separate *
+  *note-creation pipe** that, regardless of updating queue/priority, always appends a ticket note with model confidence
+  scores or sentiment analysis. These notes help agents understand *why* a decision was made.
 
-Each enhancement fits naturally into the pipeline and is automatically applied by the GenericTicketUpdater via the adapter. For example, after running a sentiment analysis pipe, you might do:
+Each enhancement fits naturally into the pipeline and is automatically applied by the GenericTicketUpdater via the
+adapter. For example, after running a sentiment analysis pipe, you might do:
 
 ```python
 context.data['update_data'] = {
@@ -180,8 +224,17 @@ Then the adapter will POST it as an article to Zammad.
 
 ## Benefits for Zammad Ticket Automation
 
-With this integration, Zammad gains on-premise AI-powered automation. Incoming tickets can be auto-assigned to the correct queue and given a preliminary priority, freeing support teams to focus on urgent issues. Because OpenTicketAI runs locally, sensitive ticket data stays in-house (important for compliance). This **Zammad AI integration** turns manual triage into a streamlined process: you maintain full control and customization (via config and custom models) while leveraging OpenTicketAI’s pipeline.
+With this integration, Zammad gains on-premise AI-powered automation. Incoming tickets can be auto-assigned to the
+correct queue and given a preliminary priority, freeing support teams to focus on urgent issues. Because OpenTicketAI
+runs locally, sensitive ticket data stays in-house (important for compliance). This **Zammad AI integration** turns
+manual triage into a streamlined process: you maintain full control and customization (via config and custom models)
+while leveraging OpenTicketAI’s pipeline.
 
-In summary, implementing a **ZammadAdapter** involves subclassing `TicketSystemAdapter` and wiring it into OpenTicketAI’s pipeline. The adapter uses Zammad’s API for ticket CRUD operations (e.g. `GET /tickets` and `PUT /tickets/{id}`). Once configured, OpenTicketAI will continuously fetch tickets, run them through your AI model stack, and update Zammad with predicted queue, priority, and any notes. This **ticket system AI** integration empowers Zammad with automated classification and routing, realizing the vision of an on-premise AI ticket classifier for enterprise support teams.
+In summary, implementing a **ZammadAdapter** involves subclassing `TicketSystemAdapter` and wiring it into
+OpenTicketAI’s pipeline. The adapter uses Zammad’s API for ticket CRUD operations (e.g. `GET /tickets` and
+`PUT /tickets/{id}`). Once configured, OpenTicketAI will continuously fetch tickets, run them through your AI model
+stack, and update Zammad with predicted queue, priority, and any notes. This **ticket system AI** integration empowers
+Zammad with automated classification and routing, realizing the vision of an on-premise AI ticket classifier for
+enterprise support teams.
 
 **Sources:** Zammad REST API docs; OpenTicketAI developer docs.

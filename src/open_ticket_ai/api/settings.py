@@ -9,7 +9,8 @@ try:
 except ImportError:
     # Fallback for environments without pydantic-settings
     from pydantic import BaseSettings  # type: ignore
-    
+
+
     class SettingsConfigDict:  # type: ignore
         """Dummy SettingsConfigDict for environments without pydantic-settings."""
         pass

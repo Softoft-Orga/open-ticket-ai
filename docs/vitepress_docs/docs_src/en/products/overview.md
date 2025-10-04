@@ -3,6 +3,7 @@ description: 'Discover Open Ticket AI''s suite: an on-prem classifier, hosted AP
   synthetic data generator, and public models to automate your support ticket workflow.'
 pageClass: full-page
 ---
+
 # Products Overview
 
 Use this page to see what’s available today, what’s hosted by us, and what’s coming next.

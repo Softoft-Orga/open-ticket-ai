@@ -1,19 +1,24 @@
 # Predefined Pipe Concepts
 
-This document captures early ideas for shipping reusable, predefined Pipes that can be imported into project-level YAML pipelines.
+This document captures early ideas for shipping reusable, predefined Pipes that can be imported into project-level YAML
+pipelines.
 
 ## Goals
 
 - Provide a catalog of shareable automation patterns for support workflows.
 - Allow teams to compose complex automations by importing a single file.
-- Keep the predefined pipes compatible with the existing execution engine, so an imported YAML can run without additional wiring.
+- Keep the predefined pipes compatible with the existing execution engine, so an imported YAML can run without
+  additional wiring.
 
 ## Design Principles
 
-1. **Single-file portability** – Each predefined Pipe lives in its own YAML file with all required steps and metadata. Importing the file should immediately make the Pipe runnable.
-2. **Declarative parameters** – Pipes expose a `parameters` block where downstream YAMLs can override defaults without editing the shared file.
+1. **Single-file portability** – Each predefined Pipe lives in its own YAML file with all required steps and metadata.
+   Importing the file should immediately make the Pipe runnable.
+2. **Declarative parameters** – Pipes expose a `parameters` block where downstream YAMLs can override defaults without
+   editing the shared file.
 3. **Idempotent steps** – Every Pipe should be safe to run multiple times.
-4. **Observability hooks** – Standard annotations for logging, metrics, and alerting so imported Pipes integrate cleanly with monitoring.
+4. **Observability hooks** – Standard annotations for logging, metrics, and alerting so imported Pipes integrate cleanly
+   with monitoring.
 
 ## YAML Structure Prototype
 
@@ -75,14 +80,14 @@ pipe:
 
 ## Catalog Ideas
 
-| Pipe Name | Problem Solved | Key Steps | Notes |
-|-----------|----------------|-----------|-------|
-| `triage-basic` | Classify and enqueue new tickets | normalization → classification → SLA reminder | Baseline for all teams |
-| `triage-advanced` | Multi-language classification with translation fallback | language detection → translation → classification → routing | Requires translation credits |
-| `auto-escalate` | Escalate urgent tickets | severity detection → senior engineer notification → incident logging | Integrates with on-call schedules |
-| `knowledge-base-suggest` | Suggest KB articles to agents | vector embed → similarity search → suggestion post | Consumes search API quota |
-| `customer-sentiment-monitor` | Track sentiment drift over conversation lifetime | conversation aggregation → sentiment scoring → trend alerting | Works best with hourly cron |
-| `bug-report-digest` | Aggregate bug-related tickets | label filter → deduplicate → weekly digest email | Ties into product board |
+| Pipe Name                    | Problem Solved                                          | Key Steps                                                            | Notes                             |
+|------------------------------|---------------------------------------------------------|----------------------------------------------------------------------|-----------------------------------|
+| `triage-basic`               | Classify and enqueue new tickets                        | normalization → classification → SLA reminder                        | Baseline for all teams            |
+| `triage-advanced`            | Multi-language classification with translation fallback | language detection → translation → classification → routing          | Requires translation credits      |
+| `auto-escalate`              | Escalate urgent tickets                                 | severity detection → senior engineer notification → incident logging | Integrates with on-call schedules |
+| `knowledge-base-suggest`     | Suggest KB articles to agents                           | vector embed → similarity search → suggestion post                   | Consumes search API quota         |
+| `customer-sentiment-monitor` | Track sentiment drift over conversation lifetime        | conversation aggregation → sentiment scoring → trend alerting        | Works best with hourly cron       |
+| `bug-report-digest`          | Aggregate bug-related tickets                           | label filter → deduplicate → weekly digest email                     | Ties into product board           |
 
 ## Validation Checklist
 

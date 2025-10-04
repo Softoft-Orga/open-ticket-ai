@@ -5,131 +5,131 @@
 # For example, creating escalation tickets when high-priority keywords are detected.
 
 open_ticket_ai:
-  general_config:
-    logging:
-      version: 1
-      disable_existing_loggers: false
-      handlers:
-        console:
-          class: logging.StreamHandler
-          stream: ext://sys.stdout
-      formatters:
-        std:
-          format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-      root:
-        level: INFO
-        handlers: [console]
+    general_config:
+        logging:
+            version: 1
+            disable_existing_loggers: false
+            handlers:
+                console:
+                    class: logging.StreamHandler
+                    stream: ext://sys.stdout
+            formatters:
+                std:
+                    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            root:
+                level: INFO
+                handlers: [ console ]
 
-    pipe_classes:
-      - &ticket_fetch_pipe
-        use: "open_ticket_ai.base:FetchTicketsPipe"
-      - &ticket_create_pipe
-        use: "open_ticket_ai.base:CreateTicketPipe"
-      - &ticket_update_pipe
-        use: "open_ticket_ai.base:UpdateTicketsPipe"
-      - &ticket_add_note_pipe
-        use: "open_ticket_ai.base:AddNoteTicketsPipe"
-      - &ticket_classifier_pipe
-        use: "open_ticket_ai.open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
-      - &jinja_expression_pipe
-        use: "open_ticket_ai.base:JinjaExpressionPipe"
+        pipe_classes:
+            - &ticket_fetch_pipe
+                use: "open_ticket_ai.base:FetchTicketsPipe"
+            - &ticket_create_pipe
+                use: "open_ticket_ai.base:CreateTicketPipe"
+            - &ticket_update_pipe
+                use: "open_ticket_ai.base:UpdateTicketsPipe"
+            - &ticket_add_note_pipe
+                use: "open_ticket_ai.base:AddNoteTicketsPipe"
+            - &ticket_classifier_pipe
+                use: "open_ticket_ai.open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
+            - &jinja_expression_pipe
+                use: "open_ticket_ai.base:JinjaExpressionPipe"
 
-  defs:
-    # Ticket system connection
-    - id: "otobo_znuny"
-      use: "open_ticket_ai.open_ticket_ai_otobo_znuny_plugin:OToboZnunyTicketSystemService"
-      server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
-      password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
+    defs:
+        # Ticket system connection
+        -   id: "otobo_znuny"
+            use: "open_ticket_ai.open_ticket_ai_otobo_znuny_plugin:OToboZnunyTicketSystemService"
+            server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
+            password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 
-    # AI classifier for detecting urgency
-    - &urgency_detector
-      <<: *ticket_classifier_pipe
-      token: "{{ env.OTAI_HUGGINGFACE_TOKEN }}"
-      prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
+        # AI classifier for detecting urgency
+        - &urgency_detector
+            <<: *ticket_classifier_pipe
+            token: "{{ env.OTAI_HUGGINGFACE_TOKEN }}"
+            prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
 
-    # Pipeline for conditional ticket creation
-    - &conditional_ticket_creation
-      id: create_escalation_tickets
-      steps:
-        # Step 1: Fetch new tickets from incoming queue
-        - id: ticket_fetcher
-          <<: *ticket_fetch_pipe
-          injects: { ticket_system: "otobo_znuny" }
-          ticket_search_criteria:
-            queue.name: "Incoming"
-            state.name: "new"
-            limit: 20
+        # Pipeline for conditional ticket creation
+        - &conditional_ticket_creation
+            id: create_escalation_tickets
+            steps:
+                # Step 1: Fetch new tickets from incoming queue
+                -   id: ticket_fetcher
+                    <<: *ticket_fetch_pipe
+                    injects: { ticket_system: "otobo_znuny" }
+                    ticket_search_criteria:
+                        queue.name: "Incoming"
+                        state.name: "new"
+                        limit: 20
 
-        # Step 2: Analyze urgency if tickets found
-        - if: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | length) > 0 }}"
-          id: detect_urgency
-          <<: *urgency_detector
-          model: "distilbert/distilbert-base-uncased-finetuned-sst-2-english"
+                # Step 2: Analyze urgency if tickets found
+                -   if: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | length) > 0 }}"
+                    id: detect_urgency
+                    <<: *urgency_detector
+                    model: "distilbert/distilbert-base-uncased-finetuned-sst-2-english"
 
-        # Step 3: Check if urgency is high (using confidence as proxy)
-        - if: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | length) > 0 }}"
-          id: check_needs_escalation
-          <<: *jinja_expression_pipe
-          expression: "{{ get_pipe_result('detect_urgency','confidence') > 0.85 }}"
-          depends_on: ["detect_urgency"]
+                # Step 3: Check if urgency is high (using confidence as proxy)
+                -   if: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | length) > 0 }}"
+                    id: check_needs_escalation
+                    <<: *jinja_expression_pipe
+                    expression: "{{ get_pipe_result('detect_urgency','confidence') > 0.85 }}"
+                    depends_on: [ "detect_urgency" ]
 
-        # Step 4: Create escalation ticket if condition met
-        - if: "{{ get_pipe_result('check_needs_escalation','value') == true }}"
-          id: create_escalation_ticket
-          use: "open_ticket_ai.base:CreateTicketPipe"
-          injects: { ticket_system: "otobo_znuny" }
-          new_ticket:
-            title: "ESCALATION: {{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).subject }}"
-            queue:
-              name: "Escalation"
-            priority:
-              name: "1 Very High"
-            state:
-              name: "new"
-            customer_user: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).customer_user }}"
-            body: |
-              This is an automatically created escalation ticket.
+                # Step 4: Create escalation ticket if condition met
+                -   if: "{{ get_pipe_result('check_needs_escalation','value') == true }}"
+                    id: create_escalation_ticket
+                    use: "open_ticket_ai.base:CreateTicketPipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    new_ticket:
+                        title: "ESCALATION: {{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).subject }}"
+                        queue:
+                            name: "Escalation"
+                        priority:
+                            name: "1 Very High"
+                        state:
+                            name: "new"
+                        customer_user: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).customer_user }}"
+                        body: |
+                            This is an automatically created escalation ticket.
 
-              Original Ticket ID: {{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).id }}
-              Original Subject: {{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).subject }}
+                            Original Ticket ID: {{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).id }}
+                            Original Subject: {{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).subject }}
 
-              AI Urgency Detection:
-              - Confidence: {{ get_pipe_result('detect_urgency','confidence') }}
-              - Label: {{ get_pipe_result('detect_urgency','label') }}
+                            AI Urgency Detection:
+                            - Confidence: {{ get_pipe_result('detect_urgency','confidence') }}
+                            - Label: {{ get_pipe_result('detect_urgency','label') }}
 
-              Original ticket content:
-              {{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).body }}
-          depends_on: ["check_needs_escalation"]
+                            Original ticket content:
+                            {{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).body }}
+                    depends_on: [ "check_needs_escalation" ]
 
-        # Step 5: Add note to original ticket about escalation
-        - if: "{{ get_pipe_result('check_needs_escalation','value') == true }}"
-          id: add_escalation_note
-          <<: *ticket_add_note_pipe
-          injects: { ticket_system: "otobo_znuny" }
-          ticket_id: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).id }}"
-          note:
-            subject: "Escalation Ticket Created"
-            body: |
-              An escalation ticket has been automatically created due to detected high urgency.
+                # Step 5: Add note to original ticket about escalation
+                -   if: "{{ get_pipe_result('check_needs_escalation','value') == true }}"
+                    id: add_escalation_note
+                    <<: *ticket_add_note_pipe
+                    injects: { ticket_system: "otobo_znuny" }
+                    ticket_id: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).id }}"
+                    note:
+                        subject: "Escalation Ticket Created"
+                        body: |
+                            An escalation ticket has been automatically created due to detected high urgency.
 
-              Escalation Ticket ID: {{ get_pipe_result('create_escalation_ticket','created_ticket_id') }}
+                            Escalation Ticket ID: {{ get_pipe_result('create_escalation_ticket','created_ticket_id') }}
 
-              Reason: AI detected high confidence ({{ get_pipe_result('detect_urgency','confidence') }}) urgency indicator.
-          depends_on: ["create_escalation_ticket"]
+                            Reason: AI detected high confidence ({{ get_pipe_result('detect_urgency','confidence') }}) urgency indicator.
+                    depends_on: [ "create_escalation_ticket" ]
 
-        # Step 6: Update original ticket to reference escalation
-        - if: "{{ get_pipe_result('check_needs_escalation','value') == true }}"
-          id: update_original_ticket
-          <<: *ticket_update_pipe
-          injects: { ticket_system: "otobo_znuny" }
-          ticket_id: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).id }}"
-          updated_ticket:
-            priority:
-              name: "2 High"
-          depends_on: ["add_escalation_note"]
+                # Step 6: Update original ticket to reference escalation
+                -   if: "{{ get_pipe_result('check_needs_escalation','value') == true }}"
+                    id: update_original_ticket
+                    <<: *ticket_update_pipe
+                    injects: { ticket_system: "otobo_znuny" }
+                    ticket_id: "{{ (get_pipe_result('ticket_fetcher','fetched_tickets') | first).id }}"
+                    updated_ticket:
+                        priority:
+                            name: "2 High"
+                    depends_on: [ "add_escalation_note" ]
 
-  # Orchestrator: Run this workflow every 2 minutes
-  orchestrator:
-    - run_every_milli_seconds: 120000
-      pipe:
-        <<: *conditional_ticket_creation
+    # Orchestrator: Run this workflow every 2 minutes
+    orchestrator:
+        -   run_every_milli_seconds: 120000
+            pipe:
+                <<: *conditional_ticket_creation

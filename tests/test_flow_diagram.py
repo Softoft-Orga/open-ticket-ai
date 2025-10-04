@@ -2,8 +2,6 @@ from pathlib import Path
 
 import pytest
 
-pytest.importorskip("yaml")
-
 from open_ticket_ai.diagram import ConfigFlowDiagramGenerator
 from open_ticket_ai.diagram.generator import ConfigLoader, PipelineExtractor
 

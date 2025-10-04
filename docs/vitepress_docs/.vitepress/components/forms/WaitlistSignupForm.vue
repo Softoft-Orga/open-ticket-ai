@@ -6,8 +6,8 @@
             </h2>
 
             <form
-                name="synthetic-ticket-generator-waitlist"
                 class="space-y-5 max-w-64 mx-auto"
+                name="synthetic-ticket-generator-waitlist"
                 netlify
             >
                 <div>
@@ -16,11 +16,11 @@
                     </label>
                     <TextField
                         id="email"
-                        name="email"
                         v-model="email"
-                        type="email"
+                        name="email"
                         placeholder="you@domain.com"
                         required
+                        type="email"
                     />
                 </div>
 

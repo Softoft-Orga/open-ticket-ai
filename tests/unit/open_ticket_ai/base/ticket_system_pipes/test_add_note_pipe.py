@@ -17,15 +17,15 @@ async def test_add_note_pipe_adds_note_to_ticket(
         "ticket_id": "TICKET-1",
         "note": {"body": "This is a new note"},
     }
-    
+
     pipe = AddNotePipe(mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)
-    
+
     # Verify the note was added to the ticket
     ticket = await mocked_ticket_system.get_ticket("TICKET-1")
     assert len(ticket.notes) == 1
     assert ticket.notes[0].body == "This is a new note"
-    
+
     # Verify pipe result
     pipe_result = result_context.pipes["test_add_note"]
     assert pipe_result.success is True
@@ -46,10 +46,10 @@ async def test_add_note_pipe_with_note_object(
         "ticket_id": "TICKET-2",
         "note": note,
     }
-    
+
     pipe = AddNotePipe(mocked_ticket_system, config)
     await pipe.process(empty_pipeline_context)
-    
+
     # Verify note was added with correct fields
     ticket = await mocked_ticket_system.get_ticket("TICKET-2")
     assert len(ticket.notes) == 2  # Already has 1 note in fixture
@@ -70,10 +70,10 @@ async def test_add_note_pipe_handles_failure(
         "ticket_id": "NONEXISTENT-TICKET",
         "note": {"body": "Test note"},
     }
-    
+
     pipe = AddNotePipe(empty_mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)
-    
+
     # Pipe should return failed result (add_note returns False for nonexistent ticket)
     pipe_result = result_context.pipes["test_add_note"]
     assert pipe_result.success is False
@@ -93,9 +93,9 @@ async def test_add_note_pipe_skips_when_disabled(
         "ticket_id": "TICKET-1",
         "note": {"body": "Test note"},
     }
-    
+
     pipe = AddNotePipe(mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)
-    
+
     # Verify pipe result
     assert result_context is empty_pipeline_context

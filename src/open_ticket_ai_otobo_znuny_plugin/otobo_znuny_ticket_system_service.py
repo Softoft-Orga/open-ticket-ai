@@ -30,9 +30,9 @@ def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
     def __init__(
-            self,
-            config_raw: dict[str, Any],
-            *args, **kwargs
+        self,
+        config_raw: dict[str, Any],
+        *args, **kwargs
     ):
         super().__init__(config_raw, *args, **kwargs)
         self.config = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(config_raw)

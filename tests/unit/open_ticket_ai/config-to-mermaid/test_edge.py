@@ -1,4 +1,3 @@
-import pytest
 from open_ticket_ai.tools.mermaid_conversion.edge import (
     EdgeDef,
     EdgeRenderer,

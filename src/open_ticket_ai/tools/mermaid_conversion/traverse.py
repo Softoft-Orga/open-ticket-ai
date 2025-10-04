@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 from typing import Any, Self
 
 from .graph_builder import Graph
 from .models import SubgraphDef
-from .utils import build_composite_ports, _make_global_identifier
 from .node import _format_node_label, _choose_display_name
+from .utils import build_composite_ports, _make_global_identifier
 from ...core.pipeline.pipe_config import RawPipeConfig
 
 

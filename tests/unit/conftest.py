@@ -12,7 +12,6 @@ from open_ticket_ai.core.ticket_system_integration.ticket_system_service import 
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedEntity,
     UnifiedNote,
-    UnifiedTicket,
 )
 from tests.unit.mocked_ticket_system import MockedTicketSystem
 
@@ -118,7 +117,7 @@ def empty_mocked_ticket_system() -> MockedTicketSystem:
 def mocked_ticket_system() -> MockedTicketSystem:
     """Pre-populated MockedTicketSystem with sample tickets."""
     system = MockedTicketSystem()
-    
+
     # Add sample tickets
     system.add_test_ticket(
         id="TICKET-1",
@@ -128,7 +127,7 @@ def mocked_ticket_system() -> MockedTicketSystem:
         priority=UnifiedEntity(id="3", name="Medium"),
         notes=[],
     )
-    
+
     system.add_test_ticket(
         id="TICKET-2",
         subject="Test ticket 2",
@@ -139,7 +138,7 @@ def mocked_ticket_system() -> MockedTicketSystem:
             UnifiedNote(id="NOTE-1", subject="Initial note", body="First note on ticket 2"),
         ],
     )
-    
+
     system.add_test_ticket(
         id="TICKET-3",
         subject="Urgent issue",
@@ -148,18 +147,18 @@ def mocked_ticket_system() -> MockedTicketSystem:
         priority=UnifiedEntity(id="5", name="High"),
         notes=[],
     )
-    
+
     return system
 
 
 @pytest.fixture
 def stateful_pipe_runner(mock_registry, mocked_ticket_system):
     """Factory to run pipes with stateful MockedTicketSystem."""
-    
+
     def _run_pipe(pipe_class, config, context):
         with patched_registry(mock_registry):
             import inspect
-            
+
             sig = inspect.signature(pipe_class.__init__)
             params = list(sig.parameters.keys())
             if len(params) > 2 and params[1] == "ticket_system":
@@ -167,7 +166,7 @@ def stateful_pipe_runner(mock_registry, mocked_ticket_system):
             else:
                 pipe = pipe_class(config)
             return asyncio.run(pipe.process(context))
-    
+
     return _run_pipe
 
 

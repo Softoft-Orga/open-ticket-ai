@@ -5,4 +5,5 @@ layout: page
 pageClass: wide-page
 title: Open Ticket AI Configuration
 ---
+
 <CodeDocumentation parentPackageId="src.ce.core.config" show-all-classes show-all-functions />

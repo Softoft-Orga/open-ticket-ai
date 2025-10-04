@@ -68,6 +68,7 @@ flowchart TD
 ## Pipeline Architecture Concepts
 
 ### Configuration Layers
+
 - **Root configuration**: `RawOpenTicketAIConfig` parses the YAML input into
   top-level groups such as `plugins`, `general_config`, reusable definition
   `defs`, and the `orchestrator` pipeline plan.
@@ -76,6 +77,7 @@ flowchart TD
   fields while still honouring any additional user-defined keys.
 
 ### Pipe Construction
+
 - **Template rendering**: The `TemplateRenderer` resolves environment variables,
   shared services, and previous pipe results when producing a
   `RenderedPipeConfig`. Rendering happens recursively for nested lists and
@@ -85,6 +87,7 @@ flowchart TD
   declared `injects` before the object is returned.
 
 ### Execution Flow
+
 - **Dependency gating**: Each pipe evaluates its `_if` flag and `depends_on`
   requirements. Pipes that do not pass these checks are skipped without mutating
   the context.
@@ -95,6 +98,7 @@ flowchart TD
   their raw output wrapped in a `PipeResult` for consistent storage.
 
 ### Context & Results
+
 - **Shared context**: The `Context` model keeps a dictionary of `PipeResult`
   instances keyed by pipe identifier plus any global `config` state required by
   subsequent steps.
@@ -103,6 +107,7 @@ flowchart TD
   later templates or pipes within the same run.
 
 ### Dependency Integration
+
 - **Injector bootstrapping**: Application start-up binds the raw configuration,
   `UnifiedRegistry`, and `PipeFactory` into the dependency-injection container so
   they can be reused throughout orchestration.

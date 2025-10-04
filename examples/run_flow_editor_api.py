@@ -24,7 +24,7 @@ if "CONFIG_PATH" not in os.environ:
 
 try:
     import uvicorn
-    from open_ticket_ai.tools.flow_editor_api.main import app
+    from open_ticket_ai.api.app import app
 except ImportError as e:
     print("Error: Required dependencies not installed")
     print(f"Details: {e}")
@@ -51,7 +51,7 @@ def main():
     print("  http://localhost:8000/docs")
     print("\nPress Ctrl+C to stop the server")
     print("=" * 60 + "\n")
-    
+
     uvicorn.run(
         app,
         host="0.0.0.0",

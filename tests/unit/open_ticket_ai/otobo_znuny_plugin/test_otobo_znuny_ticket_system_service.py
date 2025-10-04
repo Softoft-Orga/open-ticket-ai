@@ -12,13 +12,10 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
     UnifiedTicket,
 )
-from open_ticket_ai_otobo_znuny_plugin import (
-    OTOBOZnunyTicketSystemService,
-    _to_id_name,
-)
-from open_ticket_ai_otobo_znuny_plugin import (
-    RenderedOTOBOZnunyTicketsystemServiceConfig,
-)
+from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service import _to_id_name, \
+    OTOBOZnunyTicketSystemService
+from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import \
+    RenderedOTOBOZnunyTicketsystemServiceConfig
 
 
 class TestToIdName:
@@ -100,7 +97,8 @@ class TestOTOBOZnunyTicketSystemService:
         assert service.client == mock_client
 
     def test_recreate_client(self, service, mock_client):
-        with patch("open_ticket_ai.open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
+        with patch(
+            "open_ticket_ai.open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
             MockClientClass.return_value = mock_client
 
             result = asyncio.run(service._recreate_client())

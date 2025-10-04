@@ -7,13 +7,10 @@ the config.yml should be validated and the input to the Pipes should be validate
 
 Create an extra JinjaFieldType that has a template and then when its rendered turns into rendered value.
 Or Having a TemplateRendering class.
-RawType is always =  RenderedType | str | None
-
-
+RawType is always = RenderedType | str | None
 
 And have the PipesConfig in a params dict.
 Write extensive tests to test the config behaviour before writing all the logic for it.
-
 
 Having Real branches:
 

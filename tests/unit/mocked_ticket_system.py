@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from copy import deepcopy
-
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
@@ -16,7 +14,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 
 class MockedTicketSystem(TicketSystemService):
     """In-memory ticket system mock that maintains state with ticket objects.
-    
+
     Provides realistic, stateful testing without external dependencies.
     Maintains tickets and notes as dict objects in memory.
     """
@@ -29,15 +27,15 @@ class MockedTicketSystem(TicketSystemService):
         """Create a new ticket and return its ID."""
         ticket_id = ticket.id or f"TICKET-{self._ticket_counter}"
         self._ticket_counter += 1
-        
+
         # Deep copy to avoid external mutations
         ticket_copy = ticket.model_copy(deep=True)
         ticket_copy.id = ticket_id
-        
+
         # Initialize notes list if not present
         if ticket_copy.notes is None:
             ticket_copy.notes = []
-        
+
         self._tickets[ticket_id] = ticket_copy
         return ticket_id
 
@@ -45,15 +43,15 @@ class MockedTicketSystem(TicketSystemService):
         """Update an existing ticket with new values."""
         if ticket_id not in self._tickets:
             return False
-        
+
         existing_ticket = self._tickets[ticket_id]
-        
+
         # Update only provided fields (non-None values)
         update_data = updates.model_dump(exclude_unset=True, exclude_none=True)
         for field, value in update_data.items():
             if field != "id":  # Don't allow ID changes
                 setattr(existing_ticket, field, value)
-        
+
         return True
 
     async def get_ticket(self, ticket_id: str) -> UnifiedTicket | None:
@@ -64,11 +62,11 @@ class MockedTicketSystem(TicketSystemService):
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         """Find tickets matching the search criteria."""
         results = []
-        
+
         for ticket in self._tickets.values():
             if self._matches_criteria(ticket, criteria):
                 results.append(ticket.model_copy(deep=True))
-        
+
         # Apply pagination
         offset = criteria.offset or 0
         limit = criteria.limit or 10
@@ -84,21 +82,21 @@ class MockedTicketSystem(TicketSystemService):
     async def add_note(self, ticket_id: str | int, note: UnifiedNote) -> bool:
         """Add a note to a ticket."""
         ticket_id_str = str(ticket_id)
-        
+
         if ticket_id_str not in self._tickets:
             return False
-        
+
         ticket = self._tickets[ticket_id_str]
-        
+
         # Initialize notes list if not present
         if ticket.notes is None:
             ticket.notes = []
-        
+
         # Assign note ID if not present
         note_copy = note.model_copy(deep=True)
         if note_copy.id is None:
             note_copy.id = f"NOTE-{len(ticket.notes) + 1}"
-        
+
         ticket.notes.append(note_copy)
         return True
 
@@ -112,11 +110,11 @@ class MockedTicketSystem(TicketSystemService):
                 return False
             if criteria.queue.name is not None and ticket.queue.name != criteria.queue.name:
                 return False
-        
+
         return True
 
     # Utility methods for testing
-    
+
     def add_test_ticket(self, **kwargs) -> str:
         """Add a test ticket with provided fields. Returns ticket ID."""
         ticket = UnifiedTicket(**kwargs)

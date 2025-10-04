@@ -2,7 +2,9 @@
 description: Generate multilingual synthetic customer-support ticket datasets with
   our Python tool. Features a graph pipeline, AI assistants, rich fields & cost tracking.
 ---
+
 # Synthetic Data Generation for Support Tickets
+
 <WaitlistSignupForm />
 
 Create high-quality, multilingual support-ticket datasets for classification, routing, and response automation.
@@ -20,7 +22,7 @@ services.
 - **Controls:** Built-in CLI, dev/prod modes, cost & token tracking with currency summaries.
 - **License:** Planned **LGPL** release.
 - **Need the tool or custom mods?** → **sales@softoft.de**
-:::
+  :::
 
 ## What it generates
 

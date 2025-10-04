@@ -8,6 +8,7 @@ class EdgeDef:
     target: str
     label: str | None = None
 
+
 @dataclass
 class SubgraphDef:
     identifier: str

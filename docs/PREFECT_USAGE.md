@@ -2,7 +2,8 @@
 
 ## Overview
 
-Open-Ticket-AI now integrates with **Prefect 3.4.20** for advanced workflow orchestration, monitoring, and scheduling capabilities. This guide shows you how to use the Prefect integration with your pipelines.
+Open-Ticket-AI now integrates with **Prefect 3.4.20** for advanced workflow orchestration, monitoring, and scheduling
+capabilities. This guide shows you how to use the Prefect integration with your pipelines.
 
 ## Quick Start
 
@@ -43,7 +44,7 @@ orchestrator:
         queue: "my-queue"
         # ... other pipe config
       interval_seconds: 300  # Run every 5 minutes
-    
+
     - pipe_id: escalation_checker
       pipe:
         use: CheckEscalations
@@ -66,6 +67,7 @@ async def execute_pipe_task(...):
 ### 📊 Web UI
 
 Monitor all your pipeline executions in real-time:
+
 - **Flow runs**: See current and past executions
 - **Logs**: Centralized logging for debugging
 - **Task status**: Track individual task completion
@@ -119,11 +121,13 @@ result = await orchestrator.run_once("my_pipe")
 ### Prefect Flows
 
 **`execute_scheduled_pipe_flow(pipe_factory, definition)`**
+
 - Wraps pipe execution in a Prefect flow
 - Provides observability and retry logic
 - Returns final context data after execution
 
 **`execute_pipe_task(pipe_factory, pipe_config, context_data, pipe_id)`**
+
 - Executes a single pipe as a Prefect task
 - Configured with 2 retries and 30-second delay
 - Returns updated context data
@@ -200,15 +204,15 @@ async def execute_scheduled_pipe_flow(...):
 
 ## Comparison: APScheduler vs Prefect
 
-| Feature | APScheduler (Orchestrator) | Prefect (PrefectOrchestrator) |
-|---------|---------------------------|-------------------------------|
-| Scheduling | ✅ Interval-based | ✅ Interval, Cron, Event-based |
-| Web UI | ❌ None | ✅ Full-featured dashboard |
-| Retry Logic | ⚠️ Manual | ✅ Built-in with backoff |
-| Logging | ⚠️ Local files | ✅ Centralized in UI |
-| Observability | ❌ Limited | ✅ Comprehensive |
-| Dependencies | Minimal | Requires Prefect server |
-| Complexity | Simple | More features, more complex |
+| Feature       | APScheduler (Orchestrator) | Prefect (PrefectOrchestrator) |
+|---------------|----------------------------|-------------------------------|
+| Scheduling    | ✅ Interval-based           | ✅ Interval, Cron, Event-based |
+| Web UI        | ❌ None                     | ✅ Full-featured dashboard     |
+| Retry Logic   | ⚠️ Manual                  | ✅ Built-in with backoff       |
+| Logging       | ⚠️ Local files             | ✅ Centralized in UI           |
+| Observability | ❌ Limited                  | ✅ Comprehensive               |
+| Dependencies  | Minimal                    | Requires Prefect server       |
+| Complexity    | Simple                     | More features, more complex   |
 
 ## Troubleshooting
 

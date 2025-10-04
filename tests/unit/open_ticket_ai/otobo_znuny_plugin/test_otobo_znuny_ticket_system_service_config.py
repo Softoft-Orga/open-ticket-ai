@@ -3,11 +3,12 @@ from __future__ import annotations
 import sys
 from dataclasses import dataclass
 from enum import Enum
-from importlib.util import module_from_spec, spec_from_file_location
-from pathlib import Path
 from types import ModuleType
 
 from pydantic import SecretStr
+
+from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import \
+    RenderedOTOBOZnunyTicketsystemServiceConfig, RawOTOBOZnunyTicketsystemServiceConfig
 
 
 def _install_otobo_stubs() -> None:
@@ -64,29 +65,6 @@ _install_otobo_stubs()
 from otobo_znuny.domain_models.basic_auth_model import BasicAuth
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
-
-
-def _load_config_module():
-    module_path = (
-        Path(__file__)
-        .resolve()
-        .parents[4]
-        / "src"
-        / "open_ticket_ai"
-        / "open_ticket_ai_otobo_znuny_plugin"
-        / "otobo_znuny_ticket_system_service_config.py"
-    )
-    spec = spec_from_file_location("_otobo_config_module", module_path)
-    module = module_from_spec(spec)
-    assert spec.loader is not None
-    spec.loader.exec_module(module)
-    return module
-
-
-_config_module = _load_config_module()
-
-RawOTOBOZnunyTicketsystemServiceConfig = _config_module.RawOTOBOZnunyTicketsystemServiceConfig
-RenderedOTOBOZnunyTicketsystemServiceConfig = _config_module.RenderedOTOBOZnunyTicketsystemServiceConfig
 
 
 def test_get_basic_auth_uses_config_credentials():

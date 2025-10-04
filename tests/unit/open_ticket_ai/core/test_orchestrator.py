@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import threading
 import time
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
@@ -9,7 +8,6 @@ from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.pipeline import (
     Orchestrator,
     OrchestratorConfig,
-    RunnerDefinition,
 )
 from open_ticket_ai.core.pipeline.context import Context
 
@@ -27,8 +25,6 @@ def test_orchestrator_config_from_raw() -> None:
     assert len(config.runners) == 1
     assert config.runners[0].pipe["id"] == "demo"
     assert config.runners[0].interval_seconds == 1.0
-
-
 
 
 def test_orchestrator_starts_and_stops_runners() -> None:

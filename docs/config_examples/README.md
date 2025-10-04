@@ -7,26 +7,34 @@ This directory contains example configurations demonstrating various use cases f
 ## Available Examples
 
 ### 1. AI Adds Note to Ticket (`add_note_when_in_queue.yml`)
-Demonstrates how to configure the AI to automatically add a note to tickets when they are in a specific queue. The AI analyzes the ticket content and adds contextual information as a note.
+
+Demonstrates how to configure the AI to automatically add a note to tickets when they are in a specific queue. The AI
+analyzes the ticket content and adds contextual information as a note.
 
 **Use Case**: Automatically add analysis notes or suggestions to tickets in a "Review" queue.
 
 ### 2. Create Ticket in Specific Case (`create_ticket_on_condition.yml`)
-Shows how to automatically create a new ticket when specific conditions are met, such as detecting certain keywords or patterns in incoming tickets.
+
+Shows how to automatically create a new ticket when specific conditions are met, such as detecting certain keywords or
+patterns in incoming tickets.
 
 **Use Case**: Automatically create follow-up tickets for escalation or specialized handling.
 
 ### 3. Queue Classification (`queue_classification.yml`)
-Demonstrates AI-powered queue classification where tickets are automatically routed to the appropriate queue based on their content.
+
+Demonstrates AI-powered queue classification where tickets are automatically routed to the appropriate queue based on
+their content.
 
 **Use Case**: Automatic ticket routing to departments like IT, HR, Finance, etc.
 
 ### 4. Priority Classification (`priority_classification.yml`)
+
 Shows how to automatically set ticket priority based on AI analysis of urgency and importance.
 
 **Use Case**: Ensure critical issues get immediate attention by automatic priority assignment.
 
 ### 5. Complete Workflow (`complete_workflow.yml`)
+
 A comprehensive example combining multiple AI operations: classification, note addition, and conditional processing.
 
 **Use Case**: Full automation pipeline with queue routing, priority setting, and contextual notes.

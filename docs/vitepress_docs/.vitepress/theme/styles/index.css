@@ -71,6 +71,7 @@
     .content-container {
         @apply w-full !max-w-screen-lg;
     }
+
     @media (min-width: 1024px) {
         .content-container {
             @apply w-full !max-w-screen-xl !p-0;

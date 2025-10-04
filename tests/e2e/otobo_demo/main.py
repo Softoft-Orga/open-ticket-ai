@@ -1,15 +1,12 @@
-import asyncio
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 from open_ticket_ai.core.config.config_models import load_config
-from open_ticket_ai.main import OpenTicketAIApp
 from open_ticket_ai.tools.mermaid_conversion.graph_builder import Graph
 from open_ticket_ai.tools.mermaid_conversion.renderer import build_mermaid_diagram
 from open_ticket_ai.tools.mermaid_conversion.traverse import Traverser
 
 CONFIG_PATH = Path(__file__).parent / "config.yml"
+
 
 def write_mermaid_to_markdown(diagram: str, output_path: Path) -> None:
     with open(output_path, "w", encoding="utf-8") as f:
@@ -36,5 +33,5 @@ def generate_mermaid():
 
 if __name__ == '__main__':
     generate_mermaid()
-    #load_dotenv(override=True)
-    #asyncio.run(OpenTicketAIApp(Path(__file__).parent / "config.yml").run())
+    # load_dotenv(override=True)
+    # asyncio.run(OpenTicketAIApp(Path(__file__).parent / "config.yml").run())

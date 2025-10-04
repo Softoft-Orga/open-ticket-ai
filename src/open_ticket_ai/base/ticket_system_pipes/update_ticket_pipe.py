@@ -21,7 +21,8 @@ class UpdateTicketPipe(Pipe):
 
     async def _process(self) -> PipeResult:
         try:
-            success = await self.ticket_system.update_ticket(self.pipe_config.ticket_id, self.pipe_config.updated_ticket)
+            success = await self.ticket_system.update_ticket(self.pipe_config.ticket_id,
+                                                             self.pipe_config.updated_ticket)
             if not success:
                 return PipeResult(success=False, failed=True, message="Failed to update ticket", data={})
             return PipeResult(success=True, failed=False, data={})

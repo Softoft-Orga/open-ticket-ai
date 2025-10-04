@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from open_ticket_ai.tools.flow_editor_api.storage import read_text_file, write_text_file
+from open_ticket_ai.api.storage import read_text_file, write_text_file
 
 
 def test_write_and_read_text_file():
@@ -13,10 +13,10 @@ def test_write_and_read_text_file():
     with tempfile.TemporaryDirectory() as tmpdir:
         file_path = Path(tmpdir) / "test.txt"
         content = "Hello, World!"
-        
+
         write_text_file(file_path, content)
         read_content = read_text_file(file_path)
-        
+
         assert read_content == content
 
 
@@ -31,9 +31,9 @@ def test_write_text_file_creates_parent_dirs():
     with tempfile.TemporaryDirectory() as tmpdir:
         file_path = Path(tmpdir) / "subdir" / "test.txt"
         content = "Test content"
-        
+
         write_text_file(file_path, content)
-        
+
         assert file_path.exists()
         assert read_text_file(file_path) == content
 
@@ -43,8 +43,8 @@ def test_read_text_file_with_utf8():
     with tempfile.TemporaryDirectory() as tmpdir:
         file_path = Path(tmpdir) / "utf8.txt"
         content = "Hello 世界 🌍"
-        
+
         write_text_file(file_path, content)
         read_content = read_text_file(file_path)
-        
+
         assert read_content == content

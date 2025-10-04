@@ -2,6 +2,7 @@
 description: Save time labeling thousands of tickets. Learn a semi-automated workflow
   using GPT for zero-shot pre-labeling and Label Studio for efficient review.
 ---
+
 # Labeling 10,000 Tickets Efficiently: Semi-Automated Labeling Strategies
 
 Labeling thousands of support tickets manually is time-consuming and expensive. A **semi-automated

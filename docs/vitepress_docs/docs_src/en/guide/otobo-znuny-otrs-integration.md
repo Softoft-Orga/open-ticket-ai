@@ -2,6 +2,7 @@
 description: Integrate Python with OTOBO, Znuny, & OTRS using an async client library.
   This guide provides code examples for managing helpdesk tickets via REST API.
 ---
+
 # OTOBO Znuny OTRS Integration Guide
 
 For the Integration into OTOBO, Znuny or OTRS, we are using our otobo python client library
@@ -17,11 +18,11 @@ and ease of use.
 * **Pydantic** models for request and response data validation
 * Full CRUD operations for tickets:
 
-  * `TicketCreate`
-  * `TicketSearch`
-  * `TicketGet`
-  * `TicketUpdate`
-  * `TicketHistoryGet`
+    * `TicketCreate`
+    * `TicketSearch`
+    * `TicketGet`
+    * `TicketUpdate`
+    * `TicketHistoryGet`
 * **Error handling** via `OTOBOError` for API errors
 * Utility method `search_and_get` to combine search results with detailed retrieval
 
@@ -43,7 +44,6 @@ See Installation Guide.
 #### Create a new Agent
 
 Create a new Otobo Agent with a secure password and give it the permissions needed for the thing you want to accomplish.
-
 
 #### 1. Configure the client
 

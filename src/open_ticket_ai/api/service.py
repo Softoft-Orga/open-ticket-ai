@@ -1,10 +1,8 @@
 """Business logic for YAML configuration and Mermaid diagram conversion."""
 
 from pathlib import Path
-from typing import Dict
 
-from open_ticket_ai.diagram import ConfigFlowDiagramGenerator, MermaidDiagramRenderer
-
+from open_ticket_ai.diagram import ConfigFlowDiagramGenerator
 from .storage import read_text_file, write_text_file
 
 
@@ -37,9 +35,9 @@ def save_config_yaml(config_path: Path, yaml_content: str) -> None:
 
 
 def convert_yaml_to_mermaid(
-    yaml_content: str | None, 
-    config_path: Path, 
-    direction: str = "TD", 
+    yaml_content: str | None,
+    config_path: Path,
+    direction: str = "TD",
     wrap: bool = False
 ) -> str:
     """Convert YAML configuration to Mermaid diagram.
@@ -64,7 +62,7 @@ def convert_yaml_to_mermaid(
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yml', delete=False, encoding='utf-8') as tmp:
             tmp.write(yaml_content)
             tmp_path = Path(tmp.name)
-        
+
         try:
             generator = ConfigFlowDiagramGenerator(tmp_path)
             diagrams = generator.generate()
@@ -75,22 +73,22 @@ def convert_yaml_to_mermaid(
         # Use the provided config path
         generator = ConfigFlowDiagramGenerator(config_path)
         diagrams = generator.generate()
-    
+
     # If direction is LR, we need to modify the diagrams
     if direction == "LR":
         diagrams = {
             name: diagram.replace("flowchart TD", "flowchart LR", 1)
             for name, diagram in diagrams.items()
         }
-    
+
     # Combine all diagrams into one output
     if not diagrams:
         return "flowchart TD\n    Start[No pipelines found]"
-    
+
     # Return the first diagram (or combine multiple if needed)
     # For MVP, we'll just return all diagrams separated
     result = []
     for name, diagram in diagrams.items():
         result.append(f"--- {name} ---\n{diagram}")
-    
+
     return "\n\n".join(result)

@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Sequence, Self
+
 from node import NodeDef, NodeRenderer
 from open_ticket_ai.tools.mermaid_conversion.utils import _sanitize_token, _sanitize_mermaid_label
 
@@ -12,9 +14,11 @@ class SubgraphDef:
     nodes: list[str]
     children: list[Self]
 
+
 def build_subgraph_from_pipeline(pipeline_id: str) -> SubgraphDef:
     sg_id = _make_global_identifier([pipeline_id])
     return SubgraphDef(sg_id, pipeline_id, [], [])
+
 
 class SubgraphRenderer:
     @staticmethod
@@ -34,4 +38,3 @@ class SubgraphRenderer:
 
 def _make_global_identifier(parts: Sequence[str]) -> str:
     return "__".join(_sanitize_token(p) for p in parts)
-

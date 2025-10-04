@@ -11,10 +11,10 @@ from __future__ import annotations
 import argparse
 import io
 import subprocess
+import tokenize
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
-import tokenize
 
 
 @dataclass

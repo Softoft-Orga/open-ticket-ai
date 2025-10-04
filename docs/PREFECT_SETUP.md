@@ -7,6 +7,7 @@ Prefect **3.4.20** is successfully installed and integrated with open-ticket-ai!
 ### What Was Resolved
 
 The initial dependency conflict between `otobo-znuny` and `prefect` (typer version mismatch) has been **resolved**:
+
 - Updated `otobo-znuny` to use compatible typer version
 - Upgraded to **Prefect 3.4.20** (fully compatible with Pydantic 2.11.x)
 - All tests passing ✅
@@ -16,18 +17,18 @@ The initial dependency conflict between `otobo-znuny` and `prefect` (typer versi
 The following Prefect integration components are **ready to use**:
 
 1. **`src/open_ticket_ai/core/pipeline/prefect_flows.py`**
-   - `execute_pipe_task()` - Prefect task wrapper for pipe execution with retry logic
-   - `execute_scheduled_pipe_flow()` - Prefect flow for scheduled pipes
-   - Includes automatic retries and error handling
+    - `execute_pipe_task()` - Prefect task wrapper for pipe execution with retry logic
+    - `execute_scheduled_pipe_flow()` - Prefect flow for scheduled pipes
+    - Includes automatic retries and error handling
 
 2. **`src/open_ticket_ai/core/pipeline/prefect_orchestrator.py`**
-   - `PrefectOrchestrator` class - Alternative to `Orchestrator` (APScheduler-based)
-   - Manages Prefect deployments for scheduled pipeline execution
-   - Methods: `start()`, `stop()`, `run()`, `run_once(pipe_id)`
+    - `PrefectOrchestrator` class - Alternative to `Orchestrator` (APScheduler-based)
+    - Manages Prefect deployments for scheduled pipeline execution
+    - Methods: `start()`, `stop()`, `run()`, `run_once(pipe_id)`
 
 3. **Example Scripts**
-   - `examples/prefect_example.py` - Basic Prefect flow/task demo
-   - `examples/prefect_working_example.py` - Working integration example
+    - `examples/prefect_example.py` - Basic Prefect flow/task demo
+    - `examples/prefect_working_example.py` - Working integration example
 
 ## Quick Start
 
@@ -82,18 +83,19 @@ orchestrator:
 
 ### 🆚 Comparison with APScheduler
 
-| Feature | APScheduler | Prefect |
-|---------|-------------|---------|
-| **Web UI** | ❌ None | ✅ Full dashboard |
-| **Retry Logic** | ⚠️ Manual | ✅ Built-in |
-| **Logging** | ⚠️ Local files | ✅ Centralized UI |
-| **Observability** | ❌ Limited | ✅ Comprehensive |
-| **Setup Complexity** | Simple | Medium |
-| **Dependencies** | Minimal | Requires server |
+| Feature              | APScheduler    | Prefect          |
+|----------------------|----------------|------------------|
+| **Web UI**           | ❌ None         | ✅ Full dashboard |
+| **Retry Logic**      | ⚠️ Manual      | ✅ Built-in       |
+| **Logging**          | ⚠️ Local files | ✅ Centralized UI |
+| **Observability**    | ❌ Limited      | ✅ Comprehensive  |
+| **Setup Complexity** | Simple         | Medium           |
+| **Dependencies**     | Minimal        | Requires server  |
 
 ## Detailed Documentation
 
 See **[PREFECT_USAGE.md](./PREFECT_USAGE.md)** for comprehensive documentation including:
+
 - API reference
 - Advanced usage patterns
 - Monitoring & observability
@@ -109,6 +111,7 @@ uv run python examples/prefect_example.py
 ```
 
 Expected output:
+
 ```
 INFO | prefect - Starting temporary server...
 INFO | Flow run 'acoustic-aardwolf' - Beginning flow run...
@@ -121,13 +124,13 @@ INFO | Task run 'simple_task-855' - Finished in state Completed()
 **Choose based on your needs:**
 
 - **Development/Simple Use Cases**: Use `Orchestrator` (APScheduler)
-  - Simpler, fewer dependencies
-  - No server required
-  
+    - Simpler, fewer dependencies
+    - No server required
+
 - **Production/Complex Workflows**: Use `PrefectOrchestrator`
-  - Better monitoring and observability
-  - Automatic retries and error handling
-  - Web UI for operations team
+    - Better monitoring and observability
+    - Automatic retries and error handling
+    - Web UI for operations team
 
 Both orchestrators are fully supported and can be used interchangeably! 🚀
 

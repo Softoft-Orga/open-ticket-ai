@@ -8,6 +8,7 @@
 
 <script lang="ts" setup>
 import AccordionItem from './AccordionItem.vue'
+
 interface Item {
     title: string
     content?: string

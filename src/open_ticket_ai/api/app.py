@@ -1,7 +1,3 @@
-"""FastAPI application for the flow editor API."""
-
-from pathlib import Path
-
 try:
     from fastapi import FastAPI, HTTPException
     from fastapi.middleware.cors import CORSMiddleware
@@ -21,10 +17,8 @@ from .models import (
 from .service import convert_yaml_to_mermaid, load_config_yaml, save_config_yaml
 from .settings import get_settings
 
-# Initialize settings
 settings = get_settings()
 
-# Create FastAPI app
 app = FastAPI(
     title="Open Ticket AI Flow Editor API",
     description="REST API for otai-flow-editor integration",
@@ -43,24 +37,11 @@ app.add_middleware(
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check() -> HealthResponse:
-    """Health check endpoint.
-
-    Returns:
-        HealthResponse with status "ok"
-    """
     return HealthResponse(status="ok")
 
 
 @app.get("/config", response_model=ConfigResponse)
 async def get_config() -> ConfigResponse:
-    """Get current configuration.
-
-    Returns:
-        ConfigResponse containing current YAML configuration
-
-    Raises:
-        HTTPException: 404 if config file not found, 500 for other errors
-    """
     try:
         yaml_content = load_config_yaml(settings.config_path)
         return ConfigResponse(yaml=yaml_content)
@@ -78,19 +59,7 @@ async def get_config() -> ConfigResponse:
 
 @app.put("/config", response_model=ConfigResponse)
 async def update_config(request: ConfigUpdateRequest) -> ConfigResponse:
-    """Update configuration.
-
-    Args:
-        request: ConfigUpdateRequest with new YAML content
-
-    Returns:
-        ConfigResponse with the updated configuration
-
-    Raises:
-        HTTPException: 400 for invalid YAML, 500 for write errors
-    """
     try:
-        # Validate YAML by trying to parse it
         import yaml
         try:
             yaml.safe_load(request.yaml)
@@ -99,10 +68,9 @@ async def update_config(request: ConfigUpdateRequest) -> ConfigResponse:
                 status_code=400,
                 detail=f"Invalid YAML: {str(yaml_exc)}",
             ) from yaml_exc
-        
-        # Save the configuration
+
         save_config_yaml(settings.config_path, request.yaml)
-        
+
         return ConfigResponse(yaml=request.yaml)
     except HTTPException:
         raise
@@ -115,17 +83,6 @@ async def update_config(request: ConfigUpdateRequest) -> ConfigResponse:
 
 @app.post("/convert", response_model=ConvertResponse)
 async def convert_to_mermaid(request: ConvertRequest) -> ConvertResponse:
-    """Convert YAML configuration to Mermaid diagram.
-
-    Args:
-        request: ConvertRequest with optional YAML, direction, and wrap settings
-
-    Returns:
-        ConvertResponse with generated Mermaid diagram
-
-    Raises:
-        HTTPException: 400 for invalid input, 500 for conversion errors
-    """
     try:
         # Validate direction
         if request.direction not in ["TD", "LR"]:
@@ -133,7 +90,7 @@ async def convert_to_mermaid(request: ConvertRequest) -> ConvertResponse:
                 status_code=400,
                 detail="Invalid direction. Must be 'TD' or 'LR'",
             )
-        
+
         # Convert to Mermaid
         mermaid_content = convert_yaml_to_mermaid(
             yaml_content=request.yaml,
@@ -141,7 +98,7 @@ async def convert_to_mermaid(request: ConvertRequest) -> ConvertResponse:
             direction=request.direction,
             wrap=request.wrap,
         )
-        
+
         return ConvertResponse(mermaid=mermaid_content)
     except HTTPException:
         raise
@@ -164,5 +121,5 @@ async def convert_to_mermaid(request: ConvertRequest) -> ConvertResponse:
 
 if __name__ == "__main__":
     import uvicorn
-    
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+    uvicorn.run(app, host="0.0.0.0")

@@ -5,7 +5,7 @@ import typing
 from pydoc import locate
 from typing import Any
 
-from injector import Injector, inject, singleton
+from injector import inject, singleton
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.config.registerable_config import RegisterableConfig
@@ -65,7 +65,7 @@ class PipeFactory:
         return rendered_step_config
 
     def create_pipe(
-            self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any], scope: dict[str, Any]
+        self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any], scope: dict[str, Any]
     ) -> Any:
         pipe_id = pipe_config_raw["id"]
         self._logger.info("Creating pipe '%s' with config %s", pipe_id, pipe_config_raw)
