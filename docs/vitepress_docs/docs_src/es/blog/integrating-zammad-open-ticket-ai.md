@@ -20,7 +20,7 @@ OpenTicketAI se ejecuta en un *pipeline* que transforma los datos del ticket pas
 5.  **Postprocesador** – aplica umbrales, elige acciones.
 6.  **Adaptador del Sistema de Tickets** – actualiza el ticket en Zammad a través de la API REST.
 
-Cada etapa toma un objeto `PipelineContext` (que contiene `ticket_id` y un diccionario `data`) y lo enriquece. Por ejemplo, después de que se ejecuten los clasificadores, el `data` del contexto podría tener claves como `new_queue`, `new_priority`, o un `article` (comentario) para añadir. El pipe **GenericTicketUpdater** busca entonces una entrada `update_data` en el contexto y llama al adaptador para aplicar esos campos al ticket. Este diseño facilita la adición de nuevos pasos (p. ej., un pipe de seudonimización) o la personalización de la lógica de actualización. El orquestador gestiona estos *AttributePredictors* (fetcher, preparer, servicio de IA, modifier) basándose en la configuración YAML.
+Cada etapa opera sobre el `Context` compartido, que mantiene un diccionario `pipes` con objetos `PipeResult` y la configuración renderizada para la ejecución actual. Tras los clasificadores, los resultados almacenados bajo sus IDs pueden exponer claves como `new_queue`, `new_priority` o un `article` (comentario) para añadir. El pipe **GenericTicketUpdater** lee esos valores desde `PipeResult.data` y llama al adaptador para aplicar los cambios. Como el orquestador ejecuta un grafo de `Pipe` definido en YAML con una programación fija, es sencillo añadir pasos adicionales (por ejemplo, un pipe de seudonimización) o ajustar la lógica de decisión sin modificar código Python: basta con actualizar las definiciones en `defs` o la entrada programada en `orchestrator`.
 
 ## TicketSystemAdapter y ZammadAdapter
 
