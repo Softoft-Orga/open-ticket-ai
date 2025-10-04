@@ -55,23 +55,6 @@ class TestOTOBOZnunyTicketSystemService:
     def service(self, config):
         return OTOBOZnunyTicketSystemService(config)
 
-    @pytest.fixture(autouse=True)
-    def patch_ticket_conversion(self, monkeypatch):
-        adapter = Mock(
-            side_effect=lambda ticket: UnifiedTicket(
-                id=str(ticket.id) if ticket.id is not None else "",
-                subject=ticket.title or "",
-                queue=None,
-                priority=None,
-                notes=[],
-                body="",
-            )
-        )
-        monkeypatch.setattr(
-            "open_ticket_ai.open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.otobo_ticket_to_unified_ticket",
-            adapter,
-        )
-        return adapter
 
     @pytest.fixture
     def mock_client(self):
