@@ -47,11 +47,11 @@ class AddNotePipe(Pipe):
 
 ### Parameters
 
-| Name | Description |
-| --- | --- |
-| `ticket_id` | ID of the target ticket |
-| `body` | Text of the note |
-| `visibility` | internal|public _(default: `internal`)_ |
+| Name         | Description             |
+|--------------|-------------------------|
+| `ticket_id`  | ID of the target ticket |
+| `body`       | Text of the note        |
+| `visibility` | internal                |public _(default: `internal`)_ |
 
 ## Output
 
@@ -62,6 +62,7 @@ class AddNotePipe(Pipe):
 ### Output examples
 
 #### Ok
+
 ```yaml
 state: ok
 payload:
@@ -69,6 +70,7 @@ payload:
 ```
 
 #### Skipped
+
 ```yaml
 state: skipped
 payload:
@@ -76,6 +78,7 @@ payload:
 ```
 
 #### Failed
+
 ```yaml
 state: failed
 error: ticket_not_found
@@ -100,6 +103,7 @@ error: ticket_not_found
 ## Usage examples
 
 ### Minimal
+
 ```yaml
 use: open_ticket_ai.basic_pipes.ticket_system_pipes.AddNotePipe
 config:
@@ -107,6 +111,7 @@ config:
 ```
 
 ### Full
+
 ```yaml
 use: open_ticket_ai.basic_pipes.ticket_system_pipes.AddNotePipe
 when: true
@@ -119,6 +124,7 @@ with:
 ```
 
 ### Large
+
 ```yaml
 use: open_ticket_ai.basic_pipes.ticket_system_pipes.AddNotePipe
 when: ${ env.PIPE_ADD_NOTE_ENABLED }
@@ -135,6 +141,7 @@ with:
 ## Orchestrations
 
 ### Basic Routing With Notes
+
 ```yaml
 orchestrator:
   - use: ...FetchTicketPipe
@@ -147,6 +154,7 @@ orchestrator:
 ```
 
 ### Post-Classification Feedback
+
 File reference: `examples/orchestrations/post_classification.yml`
 
 ## Notes

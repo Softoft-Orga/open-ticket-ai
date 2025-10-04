@@ -9,6 +9,11 @@ from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
+from open_ticket_ai.core.ticket_system_integration.unified_models import (
+    UnifiedEntity,
+    UnifiedNote,
+)
+from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 
 @pytest.fixture
@@ -30,7 +35,7 @@ def mock_ticket_system_service() -> MagicMock:
 def pipe_config_factory():
     def factory(**kwargs) -> dict:
         defaults = {
-            "name": "test_pipe",
+            "id": "test_pipe",
             "use": "open_ticket_ai.base.DefaultPipe",
             "when": True,
             "steps": [],
@@ -52,7 +57,7 @@ def mock_registry():
 @pytest.fixture
 def mock_ticket_system_pipe_config():
     return {
-        "name": "test_ticket_pipe",
+        "id": "test_ticket_pipe",
         "use": "TestTicketPipe",
         "when": True,
         "steps": [],
@@ -60,39 +65,115 @@ def mock_ticket_system_pipe_config():
     }
 
 
-@contextmanager
-def patched_registry(mock_registry):
-    """Context manager to patch UnifiedRegistry for pipe testing."""
-    with patch.object(UnifiedRegistry, "get_registry_instance", return_value=mock_registry):
-        yield
-
-
 @pytest.fixture
-def pipe_runner(mock_registry):
+def pipe_runner(mock_registry, mock_ticket_system_service):
     """Factory to run pipes with mocked registry."""
+
     def _run_pipe(pipe_class, config, context):
         with patched_registry(mock_registry):
-            pipe = pipe_class(config)
+            # Check if pipe needs ticket_system as first arg (ticket system pipes)
+            import inspect
+
+            sig = inspect.signature(pipe_class.__init__)
+            params = list(sig.parameters.keys())
+            if len(params) > 2 and params[1] == "ticket_system":
+                pipe = pipe_class(mock_ticket_system_service, config)
+            else:
+                pipe = pipe_class(config)
             return asyncio.run(pipe.process(context))
+
     return _run_pipe
 
 
 @pytest.fixture
 def ticket_system_pipe_factory(mock_ticket_system_service, mock_registry):
     """Factory for creating ticket system pipes with common setup."""
+
     def _create_pipe(pipe_class, **config_overrides):
         base_config = {
-            "name": "test_pipe",
+            "id": "test_pipe",
             "use": pipe_class.__name__,
             "when": True,
             "steps": [],
             "ticket_system_id": "test_system",
         }
         base_config.update(config_overrides)
-        
+
         mock_registry.get_instance.return_value = mock_ticket_system_service
-        
+
         with patched_registry(mock_registry):
             return pipe_class(base_config)
-    
+
     return _create_pipe
+
+
+@pytest.fixture
+def empty_mocked_ticket_system() -> MockedTicketSystem:
+    """Empty MockedTicketSystem for custom test scenarios."""
+    return MockedTicketSystem()
+
+
+@pytest.fixture
+def mocked_ticket_system() -> MockedTicketSystem:
+    """Pre-populated MockedTicketSystem with sample tickets."""
+    system = MockedTicketSystem()
+
+    # Add sample tickets
+    system.add_test_ticket(
+        id="TICKET-1",
+        subject="Test ticket 1",
+        body="This is the first test ticket",
+        queue=UnifiedEntity(id="1", name="Support"),
+        priority=UnifiedEntity(id="3", name="Medium"),
+        notes=[],
+    )
+
+    system.add_test_ticket(
+        id="TICKET-2",
+        subject="Test ticket 2",
+        body="This is the second test ticket",
+        queue=UnifiedEntity(id="2", name="Development"),
+        priority=UnifiedEntity(id="5", name="High"),
+        notes=[
+            UnifiedNote(id="NOTE-1", subject="Initial note", body="First note on ticket 2"),
+        ],
+    )
+
+    system.add_test_ticket(
+        id="TICKET-3",
+        subject="Urgent issue",
+        body="This needs immediate attention",
+        queue=UnifiedEntity(id="1", name="Support"),
+        priority=UnifiedEntity(id="5", name="High"),
+        notes=[],
+    )
+
+    return system
+
+
+@pytest.fixture
+def stateful_pipe_runner(mock_registry, mocked_ticket_system):
+    """Factory to run pipes with stateful MockedTicketSystem."""
+
+    def _run_pipe(pipe_class, config, context):
+        with patched_registry(mock_registry):
+            import inspect
+
+            sig = inspect.signature(pipe_class.__init__)
+            params = list(sig.parameters.keys())
+            if len(params) > 2 and params[1] == "ticket_system":
+                pipe = pipe_class(mocked_ticket_system, config)
+            else:
+                pipe = pipe_class(config)
+            return asyncio.run(pipe.process(context))
+
+    return _run_pipe
+
+
+@contextmanager
+def patched_registry(mock_registry):
+    with patch(
+        "open_ticket_ai.core.dependency_injection.unified_registry.UnifiedRegistry.instance",
+        return_value=mock_registry,
+    ):
+        yield

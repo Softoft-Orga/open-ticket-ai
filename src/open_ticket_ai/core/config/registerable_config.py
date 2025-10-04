@@ -1,16 +1,14 @@
 import uuid
 from typing import Any
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class RegisterableConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     uid: str = Field(default_factory=lambda: uuid.uuid4().hex)
     id: str | None = None
-    use: str = Field(
-        default="open_ticket_ai.base.DefaultPipe"
-    )
+    use: str = Field(default="open_ticket_ai.base.CompositePipe")
     injects: dict[str, str] = Field(default_factory=dict)
 
     def __init__(self, **kwargs: Any) -> None:

@@ -5,7 +5,6 @@ from injector import Injector
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection import container as container_module
 from open_ticket_ai.core.dependency_injection.container import AppModule
-from open_ticket_ai.core.dependency_injection.instance_creater import InstanceCreator
 from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 
 
@@ -33,13 +32,9 @@ def test_app_module_binds_singleton_dependencies(monkeypatch) -> None:
 
     resolved_config = injector.get(RawOpenTicketAIConfig)
     resolved_registry = injector.get(UnifiedRegistry)
-    resolved_creator = injector.get(InstanceCreator)
 
     assert load_config_calls == [container_module.CONFIG_PATH]
     assert resolved_config is fake_config
     assert resolved_registry is sentinel_registry
     assert injector.get(RawOpenTicketAIConfig) is resolved_config
     assert injector.get(UnifiedRegistry) is resolved_registry
-    assert injector.get(InstanceCreator) is resolved_creator
-    assert resolved_creator._config is fake_config  # type: ignore[attr-defined]
-    assert resolved_creator._registry is sentinel_registry  # type: ignore[attr-defined]

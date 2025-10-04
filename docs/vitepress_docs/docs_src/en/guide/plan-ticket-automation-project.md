@@ -5,13 +5,18 @@ description: "Plan your ticket automation project. Choose the right path based o
   \ and support."
 pageClass: full-page
 ---
+
 # Ticket Automation Planner — Pick Your Best Path
 
-Modernize ticket routing fast—no matter where you start. This planner helps you choose the right path based on your data reality: lots of labeled tickets, lots of unlabeled tickets, or almost no data. Each path ends in a concrete service package with clear deliverables and KPIs, so you can move from idea → pilot → production without guesswork.
+Modernize ticket routing fast—no matter where you start. This planner helps you choose the right path based on your data
+reality: lots of labeled tickets, lots of unlabeled tickets, or almost no data. Each path ends in a concrete service
+package with clear deliverables and KPIs, so you can move from idea → pilot → production without guesswork.
 
-**Who this is for:** IT/service teams on Znuny/OTRS/OTOBO (or similar) who want reliable queue/priority/tag predictions, either on-prem or via a hosted API.
+**Who this is for:** IT/service teams on Znuny/OTRS/OTOBO (or similar) who want reliable queue/priority/tag predictions,
+either on-prem or via a hosted API.
 
-**What you’ll get:** short decision flow, 4 actionable paths (A–D), add-ons (multilingual, extra attributes), gates/metrics to know when you’re ready, and a data-readiness checklist.
+**What you’ll get:** short decision flow, 4 actionable paths (A–D), add-ons (multilingual, extra attributes),
+gates/metrics to know when you’re ready, and a data-readiness checklist.
 
 **How to use this page**
 
@@ -21,9 +26,11 @@ Modernize ticket routing fast—no matter where you start. This planner helps yo
 * Keep the **gates** tight (per-class F1 + business KPIs) so pilots translate to production confidence.
 
 Now continue with the overview diagram and the detailed flows below.
-Nice—here’s a fuller write-up you can drop under your diagrams. I kept it skimmable but added real guidance and thresholds so readers can confidently pick a flow.
+Nice—here’s a fuller write-up you can drop under your diagrams. I kept it skimmable but added real guidance and
+thresholds so readers can confidently pick a flow.
 
-Got it — I’ll keep your new short diagrams and add clear, concise explanatory text for each section so the article feels complete while still being easy to scan.
+Got it — I’ll keep your new short diagrams and add clear, concise explanatory text for each section so the article feels
+complete while still being easy to scan.
 
 ---
 
@@ -211,7 +218,8 @@ flowchart TD
   E --> F[Pilot/Eval]
 ```
 
-Add support for additional languages via multilingual auto-labeling or synthetic generation, then train and evaluate per locale.
+Add support for additional languages via multilingual auto-labeling or synthetic generation, then train and evaluate per
+locale.
 
 ---
 
@@ -228,4 +236,5 @@ flowchart TD
   C --> D[Deploy]
 ```
 
-Predict more than queues/priorities — e.g., tags, assignee, or first answer time — by extending labeling and training a multi-task model.
+Predict more than queues/priorities — e.g., tags, assignee, or first answer time — by extending labeling and training a
+multi-task model.

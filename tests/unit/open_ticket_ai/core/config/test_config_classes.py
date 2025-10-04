@@ -1,16 +1,12 @@
 from __future__ import annotations
 
-import importlib
-
 import pytest
-from pydantic import ValidationError
 
+from open_ticket_ai.core.config.registerable_config import RegisterableConfig
 from open_ticket_ai.core.pipeline.pipe_config import (
-    FlowAction,
     RawPipeConfig,
     RenderedPipeConfig,
 )
-from open_ticket_ai.core.config.registerable_config import RegisterableConfig
 
 
 def test_registerable_config_defaults_are_independent() -> None:
@@ -18,42 +14,38 @@ def test_registerable_config_defaults_are_independent() -> None:
     second = RegisterableConfig()
 
     assert first.id != second.id
-    assert first.name == ""
-    assert first.when is True
-    assert first.steps == []
-    assert first.use == "open_ticket_ai.base.DefaultPipe"
+    assert first.use == "open_ticket_ai.base.CompositePipe"
 
-    first.steps.append({"use": "some.pipe"})
-    assert second.steps == []
-
-    custom = RegisterableConfig(use="collections.Counter")
-    module = importlib.import_module("collections")
-    assert custom.use is module.Counter
+    custom = RegisterableConfig(use="collections.Counter", id="custom")
+    assert custom.use == "collections.Counter"
+    assert custom.id == "custom"
 
 
 def test_rendered_pipe_config_requires_boolean_when() -> None:
-    with pytest.raises(ValidationError):
-        RenderedPipeConfig()
-
-    config = RenderedPipeConfig(_if=True)
+    # _if has a default value of True
+    config = RenderedPipeConfig()
     assert config._if is True
-    assert config.on_failure is FlowAction.FAIL_CONTAINER
-    assert config.on_success is FlowAction.CONTINUE
+
+    config_false = RenderedPipeConfig(_if=False)
+    assert config_false._if is False
 
 
 @pytest.mark.parametrize(
     "field,value",
     [
-        ("on_failure", "finish_container"),
-        ("on_success", "continue"),
+        ("_if", "True"),
+        ("_if", "{{ some_var }}"),
     ],
 )
 def test_raw_pipe_config_accepts_optional_strings(field: str, value: str) -> None:
     config = RawPipeConfig(**{field: value})
     assert getattr(config, field) == value
-    assert config._if == "True"
 
 
 def test_raw_pipe_config_requires_string_when() -> None:
-    with pytest.raises(ValidationError):
-        RawPipeConfig(_if=False)
+    # _if accepts both str and bool, with default "True"
+    config_bool = RawPipeConfig(_if=False)
+    assert config_bool._if is False
+
+    config_str = RawPipeConfig(_if="{{ some_condition }}")
+    assert config_str._if == "{{ some_condition }}"

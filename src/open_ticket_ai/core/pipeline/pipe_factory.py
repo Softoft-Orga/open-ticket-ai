@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import logging
 import typing
 from pydoc import locate
 from typing import Any
 
-from injector import Injector, inject, singleton
+from injector import inject, singleton
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.config.registerable_config import RegisterableConfig
@@ -19,8 +20,12 @@ def _locate(use: str) -> type:
 
 
 CONTROL_KEYS = {
-    "id", "uid", "use", "steps", "when", "run_before_children",
-    "on_failure", "on_success", "depends_on", "if"
+    "id",
+    "uid",
+    "use",
+    "steps",
+    "depends_on",
+    "if",
 }
 
 
@@ -47,24 +52,40 @@ def resolve_config(parent_config: dict[str, Any] | None, node_raw: dict[str, Any
 @singleton
 class PipeFactory:
     @inject
-    def __init__(self, injector: Injector, app_config: RawOpenTicketAIConfig, template_renderer: TemplateRenderer):
-        self._injector = injector
+    def __init__(self, app_config: RawOpenTicketAIConfig, template_renderer: TemplateRenderer):
+        self._logger = logging.getLogger(self.__class__.__name__)
         self._app_config: RawOpenTicketAIConfig = app_config
         self._template_renderer = template_renderer
 
-    def create_pipe(self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any],
-                    scope: dict[str, Any]) -> Any:
+    def render_pipe_config(self, registerable_config_raw: dict[str, Any], scope: dict[str, Any]) -> dict[str, Any]:
+        renderable_config = registerable_config_raw.copy()
+        renderable_config["steps"] = []
+        rendered_step_config = self._template_renderer.render_recursive(renderable_config, scope)
+        rendered_step_config["steps"] = registerable_config_raw.get("steps", [])
+        return rendered_step_config
+
+    def create_pipe(
+        self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any], scope: dict[str, Any]
+    ) -> Any:
+        pipe_id = pipe_config_raw["id"]
+        self._logger.info("Creating pipe '%s' with config %s", pipe_id, pipe_config_raw)
         pipe_config = resolve_config(parent_config_raw, pipe_config_raw)
-        return self.create_registerable_instance(pipe_config, scope)
+        config_raw = self.render_pipe_config(pipe_config, scope)
+        return self.create_registerable_instance(config_raw, scope)
+
+    def create_service_instance(self, registerable_config_raw: dict[str, Any], scope: dict[str, Any]) -> Any:
+        config_raw = self._template_renderer.render_recursive(registerable_config_raw, scope)
+        return self.create_registerable_instance(config_raw, scope)
 
     def create_registerable_instance(self, registerable_config_raw: dict[str, Any], scope: dict[str, Any]) -> Any:
-        rendered_step_config = self._template_renderer.render_recursive(registerable_config_raw, scope)
-        registerable_config = RegisterableConfig.model_validate(rendered_step_config)
+
+        registerable_config = RegisterableConfig.model_validate(registerable_config_raw)
         cls: type = _locate(registerable_config.use)
         kwargs: dict[str, Any] = {}
         kwargs |= self._resolve_injects(registerable_config.injects, scope)
-        kwargs["config"] = registerable_config
-        return self._injector.create_object(cls, additional_kwargs=kwargs)
+        kwargs["config_raw"] = registerable_config_raw
+        kwargs["factory"] = self
+        return cls(**kwargs)
 
     def _resolve_injects(self, injects: dict[str, Any], scope: dict[str, Any]) -> dict[str, Any]:
         out: dict[str, Any] = {}
@@ -77,5 +98,5 @@ class PipeFactory:
             definition_config = RegisterableConfig.model_validate(definition_config_raw)
             if definition_config.id != service_id:
                 continue
-            return self.create_registerable_instance(definition_config_raw, scope)
+            return self.create_service_instance(definition_config_raw, scope)
         raise KeyError(service_id)

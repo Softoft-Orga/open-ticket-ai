@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from open_ticket_ai.hf_local.hf_local_text_classification_pipe import (
+from open_ticket_ai_hf_local.hf_local_text_classification_pipe import (
     HFLocalTextClassificationPipe,
 )
 
@@ -41,9 +41,7 @@ def _install_fake_transformers(monkeypatch, *, pipeline_return="pipeline"):
 
 
 def test_load_pipeline_initializes_transformers(monkeypatch):
-    tokenizer_mock, model_mock, pipeline_factory_mock, pipeline_return = _install_fake_transformers(
-        monkeypatch
-    )
+    tokenizer_mock, model_mock, pipeline_factory_mock, pipeline_return = _install_fake_transformers(monkeypatch)
 
     pipeline = HFLocalTextClassificationPipe._load_pipeline("model-name", "hf-token")
 
@@ -76,7 +74,7 @@ def test_process_runs_pipeline_and_returns_top_result(monkeypatch):
 
     pipe = HFLocalTextClassificationPipe(
         {
-            "name": "test-pipe",
+            "id": "test-pipe",
             "model": "local-model",
             "token": "hf-token",
             "prompt": "Explain the issue",
@@ -87,8 +85,9 @@ def test_process_runs_pipeline_and_returns_top_result(monkeypatch):
 
     mock_loader.assert_called_once_with("local-model", "hf-token")
     mock_pipeline.assert_called_once_with("Explain the issue", truncation=True)
-    assert result == {"label": "BUG", "confidence": pytest.approx(0.87)}
-    assert pipe._pipeline is mock_pipeline
+    assert result.data == {"label": "BUG", "confidence": pytest.approx(0.87)}
+    assert result.success is True
+    assert result.failed is False
 
 
 def test_process_handles_direct_dict_response(monkeypatch):
@@ -97,7 +96,7 @@ def test_process_handles_direct_dict_response(monkeypatch):
 
     pipe = HFLocalTextClassificationPipe(
         {
-            "name": "test-pipe",
+            "id": "test-pipe",
             "model": "local-model",
             "token": None,
             "prompt": "Summarise the ticket",
@@ -107,4 +106,4 @@ def test_process_handles_direct_dict_response(monkeypatch):
     result = asyncio.run(pipe._process())
 
     mock_pipeline.assert_called_once_with("Summarise the ticket", truncation=True)
-    assert result == {"label": "QUESTION", "confidence": pytest.approx(0.42)}
+    assert result.data == {"label": "QUESTION", "confidence": pytest.approx(0.42)}

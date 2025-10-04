@@ -5,4 +5,5 @@ layout: page
 pageClass: wide-page
 title: Providable Base Class
 ---
+
 <CodeDocumentation parentPackageId="src.ce.core.mixins" show-all-classes show-all-functions />

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import enum
-from typing import Any, Self, Iterable
+from collections.abc import Iterable
+from functools import reduce
+from typing import Any, Self
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.registerable_config import RegisterableConfig
 
@@ -15,18 +17,23 @@ class FlowAction(enum.StrEnum):
 
 
 class RenderedPipeConfig(RegisterableConfig):
-    _if: bool
+    model_config = ConfigDict(extra="allow")
+    if_: bool = Field(default=True, alias="if")
     depends_on: list[str] = []
+
+    @property
+    def _if(self) -> bool:
+        return self.if_
 
 
 class RawPipeConfig(RegisterableConfig):
-    _if: str | bool = "True"
+    model_config = ConfigDict(extra="allow")
+    if_: str | bool = Field(default="True", alias="if")
     depends_on: str | list[str] = []
 
-
-from typing import Any
-from functools import reduce
-from pydantic import BaseModel, ConfigDict
+    @property
+    def _if(self) -> str | bool:
+        return self.if_
 
 
 class PipeResult(BaseModel):
@@ -34,7 +41,7 @@ class PipeResult(BaseModel):
     success: bool
     failed: bool
     message: str = ""
-    data: dict[str, Any] = {}
+    data: dict[str, Any] = Field(default_factory=dict)
 
     def __and__(self, other: Self) -> Self:
         merged_data = {**self.data, **other.data}
@@ -49,5 +56,5 @@ class PipeResult(BaseModel):
     @classmethod
     def union(cls, results: Iterable[PipeResult]) -> PipeResult:
         if not results:
-            return PipeResult(success=True, failed=False, data={})
+            return PipeResult(success=True, failed=False)
         return reduce(lambda a, b: a & b, results)

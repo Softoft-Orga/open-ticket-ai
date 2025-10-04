@@ -174,30 +174,30 @@ api -> "Production Database"
 The `shape` attribute determines the geometric form of an object. If not specified, the default shape is `rectangle`. D2
 provides a rich catalog of built-in shapes tailored for software and systems diagramming.
 
-| Shape Keyword | D2 Code Example | Visual Representation (Description) | Primary Use Case |
-| :--- | :--- | :--- | :--- |
-| **rectangle** | `r: Rectangle` | A standard rectangle. The default shape. | General purpose blocks, components, systems. |
-| **square** | `s: {shape: square}` | A rectangle with equal width and height. | Icons, simple nodes, states. |
-| **page** | `p: {shape: page}` | A rectangle with a folded top-right corner. | Documents, files, reports. |
-| **parallelogram** | `p: {shape: parallelogram}` | A skewed rectangle. | Input/output operations. |
-| **document** | `d: {shape: document}` | A rectangle with a wavy bottom edge. | Single documents or data files. |
-| **cylinder** | `c: {shape: cylinder}` | A 3D-style cylinder. | Databases, data stores. |
-| **queue** | `q: {shape: queue}` | A cylinder with an opening on one side. | Message queues, data streams. |
-| **package** | `p: {shape: package}` | A 3D-style box, like a software package. | Code packages, modules, components. |
-| **step** | `s: {shape: step}` | A rectangle with an arrow shape on the right. | A step in a process or flow. |
-| **callout** | `c: {shape: callout}` | A rectangle with a pointer, like a speech bubble. | Annotations, notes, explanations. |
-| **stored\_data** | `sd: {shape: stored_data}` | A cylinder with an open top. | Data storage, persistent data. |
-| **person** | `p: {shape: person}` | A stylized icon of a person. | Users, actors, roles. |
-| **diamond** | `d: {shape: diamond}` | A rhombus shape. | Decisions, conditional logic. |
-| **oval** | `o: {shape: oval}` | An ellipse or oval. | Terminators (start/end), topics. |
-| **circle** | `c: {shape: circle}` | A perfect circle. | Nodes, states, simple entities. |
-| **hexagon** | `h: {shape: hexagon}` | A six-sided polygon. | API endpoints, services. |
-| **cloud** | `c: {shape: cloud}` | A cloud shape. | Networks, internet, external systems. |
-| **text** | `t: {shape: text}` | Renders only the label text with no border. | Labels, titles, annotations. |
-| **code** | `c: {shape: code}` | A container for displaying formatted code. | Code snippets, examples. |
-| **image** | `i: {shape: image}` | A container for a standalone image/icon. | Displaying logos, custom graphics. |
-| **class** | `c: {shape: class}` | A UML class shape with compartments. | UML class diagrams. |
-| **sql\_table** | `t: {shape: sql_table}` | A database table with columns and constraints. | Entity-Relationship Diagrams (ERDs). |
+| Shape Keyword     | D2 Code Example             | Visual Representation (Description)               | Primary Use Case                             |
+|:------------------|:----------------------------|:--------------------------------------------------|:---------------------------------------------|
+| **rectangle**     | `r: Rectangle`              | A standard rectangle. The default shape.          | General purpose blocks, components, systems. |
+| **square**        | `s: {shape: square}`        | A rectangle with equal width and height.          | Icons, simple nodes, states.                 |
+| **page**          | `p: {shape: page}`          | A rectangle with a folded top-right corner.       | Documents, files, reports.                   |
+| **parallelogram** | `p: {shape: parallelogram}` | A skewed rectangle.                               | Input/output operations.                     |
+| **document**      | `d: {shape: document}`      | A rectangle with a wavy bottom edge.              | Single documents or data files.              |
+| **cylinder**      | `c: {shape: cylinder}`      | A 3D-style cylinder.                              | Databases, data stores.                      |
+| **queue**         | `q: {shape: queue}`         | A cylinder with an opening on one side.           | Message queues, data streams.                |
+| **package**       | `p: {shape: package}`       | A 3D-style box, like a software package.          | Code packages, modules, components.          |
+| **step**          | `s: {shape: step}`          | A rectangle with an arrow shape on the right.     | A step in a process or flow.                 |
+| **callout**       | `c: {shape: callout}`       | A rectangle with a pointer, like a speech bubble. | Annotations, notes, explanations.            |
+| **stored\_data**  | `sd: {shape: stored_data}`  | A cylinder with an open top.                      | Data storage, persistent data.               |
+| **person**        | `p: {shape: person}`        | A stylized icon of a person.                      | Users, actors, roles.                        |
+| **diamond**       | `d: {shape: diamond}`       | A rhombus shape.                                  | Decisions, conditional logic.                |
+| **oval**          | `o: {shape: oval}`          | An ellipse or oval.                               | Terminators (start/end), topics.             |
+| **circle**        | `c: {shape: circle}`        | A perfect circle.                                 | Nodes, states, simple entities.              |
+| **hexagon**       | `h: {shape: hexagon}`       | A six-sided polygon.                              | API endpoints, services.                     |
+| **cloud**         | `c: {shape: cloud}`         | A cloud shape.                                    | Networks, internet, external systems.        |
+| **text**          | `t: {shape: text}`          | Renders only the label text with no border.       | Labels, titles, annotations.                 |
+| **code**          | `c: {shape: code}`          | A container for displaying formatted code.        | Code snippets, examples.                     |
+| **image**         | `i: {shape: image}`         | A container for a standalone image/icon.          | Displaying logos, custom graphics.           |
+| **class**         | `c: {shape: class}`         | A UML class shape with compartments.              | UML class diagrams.                          |
+| **sql\_table**    | `t: {shape: sql_table}`     | A database table with columns and constraints.    | Entity-Relationship Diagrams (ERDs).         |
 
 ## 2.3. Defining Connections
 
@@ -233,16 +233,16 @@ the language's own rules. A label can also be added next to an arrowhead by targ
 
 The following table details the available arrowhead shapes and their semantic meaning.
 
-| Arrowhead Keyword | D2 Code Example | Visual Representation (Description) | Semantic Meaning (Typical Use) |
-| :--- | :--- | :--- | :--- |
-| **triangle** | `target-arrowhead.shape: triangle` | A filled triangular arrowhead (default). | General direction, dependency. |
-| **arrow** | `target-arrowhead.shape: arrow` | A pointier, open triangular arrowhead. | Alternative style for direction. |
-| **diamond** | `target-arrowhead.shape: diamond` | An open diamond shape. | Aggregation (UML). |
-| **circle** | `target-arrowhead.shape: circle` | An open circle. | Unspecified or custom notation. |
-| **cf-one** | `target-arrowhead.shape: cf-one` | A single perpendicular line. | Cardinality: Exactly one (Crow's Foot). |
-| **cf-one-required** | `target-arrowhead.shape: cf-one-required` | Two perpendicular lines. | Cardinality: One and only one (Crow's Foot). |
-| **cf-many** | `target-arrowhead.shape: cf-many` | A three-pronged "crow's foot". | Cardinality: Zero or many (Crow's Foot). |
-| **cf-many-required**| `target-arrowhead.shape: cf-many-required`| A line with a crow's foot. | Cardinality: One or many (Crow's Foot). |
+| Arrowhead Keyword    | D2 Code Example                            | Visual Representation (Description)      | Semantic Meaning (Typical Use)               |
+|:---------------------|:-------------------------------------------|:-----------------------------------------|:---------------------------------------------|
+| **triangle**         | `target-arrowhead.shape: triangle`         | A filled triangular arrowhead (default). | General direction, dependency.               |
+| **arrow**            | `target-arrowhead.shape: arrow`            | A pointier, open triangular arrowhead.   | Alternative style for direction.             |
+| **diamond**          | `target-arrowhead.shape: diamond`          | An open diamond shape.                   | Aggregation (UML).                           |
+| **circle**           | `target-arrowhead.shape: circle`           | An open circle.                          | Unspecified or custom notation.              |
+| **cf-one**           | `target-arrowhead.shape: cf-one`           | A single perpendicular line.             | Cardinality: Exactly one (Crow's Foot).      |
+| **cf-one-required**  | `target-arrowhead.shape: cf-one-required`  | Two perpendicular lines.                 | Cardinality: One and only one (Crow's Foot). |
+| **cf-many**          | `target-arrowhead.shape: cf-many`          | A three-pronged "crow's foot".           | Cardinality: Zero or many (Crow's Foot).     |
+| **cf-many-required** | `target-arrowhead.shape: cf-many-required` | A line with a crow's foot.               | Cardinality: One or many (Crow's Foot).      |
 
 **Example of styled arrowheads:**
 
@@ -335,11 +335,11 @@ readability of a diagram.
 The layout engine can be specified via a command-line flag (e.g., `--layout=elk`) or configured within the script using
 a `vars` block.
 
-| Engine | Algorithm Type | Key Strengths | Notable Feature Support | Recommended Use Case |
-| :--- | :--- | :--- | :--- | :--- |
-| **Dagre** | Hierarchical (Layered) | Fast performance. Default engine. Based on the widely-used Graphviz DOT algorithm. | Good for standard flowcharts and directed graphs. Does not support connections from ancestors to descendants (e.g., container to its child). | Quick generation of simple to moderately complex hierarchical diagrams. |
-| **ELK** | Hierarchical (Layered) | Mature, well-maintained academic project. Often produces more compact and aesthetically pleasing layouts than Dagre. | Supports setting width and height on containers. Better handling of complex edge routing. | High-quality, production-ready diagrams, especially those with complex hierarchies and containers. |
-| **TALA** | Custom | New engine designed specifically for software architecture diagrams. Supports novel layout constraints. | Only engine supporting `near` for positioning relative to other objects. Only engine supporting per-container `direction`. Supports `top` and `left` for fixed positioning. | Complex software architecture diagrams requiring specific positional constraints or mixed layout directions. |
+| Engine    | Algorithm Type         | Key Strengths                                                                                                        | Notable Feature Support                                                                                                                                                     | Recommended Use Case                                                                                         |
+|:----------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------|
+| **Dagre** | Hierarchical (Layered) | Fast performance. Default engine. Based on the widely-used Graphviz DOT algorithm.                                   | Good for standard flowcharts and directed graphs. Does not support connections from ancestors to descendants (e.g., container to its child).                                | Quick generation of simple to moderately complex hierarchical diagrams.                                      |
+| **ELK**   | Hierarchical (Layered) | Mature, well-maintained academic project. Often produces more compact and aesthetically pleasing layouts than Dagre. | Supports setting width and height on containers. Better handling of complex edge routing.                                                                                   | High-quality, production-ready diagrams, especially those with complex hierarchies and containers.           |
+| **TALA**  | Custom                 | New engine designed specifically for software architecture diagrams. Supports novel layout constraints.              | Only engine supporting `near` for positioning relative to other objects. Only engine supporting per-container `direction`. Supports `top` and `left` for fixed positioning. | Complex software architecture diagrams requiring specific positional constraints or mixed layout directions. |
 
 The choice of engine is not merely stylistic; it has functional implications. For instance, a diagram that requires a
 container to have a specific size must use **ELK**, while a diagram that needs to place a legend relative to a specific
@@ -426,27 +426,27 @@ x -> y
 The following table provides a comprehensive reference for available style properties, their valid values, and their
 applicability. This formalizes the rules of the styling system, which is essential for correct programmatic generation.
 
-| Property Keyword | Applies To | Value Type & Range | Description | D2 Code Example |
-| :--- | :--- | :--- | :--- | :--- |
-| **`opacity`** | Shapes, Connections | Float 0.0 - 1.0 | Sets the transparency. | `x.style.opacity: 0.5` |
-| **`stroke`** | Shapes, Connections | Color (name or hex) | Sets the color of the border/line. | `x.style.stroke: "#ff0000"` |
-| **`fill`** | Shapes | Color (name or hex) | Sets the interior background color. | `x.style.fill: lightblue` |
-| **`fill-pattern`** | Shapes | `dots`, `lines`, `grain` | Applies a texture to the fill. | `x.style.fill-pattern: dots` |
-| **`stroke-width`** | Shapes, Connections | Integer 1 - 15 | Sets the thickness of the border/line. | `x.style.stroke-width: 3` |
-| **`stroke-dash`** | Shapes, Connections | Integer 0 - 10 | Sets the dash pattern of the line. 0 is solid. | `(x -> y).style.stroke-dash: 5` |
-| **`border-radius`** | Shapes | Integer 0 - 20 | Rounds the corners of the shape. | `x.style.border-radius: 10` |
-| **`shadow`** | Shapes | `true`, `false` | Adds a drop shadow to the shape. | `x.style.shadow: true` |
-| **`3d`** | `rectangle`, `square` | `true`, `false` | Gives the shape a 3D extruded effect. | `x.style.3d: true` |
-| **`multiple`** | Shapes | `true`, `false` | Renders a "stack" of shapes. | `x.style.multiple: true` |
-| **`double-border`**| `rectangle`, `oval` | `true`, `false` | Draws a second border around the shape. | `x.style.double-border: true` |
-| **`font`** | Text Labels | `mono` | Sets the font family. `mono` is currently the main option. | `x.style.font: mono` |
-| **`font-size`** | Text Labels | Integer 8 - 100 | Sets the size of the label text. | `x.style.font-size: 24` |
-| **`font-color`** | Text Labels | Color (name or hex) | Sets the color of the label text. | `x.style.font-color: navy` |
-| **`animated`** | Connections | `true`, `false` | Adds an animation effect to the connection line. | `(x -> y).style.animated: true` |
-| **`bold`** | Text Labels | `true`, `false` | Makes the label text bold. | `x.style.bold: true` |
-| **`italic`** | Text Labels | `true`, `false` | Makes the label text italic. | `x.style.italic: true` |
-| **`underline`** | Text Labels | `true`, `false` | Underlines the label text. | `x.style.underline: true` |
-| **`text-transform`**| Text Labels | `uppercase`, `lowercase`, `title` | Changes the case of the label text. | `x.style.text-transform: uppercase` |
+| Property Keyword     | Applies To            | Value Type & Range                | Description                                                | D2 Code Example                     |
+|:---------------------|:----------------------|:----------------------------------|:-----------------------------------------------------------|:------------------------------------|
+| **`opacity`**        | Shapes, Connections   | Float 0.0 - 1.0                   | Sets the transparency.                                     | `x.style.opacity: 0.5`              |
+| **`stroke`**         | Shapes, Connections   | Color (name or hex)               | Sets the color of the border/line.                         | `x.style.stroke: "#ff0000"`         |
+| **`fill`**           | Shapes                | Color (name or hex)               | Sets the interior background color.                        | `x.style.fill: lightblue`           |
+| **`fill-pattern`**   | Shapes                | `dots`, `lines`, `grain`          | Applies a texture to the fill.                             | `x.style.fill-pattern: dots`        |
+| **`stroke-width`**   | Shapes, Connections   | Integer 1 - 15                    | Sets the thickness of the border/line.                     | `x.style.stroke-width: 3`           |
+| **`stroke-dash`**    | Shapes, Connections   | Integer 0 - 10                    | Sets the dash pattern of the line. 0 is solid.             | `(x -> y).style.stroke-dash: 5`     |
+| **`border-radius`**  | Shapes                | Integer 0 - 20                    | Rounds the corners of the shape.                           | `x.style.border-radius: 10`         |
+| **`shadow`**         | Shapes                | `true`, `false`                   | Adds a drop shadow to the shape.                           | `x.style.shadow: true`              |
+| **`3d`**             | `rectangle`, `square` | `true`, `false`                   | Gives the shape a 3D extruded effect.                      | `x.style.3d: true`                  |
+| **`multiple`**       | Shapes                | `true`, `false`                   | Renders a "stack" of shapes.                               | `x.style.multiple: true`            |
+| **`double-border`**  | `rectangle`, `oval`   | `true`, `false`                   | Draws a second border around the shape.                    | `x.style.double-border: true`       |
+| **`font`**           | Text Labels           | `mono`                            | Sets the font family. `mono` is currently the main option. | `x.style.font: mono`                |
+| **`font-size`**      | Text Labels           | Integer 8 - 100                   | Sets the size of the label text.                           | `x.style.font-size: 24`             |
+| **`font-color`**     | Text Labels           | Color (name or hex)               | Sets the color of the label text.                          | `x.style.font-color: navy`          |
+| **`animated`**       | Connections           | `true`, `false`                   | Adds an animation effect to the connection line.           | `(x -> y).style.animated: true`     |
+| **`bold`**           | Text Labels           | `true`, `false`                   | Makes the label text bold.                                 | `x.style.bold: true`                |
+| **`italic`**         | Text Labels           | `true`, `false`                   | Makes the label text italic.                               | `x.style.italic: true`              |
+| **`underline`**      | Text Labels           | `true`, `false`                   | Underlines the label text.                                 | `x.style.underline: true`           |
+| **`text-transform`** | Text Labels           | `uppercase`, `lowercase`, `title` | Changes the case of the label text.                        | `x.style.text-transform: uppercase` |
 
 ## 4.2. Icons and Images
 
@@ -983,14 +983,14 @@ recipe"** of D2 primitives for each relationship type.
 
 The following table and subsections define the canonical D2 recipes for all standard UML class relationships.
 
-| UML Relationship | Semantic Meaning | D2 Connection | `target-arrowhead.shape` | Required Styles |
-| :--- | :--- | :--- | :--- | :--- |
-| **Association** | A structural link between peers. | `Source -> Target` | `triangle` (default) | `style.filled: true` (default) |
-| **Dependency** | A "using" relationship; changes to the supplier may affect the client. | `Client -> Supplier` | `arrow` or `triangle` | `style.stroke-dash: 4` |
-| **Generalization** | An "is-a" relationship (inheritance). | `Subclass -> Superclass` | `triangle` | `style.filled: false` |
-| **Realization** | An "implements" relationship (interface). | `Class -> Interface` | `triangle` | `style.stroke-dash: 4`, `style.filled: false`|
-| **Aggregation** | A "has-a" relationship where the part can exist independently. | `Part -> Whole` | `diamond` | `style.filled: false` |
-| **Composition** | A strong "has-a" relationship where the part cannot exist independently.| `Part -> Whole` | `diamond` | `style.filled: true` |
+| UML Relationship   | Semantic Meaning                                                         | D2 Connection            | `target-arrowhead.shape` | Required Styles                               |
+|:-------------------|:-------------------------------------------------------------------------|:-------------------------|:-------------------------|:----------------------------------------------|
+| **Association**    | A structural link between peers.                                         | `Source -> Target`       | `triangle` (default)     | `style.filled: true` (default)                |
+| **Dependency**     | A "using" relationship; changes to the supplier may affect the client.   | `Client -> Supplier`     | `arrow` or `triangle`    | `style.stroke-dash: 4`                        |
+| **Generalization** | An "is-a" relationship (inheritance).                                    | `Subclass -> Superclass` | `triangle`               | `style.filled: false`                         |
+| **Realization**    | An "implements" relationship (interface).                                | `Class -> Interface`     | `triangle`               | `style.stroke-dash: 4`, `style.filled: false` |
+| **Aggregation**    | A "has-a" relationship where the part can exist independently.           | `Part -> Whole`          | `diamond`                | `style.filled: false`                         |
+| **Composition**    | A strong "has-a" relationship where the part cannot exist independently. | `Part -> Whole`          | `diamond`                | `style.filled: true`                          |
 
 #### Association
 
@@ -1926,13 +1926,13 @@ This matrix provides a direct mapping from the intended compositional behavior t
 the conceptual differences between `layers`, `scenarios`, and `steps` into a concise lookup table, enabling an AI to
 make the appropriate syntactical choice based on functional requirements.
 
-| Feature | `layers` | `scenarios` | `steps` |
-| :--- | :--- | :--- | :--- |
-| **Defining Keyword** | `layers` | `scenarios` | `steps` |
-| **Inheritance Model** | None (Starts as a blank board) | Inherits from the single base layer | Inherits from the immediate previous step |
-| **Primary Use Case** | Levels of abstraction, "drill-down" | Alternative views, "what-if" analysis | Sequential flows, animations |
-| **Scope** | New, isolated scope | Inherited, modifiable scope | Cumulative, inherited scope |
-| **Syntax Example** | `layers: { name: {...} }` | `scenarios: { name: {...} }` | `steps: { name: {...} }` |
+| Feature               | `layers`                            | `scenarios`                           | `steps`                                   |
+|:----------------------|:------------------------------------|:--------------------------------------|:------------------------------------------|
+| **Defining Keyword**  | `layers`                            | `scenarios`                           | `steps`                                   |
+| **Inheritance Model** | None (Starts as a blank board)      | Inherits from the single base layer   | Inherits from the immediate previous step |
+| **Primary Use Case**  | Levels of abstraction, "drill-down" | Alternative views, "what-if" analysis | Sequential flows, animations              |
+| **Scope**             | New, isolated scope                 | Inherited, modifiable scope           | Cumulative, inherited scope               |
+| **Syntax Example**    | `layers: { name: {...} }`           | `scenarios: { name: {...} }`          | `steps: { name: {...} }`                  |
 
 #### Table 5.2: `link` Attribute Syntax Reference
 
@@ -1940,13 +1940,13 @@ This table provides a complete and unambiguous reference for all valid syntaxes 
 addresses the context-dependent behavior of the `_` symbol and documents the best-practice syntax for external URLs,
 resolving potential ambiguities and preventing common parsing errors.
 
-| Link Type | Description | Syntax Example |
-| :--- | :--- | :--- |
-| **Internal (Standard)** | Links to a board with a simple, alphanumeric name. | `link: layers.details` |
-| **Internal (Complex Name)**| Links to a board whose name contains spaces, dots, or other special characters. The name must be quoted. | `link: scenarios."Failure Mode"` |
-| **Parent Board (Single Level)**| Links to the immediate parent board in the nested board hierarchy. | `link: _` |
-| **Parent Board (Multi-Level)**| Links multiple levels up the board hierarchy by chaining the parent reference. | `link: _._` (navigates 2 levels up) |
-| **External URL** | Creates a hyperlink to an external website. The URL should be quoted to prevent misinterpretation of special characters (`#`, `?`, `&`). | `link: "https://d2lang.com"` |
+| Link Type                       | Description                                                                                                                              | Syntax Example                      |
+|:--------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------|
+| **Internal (Standard)**         | Links to a board with a simple, alphanumeric name.                                                                                       | `link: layers.details`              |
+| **Internal (Complex Name)**     | Links to a board whose name contains spaces, dots, or other special characters. The name must be quoted.                                 | `link: scenarios."Failure Mode"`    |
+| **Parent Board (Single Level)** | Links to the immediate parent board in the nested board hierarchy.                                                                       | `link: _`                           |
+| **Parent Board (Multi-Level)**  | Links multiple levels up the board hierarchy by chaining the parent reference.                                                           | `link: _._` (navigates 2 levels up) |
+| **External URL**                | Creates a hyperlink to an external website. The URL should be quoted to prevent misinterpretation of special characters (`#`, `?`, `&`). | `link: "https://d2lang.com"`        |
 
 #### Table 5.3: CLI Flags for Compositional Control
 
@@ -1954,13 +1954,13 @@ This table equips an AI system with the necessary command-line arguments to cont
 multi-board diagrams it generates. This completes the end-to-end programmatic workflow, from code generation to final
 artifact production.
 
-| Flag | Alias | Description | Syntax Example |
-| :--- | :--- | :--- | :--- |
-| `--target` | | Renders only the specified board from a multi-board file. An empty string targets the root. A `.*` suffix includes all children. | `d2 --target='layers.details' in.d2 out.svg` |
-| `--watch` | `-w` | Starts a live-reload server that supports interactive multi-board navigation, ideal for development. | `d2 --watch my_diagram.d2` |
-| `--layout` | `-l` | Specifies the layout engine to use (e.g., `dagre`, `elk`, `tala`). Different engines can produce visually distinct results. | `d2 --layout=elk my_diagram.d2` |
-| `--theme` | `-t` | Applies a pre-defined theme ID to the diagram for consistent styling. | `d2 --theme=101 my_diagram.d2` |
-| `--timeout` | | Sets the maximum execution time in seconds, which is crucial for preventing hangs when rendering very large or complex compositions. | `d2 --timeout=300 my_diagram.d2` |
+| Flag        | Alias | Description                                                                                                                          | Syntax Example                               |
+|:------------|:------|:-------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------|
+| `--target`  |       | Renders only the specified board from a multi-board file. An empty string targets the root. A `.*` suffix includes all children.     | `d2 --target='layers.details' in.d2 out.svg` |
+| `--watch`   | `-w`  | Starts a live-reload server that supports interactive multi-board navigation, ideal for development.                                 | `d2 --watch my_diagram.d2`                   |
+| `--layout`  | `-l`  | Specifies the layout engine to use (e.g., `dagre`, `elk`, `tala`). Different engines can produce visually distinct results.          | `d2 --layout=elk my_diagram.d2`              |
+| `--theme`   | `-t`  | Applies a pre-defined theme ID to the diagram for consistent styling.                                                                | `d2 --theme=101 my_diagram.d2`               |
+| `--timeout` |       | Sets the maximum execution time in seconds, which is crucial for preventing hangs when rendering very large or complex compositions. | `d2 --timeout=300 my_diagram.d2`             |
 
 ### Conclusions
 

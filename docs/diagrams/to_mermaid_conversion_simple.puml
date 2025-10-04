@@ -1,0 +1,62 @@
+@startuml Simple_Conversion_With_Composites
+allow_mixing
+!include https://raw.githubusercontent.com/patrik-csak/one-dark-plantuml-theme/v1.0.1/theme.puml
+
+title YAML → Mermaid with Composite Entry/Exit & Scoped IDs
+
+
+
+' ==== Inputs / Outputs ====
+rectangle "config.yml" as CFG #0a0f14
+rectangle "diagram.mmd (Mermaid)" as MMD #0a0f14
+
+' ==== Core Flow ====
+package "Traversal & Build" {
+  class Traverser {
+    + walk(cfg)
+  }
+
+  class GlobalIdBuilder {
+    + makeId(path: [str]) : str
+  }
+
+  class ScopedIdMap {
+    + pushScope()
+    + popScope()
+    + set(local: str, global: str)
+    + get(name: str) : str?
+  }
+
+  class GraphBuilder {
+    + addNode(id, label, kind)
+    + addEdge(src, dst, lbl?)
+    + openSubgraph(id, label)
+    + closeSubgraph()
+  }
+}
+
+package "Composite Handling" {
+  class CompositeStrategy {
+    + createEntryExitIds()
+    + connectIncomingToEntry()
+    + connectExitToDependents()
+  }
+}
+
+package "Render" {
+  class MermaidWriter {
+    + toMermaid(nodes, edges, subgraphs) : str
+  }
+}
+
+CFG --> Traverser : parse YAML
+Traverser --> GlobalIdBuilder : path = [pipeline, parents..., step]
+Traverser --> ScopedIdMap : resolve depends_on (lexical)
+Traverser --> GraphBuilder : add nodes/edges
+Traverser --> CompositeStrategy : when step has children
+
+CompositeStrategy --> GraphBuilder : add entry/exit nodes
+CompositeStrategy --> ScopedIdMap : map compositeId → exitNodeId
+GraphBuilder --> MermaidWriter : nodes/edges/subgraphs
+MermaidWriter --> MMD : text
+@enduml

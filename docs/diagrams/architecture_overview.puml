@@ -5,51 +5,68 @@ skinparam classFontSize 12
 skinparam packageFontSize 14
 
 package "Core Pipeline" {
-    abstract class ConfigurablePipe {
-        +config: RegisterableConfig
+    abstract class Pipe {
+        +config: RenderedPipeConfig
         --
         +process(ctx: Context)
-        +_process_steps(ctx)
-        +_build_pipe_from_step_config()
+        +have_dependent_pipes_been_run(ctx)
         #{abstract} _process()
     }
-    
-    class RegisterableConfig {
-        +id: str
-        +name: str
-        +use: ImportString
-        +when: bool
-        +steps: list
+
+    class CompositePipe {
+        +_process_steps(ctx): list[PipeResult]
+        +_build_pipe_from_step_config(step_config, ctx): Pipe
+        +process(ctx: Context)
     }
-    
+
     class Context {
-        +pipes: dict
+        +pipes: dict[str, PipeResult]
         +config: dict
     }
-    
-    class DefaultPipe {
-        +_process()
+
+    class PipeResult {
+        +success: bool
+        +failed: bool
+        +message: str
+        +data: dict
     }
-    
-    class JinjaExpressionPipe {
-        +expr: str
-        --
-        +_process()
+}
+
+package "Pipeline Construction" {
+    class PipeFactory {
+        +create_pipe(parent_config, pipe_config, scope)
+        +create_registerable_instance(config, scope)
+        +_resolve_injects(injects, scope)
     }
 }
 
 package "Config System" {
+    class RegisterableConfig {
+        +uid: str
+        +id: str
+        +use: str
+        +injects: dict
+    }
+
+    class RenderedPipeConfig {
+        +_if: bool
+        +depends_on: list[str]
+        +steps: list
+    }
+
     class RawOpenTicketAIConfig {
         +plugins: list
         +general_config: dict
         +defs: list
         +orchestrator: list
     }
-    
-    class Jinja2Env {
+}
+
+package "Base Pipes" {
+    class JinjaExpressionPipe {
+        +expression
         --
-        +render(tmpl: str, scope)
-        +render_recursive(obj, scope)
+        +_process()
     }
 }
 
@@ -61,13 +78,13 @@ package "Dependency Injection" {
         +register_instance(inst)
         +get_instance(id: str)
     }
-    
+
     class Container {
         --
         +bind()
         +get()
     }
-    
+
     class InstanceCreator {
         --
         +create_instance()
@@ -162,19 +179,25 @@ package "Ticket System Pipes" {
 }
 
 ' Core relationships
-ConfigurablePipe --> RegisterableConfig : uses
-ConfigurablePipe --> Context : processes
-DefaultPipe --|> ConfigurablePipe
-JinjaExpressionPipe --|> ConfigurablePipe
+Pipe --> RenderedPipeConfig : renders to
+Pipe --> Context : updates
+CompositePipe --|> Pipe
+JinjaExpressionPipe --|> Pipe
+Context --> PipeResult : stores
+
+' Construction relationships
+PipeFactory --> Pipe : creates
+PipeFactory --> RegisterableConfig : validates
+CompositePipe --> PipeFactory : uses
 
 ' Config relationships
-ConfigurablePipe --> Jinja2Env : renders with
-RawOpenTicketAIConfig --> ConfigurablePipe : configures
+RawOpenTicketAIConfig --> RegisterableConfig : normalizes
+RenderedPipeConfig --|> RegisterableConfig
 
 ' Registry relationships
 UnifiedRegistry --> Container : manages
 Container --> InstanceCreator : uses
-ConfigurablePipe --> UnifiedRegistry : registers with
+Pipe --> UnifiedRegistry : requests services
 
 ' Ticket system relationships
 OTOBOZnunyTicketSystemService --|> TicketSystemService
@@ -194,8 +217,8 @@ RawTicketSystemBasePipeConfig --> RenderedTicketSystemBasePipeConfig : renders t
 RenderedTicketSystemBasePipeConfig --> TicketSystemService : contains
 
 ' Pipe inheritance
-AddNotePipe --|> ConfigurablePipe
-FetchTicketsPipe --|> ConfigurablePipe
-UpdateTicketPipe --|> ConfigurablePipe
+AddNotePipe --|> Pipe
+FetchTicketsPipe --|> Pipe
+UpdateTicketPipe --|> Pipe
 
 @enduml

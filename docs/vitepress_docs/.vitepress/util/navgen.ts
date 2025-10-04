@@ -26,7 +26,8 @@ export type NavGeneratorOptions = {
 }
 
 const defaultTitleTransform = (name: string) =>
-  name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+    name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+
 export class NavGenerator {
     private rootPath: string
     private allowedExtensions: string[]

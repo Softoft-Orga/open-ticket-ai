@@ -2,6 +2,7 @@
 description: Bridge the intelligence gap in open-source help desks like osTicket &
   Zammad. This guide shows how to use AI to automate ticket classification and workflows.
 ---
+
 # Open Source Ticket Systems, AI, and Automation: The Ultimate 2025 Guide to Transforming Support Workflows
 
 ## The Foundation: Why Smart Teams Still Bet on Open Source Help Desks

@@ -3,6 +3,7 @@ description: 'Learn to evaluate AI ticket classifiers on real, imbalanced data. 
   why accuracy is misleading and focus on metrics that matter: precision, recall &
   F1-score.'
 ---
+
 # Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter
 
 ## Introduction
@@ -33,8 +34,8 @@ the majority yields 99% accuracy despite no real learning. In
 short, a high accuracy can simply reflect class distribution, not genuine performance.
 
 > **“... accuracy is no longer a proper measure [for imbalanced datasets], since it does not
-distinguish between the numbers of correctly classified examples of different classes. Hence, it may
-lead to erroneous conclusions ...”.
+> distinguish between the numbers of correctly classified examples of different classes. Hence, it may
+> lead to erroneous conclusions ...”.
 
 ## Core Metrics: Precision, Recall, F1
 

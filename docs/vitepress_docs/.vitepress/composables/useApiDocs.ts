@@ -1,4 +1,4 @@
-import { reactive, toRefs, readonly } from 'vue';
+import {reactive, readonly, toRefs} from 'vue';
 
 // --- (All your interface definitions like ParameterData, ClassData, etc., remain here) ---
 export interface ParameterData {
@@ -77,7 +77,7 @@ async function fetchAndProcessApiData() {
             throw new Error(`Failed to fetch API documentation: ${response.statusText}`);
         }
         const apiData: ModuleEntry[] = await response.json();
-        
+
         // Build maps in temporary variables to avoid triggering reactivity on every item added.
         const tempPackages = new Map<string, ModuleEntry>();
         const tempClasses = new Map<string, ClassDataWithContext>();
@@ -87,7 +87,7 @@ async function fetchAndProcessApiData() {
             if (module.classes) {
                 for (const cls of module.classes) {
                     const classId = `${module.module_path.replace(/\//g, '.')}.${cls.name}`;
-                    tempClasses.set(classId, { ...cls, module_path: module.module_path });
+                    tempClasses.set(classId, {...cls, module_path: module.module_path});
                 }
             }
         }
