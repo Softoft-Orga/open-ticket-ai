@@ -53,7 +53,7 @@ definitions:
                     }}
                 depends_on: [ "update_ticket" ]
 
-            -   if: "{{ has_failed('update_ticket') and config.update_on_error }}"
+            -   if: "{{ has_failed('update_ticket') and config.update_on_error }}"3
                 <<: *default_ticket_update
                 updated_ticket: "{{ config.on_error_update_value | at_path(config.ticket_field) }}"
                 depends_on: [ "update_ticket" ]

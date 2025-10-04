@@ -15,3 +15,25 @@ And have the PipesConfig in a params dict.
 Write extensive tests to test the config behaviour before writing all the logic for it.
 
 
+Having Real branches:
+
+````yaml
+-   id: update_branch
+    type: if_else
+    condition: "{{ has_failed('update_ticket') and config.update_on_error }}"
+    depends_on: [ "update_ticket" ]
+    then:
+        -   id: update_branch_success
+    else:
+        -   id: update_branch_failure
+
+
+-   id: add_success_note
+    depends_on: [ "update_branch_success" ]
+
+-   id: add_failure_note
+    depends_on: [ "update_branch_failure" ]
+
+
+
+````
