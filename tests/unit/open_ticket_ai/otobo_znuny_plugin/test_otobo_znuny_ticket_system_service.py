@@ -34,26 +34,23 @@ class TestToIdName:
 
 
 class TestOTOBOZnunyTicketSystemService:
-    @pytest.fixture(autouse=True)
-    def patch_base_init(self, monkeypatch):
-        monkeypatch.setattr(
-            TicketSystemService,
-            "__init__",
-            lambda self, config: None,
-        )
+    @pytest.fixture
+    def config_dict(self):
+        return {
+            "password": "test_password",
+            "base_url": "https://test.otobo.com",
+            "username": "test_user",
+            "webservice_name": "TestService",
+        }
 
     @pytest.fixture
-    def config(self):
-        return RenderedOTOBOZnunyTicketsystemServiceConfig(
-            password=SecretStr("test_password"),
-            base_url="https://test.otobo.com",
-            username="test_user",
-            webservice_name="TestService",
-        )
+    def config(self, config_dict):
+        return RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(config_dict)
 
     @pytest.fixture
-    def service(self, config):
-        return OTOBOZnunyTicketSystemService(config)
+    def service(self, config_dict):
+        with patch("open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyTicketSystemService._recreate_client"):
+            return OTOBOZnunyTicketSystemService(config_dict)
 
 
     @pytest.fixture
@@ -64,6 +61,15 @@ class TestOTOBOZnunyTicketSystemService:
         client.get_ticket = AsyncMock()
         client.update_ticket = AsyncMock()
         return client
+
+    @pytest.fixture
+    def patch_ticket_conversion(self):
+        with patch("open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.otobo_ticket_to_unified_ticket") as mock_convert:
+            mock_convert.side_effect = lambda ticket: UnifiedTicket(
+                id=str(ticket.id),
+                subject=ticket.title,
+            )
+            yield mock_convert
 
     def test_initialization(self, service, config):
         assert service.config == config
@@ -81,10 +87,10 @@ class TestOTOBOZnunyTicketSystemService:
 
     def test_recreate_client(self, service, mock_client):
         with patch(
-            "open_ticket_ai.open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
+            "open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
             MockClientClass.return_value = mock_client
 
-            result = asyncio.run(service._recreate_client())
+            result = service._recreate_client()
 
             assert result == mock_client
             assert service._client == mock_client
@@ -94,12 +100,12 @@ class TestOTOBOZnunyTicketSystemService:
             assert login_arg.user_login == service.config.username
 
     def test_initialize(self, service, mock_client):
-        with patch.object(service, "_recreate_client", new_callable=AsyncMock) as mock_recreate:
+        with patch.object(service, "_recreate_client") as mock_recreate:
             mock_recreate.return_value = mock_client
 
-            asyncio.run(service.initialize())
+            service.initialize()
 
-            mock_recreate.assert_awaited_once()
+            mock_recreate.assert_called_once()
 
     def test_find_tickets_with_queue(self, service, mock_client, patch_ticket_conversion):
         service._client = mock_client
