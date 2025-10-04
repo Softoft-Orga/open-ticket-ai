@@ -70,3 +70,9 @@ mypy_path = "src"
 [[tool.mypy.overrides]]
 module = ["tests.*", "python_extras.*"]
 ignore_errors = true
+
+[tool.pytest]
+pythonpath = . src
+testpaths =
+    tests
+    open_ticket_ai/tests
