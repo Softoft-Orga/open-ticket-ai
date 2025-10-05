@@ -84,6 +84,52 @@ Contract tests automatically validate that all installed plugins:
 - Implement required hooks (register_pipes, register_services)
 - Declare compatible core API version
 
+## CLI Command Registration
+
+Plugins can expose CLI commands that integrate with the main `otai` command-line interface. This is useful for setup wizards, configuration tools, or maintenance utilities.
+
+### Implementing CLI Commands
+
+1. Create a `cli.py` module in your plugin with Click commands or groups:
+
+```python
+import click
+
+@click.group()
+def my_plugin():
+    """My plugin commands"""
+    pass
+
+@my_plugin.command()
+@click.option('--option', help='An option')
+def setup(option: str):
+    """Setup command for my plugin"""
+    click.echo(f"Setting up with option: {option}")
+
+def get_commands():
+    return [my_plugin]
+```
+
+2. Register the CLI commands in your plugin's `__init__.py`:
+
+```python
+def register_cli_commands():
+    from .cli import get_commands
+    return get_commands()
+```
+
+3. Commands are automatically discovered and added to the `otai` CLI when the plugin is installed.
+
+### Example: OTOBO/Znuny Setup
+
+The OTOBO/Znuny plugin provides an interactive setup command:
+
+```bash
+otai otobo-znuny setup --base-url "https://example.com" --output-config config.yml
+```
+
+This demonstrates how plugins can provide user-friendly setup wizards that generate configuration files, verify connections, and guide users through the integration process.
+
 ## Registering a Plug-in
 
 After packaging your code, wire it into the runtime through YAML:
