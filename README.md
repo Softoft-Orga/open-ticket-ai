@@ -53,6 +53,65 @@ Configuration files:
 
 For detailed information, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Workspace Architecture
+
+This repository uses a **uv workspace** to manage multiple Python packages as a monorepo:
+
+### Core vs Plugins
+
+- **Core Package** (`open-ticket-ai`)
+  - Located in root `pyproject.toml` with source code in `src/open_ticket_ai/`
+  - Provides the foundational AI pipeline framework, configuration system, and dependency injection
+  - Includes base pipes for ticket operations and template rendering
+  - Can be used standalone for custom implementations
+
+- **Plugin Packages**
+  - Each plugin is a separate workspace member with its own `pyproject.toml`
+  - `open-ticket-ai-hf-local` - HuggingFace local inference for text classification
+  - `open-ticket-ai-otobo-znuny-plugin` - OTOBO/Znuny ticket system integration
+  - Plugins extend core functionality without modifying core code
+
+### Plugin Discovery
+
+Plugins are discovered and loaded through:
+
+1. **Configuration-based registration** - Plugins define services in `config.yml`:
+   ```yaml
+   open_ticket_ai:
+     defs:
+       otobo_service:
+         use: "open_ticket_ai_otobo_znuny_plugin.OTOBOZnunyTicketSystemService"
+         # ... configuration
+   ```
+
+2. **Dependency injection** - Core uses the `UnifiedRegistry` to resolve plugin services by ID
+3. **YAML references** - Pipeline steps inject plugin services via `injects` declarations
+4. **Workspace dependencies** - The uv workspace ensures plugins can depend on the core package during development
+
+### Development Workflow
+
+The workspace configuration (in root `pyproject.toml`):
+```toml
+[tool.uv.workspace]
+members = [
+    "src/open_ticket_ai_hf_local",
+    "src/open_ticket_ai_otobo_znuny_plugin",
+]
+
+[tool.uv.sources]
+open-ticket-ai = { workspace = true }
+open-ticket-ai-hf-local = { workspace = true }
+open-ticket-ai-otobo-znuny-plugin = { workspace = true }
+```
+
+This allows:
+- Installing all packages together with `uv sync`
+- Cross-package imports during development
+- Centralized tooling (ruff, mypy, pytest) configured at the root
+- Independent versioning and publishing of each package
+
+For plugin development details, see [Plugin Developer Guide](https://open-ticket-ai.com/developers/plugins.html).
+
 ## Release Automation
 
 ### PyPI Publishing Workflow
