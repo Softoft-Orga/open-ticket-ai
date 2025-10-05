@@ -33,8 +33,7 @@ def test_metadata_fields_present(name, plugin, meta):
 @pytest.mark.parametrize("name,plugin,meta", list(discover_plugins()), ids=lambda x: x[0])
 def test_core_api_matches(name, plugin, meta):
     assert meta.get("core_api") == REQUIRED_CORE_API, (
-        f"Plugin {name} has incompatible core_api: {meta.get('core_api')} "
-        f"(expected {REQUIRED_CORE_API})"
+        f"Plugin {name} has incompatible core_api: {meta.get('core_api')} (expected {REQUIRED_CORE_API})"
     )
 
 
@@ -50,7 +49,6 @@ def test_register_hooks_exist(name, plugin, meta):
 def test_register_hooks_return_lists(name, plugin, meta):
     pipes = plugin.register_pipes()
     assert isinstance(pipes, list), f"Plugin {name} register_pipes() must return a list, got {type(pipes)}"
-    
+
     services = plugin.register_services()
     assert isinstance(services, list), f"Plugin {name} register_services() must return a list, got {type(services)}"
-

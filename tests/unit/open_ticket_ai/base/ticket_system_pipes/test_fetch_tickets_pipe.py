@@ -18,7 +18,7 @@ async def test_fetch_tickets_finds_tickets_by_queue(
         "ticket_search_criteria": {
             "queue": {"id": "1", "name": "Support"},
             "limit": 10,
-        }
+        },
     }
 
     pipe = FetchTicketsPipe(mocked_ticket_system, config)
@@ -48,7 +48,7 @@ async def test_fetch_tickets_with_pagination(
         "ticket_search_criteria": {
             "limit": 2,
             "offset": 1,
-        }
+        },
     }
 
     pipe = FetchTicketsPipe(mocked_ticket_system, config)
@@ -72,7 +72,7 @@ async def test_fetch_tickets_returns_empty_when_no_matches(
         "_if": True,
         "ticket_search_criteria": {
             "queue": {"id": "999", "name": "Nonexistent"},
-        }
+        },
     }
 
     pipe = FetchTicketsPipe(mocked_ticket_system, config)

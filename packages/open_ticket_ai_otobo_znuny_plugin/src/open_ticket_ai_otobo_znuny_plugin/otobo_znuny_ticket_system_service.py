@@ -2,9 +2,6 @@ import logging
 from typing import Any
 
 from injector import inject
-from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
-from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket, TicketSearch, TicketUpdate
-
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -12,6 +9,9 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
     UnifiedTicket,
 )
+from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
+from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket, TicketSearch, TicketUpdate
+
 from open_ticket_ai_otobo_znuny_plugin.models import otobo_ticket_to_unified_ticket
 from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import (
     RenderedOTOBOZnunyTicketsystemServiceConfig,
@@ -29,11 +29,7 @@ def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
-    def __init__(
-        self,
-        config_raw: dict[str, Any],
-        *args, **kwargs
-    ):
+    def __init__(self, config_raw: dict[str, Any], *args, **kwargs):
         super().__init__(config_raw, *args, **kwargs)
         self.config = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(config_raw)
         self._client: OTOBOZnunyClient | None = None

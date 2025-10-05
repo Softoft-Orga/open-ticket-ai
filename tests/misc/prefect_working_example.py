@@ -43,6 +43,7 @@ async def test_basic_prefect() -> None:
 
     # Import Prefect modules
     import prefect
+
     logger.info("✓ Prefect version: %s", prefect.__version__)
 
     # Run a simple flow

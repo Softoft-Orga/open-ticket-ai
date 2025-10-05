@@ -12,7 +12,6 @@ class CompositePipeConfig(RenderedPipeConfig):
 
 
 class CompositePipe(Pipe):
-
     def __init__(self, config_raw: dict[str, Any], factory: PipeFactory | None = None, *args, **kwargs) -> None:
         super().__init__(config_raw, factory, *args, **kwargs)
         self.config = CompositePipeConfig.model_validate(config_raw)
@@ -23,19 +22,15 @@ class CompositePipe(Pipe):
 
     def _build_pipe_from_step_config(self, step_config: dict[str, Any], context: Context) -> Pipe:
         # Render the parent config before passing it to child pipes
-        parent_config_rendered = self._factory.render_pipe_config(
-            self.config.model_dump(),
-            context.model_dump()
-        )
+        parent_config_rendered = self._factory.render_pipe_config(self.config.model_dump(), context.model_dump())
         return self._factory.create_pipe(parent_config_rendered, step_config, context.model_dump())
 
     async def _process_steps(self, context: Context) -> list[PipeResult]:
-
         results: list[PipeResult] = []
 
         current_context = context
 
-        from open_ticket_ai.core.pipeline.prefect_flows import is_in_prefect_context, execute_single_pipe_task
+        from open_ticket_ai.core.pipeline.prefect_flows import execute_single_pipe_task, is_in_prefect_context
 
         use_prefect = is_in_prefect_context()
 
@@ -45,7 +40,7 @@ class CompositePipe(Pipe):
             if use_prefect and self._app_config:
                 retries = step_pipe_config_raw.get("retries", 2)
                 retry_delay_seconds = step_pipe_config_raw.get("retry_delay_seconds", 30)
-                
+
                 context_data = current_context.model_dump()
                 updated_context_data = await execute_single_pipe_task(
                     app_config=self._app_config,
@@ -67,7 +62,6 @@ class CompositePipe(Pipe):
         return results
 
     async def process(self, context: Context) -> Context:
-
         if self.config.if_ and self.have_dependent_pipes_been_run(context):
             steps_result: list[PipeResult] = await self._process_steps(context)
 

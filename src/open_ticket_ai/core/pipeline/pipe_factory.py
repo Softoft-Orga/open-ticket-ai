@@ -81,7 +81,6 @@ class PipeFactory:
         return self.create_registerable_instance(config_raw, scope)
 
     def create_registerable_instance(self, registerable_config_raw: dict[str, Any], scope: dict[str, Any]) -> Any:
-
         registerable_config = RegisterableConfig.model_validate(registerable_config_raw)
         cls: type = _locate(registerable_config.use)
         kwargs: dict[str, Any] = {}

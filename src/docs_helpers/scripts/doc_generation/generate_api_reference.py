@@ -13,7 +13,6 @@ from pathlib import Path
 
 from docstring_parser import Docstring, DocstringParam, DocstringRaises, parse
 
-
 # --- Data Models (using Dataclasses) ---
 
 
@@ -284,5 +283,6 @@ def generate_documentation(
         json.dump(all_module_data, f, indent=2, cls=DataClassJSONEncoder)
 
     print(f"\n✅ JSON documentation successfully generated at: {output_path.resolve()}")
+
 
 # --- Example Usage ---

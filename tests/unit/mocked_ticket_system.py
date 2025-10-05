@@ -70,7 +70,7 @@ class MockedTicketSystem(TicketSystemService):
         # Apply pagination
         offset = criteria.offset or 0
         limit = criteria.limit or 10
-        return results[offset:offset + limit]
+        return results[offset : offset + limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         """Find the first ticket matching the criteria."""
@@ -119,6 +119,7 @@ class MockedTicketSystem(TicketSystemService):
         """Add a test ticket with provided fields. Returns ticket ID."""
         ticket = UnifiedTicket(**kwargs)
         import asyncio
+
         return asyncio.run(self.create_ticket(ticket))
 
     def get_all_tickets(self) -> list[UnifiedTicket]:

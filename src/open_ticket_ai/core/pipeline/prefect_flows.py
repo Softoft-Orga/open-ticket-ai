@@ -13,11 +13,11 @@ from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.pipeline.orchestrator_config import RunnerDefinition
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
-from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
     TemplateRendererEnvConfig,
 )
+from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 log = logging.getLogger(__name__)
 
@@ -29,11 +29,19 @@ def _build_template_renderer_from_app_config(app_config_dict: dict[str, Any]) ->
     if rtype != "jinja":
         raise ValueError(f"Unsupported template renderer type: {rtype}")
     params = tr.get("params", {}) or {}
-    
-    env_config_fields = {"prefix", "extra_prefixes", "allowlist", "denylist", "key", "provider", "refresh_env_on_each_render"}
+
+    env_config_fields = {
+        "prefix",
+        "extra_prefixes",
+        "allowlist",
+        "denylist",
+        "key",
+        "provider",
+        "refresh_env_on_each_render",
+    }
     env_params = {}
     jinja_params = {}
-    
+
     for k, v in params.items():
         if k.startswith("env_"):
             field_name = k.replace("env_", "")
@@ -42,10 +50,10 @@ def _build_template_renderer_from_app_config(app_config_dict: dict[str, Any]) ->
             env_params[k] = v
         elif k != "config":
             jinja_params[k] = v
-    
+
     env_config = TemplateRendererEnvConfig(**env_params) if env_params else TemplateRendererEnvConfig()
     jinja_config = JinjaRendererConfig(env_config=env_config, **jinja_params)
-    
+
     return JinjaRenderer(config=jinja_config)
 
 
@@ -85,7 +93,7 @@ def create_pipe_task(pipe_id: str, retries: int = 2, retry_delay_seconds: int = 
     ) -> dict[str, Any]:
         log.info("Executing pipe '%s' as Prefect task", pipe_id)
         return await _execute_pipe_internal(app_config, pipe_config, context_data, pipe_id)
-    
+
     return pipe_task
 
 

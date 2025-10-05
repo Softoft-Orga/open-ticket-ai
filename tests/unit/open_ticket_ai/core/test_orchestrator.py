@@ -28,9 +28,7 @@ def test_orchestrator_config_from_raw() -> None:
 
 
 def test_orchestrator_starts_and_stops_runners() -> None:
-    config = RawOpenTicketAIConfig(
-        orchestrator=[{"run_every_milli_seconds": 10, "pipe": {"id": "demo"}}]
-    )
+    config = RawOpenTicketAIConfig(orchestrator=[{"run_every_milli_seconds": 10, "pipe": {"id": "demo"}}])
     pipe_factory = MagicMock()
     process_mock = AsyncMock(return_value=Context())
     pipe_factory.create_pipe.return_value = SimpleNamespace(process=process_mock)

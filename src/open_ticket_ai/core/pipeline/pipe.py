@@ -3,13 +3,12 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from ..config.registerable_class import RegisterableClass
 from .context import Context
 from .pipe_config import PipeResult, RenderedPipeConfig
-from ..config.registerable_class import RegisterableClass
 
 
 class Pipe(RegisterableClass):
-
     def __init__(self, config_raw: dict[str, Any], *args, **kwargs) -> None:
         super().__init__(config_raw, *args, **kwargs)
         self.config = RenderedPipeConfig.model_validate(config_raw)
@@ -33,15 +32,12 @@ class Pipe(RegisterableClass):
         return context
 
     async def __process_and_save(self, context: Context) -> Context:
-
         new_context = context.model_copy()
 
         try:
-
             pipe_result = await self._process()
 
         except Exception as e:
-
             self._logger.error(f"Error in pipe {self.config.id}: {str(e)}", exc_info=True)
 
             pipe_result = PipeResult(success=False, failed=True, message=str(e))
@@ -51,5 +47,4 @@ class Pipe(RegisterableClass):
         return updated_context
 
     async def _process(self) -> PipeResult:
-
         pass

@@ -1,19 +1,20 @@
 import logging
 import os
+from collections.abc import Callable, Mapping
 from types import MappingProxyType
-from typing import Any, Mapping, Callable
+from typing import Any
 
 from jinja2.sandbox import SandboxedEnvironment
 
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
-from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig, TemplateRendererEnvConfig
 from open_ticket_ai.core.template_rendering.jinja_registry import (
     get_registered_methods,
     get_registered_variables,
     jinja_template_method,
     jinja_variable,
 )
+from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig, TemplateRendererEnvConfig
+from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
 class JinjaRenderer(TemplateRenderer):
@@ -54,14 +55,14 @@ class JinjaRenderer(TemplateRenderer):
         env_config = config.env_config
 
         self.env = config.env or SandboxedEnvironment(
-            autoescape=config.autoescape,
-            trim_blocks=config.trim_blocks,
-            lstrip_blocks=config.lstrip_blocks
+            autoescape=config.autoescape, trim_blocks=config.trim_blocks, lstrip_blocks=config.lstrip_blocks
         )
 
         def _build_filtered_env() -> dict[str, str]:
             src = dict(env_config.provider()) if env_config.provider else dict(os.environ)
-            pref_ok = {env_config.prefix, *env_config.extra_prefixes} if env_config.prefix else set(env_config.extra_prefixes)
+            pref_ok = (
+                {env_config.prefix, *env_config.extra_prefixes} if env_config.prefix else set(env_config.extra_prefixes)
+            )
 
             def _pref(k: str) -> bool:
                 return True if not pref_ok else any(k.startswith(p) for p in pref_ok)

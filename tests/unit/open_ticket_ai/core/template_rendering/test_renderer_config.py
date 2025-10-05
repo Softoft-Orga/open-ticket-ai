@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-import os
-
 from open_ticket_ai.core.template_rendering.renderer_config import (
-    TemplateRendererEnvConfig,
-    TemplateRendererConfig,
     JinjaRendererConfig,
+    TemplateRendererConfig,
+    TemplateRendererEnvConfig,
 )
 
 
@@ -40,7 +38,7 @@ def test_template_renderer_env_config_custom_values():
 def test_template_renderer_env_config_with_provider():
     def custom_provider():
         return {"TEST_VAR": "test_value"}
-    
+
     config = TemplateRendererEnvConfig(provider=custom_provider)
     assert config.provider is not None
     assert config.provider() == {"TEST_VAR": "test_value"}
@@ -94,10 +92,10 @@ def test_jinja_renderer_config_inherits_env_config():
 def test_jinja_renderer_config_model_dump_excludes_callables():
     def custom_provider():
         return {"TEST": "value"}
-    
+
     env_config = TemplateRendererEnvConfig(provider=custom_provider)
     config = JinjaRendererConfig(env_config=env_config)
-    
+
     dumped = config.model_dump()
     assert "provider" not in dumped["env_config"]
     assert "env" not in dumped

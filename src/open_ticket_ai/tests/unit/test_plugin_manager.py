@@ -40,7 +40,6 @@ def test_plugin_manager_initialization(plugin_manager):
 
 
 def test_plugin_manager_discover_loads_once(plugin_manager, monkeypatch):
-
     def mock_entry_points(group):
         if group == PLUGIN_GROUP:
             ep = MagicMock()
