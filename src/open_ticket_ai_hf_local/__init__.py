@@ -11,4 +11,3 @@ __all__ = [
     "register_pipes",
     "register_services",
 ]
-

@@ -22,10 +22,9 @@ def get_metadata() -> dict[str, str]:
     }
 
 
-def register_pipes(registry) -> None:
+def register_pipes(registry: object) -> None:
     pass
 
 
-def register_services(registry) -> None:
+def register_services(registry: object) -> None:
     pass
-
