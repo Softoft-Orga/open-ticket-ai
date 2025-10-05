@@ -46,10 +46,14 @@ dependencies = [
     "pyfiglet>=1.0.4",
     "tenacity>=9.0.0",
     "prefect~=3.4.20",
+    "typer>=0.9.0",
 ]
 
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
+
+[project.scripts]
+otai = "open_ticket_ai.cli.main:app"
 
 [project.optional-dependencies]
 dev = [
