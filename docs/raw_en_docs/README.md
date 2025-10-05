@@ -203,6 +203,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for comprehensive guidance on:
 - Testing and quality assurance
 - Contribution workflow
 
+### Plugin Development
+
+For plugin developers:
+- **[PLUGIN_STANDARDS.md](PLUGIN_STANDARDS.md)** - Complete plugin packaging and metadata standards
+- **[docs/PLUGIN_QUICK_REFERENCE.md](docs/PLUGIN_QUICK_REFERENCE.md)** - Quick reference guide
+- **Plugin validation**: Run `python scripts/validate_plugins.py` to check compliance
 ### Testing
 
 This repository uses a comprehensive testing strategy with different test types and CI stages:

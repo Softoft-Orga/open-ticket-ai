@@ -24,6 +24,9 @@ Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/src/open_t
 keywords = ["ai", "ticket-system", "huggingface", "text-classification", "nlp", "automation"]
 license = { text = "LGPL-2.1-only" }
 
+[project.entry-points."open_ticket_ai.plugins"]
+hf_local = "open_ticket_ai_hf_local"
+
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
