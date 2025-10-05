@@ -32,6 +32,9 @@ Homepage = "https://open-ticket-ai.com"
 [project.entry-points."open_ticket_ai.plugins"]
 otobo_znuny = "open_ticket_ai_otobo_znuny_plugin"
 
+[tool.uv.sources]
+open-ticket-ai = { workspace = true }
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"

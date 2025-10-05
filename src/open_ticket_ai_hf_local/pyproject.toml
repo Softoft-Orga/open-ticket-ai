@@ -4,12 +4,25 @@ description = "Hugging Face local text classification plugin for Open Ticket AI"
 version = "1.0.0rc1"
 readme = "README.md"
 requires-python = ">=3.13"
+keywords = ["ai", "ticket-system", "huggingface", "text-classification", "nlp", "automation"]
+license = { text = "LGPL-2.1-only" }
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
 
-readme = "README.md"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
 dependencies = [
     "open-ticket-ai>=1.0.0rc1,<2.0.0",
@@ -26,21 +39,8 @@ Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/src/open_t
 [project.entry-points."open_ticket_ai.plugins"]
 hf_local = "open_ticket_ai_hf_local"
 
-keywords = ["ai", "ticket-system", "huggingface", "text-classification", "nlp", "automation"]
-license = { text = "LGPL-2.1-only" }
-
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Information Technology",
-    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Text Processing :: Linguistic",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-]
+[tool.uv.sources]
+open-ticket-ai = { workspace = true }
 
 [project.optional-dependencies]
 dev = [
