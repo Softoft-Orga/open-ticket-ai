@@ -1,0 +1,28 @@
+[project]
+name = "open-ticket-ai-otobo-znuny-plugin"
+version = "1.0.0rc1"
+description = "OTOBO/Znuny ticket system plugin for Open Ticket AI"
+requires-python = ">=3.13"
+
+authors = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
+license = { text = "LGPL-2.1-only" }
+
+dependencies = [
+    "open-ticket-ai>=1.0.0rc1",
+    "otobo-znuny>=1.4.0",
+    "injector~=0.22.0",
+    "pydantic~=2.11.7",
+]
+
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["open_ticket_ai_otobo_znuny_plugin*"]

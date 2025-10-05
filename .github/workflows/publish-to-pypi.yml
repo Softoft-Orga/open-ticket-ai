@@ -1,0 +1,71 @@
+name: Build and Publish to PyPI
+
+on:
+  workflow_call:
+    inputs:
+      package-name:
+        required: true
+        type: string
+        description: 'Name of the package to build and publish'
+      package-path:
+        required: true
+        type: string
+        description: 'Path to the package directory containing pyproject.toml'
+      dry-run:
+        required: false
+        type: boolean
+        default: false
+        description: 'If true, build but do not publish to PyPI'
+    secrets:
+      PYPI_API_TOKEN:
+        required: false
+        description: 'PyPI API token for publishing'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+      
+      - name: Build package
+        run: |
+          cd ${{ inputs.package-path }}
+          python -m build
+      
+      - name: Check built package
+        run: |
+          cd ${{ inputs.package-path }}
+          twine check dist/*
+      
+      - name: Publish to PyPI (dry-run)
+        if: inputs.dry-run
+        run: |
+          echo "Dry-run mode: Would publish package ${{ inputs.package-name }}"
+          ls -la ${{ inputs.package-path }}/dist/
+      
+      - name: Publish to PyPI
+        if: ${{ !inputs.dry-run }}
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          cd ${{ inputs.package-path }}
+          twine upload dist/*
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.package-name }}-dist
+          path: ${{ inputs.package-path }}/dist/

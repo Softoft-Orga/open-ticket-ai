@@ -18,17 +18,14 @@ dependencies = [
     "pytest-asyncio~=0.24.0",
     "pluggy",
     "pygments",
-    "transformers[torch]~=4.52.4",
     "injector~=0.22.0",
     "requests~=2.32.4",
     "httpx>=0.28.1",
     "jinja2>=3.1.6",
-    "huggingface-hub[hf-xet]>=0.33.0",
     "openai>=1.108.1",
     "mdxlate>=0.1.0",
     "pathspec>=0.12.1",
     "docstring-parser>=0.17.0",
-    "otobo-znuny>=1.4.0",
     "pyfiglet>=1.0.4",
     "tenacity>=9.0.0",
     "prefect~=3.4.20",
@@ -44,9 +41,14 @@ dev = [
     "pytest~=8.4.0",
 ]
 
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["open_ticket_ai*"]
+include = ["open_ticket_ai"]
+exclude = ["open_ticket_ai_hf_local", "open_ticket_ai_otobo_znuny_plugin"]
 
 [tool.ruff]
 line-length = 120
