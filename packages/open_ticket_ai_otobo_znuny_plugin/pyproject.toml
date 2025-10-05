@@ -21,6 +21,17 @@ Homepage = "https://open-ticket-ai.com"
 Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
 Documentation = "https://open-ticket-ai.com/en/guide/available-plugins.html"
 
+[project.optional-dependencies]
+dev = [
+    "pytest~=8.4.0",
+    "pytest-asyncio~=0.24.0",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+    "build",
+    "twine",
+]
+
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
