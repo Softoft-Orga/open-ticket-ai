@@ -35,6 +35,24 @@ pip install open-ticket-ai-hf-local
 pip install open-ticket-ai-otobo-znuny-plugin
 ```
 
+## Repository Structure
+
+This repository uses a monorepo structure containing the core application and plugins:
+
+- **`src/open_ticket_ai/`** - Core application organized by domain (core, base, extras)
+- **`src/open_ticket_ai_hf_local/`** - HuggingFace local inference plugin package
+- **`src/open_ticket_ai_otobo_znuny_plugin/`** - OTOBO/Znuny integration plugin package
+- **`tests/`** - Test suite (unit, e2e, integration tests)
+- **`docs/`** - Documentation, diagrams, and configuration examples
+- **`packages/`** - Standalone package builds
+
+Configuration files:
+- **`pyproject.toml`** - Project metadata, dependencies, and tool configuration
+- **`uv.lock`** - Locked dependency versions for reproducible builds
+- **Runtime config** - YAML files validated with Pydantic models
+
+For detailed information, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Release Automation
 
 ### PyPI Publishing Workflow
@@ -114,7 +132,18 @@ The publishing workflow:
 
 ## Development
 
-See [docs/developer_process.md](docs/developer_process.md) for information about development workflows and automation.
+### Getting Started
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for comprehensive guidance on:
+- Repository structure and organization
+- Development setup and tooling
+- Coding standards and best practices
+- Testing and quality assurance
+- Contribution workflow
+
+### Development Workflows
+
+See [docs/developer_process.md](docs/developer_process.md) for information about automated processes.
 
 ## License
 
