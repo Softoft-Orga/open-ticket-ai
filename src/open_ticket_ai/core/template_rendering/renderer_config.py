@@ -16,7 +16,7 @@ class TemplateRendererEnvConfig(BaseModel):
         description="Custom environment provider function",
         exclude=True
     )
-    refresh_on_each_render: bool = Field(
+    refresh_env_on_each_render: bool = Field(
         default=False, 
         description="Whether to refresh environment variables on each render"
     )

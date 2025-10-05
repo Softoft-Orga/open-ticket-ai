@@ -29,8 +29,18 @@ def _build_template_renderer_from_app_config(app_config_dict: dict[str, Any]) ->
         raise ValueError(f"Unsupported template renderer type: {rtype}")
     params = tr.get("params", {}) or {}
     
-    env_params = {k.replace("env_", ""): v for k, v in params.items() if k.startswith("env_")}
-    jinja_params = {k: v for k, v in params.items() if not k.startswith("env_") and k != "config"}
+    env_config_fields = {"prefix", "extra_prefixes", "allowlist", "denylist", "key", "provider", "refresh_env_on_each_render"}
+    env_params = {}
+    jinja_params = {}
+    
+    for k, v in params.items():
+        if k.startswith("env_"):
+            field_name = k.replace("env_", "")
+            env_params[field_name] = v
+        elif k in env_config_fields:
+            env_params[k] = v
+        elif k != "config":
+            jinja_params[k] = v
     
     env_config = TemplateRendererEnvConfig(**env_params) if env_params else TemplateRendererEnvConfig()
     jinja_config = JinjaRendererConfig(env_config=env_config, **jinja_params)

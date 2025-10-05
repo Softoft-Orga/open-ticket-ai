@@ -40,7 +40,7 @@ class JinjaRenderer(TemplateRenderer):
                     denylist=env_denylist,
                     key=env_key,
                     provider=env_provider,
-                    refresh_on_each_render=refresh_env_on_each_render,
+                    refresh_env_on_each_render=refresh_env_on_each_render,
                 )
             )
         
@@ -69,12 +69,12 @@ class JinjaRenderer(TemplateRenderer):
         _static_env = MappingProxyType(_build_filtered_env())
 
         def get_env(key: str, default: str | None = None) -> str | None:
-            if self.config.env_config.refresh_on_each_render:
+            if self.config.env_config.refresh_env_on_each_render:
                 return _build_filtered_env().get(key, default)
             return _static_env.get(key, default)
 
         def get_envs() -> Mapping[str, str]:
-            if self.config.env_config.refresh_on_each_render:
+            if self.config.env_config.refresh_env_on_each_render:
                 return MappingProxyType(_build_filtered_env())
             return _static_env
 
