@@ -2,6 +2,13 @@ version = 1
 revision = 3
 requires-python = ">=3.13"
 
+[manifest]
+members = [
+    "open-ticket-ai",
+    "open-ticket-ai-hf-local",
+    "open-ticket-ai-otobo-znuny-plugin",
+]
+
 [[package]]
 name = "accelerate"
 version = "1.10.1"
@@ -545,11 +552,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/fe/85/a18508becfa01f1e4351b5e18651b06d210dbd96debccd48a452acccb901/huggingface_hub-0.35.0-py3-none-any.whl", hash = "sha256:f2e2f693bca9a26530b1c0b9bcd4c1495644dad698e6a0060f90e22e772c31e9", size = 563436, upload-time = "2025-09-16T13:49:30.627Z" },
 ]
 
-[package.optional-dependencies]
-hf-xet = [
-    { name = "hf-xet" },
-]
-
 [[package]]
 name = "humanize"
 version = "4.13.0"
@@ -1036,16 +1038,14 @@ wheels = [
 [[package]]
 name = "open-ticket-ai"
 version = "1.0.0rc1"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "docstring-parser" },
     { name = "httpx" },
-    { name = "huggingface-hub", extra = ["hf-xet"] },
     { name = "injector" },
     { name = "jinja2" },
     { name = "mdxlate" },
     { name = "openai" },
-    { name = "otobo-znuny" },
     { name = "pathspec" },
     { name = "pluggy" },
     { name = "prefect" },
@@ -1058,7 +1058,6 @@ dependencies = [
     { name = "pyyaml" },
     { name = "requests" },
     { name = "tenacity" },
-    { name = "transformers", extra = ["torch"] },
     { name = "typing-extensions" },
 ]
 
@@ -1073,13 +1072,11 @@ dev = [
 requires-dist = [
     { name = "docstring-parser", specifier = ">=0.17.0" },
     { name = "httpx", specifier = ">=0.28.1" },
-    { name = "huggingface-hub", extras = ["hf-xet"], specifier = ">=0.33.0" },
     { name = "injector", specifier = "~=0.22.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "mdxlate", specifier = ">=0.1.0" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "openai", specifier = ">=1.108.1" },
-    { name = "otobo-znuny", specifier = ">=1.4.0" },
     { name = "pathspec", specifier = ">=0.12.1" },
     { name = "pluggy" },
     { name = "prefect", specifier = "~=3.4.20" },
@@ -1094,10 +1091,58 @@ requires-dist = [
     { name = "requests", specifier = "~=2.32.4" },
     { name = "ruff", marker = "extra == 'dev'" },
     { name = "tenacity", specifier = ">=9.0.0" },
-    { name = "transformers", extras = ["torch"], specifier = "~=4.52.4" },
     { name = "typing-extensions" },
 ]
 provides-extras = ["dev"]
+
+[[package]]
+name = "open-ticket-ai-hf-local"
+version = "1.0.0rc1"
+source = { editable = "src/open_ticket_ai_hf_local" }
+dependencies = [
+    { name = "open-ticket-ai" },
+    { name = "pydantic" },
+    { name = "transformers", extra = ["torch"] },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "mypy", marker = "extra == 'dev'" },
+    { name = "open-ticket-ai", editable = "." },
+    { name = "pydantic", specifier = "~=2.11.7" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24.0" },
+    { name = "ruff", marker = "extra == 'dev'" },
+    { name = "transformers", extras = ["torch"], specifier = "~=4.52.4" },
+]
+provides-extras = ["dev"]
+
+[[package]]
+name = "open-ticket-ai-otobo-znuny-plugin"
+version = "1.0.0rc1"
+source = { editable = "src/open_ticket_ai_otobo_znuny_plugin" }
+dependencies = [
+    { name = "injector" },
+    { name = "open-ticket-ai" },
+    { name = "otobo-znuny" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "injector", specifier = "~=0.22.0" },
+    { name = "open-ticket-ai", editable = "." },
+    { name = "otobo-znuny", specifier = ">=1.4.0" },
+    { name = "pydantic", specifier = "~=2.11.7" },
+]
 
 [[package]]
 name = "openai"
