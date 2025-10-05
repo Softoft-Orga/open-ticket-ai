@@ -395,4 +395,4 @@ async def test_async_operation():
 
 - [Pytest Dokumentation](https://docs.pytest.org/)
 - [Pytest-asyncio](https://pytest-asyncio.readthedocs.io/)
-- [CONTRIBUTING.md](../CONTRIBUTING.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)

@@ -302,7 +302,7 @@ If you see `httpcore.ConnectError: All connection attempts failed` in Docker Com
 2. **prefect-init service** - Creates the default work pool automatically
 3. **Proper dependencies** - Worker waits for both server health and init completion
 
-See [DOCKER_COMPOSE_SETUP.md](./DOCKER_COMPOSE_SETUP.md) for detailed Docker deployment guide.
+See [DOCKER_COMPOSE_SETUP.md](DOCKER_COMPOSE_SETUP.md) for detailed Docker deployment guide.
 
 **Quick fix for existing deployments**:
 

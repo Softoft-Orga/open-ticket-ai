@@ -109,9 +109,9 @@ git tag otobo-znuny-v1.0.0
 
 For detailed information, see:
 
-- [SETUP_INSTRUCTIONS.md](docs/SETUP_INSTRUCTIONS.md) - Complete setup guide
-- [pypi_release_process.md](docs/pypi_release_process.md) - Release process
-- [workflow_architecture.md](docs/workflow_architecture.md) - Technical details
+- [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md) - Complete setup guide
+- [pypi_release_process.md](pypi_release_process.md) - Release process
+- [workflow_architecture.md](workflow_architecture.md) - Technical details
 - [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) - What was built
 
 ## 🎯 Next Steps
