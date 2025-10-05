@@ -36,3 +36,12 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["open_ticket_ai_otobo_znuny_plugin*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = [
+    "unit: schnelle, isolierte Tests",
+    "integration: core + plugin zusammen",
+    "slow: dauert länger"
+]

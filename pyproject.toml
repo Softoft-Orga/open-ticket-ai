@@ -88,6 +88,14 @@ ignore_errors = true
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
-testpaths = ["tests"]
+testpaths = ["tests", "src/open_ticket_ai_hf_local", "src/open_ticket_ai_otobo_znuny_plugin"]
+addopts = "-q"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "unit: schnelle, isolierte Tests",
+    "integration: core + plugin zusammen",
+    "contract: plugin-api-vertrag",
+    "e2e: end-to-end flows",
+    "slow: dauert länger"
+]
