@@ -227,6 +227,7 @@ def register_cli_commands():
         "configure": configure_command,
     }
 ```
+- `register_cli_commands()`: (Optional) Returns list of Click command/group objects for CLI integration
 
 ## Versioning
 
@@ -404,6 +405,10 @@ def register_pipes():
 
 def register_services():
     return []
+
+def register_cli_commands():
+    from .cli import get_commands
+    return get_commands()
 ```
 
 #### `minimal_pipe.py`

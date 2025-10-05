@@ -137,6 +137,33 @@ src/open_ticket_ai/otobo_znuny_plugin/otobo_znuny_ticket_system_service.py†L1-
    and add articles.
 3. Note the base URL of your GenericInterface endpoint, the web service name, and the credential you just created.
 
+### Quick Setup via CLI
+
+The plugin provides an interactive CLI setup command to help you configure your OTOBO/Znuny connection:
+
+```bash
+otai otobo-znuny setup
+```
+
+This command will:
+- Prompt you for your OTOBO/Znuny instance details (base URL, web service name, credentials)
+- Optionally verify the connection
+- Generate a configuration file for Open Ticket AI
+
+You can also provide all options via command-line flags:
+
+```bash
+otai otobo-znuny setup \
+  --base-url "https://your-otobo.com/otrs" \
+  --webservice-name "OpenTicketAI" \
+  --username "open_ticket_ai" \
+  --password "your-password" \
+  --verify-connection \
+  --output-config config.yml
+```
+
+**Note:** For security, it's recommended to use environment variables for passwords rather than command-line flags.
+
 ### Configure the ticket system
 
 The default config file registers the adapter as `otobo_znuny` and sources secrets from environment variables:
