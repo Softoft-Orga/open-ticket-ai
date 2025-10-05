@@ -12,6 +12,10 @@ from open_ticket_ai.core.config.config_models import (
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from open_ticket_ai.core.template_rendering.renderer_config import (
+    JinjaRendererConfig,
+    TemplateRendererEnvConfig,
+)
 
 
 class AppModule(Module):
@@ -43,4 +47,11 @@ class AppModule(Module):
         if renderer_type != "jinja":
             raise ValueError(f"Unsupported template renderer type: {renderer_type}")
         params = renderer_config.get("params", {})
-        return JinjaRenderer(**params)
+        
+        env_params = {k.replace("env_", ""): v for k, v in params.items() if k.startswith("env_")}
+        jinja_params = {k: v for k, v in params.items() if not k.startswith("env_") and k != "config"}
+        
+        env_config = TemplateRendererEnvConfig(**env_params) if env_params else TemplateRendererEnvConfig()
+        jinja_config = JinjaRendererConfig(env_config=env_config, **jinja_params)
+        
+        return JinjaRenderer(config=jinja_config)

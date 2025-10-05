@@ -11,11 +11,13 @@ from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
 
 class JinjaRenderer(TemplateRenderer):
     def __init__(
         self,
+        config: JinjaRendererConfig | None = None,
         env: SandboxedEnvironment | None = None,
         env_prefix: str = "OTAI_",
         env_extra_prefixes: tuple[str, ...] = (),
@@ -26,36 +28,57 @@ class JinjaRenderer(TemplateRenderer):
         refresh_env_on_each_render: bool = False,
     ):
         self._logger = logging.getLogger(__name__)
-        self.env = env or SandboxedEnvironment(autoescape=False, trim_blocks=True, lstrip_blocks=True)
+        
+        if config is None:
+            from open_ticket_ai.core.template_rendering.renderer_config import TemplateRendererEnvConfig
+            config = JinjaRendererConfig(
+                env=env,
+                env_config=TemplateRendererEnvConfig(
+                    prefix=env_prefix,
+                    extra_prefixes=env_extra_prefixes,
+                    allowlist=env_allowlist,
+                    denylist=env_denylist,
+                    key=env_key,
+                    provider=env_provider,
+                    refresh_on_each_render=refresh_env_on_each_render,
+                )
+            )
+        
+        self.config = config
+        self.env = config.env or SandboxedEnvironment(
+            autoescape=config.autoescape,
+            trim_blocks=config.trim_blocks,
+            lstrip_blocks=config.lstrip_blocks
+        )
         self.env.filters.setdefault("at_path", self._at_path)
 
         def _build_filtered_env() -> dict[str, str]:
-            src = dict(env_provider()) if env_provider else dict(os.environ)
-            pref_ok = {env_prefix, *env_extra_prefixes} if env_prefix else set(env_extra_prefixes)
+            src = dict(self.config.env_config.provider()) if self.config.env_config.provider else dict(os.environ)
+            pref_ok = {self.config.env_config.prefix, *self.config.env_config.extra_prefixes} if self.config.env_config.prefix else set(self.config.env_config.extra_prefixes)
 
             def _pref(k: str) -> bool:
                 return True if not pref_ok else any(k.startswith(p) for p in pref_ok)
 
             out = {k: v for k, v in src.items() if _pref(k)}
-            if env_allowlist is not None:
-                out = {k: v for k, v in out.items() if k in env_allowlist}
-            if env_denylist is not None:
-                out = {k: v for k, v in out.items() if k not in env_denylist}
+            if self.config.env_config.allowlist is not None:
+                out = {k: v for k, v in out.items() if k in self.config.env_config.allowlist}
+            if self.config.env_config.denylist is not None:
+                out = {k: v for k, v in out.items() if k not in self.config.env_config.denylist}
             return out
 
         _static_env = MappingProxyType(_build_filtered_env())
 
         def get_env(key: str, default: str | None = None) -> str | None:
-            if refresh_env_on_each_render:
+            if self.config.env_config.refresh_on_each_render:
                 return _build_filtered_env().get(key, default)
             return _static_env.get(key, default)
 
         def get_envs() -> Mapping[str, str]:
-            if refresh_env_on_each_render:
+            if self.config.env_config.refresh_on_each_render:
                 return MappingProxyType(_build_filtered_env())
             return _static_env
 
-        self.env.globals[env_key] = get_envs()
+        self.env.globals[self.config.env_config.key] = get_envs()
         self.env.globals["env_get"] = get_env
 
     @staticmethod
