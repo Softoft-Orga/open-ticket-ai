@@ -133,6 +133,49 @@ After implementing the class, register it under `open_ticket_ai.defs` (or
 template expressions in your definitions to inject environment variables or
 results from previous pipes.
 
+## How to Extend Templates
+
+The JinjaRenderer supports extension via Python decorators, allowing you to add custom template methods and global variables without modifying the core renderer. This is useful for adding domain-specific formatting, calculations, or data access in your templates.
+
+### Registering Template Methods
+
+Use the `@jinja_template_method` decorator to register functions as template methods or filters:
+
+```python
+from open_ticket_ai.core.template_rendering import jinja_template_method
+
+@jinja_template_method("format_priority")
+def format_priority(priority: int) -> str:
+    levels = {1: "Low", 2: "Medium", 3: "High", 4: "Critical"}
+    return levels.get(priority, "Unknown")
+```
+
+These can be used in any template:
+
+```jinja2
+Priority: {{ format_priority(ticket.priority) }}
+```
+
+### Registering Global Variables
+
+Use the `@jinja_variable` decorator to register global variables accessible in all templates:
+
+```python
+from open_ticket_ai.core.template_rendering import jinja_variable
+
+@jinja_variable("ticket_categories")
+def get_categories() -> list[str]:
+    return ["Bug", "Feature", "Support", "Question"]
+```
+
+Usage in templates:
+
+```jinja2
+{% if ticket.category in ticket_categories %}Valid category{% endif %}
+```
+
+For complete documentation and advanced examples, see the [Template Extensions Guide](./template-extensions.md).
+
 ## How to Integrate a New Ticket System
 
 To connect another help desk system, implement a new adapter that inherits from

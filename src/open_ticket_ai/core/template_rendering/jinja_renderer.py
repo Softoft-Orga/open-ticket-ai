@@ -11,6 +11,10 @@ from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from open_ticket_ai.core.template_rendering.jinja_registry import (
+    get_registered_methods,
+    get_registered_variables,
+)
 
 
 class JinjaRenderer(TemplateRenderer):
@@ -57,6 +61,12 @@ class JinjaRenderer(TemplateRenderer):
 
         self.env.globals[env_key] = get_envs()
         self.env.globals["env_get"] = get_env
+
+        for method_name, method_func in get_registered_methods().items():
+            self.env.globals[method_name] = method_func
+
+        for var_name, var_func in get_registered_variables().items():
+            self.env.globals[var_name] = var_func()
 
     @staticmethod
     def _coerce_path(path: Any) -> list[str]:
