@@ -175,6 +175,6 @@ prefect-server:
 
 ## Related Documentation
 
-- [PREFECT_SETUP.md](./PREFECT_SETUP.md) - Integration setup and components
-- [PREFECT_USAGE.md](./PREFECT_USAGE.md) - Usage guide and API reference
+- [PREFECT_SETUP.md](PREFECT_SETUP.md) - Integration setup and components
+- [PREFECT_USAGE.md](PREFECT_USAGE.md) - Usage guide and API reference
 - [Official Prefect Docker docs](https://docs.prefect.io/latest/guides/deployment/docker/)

@@ -202,7 +202,7 @@ For detailed test structure and best practices, see [docs/TESTING.md](docs/TESTI
 
 ### Development Workflows
 
-See [docs/developer_process.md](docs/developer_process.md) for information about automated processes.
+See [docs/developer_process.md](developer_process.md) for information about automated processes.
 
 ## License
 
