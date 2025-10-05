@@ -58,6 +58,31 @@ pip install open-ticket-ai-hf-local
 pip install open-ticket-ai-otobo-znuny-plugin
 ```
 
+## CLI Tool
+
+Open Ticket AI includes a command-line interface (CLI) tool for easy management:
+
+```bash
+# Initialize a new config from template
+otai init queue_classification
+
+# Validate configuration
+otai check-config config.yml
+
+# Start the application
+otai start --config config.yml
+
+# Manage plugins
+otai plugin list
+otai plugin install open-ticket-ai-hf-local
+otai plugin remove open-ticket-ai-hf-local
+
+# Upgrade OTAI
+otai upgrade
+```
+
+For detailed CLI usage, see the documentation at https://open-ticket-ai.com or run `otai --help`.
+
 ## Repository Structure
 
 This repository uses a monorepo structure containing the core application and plugins:

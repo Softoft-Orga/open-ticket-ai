@@ -12,6 +12,7 @@ This plugin enables Open Ticket AI to connect to OTOBO, Znuny, and legacy OTRS t
 - Update ticket fields (queue, priority, etc.)
 - Add notes/articles to tickets
 - Unified ticket model for seamless integration with Open Ticket AI pipelines
+- Interactive CLI setup wizard for easy configuration
 
 ## Installation
 
@@ -19,6 +20,34 @@ Install from PyPI:
 
 ```bash
 pip install open-ticket-ai-otobo-znuny-plugin
+```
+
+## Quick Start
+
+The plugin includes an interactive CLI setup wizard to help you get started:
+
+```bash
+otai otobo-znuny setup
+```
+
+This will guide you through:
+- Entering your OTOBO/Znuny instance URL
+- Configuring web service details
+- Testing the connection (optional)
+- Generating a configuration file
+
+### Non-interactive Setup
+
+You can also provide all options via command-line flags:
+
+```bash
+otai otobo-znuny setup \
+  --base-url "https://your-otobo.com/otrs" \
+  --webservice-name "OpenTicketAI" \
+  --username "open_ticket_ai" \
+  --password "your-password" \
+  --verify-connection \
+  --output-config config.yml
 ```
 
 ## Prerequisites

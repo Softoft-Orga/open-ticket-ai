@@ -1,5 +1,3 @@
-from .otobo_znuny_ticket_system_service import OTOBOZnunyTicketSystemService
-
 __version__ = "1.0.0rc1"
 
 __all__ = ["OTOBOZnunyTicketSystemService"]
@@ -19,4 +17,20 @@ def register_pipes():
 
 
 def register_services():
+    from .otobo_znuny_ticket_system_service import OTOBOZnunyTicketSystemService
     return [OTOBOZnunyTicketSystemService]
+
+def register_cli_commands():
+    import click
+    
+    @click.group()
+    def otobo_znuny_plugin():
+        pass
+    
+    @otobo_znuny_plugin.command()
+    def setup():
+        click.echo("OTOBO/Znuny plugin setup wizard")
+        click.echo("This command would guide you through configuring the plugin.")
+        click.echo("(Implementation placeholder)")
+    
+    return otobo_znuny_plugin

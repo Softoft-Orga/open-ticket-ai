@@ -84,6 +84,52 @@ Contract tests automatically validate that all installed plugins:
 - Implement required hooks (register_pipes, register_services)
 - Declare compatible core API version
 
+## CLI Command Registration
+
+Plugins can expose CLI commands that integrate with the main `otai` command-line interface. This is useful for setup wizards, configuration tools, or maintenance utilities.
+
+### Implementing CLI Commands
+
+1. Create a `cli.py` module in your plugin with Click commands or groups:
+
+```python
+import click
+
+@click.group()
+def my_plugin():
+    """My plugin commands"""
+    pass
+
+@my_plugin.command()
+@click.option('--option', help='An option')
+def setup(option: str):
+    """Setup command for my plugin"""
+    click.echo(f"Setting up with option: {option}")
+
+def get_commands():
+    return [my_plugin]
+```
+
+2. Register the CLI commands in your plugin's `__init__.py`:
+
+```python
+def register_cli_commands():
+    from .cli import get_commands
+    return get_commands()
+```
+
+3. Commands are automatically discovered and added to the `otai` CLI when the plugin is installed.
+
+### Example: OTOBO/Znuny Setup
+
+The OTOBO/Znuny plugin provides an interactive setup command:
+
+```bash
+otai otobo-znuny setup --base-url "https://example.com" --output-config config.yml
+```
+
+This demonstrates how plugins can provide user-friendly setup wizards that generate configuration files, verify connections, and guide users through the integration process.
+
 ## Registering a Plug-in
 
 After packaging your code, wire it into the runtime through YAML:
@@ -153,3 +199,48 @@ responses.
 By keeping the plug-in contract narrow—configuration models, a registry-friendly service class, and optional helper
 functions—you can extend Open Ticket AI to any ticketing platform while staying fully declarative from the
 orchestrator's perspective.
+
+## CLI Integration
+
+Open Ticket AI provides a CLI for managing plugins and accessing plugin-specific functionality.
+
+### Using the Plugin Management CLI
+
+```bash
+# List all installed plugins
+otai plugin list
+
+# Install a plugin from PyPI
+otai plugin install open-ticket-ai-otobo-znuny-plugin
+
+# Remove a plugin
+otai plugin remove open-ticket-ai-otobo-znuny-plugin
+```
+
+### Exposing Plugin CLI Commands
+
+Plugins can expose their own CLI commands by implementing the optional `register_cli_commands()` function:
+
+```python
+def register_cli_commands():
+    import click
+    
+    @click.group()
+    def my_plugin():
+        """My plugin CLI commands."""
+        pass
+    
+    @my_plugin.command()
+    def setup():
+        """Setup the plugin."""
+        click.echo("Running setup...")
+    
+    return my_plugin
+```
+
+Once registered, the command becomes available:
+```bash
+otai my_plugin setup
+```
+
+For more details, see the [CLI Usage Guide](../../../../docs/CLI_USAGE.md).
