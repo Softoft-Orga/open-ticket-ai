@@ -150,7 +150,7 @@ For plugin developers:
 
 ### Development Workflows
 
-See [docs/developer_process.md](docs/developer_process.md) for information about automated processes.
+See [docs/developer_process.md](developer_process.md) for information about automated processes.
 
 ## License
 
