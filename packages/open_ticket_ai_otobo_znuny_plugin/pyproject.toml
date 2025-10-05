@@ -1,0 +1,63 @@
+[project]
+name = "open-ticket-ai-otobo-znuny-plugin"
+version = "1.0.0"
+description = "OTOBO/Znuny/OTRS ticket system integration plugin for Open Ticket AI"
+requires-python = ">=3.13"
+
+authors = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
+license = { text = "LGPL-2.1-only" }
+readme = "README.md"
+
+dependencies = [
+    "pydantic~=2.11.7",
+    "otobo-znuny>=1.4.0",
+    "open-ticket-ai>=1.0.0rc1",
+]
+
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
+Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+Documentation = "https://open-ticket-ai.com/en/guide/available-plugins.html"
+
+[project.optional-dependencies]
+dev = [
+    "pytest~=8.4.0",
+    "pytest-asyncio~=0.24.0",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+    "build",
+    "twine",
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["open_ticket_ai_otobo_znuny_plugin*"]
+
+[tool.setuptools.package-data]
+open_ticket_ai_otobo_znuny_plugin = ["py.typed"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "PL", "PERF", "TRY"]
+ignore = ["TRY003"]
+fixable = ["ALL"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ['pydantic.mypy']
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
