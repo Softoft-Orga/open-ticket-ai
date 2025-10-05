@@ -114,7 +114,7 @@ uv run pytest --cov=open_ticket_ai tests/
 
 ### Test Organization
 
-For detailed information about the test structure, markers, fixtures, and best practices, see [docs/TESTING.md](docs/TESTING.md).
+For detailed information about the test structure, markers, fixtures, and best practices, see [docs/TESTING.md](TESTING.md).
 
 **Quick Overview**:
 - **Unit tests**: `tests/unit/` and `<plugin>/tests/` - Test individual components
@@ -379,13 +379,13 @@ npm run docs:build  # Production build
 - [RELEASE.md](RELEASE.md) - Versioning, release process, and compatibility requirements
 - [DEPRECATION_POLICY.md](DEPRECATION_POLICY.md) - Deprecation policy for Core and plugins
 - [QUICK_START.md](QUICK_START.md) - PyPI publishing guide
-- [docs/developer_process.md](docs/developer_process.md) - Automated processes
-- [docs/workflow_architecture.md](docs/workflow_architecture.md) - Technical architecture
-- [docs/pipeline_flow.md](docs/pipeline_flow.md) - Pipeline execution details
+- [docs/developer_process.md](developer_process.md) - Automated processes
+- [docs/workflow_architecture.md](workflow_architecture.md) - Technical architecture
+- [docs/pipeline_flow.md](pipeline_flow.md) - Pipeline execution details
 
 ## License
 
-This project is licensed under LGPL-2.1-only. See [LICENSE](LICENSE) for details.
+This project is licensed under LGPL-2.1-only. See [LICENSE](../../LICENSE) for details.
 
 ## Code of Conduct
 
