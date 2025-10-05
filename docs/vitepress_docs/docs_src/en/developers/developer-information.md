@@ -31,8 +31,14 @@ should run and how often the orchestrator should trigger it.
 An example command to start the application:
 
 ```bash
-python -m open_ticket_ai.src.ce.main start
+# Using the CLI tool
+otai start --config config.yml
+
+# Or using the Python module directly
+python -m open_ticket_ai.main
 ```
+
+For detailed CLI usage, see the [CLI Tool Reference](/en/guide/cli-tool-reference) guide.
 
 ## Pipeline Architecture
 
