@@ -4,7 +4,9 @@ This document defines the standards for Open Ticket AI plugin distributions to e
 
 ## Directory Structure
 
-Each plugin must follow this structure:
+Each plugin must follow one of these structures:
+
+### Option 1: Flat Structure (simpler for small plugins)
 
 ```
 src/open_ticket_ai_<plugin_name>/
@@ -12,9 +14,23 @@ src/open_ticket_ai_<plugin_name>/
 ├── README.md               # Plugin documentation
 ├── LICENSE                 # LGPL-2.1-only license file
 ├── CHANGELOG.md            # Version history
-├── __init__.py             # Plugin entry point with exports
+├── __init__.py             # Plugin entry point with metadata
+├── <module>.py             # Plugin modules
+└── tests/                  # Plugin-specific unit tests
+    └── ...
+```
+
+### Option 2: Nested Structure (recommended for complex plugins)
+
+```
+src/open_ticket_ai_<plugin_name>/
+├── pyproject.toml          # Package configuration
+├── README.md               # Plugin documentation
+├── LICENSE                 # LGPL-2.1-only license file
+├── CHANGELOG.md            # Version history
+├── __init__.py             # Top-level re-export
 ├── open_ticket_ai_<plugin_name>/  # Plugin source code
-│   ├── __init__.py
+│   ├── __init__.py         # Plugin entry point with metadata
 │   └── ...                 # Plugin modules
 └── tests/                  # Plugin-specific unit tests
     └── ...
@@ -74,6 +90,28 @@ Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/src/open_t
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+```
+
+### Package Configuration
+
+For flat structure (Option 1):
+```toml
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["open_ticket_ai_<plugin_name>*"]
+```
+
+For nested structure (Option 2):
+```toml
+[tool.setuptools]
+packages = ["open_ticket_ai_<plugin_name>"]
+```
+
+Or with auto-discovery:
+```toml
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["open_ticket_ai_<plugin_name>"]
 ```
 
 ### README.md
@@ -216,6 +254,16 @@ All plugins must pass contract tests defined in `tests/contract/test_plugin_cont
 
 3. Entry point registration
    - Plugin registered in `open_ticket_ai.plugins` entry point group
+
+### Validation Tools
+
+Run the plugin validation script to check compliance:
+
+```bash
+python scripts/validate_plugins.py
+```
+
+See [scripts/README.md](scripts/README.md) for details.
 
 ## Documentation
 
