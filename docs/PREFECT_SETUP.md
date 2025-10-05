@@ -18,8 +18,12 @@ The following Prefect integration components are **ready to use**:
 
 1. **`src/open_ticket_ai/core/pipeline/prefect_flows.py`**
     - `execute_pipe_task()` - Prefect task wrapper for pipe execution with retry logic
+    - `execute_single_pipe_task()` - Execute individual pipes as separate Prefect tasks
+    - `create_pipe_task()` - Dynamically create named Prefect tasks for each pipe
     - `execute_scheduled_pipe_flow()` - Prefect flow for scheduled pipes
-    - Includes automatic retries and error handling
+    - `is_in_prefect_context()` - Detect if code is running in Prefect context
+    - **Task-per-Pipe Architecture**: Each pipe appears as a separate task in Prefect UI
+    - Includes automatic retries and error handling per pipe
 
 2. **`src/open_ticket_ai/core/pipeline/prefect_orchestrator.py`**
     - `PrefectOrchestrator` class - Alternative to `Orchestrator` (APScheduler-based)
@@ -66,8 +70,20 @@ orchestrator:
       pipe:
         use: ProcessTickets
         queue: "my-queue"
+        retries: 3  # Optional: override default retry count (default: 2)
+        retry_delay_seconds: 60  # Optional: override default retry delay (default: 30)
       interval_seconds: 300  # Run every 5 minutes
 ```
+
+### 4. Task-per-Pipe Architecture
+
+**NEW**: Each pipe now runs as a separate Prefect task!
+
+- **Individual Task Visibility**: Each pipe appears as its own task in Prefect UI with name `pipe_{pipe_id}`
+- **Granular Retries**: Configure retry behavior per pipe using `retries` and `retry_delay_seconds`
+- **Better Error Isolation**: Failures in one pipe don't affect others in composite pipelines
+- **Composite Pipe Orchestration**: `CompositePipe` automatically dispatches steps as separate tasks
+- **Parallel Execution Ready**: Future support for parallel execution of independent pipes
 
 ## Features & Benefits
 

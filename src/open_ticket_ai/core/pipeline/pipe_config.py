@@ -20,6 +20,8 @@ class RenderedPipeConfig(RegisterableConfig):
     model_config = ConfigDict(extra="allow")
     if_: bool = Field(default=True, alias="if")
     depends_on: list[str] = []
+    retries: int = Field(default=2)
+    retry_delay_seconds: int = Field(default=30)
 
     @property
     def should_run(self) -> bool:

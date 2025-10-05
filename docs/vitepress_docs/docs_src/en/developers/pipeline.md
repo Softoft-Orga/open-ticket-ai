@@ -78,6 +78,8 @@ fields are:
   `False`, the pipe is skipped.
 - `depends_on` – a string or list of pipe IDs that must have succeeded (`PipeResult.success == True`) before this pipe
   runs.
+- `retries` – optional integer specifying how many times to retry on failure (default: 2, used by Prefect orchestration).
+- `retry_delay_seconds` – optional integer specifying delay between retries in seconds (default: 30, used by Prefect orchestration).
 - `config` / additional fields – arbitrary values that become attributes on the rendered config and can be consumed by
   the pipe.
 
@@ -121,6 +123,48 @@ custom pipes:
   criteria or thresholds).
 - Because intervals are expressed in milliseconds, `run_every_milli_seconds: 60000` triggers a run roughly once per
   minute.
+
+## Prefect Orchestration
+
+OpenTicketAI supports **Prefect** as an alternative orchestrator with enhanced observability and retry capabilities.
+
+### Task-per-Pipe Architecture
+
+When using Prefect, each pipe runs as an individual Prefect task:
+
+- **Atomic Pipes**: Each pipe's `_process()` method becomes a separate Prefect task named `pipe_{pipe_id}`
+- **Composite Pipes**: When running in a Prefect context, `CompositePipe` automatically dispatches each step as its own task
+- **Granular Control**: Each pipe can have its own retry configuration via `retries` and `retry_delay_seconds`
+
+### Configuration
+
+Add retry settings to any pipe:
+
+```yaml
+orchestrator:
+  - run_every_milli_seconds: 300000
+    pipe:
+      id: ticket_processor
+      use: ProcessTickets
+      retries: 3  # Override default retry count
+      retry_delay_seconds: 60  # Override default delay
+      steps:
+        - id: fetch
+          use: FetchTickets
+          retries: 5  # Critical step gets more retries
+        - id: classify
+          use: ClassifyTickets
+```
+
+### Benefits
+
+- **Visibility**: Each pipe appears as a separate task in Prefect UI
+- **Error Isolation**: Failures in one pipe don't block the entire pipeline
+- **Granular Metrics**: Track duration and success rates per pipe
+- **Retry Strategies**: Configure different retry behavior per pipe
+- **Observability**: Centralized logging and monitoring through Prefect dashboard
+
+See [PREFECT_SETUP.md](../../../PREFECT_SETUP.md) and [PREFECT_USAGE.md](../../../PREFECT_USAGE.md) for detailed setup and usage instructions.
 
 Armed with this structure you can compose complex ticket-processing workflows without changing Python code—simply adjust
 the YAML

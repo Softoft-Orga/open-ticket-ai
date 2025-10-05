@@ -42,24 +42,56 @@ orchestrator:
       pipe:
         use: ProcessTickets
         queue: "my-queue"
+        retries: 3  # Optional: per-pipe retry count (default: 2)
+        retry_delay_seconds: 60  # Optional: per-pipe retry delay (default: 30)
         # ... other pipe config
       interval_seconds: 300  # Run every 5 minutes
 
     - pipe_id: escalation_checker
       pipe:
         use: CheckEscalations
+        retries: 5  # Different retry config for critical operations
       interval_seconds: 600  # Run every 10 minutes
 ```
+
+### 4. Task-per-Pipe Architecture (NEW)
+
+**Each pipe now runs as an individual Prefect task!**
+
+When using Prefect, the pipeline execution model changes:
+
+- **Atomic Pipes**: Each atomic pipe's `_process()` runs as a separate Prefect task
+- **Composite Pipes**: Each step in a `CompositePipe` is dispatched as its own task
+- **Task Naming**: Tasks are named `pipe_{pipe_id}` for easy identification in Prefect UI
+- **Granular Control**: Configure retries and delays per pipe in your YAML config
+
+**Benefits:**
+- 🎯 **Better Observability**: See each pipe as a separate task in Prefect UI
+- 🔄 **Granular Retries**: Individual pipes can have different retry strategies
+- 🛡️ **Error Isolation**: Failures in one pipe don't block the entire pipeline
+- 📊 **Detailed Metrics**: Track duration and success rates per pipe
+- 🚀 **Future-Ready**: Architecture supports parallel execution of independent pipes
 
 ## Key Features
 
 ### ✨ Retry Logic
 
-Tasks automatically retry on failure:
+Each pipe can have its own retry configuration:
+
+```yaml
+pipe:
+  id: critical_operation
+  use: MyPipe
+  retries: 5  # Override default of 2
+  retry_delay_seconds: 120  # Override default of 30
+```
+
+Tasks automatically retry on failure with the configured settings. In code:
 
 ```python
-@task(name="execute_pipe", retries=2, retry_delay_seconds=30)
-async def execute_pipe_task(...):
+# Internally, each pipe creates its own task with custom retry settings
+@task(name=f"pipe_{pipe_id}", retries=5, retry_delay_seconds=120)
+async def pipe_task(...):
     # Your pipe execution logic
     pass
 ```
@@ -120,17 +152,37 @@ result = await orchestrator.run_once("my_pipe")
 
 ### Prefect Flows
 
-**`execute_scheduled_pipe_flow(pipe_factory, definition)`**
+**`execute_scheduled_pipe_flow(app_config, definition)`**
 
 - Wraps pipe execution in a Prefect flow
 - Provides observability and retry logic
 - Returns final context data after execution
+- Automatically dispatches composite pipe steps as individual tasks
 
-**`execute_pipe_task(pipe_factory, pipe_config, context_data, pipe_id)`**
+**`execute_pipe_task(app_config, pipe_config, context_data, pipe_id)`**
+
+- Legacy wrapper for backward compatibility
+- Delegates to `execute_single_pipe_task` with retry settings from config
+
+**`execute_single_pipe_task(app_config, pipe_config, context_data, pipe_id, retries, retry_delay_seconds)`** (NEW)
 
 - Executes a single pipe as a Prefect task
-- Configured with 2 retries and 30-second delay
+- Dynamically creates task with pipe ID in name: `pipe_{pipe_id}`
+- Configurable retry behavior per pipe
 - Returns updated context data
+- Used by `CompositePipe` for step orchestration
+
+**`create_pipe_task(pipe_id, retries, retry_delay_seconds)`** (NEW)
+
+- Factory function to create dynamically-named Prefect tasks
+- Enables each pipe to have a unique task name in Prefect UI
+- Returns configured task function
+
+**`is_in_prefect_context()`** (NEW)
+
+- Utility to detect if code is running within a Prefect task
+- Used by `CompositePipe` to enable task-per-step orchestration
+- Returns `True` if in Prefect context, `False` otherwise
 
 ## Advanced Usage
 
