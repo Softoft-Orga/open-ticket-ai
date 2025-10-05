@@ -10,7 +10,8 @@ from open_ticket_ai.core.pipeline import Orchestrator
 
 
 def get_project_info():
-    pyproject_path = Path("../../pyproject.toml")
+    current_file = Path(__file__).resolve()
+    pyproject_path = current_file.parent.parent / "pyproject.toml"
 
     defaults = {
         "name": "Open Ticket AI",

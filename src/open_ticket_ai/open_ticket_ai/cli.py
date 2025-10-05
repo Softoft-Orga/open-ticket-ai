@@ -1,4 +1,5 @@
 import typer
+
 from open_ticket_ai.core.plugins.manager import PluginManager
 
 cli = typer.Typer()

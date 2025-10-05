@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 
