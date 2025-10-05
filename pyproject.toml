@@ -64,7 +64,7 @@ dev = [
 ]
 
 [project.scripts]
-otai = "open_ticket_ai.cli:main"
+otai = "open_ticket_ai.cli.main:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]

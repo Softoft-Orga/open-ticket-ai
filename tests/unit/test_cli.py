@@ -11,13 +11,13 @@ class TestOtoboZnunyCLI:
         runner = CliRunner()
         result = runner.invoke(otobo_znuny, ["--help"])
         assert result.exit_code == 0
-        assert "setup" in result.output
+        assert "base-url" in result.output
 
     def test_setup_prompts_for_required_fields(self):
         runner = CliRunner()
         result = runner.invoke(
             otobo_znuny,
-            ["setup"],
+            [],
             input="https://example.com/otrs\nOpenTicketAI\nopen_ticket_ai\npassword123\n"
         )
         assert "OTOBO/Znuny base URL" in result.output
@@ -30,7 +30,6 @@ class TestOtoboZnunyCLI:
         result = runner.invoke(
             otobo_znuny,
             [
-                "setup",
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
                 "--username", "testuser",
@@ -51,7 +50,6 @@ class TestOtoboZnunyCLI:
         result = runner.invoke(
             otobo_znuny,
             [
-                "setup",
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
                 "--username", "testuser",
@@ -74,7 +72,6 @@ class TestOtoboZnunyCLI:
         result = runner.invoke(
             otobo_znuny,
             [
-                "setup",
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
                 "--username", "testuser",
@@ -95,7 +92,6 @@ class TestOtoboZnunyCLI:
         result = runner.invoke(
             otobo_znuny,
             [
-                "setup",
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
                 "--username", "testuser",
@@ -116,7 +112,6 @@ class TestOtoboZnunyCLI:
             result = runner.invoke(
                 otobo_znuny,
                 [
-                    "setup",
                     "--base-url", "https://example.com/otrs",
                     "--webservice-name", "TestService",
                     "--username", "testuser",
