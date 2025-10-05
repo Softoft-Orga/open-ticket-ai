@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 from pydantic import ValidationError
@@ -52,7 +52,7 @@ def get_config_examples_dir() -> Path:
 @app.command()
 def start(
     config: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--config", "-c", help="Path to config.yml file"),
     ] = None,
 ):
@@ -71,7 +71,7 @@ def start(
     
     typer.echo(f"🚀 Starting Open Ticket AI with config: {config_path}")
     
-    from open_ticket_ai.main import run
+    from open_ticket_ai.main import run  # noqa: PLC0415
     
     try:
         asyncio.run(run())
@@ -79,7 +79,7 @@ def start(
         typer.echo("\n⚠️  Shutdown requested...")
     except Exception as e:
         typer.echo(f"❌ Error: {e}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @app.command()
@@ -112,13 +112,13 @@ def check_config(
         for error in e.errors():
             loc = " -> ".join(str(x) for x in error["loc"])
             typer.echo(f"   {loc}: {error['msg']}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
     except ValueError as e:
         typer.echo(f"❌ Config validation failed: {e}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
     except Exception as e:
         typer.echo(f"❌ Unexpected error: {e}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @app.command()
@@ -167,7 +167,7 @@ def init(
         typer.echo(f"   4. Start with: otai start --config {output_path}")
     except Exception as e:
         typer.echo(f"❌ Error copying template: {e}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @plugin_app.command("list")
@@ -225,7 +225,7 @@ def plugin_install(
     except subprocess.CalledProcessError as e:
         typer.echo(f"❌ Failed to install {name}:", err=True)
         typer.echo(e.stderr, err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @plugin_app.command("remove")
@@ -256,7 +256,7 @@ def plugin_remove(
     except subprocess.CalledProcessError as e:
         typer.echo(f"❌ Failed to remove {name}:", err=True)
         typer.echo(e.stderr, err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @app.command()
@@ -271,9 +271,9 @@ def upgrade(
     try:
         current_version = md.version(package_name)
         typer.echo(f"📦 Current version: {current_version}")
-    except Exception:
+    except Exception as e:
         typer.echo(f"❌ Error: Could not determine current version of {package_name}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
     
     typer.echo("🔍 Checking for updates...")
     
@@ -316,7 +316,7 @@ def upgrade(
         typer.echo(f"❌ Error checking/upgrading: {e}", err=True)
         if e.stderr:
             typer.echo(e.stderr, err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @app.command()
