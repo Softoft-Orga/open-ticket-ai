@@ -126,7 +126,13 @@ Before deploying to production:
     - Monitor logs carefully
     - Verify results before scaling up
 
-3. **Test in a non-production environment first**:
+3. **Check runner count limits**:
+    - The orchestrator supports a maximum of 100 runners by default
+    - Review your `orchestrator` section to ensure you don't have duplicate or excessive entries
+    - Each entry creates a separate Prefect deployment
+    - Watch for warnings about duplicate pipe IDs in the logs
+
+4. **Test in a non-production environment first**:
     - Use a test queue
     - Create test tickets
     - Verify AI classifications are correct

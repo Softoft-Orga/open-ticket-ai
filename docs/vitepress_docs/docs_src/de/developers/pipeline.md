@@ -93,8 +93,13 @@ Jeder gespeicherte Zustand ist ein `PipeResult` (siehe `open_ticket_ai.core.pipe
 ## Hinweise zur Planung
 
 - Zeitplaneinträge in `orchestrator` sind unabhängig; jeder Lauf erhält einen frischen `Context`.
-- Mehrere Einträge können dieselbe Composite-Definition verwenden und nur Parameter überschreiben (z. B. Suchkriterien oder Schwellenwerte).
+- Mehrere Einträge können dieselbe Composite-Definition verwenden und nur Parameter überschreiben (z. B. Suchkriterien oder Schwellenwerte).
 - Intervalle werden in Millisekunden angegeben; `run_every_milli_seconds: 60000` entspricht ungefähr einem Lauf pro Minute.
+- **Ressourcenlimits**: Standardmäßig erlaubt der Orchestrator maximal 100 Runner-Deployments. Enthält Ihre Konfiguration mehr Runner,
+  schlägt der Start mit einem Fehler fehl. Dies verhindert Ressourcenüberlastung. Um dieses Limit anzupassen, kann die
+  Orchestrator-Konfiguration mit einem `max_runners`-Feld erweitert werden (erfordert Code-Änderungen).
+- **Duplikatserkennung**: Der Orchestrator warnt, wenn mehrere Runner dieselbe Pipe-ID referenzieren, was auf versehentliche
+  Duplikate in der Konfiguration hinweisen kann.
 
 Mit diesem Aufbau lassen sich komplexe Ticket-Workflows ohne Python-Codeänderungen modellieren – Konfiguration anpassen und der
 Orchestrator baut die Pipeline zur Laufzeit neu auf.

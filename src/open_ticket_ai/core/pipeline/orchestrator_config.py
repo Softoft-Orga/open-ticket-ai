@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Any, Iterable
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -27,10 +28,26 @@ class RunnerDefinition(BaseModel):
 
 class OrchestratorConfig(BaseModel):
     runners: list[RunnerDefinition] = Field(default_factory=list)
+    max_runners: int = Field(default=100, ge=1)
 
     @classmethod
     def from_raw(cls, raw_config: Iterable[dict[str, Any]] | None) -> OrchestratorConfig:
+        logger = logging.getLogger("OrchestratorConfig")
+        
         if not raw_config:
             return cls()
-        runners = [RunnerDefinition.model_validate(entry) for entry in raw_config]
+        
+        raw_list = list(raw_config)
+        runners = [RunnerDefinition.model_validate(entry) for entry in raw_list]
+        
+        pipe_ids = [r.pipe_id for r in runners]
+        unique_pipe_ids = set(pipe_ids)
+        if len(pipe_ids) != len(unique_pipe_ids):
+            duplicates = [pid for pid in unique_pipe_ids if pipe_ids.count(pid) > 1]
+            logger.warning(
+                "Duplicate pipe IDs detected in orchestrator configuration: %s. "
+                "This may result in multiple deployments for the same pipe.",
+                duplicates
+            )
+        
         return cls(runners=runners)

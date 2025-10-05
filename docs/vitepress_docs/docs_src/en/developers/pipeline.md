@@ -121,6 +121,11 @@ custom pipes:
   criteria or thresholds).
 - Because intervals are expressed in milliseconds, `run_every_milli_seconds: 60000` triggers a run roughly once per
   minute.
+- **Resource limits**: By default, the orchestrator allows a maximum of 100 runner deployments. If your configuration
+  contains more runners, startup will fail with an error. This prevents system resource exhaustion. To adjust this limit,
+  the orchestrator configuration can be extended with a `max_runners` field (requires code modification).
+- **Duplicate detection**: The orchestrator warns if multiple runners reference the same pipe ID, which may indicate
+  accidental duplication in your configuration.
 
 Armed with this structure you can compose complex ticket-processing workflows without changing Python code—simply adjust
 the YAML

@@ -60,10 +60,42 @@ class Orchestrator:
             self._logger.debug("Prefect orchestrator already running")
             return
 
-        self._logger.info("Starting Prefect orchestrator with %d runner(s)", len(self._config.runners))
+        runner_count = len(self._config.runners)
+        max_allowed = self._config.max_runners
+        
+        if runner_count > max_allowed:
+            error_msg = (
+                f"Configuration contains {runner_count} runner(s), "
+                f"but maximum allowed is {max_allowed}. "
+                f"Reduce the number of runners in your orchestrator configuration "
+                f"or increase max_runners limit to prevent system overload."
+            )
+            self._logger.error(error_msg)
+            raise ValueError(error_msg)
+        
+        if runner_count > max_allowed * 0.8:
+            self._logger.warning(
+                "Runner count (%d) is approaching the maximum limit (%d). "
+                "Consider reviewing your configuration to avoid hitting the limit.",
+                runner_count,
+                max_allowed
+            )
+
+        self._logger.info("Starting Prefect orchestrator with %d runner(s)", runner_count)
+        
         for index, definition in enumerate(self._config.runners):
-            deployment = await self._create_deployment(definition, index)
-            self._deployments.append(deployment)
+            try:
+                deployment = await self._create_deployment(definition, index)
+                self._deployments.append(deployment)
+            except Exception as e:
+                self._logger.error(
+                    "Failed to create deployment for pipe '%s' (index %d): %s",
+                    definition.pipe_id,
+                    index,
+                    str(e)
+                )
+                await self.stop()
+                raise
 
         self._running = True
         self._logger.info("Prefect orchestrator started successfully")
