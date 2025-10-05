@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "open-ticket-ai>=1.0.0rc1",
+    "open-ticket-ai>=1.0.0rc1,<2.0.0",
     "otobo-znuny>=1.4.0",
     "injector~=0.22.0",
     "pydantic~=2.11.7",
@@ -28,6 +28,9 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
+
+[project.entry-points."open_ticket_ai.plugins"]
+otobo_znuny = "open_ticket_ai_otobo_znuny_plugin"
 
 [build-system]
 requires = ["setuptools>=61.0"]

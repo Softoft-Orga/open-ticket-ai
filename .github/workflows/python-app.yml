@@ -21,7 +21,7 @@ jobs:
                 with:
                     python-version: '3.13'
             -   name: Install dependencies
-                run: uv sync --all-extras
+                run: uv sync --locked --all-extras
             -   name: Lint with ruff
                 run: |
                     uv run ruff format --check .
@@ -40,6 +40,6 @@ jobs:
                 with:
                     python-version: '3.13'
             -   name: Install dependencies
-                run: uv sync --all-extras
+                run: uv sync --locked --all-extras
             -   name: Test with pytest
                 run: uv run pytest .

@@ -12,7 +12,7 @@ authors = [
 readme = "README.md"
 
 dependencies = [
-    "open-ticket-ai>=1.0.0rc1",
+    "open-ticket-ai>=1.0.0rc1,<2.0.0",
     "transformers[torch]~=4.52.4",
     "pydantic~=2.11.7",
 ]
@@ -22,6 +22,9 @@ Homepage = "https://open-ticket-ai.com"
 Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
 Documentation = "https://open-ticket-ai.com/guide/available-plugins.html#hugging-face-local-text-classification-pipe"
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/src/open_ticket_ai_hf_local/CHANGELOG.md"
+
+[project.entry-points."open_ticket_ai.plugins"]
+hf_local = "open_ticket_ai_hf_local"
 
 keywords = ["ai", "ticket-system", "huggingface", "text-classification", "nlp", "automation"]
 license = { text = "LGPL-2.1-only" }

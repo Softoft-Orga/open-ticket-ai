@@ -15,6 +15,17 @@ This repository contains multiple Python packages that are published to PyPI:
 - **[open-ticket-ai-hf-local](https://pypi.org/project/open-ticket-ai-hf-local/)** - HuggingFace local inference plugin
 - **[open-ticket-ai-otobo-znuny-plugin](https://pypi.org/project/open-ticket-ai-otobo-znuny-plugin/)** - OTOBO/Znuny ticket system integration plugin
 
+### Version Compatibility
+
+The core package and plugins use independent versioning. Plugins declare compatibility with core versions:
+
+| Core Version | Plugin API | HF Local | OTOBO/Znuny | Status |
+|--------------|-----------|----------|-------------|--------|
+| 1.0.0rc1     | 2.0       | 1.0.0rc1 | 1.0.0rc1    | Beta   |
+| 1.x.x        | 2.0       | 1.x.x    | 1.x.x       | Compatible |
+
+Plugins specify core compatibility via dependency ranges (e.g., `open-ticket-ai>=1.0.0,<2.0.0`) and must match the Plugin API version defined in the core contract tests.
+
 ## Installation
 
 ### Core Package
@@ -118,6 +129,22 @@ Before releasing, update the version in the appropriate `pyproject.toml`:
 - Core package: `/pyproject.toml`
 - HF Local plugin: `/src/open_ticket_ai_hf_local/pyproject.toml`
 - OTOBO/Znuny plugin: `/src/open_ticket_ai_otobo_znuny_plugin/pyproject.toml`
+
+For comprehensive release procedures, compatibility requirements, and versioning policies, see [RELEASE.md](RELEASE.md).
+
+### Workspace and Dependency Locking
+
+This repository uses `uv` for workspace management with locked dependencies for reproducible builds. The workspace includes the core package and all plugins, managed from `uv.lock`.
+
+Lock dependencies after changes:
+```bash
+uv lock
+```
+
+CI uses locked versions to ensure reproducibility:
+```bash
+uv sync --locked
+```
 
 ### Workflow Details
 
