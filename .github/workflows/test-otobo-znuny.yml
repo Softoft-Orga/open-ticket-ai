@@ -40,7 +40,7 @@ jobs:
     - name: Run unit tests
       run: |
         cd src/open_ticket_ai_otobo_znuny_plugin
-        pytest -m unit tests/ -v
+        pytest tests/ -v
     
     - name: Run linter
       run: |

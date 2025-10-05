@@ -161,13 +161,7 @@ This repository uses a comprehensive testing strategy with different test types 
 # Run all tests
 pytest
 
-# Run specific test types
-pytest -m unit          # Only unit tests
-pytest -m integration   # Only integration tests
-pytest -m contract      # Only contract tests
-pytest -m e2e          # Only e2e tests
-
-# Run tests for specific components
+# Run specific test types by directory
 pytest tests/unit/              # Core unit tests
 pytest tests/integration/       # Core integration tests
 pytest tests/contract/          # Contract tests
@@ -177,6 +171,12 @@ pytest tests/e2e/              # E2E tests
 pytest src/open_ticket_ai_hf_local/tests/         # HF Local plugin
 pytest src/open_ticket_ai_otobo_znuny_plugin/tests/  # OTOBO/Znuny plugin
 
+# Run specific test types by marker
+pytest -m unit          # Only tests marked with @pytest.mark.unit
+pytest -m integration   # Only tests marked with @pytest.mark.integration
+pytest -m contract      # Only tests marked with @pytest.mark.contract
+pytest -m e2e          # Only tests marked with @pytest.mark.e2e
+
 # Skip slow tests
 pytest -m "not slow"
 ```
@@ -185,18 +185,18 @@ pytest -m "not slow"
 
 The CI pipeline runs different test stages:
 
-1. **Core Tests** (on push/PR):
+1. **Core Tests** (on push/PR to main/dev):
    - Lint with ruff and mypy
-   - Unit tests: `pytest -m unit tests/unit/`
-   - Integration tests: `pytest -m integration tests/integration/`
+   - Unit tests: All tests in `tests/unit/`
+   - Integration tests: All tests in `tests/integration/`
 
 2. **Plugin Tests** (on plugin changes):
-   - HF Local: Unit tests + linting + type checking
-   - OTOBO/Znuny: Unit tests + linting + type checking
+   - HF Local: Unit tests in `src/open_ticket_ai_hf_local/tests/` + linting + type checking
+   - OTOBO/Znuny: Unit tests in `src/open_ticket_ai_otobo_znuny_plugin/tests/` + linting + type checking
 
-3. **Nightly Tests** (scheduled or manual):
-   - Contract tests: Validate all installed plugins against core API
-   - E2E tests: Complete workflow testing
+3. **Nightly Tests** (scheduled at 2 AM UTC or manual trigger):
+   - Contract tests: All tests in `tests/contract/` - validates all installed plugins against core API
+   - E2E tests: All tests in `tests/e2e/` - complete workflow testing
 
 For detailed test structure and best practices, see [docs/TESTING.md](docs/TESTING.md).
 

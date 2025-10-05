@@ -42,7 +42,7 @@ jobs:
             -   name: Install dependencies
                 run: uv sync --all-extras
             -   name: Core Unit Tests
-                run: uv run pytest -m unit tests/unit/
+                run: uv run pytest tests/unit/ -v
 
     test-core-integration:
         runs-on: ubuntu-latest
@@ -57,4 +57,4 @@ jobs:
             -   name: Install dependencies
                 run: uv sync --all-extras
             -   name: Core Integration Tests
-                run: uv run pytest -m integration tests/integration/
+                run: uv run pytest tests/integration/ -v
