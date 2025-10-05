@@ -4,6 +4,7 @@ services:
         restart: "always"
         volumes:
             - ./config.yml:/app/config.yml:ro
+
     postgres:
         image: postgres:14
         environment:
