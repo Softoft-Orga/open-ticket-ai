@@ -14,6 +14,7 @@ class Pipe(RegisterableClass):
         super().__init__(config_raw, *args, **kwargs)
         self.config = RenderedPipeConfig.model_validate(config_raw)
         self._logger = logging.getLogger(self.__class__.__name__)
+        self._app_config = kwargs.get("app_config")
 
     def _save_pipe_result(self, context: Context, pipe_result: PipeResult) -> Context:
         context.pipes[self.config.id] = pipe_result

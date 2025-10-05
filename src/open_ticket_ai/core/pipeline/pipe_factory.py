@@ -88,6 +88,7 @@ class PipeFactory:
         kwargs |= self._resolve_injects(registerable_config.injects, scope)
         kwargs["config_raw"] = registerable_config_raw
         kwargs["factory"] = self
+        kwargs["app_config"] = self._app_config.model_dump()
         return cls(**kwargs)
 
     def _resolve_injects(self, injects: dict[str, Any], scope: dict[str, Any]) -> dict[str, Any]:
