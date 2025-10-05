@@ -9,8 +9,6 @@ authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
 
-readme = "README.md"
-
 dependencies = [
     "open-ticket-ai>=1.0.0rc1",
     "transformers[torch]~=4.52.4",
