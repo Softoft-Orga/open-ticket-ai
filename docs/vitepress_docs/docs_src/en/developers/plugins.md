@@ -44,6 +44,46 @@ Plug-ins typically expose:
 - **Conversion helpers** that translate between the remote API schema and Open Ticket AI's unified models.【F:
   src/open_ticket_ai/otobo_znuny_plugin/models.py†L1-L27】
 
+## Plugin Standards and Metadata
+
+All plugins must follow standardized packaging and metadata conventions defined in [PLUGIN_STANDARDS.md](../../../../PLUGIN_STANDARDS.md).
+
+### Required Plugin Interface
+
+Each plugin must expose three functions in its `__init__.py`:
+
+```python
+def get_metadata():
+    return {
+        "name": "open-ticket-ai-<plugin-name>",
+        "version": "X.Y.Z",
+        "core_api": "2.0",
+        "description": "Plugin description",
+    }
+
+def register_pipes():
+    return [PipeClass1, PipeClass2]
+
+def register_services():
+    return [ServiceClass1, ServiceClass2]
+```
+
+### Entry Points
+
+Plugins register via setuptools entry points in `pyproject.toml`:
+
+```toml
+[project.entry-points."open_ticket_ai.plugins"]
+<plugin_name> = "open_ticket_ai_<plugin_name>"
+```
+
+### Metadata Validation
+
+Contract tests automatically validate that all installed plugins:
+- Provide required metadata fields (name, version, core_api, description)
+- Implement required hooks (register_pipes, register_services)
+- Declare compatible core API version
+
 ## Registering a Plug-in
 
 After packaging your code, wire it into the runtime through YAML:
