@@ -46,6 +46,12 @@ services:
         command: prefect server start --no-services
         ports:
             - "4200:4200"
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:4200/api/health || exit 1"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
 
     prefect-services:
         image: prefecthq/prefect:3-latest
@@ -63,11 +69,30 @@ services:
             PREFECT_REDIS_MESSAGING_DB: 0
         command: prefect server services start
 
+    prefect-init:
+        image: prefecthq/prefect:3-latest
+        depends_on:
+            prefect-server:
+                condition: service_healthy
+        environment:
+            PREFECT_API_URL: http://prefect-server:4200/api
+        command: >
+            sh -c "
+            echo 'Waiting for Prefect server to be ready...';
+            sleep 5;
+            echo 'Creating default work pool...';
+            prefect work-pool create default --type process || echo 'Work pool already exists';
+            echo 'Work pool setup complete';
+            "
+        restart: "no"
+
     prefect-worker:
         image: prefecthq/prefect:3-latest
         depends_on:
             prefect-server:
-                condition: service_started
+                condition: service_healthy
+            prefect-init:
+                condition: service_completed_successfully
         environment:
             PREFECT_API_URL: http://prefect-server:4200/api
         command: prefect worker start --pool default
