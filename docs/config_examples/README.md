@@ -39,6 +39,12 @@ A comprehensive example combining multiple AI operations: classification, note a
 
 **Use Case**: Full automation pipeline with queue routing, priority setting, and contextual notes.
 
+### 6. Template Extensions (`template_extensions_example.py`)
+
+A Python example demonstrating how to extend Jinja2 templates with custom methods and variables using decorators.
+
+**Use Case**: Add domain-specific formatting, calculations, or data access in your templates.
+
 ## Configuration Structure
 
 All examples follow the Open Ticket AI configuration schema with these key sections:
