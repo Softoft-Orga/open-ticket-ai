@@ -22,7 +22,7 @@ class RenderedPipeConfig(RegisterableConfig):
     depends_on: list[str] = []
 
     @property
-    def _if(self) -> bool:
+    def should_run(self) -> bool:
         return self.if_
 
 

@@ -15,7 +15,10 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 def _locate(use: str) -> type:
     if ":" in use:
         m, c = use.split(":", 1)
-        return typing.cast(type, locate(f"{m}.{c}"))
+        use = f"{m}.{c}"
+    use_class = locate(use)
+    if use_class is None:
+        raise ValueError(f"Cannot locate class '{use}'")
     return typing.cast(type, locate(use))
 
 

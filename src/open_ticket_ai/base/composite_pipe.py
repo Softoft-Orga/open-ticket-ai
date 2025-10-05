@@ -21,8 +21,12 @@ class CompositePipe(Pipe):
         self._factory = factory
 
     def _build_pipe_from_step_config(self, step_config: dict[str, Any], context: Context) -> Pipe:
-
-        return self._factory.create_pipe(self.config.model_dump(), step_config, context.model_dump())
+        # Render the parent config before passing it to child pipes
+        parent_config_rendered = self._factory.render_pipe_config(
+            self.config.model_dump(),
+            context.model_dump()
+        )
+        return self._factory.create_pipe(parent_config_rendered, step_config, context.model_dump())
 
     async def _process_steps(self, context: Context) -> list[PipeResult]:
 

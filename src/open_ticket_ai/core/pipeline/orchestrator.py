@@ -23,6 +23,7 @@ class Orchestrator:
         self._app_config = app_config
         self._config = OrchestratorConfig.from_raw(app_config.orchestrator)
         self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger.warning(self._config)
         self._deployments: list[RunnerDeployment] = []
         self._running = False
 
@@ -34,11 +35,9 @@ class Orchestrator:
             "definition": definition.model_dump(mode="json"),
         }
 
-        deployment_params: dict[str, Any] = {
-            "name": deployment_name,
-            "parameters": params,
-            "tags": ["open-ticket-ai", definition.pipe_id],
-        }
+        deployment_params: dict[str, Any] = {"name": deployment_name, "parameters": params,
+                                             "tags": ["open-ticket-ai", definition.pipe_id]
+                                             }
 
         if definition.interval_seconds > 0:
             deployment_params["interval"] = create_interval_schedule(max(definition.interval_seconds, 0.5))
@@ -56,6 +55,7 @@ class Orchestrator:
         return await execute_scheduled_pipe_flow.ato_deployment(**deployment_params)
 
     async def start(self) -> None:
+        self._logger.warning(self._config)
         if self._running:
             self._logger.debug("Prefect orchestrator already running")
             return

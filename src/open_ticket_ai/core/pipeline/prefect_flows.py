@@ -18,7 +18,6 @@ log = logging.getLogger(__name__)
 
 
 def _build_template_renderer_from_app_config(app_config_dict: dict[str, Any]) -> TemplateRenderer:
-    # Mirrors AppModule.provide_template_renderer
     gen = app_config_dict.get("general_config", {})
     tr = gen.get("template_renderer", {})
     rtype = tr.get("type", "jinja")
@@ -26,7 +25,6 @@ def _build_template_renderer_from_app_config(app_config_dict: dict[str, Any]) ->
         raise ValueError(f"Unsupported template renderer type: {rtype}")
     params = tr.get("params", {}) or {}
     return JinjaRenderer(**params)  # same as DI provider
-    # (If you need env-var gating like OTAI_*: pass it via params in config)
 
 
 def _build_factory(app_config_dict: dict[str, Any]) -> PipeFactory:
@@ -35,7 +33,7 @@ def _build_factory(app_config_dict: dict[str, Any]) -> PipeFactory:
     return PipeFactory(app_cfg, renderer)
 
 
-@task(name="execute_pipe", retries=2, retry_delay_seconds=30)
+@task(name="execute_pipe", retries=2, retry_delay_seconds=100)
 async def execute_pipe_task(
     app_config: dict[str, Any],
     pipe_config: dict[str, Any],
