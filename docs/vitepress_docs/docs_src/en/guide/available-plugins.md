@@ -5,12 +5,12 @@ description: Learn how to install and configure the Hugging Face inference pipe 
 # Available Plugins
 
 Open Ticket AI ships with a small but growing plugin catalog. This page summarises the two plugins that are available
-out of the box and explains how to enable them in your configuration.
+and explains how to enable them in your configuration.
 
-| Plugin                                          | Purpose                                                                                                                     | Where it runs                                      |
-|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------|
-| **Hugging Face Local Text Classification Pipe** | Runs a Hugging Face Transformers pipeline to predict queue, priority, or any custom label inside your automation pipelines. | Inside the Open Ticket AI worker container.        |
-| **OTOBO/Znuny/OTRS Ticket System Service**      | Connects Open Ticket AI to your helpdesk via the official OTOBO REST API (compatible with Znuny & legacy OTRS).             | Against your on-premise OTOBO/Znuny/OTRS instance. |
+| Plugin                                          | Purpose                                                                                                                     | Where it runs                                      | Installation |
+|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------|--------------|
+| **Hugging Face Local Text Classification Pipe** | Runs a Hugging Face Transformers pipeline to predict queue, priority, or any custom label inside your automation pipelines. | Inside the Open Ticket AI worker container.        | Included with Open Ticket AI |
+| **OTOBO/Znuny/OTRS Ticket System Service**      | Connects Open Ticket AI to your helpdesk via the official OTOBO REST API (compatible with Znuny & legacy OTRS).             | Against your on-premise OTOBO/Znuny/OTRS instance. | Separate package: `pip install open-ticket-ai-otobo-znuny-plugin` |
 
 ## Before you begin
 
@@ -80,7 +80,16 @@ src/open_ticket_ai/otobo_znuny_plugin/otobo_znuny_ticket_system_service.py†L1-
 
 ### Installation & prerequisites
 
-1. Install Open Ticket AI—`otobo_znuny` is included as a dependency, so no extra packages are required.
+1. Install the OTOBO/Znuny plugin package:
+   ```bash
+   pip install open-ticket-ai-otobo-znuny-plugin
+   ```
+   
+   Or install Open Ticket AI with the OTOBO/Znuny extra:
+   ```bash
+   pip install open-ticket-ai[otobo-znuny]
+   ```
+
 2. In OTOBO/Znuny/OTRS create a dedicated API web service and an agent with permissions to search, read, update tickets,
    and add articles.
 3. Note the base URL of your GenericInterface endpoint, the web service name, and the credential you just created.
