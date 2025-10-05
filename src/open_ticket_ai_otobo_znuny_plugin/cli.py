@@ -2,11 +2,6 @@ import sys
 from typing import Optional
 
 import click
-from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
-from otobo_znuny.domain_models.basic_auth_model import BasicAuth
-from otobo_znuny.domain_models.otobo_client_config import ClientConfig
-from otobo_znuny.domain_models.ticket_operation import TicketOperation
-from pydantic import SecretStr
 
 
 @click.group()
@@ -32,9 +27,9 @@ def setup(
     click.echo("\n=== OTOBO/Znuny Ticket System Setup ===\n")
     
     operation_urls = {
-        TicketOperation.SEARCH.value: "ticket-search",
-        TicketOperation.GET.value: "ticket-get",
-        TicketOperation.UPDATE.value: "ticket-update",
+        "search": "ticket-search",
+        "get": "ticket-get",
+        "update": "ticket-update",
     }
     
     click.echo(f"Base URL: {base_url}")
@@ -43,12 +38,23 @@ def setup(
     click.echo()
     
     if verify_connection:
+        from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
+        from otobo_znuny.domain_models.basic_auth_model import BasicAuth
+        from otobo_znuny.domain_models.otobo_client_config import ClientConfig
+        from otobo_znuny.domain_models.ticket_operation import TicketOperation
+        from pydantic import SecretStr
+        
         click.echo("Verifying connection...")
         try:
+            operation_url_map = {
+                TicketOperation.SEARCH: operation_urls["search"],
+                TicketOperation.GET: operation_urls["get"],
+                TicketOperation.UPDATE: operation_urls["update"],
+            }
             config = ClientConfig(
                 base_url=base_url,
                 webservice_name=webservice_name,
-                operation_url_map={TicketOperation(k): v for k, v in operation_urls.items()},
+                operation_url_map=operation_url_map,
             )
             client = OTOBOZnunyClient(config=config)
             auth = BasicAuth(user_login=username, password=SecretStr(password))
@@ -70,9 +76,9 @@ def setup(
       username: "{username}"
       password: "{{{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}}}"
       operation_urls:
-        search: "{operation_urls[TicketOperation.SEARCH.value]}"
-        get: "{operation_urls[TicketOperation.GET.value]}"
-        update: "{operation_urls[TicketOperation.UPDATE.value]}"
+        search: "{operation_urls['search']}"
+        get: "{operation_urls['get']}"
+        update: "{operation_urls['update']}"
 """
         
         try:
