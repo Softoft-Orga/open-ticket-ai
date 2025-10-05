@@ -91,11 +91,16 @@ async def execute_pipe_task(
     pipe_id: str,
 ) -> dict[str, Any]:
     log.info("Executing pipe '%s' as Prefect task (legacy wrapper)", pipe_id)
-    context = Context(**context_data)
-    pipe_factory = _build_factory(app_config)
-    pipe = pipe_factory.create_pipe({}, deepcopy(pipe_config), context.model_dump())
-    updated_context = await pipe.process(context)
-    return updated_context.model_dump()
+    retries = pipe_config.get("retries", 2)
+    retry_delay_seconds = pipe_config.get("retry_delay_seconds", 30)
+    return await execute_single_pipe_task(
+        app_config=app_config,
+        pipe_config=pipe_config,
+        context_data=context_data,
+        pipe_id=pipe_id,
+        retries=retries,
+        retry_delay_seconds=retry_delay_seconds,
+    )
 
 
 @flow(name="execute_scheduled_pipe", log_prints=True)

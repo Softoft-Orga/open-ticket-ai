@@ -39,12 +39,17 @@ class CompositePipe(Pipe):
             step_pipe_id = step_pipe_config_raw["id"]
 
             if use_prefect and self._app_config:
+                retries = step_pipe_config_raw.get("retries", 2)
+                retry_delay_seconds = step_pipe_config_raw.get("retry_delay_seconds", 30)
+                
                 context_data = current_context.model_dump()
                 updated_context_data = await execute_single_pipe_task(
                     app_config=self._app_config,
                     pipe_config=step_pipe_config_raw,
                     context_data=context_data,
                     pipe_id=step_pipe_id,
+                    retries=retries,
+                    retry_delay_seconds=retry_delay_seconds,
                 )
                 current_context = Context(**updated_context_data)
             else:
