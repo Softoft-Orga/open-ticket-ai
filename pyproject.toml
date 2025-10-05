@@ -1,3 +1,10 @@
+[tool.uv.workspace]
+members = ["src/open_ticket_ai_hf_local", "src/open_ticket_ai_otobo_znuny_plugin"]
+
+[tool.uv.sources]
+open-ticket-ai-hf-local = { workspace = true }
+open-ticket-ai-otobo-znuny-plugin = { workspace = true }
+
 [project]
 name = "open-ticket-ai"
 version = "1.0.0rc1"

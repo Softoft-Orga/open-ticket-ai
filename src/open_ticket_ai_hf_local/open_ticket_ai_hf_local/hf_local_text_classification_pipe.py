@@ -2,10 +2,9 @@ import logging
 from functools import cache
 from typing import Any
 
-from pydantic import BaseModel
-
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from pydantic import BaseModel
 
 
 class HFLocalTextClassificationPipeConfig(BaseModel):
@@ -27,7 +26,7 @@ class HFLocalTextClassificationPipe(Pipe):
     @staticmethod
     @cache
     def _load_pipeline(model_name: str, token: str | None):
-        from transformers import (
+        from transformers import (  # noqa: PLC0415
             AutoModelForSequenceClassification,
             AutoTokenizer,
             pipeline,

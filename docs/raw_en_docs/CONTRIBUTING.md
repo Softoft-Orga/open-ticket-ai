@@ -304,6 +304,22 @@ See [PLUGIN_STANDARDS.md](PLUGIN_STANDARDS.md) for complete plugin development s
 4. Register in DI container
 5. Add tests
 
+## Versioning and Releases
+
+This project follows [Semantic Versioning](https://semver.org/) with specific rules for Core and plugins:
+
+- **Core**: MAJOR version bump required when Plugin API changes incompatibly
+- **Plugins**: Independent versioning, must declare Core compatibility range
+- **Deprecations**: Features deprecated for 1-2 MINOR versions before removal
+
+See [RELEASE.md](RELEASE.md) for comprehensive release procedures and [DEPRECATION_POLICY.md](DEPRECATION_POLICY.md) for deprecation guidelines.
+
+When contributing:
+- Don't break existing APIs without discussion
+- Announce deprecations early with warnings
+- Update Plugin API version when making breaking changes
+- Run contract tests to verify plugin compatibility
+
 ## Module Boundaries
 
 When adding new code:
