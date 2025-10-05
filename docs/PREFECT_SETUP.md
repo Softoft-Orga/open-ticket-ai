@@ -102,6 +102,13 @@ See **[PREFECT_USAGE.md](./PREFECT_USAGE.md)** for comprehensive documentation i
 - Troubleshooting
 - Best practices
 
+See **[DOCKER_COMPOSE_SETUP.md](./DOCKER_COMPOSE_SETUP.md)** for Docker Compose deployment:
+
+- Complete setup guide for running Prefect with Docker Compose
+- Service architecture and startup order
+- Troubleshooting connection issues
+- Production deployment considerations
+
 ## Testing
 
 Run the example to verify installation:

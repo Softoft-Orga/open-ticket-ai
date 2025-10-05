@@ -238,6 +238,31 @@ uv run prefect server start
 - Verify your pipe configuration is valid
 - Ensure all required services are available
 
+### Docker Compose: Worker Connection Errors
+
+If you see `httpcore.ConnectError: All connection attempts failed` in Docker Compose:
+
+**Problem**: Worker tries to connect before server is ready or work pool doesn't exist.
+
+**Solution**: The updated `compose.yml` includes:
+
+1. **Health check on prefect-server** - Ensures server is ready before worker starts
+2. **prefect-init service** - Creates the default work pool automatically
+3. **Proper dependencies** - Worker waits for both server health and init completion
+
+See [DOCKER_COMPOSE_SETUP.md](./DOCKER_COMPOSE_SETUP.md) for detailed Docker deployment guide.
+
+**Quick fix for existing deployments**:
+
+```bash
+# Recreate services with updated compose file
+docker compose down
+docker compose up -d
+
+# Or manually create work pool if needed
+docker compose exec prefect-server prefect work-pool create default --type process
+```
+
 ## Best Practices
 
 1. **Use Prefect for Production** - The monitoring and retry capabilities are valuable in production
