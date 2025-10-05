@@ -14,6 +14,7 @@ This repository contains multiple Python packages that are published to PyPI:
 - **[open-ticket-ai](https://pypi.org/project/open-ticket-ai/)** - Core package with AI-powered ticket classification and automation
 - **[open-ticket-ai-hf-local](https://pypi.org/project/open-ticket-ai-hf-local/)** - HuggingFace local inference plugin
 - **[open-ticket-ai-otobo-znuny-plugin](https://pypi.org/project/open-ticket-ai-otobo-znuny-plugin/)** - OTOBO/Znuny ticket system integration plugin
+- **[open-ticket-ai-bundle](https://pypi.org/project/open-ticket-ai-bundle/)** - Meta-package with tested compatible versions (optional)
 
 ### Version Compatibility
 
@@ -27,6 +28,14 @@ The core package and plugins use independent versioning. Plugins declare compati
 Plugins specify core compatibility via dependency ranges (e.g., `open-ticket-ai>=1.0.0,<2.0.0`) and must match the Plugin API version defined in the core contract tests.
 
 ## Installation
+
+### Quick Start (Bundle)
+
+Install everything with guaranteed compatibility:
+
+```bash
+pip install open-ticket-ai-bundle
+```
 
 ### Core Package
 

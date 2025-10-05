@@ -286,11 +286,16 @@ See [QUICK_START.md](QUICK_START.md) for PyPI publishing workflow.
 ### Adding New Plugins
 
 1. Create plugin package under `src/` or `packages/`
-2. Define plugin entry points
-3. Add plugin configuration schema
-4. Implement plugin interface
-5. Add tests
-6. Document usage
+2. Define plugin entry points in `pyproject.toml`
+3. Implement required plugin contract:
+   - `get_metadata()` - returns plugin metadata with `core_api` version
+   - `register_pipes(registry)` - optional, registers custom pipes
+   - `register_services(registry)` - optional, registers services
+4. Add plugin configuration schema
+5. Specify Core compatibility range in dependencies: `open-ticket-ai>=X.Y.Z,<NEXT_MAJOR>`
+6. Add tests including contract tests
+7. Document usage
+8. See [RELEASE.md](RELEASE.md) for plugin versioning guidelines
 
 ### Adding New Services
 
@@ -299,6 +304,22 @@ See [QUICK_START.md](QUICK_START.md) for PyPI publishing workflow.
 3. Add configuration model
 4. Register in DI container
 5. Add tests
+
+## Versioning and Releases
+
+This project follows [Semantic Versioning](https://semver.org/) with specific rules for Core and plugins:
+
+- **Core**: MAJOR version bump required when Plugin API changes incompatibly
+- **Plugins**: Independent versioning, must declare Core compatibility range
+- **Deprecations**: Features deprecated for 1-2 MINOR versions before removal
+
+See [RELEASE.md](RELEASE.md) for comprehensive release procedures and [DEPRECATION_POLICY.md](DEPRECATION_POLICY.md) for deprecation guidelines.
+
+When contributing:
+- Don't break existing APIs without discussion
+- Announce deprecations early with warnings
+- Update Plugin API version when making breaking changes
+- Run contract tests to verify plugin compatibility
 
 ## Module Boundaries
 
@@ -355,6 +376,8 @@ npm run docs:build  # Production build
 ## Additional Resources
 
 - [README.md](README.md) - Project overview and quick links
+- [RELEASE.md](RELEASE.md) - Versioning, release process, and compatibility requirements
+- [DEPRECATION_POLICY.md](DEPRECATION_POLICY.md) - Deprecation policy for Core and plugins
 - [QUICK_START.md](QUICK_START.md) - PyPI publishing guide
 - [docs/developer_process.md](docs/developer_process.md) - Automated processes
 - [docs/workflow_architecture.md](docs/workflow_architecture.md) - Technical architecture
