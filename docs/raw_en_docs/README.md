@@ -1,6 +1,9 @@
 # Open Ticket AI
 
 [![Python application](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/python-app.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/python-app.yml)
+[![Test HF Local](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-hf-local.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-hf-local.yml)
+[![Test OTOBO/Znuny](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-otobo-znuny.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-otobo-znuny.yml)
+[![Nightly Tests](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/nightly-tests.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/nightly-tests.yml)
 [![Publish open-ticket-ai](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-open-ticket-ai.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-open-ticket-ai.yml)
 [![Publish HF Local](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-hf-local.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-hf-local.yml)
 [![Publish OTOBO/Znuny Plugin](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-otobo-znuny.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-otobo-znuny.yml)
@@ -140,6 +143,62 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for comprehensive guidance on:
 - Coding standards and best practices
 - Testing and quality assurance
 - Contribution workflow
+
+### Testing
+
+This repository uses a comprehensive testing strategy with different test types and CI stages:
+
+#### Test Types
+
+- **Unit Tests** (`@pytest.mark.unit`): Fast, isolated tests for individual components
+- **Integration Tests** (`@pytest.mark.integration`): Test Core + Plugin interactions
+- **Contract Tests** (`@pytest.mark.contract`): Validate plugin API compatibility
+- **E2E Tests** (`@pytest.mark.e2e`): End-to-end workflow tests
+
+#### Running Tests Locally
+
+```bash
+# Run all tests
+pytest
+
+# Run specific test types by directory
+pytest tests/unit/              # Core unit tests
+pytest tests/integration/       # Core integration tests
+pytest tests/contract/          # Contract tests
+pytest tests/e2e/              # E2E tests
+
+# Run plugin tests
+pytest src/open_ticket_ai_hf_local/tests/         # HF Local plugin
+pytest src/open_ticket_ai_otobo_znuny_plugin/tests/  # OTOBO/Znuny plugin
+
+# Run specific test types by marker
+pytest -m unit          # Only tests marked with @pytest.mark.unit
+pytest -m integration   # Only tests marked with @pytest.mark.integration
+pytest -m contract      # Only tests marked with @pytest.mark.contract
+pytest -m e2e          # Only tests marked with @pytest.mark.e2e
+
+# Skip slow tests
+pytest -m "not slow"
+```
+
+#### CI Test Stages
+
+The CI pipeline runs different test stages:
+
+1. **Core Tests** (on push/PR to main/dev):
+   - Lint with ruff and mypy
+   - Unit tests: All tests in `tests/unit/`
+   - Integration tests: All tests in `tests/integration/`
+
+2. **Plugin Tests** (on plugin changes):
+   - HF Local: Unit tests in `src/open_ticket_ai_hf_local/tests/` + linting + type checking
+   - OTOBO/Znuny: Unit tests in `src/open_ticket_ai_otobo_znuny_plugin/tests/` + linting + type checking
+
+3. **Nightly Tests** (scheduled at 2 AM UTC or manual trigger):
+   - Contract tests: All tests in `tests/contract/` - validates all installed plugins against core API
+   - E2E tests: All tests in `tests/e2e/` - complete workflow testing
+
+For detailed test structure and best practices, see [docs/TESTING.md](docs/TESTING.md).
 
 ### Development Workflows
 
