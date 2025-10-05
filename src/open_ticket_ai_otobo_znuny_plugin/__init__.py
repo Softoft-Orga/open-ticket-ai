@@ -17,3 +17,7 @@ def register_pipes():
 
 def register_services():
     return [OTOBOZnunyTicketSystemService]
+
+def register_cli_commands():
+    from .cli import get_commands
+    return get_commands()
