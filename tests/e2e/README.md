@@ -5,7 +5,6 @@ Dieses Verzeichnis enthält End-to-End-Tests, die vollständige Workflows testen
 ## Zweck
 
 - Blackbox-Tests vollständiger Anwendungsflows
-- Testen von Prefect-Flows
 - Testen kompletter Ticket-Verarbeitungspipelines
 - Markierung: `@pytest.mark.e2e` und oft auch `@pytest.mark.slow`
 
