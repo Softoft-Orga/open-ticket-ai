@@ -17,3 +17,18 @@ def register_pipes():
 
 def register_services():
     return [OTOBOZnunyTicketSystemService]
+
+def register_cli_commands():
+    import click
+    
+    @click.group()
+    def otobo_znuny_plugin():
+        pass
+    
+    @otobo_znuny_plugin.command()
+    def setup():
+        click.echo("OTOBO/Znuny plugin setup wizard")
+        click.echo("This command would guide you through configuring the plugin.")
+        click.echo("(Implementation placeholder)")
+    
+    return otobo_znuny_plugin

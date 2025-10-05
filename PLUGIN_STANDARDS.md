@@ -186,6 +186,47 @@ def register_services():
 
 - `register_pipes()`: Returns list of pipe class references
 - `register_services()`: Returns list of service class references
+- `register_cli_commands()` (optional): Returns Click command(s) to be added to the CLI
+
+### CLI Command Registration (Optional)
+
+Plugins can optionally expose CLI commands by implementing the `register_cli_commands()` function:
+
+```python
+import click
+
+def register_cli_commands():
+    @click.group()
+    def my_plugin():
+        """My plugin CLI commands."""
+        pass
+    
+    @my_plugin.command()
+    def setup():
+        """Setup the plugin."""
+        click.echo("Setting up plugin...")
+    
+    return my_plugin
+```
+
+This allows plugins to be invoked via:
+```bash
+otai my_plugin setup
+```
+
+The function can return:
+- A single Click Command or Group
+- A dict mapping command names to Click Commands
+- A list of Click Commands
+
+Example with dict:
+```python
+def register_cli_commands():
+    return {
+        "setup": setup_command,
+        "configure": configure_command,
+    }
+```
 
 ## Versioning
 
