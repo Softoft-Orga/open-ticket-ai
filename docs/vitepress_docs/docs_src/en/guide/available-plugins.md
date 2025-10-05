@@ -10,7 +10,24 @@ and explains how to enable them in your configuration.
 | Plugin                                          | Purpose                                                                                                                     | Where it runs                                      | Installation |
 |-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------|--------------|
 | **Hugging Face Local Text Classification Pipe** | Runs a Hugging Face Transformers pipeline to predict queue, priority, or any custom label inside your automation pipelines. | Inside the Open Ticket AI worker container.        | Included with Open Ticket AI |
-| **OTOBO/Znuny/OTRS Ticket System Service**      | Connects Open Ticket AI to your helpdesk via the official OTOBO REST API (compatible with Znuny & legacy OTRS).             | Against your on-premise OTOBO/Znuny/OTRS instance. | Separate package: `pip install open-ticket-ai-otobo-znuny-plugin` |
+| **OTOBO/Znuny/OTRS Ticket System Service**      | Connects Open Ticket AI to your helpdesk via the official OTOBO REST API (compatible with Znuny & legacy OTRS).             | Against your on-premise OTOBO/Znuny/OTRS instance. | Separate package: `pip install open-ticket-ai-otobo-znuny-plugin` or via CLI: `otai plugin install open-ticket-ai-otobo-znuny-plugin` |
+
+## Plugin Management via CLI
+
+Open Ticket AI provides a command-line interface for managing plugins:
+
+```bash
+# List installed plugins
+otai plugin list
+
+# Install a plugin
+otai plugin install open-ticket-ai-otobo-znuny-plugin
+
+# Remove a plugin
+otai plugin remove open-ticket-ai-otobo-znuny-plugin
+```
+
+For more details, see the [CLI Usage Guide](../../../../docs/CLI_USAGE.md).
 
 ## Before you begin
 
@@ -119,6 +136,33 @@ src/open_ticket_ai/otobo_znuny_plugin/otobo_znuny_ticket_system_service.py†L1-
 2. In OTOBO/Znuny/OTRS create a dedicated API web service and an agent with permissions to search, read, update tickets,
    and add articles.
 3. Note the base URL of your GenericInterface endpoint, the web service name, and the credential you just created.
+
+### Quick Setup via CLI
+
+The plugin provides an interactive CLI setup command to help you configure your OTOBO/Znuny connection:
+
+```bash
+otai otobo-znuny setup
+```
+
+This command will:
+- Prompt you for your OTOBO/Znuny instance details (base URL, web service name, credentials)
+- Optionally verify the connection
+- Generate a configuration file for Open Ticket AI
+
+You can also provide all options via command-line flags:
+
+```bash
+otai otobo-znuny setup \
+  --base-url "https://your-otobo.com/otrs" \
+  --webservice-name "OpenTicketAI" \
+  --username "open_ticket_ai" \
+  --password "your-password" \
+  --verify-connection \
+  --output-config config.yml
+```
+
+**Note:** For security, it's recommended to use environment variables for passwords rather than command-line flags.
 
 ### Configure the ticket system
 

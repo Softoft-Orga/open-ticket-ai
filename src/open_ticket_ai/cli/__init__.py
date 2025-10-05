@@ -1,3 +1,3 @@
-from open_ticket_ai.cli.main import app
+from open_ticket_ai.cli.main import cli
 
-__all__ = ["app"]
+__all__ = ["cli"]

@@ -66,3 +66,21 @@ class PluginManager:
     @property
     def loaded_plugins(self) -> list[Any]:
         return self._plugins.copy()
+
+    def get_cli_commands(self) -> dict[str, Any]:
+        commands = {}
+        for plugin in self._plugins:
+            if hasattr(plugin, "register_cli_commands"):
+                try:
+                    plugin_commands = plugin.register_cli_commands()
+                    if isinstance(plugin_commands, dict):
+                        commands.update(plugin_commands)
+                    else:
+                        meta = getattr(plugin, "get_metadata", lambda: {})()
+                        plugin_name = meta.get("name", "unknown")
+                        self._logger.debug(
+                            f"Plugin {plugin_name} returned non-dict CLI commands"
+                        )
+                except Exception:
+                    self._logger.exception("Failed to get CLI commands for plugin")
+        return commands

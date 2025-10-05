@@ -27,6 +27,21 @@ def register_pipes():
 
 def register_services():
     return [ServiceClass1]  # or [] if no services
+
+def register_cli_commands():  # optional
+    import click
+    
+    @click.group()
+    def my_plugin():
+        """My plugin CLI commands."""
+        pass
+    
+    @my_plugin.command()
+    def setup():
+        """Setup the plugin."""
+        click.echo("Setting up...")
+    
+    return my_plugin
 ```
 
 ## pyproject.toml Entry Points
@@ -71,6 +86,28 @@ pytest tests/contract/ -m contract
 ```bash
 cd src/open_ticket_ai_<plugin_name>
 python -m build
+```
+
+## CLI Commands
+
+### Plugin Management
+
+```bash
+# List installed plugins
+otai plugin list
+
+# Install a plugin
+otai plugin install open-ticket-ai-<plugin-name>
+
+# Remove a plugin
+otai plugin remove open-ticket-ai-<plugin-name>
+```
+
+### Plugin-specific Commands
+
+If a plugin exposes CLI commands via `register_cli_commands()`:
+```bash
+otai <plugin_command> <subcommand>
 ```
 
 ## Documentation
