@@ -320,10 +320,14 @@ For existing plugins not following these standards:
 ### Complete Plugin Structure
 
 See reference implementations:
-- HuggingFace Plugin: `src/open_ticket_ai_hf_local/`
-- OTOBO/Znuny Plugin: `src/open_ticket_ai_otobo_znuny_plugin/`
+- HuggingFace Plugin: `src/open_ticket_ai_hf_local/` (nested structure with advanced features)
+- OTOBO/Znuny Plugin: `src/open_ticket_ai_otobo_znuny_plugin/` (flat structure for services)
 
 ### Minimal Plugin Template
+
+Here's a minimal plugin implementation:
+
+#### Directory Structure (Flat)
 
 ```
 src/open_ticket_ai_minimal/
@@ -332,11 +336,86 @@ src/open_ticket_ai_minimal/
 ├── LICENSE
 ├── CHANGELOG.md
 ├── __init__.py
-├── open_ticket_ai_minimal/
-│   ├── __init__.py
-│   └── minimal_pipe.py
+├── minimal_pipe.py
 └── tests/
     └── test_minimal_pipe.py
+```
+
+#### `__init__.py`
+
+```python
+from .minimal_pipe import MinimalPipe
+
+__version__ = "1.0.0"
+
+__all__ = ["MinimalPipe"]
+
+def get_metadata():
+    return {
+        "name": "open-ticket-ai-minimal",
+        "version": __version__,
+        "core_api": "2.0",
+        "description": "Minimal example plugin for Open Ticket AI",
+    }
+
+def register_pipes():
+    return [MinimalPipe]
+
+def register_services():
+    return []
+```
+
+#### `minimal_pipe.py`
+
+```python
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.context import Context
+
+class MinimalPipe(Pipe):
+    def execute(self, context: Context):
+        return {"message": "Hello from minimal plugin!"}
+```
+
+#### `pyproject.toml`
+
+```toml
+[project]
+name = "open-ticket-ai-minimal"
+version = "1.0.0"
+description = "Minimal example plugin for Open Ticket AI"
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+license = { text = "LGPL-2.1-only" }
+
+keywords = ["open-ticket-ai", "plugin", "example"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+]
+
+dependencies = [
+    "open-ticket-ai>=1.0.0rc1",
+]
+
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
+Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+
+[project.entry-points."open_ticket_ai.plugins"]
+minimal = "open_ticket_ai_minimal"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["open_ticket_ai_minimal*"]
 ```
 
 ## Questions and Support
