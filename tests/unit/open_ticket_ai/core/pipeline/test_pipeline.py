@@ -79,7 +79,7 @@ def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.mark.asyncio
 async def test_process_skips_pipe_when_condition_is_false():
     context = Context(pipes={"existing": PipeResult(success=True, failed=False, data={"value": 1})})
-    skip_pipe = SkipPipe({"id": "skip", "_if": False, "when": False})
+    skip_pipe = SkipPipe({"id": "skip", "if": False, "when": False})
 
     result_context = await skip_pipe.process(context)
 

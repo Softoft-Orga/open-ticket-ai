@@ -1,6 +1,7 @@
 import pytest
 
 from open_ticket_ai.base.ticket_system_pipes.add_note_pipe import AddNotePipe
+from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 
 
@@ -89,13 +90,17 @@ async def test_add_note_pipe_skips_when_disabled(
     config = {
         "id": "test_add_note",
         "use": "AddNotePipe",
-        "_if": False,
+        "if": False,
         "ticket_id": "TICKET-1",
         "note": {"body": "Test note"},
     }
 
     pipe = AddNotePipe(mocked_ticket_system, config)
-    result_context = await pipe.process(empty_pipeline_context)
+    
+    # Use a fresh context for this test
+    fresh_context = Context(pipes={}, config={})
+    result_context = await pipe.process(fresh_context)
 
-    # Verify pipe result
-    assert result_context is empty_pipeline_context
+    # Verify pipe didn't run - no result was added
+    assert result_context is fresh_context
+    assert "test_add_note" not in result_context.pipes

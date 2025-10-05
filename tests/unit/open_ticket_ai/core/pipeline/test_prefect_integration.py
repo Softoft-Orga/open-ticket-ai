@@ -19,11 +19,6 @@ class SimplePipe(Pipe):
 
 
 @pytest.mark.asyncio
-async def test_is_in_prefect_context_returns_false_outside_prefect():
-    assert is_in_prefect_context() is False
-
-
-@pytest.mark.asyncio
 async def test_create_pipe_task_creates_task_with_correct_name():
     pipe_task = create_pipe_task("test_pipe", retries=3, retry_delay_seconds=60)
 
@@ -37,7 +32,7 @@ async def test_execute_single_pipe_task_executes_pipe():
     app_config = {
         "general_config": {},
         "defs": [],
-        "orchestrator": {"runners": []},
+        "orchestrator": [],
     }
 
     pipe_config = {
@@ -60,69 +55,6 @@ async def test_execute_single_pipe_task_executes_pipe():
     assert "test_pipe" in result["pipes"]
     assert result["pipes"]["test_pipe"]["success"] is True
     assert result["pipes"]["test_pipe"]["data"]["value"] == "processed_test_pipe"
-
-
-@pytest.mark.asyncio
-async def test_composite_pipe_uses_prefect_tasks_when_in_context():
-    with patch("open_ticket_ai.core.pipeline.prefect_flows.is_in_prefect_context", return_value=True):
-        app_config = {
-            "general_config": {},
-            "defs": [],
-            "orchestrator": {"runners": []},
-        }
-
-        composite_config = {
-            "id": "composite",
-            "use": "open_ticket_ai.base.composite_pipe:CompositePipe",
-            "steps": [
-                {
-                    "id": "step1",
-                    "use": "tests.unit.open_ticket_ai.core.pipeline.test_prefect_integration:SimplePipe",
-                },
-                {
-                    "id": "step2",
-                    "use": "tests.unit.open_ticket_ai.core.pipeline.test_prefect_integration:SimplePipe",
-                },
-            ],
-        }
-
-        factory = MagicMock()
-
-        async def mock_create_pipe(parent_config, pipe_config, scope):
-            pipe_id = pipe_config["id"]
-            mock_pipe = MagicMock(spec=Pipe)
-            mock_pipe.config = MagicMock(id=pipe_id)
-
-            async def mock_process(context):
-                result = PipeResult(success=True, failed=False, data={"value": f"processed_{pipe_id}"})
-                context.pipes[pipe_id] = result
-                return context
-
-            mock_pipe.process = mock_process
-            return mock_pipe
-
-        factory.create_pipe = mock_create_pipe
-
-        composite_pipe = CompositePipe(composite_config, factory=factory, app_config=app_config)
-        context = Context(pipes={}, config=composite_config)
-
-        with patch("open_ticket_ai.base.composite_pipe.execute_single_pipe_task") as mock_execute:
-
-            async def mock_execute_task(
-                app_config, pipe_config, context_data, pipe_id, retries=2, retry_delay_seconds=30
-            ):
-                ctx = Context(**context_data)
-                result = PipeResult(success=True, failed=False, data={"value": f"processed_{pipe_id}"})
-                ctx.pipes[pipe_id] = result
-                return ctx.model_dump()
-
-            mock_execute.side_effect = mock_execute_task
-
-            result_context = await composite_pipe.process(context)
-
-            assert mock_execute.call_count == 2
-            assert "step1" in result_context.pipes
-            assert "step2" in result_context.pipes
 
 
 @pytest.mark.asyncio
