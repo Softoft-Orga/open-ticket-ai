@@ -204,3 +204,8 @@ storybook-static
 
 */.vitepress/cache/
 .idea
+
+# Package build directories
+packages/*/dist/
+packages/*/build/
+packages/*/*.egg-info/
