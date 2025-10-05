@@ -2,12 +2,22 @@
 name = "open-ticket-ai"
 version = "1.0.0rc1"
 description = "AI enhancements for open source ticket systems"
+readme = "README.md"
 requires-python = ">=3.13"
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
 license = { text = "LGPL-2.1-only" }
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 
 dependencies = [
     "pyyaml>=6.0.2",
