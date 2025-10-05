@@ -1,4 +1,6 @@
 name: Test open-ticket-ai-hf-local
+permissions:
+  contents: read
 
 on:
   push:
