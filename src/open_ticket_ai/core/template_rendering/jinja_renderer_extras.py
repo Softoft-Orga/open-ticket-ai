@@ -1,14 +1,17 @@
 import ast
 import json
+import os
+from json import JSONDecodeError
 from typing import Any
 
+from jinja2 import pass_context
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
-from open_ticket_ai.core.template_rendering.jinja_registry import jinja_template_method, jinja_variable
+
+from open_ticket_ai.core.template_rendering import JinjaRendererConfig
 
 
-@jinja_template_method("at_path")
 def at_path(value: Any, path: Any) -> str:
     def _coerce_path(path: Any) -> list[str]:
         if path is None:
@@ -44,40 +47,36 @@ def at_path(value: Any, path: Any) -> str:
     nested = _nest_value(parts, value) if parts else value
     try:
         return json.dumps(nested)
-    except Exception:
+    except JSONDecodeError:
         return str(nested)
 
+@pass_context
+def has_failed(ctx, pipe_id: str) -> bool:
+    pipes = ctx.get("pipes", {})
+    pipe = pipes.get(pipe_id)
+    if pipe is None:
+        return False
+    return pipe.failed or pipe.get("failed")
 
-@jinja_template_method("has_failed")
-def has_failed_factory(scope: dict[str, Any]) -> callable:
-    def has_failed(pipe_id: str) -> bool:
-        pipes = scope.get("pipes", {})
-        pipe = pipes.get(pipe_id)
-        if pipe is None:
-            return False
-        return pipe.failed or pipe.get("failed")
-
-    return has_failed
-
-
-@jinja_template_method("pipe_result")
-def pipe_result_factory(scope: dict[str, Any]) -> callable:
-    def pipe_result(pipe_id: str, data_key: str = "value") -> Any:
-        pipes = scope.get("pipes", {})
-        pipe = pipes.get(pipe_id)
-        if pipe is None:
-            return None
-        pipe_data = pipe.data if isinstance(pipe, PipeResult) else pipe.get("data")
-        return pipe_data.get(data_key)
-
-    return pipe_result
+@pass_context
+def pipe_result(ctx, pipe_id: str, data_key: str = "value") -> Any:
+    pipes = ctx.get("pipes", {})
+    pipe = pipes.get(pipe_id)
+    if pipe is None:
+        return None
+    pipe_data = pipe.data if isinstance(pipe, PipeResult) else pipe.get("data")
+    return pipe_data.get(data_key)
 
 
-@jinja_template_method("example_function")
-def example_function(value: str) -> str:
-    return value.upper()
+def build_filtered_env(jinja_renderer_config: JinjaRendererConfig) -> dict[str, str]:
+    env_config = jinja_renderer_config.env_config
 
+    def _pref(k: str) -> bool:
+        return True if not env_config.prefix else k.startswith(env_config.prefix)
 
-@jinja_variable("example_variable")
-def example_variable() -> str:
-    return "example_value"
+    out = {k: v for k, v in dict(os.environ).items() if _pref(k)}
+    if env_config.allowlist is not None:
+        out = {k: v for k, v in out.items() if k in env_config.allowlist}
+    if env_config.denylist is not None:
+        out = {k: v for k, v in out.items() if k not in env_config.denylist}
+    return out

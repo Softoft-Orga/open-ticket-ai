@@ -1,9 +1,8 @@
 from unittest.mock import MagicMock, patch
 
-import pytest
 from click.testing import CliRunner
 
-from open_ticket_ai_otobo_znuny_plugin.cli import otobo_znuny, setup
+from otai_otobo_znuny.otai_otobo_znuny.cli import otobo_znuny, setup
 
 
 class TestOtoboZnunyCLI:
@@ -23,7 +22,7 @@ class TestOtoboZnunyCLI:
         assert "Web service name" in result.output
         assert "Username" in result.output
 
-    @patch("open_ticket_ai_otobo_znuny_plugin.cli.OTOBOZnunyClient")
+    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
     def test_setup_with_all_options_no_verify(self, mock_client):
         runner = CliRunner()
         result = runner.invoke(
@@ -40,7 +39,7 @@ class TestOtoboZnunyCLI:
         assert "Next Steps" in result.output
         mock_client.assert_not_called()
 
-    @patch("open_ticket_ai_otobo_znuny_plugin.cli.OTOBOZnunyClient")
+    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
     def test_setup_with_connection_verification_success(self, mock_client):
         mock_instance = MagicMock()
         mock_client.return_value = mock_instance
@@ -63,7 +62,7 @@ class TestOtoboZnunyCLI:
         mock_client.assert_called_once()
         mock_instance.login.assert_called_once()
 
-    @patch("open_ticket_ai_otobo_znuny_plugin.cli.OTOBOZnunyClient")
+    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
     def test_setup_with_connection_verification_failure_abort(self, mock_client):
         mock_client.side_effect = Exception("Connection failed")
         
@@ -83,7 +82,7 @@ class TestOtoboZnunyCLI:
         assert result.exit_code == 1
         assert "Connection failed" in result.output
 
-    @patch("open_ticket_ai_otobo_znuny_plugin.cli.OTOBOZnunyClient")
+    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
     def test_setup_with_connection_verification_failure_continue(self, mock_client):
         mock_client.side_effect = Exception("Connection failed")
         
@@ -104,7 +103,7 @@ class TestOtoboZnunyCLI:
         assert "Connection failed" in result.output
         assert "Next Steps" in result.output
 
-    @patch("open_ticket_ai_otobo_znuny_plugin.cli.OTOBOZnunyClient")
+    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
     def test_setup_generates_config_file(self, mock_client):
         runner = CliRunner()
         with runner.isolated_filesystem():

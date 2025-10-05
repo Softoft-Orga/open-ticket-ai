@@ -66,7 +66,7 @@ open_ticket_ai:
   general_config:
     pipe_classes:
       - &ticket_classifier_pipe
-        use: "open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
+        use: "otai_hf_local:HFLocalTextClassificationPipe"
   defs:
     - &ticket_classifier
       <<: *ticket_classifier_pipe
@@ -93,7 +93,7 @@ Example configuration with queue classification:
 
 ```yaml
 - id: classify_queue
-  use: "open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
+  use: "otai_hf_local:HFLocalTextClassificationPipe"
   model: "softoft/EHS_Queue_V8"
   token: "{{ env.OTAI_HUGGINGFACE_TOKEN }}"
   prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
@@ -172,7 +172,7 @@ The default config file registers the adapter as `otobo_znuny` and sources secre
 open_ticket_ai:
   defs:
     - id: "otobo_znuny"
-      use: "open_ticket_ai.open_ticket_ai_otobo_znuny_plugin:OToboZnunyTicketSystemService"
+      use: "open_ticket_ai.otai_otobo_znuny:OToboZnunyTicketSystemService"
       server_address: "{{ env.OTAI_OTOBO_ZNUNY_SERVER_ADDRESS }}"
       password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 ```

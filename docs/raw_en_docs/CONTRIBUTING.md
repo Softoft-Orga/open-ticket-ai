@@ -266,7 +266,7 @@ pip install -e ".[otobo-znuny]"
 python -m build
 
 # Build specific package
-cd src/open_ticket_ai_hf_local
+cd src/otai_hf_local
 python -m build
 ```
 

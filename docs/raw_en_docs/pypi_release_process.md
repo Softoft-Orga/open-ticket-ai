@@ -87,7 +87,7 @@ cd /path/to/repo
 python -m build
 
 # Build plugin package
-cd src/open_ticket_ai_hf_local
+cd src/otai_hf_local
 python -m build
 
 # Check the built package

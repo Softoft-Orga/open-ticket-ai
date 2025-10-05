@@ -1,21 +1,14 @@
 from collections.abc import Callable, Mapping
+from typing import Literal
 
 from jinja2.sandbox import SandboxedEnvironment
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class TemplateRendererEnvConfig(BaseModel):
-    prefix: str = Field(default="OTAI_", description="Primary environment variable prefix")
-    extra_prefixes: tuple[str, ...] = Field(default=(), description="Additional environment variable prefixes")
+    prefix: str | None = Field(default="OTAI_", description="Primary environment variable prefix")
     allowlist: set[str] | None = Field(default=None, description="Allowed environment variable names")
     denylist: set[str] | None = Field(default=None, description="Denied environment variable names")
-    key: str = Field(default="env", description="Template key for environment variables")
-    provider: Callable[[], Mapping[str, str]] | None = Field(
-        default=None, description="Custom environment provider function", exclude=True
-    )
-    refresh_on_each_render: bool = Field(
-        default=False, description="Whether to refresh environment variables on each render"
-    )
 
 
 class TemplateRendererConfig(BaseModel):
@@ -25,17 +18,7 @@ class TemplateRendererConfig(BaseModel):
 
 
 class JinjaRendererConfig(TemplateRendererConfig):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    env: SandboxedEnvironment | None = Field(
-        default=None, description="Custom Jinja2 SandboxedEnvironment instance", exclude=True
-    )
+    type: Literal["jinja"] = "jinja"
     autoescape: bool = Field(default=False, description="Enable autoescaping in Jinja2")
     trim_blocks: bool = Field(default=True, description="Trim blocks in Jinja2")
     lstrip_blocks: bool = Field(default=True, description="Left-strip blocks in Jinja2")
-    jinja_template_method: Callable[[str], Callable] = Field(
-        default=None, description="Decorator for registering Jinja template methods", exclude=True
-    )
-    jinja_variable: Callable[[str], Callable] = Field(
-        default=None, description="Decorator for registering Jinja template variables", exclude=True
-    )

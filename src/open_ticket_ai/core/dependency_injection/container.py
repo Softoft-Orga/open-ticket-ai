@@ -49,30 +49,7 @@ class AppModule(Module):
         renderer_type = renderer_config.get("type", "jinja")
         if renderer_type != "jinja":
             raise ValueError(f"Unsupported template renderer type: {renderer_type}")
-        params = renderer_config.get("params", {})
 
-        env_config_fields = {
-            "prefix",
-            "extra_prefixes",
-            "allowlist",
-            "denylist",
-            "key",
-            "provider",
-            "refresh_env_on_each_render",
-        }
-        env_params = {}
-        jinja_params = {}
-
-        for k, v in params.items():
-            if k.startswith("env_"):
-                field_name = k.replace("env_", "")
-                env_params[field_name] = v
-            elif k in env_config_fields:
-                env_params[k] = v
-            elif k != "config":
-                jinja_params[k] = v
-
-        env_config = TemplateRendererEnvConfig(**env_params) if env_params else TemplateRendererEnvConfig()
-        jinja_config = JinjaRendererConfig(env_config=env_config, **jinja_params)
+        jinja_config = JinjaRendererConfig.model_validate(renderer_config)
 
         return JinjaRenderer(config=jinja_config)

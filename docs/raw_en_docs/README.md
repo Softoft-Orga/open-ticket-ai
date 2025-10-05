@@ -128,7 +128,7 @@ Plugins are discovered and loaded through:
    open_ticket_ai:
      defs:
        otobo_service:
-         use: "open_ticket_ai_otobo_znuny_plugin.OTOBOZnunyTicketSystemService"
+         use: "otai_otobo_znuny.OTOBOZnunyTicketSystemService"
          # ... configuration
    ```
 
@@ -335,8 +335,8 @@ pytest tests/contract/          # Contract tests
 pytest tests/e2e/              # E2E tests
 
 # Run plugin tests
-pytest src/open_ticket_ai_hf_local/tests/         # HF Local plugin
-pytest src/open_ticket_ai_otobo_znuny_plugin/tests/  # OTOBO/Znuny plugin
+pytest src/otai_hf_local/tests/         # HF Local plugin
+pytest src/otai_otobo_znuny/tests/  # OTOBO/Znuny plugin
 
 # Run specific test types by marker
 pytest -m unit          # Only tests marked with @pytest.mark.unit
