@@ -285,12 +285,16 @@ See [QUICK_START.md](QUICK_START.md) for PyPI publishing workflow.
 
 ### Adding New Plugins
 
-1. Create plugin package under `src/` or `packages/`
-2. Define plugin entry points
-3. Add plugin configuration schema
-4. Implement plugin interface
-5. Add tests
-6. Document usage
+See [PLUGIN_STANDARDS.md](PLUGIN_STANDARDS.md) for complete plugin development standards.
+
+1. Create plugin package under `src/open_ticket_ai_<plugin_name>/`
+2. Follow standard directory structure and naming conventions
+3. Implement required plugin interface (`get_metadata()`, `register_pipes()`, `register_services()`)
+4. Add entry points in pyproject.toml
+5. Include all required files (README.md, LICENSE, CHANGELOG.md, pyproject.toml)
+6. Add plugin configuration schema
+7. Add tests (unit tests in plugin directory, contract tests will auto-discover)
+8. Document usage in VitePress docs
 
 ### Adding New Services
 
