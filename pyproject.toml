@@ -57,9 +57,6 @@ dependencies = [
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
 
-[project.scripts]
-otai = "open_ticket_ai.cli:cli"
-
 [project.optional-dependencies]
 dev = [
     "ruff",
