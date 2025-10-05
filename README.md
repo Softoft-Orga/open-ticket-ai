@@ -114,7 +114,7 @@ The publishing workflow:
 
 ## Development
 
-See [docs/developer_process.md](docs/developer_process.md) for information about development workflows and automation.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for comprehensive contribution guidelines, repository structure, and development workflows. Also see [docs/developer_process.md](docs/developer_process.md) for information about development automation.
 
 ## License
 
