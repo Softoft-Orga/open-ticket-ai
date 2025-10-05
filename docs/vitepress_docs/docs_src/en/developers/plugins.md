@@ -153,3 +153,48 @@ responses.
 By keeping the plug-in contract narrow—configuration models, a registry-friendly service class, and optional helper
 functions—you can extend Open Ticket AI to any ticketing platform while staying fully declarative from the
 orchestrator's perspective.
+
+## CLI Integration
+
+Open Ticket AI provides a CLI for managing plugins and accessing plugin-specific functionality.
+
+### Using the Plugin Management CLI
+
+```bash
+# List all installed plugins
+otai plugin list
+
+# Install a plugin from PyPI
+otai plugin install open-ticket-ai-otobo-znuny-plugin
+
+# Remove a plugin
+otai plugin remove open-ticket-ai-otobo-znuny-plugin
+```
+
+### Exposing Plugin CLI Commands
+
+Plugins can expose their own CLI commands by implementing the optional `register_cli_commands()` function:
+
+```python
+def register_cli_commands():
+    import click
+    
+    @click.group()
+    def my_plugin():
+        """My plugin CLI commands."""
+        pass
+    
+    @my_plugin.command()
+    def setup():
+        """Setup the plugin."""
+        click.echo("Running setup...")
+    
+    return my_plugin
+```
+
+Once registered, the command becomes available:
+```bash
+otai my_plugin setup
+```
+
+For more details, see the [CLI Usage Guide](../../../../docs/CLI_USAGE.md).

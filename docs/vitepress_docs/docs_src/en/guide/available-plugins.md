@@ -10,7 +10,24 @@ and explains how to enable them in your configuration.
 | Plugin                                          | Purpose                                                                                                                     | Where it runs                                      | Installation |
 |-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------|--------------|
 | **Hugging Face Local Text Classification Pipe** | Runs a Hugging Face Transformers pipeline to predict queue, priority, or any custom label inside your automation pipelines. | Inside the Open Ticket AI worker container.        | Included with Open Ticket AI |
-| **OTOBO/Znuny/OTRS Ticket System Service**      | Connects Open Ticket AI to your helpdesk via the official OTOBO REST API (compatible with Znuny & legacy OTRS).             | Against your on-premise OTOBO/Znuny/OTRS instance. | Separate package: `pip install open-ticket-ai-otobo-znuny-plugin` |
+| **OTOBO/Znuny/OTRS Ticket System Service**      | Connects Open Ticket AI to your helpdesk via the official OTOBO REST API (compatible with Znuny & legacy OTRS).             | Against your on-premise OTOBO/Znuny/OTRS instance. | Separate package: `pip install open-ticket-ai-otobo-znuny-plugin` or via CLI: `otai plugin install open-ticket-ai-otobo-znuny-plugin` |
+
+## Plugin Management via CLI
+
+Open Ticket AI provides a command-line interface for managing plugins:
+
+```bash
+# List installed plugins
+otai plugin list
+
+# Install a plugin
+otai plugin install open-ticket-ai-otobo-znuny-plugin
+
+# Remove a plugin
+otai plugin remove open-ticket-ai-otobo-znuny-plugin
+```
+
+For more details, see the [CLI Usage Guide](../../../../docs/CLI_USAGE.md).
 
 ## Before you begin
 
