@@ -51,14 +51,10 @@ dependencies = [
     "tenacity>=9.0.0",
     "prefect~=3.4.20",
     "typer>=0.9.0",
-    "click>=8.0.0",
 ]
 
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
-
-[project.scripts]
-otai = "open_ticket_ai.cli:cli"
 
 [project.optional-dependencies]
 dev = [
@@ -68,7 +64,7 @@ dev = [
 ]
 
 [project.scripts]
-otai = "open_ticket_ai.cli:main"
+otai = "open_ticket_ai.cli.main:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
