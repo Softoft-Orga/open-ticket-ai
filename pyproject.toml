@@ -1,16 +1,9 @@
-[tool.uv.workspace]
-members = ["src/open_ticket_ai_hf_local", "src/open_ticket_ai_otobo_znuny_plugin"]
-
-[tool.uv.sources]
-open-ticket-ai-hf-local = { workspace = true }
-open-ticket-ai-otobo-znuny-plugin = { workspace = true }
-
 [project]
 name = "open-ticket-ai"
 version = "1.0.0rc1"
 description = "AI enhancements for open source ticket systems"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
@@ -46,11 +39,14 @@ dependencies = [
     "pyfiglet>=1.0.4",
     "tenacity>=9.0.0",
     "prefect~=3.4.20",
-    "click>=8.1.6",
+    "click>=8.0.0",
 ]
 
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
+
+[project.scripts]
+otai = "open_ticket_ai.cli:cli"
 
 [project.optional-dependencies]
 dev = [
