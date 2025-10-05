@@ -1,30 +1,21 @@
 import sys
 from typing import Optional
 
-import click
+import typer
 
-
-@click.group()
-def otobo_znuny():
-    pass
+otobo_znuny = typer.Typer()
 
 
 @otobo_znuny.command()
-@click.option('--base-url', prompt='OTOBO/Znuny base URL', help='Base URL of the OTOBO/Znuny instance')
-@click.option('--webservice-name', default='OpenTicketAI', prompt='Web service name', help='Name of the web service')
-@click.option('--username', default='open_ticket_ai', prompt='Username', help='Username for authentication')
-@click.option('--password', prompt=True, hide_input=True, help='Password for authentication')
-@click.option('--verify-connection/--no-verify-connection', default=True, help='Verify the connection after setup')
-@click.option('--output-config', type=click.Path(), help='Path to output a config.yml file')
 def setup(
-    base_url: str,
-    webservice_name: str,
-    username: str,
-    password: str,
-    verify_connection: bool,
-    output_config: Optional[str]
+    base_url: str = typer.Option(..., "--base-url", prompt="OTOBO/Znuny base URL", help="Base URL of the OTOBO/Znuny instance"),
+    webservice_name: str = typer.Option("OpenTicketAI", "--webservice-name", prompt="Web service name", help="Name of the web service"),
+    username: str = typer.Option("open_ticket_ai", "--username", prompt="Username", help="Username for authentication"),
+    password: str = typer.Option(..., "--password", prompt=True, hide_input=True, help="Password for authentication"),
+    verify_connection: bool = typer.Option(True, "--verify-connection/--no-verify-connection", help="Verify the connection after setup"),
+    output_config: Optional[str] = typer.Option(None, "--output-config", help="Path to output a config.yml file")
 ):
-    click.echo("\n=== OTOBO/Znuny Ticket System Setup ===\n")
+    typer.echo("\n=== OTOBO/Znuny Ticket System Setup ===\n")
     
     operation_urls = {
         "search": "ticket-search",
@@ -32,10 +23,10 @@ def setup(
         "update": "ticket-update",
     }
     
-    click.echo(f"Base URL: {base_url}")
-    click.echo(f"Web service: {webservice_name}")
-    click.echo(f"Username: {username}")
-    click.echo()
+    typer.echo(f"Base URL: {base_url}")
+    typer.echo(f"Web service: {webservice_name}")
+    typer.echo(f"Username: {username}")
+    typer.echo()
     
     if verify_connection:
         from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
@@ -44,7 +35,7 @@ def setup(
         from otobo_znuny.domain_models.ticket_operation import TicketOperation
         from pydantic import SecretStr
         
-        click.echo("Verifying connection...")
+        typer.echo("Verifying connection...")
         try:
             operation_url_map = {
                 TicketOperation.SEARCH: operation_urls["search"],
@@ -59,14 +50,14 @@ def setup(
             client = OTOBOZnunyClient(config=config)
             auth = BasicAuth(user_login=username, password=SecretStr(password))
             client.login(auth)
-            click.echo(click.style("✓ Connection successful!", fg='green'))
+            typer.echo(typer.style("✓ Connection successful!", fg=typer.colors.GREEN))
         except Exception as e:
-            click.echo(click.style(f"✗ Connection failed: {e}", fg='red'))
-            if not click.confirm("\nContinue anyway?"):
-                sys.exit(1)
+            typer.echo(typer.style(f"✗ Connection failed: {e}", fg=typer.colors.RED))
+            if not typer.confirm("\nContinue anyway?"):
+                raise typer.Exit(code=1)
     
     if output_config:
-        click.echo(f"\nGenerating configuration file: {output_config}")
+        typer.echo(f"\nGenerating configuration file: {output_config}")
         config_content = f"""open_ticket_ai:
   defs:
     - id: "otobo_znuny"
@@ -84,21 +75,21 @@ def setup(
         try:
             with open(output_config, 'w') as f:
                 f.write(config_content)
-            click.echo(click.style(f"✓ Configuration written to {output_config}", fg='green'))
-            click.echo(f"\nNOTE: Set the OTAI_OTOBO_ZNUNY_PASSWORD environment variable before running.")
+            typer.echo(typer.style(f"✓ Configuration written to {output_config}", fg=typer.colors.GREEN))
+            typer.echo(f"\nNOTE: Set the OTAI_OTOBO_ZNUNY_PASSWORD environment variable before running.")
         except Exception as e:
-            click.echo(click.style(f"✗ Failed to write config: {e}", fg='red'))
-            sys.exit(1)
+            typer.echo(typer.style(f"✗ Failed to write config: {e}", fg=typer.colors.RED))
+            raise typer.Exit(code=1)
     
-    click.echo("\n=== Next Steps ===")
-    click.echo("1. In OTOBO/Znuny, create a dedicated API web service")
-    click.echo("2. Create an agent with permissions to search, read, update tickets, and add articles")
-    click.echo("3. Configure the web service with the following operations:")
+    typer.echo("\n=== Next Steps ===")
+    typer.echo("1. In OTOBO/Znuny, create a dedicated API web service")
+    typer.echo("2. Create an agent with permissions to search, read, update tickets, and add articles")
+    typer.echo("3. Configure the web service with the following operations:")
     for op, url in operation_urls.items():
-        click.echo(f"   - {op}: {url}")
-    click.echo("4. Set the OTAI_OTOBO_ZNUNY_PASSWORD environment variable")
-    click.echo("5. Test your configuration with Open Ticket AI")
-    click.echo()
+        typer.echo(f"   - {op}: {url}")
+    typer.echo("4. Set the OTAI_OTOBO_ZNUNY_PASSWORD environment variable")
+    typer.echo("5. Test your configuration with Open Ticket AI")
+    typer.echo()
 
 
 def get_commands():

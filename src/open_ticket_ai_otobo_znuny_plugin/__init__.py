@@ -21,16 +21,14 @@ def register_services():
     return [OTOBOZnunyTicketSystemService]
 
 def register_cli_commands():
-    import click
+    import typer
     
-    @click.group()
-    def otobo_znuny_plugin():
-        pass
+    otobo_znuny_plugin = typer.Typer()
     
     @otobo_znuny_plugin.command()
     def setup():
-        click.echo("OTOBO/Znuny plugin setup wizard")
-        click.echo("This command would guide you through configuring the plugin.")
-        click.echo("(Implementation placeholder)")
+        typer.echo("OTOBO/Znuny plugin setup wizard")
+        typer.echo("This command would guide you through configuring the plugin.")
+        typer.echo("(Implementation placeholder)")
     
     return otobo_znuny_plugin

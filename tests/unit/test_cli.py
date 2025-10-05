@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from click.testing import CliRunner
+from typer.testing import CliRunner
 
 from open_ticket_ai_otobo_znuny_plugin.cli import otobo_znuny, setup
 
@@ -16,7 +16,8 @@ class TestOtoboZnunyCLI:
     def test_setup_prompts_for_required_fields(self):
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
+            ["setup"],
             input="https://example.com/otrs\nOpenTicketAI\nopen_ticket_ai\npassword123\n"
         )
         assert "OTOBO/Znuny base URL" in result.output
@@ -27,8 +28,9 @@ class TestOtoboZnunyCLI:
     def test_setup_with_all_options_no_verify(self, mock_client):
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
             [
+                "setup",
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
                 "--username", "testuser",
@@ -47,8 +49,9 @@ class TestOtoboZnunyCLI:
         
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
             [
+                "setup",
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
                 "--username", "testuser",
@@ -69,8 +72,9 @@ class TestOtoboZnunyCLI:
         
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
             [
+                "setup",
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
                 "--username", "testuser",
@@ -89,8 +93,9 @@ class TestOtoboZnunyCLI:
         
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
             [
+                "setup",
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
                 "--username", "testuser",
@@ -109,8 +114,9 @@ class TestOtoboZnunyCLI:
         runner = CliRunner()
         with runner.isolated_filesystem():
             result = runner.invoke(
-                setup,
+                otobo_znuny,
                 [
+                    "setup",
                     "--base-url", "https://example.com/otrs",
                     "--webservice-name", "TestService",
                     "--username", "testuser",

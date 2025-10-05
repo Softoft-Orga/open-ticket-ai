@@ -90,21 +90,16 @@ Plugins can expose CLI commands that integrate with the main `otai` command-line
 
 ### Implementing CLI Commands
 
-1. Create a `cli.py` module in your plugin with Click commands or groups:
+1. Create a `cli.py` module in your plugin with Typer commands or groups:
 
 ```python
-import click
+import typer
 
-@click.group()
-def my_plugin():
-    """My plugin commands"""
-    pass
+my_plugin = typer.Typer()
 
 @my_plugin.command()
-@click.option('--option', help='An option')
-def setup(option: str):
-    """Setup command for my plugin"""
-    click.echo(f"Setting up with option: {option}")
+def setup(option: str = typer.Option(None, help='An option')):
+    typer.echo(f"Setting up with option: {option}")
 
 def get_commands():
     return [my_plugin]
@@ -223,17 +218,13 @@ Plugins can expose their own CLI commands by implementing the optional `register
 
 ```python
 def register_cli_commands():
-    import click
+    import typer
     
-    @click.group()
-    def my_plugin():
-        """My plugin CLI commands."""
-        pass
+    my_plugin = typer.Typer()
     
     @my_plugin.command()
     def setup():
-        """Setup the plugin."""
-        click.echo("Running setup...")
+        typer.echo("Running setup...")
     
     return my_plugin
 ```
