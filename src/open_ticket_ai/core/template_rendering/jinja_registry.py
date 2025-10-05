@@ -36,3 +36,4 @@ def clear_registry() -> None:
     with _registry_lock:
         _template_methods.clear()
         _template_variables.clear()
+

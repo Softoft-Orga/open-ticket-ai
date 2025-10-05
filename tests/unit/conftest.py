@@ -4,7 +4,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
@@ -67,7 +66,6 @@ def mock_ticket_system_pipe_config():
 
 @pytest.fixture
 def pipe_runner(mock_registry, mock_ticket_system_service):
-    """Factory to run pipes with mocked registry."""
 
     def _run_pipe(pipe_class, config, context):
         with patched_registry(mock_registry):
@@ -87,7 +85,6 @@ def pipe_runner(mock_registry, mock_ticket_system_service):
 
 @pytest.fixture
 def ticket_system_pipe_factory(mock_ticket_system_service, mock_registry):
-    """Factory for creating ticket system pipes with common setup."""
 
     def _create_pipe(pipe_class, **config_overrides):
         base_config = {
@@ -115,7 +112,6 @@ def empty_mocked_ticket_system() -> MockedTicketSystem:
 
 @pytest.fixture
 def mocked_ticket_system() -> MockedTicketSystem:
-    """Pre-populated MockedTicketSystem with sample tickets."""
     system = MockedTicketSystem()
 
     # Add sample tickets
@@ -153,7 +149,6 @@ def mocked_ticket_system() -> MockedTicketSystem:
 
 @pytest.fixture
 def stateful_pipe_runner(mock_registry, mocked_ticket_system):
-    """Factory to run pipes with stateful MockedTicketSystem."""
 
     def _run_pipe(pipe_class, config, context):
         with patched_registry(mock_registry):

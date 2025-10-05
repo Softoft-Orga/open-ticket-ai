@@ -41,3 +41,4 @@ class TemplateRenderer(ABC):
         if isinstance(obj, dict):
             return {k: self.render_recursive(v, scope_dict, fail_silently) for k, v in obj.items()}
         return obj
+

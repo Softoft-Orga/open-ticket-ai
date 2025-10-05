@@ -3,15 +3,14 @@ import json
 import logging
 import os
 from types import MappingProxyType
-from typing import Any
-from typing import Mapping, Callable
+from typing import Any, Mapping, Callable
 
 from jinja2.sandbox import SandboxedEnvironment
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
+from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig, TemplateRendererEnvConfig
 from open_ticket_ai.core.template_rendering.jinja_registry import (
     get_registered_methods,
     get_registered_variables,
@@ -22,34 +21,13 @@ class JinjaRenderer(TemplateRenderer):
     def __init__(
         self,
         config: JinjaRendererConfig | None = None,
-        env: SandboxedEnvironment | None = None,
-        env_prefix: str = "OTAI_",
-        env_extra_prefixes: tuple[str, ...] = (),
-        env_allowlist: set[str] | None = None,
-        env_denylist: set[str] | None = None,
-        env_key: str = "env",
-        env_provider: Callable[[], Mapping[str, str]] | None = None,
-        refresh_env_on_each_render: bool = False,
     ):
         self._logger = logging.getLogger(__name__)
-        
-        if config is None:
-            from open_ticket_ai.core.template_rendering.renderer_config import TemplateRendererEnvConfig
-            config = JinjaRendererConfig(
-                env=env,
-                env_config=TemplateRendererEnvConfig(
-                    prefix=env_prefix,
-                    extra_prefixes=env_extra_prefixes,
-                    allowlist=env_allowlist,
-                    denylist=env_denylist,
-                    key=env_key,
-                    provider=env_provider,
-                    refresh_env_on_each_render=refresh_env_on_each_render,
-                )
-            )
-        
+
         self.config = config
-        self.env = config.env or SandboxedEnvironment(
+        env_config = config.env_config
+
+        self.env = SandboxedEnvironment(
             autoescape=config.autoescape,
             trim_blocks=config.trim_blocks,
             lstrip_blocks=config.lstrip_blocks
@@ -57,32 +35,32 @@ class JinjaRenderer(TemplateRenderer):
         self.env.filters.setdefault("at_path", self._at_path)
 
         def _build_filtered_env() -> dict[str, str]:
-            src = dict(self.config.env_config.provider()) if self.config.env_config.provider else dict(os.environ)
-            pref_ok = {self.config.env_config.prefix, *self.config.env_config.extra_prefixes} if self.config.env_config.prefix else set(self.config.env_config.extra_prefixes)
+            src = dict(env_config.provider()) if env_config.provider else dict(os.environ)
+            pref_ok = {env_config.prefix, *env_config.extra_prefixes} if env_config.prefix else set(env_config.extra_prefixes)
 
             def _pref(k: str) -> bool:
                 return True if not pref_ok else any(k.startswith(p) for p in pref_ok)
 
             out = {k: v for k, v in src.items() if _pref(k)}
-            if self.config.env_config.allowlist is not None:
-                out = {k: v for k, v in out.items() if k in self.config.env_config.allowlist}
-            if self.config.env_config.denylist is not None:
-                out = {k: v for k, v in out.items() if k not in self.config.env_config.denylist}
+            if env_config.allowlist is not None:
+                out = {k: v for k, v in out.items() if k in env_config.allowlist}
+            if env_config.denylist is not None:
+                out = {k: v for k, v in out.items() if k not in env_config.denylist}
             return out
 
         _static_env = MappingProxyType(_build_filtered_env())
 
         def get_env(key: str, default: str | None = None) -> str | None:
-            if self.config.env_config.refresh_env_on_each_render:
+            if env_config.refresh_on_each_render:
                 return _build_filtered_env().get(key, default)
             return _static_env.get(key, default)
 
         def get_envs() -> Mapping[str, str]:
-            if self.config.env_config.refresh_env_on_each_render:
+            if env_config.refresh_on_each_render:
                 return MappingProxyType(_build_filtered_env())
             return _static_env
 
-        self.env.globals[self.config.env_config.key] = get_envs()
+        self.env.globals[env_config.key] = get_envs()
         self.env.globals["env_get"] = get_env
 
         for method_name, method_func in get_registered_methods().items():
@@ -95,7 +73,7 @@ class JinjaRenderer(TemplateRenderer):
     def _coerce_path(path: Any) -> list[str]:
         if path is None:
             return []
-        if isinstance(path, list | tuple):
+        if isinstance(path, (list, tuple)):
             return [str(p) for p in path if str(p)]
         if not isinstance(path, str):
             return [str(path)]
@@ -107,7 +85,7 @@ class JinjaRenderer(TemplateRenderer):
         if p.startswith(("[", "(")) and p.endswith(("]", ")")):
             try:
                 seq = ast.literal_eval(p)
-                if isinstance(seq, list | tuple):
+                if isinstance(seq, (list, tuple)):
                     return [str(x) for x in seq]
             except Exception:
                 pass
@@ -161,3 +139,4 @@ class JinjaRenderer(TemplateRenderer):
             if fail_silently:
                 return template_str
             raise
+
