@@ -25,49 +25,75 @@ out of the box and explains how to enable them in your configuration.
 
 This pipe lets you execute any Hugging Face sequence-classification model locally. When the pipe runs it loads the
 tokenizer and model, builds a `text-classification` pipeline, and returns the top label together with its confidence
-score.【F:src/open_ticket_ai/hf_local/hf_local_text_classification_pipe.py†L1-L47】
+score.
 
 ### Installation & dependencies
 
-The dependency on `transformers[torch]` is already declared in `pyproject.toml`, so no additional package installation
-is needed once you install Open Ticket AI.【F:pyproject.toml†L17-L27】 If your model is private you must supply a Hugging
-Face token.
+The Hugging Face local text classification plugin is now available as a standalone PyPI package. Install it with:
+
+```bash
+pip install open-ticket-ai-hf-local
+```
+
+This will automatically install the required dependencies including `transformers[torch]` and `open-ticket-ai` core.
+
+If your model is private you must supply a Hugging Face token.
 
 ### Configure the pipe
 
-The default configuration declares the pipe class and injects it into the reusable `classification_generic` pipeline
-step. Copy the relevant snippet if you are creating your own config:
+Declare the pipe class in your configuration and inject it into your pipeline. The plugin is now referenced by its
+standalone package name:
 
 ```yaml
 open_ticket_ai:
   general_config:
     pipe_classes:
       - &ticket_classifier_pipe
-        use: "open_ticket_ai.open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
+        use: "open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
   defs:
     - &ticket_classifier
       <<: *ticket_classifier_pipe
-      token: "{{ env.OTAI_HUGGINGFACE_EHS_TOKEN }}"
+      token: "{{ env.OTAI_HUGGINGFACE_TOKEN }}"
       prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
 ```
 
-【F:src/config.yml†L10-L41】
+**Note:** The import path has changed from `open_ticket_ai.open_ticket_ai_hf_local` to just `open_ticket_ai_hf_local` 
+since it's now a standalone package.
 
 ### Runtime parameters
 
-When you reference the pipe inside a workflow you provide the model name (for example, `softoft/EHS_Queue_V8`) and a
-mapping that translates raw labels to your helpdesk queue or priority names. The example automation shipped with the
-repo shows the queue and priority classification steps using two different models but sharing the same Hugging Face pipe
-definition.【F:src/config.yml†L59-L126】
+When you reference the pipe inside a workflow you provide the model name (for example, `softoft/EHS_Queue_V8`) and 
+configure how it processes your ticket data.
+
+**Required parameters:**
+- `model` (str): The Hugging Face model identifier (e.g., `"softoft/EHS_Queue_V8"`)
+- `prompt` (str): Text to classify, typically constructed from ticket fields using Jinja2 templates
+
+**Optional parameters:**
+- `token` (str): Hugging Face API token for private models
+
+Example configuration with queue classification:
+
+```yaml
+- id: classify_queue
+  use: "open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
+  model: "softoft/EHS_Queue_V8"
+  token: "{{ env.OTAI_HUGGINGFACE_TOKEN }}"
+  prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
+```
 
 ### Usage tips
 
-* Cache behaviour: models are cached per `(model, token)` combination, so repeated runs avoid reloading the weights when
-  the worker stays warm.【F:src/open_ticket_ai/hf_local/hf_local_text_classification_pipe.py†L20-L32】
-* Secret management: keep your Hugging Face token in the `OTAI_HUGGINGFACE_EHS_TOKEN` environment variable or remove the
+* **Cache behaviour:** Models are cached per `(model, token)` combination, so repeated runs avoid reloading the weights 
+  when the worker stays warm.
+* **Secret management:** Keep your Hugging Face token in the `OTAI_HUGGINGFACE_TOKEN` environment variable or omit the 
   `token` field if the model is public.
-* Prompt control: the `prompt` parameter can be any string—use Jinja templates to concatenate ticket subject, body, or
-  other context fields.
+* **Prompt control:** The `prompt` parameter can be any string—use Jinja templates to concatenate ticket subject, body, 
+  or other context fields.
+* **Package updates:** Install updates with `pip install --upgrade open-ticket-ai-hf-local`
+
+For more details, see the [package repository](https://github.com/Softoft-Orga/open-ticket-ai/tree/main/src/open_ticket_ai_hf_local) 
+and [PyPI page](https://pypi.org/project/open-ticket-ai-hf-local/).
 
 ---
 
