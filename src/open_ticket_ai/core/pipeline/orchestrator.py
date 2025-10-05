@@ -11,8 +11,8 @@ from prefect.deployments.runner import RunnerDeployment
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig, RunnerDefinition
 from open_ticket_ai.core.pipeline.prefect_flows import (
-    execute_scheduled_pipe_flow,
     create_interval_schedule,
+    execute_scheduled_pipe_flow,
 )
 
 
@@ -35,9 +35,11 @@ class Orchestrator:
             "definition": definition.model_dump(mode="json"),
         }
 
-        deployment_params: dict[str, Any] = {"name": deployment_name, "parameters": params,
-                                             "tags": ["open-ticket-ai", definition.pipe_id]
-                                             }
+        deployment_params: dict[str, Any] = {
+            "name": deployment_name,
+            "parameters": params,
+            "tags": ["open-ticket-ai", definition.pipe_id],
+        }
 
         if definition.interval_seconds > 0:
             deployment_params["interval"] = create_interval_schedule(max(definition.interval_seconds, 0.5))

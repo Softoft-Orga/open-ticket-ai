@@ -1,4 +1,4 @@
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -26,7 +26,7 @@ async def test_is_in_prefect_context_returns_false_outside_prefect():
 @pytest.mark.asyncio
 async def test_create_pipe_task_creates_task_with_correct_name():
     pipe_task = create_pipe_task("test_pipe", retries=3, retry_delay_seconds=60)
-    
+
     assert pipe_task is not None
     assert callable(pipe_task)
     assert pipe_task.name == "pipe_test_pipe"
@@ -39,14 +39,14 @@ async def test_execute_single_pipe_task_executes_pipe():
         "defs": [],
         "orchestrator": {"runners": []},
     }
-    
+
     pipe_config = {
         "id": "test_pipe",
         "use": "tests.unit.open_ticket_ai.core.pipeline.test_prefect_integration:SimplePipe",
     }
-    
+
     context_data = {"pipes": {}, "config": {}}
-    
+
     result = await execute_single_pipe_task(
         app_config=app_config,
         pipe_config=pipe_config,
@@ -55,7 +55,7 @@ async def test_execute_single_pipe_task_executes_pipe():
         retries=2,
         retry_delay_seconds=30,
     )
-    
+
     assert "pipes" in result
     assert "test_pipe" in result["pipes"]
     assert result["pipes"]["test_pipe"]["success"] is True
@@ -70,7 +70,7 @@ async def test_composite_pipe_uses_prefect_tasks_when_in_context():
             "defs": [],
             "orchestrator": {"runners": []},
         }
-        
+
         composite_config = {
             "id": "composite",
             "use": "open_ticket_ai.base.composite_pipe:CompositePipe",
@@ -85,38 +85,41 @@ async def test_composite_pipe_uses_prefect_tasks_when_in_context():
                 },
             ],
         }
-        
+
         factory = MagicMock()
-        
+
         async def mock_create_pipe(parent_config, pipe_config, scope):
             pipe_id = pipe_config["id"]
             mock_pipe = MagicMock(spec=Pipe)
             mock_pipe.config = MagicMock(id=pipe_id)
-            
+
             async def mock_process(context):
                 result = PipeResult(success=True, failed=False, data={"value": f"processed_{pipe_id}"})
                 context.pipes[pipe_id] = result
                 return context
-            
+
             mock_pipe.process = mock_process
             return mock_pipe
-        
+
         factory.create_pipe = mock_create_pipe
-        
+
         composite_pipe = CompositePipe(composite_config, factory=factory, app_config=app_config)
         context = Context(pipes={}, config=composite_config)
-        
+
         with patch("open_ticket_ai.base.composite_pipe.execute_single_pipe_task") as mock_execute:
-            async def mock_execute_task(app_config, pipe_config, context_data, pipe_id, retries=2, retry_delay_seconds=30):
+
+            async def mock_execute_task(
+                app_config, pipe_config, context_data, pipe_id, retries=2, retry_delay_seconds=30
+            ):
                 ctx = Context(**context_data)
                 result = PipeResult(success=True, failed=False, data={"value": f"processed_{pipe_id}"})
                 ctx.pipes[pipe_id] = result
                 return ctx.model_dump()
-            
+
             mock_execute.side_effect = mock_execute_task
-            
+
             result_context = await composite_pipe.process(context)
-            
+
             assert mock_execute.call_count == 2
             assert "step1" in result_context.pipes
             assert "step2" in result_context.pipes
@@ -130,11 +133,11 @@ async def test_pipe_retry_configuration_from_config():
         "retries": 5,
         "retry_delay_seconds": 120,
     }
-    
+
     from open_ticket_ai.core.pipeline.pipe_config import RenderedPipeConfig
-    
+
     rendered_config = RenderedPipeConfig.model_validate(pipe_config)
-    
+
     assert rendered_config.retries == 5
     assert rendered_config.retry_delay_seconds == 120
 
@@ -145,10 +148,10 @@ async def test_pipe_retry_configuration_defaults():
         "id": "test_pipe",
         "use": "tests.unit.open_ticket_ai.core.pipeline.test_prefect_integration:SimplePipe",
     }
-    
+
     from open_ticket_ai.core.pipeline.pipe_config import RenderedPipeConfig
-    
+
     rendered_config = RenderedPipeConfig.model_validate(pipe_config)
-    
+
     assert rendered_config.retries == 2
     assert rendered_config.retry_delay_seconds == 30

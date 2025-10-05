@@ -1,6 +1,5 @@
 import logging
 import tomllib
-from logging.config import dictConfig
 from pathlib import Path
 
 import pyfiglet

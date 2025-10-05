@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from threading import Lock
-from typing import Any, Callable
+from typing import Any
 
 _registry_lock = Lock()
 _template_methods: dict[str, Callable[..., Any]] = {}
@@ -11,6 +12,7 @@ def jinja_template_method(method_name: str) -> Callable[[Callable[..., Any]], Ca
         with _registry_lock:
             _template_methods[method_name] = func
         return func
+
     return decorator
 
 
@@ -19,6 +21,7 @@ def jinja_variable(variable_name: str) -> Callable[[Callable[[], Any]], Callable
         with _registry_lock:
             _template_variables[variable_name] = func
         return func
+
     return decorator
 
 
@@ -36,4 +39,3 @@ def clear_registry() -> None:
     with _registry_lock:
         _template_methods.clear()
         _template_variables.clear()
-

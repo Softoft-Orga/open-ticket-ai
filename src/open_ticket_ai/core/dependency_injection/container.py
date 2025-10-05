@@ -21,16 +21,13 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class AppModule(Module):
     def __init__(self, config_path: str | os.PathLike | None = None):
         """Initialize AppModule with optional config path.
-        
+
         Args:
             config_path: Path to config.yml. If None, uses OPEN_TICKET_AI_CONFIG
                         environment variable or falls back to default location.
         """
         if config_path is None:
-            config_path = os.getenv(
-                "OPEN_TICKET_AI_CONFIG",
-                Path.cwd() / "config.yml"
-            )
+            config_path = os.getenv("OPEN_TICKET_AI_CONFIG", Path.cwd() / "config.yml")
         self.config_path = config_path
 
     def configure(self, binder: Binder):
@@ -39,11 +36,11 @@ class AppModule(Module):
         dictConfig(config.general_config["logging"])
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(PipeFactory, scope=singleton)
-        
+
         plugin_manager = PluginManager()
         plugin_manager.discover_and_load()
         binder.bind(PluginManager, to=plugin_manager, scope=singleton)
-        
+
         plugin_manager.register_services(binder)
 
     @provider
@@ -53,7 +50,7 @@ class AppModule(Module):
         if renderer_type != "jinja":
             raise ValueError(f"Unsupported template renderer type: {renderer_type}")
         params = renderer_config.get("params", {})
-        
+
         env_config_fields = {
             "prefix",
             "extra_prefixes",
@@ -65,7 +62,7 @@ class AppModule(Module):
         }
         env_params = {}
         jinja_params = {}
-        
+
         for k, v in params.items():
             if k.startswith("env_"):
                 field_name = k.replace("env_", "")
@@ -74,8 +71,8 @@ class AppModule(Module):
                 env_params[k] = v
             elif k != "config":
                 jinja_params[k] = v
-        
+
         env_config = TemplateRendererEnvConfig(**env_params) if env_params else TemplateRendererEnvConfig()
         jinja_config = JinjaRendererConfig(env_config=env_config, **jinja_params)
-        
+
         return JinjaRenderer(config=jinja_config)

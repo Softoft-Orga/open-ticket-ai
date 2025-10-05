@@ -7,8 +7,10 @@ from types import ModuleType
 
 from pydantic import SecretStr
 
-from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import \
-    RenderedOTOBOZnunyTicketsystemServiceConfig, RawOTOBOZnunyTicketsystemServiceConfig
+from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import (
+    RawOTOBOZnunyTicketsystemServiceConfig,
+    RenderedOTOBOZnunyTicketsystemServiceConfig,
+)
 
 
 def _install_otobo_stubs() -> None:
@@ -98,9 +100,7 @@ def test_to_client_config_builds_client_config_with_operation_map():
 
 
 def test_raw_config_provides_default_values():
-    raw_config = RawOTOBOZnunyTicketsystemServiceConfig(
-        password="plain", base_url="https://raw.example.com"
-    )
+    raw_config = RawOTOBOZnunyTicketsystemServiceConfig(password="plain", base_url="https://raw.example.com")
 
     assert raw_config.username == "open_ticket_ai"
     assert raw_config.operation_urls[TicketOperation.SEARCH.value] == "ticket-search"

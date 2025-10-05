@@ -3,7 +3,6 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from otobo_znuny.domain_models.ticket_models import IdName, Ticket, TicketSearch, TicketUpdate
-from pydantic import SecretStr
 
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
@@ -12,10 +11,13 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
     UnifiedTicket,
 )
-from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service import _to_id_name, \
-    OTOBOZnunyTicketSystemService
-from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import \
-    RenderedOTOBOZnunyTicketsystemServiceConfig
+from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service import (
+    OTOBOZnunyTicketSystemService,
+    _to_id_name,
+)
+from open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import (
+    RenderedOTOBOZnunyTicketsystemServiceConfig,
+)
 
 
 class TestToIdName:
@@ -49,9 +51,10 @@ class TestOTOBOZnunyTicketSystemService:
 
     @pytest.fixture
     def service(self, config_dict):
-        with patch("open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyTicketSystemService._recreate_client"):
+        with patch(
+            "open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyTicketSystemService._recreate_client"
+        ):
             return OTOBOZnunyTicketSystemService(config_dict)
-
 
     @pytest.fixture
     def mock_client(self):
@@ -64,7 +67,9 @@ class TestOTOBOZnunyTicketSystemService:
 
     @pytest.fixture
     def patch_ticket_conversion(self):
-        with patch("open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.otobo_ticket_to_unified_ticket") as mock_convert:
+        with patch(
+            "open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.otobo_ticket_to_unified_ticket"
+        ) as mock_convert:
             mock_convert.side_effect = lambda ticket: UnifiedTicket(
                 id=str(ticket.id),
                 subject=ticket.title,
@@ -87,7 +92,8 @@ class TestOTOBOZnunyTicketSystemService:
 
     def test_recreate_client(self, service, mock_client):
         with patch(
-            "open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
+            "open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service.OTOBOZnunyClient"
+        ) as MockClientClass:
             MockClientClass.return_value = mock_client
 
             result = service._recreate_client()

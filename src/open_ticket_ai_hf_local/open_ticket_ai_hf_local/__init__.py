@@ -10,6 +10,7 @@ __all__ = [
     "HFLocalTextClassificationPipeConfig",
 ]
 
+
 def get_metadata():
     return {
         "name": "open-ticket-ai-hf-local",
@@ -18,8 +19,10 @@ def get_metadata():
         "description": "Hugging Face local text classification plugin for Open Ticket AI",
     }
 
+
 def register_pipes():
     return [HFLocalTextClassificationPipe]
+
 
 def register_services():
     return []

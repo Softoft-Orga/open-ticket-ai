@@ -26,7 +26,7 @@ class TemplateRenderer(ABC):
         except Exception as e:
             logging.debug(f"Failed to parse JSON: {str(e)}")
 
-            if stripped.startswith(('[', '{', '(', '"', "'")):
+            if stripped.startswith(("[", "{", "(", '"', "'")):
                 try:
                     return ast.literal_eval(s)
                 except Exception as e:

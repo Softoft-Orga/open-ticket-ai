@@ -43,7 +43,7 @@ def _parse_frontmatter(content: str) -> tuple[dict, str]:
     match = _FRONTMATTER_PATTERN.match(content)
     if match:
         frontmatter_text = match.group(1)
-        body = content[match.end():]
+        body = content[match.end() :]
         data = yaml.safe_load(frontmatter_text) or {}
         return data, body
     return {}, content

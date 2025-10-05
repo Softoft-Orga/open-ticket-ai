@@ -56,6 +56,7 @@ def has_failed_factory(scope: dict[str, Any]) -> callable:
         if pipe is None:
             return False
         return pipe.failed or pipe.get("failed")
+
     return has_failed
 
 
@@ -68,6 +69,7 @@ def pipe_result_factory(scope: dict[str, Any]) -> callable:
             return None
         pipe_data = pipe.data if isinstance(pipe, PipeResult) else pipe.get("data")
         return pipe_data.get(data_key)
+
     return pipe_result
 
 

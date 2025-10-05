@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from src.scripts.util.display_file_structure import display_dir_tree
-
 from open_ticket_ai.core.util.path_util import find_python_code_root_path
+
+from src.scripts.util.display_file_structure import display_dir_tree
 
 """Module for updating project README files using AI-generated content.
 

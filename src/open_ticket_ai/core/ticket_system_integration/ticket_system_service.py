@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 
+from ..config.registerable_class import RegisterableClass
 from .unified_models import (
     TicketSearchCriteria,
     UnifiedNote,
     UnifiedTicket,
 )
-from ..config.registerable_class import RegisterableClass
 
 
 class TicketSystemService(RegisterableClass, ABC):

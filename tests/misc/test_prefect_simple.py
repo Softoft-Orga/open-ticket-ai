@@ -11,12 +11,15 @@ async def test_prefect_import() -> None:
     """Test that Prefect can be imported."""
     try:
         import prefect
+
         logger.info("✓ Prefect imported successfully: version %s", prefect.__version__)
 
         from prefect.client.orchestration import get_client
+
         logger.info("✓ Prefect client available")
 
         from prefect.deployments.runner import deploy
+
         logger.info("✓ Prefect deployment tools available")
 
         logger.info("\n✓ Prefect is correctly installed!")

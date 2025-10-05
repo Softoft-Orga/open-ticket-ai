@@ -4,7 +4,6 @@ import types
 from unittest.mock import MagicMock
 
 import pytest
-
 from open_ticket_ai_hf_local.hf_local_text_classification_pipe import (
     HFLocalTextClassificationPipe,
 )

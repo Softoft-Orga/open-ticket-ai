@@ -4,6 +4,7 @@ __version__ = "1.0.0rc1"
 
 __all__ = ["OTOBOZnunyTicketSystemService"]
 
+
 def get_metadata():
     return {
         "name": "open-ticket-ai-otobo-znuny-plugin",
@@ -12,8 +13,10 @@ def get_metadata():
         "description": "OTOBO/Znuny ticket system integration plugin for Open Ticket AI",
     }
 
+
 def register_pipes():
     return []
+
 
 def register_services():
     return [OTOBOZnunyTicketSystemService]

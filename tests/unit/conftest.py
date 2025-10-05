@@ -66,7 +66,6 @@ def mock_ticket_system_pipe_config():
 
 @pytest.fixture
 def pipe_runner(mock_registry, mock_ticket_system_service):
-
     def _run_pipe(pipe_class, config, context):
         with patched_registry(mock_registry):
             # Check if pipe needs ticket_system as first arg (ticket system pipes)
@@ -85,7 +84,6 @@ def pipe_runner(mock_registry, mock_ticket_system_service):
 
 @pytest.fixture
 def ticket_system_pipe_factory(mock_ticket_system_service, mock_registry):
-
     def _create_pipe(pipe_class, **config_overrides):
         base_config = {
             "id": "test_pipe",
@@ -149,7 +147,6 @@ def mocked_ticket_system() -> MockedTicketSystem:
 
 @pytest.fixture
 def stateful_pipe_runner(mock_registry, mocked_ticket_system):
-
     def _run_pipe(pipe_class, config, context):
         with patched_registry(mock_registry):
             import inspect
