@@ -1,6 +1,6 @@
 from typing import Callable, Mapping
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from jinja2.sandbox import SandboxedEnvironment
 
 
@@ -29,6 +29,13 @@ class TemplateRendererConfig(BaseModel):
 
 
 class JinjaRendererConfig(TemplateRendererConfig):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    env: SandboxedEnvironment | None = Field(
+        default=None,
+        description="Custom Jinja2 SandboxedEnvironment instance",
+        exclude=True
+    )
     autoescape: bool = Field(default=False, description="Enable autoescaping in Jinja2")
     trim_blocks: bool = Field(default=True, description="Trim blocks in Jinja2")
     lstrip_blocks: bool = Field(default=True, description="Left-strip blocks in Jinja2")

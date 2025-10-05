@@ -5,6 +5,7 @@ from open_ticket_ai.core.template_rendering.renderer_config import (
     TemplateRendererConfig,
     TemplateRendererEnvConfig,
 )
+from open_ticket_ai.core.template_rendering import jinja_renderer_extras
 
 __all__ = [
     "JinjaRenderer",
