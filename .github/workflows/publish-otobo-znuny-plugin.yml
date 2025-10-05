@@ -1,0 +1,64 @@
+name: Build and Publish OTOBO/Znuny Plugin
+
+on:
+  push:
+    tags:
+      - 'otobo-znuny-plugin-v*'
+  workflow_dispatch:
+    inputs:
+      publish_to_pypi:
+        description: 'Publish to PyPI'
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+    
+    - name: Build package
+      working-directory: packages/open_ticket_ai_otobo_znuny_plugin
+      run: |
+        python -m build
+    
+    - name: Check package
+      working-directory: packages/open_ticket_ai_otobo_znuny_plugin
+      run: |
+        twine check dist/*
+    
+    - name: Publish to Test PyPI
+      if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish_to_pypi == 'false'
+      working-directory: packages/open_ticket_ai_otobo_znuny_plugin
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      run: |
+        twine upload --repository testpypi dist/*
+    
+    - name: Publish to PyPI
+      if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/otobo-znuny-plugin-v')) || (github.event_name == 'workflow_dispatch' && github.event.inputs.publish_to_pypi == 'true')
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        packages-dir: packages/open_ticket_ai_otobo_znuny_plugin/dist/
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: plugin-package
+        path: packages/open_ticket_ai_otobo_znuny_plugin/dist/*
