@@ -1,24 +1,19 @@
-# FILE_PATH: open_ticket_ai\tests\conftest.py
+from __future__ import annotations
+
 import importlib
+from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
 import pytest
 
+if TYPE_CHECKING:
+    from injector import Injector
+
+    from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+
 
 def pytest_collection_modifyitems(config, items):
-    """Skip heavy experimental tests if dependencies are missing.
-
-    This pytest hook function checks for the availability of SpaCy and the German language model.
-    If either module fails to import, marks all tests from 'test_anonymize_data.py' to be skipped.
-
-    Modifies the test items list in-place by adding skip markers to relevant tests.
-
-    Args:
-        config (pytest.Config):
-            The pytest configuration object (unused in this function but required by hook signature).
-        items (list[pytest.Item]):
-            List of collected test items. Will be modified in-place by adding skip markers.
-    """
     try:
         importlib.import_module("spacy")
         importlib.import_module("de_core_news_sm")
@@ -86,3 +81,46 @@ def mock_context():
     from open_ticket_ai.core.pipeline.context import Context
 
     return Context(pipes={}, config={})
+
+
+@pytest.fixture
+def tmp_config(tmp_path: Path) -> Path:
+    config_content = """
+open_ticket_ai:
+  plugins: []
+  general_config:
+    logging:
+      version: 1
+      disable_existing_loggers: false
+      formatters:
+        simple:
+          format: '%(levelname)s - %(message)s'
+      handlers:
+        console:
+          class: logging.StreamHandler
+          formatter: simple
+      root:
+        level: INFO
+        handlers: [console]
+  defs: []
+  orchestrator: []
+    """
+    config_path = tmp_path / "config.yml"
+    config_path.write_text(config_content.strip(), encoding="utf-8")
+    return config_path
+
+
+@pytest.fixture
+def app_injector(tmp_config: Path) -> Injector:
+    from injector import Injector
+
+    from open_ticket_ai.core.dependency_injection.container import AppModule
+
+    return Injector([AppModule(tmp_config)])
+
+
+@pytest.fixture
+def test_config(tmp_config: Path) -> RawOpenTicketAIConfig:
+    from open_ticket_ai.core.config.config_models import load_config
+
+    return load_config(tmp_config)

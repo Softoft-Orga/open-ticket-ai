@@ -61,3 +61,8 @@ pythonpath = [".", "src"]
 testpaths = ["tests"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "unit: schnelle, isolierte Tests",
+    "integration: core + plugin zusammen",
+    "slow: dauert länger"
+]

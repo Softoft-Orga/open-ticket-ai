@@ -114,10 +114,28 @@ uv run pytest --cov=open_ticket_ai tests/
 
 ### Test Organization
 
-- **Unit tests**: `tests/unit/` - Test individual components
+For detailed information about the test structure, markers, fixtures, and best practices, see [docs/TESTING.md](docs/TESTING.md).
+
+**Quick Overview**:
+- **Unit tests**: `tests/unit/` and `<plugin>/tests/` - Test individual components
+- **Integration tests**: `tests/integration/` - Test Core + Plugin interactions
+- **Contract tests**: `tests/contract/` - Test Plugin API compliance
 - **E2E tests**: `tests/e2e/` - Test complete workflows
-- **Integration tests**: Test with actual ticket systems
-- **Async tests**: Use `pytest-asyncio` (configured in `pyproject.toml`)
+- **Test data**: `tests/data/` - Shared test data files
+
+**Test Markers**:
+- `@pytest.mark.unit` - Fast, isolated tests
+- `@pytest.mark.integration` - Core + plugin together
+- `@pytest.mark.contract` - Plugin API contracts
+- `@pytest.mark.e2e` - End-to-end flows
+- `@pytest.mark.slow` - Long-running tests
+
+**Run specific test types**:
+```bash
+pytest -m unit          # Only unit tests
+pytest -m integration   # Only integration tests
+pytest -m "not slow"    # Skip slow tests
+```
 
 ### Writing Tests
 

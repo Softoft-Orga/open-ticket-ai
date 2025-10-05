@@ -1,0 +1,12 @@
+sample_tickets:
+  - id: "TICKET-001"
+    subject: "Test Ticket 1"
+    body: "Dies ist ein Testticket für Unit-Tests"
+    queue: "Support"
+    priority: "Medium"
+  
+  - id: "TICKET-002"
+    subject: "Test Ticket 2"
+    body: "Ein weiteres Testticket"
+    queue: "IT"
+    priority: "High"
