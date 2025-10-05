@@ -1,102 +1,98 @@
-# orchestrator.py
 from __future__ import annotations
 
+import asyncio
 import logging
-from typing import Any
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
 from injector import inject, singleton
-from prefect import aserve
-from prefect.deployments.runner import RunnerDeployment
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
-from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig, RunnerDefinition
-from open_ticket_ai.core.pipeline.prefect_flows import (
-    create_interval_schedule,
-    execute_scheduled_pipe_flow,
-)
+
+from .orchestrator_config import OrchestratorConfig, RunnerDefinition
+from .pipe_factory import PipeFactory
+from .scheduled_runner import ScheduledPipeRunner
 
 
 @singleton
 class Orchestrator:
+    """Manages scheduled pipeline execution using APScheduler."""
+
     @inject
-    def __init__(self, app_config: RawOpenTicketAIConfig) -> None:
-        self._app_config = app_config
+    def __init__(self, pipe_factory: PipeFactory, app_config: RawOpenTicketAIConfig) -> None:
+        self._pipe_factory = pipe_factory
         self._config = OrchestratorConfig.from_raw(app_config.orchestrator)
         self._logger = logging.getLogger(self.__class__.__name__)
-        self._logger.warning(self._config)
-        self._deployments: list[RunnerDeployment] = []
-        self._running = False
+        self._scheduler = AsyncIOScheduler()
+        self._runners: dict[str, ScheduledPipeRunner] = {}
 
-    async def _create_deployment(self, definition: RunnerDefinition, index: int) -> RunnerDeployment:
-        deployment_name = f"{definition.pipe_id}_{index}"
-
-        params = {
-            "app_config": self._app_config.model_dump(mode="json"),
-            "definition": definition.model_dump(mode="json"),
-        }
-
-        deployment_params: dict[str, Any] = {
-            "name": deployment_name,
-            "parameters": params,
-            "tags": ["open-ticket-ai", definition.pipe_id],
-        }
-
-        if definition.interval_seconds > 0:
-            deployment_params["interval"] = create_interval_schedule(max(definition.interval_seconds, 0.5))
-            self._logger.info(
-                "Creating Prefect deployment for pipe '%s' with %.2f second interval",
-                definition.pipe_id,
-                definition.interval_seconds,
-            )
-        else:
-            self._logger.info(
-                "Creating Prefect deployment for pipe '%s' (manual trigger only)",
-                definition.pipe_id,
-            )
-
-        return await execute_scheduled_pipe_flow.ato_deployment(**deployment_params)
+    def _create_runner(self, definition: RunnerDefinition) -> ScheduledPipeRunner:
+        return ScheduledPipeRunner(definition, self._pipe_factory)
 
     async def start(self) -> None:
-        self._logger.warning(self._config)
-        if self._running:
-            self._logger.debug("Prefect orchestrator already running")
+        """Start the orchestrator and all scheduled runners."""
+        if self._scheduler.running:
+            self._logger.debug("Orchestrator already running")
             return
 
-        self._logger.info("Starting Prefect orchestrator with %d runner(s)", len(self._config.runners))
-        for index, definition in enumerate(self._config.runners):
-            deployment = await self._create_deployment(definition, index)
-            self._deployments.append(deployment)
+        self._logger.info("Starting orchestrator with %d runner(s)", len(self._config.runners))
 
-        self._running = True
-        self._logger.info("Prefect orchestrator started successfully")
+        for index, definition in enumerate(self._config.runners):
+            runner = self._create_runner(definition)
+            job_id = f"{definition.pipe_id}_{index}"
+            self._runners[job_id] = runner
+
+            # Schedule the runner
+            interval_seconds = definition.interval_seconds
+            if interval_seconds > 0:
+                trigger = IntervalTrigger(seconds=int(interval_seconds))
+                self._scheduler.add_job(
+                    runner.execute,
+                    trigger=trigger,
+                    id=job_id,
+                    name=f"Pipe: {definition.pipe_id}",
+                    max_instances=1,  # Prevent concurrent runs of same job
+                    coalesce=True,  # Combine missed runs into one
+                )
+                self._logger.info(
+                    "Scheduled pipe '%s' to run every %.2f seconds",
+                    definition.pipe_id,
+                    interval_seconds,
+                )
+            else:
+                # Run once immediately if interval is 0
+                self._scheduler.add_job(
+                    runner.execute,
+                    id=job_id,
+                    name=f"Pipe: {definition.pipe_id} (one-time)",
+                )
+                self._logger.info("Scheduled pipe '%s' for one-time execution", definition.pipe_id)
+
+        # Start the scheduler
+        self._scheduler.start()
+        self._logger.info("Orchestrator started successfully")
 
     async def stop(self) -> None:
-        if not self._running:
-            self._logger.debug("Prefect orchestrator stop requested but it is not running")
+        """Stop the orchestrator and all scheduled runners gracefully."""
+        if not self._scheduler.running:
+            self._logger.debug("Orchestrator stop requested but it is not running")
             return
 
-        self._logger.info("Stopping Prefect orchestrator")
-        self._deployments.clear()
-        self._running = False
-        self._logger.info("Prefect orchestrator stopped successfully")
+        self._logger.info("Stopping orchestrator")
+        self._scheduler.shutdown()
+        self._runners.clear()
+        self._logger.info("Orchestrator stopped successfully")
 
     async def run(self) -> None:
+        """Start the orchestrator and keep it running. Blocks until shutdown."""
         await self.start()
-        if not self._deployments:
-            self._logger.warning("No deployments to serve")
-            return
+
+        # Keep running until externally stopped
         try:
-            self._logger.info("Serving %d Prefect deployment(s)", len(self._deployments))
-            await aserve(*self._deployments)
+            # APScheduler runs in the background, so we just wait
+            while self._scheduler.running:
+                await asyncio.sleep(1)
+        except (KeyboardInterrupt, SystemExit):
+            self._logger.info("Shutdown signal received")
         finally:
             await self.stop()
-
-    async def run_once(self, pipe_id: str) -> dict[str, Any]:
-        definition = next((d for d in self._config.runners if d.pipe_id == pipe_id), None)
-        if definition is None:
-            raise ValueError(f"Pipe '{pipe_id}' not found in orchestrator configuration")
-
-        return await execute_scheduled_pipe_flow(
-            app_config=self._app_config.model_dump(mode="json"),
-            definition=definition.model_dump(mode="json"),
-        )
