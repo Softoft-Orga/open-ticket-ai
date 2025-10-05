@@ -42,8 +42,8 @@ class PluginManager:
                 self._plugins.append(plugin)
                 self._logger.info(f"Loaded plugin: {plugin_name} v{plugin_version}")
 
-            except Exception as e:
-                self._logger.error(f"Failed to load plugin '{ep.name}': {e}")
+            except Exception:
+                self._logger.exception(f"Failed to load plugin '{ep.name}'")
 
         self._loaded = True
 
@@ -52,16 +52,16 @@ class PluginManager:
             if hasattr(plugin, "register_services"):
                 try:
                     plugin.register_services(binder)
-                except Exception as e:
-                    self._logger.error(f"Failed to register services for plugin: {e}")
+                except Exception:
+                    self._logger.exception("Failed to register services for plugin")
 
     def register_pipes(self, factory: PipeFactory) -> None:
         for plugin in self._plugins:
             if hasattr(plugin, "register_pipes"):
                 try:
                     plugin.register_pipes(factory)
-                except Exception as e:
-                    self._logger.error(f"Failed to register pipes for plugin: {e}")
+                except Exception:
+                    self._logger.exception("Failed to register pipes for plugin")
 
     @property
     def loaded_plugins(self) -> list[Any]:

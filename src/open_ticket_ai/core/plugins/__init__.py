@@ -1,4 +1,4 @@
 from .manager import PluginManager
-from .spec import PluginMetadata, PluginHookSpec
+from .spec import PluginHookSpec, PluginMetadata
 
 __all__ = ["PluginManager", "PluginMetadata", "PluginHookSpec"]
