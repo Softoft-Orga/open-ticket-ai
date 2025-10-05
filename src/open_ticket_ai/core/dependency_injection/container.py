@@ -10,6 +10,7 @@ from open_ticket_ai.core.config.config_models import (
     load_config,
 )
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
+from open_ticket_ai.core.plugins.manager import PluginManager
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from open_ticket_ai.core.template_rendering.renderer_config import (
@@ -39,6 +40,12 @@ class AppModule(Module):
         dictConfig(config.general_config["logging"])
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(PipeFactory, scope=singleton)
+        
+        plugin_manager = PluginManager()
+        plugin_manager.discover_and_load()
+        binder.bind(PluginManager, to=plugin_manager, scope=singleton)
+        
+        plugin_manager.register_services(binder)
 
     @provider
     def provide_template_renderer(self, config: RawOpenTicketAIConfig) -> TemplateRenderer:

@@ -141,6 +141,48 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for comprehensive guidance on:
 - Testing and quality assurance
 - Contribution workflow
 
+### Plugin API Compatibility
+
+The core package defines a Plugin API version that ensures compatibility between the core and plugins.
+
+**Current Plugin API Version: 2.0**
+
+#### Compatibility Table
+
+| Core Version | Plugin API Version | Compatible Plugins |
+|--------------|-------------------|-------------------|
+| 1.0.0rc1+    | 2.0               | open-ticket-ai-hf-local >= 1.0.0rc1<br>open-ticket-ai-otobo-znuny-plugin >= 1.0.0rc1 |
+
+#### Plugin Development
+
+Plugins must implement the following interface to be compatible:
+
+```python
+def get_metadata() -> dict:
+    return {
+        "name": "plugin-name",
+        "version": "1.0.0",
+        "core_api": "2.0"  # Must match core API version
+    }
+
+def register_services(binder) -> None:
+    # Register DI services
+    pass
+
+def register_pipes(factory) -> None:
+    # Register pipeline components
+    pass
+```
+
+Plugins are discovered via entry points in the `open_ticket_ai.plugins` group. Add this to your plugin's `pyproject.toml`:
+
+```toml
+[project.entry-points."open_ticket_ai.plugins"]
+your_plugin = "your_package:plugin_module"
+```
+
+For detailed plugin development guidance, see [docs/vitepress_docs/docs_src/en/developers/plugins.md](docs/vitepress_docs/docs_src/en/developers/plugins.md).
+
 ### Development Workflows
 
 See [docs/developer_process.md](docs/developer_process.md) for information about automated processes.
