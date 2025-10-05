@@ -2,20 +2,20 @@ import os
 from logging.config import dictConfig
 from pathlib import Path
 
-from injector import Binder, Module, singleton, provider
+from injector import Binder, Module, provider, singleton
 
 from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
-    load_config,
 )
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
+from open_ticket_ai.core.plugins.manager import PluginManager
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
-from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
     TemplateRendererEnvConfig,
 )
+from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
 class AppModule(Module):
@@ -39,6 +39,12 @@ class AppModule(Module):
         dictConfig(config.general_config["logging"])
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(PipeFactory, scope=singleton)
+        
+        plugin_manager = PluginManager()
+        plugin_manager.discover_and_load()
+        binder.bind(PluginManager, to=plugin_manager, scope=singleton)
+        
+        plugin_manager.register_services(binder)
 
     @provider
     def provide_template_renderer(self, config: RawOpenTicketAIConfig) -> TemplateRenderer:
@@ -48,7 +54,15 @@ class AppModule(Module):
             raise ValueError(f"Unsupported template renderer type: {renderer_type}")
         params = renderer_config.get("params", {})
         
-        env_config_fields = {"prefix", "extra_prefixes", "allowlist", "denylist", "key", "provider", "refresh_env_on_each_render"}
+        env_config_fields = {
+            "prefix",
+            "extra_prefixes",
+            "allowlist",
+            "denylist",
+            "key",
+            "provider",
+            "refresh_env_on_each_render",
+        }
         env_params = {}
         jinja_params = {}
         
