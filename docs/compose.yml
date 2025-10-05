@@ -1,9 +1,9 @@
 services:
-    open-ticket-ai:
-        image: softotobo/open-ticket-ai:otobo-znuny-mvp
-        restart: "always"
-        volumes:
-            - ./config.yml:/app/config.yml:ro
+    # open-ticket-ai:
+    #    image: softotobo/open-ticket-ai:otobo-znuny-mvp
+    #    restart: "always"
+    #    volumes:
+    #        - ./config.yml:/app/config.yml:ro
 
     postgres:
         image: postgres:14
@@ -39,6 +39,7 @@ services:
         environment:
             PREFECT_API_DATABASE_CONNECTION_URL: postgresql+asyncpg://prefect:prefect@postgres:5432/prefect
             PREFECT_SERVER_API_HOST: 0.0.0.0
+            PREFECT_SERVER_API_AUTH_STRING: "admin:pass"
             PREFECT_MESSAGING_BROKER: prefect_redis.messaging
             PREFECT_MESSAGING_CACHE: prefect_redis.messaging
             PREFECT_REDIS_MESSAGING_HOST: redis
@@ -46,7 +47,7 @@ services:
             PREFECT_REDIS_MESSAGING_DB: 0
         command: prefect server start --no-services
         ports:
-            - "4200:4200"
+            - "0.0.0.0:4200:4200"
         healthcheck:
             test: ["CMD-SHELL", "curl -f http://localhost:4200/api/health || exit 1"]
             interval: 10s
@@ -96,6 +97,7 @@ services:
                 condition: service_completed_successfully
         environment:
             PREFECT_API_URL: http://prefect-server:4200/api
+            PREFECT_API_AUTH_STRING: "admin:pass"
         command: prefect worker start --pool default
 
 volumes:

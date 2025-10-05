@@ -24,7 +24,7 @@ class RenderedPipeConfig(RegisterableConfig):
     retry_delay_seconds: int = Field(default=30)
 
     @property
-    def _if(self) -> bool:
+    def should_run(self) -> bool:
         return self.if_
 
 

@@ -24,10 +24,10 @@ def test_registerable_config_defaults_are_independent() -> None:
 def test_rendered_pipe_config_requires_boolean_when() -> None:
     # _if has a default value of True
     config = RenderedPipeConfig()
-    assert config._if is True
+    assert config.should_run is True
 
     config_false = RenderedPipeConfig(_if=False)
-    assert config_false._if is False
+    assert config_false.should_run is False
 
 
 @pytest.mark.parametrize(

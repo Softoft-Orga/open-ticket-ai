@@ -27,7 +27,7 @@ class Pipe(RegisterableClass):
     async def process(self, context: Context) -> Context:
         self._logger.info("Processing pipe '%s'", self.config.id)
 
-        if self.config._if and self.have_dependent_pipes_been_run(context):
+        if self.config.should_run and self.have_dependent_pipes_been_run(context):
             return await self.__process_and_save(context)
 
         return context

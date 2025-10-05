@@ -1,16 +1,17 @@
 import os
+from logging.config import dictConfig
+from pathlib import Path
 
 from injector import Binder, Module, singleton, provider
 
+from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
     load_config,
 )
-from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
 
 class AppModule(Module):
@@ -24,15 +25,15 @@ class AppModule(Module):
         if config_path is None:
             config_path = os.getenv(
                 "OPEN_TICKET_AI_CONFIG",
-                find_python_code_root_path() / "config.yml"
+                Path.cwd() / "config.yml"
             )
         self.config_path = config_path
 
     def configure(self, binder: Binder):
-        config = load_config(self.config_path)
-        registry = UnifiedRegistry.get_registry_instance()
+        config_loader = ConfigLoader(self.config_path)
+        config = config_loader.load_config()
+        dictConfig(config.general_config["logging"])
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
-        binder.bind(UnifiedRegistry, to=registry, scope=singleton)
         binder.bind(PipeFactory, scope=singleton)
 
     @provider
