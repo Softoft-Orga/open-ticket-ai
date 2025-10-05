@@ -1,170 +1,126 @@
 # Open Ticket AI
 
-AI-powered automation and classification for open source ticket systems.
+[![Python application](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/python-app.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/python-app.yml)
+[![Publish open-ticket-ai](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-open-ticket-ai.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-open-ticket-ai.yml)
+[![Publish HF Local](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-hf-local.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-hf-local.yml)
+[![Publish OTOBO/Znuny Plugin](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-otobo-znuny.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-otobo-znuny.yml)
 
-[![License: LGPL-2.1](https://img.shields.io/badge/License-LGPL%202.1-blue.svg)](https://www.gnu.org/licenses/lgpl-2.1)
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+AI enhancements for open source ticket systems
 
-## Overview
+## Packages
 
-Open Ticket AI is an extensible automation framework that brings AI-powered classification and routing to ticket systems. It integrates with helpdesk platforms like OTOBO, Znuny, and OTRS to automatically classify, route, and enhance tickets using machine learning models.
+This repository contains multiple Python packages that are published to PyPI:
 
-## Features
+- **[open-ticket-ai](https://pypi.org/project/open-ticket-ai/)** - Core package with AI-powered ticket classification and automation
+- **[open-ticket-ai-hf-local](https://pypi.org/project/open-ticket-ai-hf-local/)** - HuggingFace local inference plugin
+- **[open-ticket-ai-otobo-znuny-plugin](https://pypi.org/project/open-ticket-ai-otobo-znuny-plugin/)** - OTOBO/Znuny ticket system integration plugin
 
-- 🤖 **AI-Powered Classification**: Use Hugging Face models for queue, priority, and custom classification
-- 🎯 **Intelligent Routing**: Automatically route tickets based on content analysis
-- 🔌 **Plugin Architecture**: Extensible design for adding new ticket systems and AI providers
-- 🔄 **Workflow Automation**: Define complex automation pipelines with declarative YAML
-- 🛡️ **Type-Safe**: Built with Pydantic for robust data validation
-- 🧪 **Well-Tested**: Comprehensive test suite with unit and integration tests
+## Installation
 
-## Quick Start
-
-### Installation
-
-Install Open Ticket AI:
+### Core Package
 
 ```bash
 pip install open-ticket-ai
 ```
 
-Install plugins as needed:
+### Plugins
+
+Install plugins separately as needed:
 
 ```bash
-# OTOBO/Znuny/OTRS integration
+# HuggingFace local inference
+pip install open-ticket-ai-hf-local
+
+# OTOBO/Znuny integration
 pip install open-ticket-ai-otobo-znuny-plugin
-
-# Or install with plugin extras
-pip install open-ticket-ai[otobo-znuny]
 ```
 
-### Configuration
+## Release Automation
 
-Create a configuration file (e.g., `config.yml`):
+### PyPI Publishing Workflow
 
-```yaml
-open_ticket_ai:
-  defs:
-    - id: "my_ticket_system"
-      use: "open_ticket_ai_otobo_znuny_plugin:OTOBOZnunyTicketSystemService"
-      base_url: "https://your-otobo-instance.com/otobo/nph-genericinterface.pl"
-      password: "{{ env.OTOBO_PASSWORD }}"
+All packages are automatically built and published to PyPI using GitHub Actions. The repository uses a reusable workflow pattern for consistent publishing across packages.
 
-  orchestrator:
-    - run_every_milli_seconds: 60000
-      pipe:
-        id: ticket-classifier
-        steps:
-          - id: fetch_tickets
-            use: "open_ticket_ai.base:FetchTicketsPipe"
-            injects: { ticket_system: "my_ticket_system" }
-          
-          - id: classify
-            use: "open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
-            model: "your-model-name"
-            prompt: "{{ ticket.subject }} {{ ticket.body }}"
-```
+### Triggering a Release
 
-### Running
+Releases can be triggered in multiple ways:
+
+#### 1. Manual Trigger (Dry-Run for Testing)
+
+You can test the build process without publishing:
+
+1. Go to the Actions tab in GitHub
+2. Select the workflow for the package you want to test:
+   - "Publish open-ticket-ai to PyPI"
+   - "Publish open-ticket-ai-hf-local to PyPI"
+   - "Publish open-ticket-ai-otobo-znuny-plugin to PyPI"
+3. Click "Run workflow"
+4. Check "Run in dry-run mode" to build without publishing
+5. Click "Run workflow"
+
+#### 2. Tag-Based Release
+
+Create and push a version tag to trigger automatic publishing:
 
 ```bash
-open-ticket-ai --config config.yml
+# For core package
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin v1.0.0
+
+# For HuggingFace plugin
+git tag -a hf-local-v1.0.0 -m "Release HF Local plugin 1.0.0"
+git push origin hf-local-v1.0.0
+
+# For OTOBO/Znuny plugin
+git tag -a otobo-znuny-v1.0.0 -m "Release OTOBO/Znuny plugin 1.0.0"
+git push origin otobo-znuny-v1.0.0
 ```
 
-## Available Plugins
+#### 3. GitHub Release
 
-### Official Plugins
+Create a release through the GitHub UI, which will automatically trigger the publishing workflow.
 
-| Plugin | Description | Installation |
-|--------|-------------|--------------|
-| **OTOBO/Znuny Plugin** | Integration with OTOBO, Znuny, and OTRS ticket systems | `pip install open-ticket-ai-otobo-znuny-plugin` |
-| **HuggingFace Local** | Run classification models locally with transformers | Included in base package |
+### Required Secrets
 
-### Creating Your Own Plugin
+The following secrets must be configured in the repository settings:
 
-See the [Plugin Developer Guide](docs/vitepress_docs/docs_src/en/developers/plugins.md) for instructions on creating custom plugins.
+- `PYPI_API_TOKEN` - PyPI API token for the core package
+- `PYPI_API_TOKEN_HF_LOCAL` - PyPI API token for the HuggingFace plugin
+- `PYPI_API_TOKEN_OTOBO_ZNUNY` - PyPI API token for the OTOBO/Znuny plugin
 
-## Package Structure
+To create PyPI API tokens:
+1. Go to https://pypi.org/manage/account/token/
+2. Create a token with scope limited to the specific project
+3. Add the token to GitHub repository secrets
 
-This repository is organized as a monorepo:
+### Version Management
 
-```
-open-ticket-ai/
-├── src/                          # Main Open Ticket AI source code
-│   ├── open_ticket_ai/          # Core framework
-│   ├── open_ticket_ai_hf_local/ # HuggingFace plugin (bundled)
-│   └── open_ticket_ai_otobo_znuny_plugin/  # Legacy location (backward compat)
-├── packages/                     # Standalone plugin packages
-│   └── open_ticket_ai_otobo_znuny_plugin/  # OTOBO/Znuny plugin (PyPI package)
-├── tests/                        # Test suite
-└── docs/                         # Documentation
-```
+Before releasing, update the version in the appropriate `pyproject.toml`:
 
-## Documentation
+- Core package: `/pyproject.toml`
+- HF Local plugin: `/src/open_ticket_ai_hf_local/pyproject.toml`
+- OTOBO/Znuny plugin: `/src/open_ticket_ai_otobo_znuny_plugin/pyproject.toml`
 
-- 📚 [Full Documentation](https://open-ticket-ai.com)
-- 🚀 [Getting Started Guide](https://open-ticket-ai.com/en/guide/getting-started.html)
-- 🔌 [Available Plugins](https://open-ticket-ai.com/en/guide/available-plugins.html)
-- 🛠️ [Plugin Developer Guide](https://open-ticket-ai.com/en/developers/plugins.html)
+### Workflow Details
+
+The publishing workflow:
+1. Checks out the repository
+2. Sets up Python 3.13
+3. Installs build tools (`build` and `twine`)
+4. Builds the package using `python -m build`
+5. Validates the built package with `twine check`
+6. Publishes to PyPI (or skips in dry-run mode)
+7. Uploads build artifacts for inspection
 
 ## Development
 
-### Prerequisites
-
-- Python 3.13 or higher
-- pip or uv
-
-### Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Softoft-Orga/open-ticket-ai.git
-   cd open-ticket-ai
-   ```
-
-2. Install in development mode:
-   ```bash
-   pip install -e ".[dev]"
-   ```
-
-3. Run tests:
-   ```bash
-   pytest
-   ```
-
-### Plugin Development
-
-Each plugin in `packages/` is a standalone Python package that can be developed and published independently:
-
-```bash
-cd packages/open_ticket_ai_otobo_znuny_plugin
-pip install -e ".[dev]"
-pytest
-```
-
-See individual plugin `DEVELOPER.md` files for plugin-specific development instructions.
-
-## Contributing
-
-We welcome contributions! Please see our contributing guidelines for details.
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes with tests
-4. Submit a pull request
+See [docs/developer_process.md](docs/developer_process.md) for information about development workflows and automation.
 
 ## License
 
-This project is licensed under the LGPL-2.1 License - see the [LICENSE](LICENSE) file for details.
+LGPL-2.1-only
 
-## Support
+## Links
 
-- 🐛 [Issue Tracker](https://github.com/Softoft-Orga/open-ticket-ai/issues)
-- 💬 [Discussions](https://github.com/Softoft-Orga/open-ticket-ai/discussions)
-- 📧 Email: tab@softoft.de
-
-## Acknowledgments
-
-Built with ❤️ by [Softoft](https://softoft.de)
-
-Special thanks to all contributors and the open source community.
+- Homepage: https://open-ticket-ai.com
+- Documentation: [docs/](docs/)

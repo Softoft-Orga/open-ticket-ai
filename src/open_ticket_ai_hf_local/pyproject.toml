@@ -1,13 +1,13 @@
 [project]
 name = "open-ticket-ai-hf-local"
-version = "1.0.0"
 description = "Hugging Face local text classification plugin for Open Ticket AI"
+version = "1.0.0rc1"
+readme = "README.md"
 requires-python = ">=3.13"
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
-license = { file = "LICENSE" }
 
 readme = "README.md"
 
@@ -24,6 +24,7 @@ Documentation = "https://open-ticket-ai.com/guide/available-plugins.html#hugging
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/src/open_ticket_ai_hf_local/CHANGELOG.md"
 
 keywords = ["ai", "ticket-system", "huggingface", "text-classification", "nlp", "automation"]
+license = { text = "LGPL-2.1-only" }
 
 classifiers = [
     "Development Status :: 4 - Beta",

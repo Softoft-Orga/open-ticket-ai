@@ -1,14 +1,12 @@
-name: Build and Publish open-ticket-ai-hf-local
-permissions:
-  contents: read
+name: Publish open-ticket-ai-otobo-znuny-plugin to PyPI
 
 on:
   release:
     types: [published]
   push:
     tags:
-      - 'hf-local-v*'
-      - 'open-ticket-ai-hf-local-v*'
+      - 'otobo-znuny-v*'
+      - 'open-ticket-ai-otobo-znuny-v*'
   workflow_dispatch:
     inputs:
       dry-run:
@@ -21,8 +19,8 @@ jobs:
   publish:
     uses: ./.github/workflows/publish-to-pypi.yml
     with:
-      package-name: open-ticket-ai-hf-local
-      package-path: src/open_ticket_ai_hf_local
+      package-name: open-ticket-ai-otobo-znuny-plugin
+      package-path: src/open_ticket_ai_otobo_znuny_plugin
       dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
     secrets:
-      PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+      PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN_OTOBO_ZNUNY }}

@@ -9,8 +9,12 @@ pip install open-ticket-ai-hf-local
 ```
 
 ## Overview
+## Requirements
 
 This package provides a pipe that executes Hugging Face sequence-classification models locally for automated ticket classification. When the pipe runs, it loads the tokenizer and model, builds a `text-classification` pipeline, and returns the top label together with its confidence score.
+- Python >= 3.13
+- open-ticket-ai >= 1.0.0rc1
+- transformers[torch] ~= 4.52.4
 
 ## Usage
 
@@ -75,6 +79,7 @@ Run tests:
 ```bash
 pytest
 ```
+This plugin integrates with the Open Ticket AI pipeline system. See the main [Open Ticket AI documentation](https://open-ticket-ai.com) for configuration examples.
 
 ## License
 

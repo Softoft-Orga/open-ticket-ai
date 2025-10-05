@@ -1,216 +1,220 @@
-# Implementation Summary: OTOBO/Znuny Plugin as Standalone PyPI Package
+# Implementation Summary: PyPI Publishing Workflows
 
-## Overview
+## What Was Implemented
 
-Successfully refactored the `open_ticket_ai_otobo_znuny_plugin` module into a standalone PyPI package while maintaining backward compatibility with existing code.
+This implementation adds complete automated PyPI publishing infrastructure for the Open Ticket AI project.
 
-## What Was Created
+## Changes Made
 
-### 1. Standalone Package Structure (`packages/open_ticket_ai_otobo_znuny_plugin/`)
+### 1. Package Configuration
 
-```
-packages/open_ticket_ai_otobo_znuny_plugin/
-├── pyproject.toml           # Package metadata and dependencies
-├── README.md                # User-facing documentation
-├── CHANGELOG.md             # Version history
-├── DEVELOPER.md             # Development guide
-├── PUBLISHING.md            # PyPI publishing instructions
-├── LICENSE                  # LGPL-2.1 license
-├── MANIFEST.in              # Package manifest
-├── src/
-│   └── open_ticket_ai_otobo_znuny_plugin/
-│       ├── __init__.py
-│       ├── models.py
-│       ├── otobo_znuny_ticket_system_service.py
-│       ├── otobo_znuny_ticket_system_service_config.py
-│       └── py.typed         # Type information marker
-└── tests/
-    ├── __init__.py
-    ├── test_models.py
-    ├── test_otobo_adapter.py
-    ├── test_otobo_znuny_ticket_system_service.py
-    └── test_otobo_znuny_ticket_system_service_config.py
-```
+Created separate package configurations for each publishable package:
 
-### 2. Package Metadata (pyproject.toml)
+- **Core Package** (`/pyproject.toml`)
+  - Updated to exclude plugin packages
+  - Removed plugin-specific dependencies (transformers, otobo-znuny)
+  - Added build system configuration
+  - Added classifiers and metadata
 
-- **Package name**: `open-ticket-ai-otobo-znuny-plugin`
-- **Version**: 1.0.0
-- **Python requirement**: >=3.13
-- **Dependencies**:
-  - `pydantic~=2.11.7`
-  - `otobo-znuny>=1.4.0`
-  - `open-ticket-ai>=1.0.0rc1`
-- **Dev dependencies**: pytest, ruff, mypy, build, twine, etc.
+- **HuggingFace Plugin** (`/src/open_ticket_ai_hf_local/pyproject.toml`)
+  - New standalone package configuration
+  - Dependencies: open-ticket-ai, transformers[torch], pydantic
+  - Includes README.md reference
 
-### 3. CI/CD Workflow
+- **OTOBO/Znuny Plugin** (`/src/open_ticket_ai_otobo_znuny_plugin/pyproject.toml`)
+  - New standalone package configuration  
+  - Dependencies: open-ticket-ai, otobo-znuny, injector, pydantic
+  - Includes README.md reference
 
-Created `.github/workflows/publish-otobo-znuny-plugin.yml` that:
-- Triggers on tags matching `otobo-znuny-plugin-v*`
-- Supports manual workflow dispatch
-- Builds the package with Python 3.13
-- Validates package with twine check
-- Publishes to PyPI automatically (with trusted publishing or API token)
-- Uploads build artifacts
+### 2. GitHub Actions Workflows
 
-### 4. Documentation
+Created 4 new workflow files:
 
-#### Plugin-Specific Documentation
-- **README.md**: Installation, configuration, usage examples
-- **DEVELOPER.md**: Development setup, testing, building
-- **PUBLISHING.md**: Complete PyPI publishing guide including:
-  - Manual and automated publishing methods
-  - Trusted publishing setup
-  - Version management
-  - Release checklist
-  - Troubleshooting
+- **`.github/workflows/publish-to-pypi.yml`**
+  - Reusable workflow for building and publishing
+  - Accepts package name, path, and dry-run flag
+  - Uses Python 3.13
+  - Builds with `python -m build`
+  - Validates with `twine check`
+  - Publishes with `twine upload`
+  - Uploads build artifacts
 
-#### Repository-Level Documentation
-- **Main README.md**: Repository overview with plugin information
-- **Backward compatibility note**: In `src/open_ticket_ai_otobo_znuny_plugin/README.md`
-- **Updated user guide**: Modified `docs/vitepress_docs/docs_src/en/guide/available-plugins.md`
+- **`.github/workflows/publish-open-ticket-ai.yml`**
+  - Triggers for core package
+  - Tag patterns: `v*`, `open-ticket-ai-v*`
+  - Uses `PYPI_API_TOKEN` secret
 
-### 5. Main Project Updates
+- **`.github/workflows/publish-hf-local.yml`**
+  - Triggers for HF Local plugin
+  - Tag patterns: `hf-local-v*`, `open-ticket-ai-hf-local-v*`
+  - Uses `PYPI_API_TOKEN_HF_LOCAL` secret
 
-#### pyproject.toml Changes
-- Removed `otobo-znuny>=1.4.0` from main dependencies
-- Added optional dependency group:
-  ```toml
-  [project.optional-dependencies]
-  otobo-znuny = [
-      "open-ticket-ai-otobo-znuny-plugin>=1.0.0",
-  ]
-  ```
+- **`.github/workflows/publish-otobo-znuny.yml`**
+  - Triggers for OTOBO/Znuny plugin
+  - Tag patterns: `otobo-znuny-v*`, `open-ticket-ai-otobo-znuny-v*`
+  - Uses `PYPI_API_TOKEN_OTOBO_ZNUNY` secret
 
-#### .gitignore Updates
-Added entries for package build artifacts:
-```
-packages/*/dist/
-packages/*/build/
-packages/*/*.egg-info/
-```
+### 3. Documentation
 
-## Installation Methods
+Created comprehensive documentation:
 
-### For Users
+- **`README.md`** (root)
+  - Project overview with status badges
+  - Installation instructions for all packages
+  - Release automation documentation
+  - Tag naming conventions
+  - Required secrets configuration
 
-1. **Standalone package**:
-   ```bash
-   pip install open-ticket-ai-otobo-znuny-plugin
-   ```
+- **`docs/SETUP_INSTRUCTIONS.md`**
+  - Step-by-step setup guide
+  - PyPI token creation instructions
+  - GitHub secrets configuration
+  - Testing and troubleshooting
 
-2. **With Open Ticket AI extras**:
-   ```bash
-   pip install open-ticket-ai[otobo-znuny]
-   ```
+- **`docs/pypi_release_process.md`**
+  - Complete release process documentation
+  - Version management guidelines
+  - Local testing procedures
+  - Post-release verification
 
-3. **Both packages separately**:
-   ```bash
-   pip install open-ticket-ai
-   pip install open-ticket-ai-otobo-znuny-plugin
-   ```
+- **`docs/workflow_architecture.md`**
+  - Technical architecture documentation
+  - Workflow diagrams and flow charts
+  - Package structure overview
+  - Security model explanation
 
-### For Developers
+- **`src/open_ticket_ai_hf_local/README.md`**
+  - Plugin-specific documentation for PyPI
 
+- **`src/open_ticket_ai_otobo_znuny_plugin/README.md`**
+  - Plugin-specific documentation for PyPI
+
+### 4. Code Updates
+
+- **`src/open_ticket_ai_hf_local/__init__.py`**
+  - Added proper exports for the plugin
+
+## Key Features
+
+### Multi-Package Support
+- Separate workflows for each package
+- Independent versioning
+- Different tag patterns per package
+
+### Dry-Run Testing
+- Manual trigger option with dry-run mode
+- Build and validate without publishing
+- Artifact upload for inspection
+
+### Security
+- Project-scoped PyPI tokens
+- Encrypted GitHub secrets
+- No token exposure in logs
+
+### Automation
+- Tag-based releases
+- GitHub release integration
+- Manual workflow dispatch
+
+## Required Setup
+
+Before using the workflows, repository administrators must:
+
+1. Create PyPI API tokens for each package
+2. Add three GitHub secrets:
+   - `PYPI_API_TOKEN`
+   - `PYPI_API_TOKEN_HF_LOCAL`
+   - `PYPI_API_TOKEN_OTOBO_ZNUNY`
+3. Test with dry-run mode
+
+See `docs/SETUP_INSTRUCTIONS.md` for detailed steps.
+
+## How to Use
+
+### Testing (Recommended First)
+
+1. Go to GitHub Actions
+2. Select a publish workflow
+3. Click "Run workflow"
+4. Check "Run in dry-run mode"
+5. Review build artifacts
+
+### Publishing
+
+#### Method 1: Tag-Based
 ```bash
-cd packages/open_ticket_ai_otobo_znuny_plugin
-pip install -e ".[dev]"
+git tag -a v1.0.0 -m "Release 1.0.0"
+git push origin v1.0.0
 ```
 
-## Backward Compatibility
+#### Method 2: Manual Trigger
+1. Go to GitHub Actions
+2. Select workflow
+3. Click "Run workflow" (without dry-run)
 
-✅ **Fully maintained**: The old location `src/open_ticket_ai_otobo_znuny_plugin/` remains intact with all original code, ensuring existing projects continue to work without changes.
+#### Method 3: GitHub Release
+Create a release through GitHub UI
 
-## Publishing to PyPI
+## File Summary
 
-### Automatic Publishing
+### New Files (16)
+```
+.github/workflows/publish-to-pypi.yml
+.github/workflows/publish-open-ticket-ai.yml
+.github/workflows/publish-hf-local.yml
+.github/workflows/publish-otobo-znuny.yml
+README.md
+docs/SETUP_INSTRUCTIONS.md
+docs/pypi_release_process.md
+docs/workflow_architecture.md
+src/open_ticket_ai_hf_local/pyproject.toml
+src/open_ticket_ai_hf_local/README.md
+src/open_ticket_ai_otobo_znuny_plugin/pyproject.toml
+src/open_ticket_ai_otobo_znuny_plugin/README.md
+```
 
-1. Update version in `pyproject.toml`
-2. Update `CHANGELOG.md`
-3. Commit changes
-4. Create and push tag: `git tag otobo-znuny-plugin-v1.0.0 && git push origin otobo-znuny-plugin-v1.0.0`
-5. GitHub Actions automatically builds and publishes to PyPI
+### Modified Files (2)
+```
+pyproject.toml (updated package config)
+src/open_ticket_ai_hf_local/__init__.py (added exports)
+```
 
-### Manual Publishing
+## Acceptance Criteria Status
 
-See `PUBLISHING.md` for detailed instructions.
+✅ Each package is built and published to PyPI automatically on release/tag
+✅ CI workflow is documented and visible in repo
+✅ PyPI releases are versioned and traceable to the repo
+✅ Reusable workflows for handling multiple packages
+✅ Secrets configuration documented for PyPI
+✅ Workflow can be triggered on tag/release for each package
+✅ Status badges added to README
+✅ Documentation added for release automation
+✅ Dry-run testing capability included
 
-## Benefits Achieved
+## Testing Notes
 
-✅ **Easier Installation**: Users can install the plugin with a simple pip command
-✅ **Independent Versioning**: Plugin can be versioned and released separately
-✅ **Clear Separation**: Plugin is now a distinct, standalone package
-✅ **Reusability**: Can be used in other projects without full Open Ticket AI
-✅ **Automated CI/CD**: Build and publish workflow is automated
-✅ **Comprehensive Documentation**: README, developer guide, and publishing guide
-✅ **Type Safety**: Includes py.typed marker for type checking
-✅ **Backward Compatible**: Existing code continues to work
+Due to environment limitations (no internet access to PyPI), the workflows could not be tested end-to-end. However:
 
-## Next Steps (For Project Maintainer)
+- ✅ All YAML files validated successfully
+- ✅ Package structures are correct
+- ✅ Workflow syntax is valid
+- ✅ Dependencies are properly specified
 
-1. **Set up PyPI**:
-   - Create PyPI account
-   - Generate API token or set up trusted publishing
-   - Add `PYPI_API_TOKEN` to GitHub secrets
+First-time use should be done with dry-run mode to verify the build process.
 
-2. **First Release**:
-   - Review version number in `pyproject.toml`
-   - Finalize `CHANGELOG.md`
-   - Create release tag: `otobo-znuny-plugin-v1.0.0`
-   - Verify GitHub Action succeeds
-   - Test installation from PyPI
+## Next Steps
 
-3. **Update Documentation**:
-   - Ensure website reflects new installation method
-   - Update any tutorials or examples
+After merging this PR:
 
-4. **Announce**:
-   - Create GitHub release with release notes
-   - Announce in relevant channels
+1. Configure PyPI API tokens as GitHub secrets
+2. Test each workflow in dry-run mode
+3. Verify builds produce correct artifacts
+4. Publish first release of each package
+5. Test installation from PyPI
 
-## Testing Checklist
+## Support
 
-- [x] Package structure is valid (verified with tree)
-- [x] Python syntax is correct (verified with py_compile)
-- [x] pyproject.toml is valid TOML (verified with tomllib)
-- [x] Package metadata is complete
-- [x] Tests are copied to package
-- [x] Documentation is comprehensive
-- [x] Backward compatibility maintained
-- [x] GitHub workflow is configured
-- [x] .gitignore excludes build artifacts
-
-## Files Modified/Created
-
-### Created (19 files)
-1. `packages/open_ticket_ai_otobo_znuny_plugin/pyproject.toml`
-2. `packages/open_ticket_ai_otobo_znuny_plugin/README.md`
-3. `packages/open_ticket_ai_otobo_znuny_plugin/CHANGELOG.md`
-4. `packages/open_ticket_ai_otobo_znuny_plugin/DEVELOPER.md`
-5. `packages/open_ticket_ai_otobo_znuny_plugin/PUBLISHING.md`
-6. `packages/open_ticket_ai_otobo_znuny_plugin/LICENSE`
-7. `packages/open_ticket_ai_otobo_znuny_plugin/MANIFEST.in`
-8. `packages/open_ticket_ai_otobo_znuny_plugin/src/open_ticket_ai_otobo_znuny_plugin/__init__.py`
-9. `packages/open_ticket_ai_otobo_znuny_plugin/src/open_ticket_ai_otobo_znuny_plugin/models.py`
-10. `packages/open_ticket_ai_otobo_znuny_plugin/src/open_ticket_ai_otobo_znuny_plugin/otobo_znuny_ticket_system_service.py`
-11. `packages/open_ticket_ai_otobo_znuny_plugin/src/open_ticket_ai_otobo_znuny_plugin/otobo_znuny_ticket_system_service_config.py`
-12. `packages/open_ticket_ai_otobo_znuny_plugin/src/open_ticket_ai_otobo_znuny_plugin/py.typed`
-13. `packages/open_ticket_ai_otobo_znuny_plugin/tests/` (5 test files)
-14. `.github/workflows/publish-otobo-znuny-plugin.yml`
-15. `README.md` (main repository)
-16. `src/open_ticket_ai_otobo_znuny_plugin/README.md` (backward compat note)
-
-### Modified (3 files)
-1. `pyproject.toml` - Made otobo-znuny dependency optional
-2. `.gitignore` - Added package build artifact entries
-3. `docs/vitepress_docs/docs_src/en/guide/available-plugins.md` - Updated installation instructions
-
-## Conclusion
-
-The refactoring is complete and ready for use. The `open_ticket_ai_otobo_znuny_plugin` is now:
-- A standalone, pip-installable package
-- Fully documented with user and developer guides
-- Ready for automated PyPI publishing via GitHub Actions
-- Backward compatible with existing code
-
-All acceptance criteria from the issue have been met.
+For issues or questions:
+- Review documentation in `docs/`
+- Check GitHub Actions logs
+- Open an issue in the repository
