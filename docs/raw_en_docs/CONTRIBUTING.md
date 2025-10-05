@@ -285,17 +285,16 @@ See [QUICK_START.md](QUICK_START.md) for PyPI publishing workflow.
 
 ### Adding New Plugins
 
-1. Create plugin package under `src/` or `packages/`
-2. Define plugin entry points in `pyproject.toml`
-3. Implement required plugin contract:
-   - `get_metadata()` - returns plugin metadata with `core_api` version
-   - `register_pipes(registry)` - optional, registers custom pipes
-   - `register_services(registry)` - optional, registers services
-4. Add plugin configuration schema
-5. Specify Core compatibility range in dependencies: `open-ticket-ai>=X.Y.Z,<NEXT_MAJOR>`
-6. Add tests including contract tests
-7. Document usage
-8. See [RELEASE.md](RELEASE.md) for plugin versioning guidelines
+See [PLUGIN_STANDARDS.md](PLUGIN_STANDARDS.md) for complete plugin development standards.
+
+1. Create plugin package under `src/open_ticket_ai_<plugin_name>/`
+2. Follow standard directory structure and naming conventions
+3. Implement required plugin interface (`get_metadata()`, `register_pipes()`, `register_services()`)
+4. Add entry points in pyproject.toml
+5. Include all required files (README.md, LICENSE, CHANGELOG.md, pyproject.toml)
+6. Add plugin configuration schema
+7. Add tests (unit tests in plugin directory, contract tests will auto-discover)
+8. Document usage in VitePress docs
 
 ### Adding New Services
 
@@ -376,8 +375,6 @@ npm run docs:build  # Production build
 ## Additional Resources
 
 - [README.md](README.md) - Project overview and quick links
-- [RELEASE.md](RELEASE.md) - Versioning, release process, and compatibility requirements
-- [DEPRECATION_POLICY.md](DEPRECATION_POLICY.md) - Deprecation policy for Core and plugins
 - [QUICK_START.md](QUICK_START.md) - PyPI publishing guide
 - [docs/developer_process.md](developer_process.md) - Automated processes
 - [docs/workflow_architecture.md](workflow_architecture.md) - Technical architecture

@@ -1,6 +1,9 @@
 # Open Ticket AI
 
 [![Python application](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/python-app.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/python-app.yml)
+[![Test HF Local](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-hf-local.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-hf-local.yml)
+[![Test OTOBO/Znuny](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-otobo-znuny.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-otobo-znuny.yml)
+[![Nightly Tests](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/nightly-tests.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/nightly-tests.yml)
 [![Publish open-ticket-ai](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-open-ticket-ai.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-open-ticket-ai.yml)
 [![Publish HF Local](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-hf-local.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-hf-local.yml)
 [![Publish OTOBO/Znuny Plugin](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-otobo-znuny.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-otobo-znuny.yml)
@@ -72,6 +75,65 @@ Configuration files:
 - **Runtime config** - YAML files validated with Pydantic models
 
 For detailed information, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Workspace Architecture
+
+This repository uses a **uv workspace** to manage multiple Python packages as a monorepo:
+
+### Core vs Plugins
+
+- **Core Package** (`open-ticket-ai`)
+  - Located in root `pyproject.toml` with source code in `src/open_ticket_ai/`
+  - Provides the foundational AI pipeline framework, configuration system, and dependency injection
+  - Includes base pipes for ticket operations and template rendering
+  - Can be used standalone for custom implementations
+
+- **Plugin Packages**
+  - Each plugin is a separate workspace member with its own `pyproject.toml`
+  - `open-ticket-ai-hf-local` - HuggingFace local inference for text classification
+  - `open-ticket-ai-otobo-znuny-plugin` - OTOBO/Znuny ticket system integration
+  - Plugins extend core functionality without modifying core code
+
+### Plugin Discovery
+
+Plugins are discovered and loaded through:
+
+1. **Configuration-based registration** - Plugins define services in `config.yml`:
+   ```yaml
+   open_ticket_ai:
+     defs:
+       otobo_service:
+         use: "open_ticket_ai_otobo_znuny_plugin.OTOBOZnunyTicketSystemService"
+         # ... configuration
+   ```
+
+2. **Dependency injection** - Core uses the `UnifiedRegistry` to resolve plugin services by ID
+3. **YAML references** - Pipeline steps inject plugin services via `injects` declarations
+4. **Workspace dependencies** - The uv workspace ensures plugins can depend on the core package during development
+
+### Development Workflow
+
+The workspace configuration (in root `pyproject.toml`):
+```toml
+[tool.uv.workspace]
+members = [
+    "src/open_ticket_ai_hf_local",
+    "src/open_ticket_ai_otobo_znuny_plugin",
+]
+
+[tool.uv.sources]
+open-ticket-ai = { workspace = true }
+open-ticket-ai-hf-local = { workspace = true }
+open-ticket-ai-otobo-znuny-plugin = { workspace = true }
+```
+
+This allows:
+- Installing all packages together with `uv sync`
+- Cross-package imports during development
+- Centralized tooling (ruff, mypy, pytest) configured at the root
+- Independent versioning and publishing of each package
+
+For plugin development details, see [Plugin Developer Guide](https://open-ticket-ai.com/developers/plugins.html).
 
 ## Release Automation
 
@@ -176,6 +238,68 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for comprehensive guidance on:
 - Coding standards and best practices
 - Testing and quality assurance
 - Contribution workflow
+
+### Plugin Development
+
+For plugin developers:
+- **[PLUGIN_STANDARDS.md](PLUGIN_STANDARDS.md)** - Complete plugin packaging and metadata standards
+- **[docs/PLUGIN_QUICK_REFERENCE.md](docs/PLUGIN_QUICK_REFERENCE.md)** - Quick reference guide
+- **Plugin validation**: Run `python scripts/validate_plugins.py` to check compliance
+### Testing
+
+This repository uses a comprehensive testing strategy with different test types and CI stages:
+
+#### Test Types
+
+- **Unit Tests** (`@pytest.mark.unit`): Fast, isolated tests for individual components
+- **Integration Tests** (`@pytest.mark.integration`): Test Core + Plugin interactions
+- **Contract Tests** (`@pytest.mark.contract`): Validate plugin API compatibility
+- **E2E Tests** (`@pytest.mark.e2e`): End-to-end workflow tests
+
+#### Running Tests Locally
+
+```bash
+# Run all tests
+pytest
+
+# Run specific test types by directory
+pytest tests/unit/              # Core unit tests
+pytest tests/integration/       # Core integration tests
+pytest tests/contract/          # Contract tests
+pytest tests/e2e/              # E2E tests
+
+# Run plugin tests
+pytest src/open_ticket_ai_hf_local/tests/         # HF Local plugin
+pytest src/open_ticket_ai_otobo_znuny_plugin/tests/  # OTOBO/Znuny plugin
+
+# Run specific test types by marker
+pytest -m unit          # Only tests marked with @pytest.mark.unit
+pytest -m integration   # Only tests marked with @pytest.mark.integration
+pytest -m contract      # Only tests marked with @pytest.mark.contract
+pytest -m e2e          # Only tests marked with @pytest.mark.e2e
+
+# Skip slow tests
+pytest -m "not slow"
+```
+
+#### CI Test Stages
+
+The CI pipeline runs different test stages:
+
+1. **Core Tests** (on push/PR to main/dev):
+   - Lint with ruff and mypy
+   - Unit tests: All tests in `tests/unit/`
+   - Integration tests: All tests in `tests/integration/`
+
+2. **Plugin Tests** (on plugin changes):
+   - HF Local: Unit tests in `src/open_ticket_ai_hf_local/tests/` + linting + type checking
+   - OTOBO/Znuny: Unit tests in `src/open_ticket_ai_otobo_znuny_plugin/tests/` + linting + type checking
+
+3. **Nightly Tests** (scheduled at 2 AM UTC or manual trigger):
+   - Contract tests: All tests in `tests/contract/` - validates all installed plugins against core API
+   - E2E tests: All tests in `tests/e2e/` - complete workflow testing
+
+For detailed test structure and best practices, see [docs/TESTING.md](docs/TESTING.md).
 
 ### Development Workflows
 

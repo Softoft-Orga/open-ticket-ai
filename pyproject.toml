@@ -57,9 +57,17 @@ dev = [
     "mypy",
     "pytest~=8.4.0",
 ]
-otobo-znuny = [
-    "open-ticket-ai-otobo-znuny-plugin>=1.0.0",
+
+[tool.uv.workspace]
+members = [
+    "src/open_ticket_ai_hf_local",
+    "src/open_ticket_ai_otobo_znuny_plugin",
 ]
+
+[tool.uv.sources]
+open-ticket-ai = { workspace = true }
+open-ticket-ai-hf-local = { workspace = true }
+open-ticket-ai-otobo-znuny-plugin = { workspace = true }
 
 [build-system]
 requires = ["setuptools>=61.0"]
