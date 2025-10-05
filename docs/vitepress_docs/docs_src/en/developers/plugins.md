@@ -46,7 +46,7 @@ Plug-ins typically expose:
 
 ## Plugin Standards and Metadata
 
-All plugins must follow standardized packaging and metadata conventions defined in [PLUGIN_STANDARDS.md](../../../../PLUGIN_STANDARDS.md).
+All plugins must follow standardized packaging and metadata conventions defined in [PLUGIN_STANDARDS.md](../../../../raw_en_docs/PLUGIN_STANDARDS.md).
 
 ### Required Plugin Interface
 
