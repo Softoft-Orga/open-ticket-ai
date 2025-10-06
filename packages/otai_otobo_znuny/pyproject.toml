@@ -9,7 +9,7 @@ authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
 
-license = { text = "LGPL-2.1-only" }
+license = "LGPL-2.1-only"
 
 keywords = ["open-ticket-ai", "plugin", "otobo", "znuny", "otrs", "ticket-system", "automation"]
 
@@ -17,7 +17,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
-    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.13",
