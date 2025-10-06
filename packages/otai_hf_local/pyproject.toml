@@ -1,7 +1,7 @@
 [project]
-name = "open-ticket-ai-hf-local"
-description = "Hugging Face local text classification plugin for Open Ticket AI"
+name = "otai-hf-local"
 version = "1.0.0rc1"
+description = "Hugging Face local text classification plugin for Open Ticket AI"
 readme = "README.md"
 requires-python = ">=3.13"
 
@@ -9,14 +9,14 @@ authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
 
-license = { text = "LGPL-2.1-only" }
+license = "LGPL-2.1-only"
+
 keywords = ["ai", "ticket-system", "huggingface", "text-classification", "nlp", "automation"]
 
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
-    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.13",
@@ -35,10 +35,10 @@ dependencies = [
 Homepage = "https://open-ticket-ai.com"
 Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
 Documentation = "https://open-ticket-ai.com/guide/available-plugins.html#hugging-face-local-text-classification-pipe"
-Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/src/open_ticket_ai_hf_local/CHANGELOG.md"
+Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_hf_local/CHANGELOG.md"
 
 [project.entry-points."open_ticket_ai.plugins"]
-hf_local = "open_ticket_ai_hf_local"
+hf_local = "otai_hf_local"
 
 [tool.uv.sources]
 open-ticket-ai = { workspace = true }
@@ -55,8 +55,9 @@ dev = [
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["open_ticket_ai_hf_local"]
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["otai_hf_local*"]
 
 [tool.ruff]
 line-length = 120
