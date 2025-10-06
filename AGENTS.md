@@ -63,7 +63,7 @@ For Python-specific conventions (formatting, linting, imports), see `.windsurf/r
 
 For testing structure and standards, see `docs/raw_en_docs/CONTRIBUTING.md`.
 
-For plugin development, see `PLUGIN_STANDARDS.md`.
+For plugin development, see `docs/raw_en_docs/plugins/PLUGIN_STANDARDS.md`.
 
 ## Expectations
 

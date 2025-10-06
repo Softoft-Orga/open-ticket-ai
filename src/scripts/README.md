@@ -4,7 +4,7 @@ This directory contains utility scripts for the Open Ticket AI project.
 
 ## validate_plugins.py
 
-Validates that all installed plugins conform to the plugin standards defined in [PLUGIN_STANDARDS.md](../../docs/raw_en_docs/PLUGIN_STANDARDS.md).
+Validates that all installed plugins conform to the plugin standards defined in [PLUGIN_STANDARDS.md](../../docs/raw_en_docs/plugins/PLUGIN_STANDARDS.md).
 
 ### Usage
 
