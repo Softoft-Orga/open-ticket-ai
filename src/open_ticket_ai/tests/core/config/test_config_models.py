@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from open_ticket_ai.open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig, load_config
+from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig, load_config
 
 
 def test_load_config_parses_expected_structure(tmp_path: Path) -> None:

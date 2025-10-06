@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from injector import Binder
 
-    from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
+    from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 
 PLUGIN_GROUP = "open_ticket_ai.plugins"
 CORE_API_VERSION = "2.0"

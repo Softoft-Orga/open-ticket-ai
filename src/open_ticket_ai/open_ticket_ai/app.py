@@ -5,8 +5,8 @@ from pathlib import Path
 import pyfiglet
 from injector import inject
 
-from open_ticket_ai.open_ticket_ai.core.config import RawOpenTicketAIConfig
-from open_ticket_ai.open_ticket_ai.core import Orchestrator
+from open_ticket_ai.core.config import RawOpenTicketAIConfig
+from open_ticket_ai.core import Orchestrator
 
 
 def get_project_info():
