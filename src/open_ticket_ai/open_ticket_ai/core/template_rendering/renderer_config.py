@@ -1,8 +1,6 @@
-from collections.abc import Callable, Mapping
 from typing import Literal
 
-from jinja2.sandbox import SandboxedEnvironment
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 class TemplateRendererEnvConfig(BaseModel):
