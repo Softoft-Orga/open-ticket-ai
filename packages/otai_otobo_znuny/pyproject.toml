@@ -1,5 +1,5 @@
 [project]
-name = "open-ticket-ai-otobo-znuny-plugin"
+name = "otai-otobo-znuny"
 version = "1.0.0rc1"
 description = "OTOBO/Znuny ticket system plugin for Open Ticket AI"
 readme = "README.md"
@@ -8,7 +8,8 @@ requires-python = ">=3.13"
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
-license = { text = "LGPL-2.1-only" }
+
+license = "LGPL-2.1-only"
 
 keywords = ["open-ticket-ai", "plugin", "otobo", "znuny", "otrs", "ticket-system", "automation"]
 
@@ -16,7 +17,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
-    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.13",
@@ -35,10 +35,10 @@ dependencies = [
 Homepage = "https://open-ticket-ai.com"
 Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
 Documentation = "https://open-ticket-ai.com/en/guide/available-plugins.html"
-Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/src/open_ticket_ai_otobo_znuny_plugin/CHANGELOG.md"
+Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_otobo_znuny/CHANGELOG.md"
 
 [project.entry-points."open_ticket_ai.plugins"]
-otobo_znuny = "open_ticket_ai_otobo_znuny_plugin"
+otobo_znuny = "otai_otobo_znuny"
 
 [tool.uv.sources]
 open-ticket-ai = { workspace = true }
@@ -48,8 +48,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["open_ticket_ai_otobo_znuny_plugin*"]
+where = ["src"]
+include = ["otai_otobo_znuny*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
