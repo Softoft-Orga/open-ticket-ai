@@ -1,14 +1,64 @@
+[project]
+name = "open-ticket-ai"
+version = "1.0.0rc1"
+description = "AI-powered ticket processing and automation system"
+readme = "docs/raw_en_docs/README.md"
+requires-python = ">=3.13"
+
+authors = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
+
+license = { text = "LGPL-2.1-only" }
+
+keywords = ["ai", "ticket-system", "automation", "nlp", "workflow"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "pydantic~=2.11.7",
+    "pyyaml>=6.0",
+    "injector~=0.22.0",
+    "pyfiglet>=1.0.2",
+]
+
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
+Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+Documentation = "https://open-ticket-ai.com"
+
+[project.scripts]
+open-ticket-ai = "open_ticket_ai.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["open_ticket_ai*"]
+
 [tool.uv.workspace]
 members = [
-    "src/open_ticket_ai",
-    "src/open_ticket_ai_hf_local",
-    "src/open_ticket_ai_otobo_znuny_plugin",
+    "packages/otai_hf_local",
+    "packages/otai_otobo_znuny",
 ]
 
 [tool.uv.sources]
-open-ticket-ai = { workspace = true }
-open-ticket-ai-hf-local = { workspace = true }
-open-ticket-ai-otobo-znuny-plugin = { workspace = true }
+otai-hf-local = { workspace = true }
+otai-otobo-znuny = { workspace = true }
 
 [tool.ruff]
 line-length = 120
@@ -35,7 +85,8 @@ ignore_errors = true
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
-testpaths = ["tests", "src/open_ticket_ai/tests", "src/otai_hf_local", "src/otai_otobo_znuny", "src/docs_helpers"]
+testpaths = ["tests", "packages/*/tests"]
+python_files = "test_*.py"
 addopts = "-q"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
@@ -45,4 +96,10 @@ markers = [
     "contract: plugin-api-vertrag",
     "e2e: end-to-end flows",
     "slow: dauert länger"
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-asyncio>=0.24.0",
 ]
