@@ -109,7 +109,7 @@ from packages.open_ticket_ai_hf_local import HFLocalTextClassificationPipe
 
 **Configuration:**
 ```yaml
-use: "open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
+use: "otai_hf_local:HFLocalTextClassificationPipe"
 ```
 
 ## 📄 Files Created/Modified

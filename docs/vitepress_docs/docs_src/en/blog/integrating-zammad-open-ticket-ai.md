@@ -53,7 +53,7 @@ A **ZammadAdapter** will subclass this and implement these methods using Zammadâ
 configuration (base URL, credentials) injected via a `SystemConfig`. For example:
 
 ```python
-from open_ticket_ai.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai import TicketSystemAdapter
 import httpx
 
 

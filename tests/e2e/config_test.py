@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from open_ticket_ai.core.config import load_config
+from open_ticket_ai.core import load_config
 
 
 def test_load_yaml_config():

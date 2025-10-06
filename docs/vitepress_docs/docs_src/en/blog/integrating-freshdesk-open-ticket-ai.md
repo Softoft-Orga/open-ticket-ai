@@ -27,7 +27,7 @@ implement three core async methods: `update_ticket(ticket_id, data)`, `find_tick
 ```python
 import aiohttp
 
-from open_ticket_ai.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai import TicketSystemAdapter
 
 
 class FreshdeskAdapter(TicketSystemAdapter):

@@ -34,7 +34,7 @@ Controls which environment variables are accessible in templates and how they ar
 ### Example
 
 ```python
-from open_ticket_ai.core.template_rendering.renderer_config import TemplateRendererEnvConfig
+from open_ticket_ai.core import TemplateRendererEnvConfig
 
 env_config = TemplateRendererEnvConfig(
     prefix="MYAPP_",
@@ -57,7 +57,7 @@ Base configuration class for template renderers. Contains environment configurat
 ### Example
 
 ```python
-from open_ticket_ai.core.template_rendering.renderer_config import (
+from open_ticket_ai.core import (
     TemplateRendererConfig,
     TemplateRendererEnvConfig
 )
@@ -83,7 +83,7 @@ Inherits all fields from `TemplateRendererConfig`, plus:
 ### Example
 
 ```python
-from open_ticket_ai.core.template_rendering.renderer_config import (
+from open_ticket_ai.core import (
     JinjaRendererConfig,
     TemplateRendererEnvConfig
 )
@@ -106,7 +106,7 @@ config = JinjaRendererConfig(
 
 ```python
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
-from open_ticket_ai.core.template_rendering.renderer_config import (
+from open_ticket_ai.core import (
     JinjaRendererConfig,
     TemplateRendererEnvConfig
 )
@@ -173,7 +173,7 @@ open_ticket_ai:
 Generate JSON schema for configuration:
 
 ```python
-from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
+from open_ticket_ai.core import JinjaRendererConfig
 
 schema = JinjaRendererConfig.model_json_schema()
 print(schema)

@@ -27,7 +27,7 @@ open_ticket_ai:
   general_config:
     pipe_classes:
       - &ticket_classifier_pipe
-        use: "open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
+        use: "otai_hf_local:HFLocalTextClassificationPipe"
   defs:
     - &ticket_classifier
       <<: *ticket_classifier_pipe
@@ -47,7 +47,7 @@ open_ticket_ai:
 ```yaml
 steps:
   - id: classify_ticket
-    use: "open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
+    use: "otai_hf_local:HFLocalTextClassificationPipe"
     model: "softoft/EHS_Queue_V8"
     token: "{{ env.HUGGINGFACE_TOKEN }}"
     prompt: "{{ data.ticket.subject }} {{ data.ticket.body }}"
