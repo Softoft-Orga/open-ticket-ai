@@ -312,8 +312,8 @@ For detailed plugin development guidance, see [docs/vitepress_docs/docs_src/en/d
 ### Plugin Development
 
 For plugin developers:
-- **[PLUGIN_STANDARDS.md](../../PLUGIN_STANDARDS.md)** - Complete plugin packaging and metadata standards
-- **[PLUGIN_QUICK_REFERENCE.md](PLUGIN_QUICK_REFERENCE.md)** - Quick reference guide
+- **[PLUGIN_STANDARDS.md](plugins/PLUGIN_STANDARDS.md)** - Complete plugin packaging and metadata standards
+- **[PLUGIN_QUICK_REFERENCE.md](plugins/PLUGIN_QUICK_REFERENCE.md)** - Quick reference guide
 - **Plugin validation**: Run `python scripts/validate_plugins.py` to check compliance
 ### Testing
 

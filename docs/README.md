@@ -7,15 +7,28 @@ This folder contains all documentation for the Open Ticket AI project, organized
 ### `/docs/raw_en_docs`
 Raw English documentation files for the project.
 
-Contains:
+**Root files:**
 - Contributing guidelines (CONTRIBUTING.md)
 - Testing documentation (TESTING.md)
-- Setup and deployment guides
-- Development workflows
-- Plugin standards and implementation guides
-- Release and deprecation policies
-- Quick start guides
-- Technical implementation notes
+- Project README (README.md)
+
+**Subdirectories:**
+- `guides/` - User guides and setup documentation
+  - Quick start guide (QUICK_START.md)
+  - Setup and deployment instructions (SETUP_INSTRUCTIONS.md)
+  - CLI usage guide (CLI_USAGE.md)
+  - Workspace setup (WORKSPACE_SETUP.md)
+  
+- `plugins/` - Plugin development documentation
+  - Plugin standards (PLUGIN_STANDARDS.md)
+  - Quick reference guide (PLUGIN_QUICK_REFERENCE.md)
+  - Plugin-specific documentation (READMEs, CHANGELOGs)
+  
+- `reference/` - Reference documentation
+  - Release procedures (RELEASE.md)
+  - Deprecation policy (DEPRECATION_POLICY.md)
+  - Workflow architecture (workflow_architecture.md)
+  - Predefined pipes documentation (predefined-pipes.md)
 
 This is the source documentation in English before any translation or processing.
 

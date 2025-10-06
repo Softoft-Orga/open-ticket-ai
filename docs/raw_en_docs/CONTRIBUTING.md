@@ -270,7 +270,7 @@ cd src/otai_hf_local
 python -m build
 ```
 
-See [QUICK_START.md](QUICK_START.md) for PyPI publishing workflow.
+See [QUICK_START.md](guides/QUICK_START.md) for PyPI publishing workflow.
 
 ## Extending the System
 
@@ -285,7 +285,7 @@ See [QUICK_START.md](QUICK_START.md) for PyPI publishing workflow.
 
 ### Adding New Plugins
 
-See [PLUGIN_STANDARDS.md](PLUGIN_STANDARDS.md) for complete plugin development standards.
+See [PLUGIN_STANDARDS.md](plugins/PLUGIN_STANDARDS.md) for complete plugin development standards.
 
 1. Create plugin package under `src/open_ticket_ai_<plugin_name>/`
 2. Follow standard directory structure and naming conventions
@@ -312,7 +312,7 @@ This project follows [Semantic Versioning](https://semver.org/) with specific ru
 - **Plugins**: Independent versioning, must declare Core compatibility range
 - **Deprecations**: Features deprecated for 1-2 MINOR versions before removal
 
-See [RELEASE.md](RELEASE.md) for comprehensive release procedures and [DEPRECATION_POLICY.md](DEPRECATION_POLICY.md) for deprecation guidelines.
+See [RELEASE.md](reference/RELEASE.md) for comprehensive release procedures and [DEPRECATION_POLICY.md](reference/DEPRECATION_POLICY.md) for deprecation guidelines.
 
 When contributing:
 - Don't break existing APIs without discussion
@@ -375,10 +375,9 @@ npm run docs:build  # Production build
 ## Additional Resources
 
 - [README.md](README.md) - Project overview and quick links
-- [QUICK_START.md](QUICK_START.md) - PyPI publishing guide
-- [docs/developer_process.md](developer_process.md) - Automated processes
-- [docs/workflow_architecture.md](workflow_architecture.md) - Technical architecture
-- [docs/pipeline_flow.md](pipeline_flow.md) - Pipeline execution details
+- [QUICK_START.md](guides/QUICK_START.md) - PyPI publishing guide
+- [developer_process.md](../internal_docs/developer_process.md) - Automated processes
+- [workflow_architecture.md](reference/workflow_architecture.md) - Technical architecture
 
 ## License
 
