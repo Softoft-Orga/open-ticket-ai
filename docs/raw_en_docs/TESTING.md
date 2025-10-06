@@ -160,7 +160,6 @@ def test_register_hooks_exist(name, plugin, meta):
 
 **Eigenschaften**:
 - Blackbox-Tests kompletter Workflows
-- Testen Prefect-Flows
 - Realistische Szenarien
 - Längste Laufzeit
 
