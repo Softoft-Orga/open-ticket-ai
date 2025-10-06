@@ -1,13 +1,4 @@
 # Open Ticket AI
-
-[![Python application](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/python-app.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/python-app.yml)
-[![Test HF Local](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-hf-local.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-hf-local.yml)
-[![Test OTOBO/Znuny](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-otobo-znuny.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/test-otobo-znuny.yml)
-[![Nightly Tests](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/nightly-tests.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/nightly-tests.yml)
-[![Publish open-ticket-ai](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-open-ticket-ai.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-open-ticket-ai.yml)
-[![Publish HF Local](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-hf-local.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-hf-local.yml)
-[![Publish OTOBO/Znuny Plugin](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-otobo-znuny.yml/badge.svg)](https://github.com/Softoft-Orga/open-ticket-ai/actions/workflows/publish-otobo-znuny.yml)
-
 AI enhancements for open source ticket systems
 
 ## Packages

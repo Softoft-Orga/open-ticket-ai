@@ -4,7 +4,7 @@ This document provides Python-specific guidelines for all source code in the `sr
 
 ## Python Standards
 
-All code follows Python 3.13 conventions with strict type checking enabled. See `.windsurf/rules/python.md` for detailed formatting and linting rules.
+All code follows Python 3.13 conventions with strict type checking enabled.
 
 ## Import Organization
 
@@ -16,12 +16,6 @@ All code follows Python 3.13 conventions with strict type checking enabled. See 
 ## Type Annotations
 
 Every function, method, and variable that isn't trivially inferrable must have type annotations:
-
-```python
-def process_ticket(ticket_id: int, config: TicketConfig) -> ProcessingResult:
-    result: ProcessingResult = ...
-    return result
-```
 
 Use pydantic models for complex data structures rather than TypedDict or plain dicts.
 
@@ -44,12 +38,3 @@ Use pydantic models for complex data structures rather than TypedDict or plain d
 - Don't catch broad exceptions unless absolutely necessary
 - Provide context in exception messages to aid debugging
 - Let exceptions propagate when you can't handle them meaningfully
-
-## Configuration
-
-All configuration lives in `src/open_ticket_ai/core/config/` using pydantic models. When adding settings:
-
-1. Add fields to appropriate config model
-2. Update YAML schema documentation
-3. Add validation logic if needed
-4. Update VitePress docs with usage examples

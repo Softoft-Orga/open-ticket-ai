@@ -21,7 +21,6 @@ open-ticket-ai/
 │   └── open_ticket_ai/...         # root application code
 ├── tests/                         # workspace-level integration/e2e
 ├── pyproject.toml                 # root (workspace) config
-└── uv.lock
 ```
 
 ### Absolute rules
@@ -67,9 +66,6 @@ testpaths = [
 ]
 addopts = ["-q"]
 ```
-
-Packages may optionally add their own minimal `tool.pytest.ini_options` **only** for local data paths or markers—do not override discovery.
-
 ## How to run
 
 - From repo root:

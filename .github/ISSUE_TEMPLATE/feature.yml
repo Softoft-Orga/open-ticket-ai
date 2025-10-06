@@ -1,0 +1,66 @@
+name: Feature Request
+description: Suggest a new feature for Open Ticket AI
+title: "[Feature] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Feature Request
+        Help us understand what you'd like to see in Open Ticket AI.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Describe the feature you'd like to see
+      placeholder: "I'd like a pipe that can..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: How would you use this feature?
+      placeholder: "In our workflow, we need to..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: documentation-needs
+    attributes:
+      label: Documentation Requirements
+      description: What documentation will this feature need?
+      options:
+        - label: New pipe documentation (with config examples)
+        - label: Configuration schema updates
+        - label: API reference updates (docstrings only)
+        - label: Migration guide (if breaking change)
+        - label: Tutorial/guide updates
+        - label: README updates
+
+  - type: textarea
+    id: config-example
+    attributes:
+      label: Configuration Example (if applicable)
+      description: Show how this would be configured
+      render: yaml
+      placeholder: |
+        - id: new_feature
+          use: open_ticket_ai.NewFeaturePipe
+          setting: value
+
+  - type: checkboxes
+    id: implementation
+    attributes:
+      label: Implementation Checklist (for maintainers)
+      options:
+        - label: Code implementation
+        - label: Unit tests
+        - label: Integration tests
+        - label: Docstrings (Google style)
+        - label: User documentation updated
+        - label: Configuration examples tested
+        - label: CHANGELOG.md entry
+        - label: Schema regenerated (if config changed)

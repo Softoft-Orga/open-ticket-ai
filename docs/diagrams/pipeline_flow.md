@@ -1,53 +1,80 @@
 # Pipeline Execution Flow
 
 ```mermaid
-flowchart TD
-    Start([Start]) --> LoadConfig[Load config (config.yml)]
-    LoadConfig --> InitContext[Initialise Context]
-    InitContext --> BootInjector[Boot injector & PipeFactory]
-
-    BootInjector --> PipelineLoop{Pipeline entries?}
-
-    PipelineLoop --> Normalize[Normalise to RegisterableConfig]
-    Normalize --> RenderConfig[Render with TemplateRenderer]
-    RenderConfig --> CreatePipe[PipeFactory creates Pipe]
-    CreatePipe --> CheckRunnable{`_if` ok & deps met?}
-
-    CheckRunnable -->|No| SkipPipe[Skip pipe]
-    CheckRunnable -->|Yes| Composite{Composite pipe?}
-
-    Composite -->|Yes| StepLoop{For each rendered step}
-    StepLoop --> BuildChild[PipeFactory builds child]
-    BuildChild --> RunChild[child.process(context)]
-    RunChild --> Collect[Collect PipeResult]
-    Collect --> StepLoop
-    StepLoop -->|Complete| Merge[Union child PipeResult]
-
-    Composite -->|No| ExecutePipe[Execute pipe._process()]
-    ExecutePipe --> WrapResult[Wrap output as PipeResult]
-
-    Merge --> Persist[Persist PipeResult to context]
-    WrapResult --> Persist
-    SkipPipe --> Persist
-
-    Persist --> Snapshot[Update context snapshot]
-    Snapshot --> PipelineLoop
-
-    PipelineLoop -->|No more| FinalState[Final Context]
-    FinalState --> End([End])
-
-    %% Styling
-    classDef configClass fill:#e1f5fe
-    classDef processClass fill:#f3e5f5
-    classDef contextClass fill:#e8f5e8
-    classDef decisionClass fill:#fff3e0
-
-    class LoadConfig,RenderConfig,Normalize configClass
-    class ExecutePipe,RunChild,Merge,WrapResult processClass
-    class InitContext,Snapshot,FinalState contextClass
-    class CheckRunnable,Composite,StepLoop,PipelineLoop decisionClass
+flowchart TB
+    %% ========== INITIALIZATION PHASE ==========
+    Start([🚀 Start]) --> LoadConfig["📄 Load Configuration<br/>(config.yml)"]
+    LoadConfig --> InitContext["🔧 Initialize Context<br/>(empty pipes dict)"]
+    InitContext --> BootInjector["⚙️ Boot Dependency Injector<br/>& PipeFactory"]
+    
+    BootInjector --> EnterOrchestrator["🎯 Enter Orchestrator Loop"]
+    
+    %% ========== ORCHESTRATOR LOOP ==========
+    EnterOrchestrator --> PipelineLoop{📋 More pipeline<br/>entries?}
+    
+    %% ========== PIPE PROCESSING ==========
+    PipelineLoop -->|Yes| Normalize["📐 Parse to<br/>RegisterableConfig<br/>(id, use, if, depends_on)"]
+    
+    Normalize --> RenderConfig["🎨 Render Config with<br/>TemplateRenderer<br/>(Jinja templating)"]
+    
+    RenderConfig --> CreatePipe["🏭 PipeFactory.create_pipe()<br/>Instantiate Pipe class"]
+    
+    CreatePipe --> CheckRunnable{"✅ Should run?<br/>(if=true &<br/>dependencies met)"}
+    
+    %% ========== SKIP PATH ==========
+    CheckRunnable -->|❌ No| SkipPipe["⏭️ Skip Pipe<br/>(no result saved)"]
+    
+    %% ========== EXECUTION PATH ==========
+    CheckRunnable -->|✅ Yes| Composite{"🔀 Is Composite<br/>Pipe?"}
+    
+    %% ========== COMPOSITE PIPE LOGIC ==========
+    Composite -->|Yes| StepLoop{"📚 For each<br/>step config"}
+    
+    StepLoop -->|Has steps| ResolveStep["🔍 Resolve parent config<br/>+ step config"]
+    ResolveStep --> BuildChild["🏗️ PipeFactory builds<br/>child pipe"]
+    BuildChild --> RunChild["▶️ child.process(context)"]
+    RunChild --> CollectResult["📥 Collect child<br/>PipeResult"]
+    CollectResult --> UpdateChildContext["🔄 Update context<br/>with child result"]
+    UpdateChildContext --> StepLoop
+    
+    StepLoop -->|✅ All steps done| UnionResults["🔗 PipeResult.union()<br/>(merge all child results)"]
+    
+    %% ========== SIMPLE PIPE LOGIC ==========
+    Composite -->|No| ExecutePipe["⚡ Execute<br/>pipe._process()"]
+    ExecutePipe --> WrapResult["📦 Wrap output<br/>as PipeResult"]
+    
+    %% ========== RESULT PERSISTENCE ==========
+    UnionResults --> PersistResult["💾 Save to Context<br/>context.pipes[pipe_id]"]
+    WrapResult --> PersistResult
+    SkipPipe --> NextIteration
+    
+    PersistResult --> LogResult["📝 Log execution result"]
+    LogResult --> NextIteration["➡️ Next iteration"]
+    
+    %% ========== LOOP CONTINUATION ==========
+    NextIteration --> PipelineLoop
+    
+    %% ========== COMPLETION ==========
+    PipelineLoop -->|❌ No more| FinalContext["✨ Final Context<br/>(all results available)"]
+    FinalContext --> End([🏁 End])
+    
+    %% ========== STYLING ==========
+    classDef startEnd fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
+    classDef config fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef context fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef composite fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef skip fill:#eceff1,stroke:#37474f,stroke-width:2px
+    
+    class Start,End startEnd
+    class LoadConfig,RenderConfig,Normalize config
+    class ExecutePipe,RunChild,WrapResult,BuildChild,ResolveStep process
+    class InitContext,UpdateChildContext,FinalContext,PersistResult context
+    class CheckRunnable,Composite,StepLoop,PipelineLoop decision
+    class UnionResults,CollectResult composite
+    class SkipPipe,NextIteration skip
 ```
-
 ## Key Components
 
 - **RegisterableConfig** – normalises every pipeline entry with consistent control
