@@ -2,14 +2,23 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
+from open_ticket_ai.core.config.registerable import RegisterableConfig
+from open_ticket_ai.core.pipeline import OrchestratorConfig
+from open_ticket_ai.core.template_rendering import TemplateRendererConfig
+
+
+class GeneralConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
+    logging: dict[str, Any] = {}
+    template_renderer: TemplateRendererConfig = {}
 
 class RawOpenTicketAIConfig(BaseModel):
-    plugins: list[str] = []
-    general_config: dict[str, dict[str, Any] | Any] = {}
-    defs: list[dict[str, Any]] = []
-    orchestrator: list[dict[str, Any]] = []
+    plugins: list[str] = Field(default_factory=lambda: [])
+    general_config: GeneralConfig = Field(default_factory=GeneralConfig)
+    defs: list[RegisterableConfig] = Field(default_factory=lambda: [])
+    orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
 
 
 def load_config(path: str | Path) -> RawOpenTicketAIConfig:

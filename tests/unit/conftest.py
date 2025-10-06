@@ -12,7 +12,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedEntity,
     UnifiedNote,
 )
-from open_ticket_ai.tests.mocked_ticket_system import MockedTicketSystem
+from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 
 @pytest.fixture
@@ -43,14 +43,6 @@ def pipe_config_factory():
         return defaults
 
     return factory
-
-
-@pytest.fixture
-def mock_registry():
-    mock = MagicMock(spec=UnifiedRegistry)
-    mock.get_instance.return_value = MagicMock()
-    mock.register_instance.return_value = MagicMock()
-    return mock
 
 
 @pytest.fixture
@@ -165,7 +157,7 @@ def stateful_pipe_runner(mock_registry, mocked_ticket_system):
 @contextmanager
 def patched_registry(mock_registry):
     with patch(
-        "open_ticket_ai.core.dependency_injection.unified_registry.UnifiedRegistry.instance",
-        return_value=mock_registry,
+            "open_ticket_ai.core.dependency_injection.unified_registry.UnifiedRegistry.instance",
+            return_value=mock_registry,
     ):
         yield

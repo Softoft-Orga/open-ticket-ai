@@ -7,7 +7,6 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from injector import inject, singleton
 
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 
 from .orchestrator_config import OrchestratorConfig, RunnerDefinition
 from .pipe_factory import PipeFactory
@@ -19,9 +18,9 @@ class Orchestrator:
     """Manages scheduled pipeline execution using APScheduler."""
 
     @inject
-    def __init__(self, pipe_factory: PipeFactory, app_config: RawOpenTicketAIConfig) -> None:
+    def __init__(self, pipe_factory: PipeFactory, orchestrator_config: OrchestratorConfig) -> None:
         self._pipe_factory = pipe_factory
-        self._config = OrchestratorConfig.from_raw(app_config.orchestrator)
+        self._config = OrchestratorConfig.model_validate(orchestrator_config)
         self._logger = logging.getLogger(self.__class__.__name__)
         self._scheduler = AsyncIOScheduler()
         self._runners: dict[str, ScheduledPipeRunner] = {}

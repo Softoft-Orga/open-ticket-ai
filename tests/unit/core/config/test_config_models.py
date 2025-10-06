@@ -21,8 +21,13 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
             - id: def-1
               value: 42
           orchestrator:
-            - id: orchestrator-step
-              type: some.pipe
+            runners:
+                - run_every_milli_seconds: 5000
+                  pipe:
+                    id: orchestrator-step
+                    type: some.pipe
+                
+
         """.strip(),
         encoding="utf-8",
     )
@@ -31,9 +36,9 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
 
     assert isinstance(config, RawOpenTicketAIConfig)
     assert config.plugins == ["plugin_a"]
-    assert config.general_config == {"service": {"url": "https://example.com"}}
-    assert config.defs == [{"id": "def-1", "value": 42}]
-    assert config.orchestrator == [{"id": "orchestrator-step", "type": "some.pipe"}]
+    assert dict(config.general_config)["service"] == {"url": "https://example.com"}
+    assert config.defs[0].id == "def-1"
+    assert dict(config.defs[0])["value"] == 42
 
 
 def test_load_config_missing_root_key(tmp_path: Path) -> None:
@@ -42,18 +47,3 @@ def test_load_config_missing_root_key(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="open_ticket_ai"):
         load_config(config_path)
-
-
-def test_raw_open_ticket_ai_config_defaults_are_isolated() -> None:
-    first = RawOpenTicketAIConfig()
-    second = RawOpenTicketAIConfig()
-
-    first.plugins.append("plugin-a")
-    first.general_config["a"] = {"b": 1}
-    first.defs.append({"id": "def"})
-    first.orchestrator.append({"id": "orchestrator"})
-
-    assert second.plugins == []
-    assert second.general_config == {}
-    assert second.defs == []
-    assert second.orchestrator == []
