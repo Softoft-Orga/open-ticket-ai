@@ -12,7 +12,7 @@ from open_ticket_ai.open_ticket_ai.core.ticket_system_integration.unified_models
     UnifiedEntity,
     UnifiedNote,
 )
-from tests.unit.mocked_ticket_system import MockedTicketSystem
+from open_ticket_ai.tests.mocked_ticket_system import MockedTicketSystem
 
 
 @pytest.fixture
