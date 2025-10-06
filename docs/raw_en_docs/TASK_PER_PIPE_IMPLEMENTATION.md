@@ -140,8 +140,9 @@ orchestrator:
 ```
 
 ### Python Code
+
 ```python
-from open_ticket_ai.core.pipeline import execute_single_pipe_task
+from open_ticket_ai.open_ticket_ai.core import execute_single_pipe_task
 
 # Execute a pipe as a Prefect task
 result = await execute_single_pipe_task(

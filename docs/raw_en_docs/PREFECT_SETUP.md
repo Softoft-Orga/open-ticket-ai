@@ -47,7 +47,7 @@ Access the UI at: **http://127.0.0.1:4200**
 ### 2. Use PrefectOrchestrator
 
 ```python
-from open_ticket_ai.core.pipeline import PrefectOrchestrator
+from open_ticket_ai.open_ticket_ai.core import PrefectOrchestrator
 
 # Via dependency injection
 orchestrator = injector.get(PrefectOrchestrator)

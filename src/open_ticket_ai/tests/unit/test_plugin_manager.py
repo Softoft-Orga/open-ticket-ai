@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from open_ticket_ai.core.plugins.manager import CORE_API_VERSION, PLUGIN_GROUP, PluginManager
+from open_ticket_ai.open_ticket_ai.core.plugins.manager import CORE_API_VERSION, PLUGIN_GROUP, PluginManager
 
 
 class MockPlugin:
