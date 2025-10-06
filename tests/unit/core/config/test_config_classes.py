@@ -22,30 +22,31 @@ def test_registerable_config_defaults_are_independent() -> None:
 
 
 def test_rendered_pipe_config_requires_boolean_when() -> None:
-    # _if has a default value of True
+    # if field has a default value of True
     config = RenderedPipeConfig()
     assert config.should_run is True
 
-    config_false = RenderedPipeConfig(_if=False)
+    config_false = RenderedPipeConfig(**{"if": False})
     assert config_false.should_run is False
 
 
 @pytest.mark.parametrize(
     "field,value",
     [
-        ("_if", "True"),
-        ("_if", "{{ some_var }}"),
+        ("if", "True"),
+        ("if", "{{ some_var }}"),
     ],
 )
 def test_raw_pipe_config_accepts_optional_strings(field: str, value: str) -> None:
     config = RawPipeConfig(**{field: value})
-    assert getattr(config, field) == value
+    # Access the field using if_ attribute since 'if' is aliased
+    assert config.if_ == value
 
 
 def test_raw_pipe_config_requires_string_when() -> None:
-    # _if accepts both str and bool, with default "True"
-    config_bool = RawPipeConfig(_if=False)
-    assert config_bool._if is False
+    # if field accepts both str and bool, with default "True"
+    config_bool = RawPipeConfig(**{"if": False})
+    assert config_bool.if_ is False
 
-    config_str = RawPipeConfig(_if="{{ some_condition }}")
-    assert config_str._if == "{{ some_condition }}"
+    config_str = RawPipeConfig(**{"if": "{{ some_condition }}"})
+    assert config_str.if_ == "{{ some_condition }}"
