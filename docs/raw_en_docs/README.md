@@ -230,7 +230,7 @@ Before releasing, update the version in the appropriate `pyproject.toml`:
 - HF Local plugin: `/src/open_ticket_ai_hf_local/pyproject.toml`
 - OTOBO/Znuny plugin: `/src/open_ticket_ai_otobo_znuny_plugin/pyproject.toml`
 
-For comprehensive release procedures, compatibility requirements, and versioning policies, see [RELEASE.md](RELEASE.md).
+For comprehensive release procedures, compatibility requirements, and versioning policies, see [RELEASE.md](reference/RELEASE.md).
 
 ### Workspace and Dependency Locking
 
@@ -373,7 +373,7 @@ For detailed test structure and best practices, see [TESTING.md](TESTING.md).
 
 ### Development Workflows
 
-See [docs/developer_process.md](developer_process.md) for information about automated processes.
+See [developer_process.md](../internal_docs/developer_process.md) for information about automated processes.
 
 ## License
 
