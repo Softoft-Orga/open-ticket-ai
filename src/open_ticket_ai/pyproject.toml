@@ -61,8 +61,8 @@ otai = "open_ticket_ai.cli.main:main"
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["open_ticket_ai"]
+[tool.setuptools.packages.find]
+include = ["open_ticket_ai", "open_ticket_ai.*"]
 
 [tool.ruff]
 line-length = 120
