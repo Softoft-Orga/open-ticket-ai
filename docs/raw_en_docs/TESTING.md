@@ -15,11 +15,16 @@ Das Repository verwendet eine mehrstufige Teststruktur:
 ├── pyproject.toml
 ├── src/
 │   ├── open_ticket_ai/           # Core-Paket
+│   │   ├── tests/                # Core Unit-Tests
+│   │   │   ├── base/             # Base components tests
+│   │   │   ├── cli/              # CLI tests
+│   │   │   ├── core/             # Core functionality tests
+│   │   │   └── conftest.py       # Core test fixtures
 │   │   └── core/...
-│   ├── open_ticket_ai_hf_local/  # HuggingFace Plugin
+│   ├── otai_hf_local/            # HuggingFace Plugin
 │   │   ├── pyproject.toml
 │   │   └── tests/                # Plugin-spezifische Unit-Tests
-│   └── open_ticket_ai_otobo_znuny_plugin/  # OTOBO/Znuny Plugin
+│   └── otai_otobo_znuny/         # OTOBO/Znuny Plugin
 │       ├── pyproject.toml
 │       └── tests/                # Plugin-spezifische Unit-Tests
 │
@@ -29,7 +34,6 @@ Das Repository verwendet eine mehrstufige Teststruktur:
 │       └── tests/
 │
 └── tests/                        # Zentrale Tests
-    ├── unit/                     # Core Unit-Tests
     ├── integration/              # Core + Plugins zusammen
     ├── e2e/                      # End-to-End Workflows
     ├── contract/                 # Plugin-API-Contract-Tests
@@ -44,7 +48,7 @@ Das Repository verwendet eine mehrstufige Teststruktur:
 ```toml
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
-testpaths = ["tests", "src/open_ticket_ai_hf_local", "src/open_ticket_ai_otobo_znuny_plugin"]
+testpaths = ["tests", "src/open_ticket_ai/tests", "src/otai_hf_local", "src/otai_otobo_znuny", "src/docs_helpers"]
 addopts = "-q"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
@@ -76,7 +80,7 @@ markers = [
 
 ### Unit-Tests
 
-**Speicherort**: `tests/unit/` (Core), `<plugin>/tests/` (Plugins)
+**Speicherort**: `src/open_ticket_ai/tests/` (Core), `<plugin>/tests/` (Plugins)
 
 **Eigenschaften**:
 - Schnelle Ausführung
@@ -231,7 +235,7 @@ pytest -m "not slow"
 ### Spezifisches Verzeichnis
 ```bash
 # Core Unit-Tests
-pytest tests/unit/
+pytest src/open_ticket_ai/tests/
 
 # Integration-Tests
 pytest tests/integration/
@@ -283,15 +287,15 @@ def test_with_data():
 **Core-Tests**:
 ```yaml
 - name: Core Unit Tests
-  run: pytest -m unit tests/unit/
+  run: pytest -m unit src/open_ticket_ai/tests/
 ```
 
 **Plugin-Tests**:
 ```yaml
 - name: Plugin Tests
   run: |
-    pytest -m unit src/open_ticket_ai_hf_local/tests/
-    pytest -m unit packages/open_ticket_ai_otobo_znuny_plugin/tests/
+    pytest -m unit src/otai_hf_local/tests/
+    pytest -m unit src/otai_otobo_znuny/tests/
 ```
 
 **Integration & Contract**:

@@ -2,6 +2,8 @@ import asyncio
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
+from otobo_znuny.domain_models.ticket_models import IdName, Ticket, TicketSearch, TicketUpdate
+
 from open_ticket_ai.open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,

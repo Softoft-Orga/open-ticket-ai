@@ -35,7 +35,7 @@ ignore_errors = true
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
-testpaths = ["tests", "src/open_ticket_ai_hf_local", "src/open_ticket_ai_otobo_znuny_plugin"]
+testpaths = ["tests", "src/open_ticket_ai/tests", "src/otai_hf_local", "src/otai_otobo_znuny", "src/docs_helpers"]
 addopts = "-q"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

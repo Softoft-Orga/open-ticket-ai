@@ -160,7 +160,7 @@ uv run mypy src/          # Type check
 uv run pytest
 
 # Run specific test categories
-uv run pytest tests/unit/
+uv run pytest src/open_ticket_ai/tests/
 uv run pytest tests/integration/
 uv run pytest tests/contract/
 uv run pytest tests/e2e/

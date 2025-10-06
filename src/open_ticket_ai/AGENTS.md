@@ -69,7 +69,7 @@ The plugin system in `core/plugins/` discovers and loads external plugins:
 
 ## Testing Core Code
 
-Tests for core code live in `tests/unit/core/`. Focus on:
+Tests for core code live in `src/open_ticket_ai/tests/`. Focus on:
 
 - Testing public interfaces and contracts
 - Validating configuration parsing and validation

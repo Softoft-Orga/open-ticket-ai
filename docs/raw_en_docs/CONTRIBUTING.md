@@ -106,7 +106,7 @@ uv run ruff check --fix src/ tests/
 uv run pytest
 
 # Run specific test directory
-uv run pytest tests/unit/
+uv run pytest src/open_ticket_ai/tests/
 
 # Run with coverage
 uv run pytest --cov=open_ticket_ai tests/
@@ -117,7 +117,7 @@ uv run pytest --cov=open_ticket_ai tests/
 For detailed information about the test structure, markers, fixtures, and best practices, see [docs/TESTING.md](TESTING.md).
 
 **Quick Overview**:
-- **Unit tests**: `tests/unit/` and `<plugin>/tests/` - Test individual components
+- **Unit tests**: `src/open_ticket_ai/tests/` (core) and `<plugin>/tests/` (plugins) - Test individual components
 - **Integration tests**: `tests/integration/` - Test Core + Plugin interactions
 - **Contract tests**: `tests/contract/` - Test Plugin API compliance
 - **E2E tests**: `tests/e2e/` - Test complete workflows
@@ -139,7 +139,7 @@ pytest -m "not slow"    # Skip slow tests
 
 ### Writing Tests
 
-- Place tests in appropriate directories (`unit/`, `e2e/`)
+- Place tests in appropriate directories (core tests in `src/open_ticket_ai/tests/`, integration in `tests/integration/`, e2e in `tests/e2e/`)
 - Follow existing test patterns and naming conventions
 - Ensure async tests are properly decorated
 - Add tests for new functionality

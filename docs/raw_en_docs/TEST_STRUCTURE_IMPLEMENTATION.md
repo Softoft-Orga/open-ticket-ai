@@ -105,17 +105,22 @@ open-ticket-ai/
 ├── pyproject.toml                    # Root config with markers
 ├── src/
 │   ├── open_ticket_ai/               # Core package
-│   ├── open_ticket_ai_hf_local/
+│   │   └── tests/                    # Core unit tests
+│   │       ├── base/                 # Base components tests
+│   │       ├── cli/                  # CLI tests
+│   │       ├── core/                 # Core functionality tests
+│   │       └── conftest.py           # Core test fixtures
+│   ├── otai_hf_local/
 │   │   ├── pyproject.toml            # Plugin config with markers
 │   │   └── tests/                    # Plugin unit tests
-│   └── open_ticket_ai_otobo_znuny_plugin/
-│       └── pyproject.toml            # Plugin config with markers
+│   └── otai_otobo_znuny/
+│       ├── pyproject.toml            # Plugin config with markers
+│       └── tests/                    # Plugin unit tests
 ├── packages/
 │   └── open_ticket_ai_otobo_znuny_plugin/
 │       ├── pyproject.toml            # Standalone package config
 │       └── tests/                    # Standalone package tests
 └── tests/                            # Central test directory
-    ├── unit/                         # Core unit tests
     ├── integration/                  # Core + Plugin tests
     ├── contract/                     # Plugin API tests
     ├── e2e/                          # End-to-end tests
@@ -141,10 +146,10 @@ pytest -m "not slow"    # Exclude slow tests
 
 Run by directory:
 ```bash
-pytest tests/unit/                              # Core unit tests
-pytest tests/integration/                       # Integration tests
-pytest src/otai_hf_local/tests/       # HF plugin tests
-pytest packages/otai_otobo_znuny/tests/  # OTOBO plugin tests
+pytest src/open_ticket_ai/tests/                 # Core unit tests
+pytest tests/integration/                        # Integration tests
+pytest src/otai_hf_local/tests/                  # HF plugin tests
+pytest src/otai_otobo_znuny/tests/               # OTOBO plugin tests
 ```
 
 Run with coverage:

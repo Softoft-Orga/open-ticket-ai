@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
 
-from open_ticket_ai_otobo_znuny_plugin.open_ticket_ai_otobo_znuny_plugin.cli import otobo_znuny, setup
+from otai_otobo_znuny.otai_otobo_znuny.cli import otobo_znuny, setup
 
 
 class TestOtoboZnunyCLI:
