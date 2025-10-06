@@ -25,7 +25,7 @@ def _install_otobo_stubs() -> None:
     basic_auth_module = ModuleType("otobo_znuny.domain_models.basic_auth_model")
 
     @dataclass
-    class BasicAuth:  # noqa: D401 - simple stub container
+    class BasicAuth:
         user_login: str
         password: object
 
@@ -34,7 +34,7 @@ def _install_otobo_stubs() -> None:
     client_config_module = ModuleType("otobo_znuny.domain_models.otobo_client_config")
 
     @dataclass
-    class ClientConfig:  # noqa: D401 - simple stub container
+    class ClientConfig:
         base_url: str
         webservice_name: str
         operation_url_map: dict
