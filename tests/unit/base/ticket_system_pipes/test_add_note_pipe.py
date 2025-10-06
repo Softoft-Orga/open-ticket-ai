@@ -89,7 +89,7 @@ async def test_add_note_pipe_skips_when_disabled(
     config = {
         "id": "test_add_note",
         "use": "AddNotePipe",
-        "_if": False,
+        "if": False,
         "ticket_id": "TICKET-1",
         "note": {"body": "Test note"},
     }
@@ -98,4 +98,7 @@ async def test_add_note_pipe_skips_when_disabled(
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify pipe result
+    # When disabled, the pipe should not execute and return original context
     assert result_context is empty_pipeline_context
+    # Verify no note was added by checking the pipe result is not in the context
+    assert "test_add_note" not in result_context.pipes

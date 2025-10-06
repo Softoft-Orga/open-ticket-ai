@@ -52,7 +52,8 @@ def reset_dummy_pipes() -> None:
 
 @pytest.fixture
 def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
-    jinja_renderer = JinjaRenderer()
+    from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
+    jinja_renderer = JinjaRenderer(JinjaRendererConfig())
 
     def _resolve_class(import_path: str):
         module_path, separator, attr_name = import_path.partition(":")
@@ -79,7 +80,7 @@ def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.mark.asyncio
 async def test_process_skips_pipe_when_condition_is_false():
     context = Context(pipes={"existing": PipeResult(success=True, failed=False, data={"value": 1})})
-    skip_pipe = SkipPipe({"id": "skip", "_if": False, "when": False})
+    skip_pipe = SkipPipe({"id": "skip", "use": "SkipPipe", "if": False})
 
     result_context = await skip_pipe.process(context)
 
