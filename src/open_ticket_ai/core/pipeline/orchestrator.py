@@ -42,7 +42,7 @@ class Orchestrator:
             job_id = f"{definition.pipe_id}_{index}"
             self._runners[job_id] = runner
 
-            # Schedule the runner
+
             interval_seconds = definition.interval_seconds
             if interval_seconds > 0:
                 trigger = IntervalTrigger(seconds=int(interval_seconds))
@@ -51,8 +51,8 @@ class Orchestrator:
                     trigger=trigger,
                     id=job_id,
                     name=f"Pipe: {definition.pipe_id}",
-                    max_instances=1,  # Prevent concurrent runs of same job
-                    coalesce=True,  # Combine missed runs into one
+                    max_instances=1,
+                    coalesce=True,
                 )
                 self._logger.info(
                     "Scheduled pipe '%s' to run every %.2f seconds",
@@ -60,7 +60,7 @@ class Orchestrator:
                     interval_seconds,
                 )
             else:
-                # Run once immediately if interval is 0
+
                 self._scheduler.add_job(
                     runner.execute,
                     id=job_id,
@@ -68,7 +68,7 @@ class Orchestrator:
                 )
                 self._logger.info("Scheduled pipe '%s' for one-time execution", definition.pipe_id)
 
-        # Start the scheduler
+
         self._scheduler.start()
         self._logger.info("Orchestrator started successfully")
 
@@ -87,9 +87,9 @@ class Orchestrator:
         """Start the orchestrator and keep it running. Blocks until shutdown."""
         await self.start()
 
-        # Keep running until externally stopped
+
         try:
-            # APScheduler runs in the background, so we just wait
+
             while self._scheduler.running:
                 await asyncio.sleep(1)
         except (KeyboardInterrupt, SystemExit):
