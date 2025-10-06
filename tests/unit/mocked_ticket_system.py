@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
+from open_ticket_ai.open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
-from open_ticket_ai.core.ticket_system_integration.unified_models import (
+from open_ticket_ai.open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedNote,
     UnifiedTicket,

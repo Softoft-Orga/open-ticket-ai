@@ -181,5 +181,6 @@ otai plugin install open-ticket-ai-hf-local
 ## See Also
 
 - [Plugin Developer Guide](../vitepress_docs/docs_src/en/developers/plugins.md)
+- [Plugin Standards](../../PLUGIN_STANDARDS.md)
 - [Plugin Standards](PLUGIN_STANDARDS.md)
 - [Plugin Quick Reference](PLUGIN_QUICK_REFERENCE.md)

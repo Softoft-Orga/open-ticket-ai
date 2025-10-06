@@ -3,9 +3,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from ..config.registerable_class import RegisterableClass
 from .context import Context
 from .pipe_config import PipeResult, RenderedPipeConfig
-from ..config.registerable_class import RegisterableClass
 
 
 class Pipe(RegisterableClass):

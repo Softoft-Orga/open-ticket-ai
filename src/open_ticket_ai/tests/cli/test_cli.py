@@ -1,8 +1,5 @@
-import os
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 from typer.testing import CliRunner
 
 from open_ticket_ai.cli.main import app

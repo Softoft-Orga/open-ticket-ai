@@ -1,6 +1,6 @@
 import pytest
 
-from open_ticket_ai.core.template_rendering.jinja_registry import (
+from open_ticket_ai.core import (
     clear_registry,
     jinja_template_method,
     jinja_variable,

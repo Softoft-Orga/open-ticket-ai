@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from typer.testing import CliRunner
 
-from open_ticket_ai.cli.main import cli, plugin_install, plugin_list, plugin_remove
+from open_ticket_ai.cli import cli
 
 
 @pytest.fixture

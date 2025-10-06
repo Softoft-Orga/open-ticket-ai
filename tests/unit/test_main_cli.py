@@ -1,9 +1,8 @@
 from unittest.mock import MagicMock, patch
 
-import pytest
 from typer.testing import CliRunner
 
-from open_ticket_ai.cli import cli, main, register_plugin_commands
+from open_ticket_ai.open_ticket_ai.cli import cli, register_plugin_commands
 
 
 class TestMainCLI:

@@ -5,11 +5,11 @@ This example demonstrates how to extend JinjaRenderer with custom template
 methods and variables using decorators.
 """
 
-from open_ticket_ai.core.template_rendering import (
+from open_ticket_ai.open_ticket_ai.core.template_rendering import (
     jinja_template_method,
     jinja_variable,
 )
-from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 
 
 @jinja_template_method("format_priority")

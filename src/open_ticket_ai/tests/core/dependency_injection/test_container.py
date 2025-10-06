@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from injector import Injector
-from open_ticket_ai.core.dependency_injection.unified_registry import UnifiedRegistry
+from open_ticket_ai.core import UnifiedRegistry
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection import container as container_module

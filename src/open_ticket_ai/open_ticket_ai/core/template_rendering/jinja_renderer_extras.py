@@ -8,8 +8,7 @@ from jinja2 import pass_context
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
-
-from open_ticket_ai.core.template_rendering import JinjaRendererConfig
+from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
 
 def at_path(value: Any, path: Any) -> str:

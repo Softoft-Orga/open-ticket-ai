@@ -13,7 +13,6 @@ from open_ticket_ai.core.plugins.manager import PluginManager
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
-    TemplateRendererEnvConfig,
 )
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
