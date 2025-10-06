@@ -5,7 +5,7 @@ from open_ticket_ai.open_ticket_ai.core.ticket_system_integration.unified_models
     UnifiedEntity,
     UnifiedNote,
 )
-from otai_otobo_znuny.otai_otobo_znuny.models import (
+from open_ticket_ai_otobo_znuny_plugin.open_ticket_ai_otobo_znuny_plugin.models import (
     _to_unified_entity,
     otobo_article_to_unified_note,
     otobo_ticket_to_unified_ticket,
