@@ -16,14 +16,14 @@ The Docker Compose setup includes:
 
 ## Quick Start
 
-1. Navigate to the docs directory:
+1. Navigate to the config examples directory:
 ```bash
-cd docs
+cd docs/config_examples
 ```
 
-2. Start all services:
+2. Start all services using the Prefect compose file:
 ```bash
-docker compose up -d
+docker compose -f prefect_docker_compose.yml up -d
 ```
 
 3. Access the Prefect UI at http://localhost:4200
@@ -120,7 +120,7 @@ This prevents the worker from trying to connect before:
 
 By default, the work pool type is "process". To use a different type:
 
-1. Edit `compose.yml`:
+1. Edit `prefect_docker_compose.yml` (in `docs/config_examples/`):
 ```yaml
 prefect-init:
   command: >

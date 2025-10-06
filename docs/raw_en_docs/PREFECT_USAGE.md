@@ -298,7 +298,7 @@ If you see `httpcore.ConnectError: All connection attempts failed` in Docker Com
 
 **Problem**: Worker tries to connect before server is ready or work pool doesn't exist.
 
-**Solution**: The updated `compose.yml` includes:
+**Solution**: The updated `prefect_docker_compose.yml` (in `docs/config_examples/`) includes:
 
 1. **Health check on prefect-server** - Ensures server is ready before worker starts
 2. **prefect-init service** - Creates the default work pool automatically
