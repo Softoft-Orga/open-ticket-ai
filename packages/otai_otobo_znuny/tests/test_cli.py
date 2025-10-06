@@ -43,7 +43,7 @@ class TestOtoboZnunyCLI:
     def test_setup_with_connection_verification_success(self, mock_client):
         mock_instance = MagicMock()
         mock_client.return_value = mock_instance
-        
+
         runner = CliRunner()
         result = runner.invoke(
             setup,
@@ -55,7 +55,7 @@ class TestOtoboZnunyCLI:
                 "--verify-connection",
             ]
         )
-        
+
         assert result.exit_code == 0
         assert "Verifying connection" in result.output
         assert "Connection successful" in result.output
@@ -65,7 +65,7 @@ class TestOtoboZnunyCLI:
     @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
     def test_setup_with_connection_verification_failure_abort(self, mock_client):
         mock_client.side_effect = Exception("Connection failed")
-        
+
         runner = CliRunner()
         result = runner.invoke(
             setup,
@@ -78,14 +78,14 @@ class TestOtoboZnunyCLI:
             ],
             input="n\n"
         )
-        
+
         assert result.exit_code == 1
         assert "Connection failed" in result.output
 
     @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
     def test_setup_with_connection_verification_failure_continue(self, mock_client):
         mock_client.side_effect = Exception("Connection failed")
-        
+
         runner = CliRunner()
         result = runner.invoke(
             setup,
@@ -98,7 +98,7 @@ class TestOtoboZnunyCLI:
             ],
             input="y\n"
         )
-        
+
         assert result.exit_code == 0
         assert "Connection failed" in result.output
         assert "Next Steps" in result.output
@@ -118,10 +118,10 @@ class TestOtoboZnunyCLI:
                     "--output-config", "config.yml",
                 ]
             )
-            
+
             assert result.exit_code == 0
             assert "Generating configuration file" in result.output
-            
+
             with open("config.yml") as f:
                 content = f.read()
                 assert "open_ticket_ai:" in content

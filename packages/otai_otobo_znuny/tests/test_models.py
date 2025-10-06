@@ -92,7 +92,7 @@ class TestTicketAdapter:
         assert adapter.priority.name == "High"
 
     def test_handles_none_ticket_id(self):
-        # noinspection PyTypeChecker
+
         ticket = Ticket(id=1, title="No ID Ticket")
 
         adapter = otobo_ticket_to_unified_ticket(ticket)
