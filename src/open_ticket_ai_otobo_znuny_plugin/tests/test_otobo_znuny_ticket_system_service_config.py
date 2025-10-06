@@ -7,7 +7,7 @@ from types import ModuleType
 
 from pydantic import SecretStr
 
-from otai_otobo_znuny.otai_otobo_znuny.otobo_znuny_ticket_system_service_config import (
+from open_ticket_ai_otobo_znuny_plugin.open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import (
     RawOTOBOZnunyTicketsystemServiceConfig,
     RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
