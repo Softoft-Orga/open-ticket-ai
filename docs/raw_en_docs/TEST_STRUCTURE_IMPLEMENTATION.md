@@ -63,7 +63,7 @@ Implemented `tests/contract/test_plugin_contract.py` with:
 
 Created comprehensive documentation:
 
-- **`docs/TESTING.md`**: Complete testing guide (398 lines)
+- **`docs/raw_en_docs/TESTING.md`**: Complete testing guide (398 lines)
   - Directory structure explanation
   - Pytest configuration details
   - Test types and markers
@@ -72,7 +72,7 @@ Created comprehensive documentation:
   - Best practices
   - Troubleshooting guide
   
-- **`docs/diagrams/test-structure.md`**: Visual diagrams
+- **`docs/diagrams/test-structure.md`**: Visual diagrams (relative: `../diagrams/test-structure.md`)
   - Monorepo structure diagram
   - Test flow diagram
   - Configuration hierarchy
@@ -181,6 +181,6 @@ To continue building on this structure:
 
 ## References
 
-- [docs/TESTING.md](docs/TESTING.md) - Complete testing guide
+- [docs/raw_en_docs/TESTING.md](TESTING.md) - Complete testing guide
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contributing guidelines
-- [docs/diagrams/test-structure.md](docs/diagrams/test-structure.md) - Visual diagrams
+- [docs/diagrams/test-structure.md](../diagrams/test-structure.md) - Visual diagrams

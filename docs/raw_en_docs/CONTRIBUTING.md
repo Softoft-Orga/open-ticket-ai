@@ -114,7 +114,7 @@ uv run pytest --cov=open_ticket_ai tests/
 
 ### Test Organization
 
-For detailed information about the test structure, markers, fixtures, and best practices, see [docs/TESTING.md](TESTING.md).
+For detailed information about the test structure, markers, fixtures, and best practices, see [TESTING.md](TESTING.md).
 
 **Quick Overview**:
 - **Unit tests**: `src/open_ticket_ai/tests/` (core) and `<plugin>/tests/` (plugins) - Test individual components

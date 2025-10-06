@@ -1,58 +1,114 @@
-# Documentation Directory
+# Documentation Structure
 
-This directory contains documentation for Open Ticket AI.
+This folder contains all documentation for the Open Ticket AI project, organized into clear subfolders for easy navigation and maintenance.
 
-## Directory Structure
+## Folder Organization
 
-### `/docs/diagrams/`
+### `/docs/raw_en_docs`
+Raw English documentation files for the project.
 
-Centralized location for all architecture diagrams, flowcharts, and visual documentation.
+Contains:
+- Contributing guidelines (CONTRIBUTING.md)
+- Testing documentation (TESTING.md)
+- Setup and deployment guides
+- Development workflows
+- Plugin standards and implementation guides
+- Release and deprecation policies
+- Quick start guides
+- Technical implementation notes
 
-**Supported formats:**
-- PlantUML (`.puml`)
-- Mermaid (`.mmd`, or embedded in `.md`)
-- D2 (`.d2`)
-- Images (`.png`, `.svg`, `.jpg`)
+This is the source documentation in English before any translation or processing.
 
-**Current diagrams:**
-- `architecture_overview.puml` - System architecture overview
-- `class_diagram.puml` - Class hierarchy and relationships
-- `dependency_injection.puml` - Dependency injection flow
-- `pipeline_flow.puml` - Pipeline execution flow
-- `pipeline-context.md` - Pipeline context documentation with diagrams
-- `pipeline_flow.md` - Pipeline flow with mermaid diagrams
-- `test-structure.md` - Test structure diagrams
-- `to_mermaid_conversion.puml` - PlantUML to Mermaid conversion examples
-- `to_mermaid_conversion_simple.puml` - Simple conversion examples
+### `/docs/man_structured`
+Structured YAML documentation for automated processing.
 
-**Usage guidelines:**
-1. Place all new diagrams in `/docs/diagrams/`
-2. Use descriptive filenames (e.g., `feature-architecture.puml`)
-3. Include a brief comment at the top of each diagram file describing its purpose
-4. Reference diagrams from documentation using relative paths: `../diagrams/filename.ext`
-5. For markdown files with embedded diagrams (mermaid), keep them in `/docs/diagrams/` if they are primarily diagram documentation
+Contains:
+- Pipe sidecar YAML files (`.sidecar.yml`)
+- Schema definitions for documentation structure
+- Machine-readable metadata for pipes and components
 
-### `/docs/config_examples/`
+These files are used for automated documentation generation and validation.
 
+### `/docs/diagrams`
+All architecture and technical diagrams.
+
+Contains:
+- PlantUML diagrams (`.puml`)
+- Markdown-based diagrams
+- Architecture overviews
+- Pipeline flow visualizations
+- Test structure diagrams
+- Dependency injection diagrams
+
+All visual documentation should be placed here regardless of format.
+
+### `/docs/config_examples`
 Configuration file examples and templates.
 
-### `/docs/raw_en_docs/`
+Contains:
+- Sample YAML configuration files
+- Template renderer configuration guides
+- Quick reference for configuration
+- Workflow examples (queue classification, priority classification, etc.)
+- Python template extension examples
 
-Raw English documentation files.
+These examples help users understand how to configure the system.
 
-### `/docs/vitepress_docs/`
+### `/docs/internal_docs`
+Internal development notes and planning documents.
 
-VitePress documentation site source files. Do not modify diagram paths in this directory.
+Contains:
+- Developer notes
+- Implementation ideas
+- Temporary planning documents
 
-### `/docs/internal_docs/`
+Not intended for end-users; for development team reference only.
 
-Internal documentation and notes.
+### `/docs/vitepress_docs`
+VitePress documentation site source files.
 
-## Adding New Diagrams
+**DO NOT MODIFY** as part of general documentation reorganization.
 
-When adding new diagrams to the repository:
+Contains:
+- VitePress configuration
+- Multilingual documentation source
+- Static site generation assets
 
-1. Save the diagram file to `/docs/diagrams/`
-2. Use appropriate file extensions (`.puml`, `.d2`, `.mmd`, `.svg`, `.png`)
-3. Update this README if adding a significant new diagram
-4. Reference the diagram in relevant documentation files
+This folder has its own structure and workflow for the documentation website.
+
+## Documentation Guidelines
+
+### Adding New Documentation
+
+1. **User-facing guides**: Add to `/docs/raw_en_docs`
+2. **Diagrams**: Add to `/docs/diagrams`
+3. **Configuration examples**: Add to `/docs/config_examples`
+4. **Machine-readable metadata**: Add to `/docs/man_structured`
+5. **Internal notes**: Add to `/docs/internal_docs`
+6. **Website documentation**: Follow VitePress guidelines in `/docs/vitepress_docs`
+
+### File Naming Conventions
+
+- Use UPPERCASE for major documents (e.g., README.md, CONTRIBUTING.md)
+- Use lowercase with underscores for specific guides (e.g., pipeline_flow.md)
+- Use descriptive names that indicate content clearly
+
+### Avoiding Duplication
+
+- Check existing documentation before creating new files
+- Update existing documents rather than creating duplicates
+- Reference other documentation files using relative paths
+
+## Translation Workflow
+
+All documentation starts in English in `/docs/raw_en_docs`. Translation processes should:
+1. Source from `/docs/raw_en_docs`
+2. Output to appropriate locations (e.g., VitePress multilingual folders)
+3. Never modify the English source files during translation
+
+## Maintenance
+
+- Keep documentation synchronized with code changes
+- Update diagrams when architecture changes
+- Review and update examples when configuration schemas change
+- Archive outdated documentation rather than deleting it
