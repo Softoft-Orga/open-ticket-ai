@@ -14,7 +14,9 @@ class HFLocalTextClassificationPipeConfig(BaseModel):
 
 
 class HFLocalTextClassificationPipe(Pipe):
-    def __init__(self, config_raw: dict[str, Any], *args, **kwargs):
+    _pipeline: Any
+
+    def __init__(self, config_raw: dict[str, Any], *args: Any, **kwargs: Any) -> None:
         super().__init__(config_raw)
         pipe_config = HFLocalTextClassificationPipeConfig(**config_raw)
         self.model = pipe_config.model
@@ -25,15 +27,15 @@ class HFLocalTextClassificationPipe(Pipe):
 
     @staticmethod
     @cache
-    def _load_pipeline(model_name: str, token: str | None):
-        from transformers import (
+    def _load_pipeline(model_name: str, token: str | None) -> Any:
+        from transformers import (  # type: ignore[attr-defined]
             AutoModelForSequenceClassification,
             AutoTokenizer,
             pipeline,
         )
 
         tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)
-        model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
+        model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)  # type: ignore[no-untyped-call]
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 
     async def _process(self) -> PipeResult:

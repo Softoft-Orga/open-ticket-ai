@@ -75,6 +75,10 @@ python_version = "3.13"
 strict = true
 plugins = ['pydantic.mypy']
 
+[[tool.mypy.overrides]]
+module = "transformers.*"
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
