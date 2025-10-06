@@ -8,7 +8,7 @@ from typing import Any
 from injector import inject, singleton
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
-from open_ticket_ai.core.config.registerable_config import RegisterableConfig
+from open_ticket_ai.core.config.registerable import RegisterableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 

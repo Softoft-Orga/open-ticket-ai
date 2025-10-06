@@ -7,8 +7,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class RunnerDefinition(BaseModel):
-    """Configuration for a scheduled pipeline runner."""
-
     run_every_milli_seconds: int = Field(..., ge=1)
     pipe: dict[str, Any] = Field(default_factory=dict)
 
@@ -23,15 +21,8 @@ class RunnerDefinition(BaseModel):
         pipe_id = self.pipe.get("id")
         if pipe_id:
             return str(pipe_id)
-        return "pipe"
+        return "pipe-" + hex(hash(frozenset(self.pipe.items())) & 0xFFFFFFFF)[2:]
 
 
 class OrchestratorConfig(BaseModel):
     runners: list[RunnerDefinition] = Field(default_factory=list)
-
-    @classmethod
-    def from_raw(cls, raw_config: Iterable[dict[str, Any]] | None) -> OrchestratorConfig:
-        if not raw_config:
-            return cls()
-        runners = [RunnerDefinition.model_validate(entry) for entry in raw_config]
-        return cls(runners=runners)
