@@ -4,7 +4,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from open_ticket_ai.open_ticket_ai.main import run
+from open_ticket_ai.main import run
 
 CONFIG_PATH = Path(__file__).parent / "config.yml"
 

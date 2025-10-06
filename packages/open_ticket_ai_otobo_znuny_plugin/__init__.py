@@ -17,7 +17,7 @@ def register_pipes():
 
 
 def register_services():
-    from open_ticket_ai_otobo_znuny_plugin.open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service import OTOBOZnunyTicketSystemService
+    from packages.open_ticket_ai_otobo_znuny_plugin.open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service import OTOBOZnunyTicketSystemService
     return [OTOBOZnunyTicketSystemService]
 
 def register_cli_commands():

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from open_ticket_ai.open_ticket_ai.core import find_python_code_root_path
+from open_ticket_ai.core import find_python_code_root_path
 
 from src.scripts.util.display_file_structure import display_dir_tree
 

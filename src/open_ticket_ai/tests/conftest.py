@@ -4,11 +4,11 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from open_ticket_ai.open_ticket_ai.core.pipeline.context import Context
-from open_ticket_ai.open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
+from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
-from open_ticket_ai.open_ticket_ai.core.ticket_system_integration.unified_models import (
+from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedEntity,
     UnifiedNote,
 )

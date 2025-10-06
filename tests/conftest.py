@@ -10,7 +10,7 @@ import pytest
 if TYPE_CHECKING:
     from injector import Injector
 
-    from open_ticket_ai.open_ticket_ai.core.config import RawOpenTicketAIConfig
+    from open_ticket_ai.core.config import RawOpenTicketAIConfig
 
 
 def pytest_collection_modifyitems(config, items):
@@ -60,7 +60,7 @@ def mock_registry():
 
     Returns a MagicMock that behaves like UnifiedRegistry.
     """
-    from open_ticket_ai.open_ticket_ai.core import UnifiedRegistry
+    from open_ticket_ai.core import UnifiedRegistry
 
     mock = MagicMock(spec=UnifiedRegistry)
     mock.get_instance.return_value = MagicMock()
@@ -78,7 +78,7 @@ def mock_context():
 
     Returns a Context instance with test data.
     """
-    from open_ticket_ai.open_ticket_ai.core.pipeline.context import Context
+    from open_ticket_ai.core.pipeline.context import Context
 
     return Context(pipes={}, config={})
 
@@ -114,13 +114,13 @@ open_ticket_ai:
 def app_injector(tmp_config: Path) -> Injector:
     from injector import Injector
 
-    from open_ticket_ai.open_ticket_ai.core.dependency_injection.container import AppModule
+    from open_ticket_ai.core.dependency_injection.container import AppModule
 
     return Injector([AppModule(tmp_config)])
 
 
 @pytest.fixture
 def test_config(tmp_config: Path) -> RawOpenTicketAIConfig:
-    from open_ticket_ai.open_ticket_ai.core.config import load_config
+    from open_ticket_ai.core.config import load_config
 
     return load_config(tmp_config)

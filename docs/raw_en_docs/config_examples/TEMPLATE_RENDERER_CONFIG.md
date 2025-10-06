@@ -91,7 +91,7 @@ Both styles are equivalent and work the same way. The renderer automatically con
 You can also use the configuration classes directly in Python:
 
 ```python
-from open_ticket_ai.open_ticket_ai.core.template_rendering import (
+from open_ticket_ai.core import (
     JinjaRenderer,
     JinjaRendererConfig,
     TemplateRendererEnvConfig,

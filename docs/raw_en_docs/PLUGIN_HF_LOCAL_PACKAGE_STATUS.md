@@ -102,8 +102,9 @@ pip install open-ticket-ai-hf-local
 ```
 
 **Import:**
+
 ```python
-from open_ticket_ai_hf_local import HFLocalTextClassificationPipe
+from packages.open_ticket_ai_hf_local import HFLocalTextClassificationPipe
 ```
 
 **Configuration:**

@@ -414,8 +414,8 @@ def register_cli_commands():
 #### `minimal_pipe.py`
 
 ```python
-from open_ticket_ai.open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.context import Context
 
 
 class MinimalPipe(Pipe):

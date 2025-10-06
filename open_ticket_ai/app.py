@@ -10,7 +10,7 @@ from open_ticket_ai.core import Orchestrator
 
 
 def get_project_info():
-    pyproject_path = Path("../../../pyproject.toml")
+    pyproject_path = Path("../pyproject.toml")
 
     defaults = {
         "name": "Open Ticket AI",

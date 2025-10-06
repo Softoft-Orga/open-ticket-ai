@@ -8,7 +8,7 @@ representation of the structure using the `rich` library.
 from io import StringIO
 from pathlib import Path
 
-from open_ticket_ai.open_ticket_ai.core import find_python_code_root_path
+from open_ticket_ai.core import find_python_code_root_path
 from pathspec import PathSpec
 from pathspec.patterns import GitWildMatchPattern
 from pathspec.util import normalize_file
