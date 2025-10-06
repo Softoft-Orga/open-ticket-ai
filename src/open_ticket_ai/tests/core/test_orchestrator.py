@@ -4,12 +4,12 @@ import time
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
 
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
-from open_ticket_ai.core.pipeline import (
+from open_ticket_ai.open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+from open_ticket_ai.open_ticket_ai.core.pipeline import (
     Orchestrator,
     OrchestratorConfig,
 )
-from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.open_ticket_ai.core.pipeline.context import Context
 
 
 def test_orchestrator_config_from_raw() -> None:

@@ -112,7 +112,7 @@ The CLI can be tested programmatically using Click's testing utilities:
 
 ```python
 from click.testing import CliRunner
-from open_ticket_ai.cli.main import cli
+from open_ticket_ai.open_ticket_ai.cli import cli
 
 runner = CliRunner()
 result = runner.invoke(cli, ['plugin', 'list'])

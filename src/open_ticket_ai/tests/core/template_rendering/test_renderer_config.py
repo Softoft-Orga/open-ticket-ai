@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from open_ticket_ai.core.template_rendering.renderer_config import (
+from open_ticket_ai.open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
     TemplateRendererConfig,
     TemplateRendererEnvConfig,

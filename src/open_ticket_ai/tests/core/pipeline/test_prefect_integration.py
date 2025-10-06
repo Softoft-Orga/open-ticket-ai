@@ -2,11 +2,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from open_ticket_ai.base.composite_pipe import CompositePipe
-from open_ticket_ai.core.pipeline.context import Context
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
-from open_ticket_ai.core.pipeline.prefect_flows import (
+from open_ticket_ai.open_ticket_ai.base.composite_pipe import CompositePipe
+from open_ticket_ai.open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.open_ticket_ai.core.pipeline import (
     create_pipe_task,
     execute_single_pipe_task,
     is_in_prefect_context,
@@ -134,7 +134,7 @@ async def test_pipe_retry_configuration_from_config():
         "retry_delay_seconds": 120,
     }
 
-    from open_ticket_ai.core.pipeline.pipe_config import RenderedPipeConfig
+    from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_config import RenderedPipeConfig
 
     rendered_config = RenderedPipeConfig.model_validate(pipe_config)
 
@@ -149,7 +149,7 @@ async def test_pipe_retry_configuration_defaults():
         "use": "tests.unit.open_ticket_ai.core.pipeline.test_prefect_integration:SimplePipe",
     }
 
-    from open_ticket_ai.core.pipeline.pipe_config import RenderedPipeConfig
+    from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_config import RenderedPipeConfig
 
     rendered_config = RenderedPipeConfig.model_validate(pipe_config)
 

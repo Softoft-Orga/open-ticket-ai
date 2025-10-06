@@ -3,7 +3,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+from open_ticket_ai.open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 
 
 class RootConfig(BaseModel):

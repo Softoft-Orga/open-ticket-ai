@@ -7,7 +7,7 @@ from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.core.config.registerable_config import RegisterableConfig
+from open_ticket_ai.open_ticket_ai.core.config.registerable_config import RegisterableConfig
 
 
 class FlowAction(enum.StrEnum):

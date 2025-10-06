@@ -1,10 +1,10 @@
 import logging
 from typing import Any
 
-from open_ticket_ai.core.pipeline.context import Context
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
-from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
+from open_ticket_ai.open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 
 
 class CompositePipeConfig(RenderedPipeConfig):

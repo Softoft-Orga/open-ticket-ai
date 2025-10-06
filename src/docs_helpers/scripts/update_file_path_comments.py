@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from open_ticket_ai.core.util.path_util import find_python_code_root_path
+from open_ticket_ai.open_ticket_ai.core import find_python_code_root_path
 
 FILE_PATH_PATTERN = re.compile(r"^\s*#\s*FILE_PATH:.*$")
 """re.Pattern: Regular expression to match lines that are FILE_PATH comments.

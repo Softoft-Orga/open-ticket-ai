@@ -3,10 +3,10 @@ import os
 
 from injector import Injector
 
-from open_ticket_ai.app import OpenTicketAIApp
-from open_ticket_ai.core.dependency_injection.container import AppModule
-from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
-from open_ticket_ai.core.plugins.manager import PluginManager
+from open_ticket_ai.open_ticket_ai.app import OpenTicketAIApp
+from open_ticket_ai.open_ticket_ai.core.dependency_injection.container import AppModule
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
+from open_ticket_ai.open_ticket_ai.core.plugins.manager import PluginManager
 
 
 def get_container():

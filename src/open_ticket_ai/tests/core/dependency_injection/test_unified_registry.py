@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from open_ticket_ai.core.dependency_injection.unified_registry import (
+from open_ticket_ai.open_ticket_ai.core import (
     ConflictingClassRegistration,
     NotRegistered,
     UnifiedRegistry,

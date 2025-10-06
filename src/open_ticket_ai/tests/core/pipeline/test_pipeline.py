@@ -3,11 +3,11 @@ from typing import Any
 
 import pytest
 
-from open_ticket_ai.base.composite_pipe import CompositePipe
-from open_ticket_ai.core.pipeline.context import Context
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
-from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.open_ticket_ai.base.composite_pipe import CompositePipe
+from open_ticket_ai.open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 
 
 class DummyChildPipe(Pipe):

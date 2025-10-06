@@ -21,7 +21,7 @@ Access the Prefect UI at: **http://127.0.0.1:4200**
 The `PrefectOrchestrator` is a drop-in replacement for the APScheduler-based `Orchestrator`:
 
 ```python
-from open_ticket_ai.core.pipeline import PrefectOrchestrator
+from open_ticket_ai.open_ticket_ai.core import PrefectOrchestrator
 from injector import Injector
 
 # Get orchestrator via dependency injection
@@ -191,7 +191,7 @@ result = await orchestrator.run_once("my_pipe")
 You can create custom deployments programmatically:
 
 ```python
-from open_ticket_ai.core.pipeline.prefect_flows import execute_scheduled_pipe_flow
+from open_ticket_ai.open_ticket_ai.core.pipeline import execute_scheduled_pipe_flow
 from datetime import timedelta
 
 # Create a custom deployment
@@ -215,11 +215,13 @@ The Prefect integration works alongside your existing APScheduler-based orchestr
 
 ```python
 # Use APScheduler for local development
-from open_ticket_ai.core.pipeline import Orchestrator
+from open_ticket_ai.open_ticket_ai.core import Orchestrator
+
 orchestrator = injector.get(Orchestrator)
 
 # Use Prefect for production with monitoring
-from open_ticket_ai.core.pipeline import PrefectOrchestrator
+from open_ticket_ai.open_ticket_ai.core import PrefectOrchestrator
+
 orchestrator = injector.get(PrefectOrchestrator)
 ```
 

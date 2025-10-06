@@ -5,13 +5,12 @@ from pathlib import Path
 import pyfiglet
 from injector import inject
 
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
-from open_ticket_ai.core.pipeline import Orchestrator
+from open_ticket_ai.open_ticket_ai.core.config import RawOpenTicketAIConfig
+from open_ticket_ai.open_ticket_ai.core import Orchestrator
 
 
 def get_project_info():
-    current_file = Path(__file__).resolve()
-    pyproject_path = current_file.parent.parent / "pyproject.toml"
+    pyproject_path = Path("../../../pyproject.toml")
 
     defaults = {
         "name": "Open Ticket AI",
