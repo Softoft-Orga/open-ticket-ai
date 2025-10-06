@@ -1,7 +1,6 @@
 from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
-
 from otai_otobo_znuny.otai_otobo_znuny.cli import otobo_znuny, setup
 
 

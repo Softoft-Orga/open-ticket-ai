@@ -2,6 +2,10 @@ import logging
 from typing import Any
 
 from injector import inject
+from otai_otobo_znuny.models import otobo_ticket_to_unified_ticket
+from otai_otobo_znuny.otobo_znuny_ticket_system_service_config import (
+    RenderedOTOBOZnunyTicketsystemServiceConfig,
+)
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket, TicketSearch, TicketUpdate
 
@@ -11,10 +15,6 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedEntity,
     UnifiedNote,
     UnifiedTicket,
-)
-from packages.open_ticket_ai_otobo_znuny_plugin.open_ticket_ai_otobo_znuny_plugin.models import otobo_ticket_to_unified_ticket
-from packages.open_ticket_ai_otobo_znuny_plugin.open_ticket_ai_otobo_znuny_plugin.otobo_znuny_ticket_system_service_config import (
-    RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
 
 
