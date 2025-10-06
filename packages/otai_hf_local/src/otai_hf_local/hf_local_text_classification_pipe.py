@@ -26,7 +26,7 @@ class HFLocalTextClassificationPipe(Pipe):
     @staticmethod
     @cache
     def _load_pipeline(model_name: str, token: str | None):
-        from transformers import (  # noqa: PLC0415
+        from transformers import (
             AutoModelForSequenceClassification,
             AutoTokenizer,
             pipeline,
