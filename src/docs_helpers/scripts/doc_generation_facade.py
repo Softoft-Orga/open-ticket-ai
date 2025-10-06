@@ -17,7 +17,7 @@ from pathlib import Path
 
 import typer
 from mdxlate.translator import Translator
-from open_ticket_ai.core.util.path_util import find_python_code_root_path
+from open_ticket_ai.open_ticket_ai.core import find_python_code_root_path
 from openai import AsyncOpenAI
 from rich.console import Console
 

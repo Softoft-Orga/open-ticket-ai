@@ -5,26 +5,27 @@ The repository is now properly configured as a UV monorepo workspace with the co
 
 ## Important Note on Package Structure
 
-The issue originally requested "a dedicated `pyproject.toml` inside `src/open_ticket_ai/`". However, after careful analysis, we determined that the proper UV workspace pattern is to have the root `pyproject.toml` serve as both:
-1. The workspace configuration
-2. The core package definition
+The core package has been restructured to follow the standard Python package layout pattern:
+1. `src/open_ticket_ai/` contains the package-level files (`pyproject.toml`, `README.md`)
+2. `src/open_ticket_ai/open_ticket_ai/` contains the actual package code
 
-This is because:
-- `src/open_ticket_ai/` IS the package itself (contains `__init__.py` and package code)
-- A `pyproject.toml` inside the package directory would not work with setuptools
-- The UV workspace standard pattern allows the root to be both a workspace AND a package
-- This matches the existing documentation which states: "Core Package (`open-ticket-ai`) - Located in root `pyproject.toml` with source code in `src/open_ticket_ai/`"
+This structure:
+- Matches the plugin layout pattern (e.g., `src/otai_hf_local/otai_hf_local/`)
+- Provides proper separation between package metadata and source code
+- Allows `src/open_ticket_ai` to be a workspace member like the plugins
+- Enables proper package building and distribution
 
 ## Workspace Configuration
 
 ### Root `pyproject.toml`
-The root `pyproject.toml` serves dual purposes:
+The root `pyproject.toml` now serves as the workspace configuration only, containing:
 1. **Workspace Configuration** - Defines workspace members and sources
-2. **Core Package Definition** - Contains the `open-ticket-ai` package metadata
+2. **Shared Tooling Configuration** - Ruff, mypy, pytest settings for all packages
 
 ```toml
 [tool.uv.workspace]
 members = [
+    "src/open_ticket_ai",
     "src/open_ticket_ai_hf_local",
     "src/open_ticket_ai_otobo_znuny_plugin",
 ]
@@ -33,41 +34,48 @@ members = [
 open-ticket-ai = { workspace = true }
 open-ticket-ai-hf-local = { workspace = true }
 open-ticket-ai-otobo-znuny-plugin = { workspace = true }
+```
 
+### Core Package `pyproject.toml`
+The core package has its own `pyproject.toml` at `src/open_ticket_ai/pyproject.toml`:
+
+```toml
 [project]
 name = "open-ticket-ai"
 version = "1.0.0rc1"
-# ... core package metadata
+# ... package metadata
 
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["open_ticket_ai", "open_ticket_ai.*"]
-exclude = ["open_ticket_ai.tests*", "open_ticket_ai_hf_local*", "open_ticket_ai_otobo_znuny_plugin*"]
+[tool.setuptools]
+packages = ["open_ticket_ai"]
 ```
 
 ### Package Structure
 
 ```
 open-ticket-ai/
-├── pyproject.toml                          # Root: workspace config + core package
+├── pyproject.toml                          # Root: workspace config only
 ├── src/
-│   ├── open_ticket_ai/                     # Core package source code
-│   │   ├── __init__.py
-│   │   ├── app.py
-│   │   ├── main.py
-│   │   ├── base/
-│   │   ├── core/
-│   │   └── extras/
-│   ├── open_ticket_ai_hf_local/            # HF Local plugin workspace member
+│   ├── open_ticket_ai/                     # Core package directory
+│   │   ├── pyproject.toml                  # Core package definition
+│   │   ├── README.md                       # Package README
+│   │   ├── tests/                          # Package-specific tests
+│   │   └── open_ticket_ai/                 # Core package source code
+│   │       ├── __init__.py
+│   │       ├── app.py
+│   │       ├── main.py
+│   │       ├── base/
+│   │       ├── core/
+│   │       └── extras/
+│   ├── otai_hf_local/                      # HF Local plugin workspace member
 │   │   ├── pyproject.toml                  # Plugin package definition
-│   │   └── open_ticket_ai_hf_local/        # Plugin source code
-│   └── open_ticket_ai_otobo_znuny_plugin/  # OTOBO plugin workspace member
+│   │   └── otai_hf_local/                  # Plugin source code
+│   └── otai_otobo_znuny/                   # OTOBO plugin workspace member
 │       ├── pyproject.toml                  # Plugin package definition
-│       └── *.py                            # Plugin source code
+│       └── otai_otobo_znuny/               # Plugin source code
 ├── tests/                                  # Central test directory
 │   ├── unit/
 │   ├── integration/
@@ -78,25 +86,31 @@ open-ticket-ai/
 
 ## Key Changes Made
 
-1. **Fixed Duplicate Sections**
-   - Removed duplicate `[tool.uv.workspace]` and `[tool.uv.sources]` sections from root pyproject.toml
-   - Removed duplicate `dependencies`, `[project.urls]`, and `[project.entry-points]` from plugin files
+1. **Restructured Core Package**
+   - Moved all source code from `src/open_ticket_ai/` to `src/open_ticket_ai/open_ticket_ai/`
+   - Created new `pyproject.toml` at `src/open_ticket_ai/pyproject.toml` for core package metadata
+   - Added `src/open_ticket_ai` as a workspace member
+   - Core package now follows the same pattern as plugins
 
-2. **Package Exclusions**
-   - Updated `[tool.setuptools.packages.find]` in root to explicitly exclude plugin packages
-   - Core package build now only includes `open_ticket_ai` code, not plugin code
-   - Properly excludes tests from the core package
+2. **Root pyproject.toml Refactoring**
+   - Removed `[project]` section from root (now in core package pyproject.toml)
+   - Removed `[build-system]` section from root (now in core package pyproject.toml)
+   - Root now only contains workspace configuration and shared tooling settings
+   - Added `src/open_ticket_ai` to workspace members list
 
-3. **Plugin pyproject.toml Cleanup**
-   - Fixed duplicate readme field in HF Local plugin
-   - Fixed duplicate entry points in OTOBO/Znuny plugin
-   - Removed conflicting dependencies sections
+3. **Dependency Updates**
+   - Added missing `apscheduler>=3.10.0` dependency to core package
 
-4. **Workspace Benefits**
+4. **Code Updates**
+   - Updated `get_project_info()` in `app.py` to use `__file__` for relative path resolution
+   - Fixed import order issues with ruff auto-fix
+
+5. **Workspace Benefits**
    - All packages can be installed together with `uv sync`
    - Cross-package imports work during development
    - Centralized tooling (ruff, mypy, pytest) configured at the root
    - Independent versioning and publishing of each package
+   - Consistent package structure across core and plugins
 
 ## Build Verification
 
@@ -114,15 +128,15 @@ Successfully built dist/open_ticket_ai-1.0.0rc1-py3-none-any.whl
 ### HF Local Plugin
 ```bash
 $ uv build --package open-ticket-ai-hf-local
-Successfully built dist/open_ticket_ai_hf_local-1.0.0rc1.tar.gz
-Successfully built dist/open_ticket_ai_hf_local-1.0.0rc1-py3-none-any.whl
+Successfully built dist/otai_hf_local-1.0.0rc1.tar.gz
+Successfully built dist/otai_hf_local-1.0.0rc1-py3-none-any.whl
 ```
 
 ### OTOBO/Znuny Plugin
 ```bash
 $ uv build --package open-ticket-ai-otobo-znuny-plugin
-Successfully built dist/open_ticket_ai_otobo_znuny_plugin-1.0.0rc1.tar.gz
-Successfully built dist/open_ticket_ai_otobo_znuny_plugin-1.0.0rc1-py3-none-any.whl
+Successfully built dist/otai_otobo_znuny-1.0.0rc1.tar.gz
+Successfully built dist/otai_otobo_znuny-1.0.0rc1-py3-none-any.whl
 ```
 
 ## Testing and Linting
@@ -146,7 +160,7 @@ uv run mypy src/          # Type check
 uv run pytest
 
 # Run specific test categories
-uv run pytest tests/unit/
+uv run pytest src/open_ticket_ai/tests/
 uv run pytest tests/integration/
 uv run pytest tests/contract/
 uv run pytest tests/e2e/

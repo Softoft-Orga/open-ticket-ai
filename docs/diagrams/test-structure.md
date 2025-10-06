@@ -16,17 +16,17 @@ graph TB
             core[open_ticket_ai/core/]
         end
         
-        subgraph "HF Plugin (src/open_ticket_ai_hf_local)"
+        subgraph "HF Plugin (src/otai_hf_local)"
             hf_plugin[open_ticket_ai_hf_local/]
             hf_tests[tests/<br/>Plugin Unit Tests<br/>pyproject.toml]
         end
         
-        subgraph "OTOBO Plugin (src/open_ticket_ai_otobo_znuny_plugin)"
+        subgraph "OTOBO Plugin (src/otai_otobo_znuny)"
             otobo_plugin[open_ticket_ai_otobo_znuny_plugin/]
             otobo_pyproject[pyproject.toml<br/>pytest markers]
         end
         
-        subgraph "OTOBO Package (packages/open_ticket_ai_otobo_znuny_plugin)"
+        subgraph "OTOBO Package (packages/otai_otobo_znuny)"
             otobo_pkg[src/open_ticket_ai_otobo_znuny_plugin/]
             otobo_tests[tests/<br/>Plugin Unit Tests<br/>pyproject.toml]
         end

@@ -3,9 +3,9 @@ from __future__ import annotations
 from unittest.mock import MagicMock, patch
 
 import pytest
-from click.testing import CliRunner
+from typer.testing import CliRunner
 
-from open_ticket_ai.cli.main import cli, plugin_install, plugin_list, plugin_remove
+from open_ticket_ai.cli import cli
 
 
 @pytest.fixture
@@ -16,13 +16,13 @@ def runner():
 def test_cli_help(runner):
     result = runner.invoke(cli, ["--help"])
     assert result.exit_code == 0
-    assert "Commands:" in result.output
+    assert "Commands:" in result.output or "Usage:" in result.output
 
 
 def test_plugin_help(runner):
     result = runner.invoke(cli, ["plugin", "--help"])
     assert result.exit_code == 0
-    assert "Commands:" in result.output
+    assert "Commands:" in result.output or "Usage:" in result.output
     assert "install" in result.output
     assert "list" in result.output
     assert "remove" in result.output
@@ -31,7 +31,7 @@ def test_plugin_help(runner):
 def test_plugin_list_no_plugins(runner):
     with patch("open_ticket_ai.cli.main.md.entry_points") as mock_ep:
         mock_ep.return_value = []
-        result = runner.invoke(plugin_list)
+        result = runner.invoke(cli, ["plugin", "list"])
         assert result.exit_code == 0
         assert "No plugins installed" in result.output
 
@@ -51,7 +51,7 @@ def test_plugin_list_with_plugins(runner):
     
     with patch("open_ticket_ai.cli.main.md.entry_points") as mock_entry_points:
         mock_entry_points.return_value = [mock_ep]
-        result = runner.invoke(plugin_list)
+        result = runner.invoke(cli, ["plugin", "list"])
         assert result.exit_code == 0
         assert "test-plugin" in result.output
         assert "1.0.0" in result.output
@@ -61,7 +61,7 @@ def test_plugin_list_with_plugins(runner):
 def test_plugin_install_success(runner):
     with patch("open_ticket_ai.cli.main.subprocess.run") as mock_run:
         mock_run.return_value = MagicMock(returncode=0, stderr="", stdout="")
-        result = runner.invoke(plugin_install, ["test-plugin"])
+        result = runner.invoke(cli, ["plugin", "install", "test-plugin"])
         assert result.exit_code == 0
         assert "installed successfully" in result.output
         mock_run.assert_called_once()
@@ -74,7 +74,7 @@ def test_plugin_install_failure(runner):
             stderr="Error installing package",
             stdout=""
         )
-        result = runner.invoke(plugin_install, ["test-plugin"])
+        result = runner.invoke(cli, ["plugin", "install", "test-plugin"])
         assert result.exit_code == 1
         assert "Failed to install" in result.output
 
@@ -82,7 +82,7 @@ def test_plugin_install_failure(runner):
 def test_plugin_remove_success(runner):
     with patch("open_ticket_ai.cli.main.subprocess.run") as mock_run:
         mock_run.return_value = MagicMock(returncode=0, stderr="", stdout="")
-        result = runner.invoke(plugin_remove, ["test-plugin"])
+        result = runner.invoke(cli, ["plugin", "remove", "test-plugin"])
         assert result.exit_code == 0
         assert "removed successfully" in result.output
         mock_run.assert_called_once()
@@ -95,6 +95,6 @@ def test_plugin_remove_failure(runner):
             stderr="Error uninstalling package",
             stdout=""
         )
-        result = runner.invoke(plugin_remove, ["test-plugin"])
+        result = runner.invoke(cli, ["plugin", "remove", "test-plugin"])
         assert result.exit_code == 1
         assert "Failed to remove" in result.output

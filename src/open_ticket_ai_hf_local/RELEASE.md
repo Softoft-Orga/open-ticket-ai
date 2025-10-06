@@ -30,7 +30,7 @@ If you need to release manually:
 
 1. Navigate to the package directory:
    ```bash
-   cd src/open_ticket_ai_hf_local
+   cd src/otai_hf_local
    ```
 
 2. Build the package:
@@ -61,13 +61,13 @@ Before releasing, test the package locally:
 
 1. Build the package:
    ```bash
-   cd src/open_ticket_ai_hf_local
+   cd src/otai_hf_local
    python -m build --no-isolation
    ```
 
 2. Install in a test environment:
    ```bash
-   pip install dist/open_ticket_ai_hf_local-*.whl
+   pip install dist/otai_hf_local-*.whl
    ```
 
 3. Run the tests:

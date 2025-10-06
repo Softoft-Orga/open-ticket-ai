@@ -2,8 +2,8 @@ import logging
 from functools import cache
 from typing import Any
 
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from pydantic import BaseModel
 
 

@@ -20,7 +20,8 @@ The template extension system provides two decorators:
 Template methods can be used as functions or filters in your templates:
 
 ```python
-from open_ticket_ai.core.template_rendering import jinja_template_method
+from open_ticket_ai.open_ticket_ai.core.template_rendering import jinja_template_method
+
 
 @jinja_template_method("my_upper")
 def my_upper(text: str) -> str:
@@ -40,7 +41,8 @@ Now you can use this in any template:
 Global variables are evaluated once when the JinjaRenderer is initialized and made available to all templates:
 
 ```python
-from open_ticket_ai.core.template_rendering import jinja_variable
+from open_ticket_ai.open_ticket_ai.core.template_rendering import jinja_variable
+
 
 @jinja_variable("app_config")
 def get_app_config() -> dict[str, str]:
@@ -61,11 +63,13 @@ Use in templates:
 ### Complex Data Processing
 
 ```python
-from open_ticket_ai.core.template_rendering import jinja_template_method
+from open_ticket_ai.open_ticket_ai.core.template_rendering import jinja_template_method
+
 
 @jinja_template_method("format_currency")
 def format_currency(amount: float, currency: str = "USD") -> str:
     return f"{currency} {amount:,.2f}"
+
 
 @jinja_template_method("truncate_text")
 def truncate_text(text: str, max_length: int = 50) -> str:
@@ -85,7 +89,8 @@ Summary: {{ truncate_text(ticket.description, 100) }}
 
 ```python
 import os
-from open_ticket_ai.core.template_rendering import jinja_variable
+from open_ticket_ai.open_ticket_ai.core.template_rendering import jinja_variable
+
 
 @jinja_variable("system_info")
 def get_system_info() -> dict[str, str]:
@@ -100,11 +105,13 @@ def get_system_info() -> dict[str, str]:
 Plugins can register their own template extensions. Simply decorate your functions at module level, and they'll be available when the module is imported:
 
 ```python
-from open_ticket_ai.core.template_rendering import jinja_template_method, jinja_variable
+from open_ticket_ai.open_ticket_ai.core.template_rendering import jinja_template_method, jinja_variable
+
 
 @jinja_template_method("my_plugin_filter")
 def my_plugin_filter(value: str) -> str:
     return f"[PLUGIN] {value}"
+
 
 @jinja_variable("plugin_config")
 def get_plugin_config() -> dict[str, str]:
@@ -129,7 +136,8 @@ When testing templates with custom extensions, make sure to clear the registry b
 
 ```python
 import pytest
-from open_ticket_ai.core.template_rendering.jinja_registry import clear_registry
+from open_ticket_ai.open_ticket_ai.core import clear_registry
+
 
 @pytest.fixture(autouse=True)
 def reset_registry():

@@ -1,4 +1,4 @@
-from open_ticket_ai_hf_local.hf_local_text_classification_pipe import (
+from .hf_local_text_classification_pipe import (
     HFLocalTextClassificationPipe,
     HFLocalTextClassificationPipeConfig,
 )

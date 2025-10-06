@@ -137,10 +137,10 @@ uv lock --upgrade-package package-name
    uv build
    
    # Plugins
-   cd src/open_ticket_ai_hf_local
+   cd src/otai_hf_local
    uv build
    
-   cd ../open_ticket_ai_otobo_znuny_plugin
+   cd ../otai_otobo_znuny
    uv build
    ```
 
@@ -159,7 +159,7 @@ uv publish
 #### HF Local Plugin
 
 ```bash
-cd src/open_ticket_ai_hf_local
+cd src/otai_hf_local
 uv build
 uv publish
 ```
@@ -167,7 +167,7 @@ uv publish
 #### OTOBO/Znuny Plugin
 
 ```bash
-cd src/open_ticket_ai_otobo_znuny_plugin
+cd src/otai_otobo_znuny
 uv build
 uv publish
 ```

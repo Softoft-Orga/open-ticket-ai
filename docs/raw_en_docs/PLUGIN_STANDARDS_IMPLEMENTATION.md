@@ -166,6 +166,7 @@ Updated **`tests/contract/test_plugin_contract.py`**:
 - Linked to quick reference guide
 - Mentioned validation script
 
+**`docs/raw_en_docs/PLUGIN_QUICK_REFERENCE.md`** (new):
 **`docs/PLUGIN_QUICK_REFERENCE.md`** (new):
 - Quick reference checklist
 - Metadata template
@@ -263,6 +264,10 @@ Required in every plugin's `pyproject.toml`:
 
 ### New Files
 - `PLUGIN_STANDARDS.md` - Complete standards documentation
+- `docs/raw_en_docs/PLUGIN_QUICK_REFERENCE.md` - Developer quick reference
+- `scripts/validate_plugins.py` - Validation script
+- `scripts/README.md` - Scripts documentation
+- `docs/raw_en_docs/PLUGIN_OTOBO_ZNUNY_CHANGELOG.md` - Plugin changelog (moved from src)
 - `docs/PLUGIN_QUICK_REFERENCE.md` - Developer quick reference
 - `scripts/validate_plugins.py` - Validation script
 - `scripts/README.md` - Scripts documentation

@@ -5,11 +5,11 @@ permissions:
 on:
   push:
     paths:
-      - 'src/open_ticket_ai_hf_local/**'
+      - '../../src/otai_hf_local/**'
       - '.github/workflows/test-hf-local.yml'
   pull_request:
     paths:
-      - 'src/open_ticket_ai_hf_local/**'
+      - '../../src/otai_hf_local/**'
 
 jobs:
   test:
