@@ -1,74 +1,103 @@
 # Agent Guidelines for Open Ticket AI
 
-This document outlines core principles and expectations for contributors working on Open Ticket AI. It serves as the foundation for all development work across the repository.
+This document is **authoritative**. Follow these rules strictly when adding, moving, or generating files.
 
-## Core Philosophy
+## Workspace & Repository Layout (uv)
 
-Write code that speaks for itself. Favor clarity, simplicity, and explicitness over cleverness. The goal is maintainable software that can evolve without breaking.
+The repo is a uv workspace with a root app and multiple packages.
 
-## Design Principles
+```
+open-ticket-ai/
+├── packages/
+│   ├── <package-a>/
+│   │   ├── pyproject.toml
+│   │   ├── src/<package_a>/...
+│   │   └── tests/                 # package-local tests
+│   └── <package-b>/
+│       ├── pyproject.toml
+│       ├── src/<package_b>/...
+│       └── tests/
+├── src/
+│   └── open_ticket_ai/...         # root application code
+├── tests/                         # workspace-level integration/e2e
+├── pyproject.toml                 # root (workspace) config
+└── uv.lock
+```
 
-### Object-Oriented Design
-- Use OOP where it provides clear structure and encapsulation
-- Apply SOLID principles consistently
-- Favor composition over inheritance
-- Use well-established design patterns when they fit naturally
+### Absolute rules
+- **Never** place tests under any `src/` path. Forbidden: `src/**/tests`, `src/**/test_*.py`.
+- Unit tests live **with their package** under `packages/<name>/tests/`.
+- Cross-package **integration/e2e** tests live in **root** `tests/`.
+- Keep sample inputs/golden files under a sibling `data/` directory next to the tests that use them.
+- Each package is an editable member of the uv workspace. Do not add ad‑hoc `PYTHONPATH` hacks.
+- Python version: **3.13** only. Use modern typing (PEP 695). No inline code comments.
 
-### Dependency Injection
-- Leverage dependency injection for loose coupling
-- Make dependencies explicit through constructor injection
-- Use the injector framework already present in the codebase
-- Avoid service locator patterns
+## Tests Layout (required)
 
-### Type Safety
-- All code must use explicit type annotations
-- Leverage Python 3.13 features, especially new generic syntax (PEP 695)
-- Use pydantic BaseModels for structured data validation
-- Prefer type safety over dynamic approaches
+For **each** package:
+```
+packages/<name>/
+└── tests/
+    ├── unit/            # fast, isolated
+    ├── integration/     # touches I/O or package boundaries
+    ├── data/            # fixtures/goldens
+    └── conftest.py      # package-specific fixtures
+```
+At the repo root:
+```
+tests/
+├── integration/         # spans multiple packages
+├── e2e/                 # CLI/app-level
+├── data/
+└── conftest.py          # shared fixtures for the whole workspace
+```
 
-### Minimal Magic
-- Avoid monkey patching entirely
-- Minimize use of complex reflection patterns
-- Prefer direct attribute access over getattr/setattr unless absolutely required
-- When dynamic access is necessary, use typing.cast for type safety
-- Decorators are acceptable where they improve readability and reusability
+### Naming rules
+- Test files: `test_*.py` only.
+- Keep fixtures in `conftest.py` or `tests/**/fixtures_*.py` (no global helper modules under `src/`).
 
-## Code Quality Standards
+## Pytest configuration (root `pyproject.toml`)
 
-### Comments and Documentation
-- Comments should be minimal and only used when code cannot clearly express intent
-- Do not add docstrings to source files
-- Documentation belongs in VitePress markdown files, not in code
-- Write self-explanatory code with clear naming instead of relying on comments
+```toml
+[tool.pytest.ini_options]
+python_files = "test_*.py"
+testpaths = [
+  "tests",
+  "packages/*/tests"
+]
+addopts = ["-q"]
+```
 
-### Testing Philosophy
-- Test core principles and behaviors, not implementation details
-- Write tests that are robust against minor code changes
-- Avoid brittle tests that break with every refactor
-- Never use monkey patching in tests unless absolutely unavoidable
-- Prefer testing contracts and interfaces over internal state
+Packages may optionally add their own minimal `tool.pytest.ini_options` **only** for local data paths or markers—do not override discovery.
 
-### Modern Python Features
-- Target Python 3.13 exclusively
-- Use new generic syntax: `type Point[T] = tuple[T, T]`
-- Apply type parameter syntax for classes and functions
-- Leverage pattern matching where it improves clarity
-- Use structural pattern matching (match/case) for complex conditionals
+## How to run
 
-## Repository Standards
+- From repo root:
+  - `uv sync`
+  - `uv run -m pytest` (all tests)
+  - `uv run -m pytest packages/<name>/tests` (single package)
+- uv workspaces install members in editable mode; imports resolve without extra config.
 
-Each subdirectory may have its own AGENTS.md with domain-specific guidance. Those files add detail without repeating what is stated here. Always consult both this root file and any subdirectory AGENTS.md when working in that area.
+## CI / Quality gates
 
-For Python-specific conventions (formatting, linting, imports), see `.windsurf/rules/python.md`.
+- Lint: `uv run ruff check .` (no warnings allowed)
+- Types: `uv run mypy .` (no ignores added without justification in PR)
+- Tests: `uv run -m pytest`
+- No test files under `src/**` will be accepted. PRs that create them must be changed.
 
-For testing structure and standards, see `docs/raw_en_docs/CONTRIBUTING.md`.
+## Architectural expectations (short)
 
-For plugin development, see `PLUGIN_STANDARDS.md`.
+- Prefer composition and DI (Injector) over inheritance.
+- Pydantic v2 for data models; explicit type annotations everywhere.
+- No monkey patching; avoid reflection “magic.”
+- Documentation in Markdown (VitePress), not as docstrings or comments in code.
 
-## Expectations
+---
 
-- Read and understand existing code patterns before adding new code
-- Keep changes minimal and focused
-- Verify your code with ruff, mypy, and pytest before committing
-- Update VitePress documentation when adding user-facing features
-- Follow established module boundaries and architecture patterns
+**Checklist for contributors (must pass):**
+- [ ] New unit tests added under `packages/<name>/tests`
+- [ ] No files under any `src/**/tests`
+- [ ] Root-level integration/e2e tests only in `tests/`
+- [ ] `uv run ruff check .` clean
+- [ ] `uv run mypy .` clean
+- [ ] `uv run -m pytest` green

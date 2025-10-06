@@ -53,7 +53,3 @@ All configuration lives in `src/open_ticket_ai/core/config/` using pydantic mode
 2. Update YAML schema documentation
 3. Add validation logic if needed
 4. Update VitePress docs with usage examples
-
-## Plugin Development
-
-Plugin code under `src/open_ticket_ai_<plugin_name>/` must follow `PLUGIN_STANDARDS.md`. Plugins are self-contained packages with their own pyproject.toml, tests, and documentation.

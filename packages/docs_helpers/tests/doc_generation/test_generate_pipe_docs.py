@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from docs_helpers.scripts.doc_generation.generate_pipe_docs import generate_pipe_docs
+from packages.docs_helpers.scripts.doc_generation.generate_pipe_docs import generate_pipe_docs
 
 
 def test_generate_pipe_docs_from_sidecar(tmp_path: Path) -> None:

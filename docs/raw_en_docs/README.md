@@ -101,7 +101,7 @@ Configuration files:
 - **`uv.lock`** - Locked dependency versions for reproducible builds
 - **Runtime config** - YAML files validated with Pydantic models
 
-For detailed information, see [CONTRIBUTING.md](CONTRIBUTING.md).
+For detailed information, see [CONTRIBUTING.md](general/CONTRIBUTING.md).
 
 ## Workspace Architecture
 
@@ -261,7 +261,7 @@ The publishing workflow:
 
 ### Getting Started
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for comprehensive guidance on:
+See [CONTRIBUTING.md](general/CONTRIBUTING.md) for comprehensive guidance on:
 - Repository structure and organization
 - Development setup and tooling
 - Coding standards and best practices
@@ -313,7 +313,7 @@ For detailed plugin development guidance, see [docs/vitepress_docs/docs_src/en/d
 
 For plugin developers:
 - **[PLUGIN_STANDARDS.md](../../PLUGIN_STANDARDS.md)** - Complete plugin packaging and metadata standards
-- **[PLUGIN_QUICK_REFERENCE.md](PLUGIN_QUICK_REFERENCE.md)** - Quick reference guide
+- **[PLUGIN_QUICK_REFERENCE.md](general/PLUGIN_QUICK_REFERENCE.md)** - Quick reference guide
 - **Plugin validation**: Run `python scripts/validate_plugins.py` to check compliance
 ### Testing
 
@@ -369,11 +369,11 @@ The CI pipeline runs different test stages:
    - Contract tests: All tests in `tests/contract/` - validates all installed plugins against core API
    - E2E tests: All tests in `tests/e2e/` - complete workflow testing
 
-For detailed test structure and best practices, see [TESTING.md](TESTING.md).
+For detailed test structure and best practices, see [TESTING.md](general/TESTING.md).
 
 ### Development Workflows
 
-See [docs/developer_process.md](developer_process.md) for information about automated processes.
+See [docs/developer_process.md](general/developer_process.md) for information about automated processes.
 
 ## License
 
