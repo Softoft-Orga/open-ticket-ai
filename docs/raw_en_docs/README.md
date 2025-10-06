@@ -329,7 +329,7 @@ This repository uses a comprehensive testing strategy with different test types 
 pytest
 
 # Run specific test types by directory
-pytest tests/unit/              # Core unit tests
+pytest src/open_ticket_ai/tests/  # Core unit tests
 pytest tests/integration/       # Core integration tests
 pytest tests/contract/          # Contract tests
 pytest tests/e2e/              # E2E tests
@@ -354,7 +354,7 @@ The CI pipeline runs different test stages:
 
 1. **Core Tests** (on push/PR to main/dev):
    - Lint with ruff and mypy
-   - Unit tests: All tests in `tests/unit/`
+   - Unit tests: All tests in `src/open_ticket_ai/tests/`
    - Integration tests: All tests in `tests/integration/`
 
 2. **Plugin Tests** (on plugin changes):

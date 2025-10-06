@@ -65,7 +65,7 @@ This implementation refactors the OpenTicketAI pipeline execution so that **each
 
 ### Testing (2 new test files)
 
-#### 1. `tests/unit/open_ticket_ai/core/pipeline/test_prefect_integration.py`
+#### 1. `src/open_ticket_ai/tests/core/pipeline/test_prefect_integration.py`
 Comprehensive test suite covering:
 - Prefect context detection
 - Task creation with correct naming
