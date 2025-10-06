@@ -11,7 +11,7 @@ description: "F\xFCgt einem Ticket eine Notiz/Artikel hinzu."
 - **Extends:** `open_ticket_ai.core.pipeline.BasePipe`
 - **Category:** `ticket-system`
 - **Module:** `open_ticket_ai.base.ticket_system_pipes.add_note_pipe`
-- **Source:** `src/open_ticket_ai/base/ticket_system_pipes/add_note_pipe.py`
+- **Source:** `src/open_ticket_ai/open_ticket_ai/base/ticket_system_pipes/add_note_pipe.py`
 - **Sidecar:** `docs/man_structured/pipes/sidecar_pipe_schema.yml`
 
 ## Summary

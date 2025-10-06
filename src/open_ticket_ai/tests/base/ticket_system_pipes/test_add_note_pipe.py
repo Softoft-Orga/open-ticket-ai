@@ -1,7 +1,7 @@
 import pytest
 
-from open_ticket_ai.open_ticket_ai.base.ticket_system_pipes.add_note_pipe import AddNotePipe
-from open_ticket_ai.open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
+from open_ticket_ai.base.ticket_system_pipes.add_note_pipe import AddNotePipe
+from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 
 
 @pytest.mark.asyncio

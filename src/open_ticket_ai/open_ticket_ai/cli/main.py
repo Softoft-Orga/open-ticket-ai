@@ -5,7 +5,7 @@ import sys
 
 import typer
 
-from open_ticket_ai.open_ticket_ai.core.plugins.manager import PLUGIN_GROUP
+from open_ticket_ai.core.plugins.manager import PLUGIN_GROUP
 
 cli = typer.Typer()
 plugin = typer.Typer()

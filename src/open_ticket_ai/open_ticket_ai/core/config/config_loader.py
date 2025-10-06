@@ -3,7 +3,7 @@ import os
 import yaml
 from injector import singleton
 
-from open_ticket_ai.open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 
 
 @singleton

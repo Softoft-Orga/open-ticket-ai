@@ -1,11 +1,11 @@
 import pytest
 
-from open_ticket_ai.open_ticket_ai.core import (
+from open_ticket_ai.core import (
     clear_registry,
     jinja_template_method,
     jinja_variable,
 )
-from open_ticket_ai.open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 
 
 @pytest.fixture(autouse=True)

@@ -83,10 +83,10 @@ Created comprehensive documentation:
   - Package structure overview
   - Security model explanation
 
-- **`src/open_ticket_ai_hf_local/README.md`**
+- **`docs/raw_en_docs/PLUGIN_HF_LOCAL_README.md`** (moved from src)
   - Plugin-specific documentation for PyPI
 
-- **`src/open_ticket_ai_otobo_znuny_plugin/README.md`**
+- **`docs/raw_en_docs/PLUGIN_OTOBO_ZNUNY_README.md`** (moved from src)
   - Plugin-specific documentation for PyPI
 
 ### 4. Code Updates
@@ -165,12 +165,12 @@ Create a release through GitHub UI
 .github/workflows/publish-otobo-znuny.yml
 README.md
 docs/SETUP_INSTRUCTIONS.md
-docs/pypi_release_process.md
-docs/workflow_architecture.md
+docs/raw_en_docs/pypi_release_process.md
+docs/raw_en_docs/workflow_architecture.md
 src/open_ticket_ai_hf_local/pyproject.toml
-src/open_ticket_ai_hf_local/README.md
+docs/raw_en_docs/PLUGIN_HF_LOCAL_README.md (moved from src)
 src/open_ticket_ai_otobo_znuny_plugin/pyproject.toml
-src/open_ticket_ai_otobo_znuny_plugin/README.md
+docs/raw_en_docs/PLUGIN_OTOBO_ZNUNY_README.md (moved from src)
 ```
 
 ### Modified Files (2)

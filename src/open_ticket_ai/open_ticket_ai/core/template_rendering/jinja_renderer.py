@@ -4,10 +4,10 @@ from typing import Any
 from injector import inject
 from jinja2.sandbox import SandboxedEnvironment
 
-from open_ticket_ai.open_ticket_ai.core.template_rendering.jinja_renderer_extras import build_filtered_env, at_path, has_failed, \
+from open_ticket_ai.core.template_rendering.jinja_renderer_extras import build_filtered_env, at_path, has_failed, \
     pipe_result
-from open_ticket_ai.open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
-from open_ticket_ai.open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
+from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
 class JinjaRenderer(TemplateRenderer):

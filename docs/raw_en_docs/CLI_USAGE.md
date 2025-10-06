@@ -112,7 +112,7 @@ The CLI can be tested programmatically using Click's testing utilities:
 
 ```python
 from click.testing import CliRunner
-from open_ticket_ai.open_ticket_ai.cli import cli
+from open_ticket_ai.cli.main import cli
 
 runner = CliRunner()
 result = runner.invoke(cli, ['plugin', 'list'])
@@ -181,5 +181,6 @@ otai plugin install open-ticket-ai-hf-local
 ## See Also
 
 - [Plugin Developer Guide](../vitepress_docs/docs_src/en/developers/plugins.md)
+- [Plugin Standards](../../PLUGIN_STANDARDS.md)
 - [Plugin Standards](PLUGIN_STANDARDS.md)
 - [Plugin Quick Reference](PLUGIN_QUICK_REFERENCE.md)

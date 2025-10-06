@@ -7,7 +7,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from injector import inject, singleton
 
-from open_ticket_ai.open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 
 from .orchestrator_config import OrchestratorConfig, RunnerDefinition
 from .pipe_factory import PipeFactory

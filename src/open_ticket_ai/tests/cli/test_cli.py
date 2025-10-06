@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 from typer.testing import CliRunner
 
-from open_ticket_ai.open_ticket_ai.cli.main import app
+from open_ticket_ai.cli.main import app
 
 runner = CliRunner()
 

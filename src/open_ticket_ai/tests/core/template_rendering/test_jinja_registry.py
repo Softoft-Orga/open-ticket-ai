@@ -1,6 +1,6 @@
 import pytest
 
-from open_ticket_ai.open_ticket_ai.core import (
+from open_ticket_ai.core import (
     clear_registry,
     get_registered_methods,
     get_registered_variables,

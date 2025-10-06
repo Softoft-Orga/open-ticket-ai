@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from open_ticket_ai.open_ticket_ai.core.config.registerable_config import RegisterableConfig
-from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_config import (
+from open_ticket_ai.core.config.registerable_config import RegisterableConfig
+from open_ticket_ai.core.pipeline.pipe_config import (
     RawPipeConfig,
     RenderedPipeConfig,
 )

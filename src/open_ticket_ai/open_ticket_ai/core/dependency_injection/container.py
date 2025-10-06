@@ -4,17 +4,17 @@ from pathlib import Path
 
 from injector import Binder, Module, provider, singleton
 
-from open_ticket_ai.open_ticket_ai.core.config.config_loader import ConfigLoader
-from open_ticket_ai.open_ticket_ai.core.config.config_models import (
+from open_ticket_ai.core.config.config_loader import ConfigLoader
+from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
-from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
-from open_ticket_ai.open_ticket_ai.core.plugins.manager import PluginManager
-from open_ticket_ai.open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
-from open_ticket_ai.open_ticket_ai.core.template_rendering.renderer_config import (
+from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
+from open_ticket_ai.core.plugins.manager import PluginManager
+from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
 )
-from open_ticket_ai.open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
 class AppModule(Module):
