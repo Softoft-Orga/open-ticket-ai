@@ -1,7 +1,8 @@
 from unittest.mock import MagicMock, patch
 
-from click.testing import CliRunner
-from otai_otobo_znuny.otai_otobo_znuny.cli import otobo_znuny, setup
+from typer.testing import CliRunner
+
+from otai_otobo_znuny.cli import otobo_znuny, setup
 
 
 class TestOtoboZnunyCLI:
@@ -14,18 +15,19 @@ class TestOtoboZnunyCLI:
     def test_setup_prompts_for_required_fields(self):
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
+            [],
             input="https://example.com/otrs\nOpenTicketAI\nopen_ticket_ai\npassword123\n"
         )
         assert "OTOBO/Znuny base URL" in result.output
         assert "Web service name" in result.output
         assert "Username" in result.output
 
-    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
+    @patch("otobo_znuny.clients.otobo_client.OTOBOZnunyClient")
     def test_setup_with_all_options_no_verify(self, mock_client):
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
             [
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
@@ -38,14 +40,14 @@ class TestOtoboZnunyCLI:
         assert "Next Steps" in result.output
         mock_client.assert_not_called()
 
-    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
+    @patch("otobo_znuny.clients.otobo_client.OTOBOZnunyClient")
     def test_setup_with_connection_verification_success(self, mock_client):
         mock_instance = MagicMock()
         mock_client.return_value = mock_instance
 
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
             [
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
@@ -61,13 +63,13 @@ class TestOtoboZnunyCLI:
         mock_client.assert_called_once()
         mock_instance.login.assert_called_once()
 
-    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
+    @patch("otobo_znuny.clients.otobo_client.OTOBOZnunyClient")
     def test_setup_with_connection_verification_failure_abort(self, mock_client):
         mock_client.side_effect = Exception("Connection failed")
 
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
             [
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
@@ -81,13 +83,13 @@ class TestOtoboZnunyCLI:
         assert result.exit_code == 1
         assert "Connection failed" in result.output
 
-    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
+    @patch("otobo_znuny.clients.otobo_client.OTOBOZnunyClient")
     def test_setup_with_connection_verification_failure_continue(self, mock_client):
         mock_client.side_effect = Exception("Connection failed")
 
         runner = CliRunner()
         result = runner.invoke(
-            setup,
+            otobo_znuny,
             [
                 "--base-url", "https://example.com/otrs",
                 "--webservice-name", "TestService",
@@ -102,12 +104,12 @@ class TestOtoboZnunyCLI:
         assert "Connection failed" in result.output
         assert "Next Steps" in result.output
 
-    @patch("otai_otobo_znuny.cli.OTOBOZnunyClient")
+    @patch("otobo_znuny.clients.otobo_client.OTOBOZnunyClient")
     def test_setup_generates_config_file(self, mock_client):
         runner = CliRunner()
         with runner.isolated_filesystem():
             result = runner.invoke(
-                setup,
+                otobo_znuny,
                 [
                     "--base-url", "https://example.com/otrs",
                     "--webservice-name", "TestService",
