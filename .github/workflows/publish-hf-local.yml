@@ -22,7 +22,7 @@ jobs:
     uses: ./.github/workflows/publish-to-pypi.yml
     with:
       package-name: open-ticket-ai-hf-local
-      package-path: src/open_ticket_ai_hf_local
+      package-path: src/otai_hf_local
       dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
     secrets:
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}

@@ -119,3 +119,4 @@ Add plugin documentation to:
 ## Full Standards
 
 See [PLUGIN_STANDARDS.md](../PLUGIN_STANDARDS.md) for complete documentation.
+See [PLUGIN_STANDARDS.md](PLUGIN_STANDARDS.md) for complete documentation.

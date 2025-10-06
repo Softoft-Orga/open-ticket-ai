@@ -1,5 +1,6 @@
 [tool.uv.workspace]
 members = [
+    "src/open_ticket_ai",
     "src/open_ticket_ai_hf_local",
     "src/open_ticket_ai_otobo_znuny_plugin",
 ]
@@ -8,76 +9,6 @@ members = [
 open-ticket-ai = { workspace = true }
 open-ticket-ai-hf-local = { workspace = true }
 open-ticket-ai-otobo-znuny-plugin = { workspace = true }
-
-[project]
-name = "open-ticket-ai"
-version = "1.0.0rc1"
-description = "AI enhancements for open source ticket systems"
-readme = "README.md"
-requires-python = ">=3.12"
-
-authors = [
-    { name = "Tobias Bück", email = "tab@softoft.de" },
-]
-license = { text = "LGPL-2.1-only" }
-
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-]
-
-dependencies = [
-    "pyyaml>=6.0.2",
-    "pydantic~=2.11.7",
-    "pydantic_core",
-    "typing_extensions",
-    "pytest~=8.4.0",
-    "pytest-asyncio~=0.24.0",
-    "pluggy",
-    "pygments",
-    "injector~=0.22.0",
-    "requests~=2.32.4",
-    "httpx>=0.28.1",
-    "jinja2>=3.1.6",
-    "openai>=1.108.1",
-    "mdxlate>=0.1.0",
-    "pathspec>=0.12.1",
-    "docstring-parser>=0.17.0",
-    "pyfiglet>=1.0.4",
-    "tenacity>=9.0.0",
-    "prefect~=3.4.20",
-    "typer>=0.9.0",
-    "click>=8.0.0",
-]
-
-[project.urls]
-Homepage = "https://open-ticket-ai.com"
-
-[project.scripts]
-otai = "open_ticket_ai.cli:cli"
-
-[project.optional-dependencies]
-dev = [
-    "ruff",
-    "mypy",
-    "pytest~=8.4.0",
-]
-
-[project.scripts]
-otai = "open_ticket_ai.cli:main"
-
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["open_ticket_ai", "open_ticket_ai.*"]
-exclude = ["open_ticket_ai.tests*", "open_ticket_ai_hf_local*", "open_ticket_ai_otobo_znuny_plugin*"]
 
 [tool.ruff]
 line-length = 120

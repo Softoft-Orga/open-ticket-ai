@@ -143,8 +143,8 @@ Run by directory:
 ```bash
 pytest tests/unit/                              # Core unit tests
 pytest tests/integration/                       # Integration tests
-pytest src/open_ticket_ai_hf_local/tests/       # HF plugin tests
-pytest packages/open_ticket_ai_otobo_znuny_plugin/tests/  # OTOBO plugin tests
+pytest src/otai_hf_local/tests/       # HF plugin tests
+pytest packages/otai_otobo_znuny/tests/  # OTOBO plugin tests
 ```
 
 Run with coverage:

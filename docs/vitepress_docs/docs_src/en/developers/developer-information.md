@@ -103,8 +103,8 @@ from typing import Any
 from pydantic import BaseModel
 from transformers import pipeline
 
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.open_ticket_ai.core.pipeline.pipe_config import PipeResult
 
 
 class SentimentPipeConfig(BaseModel):
@@ -148,7 +148,8 @@ The JinjaRenderer supports extension via Python decorators, allowing you to add 
 Use the `@jinja_template_method` decorator to register functions as template methods or filters:
 
 ```python
-from open_ticket_ai.core.template_rendering import jinja_template_method
+from open_ticket_ai.open_ticket_ai.core.template_rendering import jinja_template_method
+
 
 @jinja_template_method("format_priority")
 def format_priority(priority: int) -> str:
@@ -167,7 +168,8 @@ Priority: {{ format_priority(ticket.priority) }}
 Use the `@jinja_variable` decorator to register global variables accessible in all templates:
 
 ```python
-from open_ticket_ai.core.template_rendering import jinja_variable
+from open_ticket_ai.open_ticket_ai.core.template_rendering import jinja_variable
+
 
 @jinja_variable("ticket_categories")
 def get_categories() -> list[str]:

@@ -238,7 +238,7 @@ pytest tests/unit/
 pytest tests/integration/
 
 # Plugin-Tests
-pytest src/open_ticket_ai_hf_local/tests/
+pytest src/otai_hf_local/tests/
 ```
 
 ### Mit Coverage

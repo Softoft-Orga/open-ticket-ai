@@ -87,7 +87,9 @@ For detailed CLI usage, see the documentation at https://open-ticket-ai.com or r
 
 This repository uses a monorepo structure containing the core application and plugins:
 
-- **`src/open_ticket_ai/`** - Core application organized by domain (core, base, extras)
+- **`src/open_ticket_ai/`** - Core application package directory
+  - `pyproject.toml` - Core package metadata and dependencies
+  - `open_ticket_ai/` - Source code organized by domain (core, base, extras)
 - **`src/open_ticket_ai_hf_local/`** - HuggingFace local inference plugin package
 - **`src/open_ticket_ai_otobo_znuny_plugin/`** - OTOBO/Znuny integration plugin package
 - **`tests/`** - Test suite (unit, e2e, integration tests)
@@ -108,7 +110,8 @@ This repository uses a **uv workspace** to manage multiple Python packages as a 
 ### Core vs Plugins
 
 - **Core Package** (`open-ticket-ai`)
-  - Located in root `pyproject.toml` with source code in `src/open_ticket_ai/`
+  - Located at `src/open_ticket_ai/` with its own `pyproject.toml`
+  - Source code in `src/open_ticket_ai/open_ticket_ai/`
   - Provides the foundational AI pipeline framework, configuration system, and dependency injection
   - Includes base pipes for ticket operations and template rendering
   - Can be used standalone for custom implementations
@@ -128,7 +131,7 @@ Plugins are discovered and loaded through:
    open_ticket_ai:
      defs:
        otobo_service:
-         use: "open_ticket_ai_otobo_znuny_plugin.OTOBOZnunyTicketSystemService"
+         use: "otai_otobo_znuny.OTOBOZnunyTicketSystemService"
          # ... configuration
    ```
 
@@ -142,6 +145,7 @@ The workspace configuration (in root `pyproject.toml`):
 ```toml
 [tool.uv.workspace]
 members = [
+    "src/open_ticket_ai",
     "src/open_ticket_ai_hf_local",
     "src/open_ticket_ai_otobo_znuny_plugin",
 ]
@@ -335,8 +339,8 @@ pytest tests/contract/          # Contract tests
 pytest tests/e2e/              # E2E tests
 
 # Run plugin tests
-pytest src/open_ticket_ai_hf_local/tests/         # HF Local plugin
-pytest src/open_ticket_ai_otobo_znuny_plugin/tests/  # OTOBO/Znuny plugin
+pytest src/otai_hf_local/tests/         # HF Local plugin
+pytest src/otai_otobo_znuny/tests/  # OTOBO/Znuny plugin
 
 # Run specific test types by marker
 pytest -m unit          # Only tests marked with @pytest.mark.unit

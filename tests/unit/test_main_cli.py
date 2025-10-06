@@ -1,20 +1,14 @@
 from unittest.mock import MagicMock, patch
 
-import pytest
-from click.testing import CliRunner
+from typer.testing import CliRunner
 
-from open_ticket_ai.cli import cli, main, register_plugin_commands
+from open_ticket_ai.open_ticket_ai.cli import cli, register_plugin_commands
 
 
 class TestMainCLI:
     def test_cli_exists(self):
         runner = CliRunner()
         result = runner.invoke(cli, ["--help"])
-        assert result.exit_code == 0
-
-    def test_cli_has_version(self):
-        runner = CliRunner()
-        result = runner.invoke(cli, ["--version"])
         assert result.exit_code == 0
 
     @patch("open_ticket_ai.cli.PluginManager")

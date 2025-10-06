@@ -34,7 +34,7 @@ Controls which environment variables are accessible in templates and how they ar
 ### Example
 
 ```python
-from open_ticket_ai.core.template_rendering.renderer_config import TemplateRendererEnvConfig
+from open_ticket_ai.open_ticket_ai.core.template_rendering.renderer_config import TemplateRendererEnvConfig
 
 env_config = TemplateRendererEnvConfig(
     prefix="MYAPP_",
@@ -57,7 +57,7 @@ Base configuration class for template renderers. Contains environment configurat
 ### Example
 
 ```python
-from open_ticket_ai.core.template_rendering.renderer_config import (
+from open_ticket_ai.open_ticket_ai.core.template_rendering.renderer_config import (
     TemplateRendererConfig,
     TemplateRendererEnvConfig
 )
@@ -83,7 +83,7 @@ Inherits all fields from `TemplateRendererConfig`, plus:
 ### Example
 
 ```python
-from open_ticket_ai.core.template_rendering.renderer_config import (
+from open_ticket_ai.open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
     TemplateRendererEnvConfig
 )
@@ -105,8 +105,8 @@ config = JinjaRendererConfig(
 ### New Config-Based Approach
 
 ```python
-from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
-from open_ticket_ai.core.template_rendering.renderer_config import (
+from open_ticket_ai.open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
     TemplateRendererEnvConfig
 )
@@ -130,7 +130,7 @@ renderer = JinjaRenderer(config=config)
 The old parameter-based approach still works:
 
 ```python
-from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 
 renderer = JinjaRenderer(
     env_prefix="OTAI_",
@@ -173,7 +173,7 @@ open_ticket_ai:
 Generate JSON schema for configuration:
 
 ```python
-from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
+from open_ticket_ai.open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
 schema = JinjaRendererConfig.model_json_schema()
 print(schema)

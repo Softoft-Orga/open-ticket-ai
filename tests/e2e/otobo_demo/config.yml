@@ -8,7 +8,7 @@ definitions:
     - &ticket_add_note_pipe
         use: "open_ticket_ai.base:AddNoteTicketsPipe"
     - &ticket_classifier_pipe
-        use: "open_ticket_ai_hf_local:HFLocalTextClassificationPipe"
+        use: "otai_hf_local:HFLocalTextClassificationPipe"
     - &jinja_expression_pipe
         use: "open_ticket_ai.base:JinjaExpressionPipe"
     - &default_ticket_update
@@ -78,7 +78,7 @@ open_ticket_ai:
                 env_key: "env"
     defs:
         -   id: "otobo_znuny"
-            use: "open_ticket_ai_otobo_znuny_plugin:OTOBOZnunyTicketSystemService"
+            use: "otai_otobo_znuny:OTOBOZnunyTicketSystemService"
             base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
             password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 

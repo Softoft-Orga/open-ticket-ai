@@ -1,5 +1,0 @@
-include README.md
-include CHANGELOG.md
-include LICENSE
-recursive-include open_ticket_ai_hf_local *.py py.typed
-recursive-include tests *.py

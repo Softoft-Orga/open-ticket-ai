@@ -38,7 +38,7 @@ open-ticket-ai/
 
 - **Runtime configuration**: YAML files (default: `src/config.yml`) validated with Pydantic models
 - **Project metadata**: `pyproject.toml` for dependencies, tool configuration, and package metadata
-- **Config schemas**: Located in `src/open_ticket_ai/core/config/`
+- **Config schemas**: Located in `src/open_ticket_ai/open_ticket_ai/core/config/`
 - **Config examples**: Located in `docs/config_examples/`
 
 ## Development Setup
@@ -266,7 +266,7 @@ pip install -e ".[otobo-znuny]"
 python -m build
 
 # Build specific package
-cd src/open_ticket_ai_hf_local
+cd src/otai_hf_local
 python -m build
 ```
 
@@ -276,7 +276,7 @@ See [QUICK_START.md](QUICK_START.md) for PyPI publishing workflow.
 
 ### Adding New Pipes
 
-1. Create pipe class in appropriate module under `src/open_ticket_ai/`
+1. Create pipe class in appropriate module under `src/open_ticket_ai/open_ticket_ai/`
 2. Inherit from base pipe classes
 3. Implement required methods
 4. Add configuration schema if needed
@@ -298,7 +298,7 @@ See [PLUGIN_STANDARDS.md](PLUGIN_STANDARDS.md) for complete plugin development s
 
 ### Adding New Services
 
-1. Create service in `src/open_ticket_ai/core/`
+1. Create service in `src/open_ticket_ai/open_ticket_ai/core/`
 2. Use dependency injection (via `injector`)
 3. Add configuration model
 4. Register in DI container
@@ -324,8 +324,8 @@ When contributing:
 
 When adding new code:
 
-- **Core functionality**: `src/open_ticket_ai/core/`
-- **Base components**: `src/open_ticket_ai/base/`
+- **Core functionality**: `src/open_ticket_ai/open_ticket_ai/core/`
+- **Base components**: `src/open_ticket_ai/open_ticket_ai/base/`
 - **Plugins**: Separate packages with clear interfaces
 - **Configuration**: Always use Pydantic models
 - **Tests**: Mirror the source structure
