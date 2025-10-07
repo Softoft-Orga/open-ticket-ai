@@ -70,6 +70,7 @@ fixable = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
 "src/otai_otobo_znuny/cli.py" = ["PLC0415", "PLR0913"]
 "tests/*.py" = ["PLR2004"]
+"tests/test_otobo_znuny_ticket_system_service_config.py" = ["PLR2004", "E402"]
 
 [tool.mypy]
 python_version = "3.13"

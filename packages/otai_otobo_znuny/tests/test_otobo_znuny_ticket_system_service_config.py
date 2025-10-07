@@ -5,11 +5,12 @@ from dataclasses import dataclass
 from enum import Enum
 from types import ModuleType
 
+from pydantic import SecretStr
+
 from otai_otobo_znuny.otobo_znuny_ticket_system_service_config import (
     RawOTOBOZnunyTicketsystemServiceConfig,
     RenderedOTOBOZnunyTicketsystemServiceConfig,
 )
-from pydantic import SecretStr
 
 
 def _install_otobo_stubs() -> None:
