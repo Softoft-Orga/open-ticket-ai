@@ -54,9 +54,10 @@ def resolve_config(parent_config: dict[str, Any] | None, node_raw: dict[str, Any
 @singleton
 class PipeFactory:
     @inject
-    def __init__(self, template_renderer: TemplateRenderer):
+    def __init__(self, template_renderer: TemplateRenderer, registerable_configs: list[RegisterableConfig]) -> None:
         self._logger = logging.getLogger(self.__class__.__name__)
         self._template_renderer = template_renderer
+        self._registerable_configs = registerable_configs
 
     def render_pipe_config(self, registerable_config_raw: dict[str, Any], scope: dict[str, Any]) -> dict[str, Any]:
         renderable_config = registerable_config_raw.copy()
@@ -74,7 +75,7 @@ class PipeFactory:
         config_raw = self.render_pipe_config(pipe_config, scope)
         return self.create_registerable_instance(config_raw, scope)
 
-    def create_service_instance(self, registerable_config_raw: dict[str, Any], scope: dict[str, Any]) -> Any:
+    def create_service_instance(self, registerable_config_raw: RegisterableConfig, scope: dict[str, Any]) -> Any:
         config_raw = self._template_renderer.render_recursive(registerable_config_raw, scope)
         return self.create_registerable_instance(config_raw, scope)
 
@@ -94,7 +95,7 @@ class PipeFactory:
         return out
 
     def _resolve_by_id(self, service_id: str, scope: dict[str, Any]) -> Any:
-        for definition_config_raw in self._app_config.defs:
+        for definition_config_raw in self._registerable_configs:
             definition_config = RegisterableConfig.model_validate(definition_config_raw)
             if definition_config.id != service_id:
                 continue

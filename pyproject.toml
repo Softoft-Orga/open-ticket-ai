@@ -33,6 +33,9 @@ dependencies = [
     "pyfiglet>=1.0.2",
     "apscheduler>=3.11.0",
     "jinja2>=3.1.6",
+    "transformers~=4.52.4",
+    "python-dotenv>=1.1.1",
+    "typer>=0.17.5",
 ]
 
 [project.urls]

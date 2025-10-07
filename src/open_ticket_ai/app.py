@@ -5,8 +5,8 @@ from pathlib import Path
 import pyfiglet
 from injector import inject
 
-from open_ticket_ai.core.config import RawOpenTicketAIConfig
-from open_ticket_ai.core import Orchestrator
+from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+from open_ticket_ai.core.pipeline import Orchestrator
 
 
 def get_project_info():
@@ -68,7 +68,7 @@ class OpenTicketAIApp:
     async def run(self) -> None:
         self._logger.info("🚀 Starting Open Ticket AI orchestration...")
         self._logger.info(f"📦 Loaded {len(self.config.defs)} definitions")
-        self._logger.info(f"🔧 Orchestrator has {len(self.config.orchestrator)} step(s)\n")
+        self._logger.info(f"🔧 Orchestrator has {len(self.config.orchestrator.runners)} runners\n")
 
         try:
             await self.orchestrator.run()

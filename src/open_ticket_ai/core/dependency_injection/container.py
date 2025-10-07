@@ -8,8 +8,10 @@ from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
+from open_ticket_ai.core.config.registerable import RegisterableConfig
+from open_ticket_ai.core.pipeline import OrchestratorConfig
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
-from open_ticket_ai.core.plugins.manager import PluginManager
+from open_ticket_ai.core.template_rendering import TemplateRendererConfig
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
@@ -36,19 +38,19 @@ class AppModule(Module):
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(PipeFactory, scope=singleton)
 
-        plugin_manager = PluginManager()
-        plugin_manager.discover_and_load()
-        binder.bind(PluginManager, to=plugin_manager, scope=singleton)
-
-        plugin_manager.register_services(binder)
-
     @provider
     def provide_template_renderer(self, config: RawOpenTicketAIConfig) -> TemplateRenderer:
-        renderer_config = config.general_config.get("template_renderer", {})
-        renderer_type = renderer_config.get("type", "jinja")
-        if renderer_type != "jinja":
-            raise ValueError(f"Unsupported template renderer type: {renderer_type}")
+        renderer_config: TemplateRendererConfig = config.general_config.template_renderer
+        if renderer_config.type != "jinja":
+            raise ValueError(f"Unsupported template renderer type: {renderer_config.type}")
 
-        jinja_config = JinjaRendererConfig.model_validate(renderer_config)
-
+        jinja_config = JinjaRendererConfig.model_validate(renderer_config.model_dump())
         return JinjaRenderer(config=jinja_config)
+
+    @provider
+    def provide_orchestrator_config(self, config: RawOpenTicketAIConfig) -> OrchestratorConfig:
+        return config.orchestrator
+
+    @provider
+    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RegisterableConfig]:
+        return config.defs

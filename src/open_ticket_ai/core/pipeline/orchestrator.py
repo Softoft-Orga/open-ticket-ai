@@ -20,7 +20,7 @@ class Orchestrator:
     @inject
     def __init__(self, pipe_factory: PipeFactory, orchestrator_config: OrchestratorConfig) -> None:
         self._pipe_factory = pipe_factory
-        self._config = OrchestratorConfig.model_validate(orchestrator_config)
+        self._config = orchestrator_config
         self._logger = logging.getLogger(self.__class__.__name__)
         self._scheduler = AsyncIOScheduler()
         self._runners: dict[str, ScheduledPipeRunner] = {}

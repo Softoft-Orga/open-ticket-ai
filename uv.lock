@@ -532,7 +532,10 @@ dependencies = [
     { name = "jinja2" },
     { name = "pydantic" },
     { name = "pyfiglet" },
+    { name = "python-dotenv" },
     { name = "pyyaml" },
+    { name = "transformers" },
+    { name = "typer" },
 ]
 
 [package.dev-dependencies]
@@ -550,7 +553,10 @@ requires-dist = [
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "pydantic", specifier = "~=2.11.7" },
     { name = "pyfiglet", specifier = ">=1.0.2" },
+    { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "pyyaml", specifier = ">=6.0" },
+    { name = "transformers", specifier = "~=4.52.4" },
+    { name = "typer", specifier = ">=0.17.5" },
 ]
 
 [package.metadata.requires-dev]

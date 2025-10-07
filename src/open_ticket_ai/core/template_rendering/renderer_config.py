@@ -10,6 +10,7 @@ class TemplateRendererEnvConfig(BaseModel):
 
 
 class TemplateRendererConfig(BaseModel):
+    type: str = Field(..., description="Type of template renderer")
     env_config: TemplateRendererEnvConfig = Field(
         default_factory=TemplateRendererEnvConfig, description="Environment variable configuration"
     )

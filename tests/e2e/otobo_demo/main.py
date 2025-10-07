@@ -13,4 +13,4 @@ if __name__ == "__main__":
     load_dotenv(override=True)
     os.environ["OPEN_TICKET_AI_CONFIG"] = str(CONFIG_PATH)
 
-    asyncio.run(run())
+    asyncio.run(run(str(CONFIG_PATH)))
