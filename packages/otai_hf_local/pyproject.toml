@@ -69,11 +69,20 @@ fixable = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/otai_hf_local/*.py" = ["PLC0415"]
+"tests/*.py" = ["PLC0415"]
 
 [tool.mypy]
 python_version = "3.13"
 strict = true
 plugins = ['pydantic.mypy']
+
+[[tool.mypy.overrides]]
+module = "transformers.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "test_*"
+ignore_errors = true
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
