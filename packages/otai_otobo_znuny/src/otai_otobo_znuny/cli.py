@@ -1,5 +1,3 @@
-import sys
-from typing import Optional
 
 import typer
 
@@ -8,12 +6,41 @@ otobo_znuny = typer.Typer()
 
 @otobo_znuny.command()
 def setup(
-    base_url: str = typer.Option(..., "--base-url", prompt="OTOBO/Znuny base URL", help="Base URL of the OTOBO/Znuny instance"),
-    webservice_name: str = typer.Option("OpenTicketAI", "--webservice-name", prompt="Web service name", help="Name of the web service"),
-    username: str = typer.Option("open_ticket_ai", "--username", prompt="Username", help="Username for authentication"),
-    password: str = typer.Option(..., "--password", prompt=True, hide_input=True, help="Password for authentication"),
-    verify_connection: bool = typer.Option(True, "--verify-connection/--no-verify-connection", help="Verify the connection after setup"),
-    output_config: Optional[str] = typer.Option(None, "--output-config", help="Path to output a config.yml file")
+    base_url: str = typer.Option(
+        ...,
+        "--base-url",
+        prompt="OTOBO/Znuny base URL",
+        help="Base URL of the OTOBO/Znuny instance",
+    ),
+    webservice_name: str = typer.Option(
+        "OpenTicketAI",
+        "--webservice-name",
+        prompt="Web service name",
+        help="Name of the web service",
+    ),
+    username: str = typer.Option(
+        "open_ticket_ai",
+        "--username",
+        prompt="Username",
+        help="Username for authentication",
+    ),
+    password: str = typer.Option(
+        ...,
+        "--password",
+        prompt=True,
+        hide_input=True,
+        help="Password for authentication",
+    ),
+    verify_connection: bool = typer.Option(
+        True,
+        "--verify-connection/--no-verify-connection",
+        help="Verify the connection after setup",
+    ),
+    output_config: str | None = typer.Option(
+        None,
+        "--output-config",
+        help="Path to output a config.yml file",
+    ),
 ):
     typer.echo("\n=== OTOBO/Znuny Ticket System Setup ===\n")
     
@@ -54,7 +81,7 @@ def setup(
         except Exception as e:
             typer.echo(typer.style(f"✗ Connection failed: {e}", fg=typer.colors.RED))
             if not typer.confirm("\nContinue anyway?"):
-                raise typer.Exit(code=1)
+                raise typer.Exit(code=1) from None
     
     if output_config:
         typer.echo(f"\nGenerating configuration file: {output_config}")
@@ -76,10 +103,10 @@ def setup(
             with open(output_config, 'w') as f:
                 f.write(config_content)
             typer.echo(typer.style(f"✓ Configuration written to {output_config}", fg=typer.colors.GREEN))
-            typer.echo(f"\nNOTE: Set the OTAI_OTOBO_ZNUNY_PASSWORD environment variable before running.")
+            typer.echo("\nNOTE: Set the OTAI_OTOBO_ZNUNY_PASSWORD environment variable before running.")
         except Exception as e:
             typer.echo(typer.style(f"✗ Failed to write config: {e}", fg=typer.colors.RED))
-            raise typer.Exit(code=1)
+            raise typer.Exit(code=1) from None
     
     typer.echo("\n=== Next Steps ===")
     typer.echo("1. In OTOBO/Znuny, create a dedicated API web service")

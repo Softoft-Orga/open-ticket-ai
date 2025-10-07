@@ -602,13 +602,26 @@ dependencies = [
     { name = "pydantic" },
 ]
 
+[package.optional-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "injector", specifier = "~=0.22.0" },
+    { name = "mypy", marker = "extra == 'dev'" },
     { name = "open-ticket-ai", editable = "." },
     { name = "otobo-znuny", specifier = ">=1.4.0" },
     { name = "pydantic", specifier = "~=2.11.7" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24.0" },
+    { name = "ruff", marker = "extra == 'dev'" },
 ]
+provides-extras = ["dev"]
 
 [[package]]
 name = "otobo-znuny"
