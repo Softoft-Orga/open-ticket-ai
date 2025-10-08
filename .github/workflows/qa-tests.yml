@@ -1,4 +1,4 @@
-name: Quality Assurance SonarQube
+name: Quality Assurance SonarCloud
 on:
     push:
         branches:
@@ -6,14 +6,66 @@ on:
     pull_request:
         types: [ opened, synchronize, reopened ]
 jobs:
-    sonarqube:
-        name: SonarQube
+    sonarcloud:
+        name: SonarCloud Analysis
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v4
                 with:
                     fetch-depth: 0
-            -   name: SonarQube Scan
-                uses: SonarSource/sonarqube-scan-action@v6
+            
+            -   name: Set up uv
+                uses: astral-sh/setup-uv@v6
+            
+            -   name: Set up Python
+                uses: actions/setup-python@v5
+                with:
+                    python-version: '3.13'
+            
+            -   name: Install dependencies
+                run: uv sync --locked --all-extras
+            
+            -   name: Generate pytest coverage report
+                run: |
+                    uv run pytest --cov=src --cov=packages/otai_hf_local/src --cov=packages/otai_otobo_znuny/src --cov-report=xml:coverage.xml --cov-report=term
+                continue-on-error: true
+            
+            -   name: Generate ruff lint report (SARIF)
+                run: |
+                    uv run ruff check . --output-format=sarif > ruff-report.sarif || true
+                continue-on-error: true
+            
+            -   name: Generate mypy type checking report
+                run: |
+                    uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src --no-error-summary > mypy-report.txt 2>&1 || true
+                continue-on-error: true
+            
+            -   name: SonarCloud Scan
+                uses: SonarSource/sonarcloud-scan-action@v4
                 env:
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            
+            -   name: Upload coverage report as artifact
+                uses: actions/upload-artifact@v4
+                if: always()
+                with:
+                    name: coverage-report
+                    path: coverage.xml
+                    retention-days: 30
+            
+            -   name: Upload ruff report as artifact
+                uses: actions/upload-artifact@v4
+                if: always()
+                with:
+                    name: ruff-report
+                    path: ruff-report.sarif
+                    retention-days: 30
+            
+            -   name: Upload mypy report as artifact
+                uses: actions/upload-artifact@v4
+                if: always()
+                with:
+                    name: mypy-report
+                    path: mypy-report.txt
+                    retention-days: 30

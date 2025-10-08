@@ -51,6 +51,11 @@ coverage.xml
 .pytest_cache/
 cover/
 
+# Code quality reports
+ruff-report.sarif
+mypy-report.txt
+mypy-report.json
+
 # Translations
 *.mo
 *.pot
