@@ -1,0 +1,144 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in Open Ticket AI
+title: "[Bug] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Report
+        Help us identify and fix issues in Open Ticket AI.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear description of what the bug is
+      placeholder: "When I run the orchestrator with..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected-component
+    attributes:
+      label: Affected Component
+      description: Which part of the system is affected?
+      options:
+        - Core Pipeline/Orchestrator
+        - Base Pipes (FetchTickets, UpdateTicket, AddNote, etc.)
+        - Configuration System
+        - Template Rendering (Jinja2)
+        - Dependency Injection
+        - Plugin - HuggingFace Local
+        - Plugin - OTOBO/Znuny Integration
+        - CLI Tool
+        - Other/Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Configure pipe with...
+        2. Run orchestrator...
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: "The pipe should..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: "Instead, the pipe..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration File (Relevant Sections)
+      description: Share the relevant parts of your config.yml (redact sensitive data)
+      render: yaml
+      placeholder: |
+        open_ticket_ai:
+          general_config:
+            # ...
+          defs:
+            - id: my_service
+              use: "module:Class"
+          orchestrator:
+            # ...
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and Error Messages
+      description: Include relevant logs, stack traces, or error messages
+      render: shell
+      placeholder: |
+        ERROR: PipeExecutionError in pipe 'my_pipe'
+        Traceback (most recent call last):
+        ...
+
+  - type: input
+    id: version
+    attributes:
+      label: Open Ticket AI Version
+      description: Which version are you using? (run `otai --version` or check pyproject.toml)
+      placeholder: "1.0.0rc1"
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: Which Python version? (run `python --version`)
+      placeholder: "3.13.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation-method
+    attributes:
+      label: Installation Method
+      description: How did you install Open Ticket AI?
+      options:
+        - pip install
+        - uv sync (development)
+        - Docker
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information that might help (environment, dependencies, etc.)
+      placeholder: "Running on Ubuntu 22.04, using PostgreSQL backend..."
+
+  - type: checkboxes
+    id: investigation
+    attributes:
+      label: Investigation Checklist (for maintainers)
+      options:
+        - label: Reproduced the issue
+        - label: Identified root cause
+        - label: Added regression test
+        - label: Fixed in code
+        - label: Updated documentation if needed
+        - label: CHANGELOG.md entry
