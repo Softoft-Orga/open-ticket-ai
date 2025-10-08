@@ -9,13 +9,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.registerable import RegisterableConfig
 
-
-class FlowAction(enum.StrEnum):
-    CONTINUE = "continue"
-    FINISH_CONTAINER = "finish_container"
-    FAIL_CONTAINER = "fail_container"
-
-
 class RenderedPipeConfig(RegisterableConfig):
     model_config = ConfigDict(extra="allow")
     if_: bool = Field(default=True, alias="if")

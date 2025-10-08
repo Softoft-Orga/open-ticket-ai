@@ -2,6 +2,8 @@ import logging
 from typing import Any
 
 from injector import inject
+from pydantic import BaseModel
+
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -31,6 +33,8 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
     def __init__(self, config_raw: dict[str, Any], *args, **kwargs):
         super().__init__(config_raw, *args, **kwargs)
+        if isinstance(config_raw, BaseModel):
+            config_raw = config_raw.model_dump()
         self.config = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(config_raw)
         self._client: OTOBOZnunyClient | None = None
         self.logger = logging.getLogger(self.__class__.__name__)

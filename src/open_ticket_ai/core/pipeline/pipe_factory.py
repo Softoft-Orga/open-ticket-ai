@@ -7,7 +7,9 @@ from typing import Any
 
 from injector import inject, singleton
 
-from open_ticket_ai.core.config.registerable import RegisterableConfig
+from open_ticket_ai.core.config.registerable import RegisterableConfig, Registerable
+from open_ticket_ai.core.pipeline import Context
+from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
@@ -59,7 +61,7 @@ class PipeFactory:
         self._template_renderer = template_renderer
         self._registerable_configs = registerable_configs
 
-    def render_pipe_config(self, registerable_config_raw: dict[str, Any], scope: dict[str, Any]) -> dict[str, Any]:
+    def render_pipe_config(self, registerable_config_raw: dict[str, Any], scope: Context) -> dict[str, Any]:
         renderable_config = registerable_config_raw.copy()
         renderable_config["steps"] = []
         rendered_step_config = self._template_renderer.render_recursive(renderable_config, scope)
@@ -67,37 +69,42 @@ class PipeFactory:
         return rendered_step_config
 
     def create_pipe(
-        self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any], scope: dict[str, Any]
-    ) -> Any:
+            self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any], scope: Context
+    ) -> Pipe:
         pipe_id = pipe_config_raw["id"]
         self._logger.info("Creating pipe '%s' with config %s", pipe_id, pipe_config_raw)
         pipe_config = resolve_config(parent_config_raw, pipe_config_raw)
         config_raw = self.render_pipe_config(pipe_config, scope)
-        return self.create_registerable_instance(config_raw, scope)
+        registerable = self.__create_registerable_instance(config_raw, scope)
+        if not isinstance(registerable, Pipe):
+            raise ValueError(f"Registerable with id '{pipe_id}' is not a Pipe")
+        return registerable
 
-    def create_service_instance(self, registerable_config_raw: RegisterableConfig, scope: dict[str, Any]) -> Any:
+    def __create_service_instance(self, registerable_config_raw: RegisterableConfig, scope: Context) -> Registerable:
         config_raw = self._template_renderer.render_recursive(registerable_config_raw, scope)
-        return self.create_registerable_instance(config_raw, scope)
+        return self.__create_registerable_instance(config_raw, scope)
 
-    def create_registerable_instance(self, registerable_config_raw: dict[str, Any], scope: dict[str, Any]) -> Any:
+    def __create_registerable_instance(self, registerable_config_raw: dict[str, Any], scope: Context) -> Registerable:
         registerable_config = RegisterableConfig.model_validate(registerable_config_raw)
         cls: type = _locate(registerable_config.use)
+        if not issubclass(cls, Registerable):
+            raise ValueError(f"Class '{registerable_config.use}' is not a Registerable")
         kwargs: dict[str, Any] = {}
-        kwargs |= self._resolve_injects(registerable_config.injects, scope)
+        kwargs |= self.__resolve_injects(registerable_config.injects, scope)
         kwargs["config_raw"] = registerable_config_raw
         kwargs["factory"] = self
         return cls(**kwargs)
 
-    def _resolve_injects(self, injects: dict[str, Any], scope: dict[str, Any]) -> dict[str, Any]:
+    def __resolve_injects(self, injects: dict[str, Any], scope: Context) -> dict[str, Registerable]:
         out: dict[str, Any] = {}
         for param, ref in injects.items():
-            out[param] = self._resolve_by_id(ref, scope)
+            out[param] = self.__resolve_by_id(ref, scope)
         return out
 
-    def _resolve_by_id(self, service_id: str, scope: dict[str, Any]) -> Any:
+    def __resolve_by_id(self, service_id: str, scope: Context) -> Any:
         for definition_config_raw in self._registerable_configs:
             definition_config = RegisterableConfig.model_validate(definition_config_raw)
             if definition_config.id != service_id:
                 continue
-            return self.create_service_instance(definition_config_raw, scope)
+            return self.__create_service_instance(definition_config_raw, scope)
         raise KeyError(service_id)

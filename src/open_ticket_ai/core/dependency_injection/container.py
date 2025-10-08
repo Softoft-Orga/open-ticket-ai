@@ -2,7 +2,7 @@ import os
 from logging.config import dictConfig
 from pathlib import Path
 
-from injector import Binder, Module, provider, singleton
+from injector import Binder, Module, provider, singleton, multiprovider
 
 from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
@@ -51,6 +51,6 @@ class AppModule(Module):
     def provide_orchestrator_config(self, config: RawOpenTicketAIConfig) -> OrchestratorConfig:
         return config.orchestrator
 
-    @provider
+    @multiprovider
     def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RegisterableConfig]:
         return config.defs

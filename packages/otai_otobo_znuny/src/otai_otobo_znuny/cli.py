@@ -56,7 +56,7 @@ def setup(
     typer.echo()
     
     if verify_connection:
-        from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
+        from otai_otobo_znuny.clients.otobo_client import OTOBOZnunyClient
         from otobo_znuny.domain_models.basic_auth_model import BasicAuth
         from otobo_znuny.domain_models.otobo_client_config import ClientConfig
         from otobo_znuny.domain_models.ticket_operation import TicketOperation
