@@ -18,24 +18,24 @@ jobs:
                 with:
                     fetch-depth: 0
                     token: ${{ secrets.GITHUB_TOKEN }}
-            
+
             -   name: Set up uv
                 uses: astral-sh/setup-uv@v6
-            
+
             -   name: Set up Python
-                uses: actions/setup-python@v5
+                uses: actions/setup-python@v6
                 with:
                     python-version-file: pyproject.toml
-            
+
             -   name: Install dependencies
                 run: uv sync --locked --all-extras
-            
+
             -   name: Lint and auto-fix with ruff
                 run: |
                     uv run ruff format .
                     uv run ruff check . --fix
                 continue-on-error: true
-            
+
             -   name: Auto-commit ruff fixes
                 if: github.event_name == 'push'
                 run: |
@@ -44,41 +44,41 @@ jobs:
                     git add .
                     git diff --staged --quiet || git commit -m "style: apply ruff auto-fixes [skip ci]"
                     git push || echo "No changes to push"
-            
+
             -   name: Check ruff compliance
                 run: |
                     uv run ruff format --check .
                     uv run ruff check .
-            
+
             -   name: Type check with mypy
                 run: |
                     uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src
-            
+
             -   name: Run all tests
                 run: |
                     uv run pytest -v
-            
+
             -   name: Generate pytest coverage report
                 run: |
                     uv run pytest --cov=src --cov=packages/otai_hf_local/src --cov=packages/otai_otobo_znuny/src --cov-report=xml:coverage.xml --cov-report=term
                 continue-on-error: true
-            
+
             -   name: Generate ruff lint report (SARIF)
                 run: |
                     uv run ruff check . --output-format=sarif > ruff-report.sarif || true
                 continue-on-error: true
-            
+
             -   name: Generate mypy type checking report
                 run: |
                     uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src --no-error-summary > mypy-report.txt 2>&1 || true
                 continue-on-error: true
-            
+
             -   name: SonarCloud Scan
                 uses: sonarsource/sonarcloud-github-action@v4
                 env:
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            
+
             -   name: Upload coverage report as artifact
                 uses: actions/upload-artifact@v4
                 if: always()
@@ -86,7 +86,8 @@ jobs:
                     name: coverage-report
                     path: coverage.xml
                     retention-days: 30
-            
+                    overwrite: true
+
             -   name: Upload ruff report as artifact
                 uses: actions/upload-artifact@v4
                 if: always()
@@ -94,7 +95,8 @@ jobs:
                     name: ruff-report
                     path: ruff-report.sarif
                     retention-days: 30
-            
+                    overwrite: true
+
             -   name: Upload mypy report as artifact
                 uses: actions/upload-artifact@v4
                 if: always()
@@ -102,3 +104,4 @@ jobs:
                     name: mypy-report
                     path: mypy-report.txt
                     retention-days: 30
+                    overwrite: true
