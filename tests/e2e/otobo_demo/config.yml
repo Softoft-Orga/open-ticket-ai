@@ -68,7 +68,7 @@ open_ticket_ai:
       disable_existing_loggers: false
       handlers: { console: { class: logging.StreamHandler, stream: ext://sys.stdout } }
       formatters: { std: { format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s" } }
-      root: { level: INFO, handlers: [ console ] }
+      root: { level: DEBUG, handlers: [ console ] }
 
     template_renderer:
       type: "jinja"

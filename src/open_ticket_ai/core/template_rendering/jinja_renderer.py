@@ -36,10 +36,10 @@ class JinjaRenderer(TemplateRenderer):
             template = self.jinja_env.from_string(template_str)
             rendered = template.render(self._normalize_scope(scope))
             return self._parse_rendered_value(rendered)
-        except Exception:
+        except Exception as e:
             self._logger.warning("Failed to render template '%s'", template_str)
             self._logger.warning("context: %s", scope)
             self._logger.exception("Template rendering failed")
             if fail_silently:
                 return template_str
-            raise
+            raise e

@@ -71,13 +71,12 @@ class PipeFactory:
     def create_pipe(
             self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any], scope: Context
     ) -> Pipe:
-        pipe_id = pipe_config_raw["id"]
-        self._logger.info("Creating pipe '%s' with config %s", pipe_id, pipe_config_raw)
+        self._logger.info("Creating pipe '%s' with config %s", pipe_config_raw["id"], pipe_config_raw)
         pipe_config = resolve_config(parent_config_raw, pipe_config_raw)
         config_raw = self.render_pipe_config(pipe_config, scope)
         registerable = self.__create_registerable_instance(config_raw, scope)
         if not isinstance(registerable, Pipe):
-            raise ValueError(f"Registerable with id '{pipe_id}' is not a Pipe")
+            raise ValueError(f"Registerable with id '{pipe_config_raw["id"]}' is not a Pipe")
         return registerable
 
     def __create_service_instance(self, registerable_config_raw: RegisterableConfig, scope: Context) -> Registerable:

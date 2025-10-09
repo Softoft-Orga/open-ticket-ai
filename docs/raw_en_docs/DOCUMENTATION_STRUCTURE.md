@@ -2,7 +2,7 @@
 
 This document proposes an organized directory structure and recommended files for the English documentation in Open Ticket AI. The structure reflects the core concepts of the project: pipeline, configuration, dependency injection, and plugins.
 
-## Proposed Directory Structure
+## Directory Structure
 
 ```
 docs/raw_en_docs/en/
@@ -21,6 +21,7 @@ docs/raw_en_docs/en/
 │   ├── plugin_development.md           # How to develop custom plugins
 │   ├── hf_local.md                     # HuggingFace local inference plugin
 │   └── otobo_znuny.md                  # OTOBO/Znuny integration plugin
+    NEW PLUGINS THAT ARE ADDED SHOULD HAVE THEIR OWN DOCS HERE
 ├── configuration/                      # Configuration system and schemas
 │   ├── config_schema.md                # Configuration schema reference
 │   ├── config_structure.md             # YAML structure and organization
@@ -32,12 +33,14 @@ docs/raw_en_docs/en/
 │   ├── otobo_znuny_integration.md      # OTOBO/Znuny specific integration
 │   ├── custom_adapters.md              # Building custom ticket system adapters
 │   └── api_compatibility.md            # Plugin API versioning and compatibility
+    OTHER INTEGRATIONS SHOULD HAVE THEIR OWN DOCS HERE
 └── guides/                             # User guides and tutorials
     ├── quick_start.md                  # Getting started guide
     ├── installation.md                 # Installation instructions
     ├── first_pipeline.md               # Creating your first pipeline
     ├── testing.md                      # Testing guide
     └── troubleshooting.md              # Common issues and solutions
+    OTHER GUIDES AS NEEDED
 ```
 
 ## File Descriptions
