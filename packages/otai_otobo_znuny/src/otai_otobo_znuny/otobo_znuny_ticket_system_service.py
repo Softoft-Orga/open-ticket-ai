@@ -30,11 +30,9 @@ def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
-    def __init__(self, config_raw: dict[str, Any], *args, **kwargs):
-        super().__init__(config_raw, *args, **kwargs)
-        if isinstance(config_raw, BaseModel):
-            config_raw = config_raw.model_dump()
-        self.config = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(config_raw)
+    def __init__(self, config: RenderedOTOBOZnunyTicketsystemServiceConfig, *args, **kwargs):
+        super().__init__(config, *args, **kwargs)
+        self.config = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(config.model_dump())
         self._client: OTOBOZnunyClient | None = None
         self.logger = logging.getLogger(self.__class__.__name__)
         self.initialize()

@@ -1,60 +1,704 @@
 {
-    "$defs": {
-        "RawOpenTicketAIConfig": {
-            "properties": {
-                "plugins": {
-                    "default": [],
-                    "items": {
-                        "type": "string"
-                    },
-                    "title": "Plugins",
-                    "type": "array"
-                },
-                "general_config": {
-                    "additionalProperties": {
-                        "anyOf": [
-                            {
-                                "additionalProperties": true,
-                                "type": "object"
-                            },
-                            {}
-                        ]
-                    },
-                    "default": {},
-                    "title": "General Config",
-                    "type": "object"
-                },
-                "defs": {
-                    "default": [],
-                    "items": {
-                        "additionalProperties": true,
-                        "type": "object"
-                    },
-                    "title": "Defs",
-                    "type": "array"
-                },
-                "orchestrator": {
-                    "default": [],
-                    "items": {
-                        "additionalProperties": true,
-                        "type": "object"
-                    },
-                    "title": "Orchestrator",
-                    "type": "array"
-                }
+  "$defs": {
+    "FilterConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "class": {
+          "anyOf": [
+            {
+              "type": "string"
             },
-            "title": "RawOpenTicketAIConfig",
-            "type": "object"
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "()": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "()"
         }
+      },
+      "title": "FilterConfig",
+      "type": "object"
     },
-    "properties": {
-        "open_ticket_ai": {
-            "$ref": "#/$defs/RawOpenTicketAIConfig"
+    "FormatterConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "class": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class"
+        },
+        "format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Format"
+        },
+        "datefmt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Datefmt"
+        },
+        "style": {
+          "anyOf": [
+            {
+              "enum": [
+                "%",
+                "{",
+                "$"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Style"
+        },
+        "()": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "()"
         }
+      },
+      "title": "FormatterConfig",
+      "type": "object"
     },
-    "required": [
-        "open_ticket_ai"
-    ],
-    "title": "RootConfig",
-    "type": "object"
+    "GeneralConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "logging": {
+          "$ref": "#/$defs/LoggingDictConfig"
+        },
+        "template_renderer": {
+          "discriminator": {
+            "mapping": {
+              "jinja": "#/$defs/JinjaRendererConfig",
+              "mustache": "#/$defs/MustacheRendererConfig"
+            },
+            "propertyName": "type"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/JinjaRendererConfig"
+            },
+            {
+              "$ref": "#/$defs/MustacheRendererConfig"
+            }
+          ],
+          "title": "Template Renderer"
+        }
+      },
+      "title": "GeneralConfig",
+      "type": "object"
+    },
+    "HandlerConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "class": {
+          "title": "Class",
+          "type": "string"
+        },
+        "level": {
+          "anyOf": [
+            {
+              "enum": [
+                "NOTSET",
+                "DEBUG",
+                "INFO",
+                "WARNING",
+                "ERROR",
+                "CRITICAL"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Level"
+        },
+        "formatter": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Formatter"
+        },
+        "filters": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Filters"
+        },
+        "()": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "()"
+        }
+      },
+      "required": [
+        "class"
+      ],
+      "title": "HandlerConfig",
+      "type": "object"
+    },
+    "JinjaRendererConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "const": "jinja",
+          "default": "jinja",
+          "title": "Type",
+          "type": "string"
+        },
+        "env_config": {
+          "$ref": "#/$defs/TemplateRendererEnvConfig",
+          "description": "Environment variable configuration"
+        },
+        "autoescape": {
+          "default": false,
+          "description": "Enable autoescaping in Jinja2",
+          "title": "Autoescape",
+          "type": "boolean"
+        },
+        "trim_blocks": {
+          "default": true,
+          "description": "Trim blocks in Jinja2",
+          "title": "Trim Blocks",
+          "type": "boolean"
+        },
+        "lstrip_blocks": {
+          "default": true,
+          "description": "Left-strip blocks in Jinja2",
+          "title": "Lstrip Blocks",
+          "type": "boolean"
+        }
+      },
+      "title": "JinjaRendererConfig",
+      "type": "object"
+    },
+    "LoggerConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "level": {
+          "anyOf": [
+            {
+              "enum": [
+                "NOTSET",
+                "DEBUG",
+                "INFO",
+                "WARNING",
+                "ERROR",
+                "CRITICAL"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Level"
+        },
+        "handlers": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Handlers"
+        },
+        "propagate": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Propagate"
+        },
+        "filters": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Filters"
+        }
+      },
+      "title": "LoggerConfig",
+      "type": "object"
+    },
+    "LoggingDictConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "disable_existing_loggers": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Disable Existing Loggers"
+        },
+        "incremental": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Incremental"
+        },
+        "root": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RootConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "loggers": {
+          "additionalProperties": {
+            "$ref": "#/$defs/LoggerConfig"
+          },
+          "title": "Loggers",
+          "type": "object"
+        },
+        "handlers": {
+          "additionalProperties": {
+            "$ref": "#/$defs/HandlerConfig"
+          },
+          "title": "Handlers",
+          "type": "object"
+        },
+        "formatters": {
+          "additionalProperties": {
+            "$ref": "#/$defs/FormatterConfig"
+          },
+          "title": "Formatters",
+          "type": "object"
+        },
+        "filters": {
+          "additionalProperties": {
+            "$ref": "#/$defs/FilterConfig"
+          },
+          "title": "Filters",
+          "type": "object"
+        }
+      },
+      "title": "LoggingDictConfig",
+      "type": "object"
+    },
+    "MustacheRendererConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "const": "mustache",
+          "default": "mustache",
+          "title": "Type",
+          "type": "string"
+        },
+        "env_config": {
+          "$ref": "#/$defs/TemplateRendererEnvConfig",
+          "description": "Environment variable configuration"
+        }
+      },
+      "title": "MustacheRendererConfig",
+      "type": "object"
+    },
+    "OrchestratorConfig": {
+      "properties": {
+        "runners": {
+          "items": {
+            "$ref": "#/$defs/RunnerDefinition"
+          },
+          "title": "Runners",
+          "type": "array"
+        }
+      },
+      "title": "OrchestratorConfig",
+      "type": "object"
+    },
+    "RawOpenTicketAIConfig": {
+      "properties": {
+        "plugins": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Plugins",
+          "type": "array"
+        },
+        "general_config": {
+          "$ref": "#/$defs/GeneralConfig"
+        },
+        "defs": {
+          "items": {
+            "$ref": "#/$defs/RegisterableConfig"
+          },
+          "title": "Defs",
+          "type": "array"
+        },
+        "orchestrator": {
+          "$ref": "#/$defs/OrchestratorConfig"
+        }
+      },
+      "title": "RawOpenTicketAIConfig",
+      "type": "object"
+    },
+    "RawPipeConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "uid": {
+          "title": "Uid",
+          "type": "string"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "use": {
+          "default": "open_ticket_ai.base.CompositePipe",
+          "title": "Use",
+          "type": "string"
+        },
+        "injects": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Injects"
+        },
+        "if": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "default": "True",
+          "title": "If"
+        },
+        "depends_on": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "default": [],
+          "title": "Depends On"
+        }
+      },
+      "title": "RawPipeConfig",
+      "type": "object"
+    },
+    "RegisterableConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "uid": {
+          "title": "Uid",
+          "type": "string"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "use": {
+          "default": "open_ticket_ai.base.CompositePipe",
+          "title": "Use",
+          "type": "string"
+        },
+        "injects": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Injects"
+        }
+      },
+      "title": "RegisterableConfig",
+      "type": "object"
+    },
+    "RootConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "level": {
+          "anyOf": [
+            {
+              "enum": [
+                "NOTSET",
+                "DEBUG",
+                "INFO",
+                "WARNING",
+                "ERROR",
+                "CRITICAL"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Level"
+        },
+        "handlers": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Handlers"
+        },
+        "filters": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Filters"
+        }
+      },
+      "title": "RootConfig",
+      "type": "object"
+    },
+    "RunnerDefinition": {
+      "properties": {
+        "run_every_milli_seconds": {
+          "minimum": 1,
+          "title": "Run Every Milli Seconds",
+          "type": "integer"
+        },
+        "pipe": {
+          "$ref": "#/$defs/RawPipeConfig"
+        }
+      },
+      "required": [
+        "run_every_milli_seconds"
+      ],
+      "title": "RunnerDefinition",
+      "type": "object"
+    },
+    "TemplateRendererEnvConfig": {
+      "properties": {
+        "prefix": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "OTAI_",
+          "description": "Primary environment variable prefix",
+          "title": "Prefix"
+        },
+        "allowlist": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Allowed environment variable names",
+          "title": "Allowlist"
+        },
+        "denylist": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Denied environment variable names",
+          "title": "Denylist"
+        }
+      },
+      "title": "TemplateRendererEnvConfig",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "open_ticket_ai": {
+      "$ref": "#/$defs/RawOpenTicketAIConfig"
+    }
+  },
+  "required": [
+    "open_ticket_ai"
+  ],
+  "title": "RootConfig",
+  "type": "object"
 }

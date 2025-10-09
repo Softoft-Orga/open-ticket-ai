@@ -1,5 +1,5 @@
 
-definitions:
+_anchors:
   - &ticket_fetch_pipe
     use: "open_ticket_ai.base:FetchTicketsPipe"
   - &ticket_update_pipe
@@ -82,11 +82,12 @@ open_ticket_ai:
 
   orchestrator:
     runners:
-      - run_every_milli_seconds: 10
+      - run_every_milli_seconds: 10_000
         pipe:
           id: ticket-routing
           ticket_search_criteria:
-            queue.name: "OpenTicketAI::Incoming"
+            queue:
+              name: "OpenTicketAI::Incoming"
             limit: 1
           min_queue_confidence: 0.8
           min_priority_confidence: 0.8
@@ -99,7 +100,6 @@ open_ticket_ai:
             - id: ticket_fetcher
               <<: *ticket_fetch_pipe
               injects: { ticket_system: "otobo_znuny" }
-              ticket_search_criteria: "{{ config.ticket_search_criteria }}"
 
             - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
               id: queue_classification

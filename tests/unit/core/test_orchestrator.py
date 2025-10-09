@@ -10,7 +10,7 @@ from open_ticket_ai.core.pipeline import (
     Orchestrator,
     OrchestratorConfig,
 )
-from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 
 def test_orchestrator_config_from_raw() -> None:
@@ -43,7 +43,7 @@ async def test_orchestrator_starts_and_stops_runners() -> None:
         }
     )
     pipe_factory = MagicMock()
-    process_mock = AsyncMock(return_value=Context())
+    process_mock = AsyncMock(return_value=PipeContext())
     pipe_factory.create_pipe.return_value = SimpleNamespace(process=process_mock)
 
     orchestrator = Orchestrator(pipe_factory, orchestrator_config)

@@ -34,7 +34,7 @@ class JinjaRenderer(TemplateRenderer):
         self.jinja_env.globals["pipe_result"] = pipe_result
         try:
             template = self.jinja_env.from_string(template_str)
-            rendered = template.render(self._normalize_scope(scope))
+            rendered = template.render(self._to_dict(scope))
             return self._parse_rendered_value(rendered)
         except Exception as e:
             self._logger.warning("Failed to render template '%s'", template_str)

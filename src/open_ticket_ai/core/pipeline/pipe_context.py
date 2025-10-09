@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 
 
-class Context(BaseModel):
+class PipeContext(BaseModel):
     pipes: dict[str, PipeResult] = Field(default_factory=dict)
     config: dict[str, Any] = Field(default_factory=dict)
 

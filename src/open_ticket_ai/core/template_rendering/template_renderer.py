@@ -8,8 +8,10 @@ from pydantic import BaseModel
 
 
 class TemplateRenderer(ABC):
+    def __init__(self):
+        self._logger = logging.getLogger(self.__class__.__name__)
     @staticmethod
-    def _normalize_scope(scope: BaseModel | dict[str, Any]) -> dict[str, Any]:
+    def _to_dict(scope: BaseModel | dict[str, Any]) -> dict[str, Any]:
         if isinstance(scope, BaseModel):
             return scope.model_dump()
         return scope
@@ -39,7 +41,12 @@ class TemplateRenderer(ABC):
         pass
 
     def render_recursive(self, obj: Any, scope: BaseModel | dict[str, Any], fail_silently: bool = False) -> Any:
-        scope_dict = self._normalize_scope(scope)
+        self._logger.info(f"Rendering {obj}")
+        self._logger.info(f"Scope: {scope}")
+        scope_dict = self._to_dict(scope)
+
+        if isinstance(obj, BaseModel):
+            obj = self._to_dict(obj)
         if isinstance(obj, str):
             return self.render(obj, scope_dict, fail_silently)
         if isinstance(obj, list):

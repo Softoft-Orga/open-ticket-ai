@@ -3,21 +3,21 @@ from typing import Any
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
 
 
-class UpdateTicketPipeConfig(BaseModel):
+class UpdateTicketPipeConfig(RenderedPipeConfig):
     ticket_id: str | int
     updated_ticket: UnifiedTicket
 
 
 class UpdateTicketPipe(Pipe):
-    def __init__(self, ticket_system: TicketSystemService, config_raw: dict[str, Any], *args, **kwargs) -> None:
-        super().__init__(config_raw)
+    def __init__(self, ticket_system: TicketSystemService, config: UpdateTicketPipeConfig, *args, **kwargs) -> None:
+        super().__init__(config)
         self.ticket_system = ticket_system
-        self.pipe_config = UpdateTicketPipeConfig.model_validate(config_raw)
+        self.pipe_config = UpdateTicketPipeConfig.model_validate(config.model_dump())
 
     async def _process(self) -> PipeResult:
         try:

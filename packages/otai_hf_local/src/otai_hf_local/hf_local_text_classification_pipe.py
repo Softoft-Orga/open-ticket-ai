@@ -3,11 +3,11 @@ from functools import cache
 from typing import Any
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
 from pydantic import BaseModel
 
 
-class HFLocalTextClassificationPipeConfig(BaseModel):
+class HFLocalTextClassificationPipeConfig(RenderedPipeConfig):
     model: str
     token: str | None = None
     prompt: str
@@ -16,12 +16,11 @@ class HFLocalTextClassificationPipeConfig(BaseModel):
 class HFLocalTextClassificationPipe(Pipe):
     _pipeline: Any
 
-    def __init__(self, config_raw: dict[str, Any], *args: Any, **kwargs: Any) -> None:
-        super().__init__(config_raw)
-        pipe_config = HFLocalTextClassificationPipeConfig(**config_raw)
-        self.model = pipe_config.model
-        self.token = pipe_config.token
-        self.prompt = pipe_config.prompt
+    def __init__(self, config: HFLocalTextClassificationPipeConfig, *args: Any, **kwargs: Any) -> None:
+        super().__init__(config)
+        self.model = config.model
+        self.token = config.token
+        self.prompt = config.prompt
         self.logger = logging.getLogger(self.__class__.__name__)
         self._pipeline = None
 

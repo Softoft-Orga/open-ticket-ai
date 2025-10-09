@@ -8,7 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.registerable import RegisterableConfig
-from open_ticket_ai.core.pipeline import OrchestratorConfig
+from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig
 from open_ticket_ai.core.template_rendering.renderer_config import SpecificTemplateRendererConfig
 
@@ -21,7 +21,6 @@ class FormatterConfig(BaseModel):
     format: str | None = None
     datefmt: str | None = None
     style: Literal["%", "{", "$"] | None = None
-    validate: bool | None = None
     call: str | None = Field(default=None, alias="()")
 
 

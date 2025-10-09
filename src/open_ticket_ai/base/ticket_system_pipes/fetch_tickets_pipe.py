@@ -3,20 +3,20 @@ from typing import Any
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
 
 
-class FetchTicketsPipeConfig(BaseModel):
+class FetchTicketsPipeConfig(RenderedPipeConfig):
     ticket_search_criteria: TicketSearchCriteria | None = None
 
 
 class FetchTicketsPipe(Pipe):
-    def __init__(self, ticket_system: TicketSystemService, config_raw: dict[str, Any], *args, **kwargs) -> None:
-        super().__init__(config_raw)
+    def __init__(self, ticket_system: TicketSystemService, config: FetchTicketsPipeConfig, *args, **kwargs) -> None:
+        super().__init__(config)
         self.ticket_system = ticket_system
-        self.pipe_config = FetchTicketsPipeConfig.model_validate(config_raw)
+        self.pipe_config = FetchTicketsPipeConfig.model_validate(config.model_dump())
 
     async def _process(self) -> PipeResult:
         try:

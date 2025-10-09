@@ -1,14 +1,14 @@
 import logging
 from typing import Any
 
-from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig, RawPipeConfig
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 
 
 class CompositePipeConfig(RenderedPipeConfig):
-    steps: list[dict[str, Any]]
+    steps: list[RawPipeConfig]
 
 
 class CompositePipe(Pipe):
@@ -16,23 +16,23 @@ class CompositePipe(Pipe):
     Composite pipe that runs multiple steps. Returns PipeResult from _process, Context from process.
     """
 
-    def __init__(self, config_raw: dict[str, Any], factory: PipeFactory | None = None, *args, **kwargs) -> None:
-        super().__init__(config_raw, factory, *args, **kwargs)
-        self.config = CompositePipeConfig.model_validate(config_raw)
+    def __init__(self, config: CompositePipeConfig, factory: PipeFactory | None = None, *args, **kwargs) -> None:
+        super().__init__(config, factory, *args, **kwargs)
+        self.config = CompositePipeConfig.model_validate(config.model_dump())
         self._logger = logging.getLogger(self.__class__.__name__)
         self._factory = factory
-        self._context: Context | None = None
+        self._context: PipeContext | None = None
 
-    def _build_pipe_from_step_config(self, step_config: dict[str, Any], context: Context) -> Pipe:
+    def _build_pipe_from_step_config(self, step_config: RawPipeConfig, context: PipeContext) -> Pipe:
         """
         Build a child pipe from step config.
         Returns Pipe.
         """
         # Render the parent config before passing it to child pipes
-        parent_config_rendered = self._factory.render_pipe_config(self.config.model_dump(), context.model_dump())
-        return self._factory.create_pipe(parent_config_rendered, step_config, context.model_dump())
+        parent_config_rendered = self.config
+        return self._factory.create_pipe(parent_config_rendered, step_config, context)
 
-    async def _process_steps(self, context: Context) -> list[PipeResult]:
+    async def _process_steps(self, context: PipeContext) -> list[PipeResult]:
         """
         Run all steps and collect their PipeResults.
         Returns list[PipeResult].
@@ -42,7 +42,7 @@ class CompositePipe(Pipe):
         for step_pipe_config_raw in self.config.steps:
             step_pipe = self._build_pipe_from_step_config(step_pipe_config_raw, current_context)
             current_context = await step_pipe.process(current_context)
-            results.append(current_context.pipes[step_pipe_config_raw["id"]])
+            results.append(current_context.pipes[step_pipe_config_raw.id])
         # Update the context for parent to access
         self._context = current_context
         return results
@@ -55,7 +55,7 @@ class CompositePipe(Pipe):
         # We need context to process steps, so we override process() to pass it
         raise NotImplementedError("CompositePipe must override process() to access context")
 
-    async def process(self, context: Context) -> Context:
+    async def process(self, context: PipeContext) -> PipeContext:
         """
         Public API. Runs composite pipe and returns updated Context.
         Overrides base implementation to access context during _process.

@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from open_ticket_ai.core.pipeline.context import Context
+from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
@@ -16,8 +16,8 @@ pytestmark = [pytest.mark.unit]
 
 
 @pytest.fixture
-def empty_pipeline_context() -> Context:
-    return Context(pipes={}, config={})
+def empty_pipeline_context() -> PipeContext:
+    return PipeContext(pipes={}, config={})
 
 
 @pytest.fixture
