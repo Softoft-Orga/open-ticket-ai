@@ -49,6 +49,7 @@ def at_path(value: Any, path: Any) -> str:
     except JSONDecodeError:
         return str(nested)
 
+
 @pass_context
 def has_failed(ctx, pipe_id: str) -> bool:
     pipes = ctx.get("pipes", {})
@@ -56,6 +57,7 @@ def has_failed(ctx, pipe_id: str) -> bool:
     if pipe is None:
         return False
     return pipe.failed or pipe.get("failed")
+
 
 @pass_context
 def pipe_result(ctx, pipe_id: str, data_key: str = "value") -> Any:

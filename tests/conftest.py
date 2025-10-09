@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import importlib
 from pathlib import Path
 from typing import TYPE_CHECKING
-from unittest.mock import MagicMock
 
 import pytest
 
@@ -11,7 +9,6 @@ if TYPE_CHECKING:
     from injector import Injector
 
     from open_ticket_ai.core import RawOpenTicketAIConfig
-
 
 
 @pytest.fixture

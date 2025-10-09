@@ -15,9 +15,7 @@ class TestOtoboZnunyCLI:
     def test_setup_prompts_for_required_fields(self):
         runner = CliRunner()
         result = runner.invoke(
-            otobo_znuny,
-            [],
-            input="https://example.com/otrs\nOpenTicketAI\nopen_ticket_ai\npassword123\n"
+            otobo_znuny, [], input="https://example.com/otrs\nOpenTicketAI\nopen_ticket_ai\npassword123\n"
         )
         assert "OTOBO/Znuny base URL" in result.output
         assert "Web service name" in result.output
@@ -29,12 +27,16 @@ class TestOtoboZnunyCLI:
         result = runner.invoke(
             otobo_znuny,
             [
-                "--base-url", "https://example.com/otrs",
-                "--webservice-name", "TestService",
-                "--username", "testuser",
-                "--password", "testpass",
+                "--base-url",
+                "https://example.com/otrs",
+                "--webservice-name",
+                "TestService",
+                "--username",
+                "testuser",
+                "--password",
+                "testpass",
                 "--no-verify-connection",
-            ]
+            ],
         )
         assert result.exit_code == 0
         assert "Next Steps" in result.output
@@ -49,12 +51,16 @@ class TestOtoboZnunyCLI:
         result = runner.invoke(
             otobo_znuny,
             [
-                "--base-url", "https://example.com/otrs",
-                "--webservice-name", "TestService",
-                "--username", "testuser",
-                "--password", "testpass",
+                "--base-url",
+                "https://example.com/otrs",
+                "--webservice-name",
+                "TestService",
+                "--username",
+                "testuser",
+                "--password",
+                "testpass",
                 "--verify-connection",
-            ]
+            ],
         )
 
         assert result.exit_code == 0
@@ -71,13 +77,17 @@ class TestOtoboZnunyCLI:
         result = runner.invoke(
             otobo_znuny,
             [
-                "--base-url", "https://example.com/otrs",
-                "--webservice-name", "TestService",
-                "--username", "testuser",
-                "--password", "testpass",
+                "--base-url",
+                "https://example.com/otrs",
+                "--webservice-name",
+                "TestService",
+                "--username",
+                "testuser",
+                "--password",
+                "testpass",
                 "--verify-connection",
             ],
-            input="n\n"
+            input="n\n",
         )
 
         assert result.exit_code == 1
@@ -91,13 +101,17 @@ class TestOtoboZnunyCLI:
         result = runner.invoke(
             otobo_znuny,
             [
-                "--base-url", "https://example.com/otrs",
-                "--webservice-name", "TestService",
-                "--username", "testuser",
-                "--password", "testpass",
+                "--base-url",
+                "https://example.com/otrs",
+                "--webservice-name",
+                "TestService",
+                "--username",
+                "testuser",
+                "--password",
+                "testpass",
                 "--verify-connection",
             ],
-            input="y\n"
+            input="y\n",
         )
 
         assert result.exit_code == 0
@@ -111,13 +125,18 @@ class TestOtoboZnunyCLI:
             result = runner.invoke(
                 otobo_znuny,
                 [
-                    "--base-url", "https://example.com/otrs",
-                    "--webservice-name", "TestService",
-                    "--username", "testuser",
-                    "--password", "testpass",
+                    "--base-url",
+                    "https://example.com/otrs",
+                    "--webservice-name",
+                    "TestService",
+                    "--username",
+                    "testuser",
+                    "--password",
+                    "testpass",
                     "--no-verify-connection",
-                    "--output-config", "config.yml",
-                ]
+                    "--output-config",
+                    "config.yml",
+                ],
             )
 
             assert result.exit_code == 0

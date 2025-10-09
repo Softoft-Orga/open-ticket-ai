@@ -13,6 +13,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
 )
 from tests.unit.mocked_ticket_system import MockedTicketSystem
+
 pytestmark = [pytest.mark.unit]
 
 
@@ -158,7 +159,7 @@ def stateful_pipe_runner(mock_registry, mocked_ticket_system):
 @contextmanager
 def patched_registry(mock_registry):
     with patch(
-            "open_ticket_ai.core.dependency_injection.unified_registry.UnifiedRegistry.instance",
-            return_value=mock_registry,
+        "open_ticket_ai.core.dependency_injection.unified_registry.UnifiedRegistry.instance",
+        return_value=mock_registry,
     ):
         yield

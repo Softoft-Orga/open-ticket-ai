@@ -13,13 +13,12 @@ from open_ticket_ai.core.pipeline.context import Context
 
 def test_orchestrator_config_from_raw() -> None:
     raw = {
-        "runners":
-            [
-                {
-                    "run_every_milli_seconds": 1000,
-                    "pipe": {"id": "demo"},
-                }
-            ]
+        "runners": [
+            {
+                "run_every_milli_seconds": 1000,
+                "pipe": {"id": "demo"},
+            }
+        ]
     }
 
     config = OrchestratorConfig.model_validate(raw)
@@ -34,14 +33,16 @@ import pytest
 
 @pytest.mark.asyncio
 async def test_orchestrator_starts_and_stops_runners() -> None:
-    orchestrator_config = OrchestratorConfig.model_validate({
-        "runners": [
-            {
-                "run_every_milli_seconds": 10,
-                "pipe": {"id": "demo"},
-            }
-        ]
-    })
+    orchestrator_config = OrchestratorConfig.model_validate(
+        {
+            "runners": [
+                {
+                    "run_every_milli_seconds": 10,
+                    "pipe": {"id": "demo"},
+                }
+            ]
+        }
+    )
     pipe_factory = MagicMock()
     process_mock = AsyncMock(return_value=Context())
     pipe_factory.create_pipe.return_value = SimpleNamespace(process=process_mock)

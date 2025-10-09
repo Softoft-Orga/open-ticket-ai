@@ -17,8 +17,8 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class JinjaRenderer(TemplateRenderer):
     @inject
     def __init__(
-            self,
-            config: JinjaRendererConfig,
+        self,
+        config: JinjaRendererConfig,
     ):
         self.config = config
         self.jinja_env = SandboxedEnvironment(
