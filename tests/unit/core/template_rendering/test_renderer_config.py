@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import pytest
 
-
 pytest.skip("Renderer config tests use outdated API that no longer exists", allow_module_level=True)
 
 

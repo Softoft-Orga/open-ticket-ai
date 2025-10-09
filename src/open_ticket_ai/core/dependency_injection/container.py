@@ -2,7 +2,7 @@ import os
 from logging.config import dictConfig
 from pathlib import Path
 
-from injector import Binder, Module, provider, singleton, multiprovider
+from injector import Binder, Module, multiprovider, provider, singleton
 
 from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
