@@ -27,5 +27,5 @@ class ConfigLoader:
             config_dict = yaml.safe_load(file)[self.app_config.config_yaml_root_key]
             return RawOpenTicketAIConfig.model_validate(config_dict)
 
-    def get_config(self):
+    def get_config(self) -> RawOpenTicketAIConfig:
         return self.config

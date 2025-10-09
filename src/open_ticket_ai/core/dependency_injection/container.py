@@ -1,6 +1,5 @@
 import os
 from logging.config import dictConfig
-from pathlib import Path
 
 from injector import Binder, Module, multiprovider, provider, singleton
 
@@ -21,7 +20,9 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 
 
 class AppModule(Module):
-    def __init__(self, config_path: str | os.PathLike | None = None, app_config: AppConfig | None = None):
+    def __init__(
+        self, config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None
+    ) -> None:
         """Initialize AppModule with optional config path and app config.
 
         Args:
@@ -37,9 +38,9 @@ class AppModule(Module):
             config_path = os.getenv(app_config.config_env_var, app_config.get_default_config_path())
         self.config_path = config_path
 
-    def configure(self, binder: Binder):
+    def configure(self, binder: Binder) -> None:
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
-        config_loader = ConfigLoader(self.app_config, self.config_path)
+        config_loader = ConfigLoader(self.app_config, str(self.config_path))
         config = config_loader.load_config()
         dictConfig(config.general_config.logging)
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
