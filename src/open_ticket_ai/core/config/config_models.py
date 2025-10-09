@@ -6,13 +6,13 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.registerable import RegisterableConfig
 from open_ticket_ai.core.pipeline import OrchestratorConfig
-from open_ticket_ai.core.template_rendering import TemplateRendererConfig
+from open_ticket_ai.core.template_rendering import TemplateRendererConfig, JinjaRendererConfig
 
 
 class GeneralConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     logging: dict[str, Any] = {}
-    template_renderer: TemplateRendererConfig = {}
+    template_renderer: TemplateRendererConfig = Field(default_factory=JinjaRendererConfig)
 
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=lambda: [])

@@ -21,8 +21,6 @@ body:
         - Extension to Existing Pipe
         - Predefined Pipe Template
         - Other
-    validations:
-      required: true
 
   - type: input
     id: proposed-name
@@ -30,8 +28,6 @@ body:
       label: Proposed Name
       description: What should this pipe/plugin be called?
       placeholder: "ClassifyTicketByUrgencyPipe or OTRSIntegrationPlugin"
-    validations:
-      required: true
 
   - type: textarea
     id: description
@@ -39,8 +35,6 @@ body:
       label: Description
       description: What should this pipe/plugin do?
       placeholder: "A pipe that analyzes ticket content and assigns urgency level..."
-    validations:
-      required: true
 
   - type: textarea
     id: use-case
@@ -50,8 +44,6 @@ body:
       placeholder: |
         In our helpdesk, we need to automatically classify incoming tickets
         by urgency before routing them to the appropriate queue...
-    validations:
-      required: true
 
   - type: dropdown
     id: integration-target
@@ -93,8 +85,6 @@ body:
       placeholder: |
         Input: PipeResult from previous step containing ticket data
         Output: PipeResult with urgency_level field added
-    validations:
-      required: true
 
   - type: dropdown
     id: dependencies

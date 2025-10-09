@@ -29,8 +29,6 @@ body:
         - Security
         - Developer Experience
         - Other
-    validations:
-      required: true
 
   - type: textarea
     id: description
@@ -38,8 +36,6 @@ body:
       label: Feature Description
       description: Describe the feature you'd like to see
       placeholder: "Add support for hot-reloading configuration changes..."
-    validations:
-      required: true
 
   - type: textarea
     id: use-case
@@ -47,8 +43,6 @@ body:
       label: Use Case
       description: How would you use this feature?
       placeholder: "In our production environment, we need to update configs without restarting..."
-    validations:
-      required: true
 
   - type: textarea
     id: current-limitation
@@ -56,8 +50,6 @@ body:
       label: Current Limitation
       description: What can't you do today that this feature would enable?
       placeholder: "Currently, we have to restart the orchestrator to pick up config changes..."
-    validations:
-      required: true
 
   - type: textarea
     id: proposed-solution
@@ -83,8 +75,6 @@ body:
         - Possibly breaking (needs discussion)
         - Yes, breaking change required
         - Unsure
-    validations:
-      required: true
 
   - type: checkboxes
     id: documentation-needs
