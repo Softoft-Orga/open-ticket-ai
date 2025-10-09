@@ -3,6 +3,7 @@ on:
     push:
         branches:
             - dev
+            - main
     pull_request:
         types: [ opened, synchronize, reopened ]
 jobs:
@@ -39,7 +40,7 @@ jobs:
             
             -   name: Generate mypy type checking report
                 run: |
-                    uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src --no-error-summary > mypy-report.txt 2>&1 || true
+                    uv run mypy . --no-error-summary > mypy-report.txt 2>&1 || true
                 continue-on-error: true
             
             -   name: SonarCloud Scan

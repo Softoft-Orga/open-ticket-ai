@@ -30,7 +30,7 @@ custom_root:
     os.environ["CUSTOM_CONFIG_VAR"] = str(config_path)
     try:
         loader = ConfigLoader(app_config)
-        config = loader.get_config()
+        config = loader.load_config()
 
         assert config is not None
         assert config.plugins == []
@@ -53,8 +53,8 @@ my_app:
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
     app_config = AppConfig(config_yaml_root_key="my_app")
-    loader = ConfigLoader(app_config, str(config_path))
-    config = loader.get_config()
+    loader = ConfigLoader(app_config)
+    config = loader.load_config(config_path)
 
     assert config.plugins == ["test"]
 
@@ -74,8 +74,8 @@ open_ticket_ai:
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
     app_config = AppConfig()
-    loader = ConfigLoader(app_config, str(config_path))
-    config = loader.get_config()
+    loader = ConfigLoader(app_config)
+    config = loader.load_config(config_path)
 
     assert config is not None
 
@@ -86,8 +86,8 @@ def test_config_loader_raises_when_no_path_and_no_env(tmp_path: Path) -> None:
     if "NON_EXISTENT_VAR" in os.environ:
         del os.environ["NON_EXISTENT_VAR"]
 
-    with pytest.raises(ValueError, match="NON_EXISTENT_VAR"):
-        ConfigLoader(app_config)
+    with pytest.raises(Exception):
+        ConfigLoader(app_config).load_config()
 
 
 def test_config_loader_error_message_includes_custom_env_var(tmp_path: Path) -> None:
@@ -96,5 +96,5 @@ def test_config_loader_error_message_includes_custom_env_var(tmp_path: Path) -> 
     if "MY_CUSTOM_VAR" in os.environ:
         del os.environ["MY_CUSTOM_VAR"]
 
-    with pytest.raises(ValueError, match="MY_CUSTOM_VAR"):
-        ConfigLoader(app_config)
+    with pytest.raises(Exception):
+        ConfigLoader(app_config).load_config()

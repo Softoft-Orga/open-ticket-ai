@@ -10,6 +10,7 @@ from injector import inject, singleton
 from open_ticket_ai.core.config.registerable import Registerable, RegisterableConfig
 from open_ticket_ai.core.pipeline import Context
 from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_config import RawPipeConfig, RenderedPipeConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
@@ -48,9 +49,12 @@ def deep_merge(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
-def resolve_config(parent_config: dict[str, Any] | None, node_raw: dict[str, Any]) -> dict[str, Any]:
-    parent_cfg = extract_config_fields(parent_config) or {}
-    return deep_merge(parent_cfg, node_raw)
+def resolve_config(parent_config: RawPipeConfig | None, pipe_config: RawPipeConfig) -> RawPipeConfig:
+    parent_config_dict = parent_config.model_dump() if parent_config else {}
+    pipe_config_dict = pipe_config.model_dump()
+
+    parent_config_cleaned = extract_config_fields(parent_config_dict)
+    return RawPipeConfig.model_validate(deep_merge(parent_config_cleaned, pipe_config_dict))
 
 
 @singleton
@@ -61,20 +65,20 @@ class PipeFactory:
         self._template_renderer = template_renderer
         self._registerable_configs = registerable_configs
 
-    def render_pipe_config(self, registerable_config_raw: dict[str, Any], scope: Context) -> dict[str, Any]:
+    def render_pipe_config(self, registerable_config_raw: RawPipeConfig, scope: Context) -> RenderedPipeConfig:
         renderable_config = registerable_config_raw.copy()
         renderable_config["steps"] = []
         rendered_step_config = self._template_renderer.render_recursive(renderable_config, scope)
         rendered_step_config["steps"] = registerable_config_raw.get("steps", [])
-        return rendered_step_config
+        return RenderedPipeConfig.model_validate(rendered_step_config)
 
     def create_pipe(
-            self, parent_config_raw: dict[str, Any], pipe_config_raw: dict[str, Any], scope: Context
+            self, parent_config_raw: RawPipeConfig, pipe_config_raw: RawPipeConfig, scope: Context
     ) -> Pipe:
         self._logger.info("Creating pipe '%s' with config %s", pipe_config_raw["id"], pipe_config_raw)
         pipe_config = resolve_config(parent_config_raw, pipe_config_raw)
-        config_raw = self.render_pipe_config(pipe_config, scope)
-        registerable = self.__create_registerable_instance(config_raw, scope)
+        rendered_config = self.render_pipe_config(pipe_config, scope)
+        registerable = self.__create_registerable_instance(rendered_config, scope)
         if not isinstance(registerable, Pipe):
             raise ValueError(f"Registerable with id '{pipe_config_raw["id"]}' is not a Pipe")
         return registerable
@@ -83,7 +87,7 @@ class PipeFactory:
         config_raw = self._template_renderer.render_recursive(registerable_config_raw, scope)
         return self.__create_registerable_instance(config_raw, scope)
 
-    def __create_registerable_instance(self, registerable_config_raw: dict[str, Any], scope: Context) -> Registerable:
+    def __create_registerable_instance(self, registerable_config_raw: RegisterableConfig, scope: Context) -> Registerable:
         registerable_config = RegisterableConfig.model_validate(registerable_config_raw)
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Registerable):

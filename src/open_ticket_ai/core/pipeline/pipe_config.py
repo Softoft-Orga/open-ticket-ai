@@ -30,7 +30,7 @@ class RawPipeConfig(RegisterableConfig):
 
 
 class PipeResult(BaseModel):
-    model_config = ConfigDict(extra="ignore")
+    model_config = ConfigDict(extra="forbid")
     success: bool
     failed: bool
     message: str = ""

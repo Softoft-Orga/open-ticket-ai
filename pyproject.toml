@@ -95,11 +95,8 @@ addopts = "-q"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 markers = [
-    "unit: schnelle, isolierte Tests",
-    "integration: core + plugin zusammen",
-    "contract: plugin-api-vertrag",
+    "unit: fast isolated tests",
     "e2e: end-to-end flows",
-    "slow: dauert länger"
 ]
 
 [dependency-groups]

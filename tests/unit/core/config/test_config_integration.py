@@ -101,7 +101,7 @@ my_app:
 
     monkeypatch.setenv("MY_APP_CONFIG", str(config_path))
 
-    injector = Injector([AppModule(None, custom_app_config)])
+    injector = Injector([AppModule(config_path, custom_app_config)])
     config = injector.get(RawOpenTicketAIConfig)
     app_config = injector.get(AppConfig)
 

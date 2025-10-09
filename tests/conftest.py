@@ -13,16 +13,6 @@ if TYPE_CHECKING:
     from open_ticket_ai.core import RawOpenTicketAIConfig
 
 
-def pytest_collection_modifyitems(config, items):
-    try:
-        importlib.import_module("spacy")
-        importlib.import_module("de_core_news_sm")
-    except Exception:
-        skip_reason = "SpaCy or the German model is not available"
-        for item in list(items):
-            if "test_anonymize_data.py" in str(item.fspath):
-                item.add_marker(pytest.mark.skip(reason=skip_reason))
-
 
 @pytest.fixture
 def mock_pipe_config():
@@ -52,35 +42,6 @@ def mock_ticket_system_config():
         "steps": [],
         "ticket_system_id": "mock_ticket_system",
     }
-
-
-@pytest.fixture
-def mock_registry():
-    """Create a mock UnifiedRegistry for testing.
-
-    Returns a MagicMock that behaves like UnifiedRegistry.
-    """
-    from open_ticket_ai.core import UnifiedRegistry
-
-    mock = MagicMock(spec=UnifiedRegistry)
-    mock.get_instance.return_value = MagicMock()
-    mock.register_instance.return_value = MagicMock()
-
-    # Mock the singleton pattern
-    UnifiedRegistry.get_registry_instance = MagicMock(return_value=mock)
-
-    return mock
-
-
-@pytest.fixture
-def mock_context():
-    """Create a mock Context for testing pipes.
-
-    Returns a Context instance with test data.
-    """
-    from open_ticket_ai.core import Context
-
-    return Context(pipes={}, config={})
 
 
 @pytest.fixture

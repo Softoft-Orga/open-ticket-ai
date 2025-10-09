@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from pydantic import BaseModel, Field
@@ -19,3 +20,6 @@ class AppConfig(BaseModel):
 
     def get_default_config_path(self) -> Path:
         return Path.cwd() / self.default_config_filename
+
+    def get_logger(self, name: str):
+        return logging.getLogger(name)
