@@ -6,7 +6,7 @@ import pytest
 import yaml
 from injector import Injector
 
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import GeneralConfig, RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.container import AppModule
 
 

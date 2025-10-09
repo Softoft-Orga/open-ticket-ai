@@ -1,6 +1,4 @@
-import asyncio
-from contextlib import contextmanager
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -32,68 +30,6 @@ def mock_ticket_system_service() -> MagicMock:
     return mock
 
 
-@pytest.fixture
-def pipe_config_factory():
-    def factory(**kwargs) -> dict:
-        defaults = {
-            "id": "test_pipe",
-            "use": "open_ticket_ai.base.DefaultPipe",
-            "when": True,
-            "steps": [],
-        }
-        defaults.update(kwargs)
-        return defaults
-
-    return factory
-
-
-@pytest.fixture
-def mock_ticket_system_pipe_config():
-    return {
-        "id": "test_ticket_pipe",
-        "use": "TestTicketPipe",
-        "when": True,
-        "steps": [],
-        "ticket_system_id": "mock_ticket_system",
-    }
-
-
-@pytest.fixture
-def pipe_runner(mock_registry, mock_ticket_system_service):
-    def _run_pipe(pipe_class, config, context):
-        with patched_registry(mock_registry):
-            # Check if pipe needs ticket_system as first arg (ticket system pipes)
-            import inspect
-
-            sig = inspect.signature(pipe_class.__init__)
-            params = list(sig.parameters.keys())
-            if len(params) > 2 and params[1] == "ticket_system":
-                pipe = pipe_class(mock_ticket_system_service, config)
-            else:
-                pipe = pipe_class(config)
-            return asyncio.run(pipe.process(context))
-
-    return _run_pipe
-
-
-@pytest.fixture
-def ticket_system_pipe_factory(mock_ticket_system_service, mock_registry):
-    def _create_pipe(pipe_class, **config_overrides):
-        base_config = {
-            "id": "test_pipe",
-            "use": pipe_class.__name__,
-            "when": True,
-            "steps": [],
-            "ticket_system_id": "test_system",
-        }
-        base_config.update(config_overrides)
-
-        mock_registry.get_instance.return_value = mock_ticket_system_service
-
-        with patched_registry(mock_registry):
-            return pipe_class(base_config)
-
-    return _create_pipe
 
 
 @pytest.fixture
@@ -139,27 +75,4 @@ def mocked_ticket_system() -> MockedTicketSystem:
     return system
 
 
-@pytest.fixture
-def stateful_pipe_runner(mock_registry, mocked_ticket_system):
-    def _run_pipe(pipe_class, config, context):
-        with patched_registry(mock_registry):
-            import inspect
 
-            sig = inspect.signature(pipe_class.__init__)
-            params = list(sig.parameters.keys())
-            if len(params) > 2 and params[1] == "ticket_system":
-                pipe = pipe_class(mocked_ticket_system, config)
-            else:
-                pipe = pipe_class(config)
-            return asyncio.run(pipe.process(context))
-
-    return _run_pipe
-
-
-@contextmanager
-def patched_registry(mock_registry):
-    with patch(
-        "open_ticket_ai.core.dependency_injection.unified_registry.UnifiedRegistry.instance",
-        return_value=mock_registry,
-    ):
-        yield

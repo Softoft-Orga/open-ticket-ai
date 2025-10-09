@@ -54,6 +54,14 @@ tests/
 ### Naming rules
 - Test files: `test_*.py` only.
 - Keep fixtures in `conftest.py` or `tests/**/fixtures_*.py` (no global helper modules under `src/`).
+- **NO** `__init__.py` files in test directories. Test directories are not Python packages.
+
+### Fixture guidelines
+- Check existing fixtures before creating new ones: `uv run -m pytest --fixtures`
+- Follow naming conventions: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
+- Document fixtures with clear docstrings
+- See [FIXTURES.md](./docs/FIXTURES.md) for complete fixture reference
+- See [FIXTURE_TEMPLATES.md](./docs/FIXTURE_TEMPLATES.md) for common patterns
 
 ## Pytest configuration (root `pyproject.toml`)
 
@@ -79,6 +87,7 @@ addopts = ["-q"]
 - Lint: `uv run ruff check .` (no warnings allowed)
 - Types: `uv run mypy .` (no ignores added without justification in PR)
 - Tests: `uv run -m pytest`
+- Test structure: `uv run python scripts/validate_test_structure.py`
 - No test files under `src/**` will be accepted. PRs that create them must be changed.
 
 ## Architectural expectations (short)
@@ -94,6 +103,9 @@ addopts = ["-q"]
 - [ ] New unit tests added under `packages/<name>/tests`
 - [ ] No files under any `src/**/tests`
 - [ ] Root-level integration/e2e tests only in `tests/`
+- [ ] No `__init__.py` in any test directories
+- [ ] Check existing fixtures before creating new ones
 - [ ] `uv run ruff check .` clean
 - [ ] `uv run mypy .` clean
 - [ ] `uv run -m pytest` green
+- [ ] `uv run python scripts/validate_test_structure.py` passes
