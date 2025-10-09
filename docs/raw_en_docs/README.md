@@ -362,6 +362,16 @@ The CI pipeline runs different test stages:
 
 For detailed test structure and best practices, see [TESTING.md](general/TESTING.md).
 
+#### CI Quality Assurance
+
+The repository uses SonarCloud for continuous code quality monitoring. The QA workflow automatically generates and uploads:
+
+- **Test Coverage Reports** (pytest with coverage.xml)
+- **Linting Reports** (ruff in SARIF format)
+- **Type Checking Reports** (mypy)
+
+All reports are analyzed by SonarCloud and displayed in pull requests. For complete details on the QA workflow, report generation, and SonarCloud configuration, see [CI Quality Assurance](general/CI_QUALITY_ASSURANCE.md).
+
 ### Development Workflows
 
 See [docs/developer_process.md](general/developer_process.md) for information about automated processes.
