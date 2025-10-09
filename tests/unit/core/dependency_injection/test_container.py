@@ -18,12 +18,12 @@ def test_model_to_yaml_direct_dump(tmp_path: Path):
     yaml_file = tmp_path / "config.yml"
 
     # Dump directly to file
-    with open(yaml_file, 'w', encoding='utf-8') as f:
-        yaml.dump({ "open_ticket_ai": model.model_dump()}, f)
+    with open(yaml_file, "w", encoding="utf-8") as f:
+        yaml.dump({"open_ticket_ai": model.model_dump()}, f)
     yield yaml_file
 
-def test_app_module_binds_singleton_dependencies(test_model_to_yaml_direct_dump: Path) -> None:
 
+def test_app_module_binds_singleton_dependencies(test_model_to_yaml_direct_dump: Path) -> None:
     injector = Injector([AppModule(str(test_model_to_yaml_direct_dump))])
 
     resolved_config = injector.get(RawOpenTicketAIConfig)

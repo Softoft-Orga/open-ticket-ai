@@ -23,7 +23,9 @@ class JinjaRendererConfig(TemplateRendererConfig):
     trim_blocks: bool = Field(default=True, description="Trim blocks in Jinja2")
     lstrip_blocks: bool = Field(default=True, description="Left-strip blocks in Jinja2")
 
+
 class MustacheRendererConfig(TemplateRendererConfig):
     type: Literal["mustache"] = "mustache"
+
 
 SpecificTemplateRendererConfig = Annotated[JinjaRendererConfig | MustacheRendererConfig, Field(discriminator="type")]

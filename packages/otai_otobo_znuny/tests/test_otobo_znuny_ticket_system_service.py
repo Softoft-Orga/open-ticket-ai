@@ -51,9 +51,7 @@ class TestOTOBOZnunyTicketSystemService:
 
     @pytest.fixture
     def service(self, config_dict):
-        with patch(
-            "otai_otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyTicketSystemService._recreate_client"
-        ):
+        with patch("otai_otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyTicketSystemService._recreate_client"):
             return OTOBOZnunyTicketSystemService(config_dict)
 
     @pytest.fixture
@@ -67,9 +65,7 @@ class TestOTOBOZnunyTicketSystemService:
 
     @pytest.fixture
     def patch_ticket_conversion(self):
-        with patch(
-            "otai_otobo_znuny.otobo_znuny_ticket_system_service.otobo_ticket_to_unified_ticket"
-        ) as mock_convert:
+        with patch("otai_otobo_znuny.otobo_znuny_ticket_system_service.otobo_ticket_to_unified_ticket") as mock_convert:
             mock_convert.side_effect = lambda ticket: UnifiedTicket(
                 id=str(ticket.id),
                 subject=ticket.title,
@@ -91,9 +87,7 @@ class TestOTOBOZnunyTicketSystemService:
         assert service.client == mock_client
 
     def test_recreate_client(self, service, mock_client):
-        with patch(
-            "otai_otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyClient"
-        ) as MockClientClass:
+        with patch("otai_otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
             MockClientClass.return_value = mock_client
 
             result = service._recreate_client()

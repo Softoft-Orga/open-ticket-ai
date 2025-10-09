@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Literal
+from typing import Literal
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
@@ -13,6 +13,7 @@ from open_ticket_ai.core.template_rendering import JinjaRendererConfig, Template
 from open_ticket_ai.core.template_rendering.renderer_config import SpecificTemplateRendererConfig
 
 LogLevel = Literal["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+
 
 class FormatterConfig(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -66,11 +67,13 @@ class LoggingDictConfig(BaseModel):
     formatters: dict[str, FormatterConfig] = Field(default_factory=lambda: {})
     filters: dict[str, FilterConfig] = Field(default_factory=lambda: {})
 
+
 class GeneralConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
     # noinspection PyTypeHints
     template_renderer: SpecificTemplateRendererConfig = Field(default_factory=JinjaRendererConfig)
+
 
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=lambda: [])
