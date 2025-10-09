@@ -103,7 +103,8 @@ open_ticket_ai:
         level: INFO
         handlers: [console]
   defs: []
-  orchestrator: []
+  orchestrator:
+    runners: []
     """
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")

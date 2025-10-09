@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 from pathlib import Path
 from typing import Any
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
+from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.registerable import RegisterableConfig
 from open_ticket_ai.core.pipeline import OrchestratorConfig
 from open_ticket_ai.core.template_rendering import TemplateRendererConfig
@@ -21,9 +24,7 @@ class RawOpenTicketAIConfig(BaseModel):
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
 
 
-def load_config(path: str | Path, app_config: "AppConfig | None" = None) -> RawOpenTicketAIConfig:
-    from open_ticket_ai.core.config.app_config import AppConfig
-
+def load_config(path: str | Path, app_config: AppConfig | None = None) -> RawOpenTicketAIConfig:
     if app_config is None:
         app_config = AppConfig()
 
