@@ -53,6 +53,7 @@ def reset_dummy_pipes() -> None:
 @pytest.fixture
 def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
     from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
+
     jinja_renderer = JinjaRenderer(JinjaRendererConfig())
 
     def _resolve_class(import_path: str):

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 
-from open_ticket_ai.core.template_rendering import JinjaRenderer, TemplateRendererEnvConfig, JinjaRendererConfig
+from open_ticket_ai.core.template_rendering import JinjaRenderer, JinjaRendererConfig, TemplateRendererEnvConfig
 
 
 def test_jinja_renderer_backward_compatibility_default_params():

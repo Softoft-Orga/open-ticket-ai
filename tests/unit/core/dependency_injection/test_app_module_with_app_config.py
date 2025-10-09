@@ -98,9 +98,7 @@ different_key:
     assert config.plugins == ["from-different-key"]
 
 
-def test_app_module_without_config_path_uses_app_config_env_var(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_app_module_without_config_path_uses_app_config_env_var(tmp_path: Path, monkeypatch) -> None:
     config_content = """
 open_ticket_ai:
   plugins: []

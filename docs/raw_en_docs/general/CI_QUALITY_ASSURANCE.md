@@ -4,29 +4,72 @@ This document describes the automated quality assurance processes integrated int
 
 ## Overview
 
-The repository uses SonarCloud for continuous code quality analysis. The QA workflow automatically generates and uploads reports from:
+The repository uses a unified CI workflow that combines quality assurance, testing, and SonarCloud integration. The workflow automatically:
 
-- **pytest** (test coverage)
-- **ruff** (linting and code style)
-- **mypy** (static type checking)
+- **Runs tests** with pytest
+- **Auto-fixes and commits** ruff formatting issues (on push to main/dev branches)
+- **Generates reports** from pytest (coverage), ruff (linting), and mypy (type checking)
+- **Uploads to SonarCloud** for continuous quality analysis
 
-## Workflow: Quality Assurance SonarCloud
+## Workflow: CI Quality Assurance
 
 **File**: `.github/workflows/qa-tests.yml`
 
 **Triggers**:
-- Push to `dev` branch
+- Push to `dev` or `main` branches
 - Pull requests (opened, synchronized, reopened)
+
+**Key Features**:
+- Uses `python-version-file: pyproject.toml` to read Python version from project configuration
+- Auto-commits ruff formatting fixes on push to main/dev branches
+- Runs comprehensive quality checks (linting, type checking, tests)
+- Integrates with SonarCloud for continuous quality monitoring
 
 ### Workflow Steps
 
 #### 1. Environment Setup
 - Checkout repository with full git history (`fetch-depth: 0` for SonarCloud)
 - Install `uv` package manager
-- Set up Python 3.13
+- Set up Python using `python-version-file: pyproject.toml` (reads from `requires-python` field)
 - Install all project dependencies with `uv sync --locked --all-extras`
 
-#### 2. Test Coverage Generation
+#### 2. Lint and Auto-fix with Ruff
+
+```bash
+uv run ruff format .
+uv run ruff check . --fix
+```
+
+**Auto-commit**: On push to `dev` or `main` branches, any ruff auto-fixes are automatically committed and pushed back to the repository with the commit message: `style: apply ruff auto-fixes [skip ci]`
+
+This ensures code style consistency without manual intervention.
+
+#### 3. Check Ruff Compliance
+
+```bash
+uv run ruff format --check .
+uv run ruff check .
+```
+
+Verifies that all code meets ruff standards after auto-fixes.
+
+#### 4. Type Check with Mypy
+
+```bash
+uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src
+```
+
+Ensures all code has proper type annotations and passes strict type checking.
+
+#### 5. Run All Tests
+
+```bash
+uv run pytest -v
+```
+
+Runs all tests from the workspace (core and all packages).
+
+#### 6. Test Coverage Generation
 
 ```bash
 uv run pytest \
@@ -44,7 +87,7 @@ uv run pytest \
 - `packages/otai_hf_local/src/` - HuggingFace Local plugin
 - `packages/otai_otobo_znuny/src/` - OTOBO/Znuny plugin
 
-#### 3. Ruff Linting Report
+#### 7. Ruff Linting Report
 
 ```bash
 uv run ruff check . --output-format=sarif > ruff-report.sarif
@@ -61,7 +104,7 @@ Ruff checks for:
 
 See `.pyproject.toml` for the complete ruff configuration.
 
-#### 4. Mypy Type Checking
+#### 8. Mypy Type Checking
 
 ```bash
 uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src --no-error-summary > mypy-report.txt
@@ -75,7 +118,7 @@ Mypy validates:
 - Return types
 - Module imports
 
-#### 5. SonarCloud Scan
+#### 9. SonarCloud Scan
 
 The workflow uses `SonarSource/sonarcloud-scan-action@v4` to upload all generated reports to SonarCloud.
 
@@ -85,7 +128,7 @@ The workflow uses `SonarSource/sonarcloud-scan-action@v4` to upload all generate
 
 **SonarCloud Configuration**: See `sonar-project.properties`
 
-#### 6. Artifact Upload
+#### 10. Artifact Upload
 
 All reports are uploaded as GitHub Actions artifacts for review and debugging:
 
@@ -162,6 +205,22 @@ You can generate the same reports locally to preview quality metrics before push
 ```bash
 uv sync --all-extras
 ```
+
+### Auto-fix Code Style Issues
+
+The CI workflow automatically fixes and commits ruff issues on push to `dev` or `main` branches. You can run the same fixes locally:
+
+```bash
+uv run ruff format .
+uv run ruff check . --fix
+```
+
+This will automatically fix:
+- Code formatting issues
+- Import sorting
+- Other auto-fixable linting violations
+
+**Note**: The workflow uses `[skip ci]` in the commit message to prevent triggering another CI run after auto-fixes are committed.
 
 ### Generate Coverage Report
 

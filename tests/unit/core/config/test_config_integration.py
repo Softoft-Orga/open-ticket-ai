@@ -95,9 +95,7 @@ my_app:
     config_path = tmp_path / "custom.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    custom_app_config = AppConfig(
-        config_env_var="MY_APP_CONFIG", config_yaml_root_key="my_app"
-    )
+    custom_app_config = AppConfig(config_env_var="MY_APP_CONFIG", config_yaml_root_key="my_app")
 
     monkeypatch.setenv("MY_APP_CONFIG", str(config_path))
 

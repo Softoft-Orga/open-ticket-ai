@@ -23,9 +23,7 @@ custom_root:
     config_path = tmp_path / "test.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    app_config = AppConfig(
-        config_env_var="CUSTOM_CONFIG_VAR", config_yaml_root_key="custom_root"
-    )
+    app_config = AppConfig(config_env_var="CUSTOM_CONFIG_VAR", config_yaml_root_key="custom_root")
 
     os.environ["CUSTOM_CONFIG_VAR"] = str(config_path)
     try:

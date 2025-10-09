@@ -72,22 +72,22 @@ class PipeFactory:
         rendered_step_config["steps"] = registerable_config_raw.get("steps", [])
         return RenderedPipeConfig.model_validate(rendered_step_config)
 
-    def create_pipe(
-            self, parent_config_raw: RawPipeConfig, pipe_config_raw: RawPipeConfig, scope: Context
-    ) -> Pipe:
+    def create_pipe(self, parent_config_raw: RawPipeConfig, pipe_config_raw: RawPipeConfig, scope: Context) -> Pipe:
         self._logger.info("Creating pipe '%s' with config %s", pipe_config_raw["id"], pipe_config_raw)
         pipe_config = resolve_config(parent_config_raw, pipe_config_raw)
         rendered_config = self.render_pipe_config(pipe_config, scope)
         registerable = self.__create_registerable_instance(rendered_config, scope)
         if not isinstance(registerable, Pipe):
-            raise ValueError(f"Registerable with id '{pipe_config_raw["id"]}' is not a Pipe")
+            raise ValueError(f"Registerable with id '{pipe_config_raw['id']}' is not a Pipe")
         return registerable
 
     def __create_service_instance(self, registerable_config_raw: RegisterableConfig, scope: Context) -> Registerable:
         config_raw = self._template_renderer.render_recursive(registerable_config_raw, scope)
         return self.__create_registerable_instance(config_raw, scope)
 
-    def __create_registerable_instance(self, registerable_config_raw: RegisterableConfig, scope: Context) -> Registerable:
+    def __create_registerable_instance(
+        self, registerable_config_raw: RegisterableConfig, scope: Context
+    ) -> Registerable:
         registerable_config = RegisterableConfig.model_validate(registerable_config_raw)
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Registerable):

@@ -1,6 +1,5 @@
 import os
 from logging.config import dictConfig
-from pathlib import Path
 
 from injector import Binder, Module, multiprovider, provider, singleton
 
