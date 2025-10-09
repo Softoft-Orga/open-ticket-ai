@@ -42,7 +42,7 @@ class ConfigLoader:
             try:
                 raw_otai_config = RawOpenTicketAIConfig.model_validate(config_dict)
             except ValidationError as e:
-                self._logger.error(f"Validation error while Loading config from {config_path}")
-                raise e
+                self._logger.exception(f"Validation error while Loading config from {config_path}")
+                raise ValidationError(e) from e
         self._logger.info(f"Loaded config from {config_path}")
         return raw_otai_config

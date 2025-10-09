@@ -60,25 +60,29 @@ def resolve_config(parent_config: RawPipeConfig | None, pipe_config: RawPipeConf
 @singleton
 class PipeFactory:
     @inject
-    def __init__(self, template_renderer: TemplateRenderer, registerable_configs: list[RegisterableConfig]) -> None:
+    def __init__(self, template_renderer: TemplateRenderer, registerable_configs: list[RegisterableConfig]):
         self._logger = logging.getLogger(self.__class__.__name__)
         self._template_renderer = template_renderer
         self._registerable_configs = registerable_configs
 
     def render_pipe_config(self, registerable_config_raw: RawPipeConfig, scope: Context) -> RenderedPipeConfig:
-        renderable_config = registerable_config_raw.copy()
+        renderable_config = registerable_config_raw.model_copy()
         renderable_config["steps"] = []
         rendered_step_config = self._template_renderer.render_recursive(renderable_config, scope)
         rendered_step_config["steps"] = registerable_config_raw.get("steps", [])
         return RenderedPipeConfig.model_validate(rendered_step_config)
 
-    def create_pipe(self, parent_config_raw: RawPipeConfig, pipe_config_raw: RawPipeConfig, scope: Context) -> Pipe:
+    def create_pipe(self,
+                    parent_config_raw: RawPipeConfig | None,
+                    pipe_config_raw: RawPipeConfig,
+                    scope: Context
+                    ) -> Pipe:
         self._logger.info("Creating pipe '%s' with config %s", pipe_config_raw["id"], pipe_config_raw)
         pipe_config = resolve_config(parent_config_raw, pipe_config_raw)
         rendered_config = self.render_pipe_config(pipe_config, scope)
         registerable = self.__create_registerable_instance(rendered_config, scope)
         if not isinstance(registerable, Pipe):
-            raise ValueError(f"Registerable with id '{pipe_config_raw['id']}' is not a Pipe")
+            raise TypeError(f"Registerable with id '{pipe_config_raw['id']}' is not a Pipe")
         return registerable
 
     def __create_service_instance(self, registerable_config_raw: RegisterableConfig, scope: Context) -> Registerable:
@@ -86,12 +90,12 @@ class PipeFactory:
         return self.__create_registerable_instance(config_raw, scope)
 
     def __create_registerable_instance(
-        self, registerable_config_raw: RegisterableConfig, scope: Context
+            self, registerable_config_raw: RegisterableConfig, scope: Context
     ) -> Registerable:
         registerable_config = RegisterableConfig.model_validate(registerable_config_raw)
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Registerable):
-            raise ValueError(f"Class '{registerable_config.use}' is not a Registerable")
+            raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")
         kwargs: dict[str, Any] = {}
         kwargs |= self.__resolve_injects(registerable_config.injects, scope)
         kwargs["config_raw"] = registerable_config_raw

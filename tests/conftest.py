@@ -1,15 +1,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pytest
+from injector import Injector
 
-if TYPE_CHECKING:
-    from injector import Injector
-
-    from open_ticket_ai.core import RawOpenTicketAIConfig
-
+from open_ticket_ai.core import AppModule, RawOpenTicketAIConfig, load_config
 
 
 @pytest.fixture
@@ -57,15 +53,9 @@ open_ticket_ai:
 
 @pytest.fixture
 def app_injector(tmp_config: Path) -> Injector:
-    from injector import Injector
-
-    from open_ticket_ai.core import AppModule
-
     return Injector([AppModule(tmp_config)])
 
 
 @pytest.fixture
 def test_config(tmp_config: Path) -> RawOpenTicketAIConfig:
-    from open_ticket_ai.core import load_config
-
     return load_config(tmp_config)

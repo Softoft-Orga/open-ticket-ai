@@ -4,6 +4,8 @@ import asyncio
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
 
+import pytest
+
 from open_ticket_ai.core.pipeline import (
     Orchestrator,
     OrchestratorConfig,
@@ -26,9 +28,6 @@ def test_orchestrator_config_from_raw() -> None:
     assert len(config.runners) == 1
     assert config.runners[0].pipe["id"] == "demo"
     assert config.runners[0].interval_seconds == 1.0
-
-
-import pytest
 
 
 @pytest.mark.asyncio

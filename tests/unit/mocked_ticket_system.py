@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import asyncio
+from typing import Any
+
+from pydantic import BaseModel
+
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
@@ -19,7 +24,8 @@ class MockedTicketSystem(TicketSystemService):
     Maintains tickets and notes as dict objects in memory.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, config: dict[str, Any] | BaseModel, *args, **kwargs) -> None:
+        super().__init__(config, *args, **kwargs)
         self._tickets: dict[str, UnifiedTicket] = {}
         self._ticket_counter: int = 1
 
@@ -61,16 +67,16 @@ class MockedTicketSystem(TicketSystemService):
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         """Find tickets matching the search criteria."""
-        results = []
-
-        for ticket in self._tickets.values():
-            if self._matches_criteria(ticket, criteria):
-                results.append(ticket.model_copy(deep=True))
+        results = [
+            ticket.model_copy(deep=True)
+            for ticket in self._tickets.values()
+            if self._matches_criteria(ticket, criteria)
+        ]
 
         # Apply pagination
         offset = criteria.offset or 0
         limit = criteria.limit or 10
-        return results[offset : offset + limit]
+        return results[offset: offset + limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         """Find the first ticket matching the criteria."""
@@ -118,7 +124,6 @@ class MockedTicketSystem(TicketSystemService):
     def add_test_ticket(self, **kwargs) -> str:
         """Add a test ticket with provided fields. Returns ticket ID."""
         ticket = UnifiedTicket(**kwargs)
-        import asyncio
 
         return asyncio.run(self.create_ticket(ticket))
 

@@ -1,14 +1,10 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
 
-from . import Context
-from .pipe import Pipe
-
-if TYPE_CHECKING:
-    from .orchestrator_config import RunnerDefinition
-    from .pipe_factory import PipeFactory
+from open_ticket_ai.core.pipeline import Context, RunnerDefinition
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 
 
 class ScheduledPipeRunner:
@@ -20,7 +16,8 @@ class ScheduledPipeRunner:
     async def execute(self) -> None:
         self._logger.info("Executing pipe '%s'", self.definition.pipe_id)
         try:
-            pipe = self.pipe_factory.create_pipe(parent_config_raw={}, pipe_config_raw=self.definition.pipe, scope={})
+            pipe = self.pipe_factory.create_pipe(parent_config_raw=None, pipe_config_raw=self.definition.pipe,
+                                                 scope=Context())
             if pipe is None:
                 self._logger.error("Failed to create pipe '%s'", self.definition.pipe_id)
                 return
@@ -40,5 +37,8 @@ class ScheduledPipeRunner:
                     self.definition.pipe_id,
                     failure_message,
                 )
-        except Exception as e:
-            self._logger.exception("Pipe '%s' execution failed with exception: %s", self.definition.pipe_id, e)
+        except Exception:
+            self._logger.exception(
+                "Pipe '%s' execution failed with exception",
+                self.definition.pipe_id,
+            )

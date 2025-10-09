@@ -42,4 +42,4 @@ class JinjaRenderer(TemplateRenderer):
             self._logger.exception("Template rendering failed")
             if fail_silently:
                 return template_str
-            raise e
+            raise RuntimeError(e) from e

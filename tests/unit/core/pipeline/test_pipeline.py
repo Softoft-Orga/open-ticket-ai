@@ -8,6 +8,7 @@ from open_ticket_ai.core.pipeline.context import Context
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
 
 class DummyChildPipe(Pipe):
@@ -52,7 +53,6 @@ def reset_dummy_pipes() -> None:
 
 @pytest.fixture
 def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
-    from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
     jinja_renderer = JinjaRenderer(JinjaRendererConfig())
 
