@@ -1,5 +1,5 @@
-name: Feature Request
-description: Suggest a new feature for Open Ticket AI
+name: Feature Request (General)
+description: Suggest a new feature or enhancement for Open Ticket AI (not a specific pipe/plugin)
 title: "[Feature] "
 labels: ["enhancement", "needs-triage"]
 body:
@@ -7,14 +7,37 @@ body:
     attributes:
       value: |
         ## Feature Request
-        Help us understand what you'd like to see in Open Ticket AI.
+        Suggest a new feature or enhancement for Open Ticket AI.
+        
+        **Note**: If you're requesting a new pipe or plugin, please use the "Pipe or Plugin Request" template instead.
+
+  - type: dropdown
+    id: feature-area
+    attributes:
+      label: Feature Area
+      description: Which area of the system does this feature relate to?
+      options:
+        - Core Framework/Architecture
+        - Configuration System
+        - CLI Tool
+        - Orchestrator/Scheduler
+        - Template Rendering
+        - Dependency Injection
+        - Testing Framework
+        - Documentation/Examples
+        - Performance/Optimization
+        - Security
+        - Developer Experience
+        - Other
+    validations:
+      required: true
 
   - type: textarea
     id: description
     attributes:
       label: Feature Description
       description: Describe the feature you'd like to see
-      placeholder: "I'd like a pipe that can..."
+      placeholder: "Add support for hot-reloading configuration changes..."
     validations:
       required: true
 
@@ -23,7 +46,43 @@ body:
     attributes:
       label: Use Case
       description: How would you use this feature?
-      placeholder: "In our workflow, we need to..."
+      placeholder: "In our production environment, we need to update configs without restarting..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-limitation
+    attributes:
+      label: Current Limitation
+      description: What can't you do today that this feature would enable?
+      placeholder: "Currently, we have to restart the orchestrator to pick up config changes..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: How do you envision this working?
+      placeholder: "Implement a file watcher that detects config changes and reloads..."
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered other approaches?
+      placeholder: "Considered using signals, but that requires manual intervention..."
+
+  - type: dropdown
+    id: breaking-change
+    attributes:
+      label: Breaking Change
+      description: Would this require breaking changes to the API or config format?
+      options:
+        - No breaking changes expected
+        - Possibly breaking (needs discussion)
+        - Yes, breaking change required
+        - Unsure
     validations:
       required: true
 
@@ -33,11 +92,11 @@ body:
       label: Documentation Requirements
       description: What documentation will this feature need?
       options:
-        - label: New pipe documentation (with config examples)
+        - label: User documentation/guide
         - label: Configuration schema updates
         - label: API reference updates (docstrings only)
         - label: Migration guide (if breaking change)
-        - label: Tutorial/guide updates
+        - label: Configuration examples
         - label: README updates
 
   - type: textarea
@@ -47,20 +106,30 @@ body:
       description: Show how this would be configured
       render: yaml
       placeholder: |
-        - id: new_feature
-          use: open_ticket_ai.NewFeaturePipe
-          setting: value
+        open_ticket_ai:
+          general_config:
+            hot_reload: true
+            watch_interval: 5000
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information, links, or references
+      placeholder: "Similar to how Django handles this with autoreload..."
 
   - type: checkboxes
     id: implementation
     attributes:
       label: Implementation Checklist (for maintainers)
       options:
+        - label: Design review and approval
         - label: Code implementation
         - label: Unit tests
         - label: Integration tests
         - label: Docstrings (Google style)
         - label: User documentation updated
         - label: Configuration examples tested
+        - label: Breaking change notice (if applicable)
         - label: CHANGELOG.md entry
         - label: Schema regenerated (if config changed)

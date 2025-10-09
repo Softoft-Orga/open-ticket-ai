@@ -259,6 +259,18 @@ See [CONTRIBUTING.md](general/CONTRIBUTING.md) for comprehensive guidance on:
 - Testing and quality assurance
 - Contribution workflow
 
+### Reporting Issues and Requesting Features
+
+Open Ticket AI provides structured issue templates to help you report bugs, request features, or suggest improvements:
+
+- **Bug Report** - For unexpected behavior, errors, or crashes
+- **Documentation Request** - For documentation improvements
+- **Configuration Issue** - For YAML config, Jinja2, or DI problems
+- **Pipe or Plugin Request** - For new pipes or plugin proposals
+- **Feature Request (General)** - For general enhancements
+
+See [ISSUE_TEMPLATES.md](general/ISSUE_TEMPLATES.md) for detailed guidance on using these templates.
+
 ### Plugin API Compatibility
 
 The core package defines a Plugin API version that ensures compatibility between the core and plugins.

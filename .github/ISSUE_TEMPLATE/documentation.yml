@@ -1,0 +1,112 @@
+name: Documentation Request
+description: Request improvements, clarifications, or additions to documentation
+title: "[Docs] "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Documentation Request
+        Help us improve the documentation for Open Ticket AI.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation needs work?
+      options:
+        - User Guide / Tutorial
+        - Configuration Examples
+        - API Reference / Docstrings
+        - Pipeline / Pipe Documentation
+        - Plugin Development Guide
+        - Architecture / Design Docs
+        - README / Getting Started
+        - CLI Tool Documentation
+        - Migration Guide
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current State
+      description: What's currently documented (or missing)?
+      placeholder: "The pipeline documentation mentions steps but doesn't explain..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-improvement
+    attributes:
+      label: Proposed Improvement
+      description: What should be added, changed, or clarified?
+      placeholder: "Add a section explaining how depends_on works with examples..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected-area
+    attributes:
+      label: Affected Component/Area
+      description: Which component does this documentation relate to?
+      multiple: true
+      options:
+        - Core Pipeline/Orchestrator
+        - Base Pipes
+        - Configuration System (YAML)
+        - Template Rendering (Jinja2)
+        - Dependency Injection
+        - Plugins (general)
+        - Plugin - HuggingFace Local
+        - Plugin - OTOBO/Znuny
+        - CLI Tool
+        - Installation/Setup
+        - Deployment
+        - Testing
+        - Contributing
+        - Other
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case / Context
+      description: Why is this documentation needed? Who would benefit?
+      placeholder: "New users trying to set up custom pipes need to understand..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: example-content
+    attributes:
+      label: Example Content (Optional)
+      description: If you have suggestions for content, examples, or code snippets, share them here
+      placeholder: |
+        Example YAML config:
+        ```yaml
+        - id: step_a
+          use: "..."
+        - id: step_b
+          use: "..."
+          depends_on: step_a
+        ```
+
+  - type: input
+    id: affected-file
+    attributes:
+      label: Affected File/Page (if known)
+      description: Which documentation file needs updating?
+      placeholder: "docs/vitepress_docs/docs_src/en/developers/pipeline.md"
+
+  - type: checkboxes
+    id: implementation
+    attributes:
+      label: Implementation Checklist (for maintainers)
+      options:
+        - label: Content written/updated
+        - label: Code examples tested
+        - label: Screenshots/diagrams added (if applicable)
+        - label: Cross-references updated
+        - label: Reviewed for accuracy
+        - label: Published/deployed
