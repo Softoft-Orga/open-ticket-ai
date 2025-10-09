@@ -21,10 +21,15 @@ class RawOpenTicketAIConfig(BaseModel):
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
 
 
-def load_config(path: str | Path) -> RawOpenTicketAIConfig:
+def load_config(path: str | Path, app_config: "AppConfig | None" = None) -> RawOpenTicketAIConfig:
+    from open_ticket_ai.core.config.app_config import AppConfig
+
+    if app_config is None:
+        app_config = AppConfig()
+
     with open(path, encoding="utf-8") as fh:
         data = yaml.safe_load(fh)
 
-    if "open_ticket_ai" not in data:
-        raise ValueError("Config file must have 'open_ticket_ai' as root key")
-    return RawOpenTicketAIConfig(**data["open_ticket_ai"])
+    if app_config.config_yaml_root_key not in data:
+        raise ValueError(f"Config file must have '{app_config.config_yaml_root_key}' as root key")
+    return RawOpenTicketAIConfig(**data[app_config.config_yaml_root_key])

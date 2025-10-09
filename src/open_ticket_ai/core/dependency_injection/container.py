@@ -4,6 +4,7 @@ from pathlib import Path
 
 from injector import Binder, Module, multiprovider, provider, singleton
 
+from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
@@ -20,19 +21,25 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 
 
 class AppModule(Module):
-    def __init__(self, config_path: str | os.PathLike | None = None):
-        """Initialize AppModule with optional config path.
+    def __init__(self, config_path: str | os.PathLike | None = None, app_config: AppConfig | None = None):
+        """Initialize AppModule with optional config path and app config.
 
         Args:
-            config_path: Path to config.yml. If None, uses OPEN_TICKET_AI_CONFIG
-                        environment variable or falls back to default location.
+            config_path: Path to config.yml. If None, uses environment variable
+                        specified in app_config or falls back to default location.
+            app_config: AppConfig instance. If None, uses default AppConfig.
         """
+        if app_config is None:
+            app_config = AppConfig()
+        self.app_config = app_config
+
         if config_path is None:
-            config_path = os.getenv("OPEN_TICKET_AI_CONFIG", Path.cwd() / "config.yml")
+            config_path = os.getenv(app_config.config_env_var, app_config.get_default_config_path())
         self.config_path = config_path
 
     def configure(self, binder: Binder):
-        config_loader = ConfigLoader(self.config_path)
+        binder.bind(AppConfig, to=self.app_config, scope=singleton)
+        config_loader = ConfigLoader(self.app_config, self.config_path)
         config = config_loader.load_config()
         dictConfig(config.general_config.logging)
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
