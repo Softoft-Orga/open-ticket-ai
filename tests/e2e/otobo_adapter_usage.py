@@ -4,14 +4,13 @@ import os
 import sys
 
 from dotenv import load_dotenv
-from open_ticket_ai import OTOBOAdapter
 from otobo_znuny.domain_models.auth_data import AuthData
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig as OTOBOClientConfig
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
 from otobo_znuny.otobo_client import OTOBOClient
 
-from open_ticket_ai.core.ticket_system_integration import TicketSystemService
-from open_ticket_ai.core.ticket_system_integration import TicketSearchCriteria, UnifiedQueue
+from open_ticket_ai import OTOBOAdapter
+from open_ticket_ai.core.ticket_system_integration import TicketSearchCriteria, TicketSystemService, UnifiedQueue
 
 
 def create_ticket_system_adapter() -> TicketSystemService:

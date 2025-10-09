@@ -1,6 +1,5 @@
 import pytest
 
-
 pytest.skip("typer is not a core dependency, skipping CLI tests", allow_module_level=True)
 
 runner = CliRunner()

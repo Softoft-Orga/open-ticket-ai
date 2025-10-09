@@ -1,6 +1,5 @@
 import pytest
 
-
 pytest.skip("Jinja registry functions do not exist in src", allow_module_level=True)
 
 

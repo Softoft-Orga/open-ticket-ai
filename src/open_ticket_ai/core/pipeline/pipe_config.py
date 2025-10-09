@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import enum
 from collections.abc import Iterable
 from functools import reduce
 from typing import Any, Self
@@ -8,6 +7,7 @@ from typing import Any, Self
 from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.registerable import RegisterableConfig
+
 
 class RenderedPipeConfig(RegisterableConfig):
     model_config = ConfigDict(extra="allow")
