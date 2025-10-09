@@ -7,7 +7,6 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from injector import inject, singleton
 
-
 from .orchestrator_config import OrchestratorConfig, RunnerDefinition
 from .pipe_factory import PipeFactory
 from .scheduled_runner import ScheduledPipeRunner

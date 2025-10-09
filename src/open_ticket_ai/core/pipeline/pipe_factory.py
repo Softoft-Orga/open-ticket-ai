@@ -7,7 +7,7 @@ from typing import Any
 
 from injector import inject, singleton
 
-from open_ticket_ai.core.config.registerable import RegisterableConfig, Registerable
+from open_ticket_ai.core.config.registerable import Registerable, RegisterableConfig
 from open_ticket_ai.core.pipeline import Context
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer

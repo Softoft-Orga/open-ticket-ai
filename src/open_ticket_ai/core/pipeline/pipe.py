@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
 from abc import ABC, abstractmethod
+from typing import Any
 
 from ..config.registerable import Registerable
 from .context import Context
