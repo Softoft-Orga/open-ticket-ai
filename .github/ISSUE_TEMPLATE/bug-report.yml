@@ -33,8 +33,6 @@ body:
         - Plugin - OTOBO/Znuny Integration
         - CLI Tool
         - Other/Unknown
-    validations:
-      required: true
 
   - type: textarea
     id: steps-to-reproduce
@@ -45,8 +43,6 @@ body:
         1. Configure pipe with...
         2. Run orchestrator...
         3. See error...
-    validations:
-      required: true
 
   - type: textarea
     id: expected-behavior
@@ -54,8 +50,6 @@ body:
       label: Expected Behavior
       description: What you expected to happen
       placeholder: "The pipe should..."
-    validations:
-      required: true
 
   - type: textarea
     id: actual-behavior
@@ -63,8 +57,6 @@ body:
       label: Actual Behavior
       description: What actually happened
       placeholder: "Instead, the pipe..."
-    validations:
-      required: true
 
   - type: textarea
     id: config
@@ -99,8 +91,6 @@ body:
       label: Open Ticket AI Version
       description: Which version are you using? (run `otai --version` or check pyproject.toml)
       placeholder: "1.0.0rc1"
-    validations:
-      required: true
 
   - type: input
     id: python-version
@@ -108,8 +98,6 @@ body:
       label: Python Version
       description: Which Python version? (run `python --version`)
       placeholder: "3.13.0"
-    validations:
-      required: true
 
   - type: dropdown
     id: installation-method
@@ -121,8 +109,6 @@ body:
         - uv sync (development)
         - Docker
         - Other
-    validations:
-      required: true
 
   - type: textarea
     id: additional-context

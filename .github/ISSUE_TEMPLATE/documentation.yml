@@ -25,8 +25,6 @@ body:
         - CLI Tool Documentation
         - Migration Guide
         - Other
-    validations:
-      required: true
 
   - type: textarea
     id: current-state
@@ -34,8 +32,6 @@ body:
       label: Current State
       description: What's currently documented (or missing)?
       placeholder: "The pipeline documentation mentions steps but doesn't explain..."
-    validations:
-      required: true
 
   - type: textarea
     id: proposed-improvement
@@ -43,8 +39,6 @@ body:
       label: Proposed Improvement
       description: What should be added, changed, or clarified?
       placeholder: "Add a section explaining how depends_on works with examples..."
-    validations:
-      required: true
 
   - type: dropdown
     id: affected-area
@@ -74,8 +68,6 @@ body:
       label: Use Case / Context
       description: Why is this documentation needed? Who would benefit?
       placeholder: "New users trying to set up custom pipes need to understand..."
-    validations:
-      required: true
 
   - type: textarea
     id: example-content

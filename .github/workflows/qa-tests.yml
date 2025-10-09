@@ -43,7 +43,7 @@ jobs:
                 continue-on-error: true
             
             -   name: SonarCloud Scan
-                uses: SonarSource/sonarcloud-scan-action@v4
+                uses: sonarsource/sonarcloud-github-action@v4
                 env:
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
