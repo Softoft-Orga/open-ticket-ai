@@ -66,3 +66,4 @@ Tests for base components should verify:
 - Base implementations work correctly
 - Subclasses can properly extend base behavior
 - Mixins compose correctly without conflicts
+4
