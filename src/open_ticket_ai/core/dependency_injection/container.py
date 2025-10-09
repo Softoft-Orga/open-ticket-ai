@@ -34,7 +34,7 @@ class AppModule(Module):
     def configure(self, binder: Binder):
         config_loader = ConfigLoader()
         config = config_loader.load_config(self.config_path)
-        dictConfig(config.general_config.logging)
+        dictConfig(config.general_config.logging.model_dump())
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(PipeFactory, scope=singleton)
 

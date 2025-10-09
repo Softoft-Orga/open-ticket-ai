@@ -1,6 +1,6 @@
-from typing import Literal
+from typing import Literal, Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict, TypeAdapter
 
 
 class TemplateRendererEnvConfig(BaseModel):
@@ -10,6 +10,7 @@ class TemplateRendererEnvConfig(BaseModel):
 
 
 class TemplateRendererConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
     type: str = Field(..., description="Type of template renderer")
     env_config: TemplateRendererEnvConfig = Field(
         default_factory=TemplateRendererEnvConfig, description="Environment variable configuration"
@@ -21,3 +22,8 @@ class JinjaRendererConfig(TemplateRendererConfig):
     autoescape: bool = Field(default=False, description="Enable autoescaping in Jinja2")
     trim_blocks: bool = Field(default=True, description="Trim blocks in Jinja2")
     lstrip_blocks: bool = Field(default=True, description="Left-strip blocks in Jinja2")
+
+class MustacheRendererConfig(TemplateRendererConfig):
+    type: Literal["mustache"] = "mustache"
+
+SpecificTemplateRendererConfig = Annotated[JinjaRendererConfig | MustacheRendererConfig, Field(discriminator="type")]
