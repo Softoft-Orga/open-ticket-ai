@@ -13,6 +13,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
 )
 from tests.unit.mocked_ticket_system import MockedTicketSystem
+
 pytestmark = [pytest.mark.unit]
 
 

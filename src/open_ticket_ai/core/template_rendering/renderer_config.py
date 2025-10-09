@@ -1,6 +1,6 @@
-from typing import Literal, Annotated
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, ConfigDict, TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 
 class TemplateRendererEnvConfig(BaseModel):

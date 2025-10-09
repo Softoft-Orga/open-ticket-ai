@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.registerable import RegisterableConfig
 from open_ticket_ai.core.pipeline import OrchestratorConfig
-from open_ticket_ai.core.template_rendering import TemplateRendererConfig, JinjaRendererConfig
+from open_ticket_ai.core.template_rendering import JinjaRendererConfig, TemplateRendererConfig
 from open_ticket_ai.core.template_rendering.renderer_config import SpecificTemplateRendererConfig
 
 LogLevel = Literal["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]

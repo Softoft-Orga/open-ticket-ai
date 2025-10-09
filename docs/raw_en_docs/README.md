@@ -372,7 +372,11 @@ The CI pipeline runs different test stages:
    - Contract tests: All tests in `tests/contract/` - validates all installed plugins against core API
    - E2E tests: All tests in `tests/e2e/` - complete workflow testing
 
-For detailed test structure and best practices, see [TESTING.md](general/TESTING.md).
+For detailed test structure and best practices, see:
+- [Testing Guide](raw_en_docs/en/guides/testing.md) - Comprehensive testing guide with test structure, fixtures, and patterns
+- [FIXTURES.md](../FIXTURES.md) - Complete fixture reference
+- [FIXTURE_TEMPLATES.md](../FIXTURE_TEMPLATES.md) - Common fixture templates
+- [AGENTS.md](../../AGENTS.md) - Authoritative test structure rules
 
 #### CI Quality Assurance
 

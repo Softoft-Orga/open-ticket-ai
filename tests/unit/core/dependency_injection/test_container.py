@@ -6,8 +6,9 @@ import pytest
 import yaml
 from injector import Injector
 
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig, GeneralConfig
+from open_ticket_ai.core.config.config_models import GeneralConfig, RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.container import AppModule
+
 
 @pytest.fixture(scope="function")
 def test_model_to_yaml_direct_dump(tmp_path: Path):
