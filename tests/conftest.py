@@ -11,20 +11,6 @@ if TYPE_CHECKING:
     from open_ticket_ai.core import RawOpenTicketAIConfig
 
 
-@pytest.fixture
-def mock_pipe_config():
-    """Create a mock pipe configuration dictionary for testing.
-
-    Returns a dictionary that can be used to initialize pipes in tests.
-
-    Example:
-        def test_something(mock_pipe_config):
-            config = mock_pipe_config
-            config["field"] = "value"
-            my_pipe = MyPipe(config)
-    """
-    return {"name": "test_pipe", "use": "TestPipe", "when": True, "steps": []}
-
 
 @pytest.fixture
 def mock_ticket_system_config():
