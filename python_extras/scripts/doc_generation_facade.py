@@ -17,10 +17,9 @@ from pathlib import Path
 
 import typer
 from mdxlate.translator import Translator
+from open_ticket_ai.core.util.path_util import find_python_code_root_path
 from openai import AsyncOpenAI
 from rich.console import Console
-
-from open_ticket_ai.core.util.path_util import find_python_code_root_path
 from src.scripts import ReadmeUpdater
 from src.scripts.doc_generation.add_docstrings import DocstringGenerator
 from src.scripts.doc_generation.generate_api_reference import generate_documentation
