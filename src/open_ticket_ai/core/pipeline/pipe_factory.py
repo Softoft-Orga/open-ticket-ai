@@ -32,11 +32,18 @@ CONTROL_KEYS = {
     "steps",
     "depends_on",
     "if",
+    "params",
 }
 
 
 def extract_config_fields(raw: dict[str, Any]) -> dict[str, Any]:
-    return {k: v for k, v in raw.items() if k not in CONTROL_KEYS}
+    result: dict[str, Any] = {}
+    legacy_fields = {k: v for k, v in raw.items() if k not in CONTROL_KEYS}
+    if legacy_fields:
+        result.update(legacy_fields)
+    if "params" in raw and raw["params"]:
+        result["params"] = raw["params"]
+    return result
 
 
 def deep_merge(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
@@ -60,9 +67,13 @@ def resolve_config(parent_config: RawPipeConfig | None, pipe_config: RawPipeConf
 
 def render_base_model(config: BaseModel, scope: PipeContext, renderer: TemplateRenderer) -> dict[str, Any]:
     config_dict = config.model_dump()
-    config_fields_raw = {k: v for k, v in config_dict.items() if k in CONTROL_KEYS}
+    config_fields_raw = {k: v for k, v in config_dict.items() if k in CONTROL_KEYS and k != "params"}
     config_dict_without_fields = {k: v for k, v in config_dict.items() if k not in CONTROL_KEYS}
     rendered_config_dict = renderer.render_recursive(config_dict_without_fields, scope)
+
+    if "params" in config_dict:
+        rendered_params = renderer.render_recursive(config_dict["params"], scope)
+        rendered_config_dict["params"] = rendered_params
 
     rendered_config_dict.update(config_fields_raw)
     return rendered_config_dict
