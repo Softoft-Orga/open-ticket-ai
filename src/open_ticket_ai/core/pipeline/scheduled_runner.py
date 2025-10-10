@@ -17,10 +17,11 @@ class ScheduledPipeRunner:
     async def execute(self) -> None:
         self._logger.info("Executing pipe '%s'", self.definition.pipe_id)
         try:
-            pipe = self.pipe_factory.create_pipe(parent_config=None, pipe_config_raw=self.definition.pipe,
-                                                 scope=PipeContext(
-                                                     params=self.definition.pipe.model_dump()
-                                                 ))
+            pipe = self.pipe_factory.create_pipe(
+                parent_config=None,
+                pipe_config_raw=self.definition.pipe,
+                scope=PipeContext(params=self.definition.pipe.model_dump()),
+            )
             if pipe is None:
                 self._logger.error("Failed to create pipe '%s'", self.definition.pipe_id)
                 return
