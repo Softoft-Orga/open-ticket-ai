@@ -53,7 +53,6 @@ def reset_dummy_pipes() -> None:
 
 @pytest.fixture
 def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
-
     jinja_renderer = JinjaRenderer(JinjaRendererConfig())
 
     def _resolve_class(import_path: str):

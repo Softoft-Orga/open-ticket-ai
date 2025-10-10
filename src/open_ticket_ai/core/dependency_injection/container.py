@@ -34,10 +34,8 @@ class AppModule(Module):
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
         config_loader = ConfigLoader(self.app_config)
         config = config_loader.load_config(self.config_path)
-        print(config.general_config.logging.model_dump_json(indent=4, by_alias=True,
-                                                            exclude_none=True))
-        dictConfig(config.general_config.logging.model_dump(by_alias=True,
-                                                            exclude_none=True))
+        print(config.general_config.logging.model_dump_json(indent=4, by_alias=True, exclude_none=True))
+        dictConfig(config.general_config.logging.model_dump(by_alias=True, exclude_none=True))
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(PipeFactory, scope=singleton)
 

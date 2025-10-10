@@ -87,7 +87,7 @@ class PipeFactory:
                     scope: PipeContext
                     ) -> Pipe:
         self._logger.debug("Creating pipe with parent config: %s", parent_config)
-        self._logger.debug("Creating pipe with config: %s", pipe_config_raw )
+        self._logger.debug("Creating pipe with config: %s", pipe_config_raw)
         self._logger.info("Creating pipe '%s' with config %s", pipe_config_raw.id, pipe_config_raw)
         pipe_config = resolve_config(parent_config, pipe_config_raw)
         rendered_config = self.render_pipe_config(pipe_config, scope)
@@ -96,16 +96,16 @@ class PipeFactory:
             raise TypeError(f"Registerable with id '{pipe_config_raw.id}' is not a Pipe")
         return registerable
 
-    def __create_service_instance(self,
-                                  registerable_config_raw: RegisterableConfig,
-                                  scope: PipeContext) -> Registerable:
+    def __create_service_instance(
+        self, registerable_config_raw: RegisterableConfig, scope: PipeContext
+    ) -> Registerable:
         config = RegisterableConfig.model_validate(
             self._template_renderer.render_recursive(registerable_config_raw, scope)
         )
         return self.__create_registerable_instance(config, scope)
 
     def __create_registerable_instance(
-            self, registerable_config: RegisterableConfig, scope: PipeContext
+        self, registerable_config: RegisterableConfig, scope: PipeContext
     ) -> Registerable:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Registerable):

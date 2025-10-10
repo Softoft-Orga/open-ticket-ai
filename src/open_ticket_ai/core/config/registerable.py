@@ -8,6 +8,7 @@ class Registerable:
     def __init__(self, config: dict[str, Any] | BaseModel, *args, **kwargs):
         pass
 
+
 class RegisterableConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     uid: str = Field(default_factory=lambda: uuid.uuid4().hex)
