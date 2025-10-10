@@ -85,7 +85,10 @@ class Orchestrator:
         try:
             while self._scheduler.running:
                 await asyncio.sleep(1)
-        except (KeyboardInterrupt, SystemExit):
-            self._logger.info("Shutdown signal received")
+        except (KeyboardInterrupt, SystemExit) as e:
+            self._logger.info("%s received; shutting down orchestrator", e.__class__.__name__)
+            self._logger.info("Shutdown signal received; Ending orchestrator")
+            self.stop()
+
         finally:
             self.stop()
