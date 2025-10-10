@@ -27,7 +27,7 @@ class Orchestrator:
     def _create_runner(self, definition: RunnerDefinition) -> ScheduledPipeRunner:
         return ScheduledPipeRunner(definition, self._pipe_factory)
 
-    async def start(self) -> None:
+    def start(self) -> None:
         """Start the orchestrator and all scheduled runners."""
         if self._scheduler.running:
             self._logger.debug("Orchestrator already running")
@@ -67,7 +67,7 @@ class Orchestrator:
         self._scheduler.start()
         self._logger.info("Orchestrator started successfully")
 
-    async def stop(self) -> None:
+    def stop(self) -> None:
         """Stop the orchestrator and all scheduled runners gracefully."""
         if not self._scheduler.running:
             self._logger.debug("Orchestrator stop requested but it is not running")
@@ -80,7 +80,7 @@ class Orchestrator:
 
     async def run(self) -> None:
         """Start the orchestrator and keep it running. Blocks until shutdown."""
-        await self.start()
+        self.start()
 
         try:
             while self._scheduler.running:
@@ -88,4 +88,4 @@ class Orchestrator:
         except (KeyboardInterrupt, SystemExit):
             self._logger.info("Shutdown signal received")
         finally:
-            await self.stop()
+            self.stop()
