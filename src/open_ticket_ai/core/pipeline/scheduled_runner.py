@@ -19,7 +19,7 @@ class ScheduledPipeRunner:
         try:
             pipe = self.pipe_factory.create_pipe(parent_config=None, pipe_config_raw=self.definition.pipe,
                                                  scope=PipeContext(
-                                                     config=self.definition.pipe.model_dump()
+                                                     params=self.definition.pipe.model_dump()
                                                  ))
             if pipe is None:
                 self._logger.error("Failed to create pipe '%s'", self.definition.pipe_id)

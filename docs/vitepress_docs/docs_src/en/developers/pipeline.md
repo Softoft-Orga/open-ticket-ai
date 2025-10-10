@@ -84,7 +84,7 @@ fields are:
 ## Execution Model
 
 1. The orchestrator selects the next schedule entry whose `run_every_milli_seconds` interval has elapsed.
-2. The associated `pipe` definition is rendered with a fresh `Context` (`context.config` contains the schedule entry;
+2. The associated `pipe` definition is rendered with a fresh `Context` (`context.params` contains the schedule entry;
    `context.pipes`
    starts empty).
 3. For each pipe or step:

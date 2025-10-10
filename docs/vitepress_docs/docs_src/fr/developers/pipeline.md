@@ -68,7 +68,7 @@ Chaque pipe (y compris les étapes imbriquées) est validé sous forme de `Regis
 ## Modèle d'exécution
 
 1. L'orchestrateur sélectionne l'entrée de planning dont l'intervalle `run_every_milli_seconds` vient d'expirer.
-2. La définition `pipe` correspondante est rendue avec un `Context` vierge (`context.config` contient l'entrée de planning, `context.pipes` est vide).
+2. La définition `pipe` correspondante est rendue avec un `Context` vierge (`context.params` contient l'entrée de planning, `context.pipes` est vide).
 3. Pour chaque pipe ou étape :
    - L'expression `_if` est évaluée ; si elle vaut `False`, la pipe est passée.
    - Les dépendances listées dans `depends_on` sont vérifiées en consultant les valeurs `PipeResult.success` déjà enregistrées.

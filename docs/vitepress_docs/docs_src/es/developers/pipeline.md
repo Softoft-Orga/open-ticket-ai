@@ -66,7 +66,7 @@ Cada pipe (incluidos los pasos anidados) se valida como `RegisterableConfig`/`Re
 ## Modelo de ejecución
 
 1. El orquestador elige la siguiente entrada cuyo intervalo `run_every_milli_seconds` haya expirado.
-2. La definición `pipe` asociada se renderiza con un `Context` nuevo (`context.config` contiene la entrada de calendario; `context.pipes` comienza vacío).
+2. La definición `pipe` asociada se renderiza con un `Context` nuevo (`context.params` contiene la entrada de calendario; `context.pipes` comienza vacío).
 3. Para cada pipe o paso:
    - Se evalúa la expresión `_if`. Si es falsa, se salta la pipe.
    - Se comprueban las dependencias listadas en `depends_on` revisando los valores `PipeResult.success` anteriores.
