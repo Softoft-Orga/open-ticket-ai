@@ -34,3 +34,21 @@ Having Real branches:
 
 
 ````
+
+
+
+
+Idea Predefined Templates / Presets
+
+````yaml
+
+- id: test_example
+  use: open_ticket_ai.complex_pipe_builder
+  build_pipe: "{{
+  from_template("ticket_classification")
+  .with("fetch_ticket_by", { queue: { name: "Support" })
+  .with("classify_ticket", { model: "gpt-4", prompt: "Classify the ticket" })
+  .with("update_ticket", { status: "classified" })
+  
+  }}"
+  

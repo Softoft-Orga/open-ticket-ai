@@ -4,7 +4,11 @@ from typing import Any
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
-
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    pipeline,
+)
 
 class HFLocalTextClassificationPipeConfig(RenderedPipeConfig):
     model: str
@@ -26,14 +30,10 @@ class HFLocalTextClassificationPipe(Pipe):
     @staticmethod
     @cache
     def _load_pipeline(model_name: str, token: str | None) -> Any:
-        from transformers import (  # type: ignore[attr-defined]
-            AutoModelForSequenceClassification,
-            AutoTokenizer,
-            pipeline,
-        )
+
 
         tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)
-        model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)  # type: ignore[no-untyped-call]
+        model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 
     async def _process(self) -> PipeResult:

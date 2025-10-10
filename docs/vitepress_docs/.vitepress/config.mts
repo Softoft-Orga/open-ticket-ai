@@ -23,6 +23,8 @@ export default defineConfig({
     title: 'Open Ticket AI',
     srcDir: './docs_src',
     appearance: 'force-dark',
+    ignoreDeadLinks: true,
+
     head: [
         [
             'link',
