@@ -4,9 +4,9 @@ from typing import Any
 import pytest
 
 from open_ticket_ai.base.composite_pipe import CompositePipe
-from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
@@ -53,7 +53,6 @@ def reset_dummy_pipes() -> None:
 
 @pytest.fixture
 def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
-
     jinja_renderer = JinjaRenderer(JinjaRendererConfig())
 
     def _resolve_class(import_path: str):

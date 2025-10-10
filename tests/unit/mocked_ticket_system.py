@@ -76,7 +76,7 @@ class MockedTicketSystem(TicketSystemService):
         # Apply pagination
         offset = criteria.offset or 0
         limit = criteria.limit or 10
-        return results[offset: offset + limit]
+        return results[offset : offset + limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         """Find the first ticket matching the criteria."""

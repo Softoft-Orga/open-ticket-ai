@@ -30,8 +30,6 @@ def mock_ticket_system_service() -> MagicMock:
     return mock
 
 
-
-
 @pytest.fixture
 def empty_mocked_ticket_system() -> MockedTicketSystem:
     """Empty MockedTicketSystem for custom test scenarios."""
@@ -73,6 +71,3 @@ def mocked_ticket_system() -> MockedTicketSystem:
     )
 
     return system
-
-
-
