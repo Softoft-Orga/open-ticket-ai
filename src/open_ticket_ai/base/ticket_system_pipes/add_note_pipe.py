@@ -17,7 +17,10 @@ class AddNotePipe(Pipe):
     ) -> None:
         super().__init__(pipe_params)
         self.ticket_system = ticket_system
-        self.pipe_config = AddNotePipeConfig.model_validate(pipe_params.model_dump())
+        if isinstance(pipe_params, dict):
+            self.pipe_config = AddNotePipeConfig.model_validate(pipe_params)
+        else:
+            self.pipe_config = AddNotePipeConfig.model_validate(pipe_params.model_dump())
 
     async def _process(self) -> PipeResult:
         try:
