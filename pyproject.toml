@@ -84,8 +84,12 @@ explicit_package_bases = true
 mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = ["tests.*", "python_extras.*"]
+module = ["*tests.*"]
 ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "*.tests.*", "packages.*.tests.*"]
+disallow_untyped_defs = false  # Allow functions without return type hints
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
