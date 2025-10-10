@@ -76,16 +76,13 @@ class PipeFactory:
         self._template_renderer = template_renderer
         self._registerable_configs = registerable_configs
 
-
     def render_pipe_config(self, registerable_config_raw: RawPipeConfig, scope: PipeContext) -> RenderedPipeConfig:
         rendered_config_dict = render_base_model(registerable_config_raw, scope, self._template_renderer)
         return RenderedPipeConfig.model_validate(rendered_config_dict)
 
-    def create_pipe(self,
-                    parent_config: RenderedPipeConfig | None,
-                    pipe_config_raw: RawPipeConfig,
-                    scope: PipeContext
-                    ) -> Pipe:
+    def create_pipe(
+        self, parent_config: RenderedPipeConfig | None, pipe_config_raw: RawPipeConfig, scope: PipeContext
+    ) -> Pipe:
         self._logger.debug("Creating pipe with parent config: %s", parent_config)
         self._logger.debug("Creating pipe with config: %s", pipe_config_raw)
         self._logger.info("Creating pipe '%s' with config %s", pipe_config_raw.id, pipe_config_raw)
