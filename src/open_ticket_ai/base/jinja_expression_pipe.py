@@ -11,9 +11,9 @@ class JinjaExpressionPipeConfig(BaseModel):
 
 
 class JinjaExpressionPipe(Pipe):
-    def __init__(self, config: dict[str, Any], *args, **kwargs) -> None:
-        super().__init__(config)
-        self.expression = JinjaExpressionPipeConfig.model_validate(config).expression
+    def __init__(self, pipe_params: dict[str, Any], *args, **kwargs) -> None:
+        super().__init__(pipe_params)
+        self.expression = JinjaExpressionPipeConfig.model_validate(pipe_params).expression
 
     async def _process(self) -> PipeResult:
         return PipeResult(success=True, failed=False, data={"value": self.expression})

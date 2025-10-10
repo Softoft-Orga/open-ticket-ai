@@ -22,9 +22,9 @@ Fügt einem Ticket eine Notiz/Artikel hinzu.
 
 ```python
 class AddNotePipe(Pipe):
-    def __init__(self, config: dict[str, Any]) -> None:
-        super().__init__(config)
-        pipe_config = AddNotePipeConfig(**config)
+    def __init__(self, pipe_params: dict[str, Any]) -> None:
+        super().__init__(pipe_params)
+        pipe_config = AddNotePipeConfig(**pipe_params)
         registry = UnifiedRegistry.get_registry_instance()
         self.ticket_system: TicketSystemService = registry.get_instance(pipe_config.ticket_system_id)
         self.ticket_id = pipe_config.ticket_id

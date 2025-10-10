@@ -36,11 +36,11 @@ import httpx
 
 
 class ZammadAdapter(TicketSystemAdapter):
-    def __init__(self, config):
-        super().__init__(config)
-        # Assume config.zammad contains URL and auth info
-        self.base_url = config.zammad.base_url.rstrip('/')
-        self.auth = (config.zammad.user, config.zammad.password)
+    def __init__(self, params):
+        super().__init__(params)
+        # Assume params.zammad contains URL and auth info
+        self.base_url = params.zammad.base_url.rstrip('/')
+        self.auth = (params.zammad.user, params.zammad.password)
 
     async def find_tickets(self, query: dict) -> list[dict]:
         # Use Zammad search API (e.g. full-text search or filters).

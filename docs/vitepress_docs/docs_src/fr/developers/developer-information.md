@@ -73,8 +73,8 @@ class SentimentPipeConfig(BaseModel):
 
 class SentimentAnalysisPipe(Pipe):
     def __init__(self, config: dict[str, Any]):
-        super().__init__(config)
-        self.cfg = SentimentPipeConfig(**config)
+        super().__init__(pipe_params)
+        self.cfg = SentimentPipeConfig(**pipe_params)
         self.classifier = pipeline("sentiment-analysis", model=self.cfg.model_name)
 
     async def _process(self) -> dict[str, Any]:

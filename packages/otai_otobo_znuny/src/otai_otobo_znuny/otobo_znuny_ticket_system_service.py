@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from injector import inject
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
@@ -28,9 +29,9 @@ def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
-    def __init__(self, config: RenderedOTOBOZnunyTicketsystemServiceConfig, *args, **kwargs):
-        super().__init__(config, *args, **kwargs)
-        self.config = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(config.model_dump())
+    def __init__(self, params: RenderedOTOBOZnunyTicketsystemServiceConfig, *args: Any, **kwargs: Any) -> None:
+        super().__init__(params, *args, **kwargs)
+        self.params = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(params.model_dump())
         self._client: OTOBOZnunyClient | None = None
         self.logger = logging.getLogger(self.__class__.__name__)
         self.initialize()
@@ -42,10 +43,10 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         return self._client
 
     def _recreate_client(self) -> OTOBOZnunyClient:
-        self._client = OTOBOZnunyClient(config=self.config.to_client_config())
+        self._client = OTOBOZnunyClient(config=self.params.to_client_config())
         self.logger.info("Recreated OTOBO client")
-        self.logger.info(self.config.get_basic_auth().model_dump(with_secrets=True))
-        self._client.login(self.config.get_basic_auth())
+        self.logger.info(self.params.get_basic_auth().model_dump(with_secrets=True))
+        self._client.login(self.params.get_basic_auth())
         return self._client
 
     def initialize(self) -> None:
