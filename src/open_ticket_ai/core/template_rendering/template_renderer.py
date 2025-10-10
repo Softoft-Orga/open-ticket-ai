@@ -10,6 +10,7 @@ from pydantic import BaseModel
 class TemplateRenderer(ABC):
     def __init__(self):
         self._logger = logging.getLogger(self.__class__.__name__)
+
     @staticmethod
     def _to_dict(scope: BaseModel | dict[str, Any]) -> dict[str, Any]:
         if isinstance(scope, BaseModel):

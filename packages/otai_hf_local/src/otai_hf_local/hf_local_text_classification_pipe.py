@@ -4,7 +4,6 @@ from typing import Any
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
-from pydantic import BaseModel
 
 
 class HFLocalTextClassificationPipeConfig(RenderedPipeConfig):

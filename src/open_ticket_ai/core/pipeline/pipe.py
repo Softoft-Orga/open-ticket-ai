@@ -4,8 +4,8 @@ import logging
 from abc import ABC, abstractmethod
 
 from ..config.registerable import Registerable
-from .pipe_context import PipeContext
 from .pipe_config import PipeResult, RenderedPipeConfig
+from .pipe_context import PipeContext
 
 
 class Pipe(Registerable, ABC):
