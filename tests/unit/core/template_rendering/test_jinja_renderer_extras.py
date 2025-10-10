@@ -208,11 +208,7 @@ class TestPipeResult:
 
     def test_pipe_result_with_dict_pipe_custom_key(self):
         ctx = MagicMock()
-        ctx.get.return_value = {
-            "test_pipe": {
-                "data": {"value": "default", "status": "completed"}
-            }
-        }
+        ctx.get.return_value = {"test_pipe": {"data": {"value": "default", "status": "completed"}}}
         result = pipe_result(ctx, "test_pipe", "status")
         assert result == "completed"
 
@@ -254,9 +250,7 @@ class TestBuildFilteredEnv:
         os.environ["TEST_VAR"] = "test_value"
         os.environ["OTHER_VAR"] = "other_value"
 
-        config = JinjaRendererConfig(
-            env_config=TemplateRendererEnvConfig(prefix=None)
-        )
+        config = JinjaRendererConfig(env_config=TemplateRendererEnvConfig(prefix=None))
         result = build_filtered_env(config)
 
         assert "TEST_VAR" in result
@@ -268,9 +262,7 @@ class TestBuildFilteredEnv:
         os.environ["TEST_VAR"] = "test_value"
         os.environ["OTHER_VAR"] = "other_value"
 
-        config = JinjaRendererConfig(
-            env_config=TemplateRendererEnvConfig(prefix="")
-        )
+        config = JinjaRendererConfig(env_config=TemplateRendererEnvConfig(prefix=""))
         result = build_filtered_env(config)
 
         assert "TEST_VAR" in result
@@ -280,9 +272,7 @@ class TestBuildFilteredEnv:
         os.environ["OTAI_TEST"] = "otai_value"
         os.environ["OTHER_TEST"] = "other_value"
 
-        config = JinjaRendererConfig(
-            env_config=TemplateRendererEnvConfig(prefix="OTAI_")
-        )
+        config = JinjaRendererConfig(env_config=TemplateRendererEnvConfig(prefix="OTAI_"))
         result = build_filtered_env(config)
 
         assert "OTAI_TEST" in result
@@ -294,12 +284,7 @@ class TestBuildFilteredEnv:
         os.environ["VAR2"] = "value2"
         os.environ["VAR3"] = "value3"
 
-        config = JinjaRendererConfig(
-            env_config=TemplateRendererEnvConfig(
-                prefix=None,
-                allowlist={"VAR1", "VAR3"}
-            )
-        )
+        config = JinjaRendererConfig(env_config=TemplateRendererEnvConfig(prefix=None, allowlist={"VAR1", "VAR3"}))
         result = build_filtered_env(config)
 
         assert "VAR1" in result
@@ -311,12 +296,7 @@ class TestBuildFilteredEnv:
         os.environ["VAR2"] = "value2"
         os.environ["VAR3"] = "value3"
 
-        config = JinjaRendererConfig(
-            env_config=TemplateRendererEnvConfig(
-                prefix=None,
-                denylist={"VAR2"}
-            )
-        )
+        config = JinjaRendererConfig(env_config=TemplateRendererEnvConfig(prefix=None, denylist={"VAR2"}))
         result = build_filtered_env(config)
 
         assert "VAR1" in result
@@ -328,12 +308,7 @@ class TestBuildFilteredEnv:
         os.environ["OTAI_BLOCKED"] = "blocked_value"
         os.environ["OTHER_VAR"] = "other_value"
 
-        config = JinjaRendererConfig(
-            env_config=TemplateRendererEnvConfig(
-                prefix="OTAI_",
-                allowlist={"OTAI_ALLOWED"}
-            )
-        )
+        config = JinjaRendererConfig(env_config=TemplateRendererEnvConfig(prefix="OTAI_", allowlist={"OTAI_ALLOWED"}))
         result = build_filtered_env(config)
 
         assert "OTAI_ALLOWED" in result
@@ -345,12 +320,7 @@ class TestBuildFilteredEnv:
         os.environ["OTAI_BAD"] = "bad_value"
         os.environ["OTHER_VAR"] = "other_value"
 
-        config = JinjaRendererConfig(
-            env_config=TemplateRendererEnvConfig(
-                prefix="OTAI_",
-                denylist={"OTAI_BAD"}
-            )
-        )
+        config = JinjaRendererConfig(env_config=TemplateRendererEnvConfig(prefix="OTAI_", denylist={"OTAI_BAD"}))
         result = build_filtered_env(config)
 
         assert "OTAI_GOOD" in result
@@ -365,9 +335,7 @@ class TestBuildFilteredEnv:
 
         config = JinjaRendererConfig(
             env_config=TemplateRendererEnvConfig(
-                prefix="OTAI_",
-                allowlist={"OTAI_ALLOW1", "OTAI_ALLOW2", "OTAI_DENY"},
-                denylist={"OTAI_DENY"}
+                prefix="OTAI_", allowlist={"OTAI_ALLOW1", "OTAI_ALLOW2", "OTAI_DENY"}, denylist={"OTAI_DENY"}
             )
         )
         result = build_filtered_env(config)
@@ -380,11 +348,7 @@ class TestBuildFilteredEnv:
     def test_build_filtered_env_empty_result(self):
         os.environ["VAR1"] = "value1"
 
-        config = JinjaRendererConfig(
-            env_config=TemplateRendererEnvConfig(
-                prefix="NONEXISTENT_"
-            )
-        )
+        config = JinjaRendererConfig(env_config=TemplateRendererEnvConfig(prefix="NONEXISTENT_"))
         result = build_filtered_env(config)
 
         assert len(result) == 0
@@ -392,9 +356,7 @@ class TestBuildFilteredEnv:
     def test_build_filtered_env_preserves_values(self):
         os.environ["OTAI_SPECIAL"] = "special!@#$%^&*()"
 
-        config = JinjaRendererConfig(
-            env_config=TemplateRendererEnvConfig(prefix="OTAI_")
-        )
+        config = JinjaRendererConfig(env_config=TemplateRendererEnvConfig(prefix="OTAI_"))
         result = build_filtered_env(config)
 
         assert result["OTAI_SPECIAL"] == "special!@#$%^&*()"
