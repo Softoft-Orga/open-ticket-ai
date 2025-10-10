@@ -68,7 +68,7 @@ Jede Pipe (auch verschachtelte Schritte) wird als `RegisterableConfig`/`Rendered
 ## Ausführungsmodell
 
 1. Der Orchestrator wählt den nächsten Zeitplaneintrag, dessen `run_every_milli_seconds`-Intervall abgelaufen ist.
-2. Die zugehörige `pipe`-Definition wird mit einem frischen `Context` gerendert (`context.config` enthält den Zeitplaneintrag,
+2. Die zugehörige `pipe`-Definition wird mit einem frischen `Context` gerendert (`context.params` enthält den Zeitplaneintrag,
    `context.pipes` startet leer).
 3. Für jede Pipe bzw. jeden Schritt gilt:
    - Der `_if`-Ausdruck wird geprüft. Ergibt er `False`, wird die Pipe übersprungen.

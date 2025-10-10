@@ -17,7 +17,7 @@ pytestmark = [pytest.mark.unit]
 
 @pytest.fixture
 def empty_pipeline_context() -> PipeContext:
-    return PipeContext(pipes={}, config={})
+    return PipeContext(pipes={}, params={})
 
 
 @pytest.fixture
