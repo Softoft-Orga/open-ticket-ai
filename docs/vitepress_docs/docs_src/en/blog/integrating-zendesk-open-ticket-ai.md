@@ -66,12 +66,12 @@ from open_ticket_ai import TicketSystemAdapter
 
 
 class ZendeskAdapter(TicketSystemAdapter):
-    def __init__(self, config):
-        super().__init__(config)
-        # Read Zendesk settings from config (defined in config.yml)
-        self.subdomain = config.zendesk_subdomain
-        self.user_email = config.zendesk_user_email
-        self.api_token = config.zendesk_api_token
+    def __init__(self, params):
+        super().__init__(params)
+        # Read Zendesk settings from params (defined in config.yml)
+        self.subdomain = params.zendesk_subdomain
+        self.user_email = params.zendesk_user_email
+        self.api_token = params.zendesk_api_token
 
     async def update_ticket(self, ticket_id: str, data: dict) -> dict | None:
         """

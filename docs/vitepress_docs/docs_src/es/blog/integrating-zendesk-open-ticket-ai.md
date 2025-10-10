@@ -35,12 +35,12 @@ from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import T
 
 
 class ZendeskAdapter(TicketSystemAdapter):
-    def __init__(self, config):
-        super().__init__(config)
+    def __init__(self, params):
+        super().__init__(params)
         # Read Zendesk settings from config (defined in config.yml)
-        self.subdomain = config.zendesk_subdomain
-        self.user_email = config.zendesk_user_email
-        self.api_token = config.zendesk_api_token
+        self.subdomain = params.zendesk_subdomain
+        self.user_email = params.zendesk_user_email
+        self.api_token = params.zendesk_api_token
 
     async def update_ticket(self, ticket_id: str, data: dict) -> dict | None:
         """
@@ -74,7 +74,7 @@ class ZendeskAdapter(TicketSystemAdapter):
 
 El constructor de este `ZendeskAdapter` extrae la configuración del `config` inyectado. El método `update_ticket` construye la URL usando el patrón estándar de Zendesk y envía una solicitud PUT. En este ejemplo, nos autenticamos con autenticación básica HTTP usando el email y el token de API de Zendesk (por convención, el nombre de usuario es `user_email/token`). El payload envuelve los datos del ticket bajo la clave `"ticket"` como espera la API de Zendesk. Tras una actualización exitosa, devuelve el JSON del ticket actualizado.
 
-Definirías `config.zendesk_subdomain`, `config.zendesk_user_email` y `config.zendesk_api_token` en `config.yml`. Por ejemplo:
+Definirías `params.zendesk_subdomain`, `params.zendesk_user_email` y `params.zendesk_api_token` en `config.yml`. Por ejemplo:
 
 ```yaml
 ticket_system_integration:

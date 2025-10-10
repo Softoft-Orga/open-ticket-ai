@@ -21,7 +21,7 @@ class DummyChildPipe(Pipe):
 
     async def _process(self) -> PipeResult:
         self.__class__.process_count += 1
-        return PipeResult(success=True, failed=False, data={"value": self.config.id})
+        return PipeResult(success=True, failed=False, data={"value": self.pipe_params.id})
 
 
 class DummyParentPipe(CompositePipe):

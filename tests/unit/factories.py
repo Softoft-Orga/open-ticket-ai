@@ -67,8 +67,8 @@ class TicketSearchCriteriaFactory:
 
 
 class TestPipe:
-    def __init__(self, config):
-        self.config = config
+    def __init__(self, pipe_params):
+        self.pipe_params = pipe_params
 
     async def process(self, context):
         return context

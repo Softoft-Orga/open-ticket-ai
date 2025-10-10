@@ -15,11 +15,11 @@ class HFLocalTextClassificationPipeConfig(RenderedPipeConfig):
 class HFLocalTextClassificationPipe(Pipe):
     _pipeline: Any
 
-    def __init__(self, config: HFLocalTextClassificationPipeConfig, *args: Any, **kwargs: Any) -> None:
-        super().__init__(config)
-        self.model = config.model
-        self.token = config.token
-        self.prompt = config.prompt
+    def __init__(self, pipe_params: HFLocalTextClassificationPipeConfig, *args: Any, **kwargs: Any) -> None:
+        super().__init__(pipe_params)
+        self.model = pipe_params.model
+        self.token = pipe_params.token
+        self.prompt = pipe_params.prompt
         self.logger = logging.getLogger(self.__class__.__name__)
         self._pipeline = None
 
