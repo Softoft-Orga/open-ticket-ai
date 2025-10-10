@@ -96,8 +96,12 @@ class PipeFactory:
             raise TypeError(f"Registerable with id '{pipe_config_raw.id}' is not a Pipe")
         return registerable
 
-    def __create_service_instance(self, registerable_config_raw: RegisterableConfig, scope: PipeContext) -> Registerable:
-        config = RegisterableConfig.model_validate(self._template_renderer.render_recursive(registerable_config_raw, scope))
+    def __create_service_instance(self,
+                                  registerable_config_raw: RegisterableConfig,
+                                  scope: PipeContext) -> Registerable:
+        config = RegisterableConfig.model_validate(
+            self._template_renderer.render_recursive(registerable_config_raw, scope)
+        )
         return self.__create_registerable_instance(config, scope)
 
     def __create_registerable_instance(

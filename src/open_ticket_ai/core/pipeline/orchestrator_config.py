@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.pipeline.pipe_config import RawPipeConfig
