@@ -10,7 +10,7 @@ from pydantic import ValidationError
 from rich.console import Console
 
 from open_ticket_ai import __version__
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig  # type: ignore[import-untyped]
+from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.main import run
 
 app = typer.Typer(help="Open Ticket AI CLI - Manage configurations and templates")
