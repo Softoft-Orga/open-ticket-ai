@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Registerable:
-    def __init__(self, config: dict[str, Any] | BaseModel, *args, **kwargs):
+    def __init__(self, params: dict[str, Any] | BaseModel, *args: Any, **kwargs: Any) -> None:
         pass
 
 

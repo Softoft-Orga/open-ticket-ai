@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RawPipeConfig, RenderedPipeConfig
@@ -15,9 +16,11 @@ class CompositePipe(Pipe):
     Composite pipe that runs multiple steps. Returns PipeResult from _process, Context from process.
     """
 
-    def __init__(self, config: CompositePipeConfig, factory: PipeFactory | None = None, *args, **kwargs) -> None:
-        super().__init__(config, factory, *args, **kwargs)
-        self.config = CompositePipeConfig.model_validate(config.model_dump())
+    def __init__(
+        self, pipe_params: CompositePipeConfig, factory: PipeFactory | None = None, *args: Any, **kwargs: Any
+    ) -> None:
+        super().__init__(pipe_params, factory, *args, **kwargs)
+        self.pipe_params = CompositePipeConfig.model_validate(pipe_params.model_dump())
         self._logger = logging.getLogger(self.__class__.__name__)
         self._factory = factory
         self._context: PipeContext | None = None
@@ -27,8 +30,7 @@ class CompositePipe(Pipe):
         Build a child pipe from step config.
         Returns Pipe.
         """
-        # Render the parent config before passing it to child pipes
-        parent_config_rendered = self.config
+        parent_config_rendered = self.pipe_params
         return self._factory.create_pipe(parent_config_rendered, step_config, context)
 
     async def _process_steps(self, context: PipeContext) -> list[PipeResult]:
@@ -38,11 +40,10 @@ class CompositePipe(Pipe):
         """
         results: list[PipeResult] = []
         current_context = context
-        for step_pipe_config_raw in self.config.steps:
+        for step_pipe_config_raw in self.pipe_params.steps:
             step_pipe = self._build_pipe_from_step_config(step_pipe_config_raw, current_context)
             current_context = await step_pipe.process(current_context)
             results.append(current_context.pipes[step_pipe_config_raw.id])
-        # Update the context for parent to access
         self._context = current_context
         return results
 
@@ -59,19 +60,18 @@ class CompositePipe(Pipe):
         Public API. Runs composite pipe and returns updated Context.
         Overrides base implementation to access context during _process.
         """
-        self._logger.info("Processing pipe '%s'", self.config.id)
-        if self.config.should_run and self.have_dependent_pipes_been_run(context):
-            self._logger.info("Pipe '%s' is running.", self.config.id)
+        self._logger.info("Processing pipe '%s'", self.pipe_params.id)
+        if self.pipe_params.should_run and self.have_dependent_pipes_been_run(context):
+            self._logger.info("Pipe '%s' is running.", self.pipe_params.id)
             new_context = context.model_copy()
             try:
                 steps_result: list[PipeResult] = await self._process_steps(new_context)
                 composite_result = PipeResult.union(steps_result)
-                # Update new_context with the latest state from step processing
                 if self._context:
                     new_context = self._context.model_copy()
             except Exception as e:
-                self._logger.error(f"Error in pipe {self.config.id}: {str(e)}", exc_info=True)
+                self._logger.error(f"Error in pipe {self.pipe_params.id}: {str(e)}", exc_info=True)
                 composite_result = PipeResult(success=False, failed=True, message=str(e))
             return self._save_pipe_result(new_context, composite_result)
-        self._logger.info("Skipping pipe '%s'.", self.config.id)
+        self._logger.info("Skipping pipe '%s'.", self.pipe_params.id)
         return context

@@ -24,8 +24,8 @@ class MockedTicketSystem(TicketSystemService):
     Maintains tickets and notes as dict objects in memory.
     """
 
-    def __init__(self, config: dict[str, Any] | BaseModel, *args, **kwargs) -> None:
-        super().__init__(config, *args, **kwargs)
+    def __init__(self, params: dict[str, Any] | BaseModel, *args, **kwargs) -> None:
+        super().__init__(params, *args, **kwargs)
         self._tickets: dict[str, UnifiedTicket] = {}
         self._ticket_counter: int = 1
 

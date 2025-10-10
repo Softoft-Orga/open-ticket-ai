@@ -1,3 +1,5 @@
+from typing import Any
+
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
@@ -10,10 +12,12 @@ class AddNotePipeConfig(RenderedPipeConfig):
 
 
 class AddNotePipe(Pipe):
-    def __init__(self, ticket_system: TicketSystemService, config: AddNotePipeConfig, *args, **kwargs) -> None:
-        super().__init__(config)
+    def __init__(
+        self, ticket_system: TicketSystemService, pipe_params: AddNotePipeConfig, *args: Any, **kwargs: Any
+    ) -> None:
+        super().__init__(pipe_params)
         self.ticket_system = ticket_system
-        self.pipe_config = AddNotePipeConfig.model_validate(config.model_dump())
+        self.pipe_config = AddNotePipeConfig.model_validate(pipe_params.model_dump())
 
     async def _process(self) -> PipeResult:
         try:
