@@ -25,8 +25,8 @@ open-ticket-ai/
 
 ### Absolute rules
 - **Never** place tests under any `src/` path. Forbidden: `src/**/tests`, `src/**/test_*.py`.
-- Unit tests live **with their package** under `packages/<name>/tests/`.
-- Cross-package **integration/e2e** tests live in **root** `tests/`.
+- Unit tests of plugins live **with their package** under `packages/<name>/tests/` Unit Tests of the core in /tests/unit/.
+- Cross-package **integration,e2e** tests live in **root** `tests/`.
 - Keep sample inputs/golden files under a sibling `data/` directory next to the tests that use them.
 - Each package is an editable member of the uv workspace. Do not add ad‑hoc `PYTHONPATH` hacks.
 - Python version: **3.13** only. Use modern typing (PEP 695). No inline code comments.
@@ -45,6 +45,7 @@ packages/<name>/
 At the repo root:
 ```
 tests/
+    unit/
 ├── integration/         # spans multiple packages
 ├── e2e/                 # CLI/app-level
 ├── data/
@@ -108,4 +109,3 @@ addopts = ["-q"]
 - [ ] `uv run ruff check .` clean
 - [ ] `uv run mypy .` clean
 - [ ] `uv run -m pytest` green
-- [ ] `uv run python scripts/validate_test_structure.py` passes

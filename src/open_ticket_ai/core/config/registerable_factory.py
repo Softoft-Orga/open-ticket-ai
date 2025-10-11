@@ -80,7 +80,7 @@ def render_base_model(config: BaseModel, scope: PipeContext, renderer: TemplateR
 
 
 @singleton
-class PipeFactory:
+class RegisterableFactory:
     @inject
     def __init__(self, template_renderer: TemplateRenderer, registerable_configs: list[RegisterableConfig]):
         self._logger = logging.getLogger(self.__class__.__name__)

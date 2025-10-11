@@ -4,7 +4,7 @@ from typing import Any
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RawPipeConfig, RenderedPipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
-from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
+from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
 
 
 class CompositePipeConfig(RenderedPipeConfig):
@@ -17,7 +17,7 @@ class CompositePipe(Pipe):
     """
 
     def __init__(
-        self, pipe_params: CompositePipeConfig, factory: PipeFactory | None = None, *args: Any, **kwargs: Any
+        self, pipe_params: CompositePipeConfig, factory: RegisterableFactory | None = None, *args: Any, **kwargs: Any
     ) -> None:
         super().__init__(pipe_params, factory, *args, **kwargs)
         self.pipe_params = CompositePipeConfig.model_validate(pipe_params.model_dump())
