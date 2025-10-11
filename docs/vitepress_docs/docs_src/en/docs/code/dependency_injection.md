@@ -12,17 +12,7 @@ The DI container:
 
 ## Service Registration and Resolution
 
-Services are registered at application startup:
-
-```python
-from injector import Injector, singleton
-
-def configure_services(binder):
-    binder.bind(TicketService, to=OtoboTicketService, scope=singleton)
-    binder.bind(ClassificationService, to=MLClassificationService, scope=singleton)
-
-injector = Injector([configure_services])
-```
+Services are registered at application startup using the injector module. The DI container manages service instances and resolves dependencies automatically when pipes request them.
 
 ## UnifiedRegistry Usage
 
@@ -34,22 +24,7 @@ The UnifiedRegistry is the central registry for:
 
 ## Injecting Services into Pipes
 
-Pipes can request services via constructor injection:
-
-```python
-from injector import inject
-
-class ClassifyPipe(BasePipe):
-    @inject
-    def __init__(self, classifier: ClassificationService):
-        self.classifier = classifier
-    
-    def execute(self, context):
-        tickets = context.get("tickets")
-        results = self.classifier.classify(tickets)
-        context.set("results", results)
-        return PipeResult.success()
-```
+Pipes can request services via constructor injection using the `@inject` decorator. The DI container automatically provides the required service instances when creating pipe instances.
 
 ## Service Scopes
 
@@ -65,21 +40,7 @@ class ClassifyPipe(BasePipe):
 
 ## Testing with DI
 
-DI makes testing easier:
-
-```python
-def test_classify_pipe():
-    mock_classifier = Mock(ClassificationService)
-    pipe = ClassifyPipe(classifier=mock_classifier)
-    
-    context = PipelineContext()
-    context.set("tickets", [ticket1, ticket2])
-    
-    result = pipe.execute(context)
-    
-    assert result.success
-    mock_classifier.classify.assert_called_once()
-```
+DI makes testing easier by allowing you to inject mock services into pipes during testing. You can create mock implementations of services and pass them directly to pipe constructors for unit testing.
 
 ## Related Documentation
 

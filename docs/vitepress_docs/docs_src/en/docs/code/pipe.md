@@ -12,14 +12,7 @@ A pipe is a stateless component that:
 
 ## Pipe Interface and Contract
 
-All pipes must implement the base pipe interface:
-
-```python
-class BasePipe:
-    def execute(self, context: PipelineContext) -> PipeResult:
-        """Execute the pipe's logic."""
-        pass
-```
+All pipes must implement the base pipe interface with an `execute` method that takes a `PipelineContext` parameter and returns a `PipeResult`.
 
 ## Input/Output Handling
 

@@ -13,20 +13,10 @@ The context object:
 ## Sharing Data Between Pipes
 
 Pipes can read and write to the context:
-
-```python
-def execute(self, context):
-    # Read from context
-    tickets = context.get("tickets", [])
-    
-    # Process data
-    classified = self.classify(tickets)
-    
-    # Write to context
-    context.set("classified_tickets", classified)
-    
-    return PipeResult.success()
-```
+- **Read from context**: Use `context.get("key", default_value)` to retrieve data
+- **Process data**: Transform or enrich the data as needed
+- **Write to context**: Use `context.set("key", value)` to store results
+- **Return result**: Return a `PipeResult` indicating success or failure
 
 ## Context Lifecycle
 
@@ -51,20 +41,11 @@ def execute(self, context):
 
 ## Context API
 
-```python
-# Get data with default
-value = context.get("key", default_value)
-
-# Set data
-context.set("key", value)
-
-# Check if key exists
-if context.has("key"):
-    # ...
-
-# Remove key
-context.remove("key")
-```
+The context provides methods for managing data:
+- `get(key, default)`: Retrieve data with an optional default value
+- `set(key, value)`: Store data in the context
+- `has(key)`: Check if a key exists
+- `remove(key)`: Remove a key from the context
 
 ## Related Documentation
 

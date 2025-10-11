@@ -26,17 +26,7 @@ The factory pattern allows:
 
 ## Custom Pipe Creation
 
-To register a custom pipe:
-
-```python
-from open_ticket_ai.pipeline import register_pipe
-
-@register_pipe("my_custom_pipe")
-class MyCustomPipe(BasePipe):
-    def execute(self, context):
-        # Pipe logic here
-        pass
-```
+To register a custom pipe, use the `@register_pipe` decorator on your pipe class. This makes the pipe available for use in YAML configuration files.
 
 ## Related Documentation
 
