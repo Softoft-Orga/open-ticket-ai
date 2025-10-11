@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-import os
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.registerable import RegisterableConfig
 from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
-from open_ticket_ai.core.template_rendering import JinjaRendererConfig
-from open_ticket_ai.core.template_rendering.renderer_config import SpecificTemplateRendererConfig
 
 LogLevel = Literal["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
@@ -69,6 +66,7 @@ class InfrastructureConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
     # noinspection PyTypeHints
+
 
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=lambda: [])
