@@ -375,6 +375,8 @@ Based on `DOCUMENTATION_STRUCTURE.md`:
 
 ## Resources
 
+- **VitePress Setup**: See [VITEPRESS_SETUP.md](VITEPRESS_SETUP.md) for documentation website setup
+- **Deployment Guide**: See [DEPLOYMENT.md](DEPLOYMENT.md) for deployment instructions
 - **JSON Schema**: Check for `config.schema.json` in project root
 - **API Reference**: See `raw_en_docs/developers/api/` for API docs
 - **Testing Guides**: See `raw_en_docs/general/testing/`
