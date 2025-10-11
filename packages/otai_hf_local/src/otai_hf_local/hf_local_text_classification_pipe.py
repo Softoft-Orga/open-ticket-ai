@@ -2,8 +2,10 @@ import logging
 from functools import cache
 from typing import Any
 
+from open_ticket_ai.core.config.registerable import Renderable
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from pydantic import BaseModel
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -11,10 +13,14 @@ from transformers import (
 )
 
 
-class HFLocalTextClassificationPipeConfig(RenderedPipeConfig):
+class HFLocalTextClassificationParams(BaseModel):
     model: str
     token: str | None = None
     prompt: str
+
+
+class HFLocalTextClassificationPipeConfig(Renderable[HFLocalTextClassificationParams]):
+    pass
 
 
 class HFLocalTextClassificationPipe(Pipe):
@@ -22,9 +28,12 @@ class HFLocalTextClassificationPipe(Pipe):
 
     def __init__(self, pipe_params: HFLocalTextClassificationPipeConfig, *args: Any, **kwargs: Any) -> None:
         super().__init__(pipe_params)
-        self.model = pipe_params.model
-        self.token = pipe_params.token
-        self.prompt = pipe_params.prompt
+        if isinstance(pipe_params, dict):
+            self.config = HFLocalTextClassificationPipeConfig.model_validate(pipe_params)
+        elif isinstance(pipe_params, HFLocalTextClassificationPipeConfig):
+            self.config = pipe_params
+        else:
+            self.config = HFLocalTextClassificationPipeConfig.model_validate(pipe_params.model_dump())
         self.logger = logging.getLogger(self.__class__.__name__)
         self._pipeline = None
 
@@ -38,9 +47,9 @@ class HFLocalTextClassificationPipe(Pipe):
     async def _process(self) -> PipeResult:
         self.logger.info(f"Running {self.__class__.__name__}")
         if self._pipeline is None:
-            self._pipeline = self._load_pipeline(self.model, self.token)
+            self._pipeline = self._load_pipeline(self.config.params.model, self.config.params.token)
 
-        result = self._pipeline(self.prompt, truncation=True)
+        result = self._pipeline(self.config.params.prompt, truncation=True)
         top = result[0] if isinstance(result, list) else result
 
         label = top["label"]
