@@ -11,31 +11,14 @@ body:
         
         **Note**: If you're requesting a new pipe or plugin, please use the "Pipe or Plugin Request" template instead.
 
-  - type: dropdown
-    id: feature-area
-    attributes:
-      label: Feature Area
-      description: Which area of the system does this feature relate to?
-      options:
-        - Core Framework/Architecture
-        - Configuration System
-        - CLI Tool
-        - Orchestrator/Scheduler
-        - Template Rendering
-        - Dependency Injection
-        - Testing Framework
-        - Documentation/Examples
-        - Performance/Optimization
-        - Security
-        - Developer Experience
-        - Other
-
   - type: textarea
     id: description
     attributes:
       label: Feature Description
       description: Describe the feature you'd like to see
       placeholder: "Add support for hot-reloading configuration changes..."
+    validations:
+      required: true
 
   - type: textarea
     id: use-case
@@ -43,83 +26,19 @@ body:
       label: Use Case
       description: How would you use this feature?
       placeholder: "In our production environment, we need to update configs without restarting..."
-
-  - type: textarea
-    id: current-limitation
-    attributes:
-      label: Current Limitation
-      description: What can't you do today that this feature would enable?
-      placeholder: "Currently, we have to restart the orchestrator to pick up config changes..."
+    validations:
+      required: true
 
   - type: textarea
     id: proposed-solution
     attributes:
-      label: Proposed Solution
+      label: Proposed Solution (Optional)
       description: How do you envision this working?
       placeholder: "Implement a file watcher that detects config changes and reloads..."
 
   - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternatives Considered
-      description: Have you considered other approaches?
-      placeholder: "Considered using signals, but that requires manual intervention..."
-
-  - type: dropdown
-    id: breaking-change
-    attributes:
-      label: Breaking Change
-      description: Would this require breaking changes to the API or config format?
-      options:
-        - No breaking changes expected
-        - Possibly breaking (needs discussion)
-        - Yes, breaking change required
-        - Unsure
-
-  - type: checkboxes
-    id: documentation-needs
-    attributes:
-      label: Documentation Requirements
-      description: What documentation will this feature need?
-      options:
-        - label: User documentation/guide
-        - label: Configuration schema updates
-        - label: API reference updates (docstrings only)
-        - label: Migration guide (if breaking change)
-        - label: Configuration examples
-        - label: README updates
-
-  - type: textarea
-    id: config-example
-    attributes:
-      label: Configuration Example (if applicable)
-      description: Show how this would be configured
-      render: yaml
-      placeholder: |
-        open_ticket_ai:
-          general_config:
-            hot_reload: true
-            watch_interval: 5000
-
-  - type: textarea
     id: additional-context
     attributes:
-      label: Additional Context
-      description: Any other information, links, or references
+      label: Additional Context (Optional)
+      description: Any other information such as alternatives considered, config examples, or references
       placeholder: "Similar to how Django handles this with autoreload..."
-
-  - type: checkboxes
-    id: implementation
-    attributes:
-      label: Implementation Checklist (for maintainers)
-      options:
-        - label: Design review and approval
-        - label: Code implementation
-        - label: Unit tests
-        - label: Integration tests
-        - label: Docstrings (Google style)
-        - label: User documentation updated
-        - label: Configuration examples tested
-        - label: Breaking change notice (if applicable)
-        - label: CHANGELOG.md entry
-        - label: Schema regenerated (if config changed)

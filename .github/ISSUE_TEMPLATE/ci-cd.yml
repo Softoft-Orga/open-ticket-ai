@@ -58,121 +58,27 @@ body:
       label: Motivation and Context
       description: Why is this change needed? What problem does it solve?
       placeholder: "Currently, we don't have automated security scanning, which means vulnerabilities could be introduced..."
-
-  - type: dropdown
-    id: risk-level
-    attributes:
-      label: Risk Level
-      description: What's the risk level of this change?
-      options:
-        - Low (cosmetic changes, documentation)
-        - Medium (new features, non-breaking changes)
-        - High (affects critical paths, breaking changes)
-        - Critical (affects deployments, security)
     validations:
       required: true
-
-  - type: textarea
-    id: impact-assessment
-    attributes:
-      label: Impact Assessment
-      description: Describe the potential impact of this change
-      placeholder: |
-        **Build Impact:** May increase build time by 2-3 minutes
-        **Backwards Compatibility:** No breaking changes expected
-        **Developer Experience:** Developers will see new security alerts in PRs
-        **Resource Usage:** Requires additional GitHub Actions minutes
-    validations:
-      required: true
-
-  - type: textarea
-    id: proposed-changes
-    attributes:
-      label: Proposed Changes
-      description: Detailed description of what will be changed
-      placeholder: |
-        1. Add new workflow file `.github/workflows/security.yml`
-        2. Configure CodeQL scanning for Python
-        3. Add security results to PR comments
-        4. Update documentation
-
-  - type: textarea
-    id: testing-plan
-    attributes:
-      label: Testing Plan
-      description: How will you test these changes?
-      placeholder: |
-        - Test in a fork with sample PRs
-        - Verify workflow triggers correctly on push/PR
-        - Confirm security reports are generated
-        - Test failure scenarios
-
-  - type: checkboxes
-    id: backwards-compatibility
-    attributes:
-      label: Backwards Compatibility
-      description: Will this change affect existing workflows or processes?
-      options:
-        - label: No impact on existing workflows
-        - label: Requires updates to existing workflows
-        - label: May break existing workflows (needs migration)
-        - label: Unsure
-
-  - type: textarea
-    id: rollback-plan
-    attributes:
-      label: Rollback Plan
-      description: How can this change be reverted if needed?
-      placeholder: "Revert the commit and re-run workflows. No state changes persist."
-
-  - type: textarea
-    id: config-example
-    attributes:
-      label: Configuration Example (if applicable)
-      description: Show relevant workflow or configuration snippets
-      render: yaml
-      placeholder: |
-        name: Security Scan
-        on:
-          push:
-            branches: [main, dev]
-          pull_request:
-        jobs:
-          codeql:
-            runs-on: ubuntu-latest
-            steps:
-              - uses: actions/checkout@v4
-              - uses: github/codeql-action/init@v3
 
   - type: textarea
     id: additional-context
     attributes:
-      label: Additional Context
-      description: Any other information, links, or references
-      placeholder: "Reference: GitHub Actions documentation on CodeQL"
-
-  - type: checkboxes
-    id: pre-implementation-checklist
-    attributes:
-      label: Pre-Implementation Checklist
-      description: Items to verify before implementing
-      options:
-        - label: Reviewed existing CI/CD workflows
-        - label: Checked for conflicts with other workflows
-        - label: Considered resource/cost implications
-        - label: Reviewed security implications
-        - label: Identified required secrets/permissions
-
-  - type: checkboxes
-    id: implementation-checklist
-    attributes:
-      label: Implementation Checklist (for maintainers)
-      options:
-        - label: Design review and approval
-        - label: Changes implemented
-        - label: Tested in development/staging
-        - label: Documentation updated
-        - label: Team notified of changes
-        - label: Rollback plan documented
-        - label: Monitoring/alerts configured (if applicable)
-        - label: CHANGELOG.md entry
+      label: Additional Context (Optional)
+      description: Any other information such as risk level, impact assessment, testing plan, rollback plan, or config examples
+      placeholder: |
+        Risk Level: Medium
+        
+        Impact: May increase build time by 2-3 minutes
+        
+        Testing: Will test in a fork with sample PRs
+        
+        Rollback: Revert the commit and re-run workflows
+        
+        Config example:
+        ```yaml
+        name: Security Scan
+        on:
+          push:
+            branches: [main, dev]
+        ```

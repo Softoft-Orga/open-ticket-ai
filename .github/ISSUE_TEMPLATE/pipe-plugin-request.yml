@@ -9,32 +9,14 @@ body:
         ## Pipe or Plugin Request
         Suggest a new pipe, plugin, or extension for Open Ticket AI's pipeline system.
 
-  - type: dropdown
-    id: request-type
-    attributes:
-      label: Request Type
-      description: What are you requesting?
-      options:
-        - New Base Pipe (core functionality)
-        - New Plugin (system integration)
-        - New Plugin Pipe (plugin-specific operation)
-        - Extension to Existing Pipe
-        - Predefined Pipe Template
-        - Other
-
-  - type: input
-    id: proposed-name
-    attributes:
-      label: Proposed Name
-      description: What should this pipe/plugin be called?
-      placeholder: "ClassifyTicketByUrgencyPipe or OTRSIntegrationPlugin"
-
   - type: textarea
     id: description
     attributes:
       label: Description
       description: What should this pipe/plugin do?
       placeholder: "A pipe that analyzes ticket content and assigns urgency level..."
+    validations:
+      required: true
 
   - type: textarea
     id: use-case
@@ -44,20 +26,8 @@ body:
       placeholder: |
         In our helpdesk, we need to automatically classify incoming tickets
         by urgency before routing them to the appropriate queue...
-
-  - type: dropdown
-    id: integration-target
-    attributes:
-      label: Integration Target (for plugins)
-      description: If this is a plugin request, what system does it integrate with?
-      options:
-        - Not applicable (this is a pipe)
-        - Ticket System (OTRS, Zammad, etc.)
-        - AI/ML Service (OpenAI, Anthropic, etc.)
-        - Database (PostgreSQL, MySQL, etc.)
-        - Messaging (Slack, Email, etc.)
-        - Monitoring/Logging
-        - Other
+    validations:
+      required: true
 
   - type: textarea
     id: config-example
@@ -76,73 +46,20 @@ body:
               - medium
               - high
               - critical
-
-  - type: textarea
-    id: input-output
-    attributes:
-      label: Input/Output
-      description: What data does this pipe consume and produce?
-      placeholder: |
-        Input: PipeResult from previous step containing ticket data
-        Output: PipeResult with urgency_level field added
-
-  - type: dropdown
-    id: dependencies
-    attributes:
-      label: External Dependencies
-      description: Would this require new Python packages or external services?
-      options:
-        - No new dependencies
-        - New Python package(s)
-        - External API/service
-        - Both package and service
-        - Unsure
-
-  - type: textarea
-    id: dependency-details
-    attributes:
-      label: Dependency Details (if applicable)
-      description: Specify any required packages or services
-      placeholder: "Would require: openai>=1.0.0 for API access"
-
-  - type: checkboxes
-    id: implementation-scope
-    attributes:
-      label: Implementation Scope
-      description: What should be included?
-      options:
-        - label: Core implementation (pipe/plugin code)
-        - label: Unit tests
-        - label: Integration tests
-        - label: Configuration schema updates
-        - label: Jinja2 template support (if applicable)
-        - label: Dependency injection setup
-        - label: Documentation (user guide)
-        - label: Configuration examples
-        - label: API reference (docstrings)
-        - label: Migration guide (if breaking)
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternatives Considered
-      description: Have you considered other approaches or existing pipes?
-      placeholder: "I looked at CompositePipe but it doesn't support..."
+    validations:
+      required: true
 
   - type: textarea
     id: additional-context
     attributes:
-      label: Additional Context
-      description: Any other information, links, or examples
-      placeholder: "Similar to how system X handles this..."
-
-  - type: checkboxes
-    id: contribution
-    attributes:
-      label: Contribution Interest
-      description: Would you be interested in contributing?
-      options:
-        - label: I can help implement this
-        - label: I can help test this
-        - label: I can help document this
-        - label: I can provide example configs
+      label: Additional Context (Optional)
+      description: Any other information such as proposed name, input/output specs, dependencies, alternatives, or references
+      placeholder: |
+        Proposed name: ClassifyTicketByUrgencyPipe
+        
+        Input: PipeResult from previous step containing ticket data
+        Output: PipeResult with urgency_level field added
+        
+        Dependencies: May require scikit-learn or similar ML library
+        
+        Similar to how system X handles this...
