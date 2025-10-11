@@ -42,7 +42,7 @@ open_ticket_ai:
       root:
         level: INFO
         handlers: [console]
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """

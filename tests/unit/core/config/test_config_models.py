@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig, load_config
+from open_ticket_ai.core import RawOpenTicketAIConfig, load_config
 
 
 def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
@@ -17,7 +17,7 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
           general_config:
             service:
               url: https://example.com
-          defs:
+          services:
             - id: def-1
               value: 42
           orchestrator:
@@ -37,8 +37,8 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
     assert isinstance(config, RawOpenTicketAIConfig)
     assert config.plugins == ["plugin_a"]
     assert dict(config.general_config)["service"] == {"url": "https://example.com"}
-    assert config.defs[0].id == "def-1"
-    assert dict(config.defs[0])["value"] == 42
+    assert config.services[0].id == "def-1"
+    assert dict(config.services[0])["value"] == 42
 
 
 def test_load_config_missing_root_key(tmp_path: Path) -> None:

@@ -54,4 +54,4 @@ class AppModule(Module):
 
     @multiprovider
     def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RegisterableConfig]:
-        return config.defs
+        return config.services

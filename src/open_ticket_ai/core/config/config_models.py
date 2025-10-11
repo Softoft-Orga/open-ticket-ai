@@ -74,5 +74,5 @@ class GeneralConfig(BaseModel):
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=lambda: [])
     general_config: GeneralConfig = Field(default_factory=GeneralConfig)
-    defs: list[RegisterableConfig] = Field(default_factory=lambda: [])
+    services: list[RegisterableConfig] = Field(default_factory=lambda: [])
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)

@@ -46,3 +46,20 @@ class ConfigLoader:
                 raise ValidationError(e) from e
         self._logger.info(f"Loaded config from {config_path}")
         return raw_otai_config
+
+
+def load_config(config_path: os.PathLike | None = None, app_config: AppConfig | None = None) -> RawOpenTicketAIConfig:
+    """Standalone helper function to load configuration.
+    
+    Args:
+        config_path: Path to the configuration file
+        app_config: Optional AppConfig instance (uses default if not provided)
+    
+    Returns:
+        Loaded RawOpenTicketAIConfig instance
+    """
+    if app_config is None:
+        app_config = AppConfig()
+    
+    loader = ConfigLoader(app_config)
+    return loader.load_config(config_path)

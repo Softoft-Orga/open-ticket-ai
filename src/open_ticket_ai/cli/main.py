@@ -150,12 +150,12 @@ def check_config(
         config = RawOpenTicketAIConfig.model_validate(raw_config.get("open_ticket_ai", {}))
 
         num_plugins = len(config.plugins) if config.plugins else 0
-        num_defs = len(config.defs) if config.defs else 0
+        num_services = len(config.services) if config.services else 0
         num_orchestrator = len(config.orchestrator.runners) if config.orchestrator else 0
 
         console.print("[green]✅ Config file is valid![/green]")
         console.print(f"   - Plugins: {num_plugins}")
-        console.print(f"   - Definitions: {num_defs}")
+        console.print(f"   - Services: {num_services}")
         console.print(f"   - Orchestrator steps: {num_orchestrator}")
 
     except ValidationError as e:
