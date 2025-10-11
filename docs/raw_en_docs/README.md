@@ -268,6 +268,7 @@ Open Ticket AI provides structured issue templates to help you report bugs, requ
 - **Configuration Issue** - For YAML config, Jinja2, or DI problems
 - **Pipe or Plugin Request** - For new pipes or plugin proposals
 - **Feature Request (General)** - For general enhancements
+- **CI/CD Issue** - For workflow, build, deployment, and automation changes
 
 See [ISSUE_TEMPLATES.md](general/ISSUE_TEMPLATES.md) for detailed guidance on using these templates.
 
