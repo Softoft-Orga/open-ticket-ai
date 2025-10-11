@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Literal
 
-import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.registerable import RegisterableConfig
 from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig
@@ -79,4 +76,3 @@ class RawOpenTicketAIConfig(BaseModel):
     general_config: GeneralConfig = Field(default_factory=GeneralConfig)
     defs: list[RegisterableConfig] = Field(default_factory=lambda: [])
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
-

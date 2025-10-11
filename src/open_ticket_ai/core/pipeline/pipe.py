@@ -4,8 +4,6 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Any
 
-from pydantic import BaseModel
-
 from ..config.registerable import Registerable
 from .pipe_config import PipeResult, RenderedPipeConfig
 from .pipe_context import PipeContext
