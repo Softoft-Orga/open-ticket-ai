@@ -156,9 +156,7 @@ class CLI:
             with open(config_path) as f:
                 raw_config = yaml.safe_load(f)
 
-            config = RawOpenTicketAIConfig.model_validate(
-                raw_config.get(self.app_config.config_yaml_root_key, {})
-            )
+            config = RawOpenTicketAIConfig.model_validate(raw_config.get(self.app_config.config_yaml_root_key, {}))
 
             num_plugins = len(config.plugins) if config.plugins else 0
             num_defs = len(config.defs) if config.defs else 0
