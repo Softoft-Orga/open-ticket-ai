@@ -4,7 +4,7 @@ from pathlib import Path
 
 from injector import Injector
 
-from open_ticket_ai.core import AppConfig, AppModule, RawOpenTicketAIConfig, load_config
+from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig
 
 
 def test_complete_config_flow_with_defaults(tmp_path: Path) -> None:
@@ -27,7 +27,8 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    config = load_config(config_path)
+    config_loader = ConfigLoader(AppConfig())
+    config = config_loader.load_config(config_path)
 
     assert config.plugins == ["default-plugin"]
     assert len(config.defs) == 1
@@ -50,7 +51,8 @@ custom_app:
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
     app_config = AppConfig(config_yaml_root_key="custom_app")
-    config = load_config(config_path, app_config)
+    config_loader = ConfigLoader(app_config)
+    config = config_loader.load_config(config_path)
 
     assert config.plugins == ["custom-plugin"]
 
@@ -124,7 +126,8 @@ open_ticket_ai:
     config_path.write_text(config_v1.strip(), encoding="utf-8")
 
     app_config = AppConfig()
-    config1 = load_config(config_path, app_config)
+    config_loader = ConfigLoader(app_config)
+    config1 = config_loader.load_config(config_path)
     assert config1.plugins == ["v1"]
 
     config_v2 = """
@@ -139,5 +142,5 @@ open_ticket_ai:
     """
     config_path.write_text(config_v2.strip(), encoding="utf-8")
 
-    config2 = load_config(config_path, app_config)
+    config2 = config_loader.load_config(config_path)
     assert config2.plugins == ["v2"]

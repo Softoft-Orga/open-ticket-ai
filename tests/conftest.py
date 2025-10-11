@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from injector import Injector
 
-from open_ticket_ai.core import AppModule, RawOpenTicketAIConfig, load_config
+from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig
 
 
 @pytest.fixture
@@ -58,4 +58,5 @@ def app_injector(tmp_config: Path) -> Injector:
 
 @pytest.fixture
 def test_config(tmp_config: Path) -> RawOpenTicketAIConfig:
-    return load_config(tmp_config)
+    config_loader = ConfigLoader(AppConfig())
+    return config_loader.load_config(tmp_config)
