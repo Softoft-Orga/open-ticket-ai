@@ -55,7 +55,7 @@ class Orchestrator:
                 for trigger_index, trigger_def in enumerate(definition.triggers):
                     trigger = self._instantiate_trigger(trigger_def)
                     trigger_job_id = f"{job_id}_trigger_{trigger_index}"
-                    
+
                     self._scheduler.add_job(
                         runner.execute,
                         trigger=trigger,

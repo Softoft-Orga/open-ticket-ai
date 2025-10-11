@@ -67,10 +67,10 @@ class RunnerDefinition(BaseModel):
                 DeprecationWarning,
                 stacklevel=4,
             )
-            
+
             interval_ms = data.pop("run_every_milli_seconds")
             interval_seconds = interval_ms / 1000.0
-            
+
             if "triggers" not in data and "on" not in data:
                 data["triggers"] = [
                     {
