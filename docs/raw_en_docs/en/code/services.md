@@ -17,7 +17,7 @@ Services encapsulate business logic and provide reusable functionality to pipes.
 ### Utility Services
 - **TemplateRenderer**: Jinja2 template rendering
 - **ConfigurationService**: Access to configuration
-- **LoggingService**: Centralized logging
+- **LoggerFactory**: Centralized logging with pluggable backends (stdlib/structlog)
 
 ## Service Lifecycle Management
 
