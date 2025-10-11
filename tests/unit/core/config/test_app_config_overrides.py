@@ -17,7 +17,7 @@ test_app:
   general_config:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -46,7 +46,7 @@ my_plugin:
   general_config:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """

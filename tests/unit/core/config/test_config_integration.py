@@ -4,7 +4,7 @@ from pathlib import Path
 
 from injector import Injector
 
-from open_ticket_ai.core import AppConfig, AppModule, RawOpenTicketAIConfig, load_config
+from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig
 
 
 def test_complete_config_flow_with_defaults(tmp_path: Path) -> None:
@@ -12,10 +12,10 @@ def test_complete_config_flow_with_defaults(tmp_path: Path) -> None:
     config_content = """
 open_ticket_ai:
   plugins: ["default-plugin"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
-  defs:
+  services:
     - id: test-def
       use: some.class
   orchestrator:
@@ -27,11 +27,12 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    config = load_config(config_path)
+    config_loader = ConfigLoader(AppConfig())
+    config = config_loader.load_config(config_path)
 
     assert config.plugins == ["default-plugin"]
-    assert len(config.defs) == 1
-    assert config.defs[0].id == "test-def"
+    assert len(config.services) == 1
+    assert config.services[0].id == "test-def"
 
 
 def test_complete_config_flow_with_custom_app_config(tmp_path: Path) -> None:
@@ -39,10 +40,10 @@ def test_complete_config_flow_with_custom_app_config(tmp_path: Path) -> None:
     config_content = """
 custom_app:
   plugins: ["custom-plugin"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -50,7 +51,8 @@ custom_app:
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
     app_config = AppConfig(config_yaml_root_key="custom_app")
-    config = load_config(config_path, app_config)
+    config_loader = ConfigLoader(app_config)
+    config = config_loader.load_config(config_path)
 
     assert config.plugins == ["custom-plugin"]
 
@@ -60,10 +62,10 @@ def test_complete_di_flow_with_env_var(tmp_path: Path, monkeypatch) -> None:
     config_content = """
 open_ticket_ai:
   plugins: ["env-plugin"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -85,10 +87,10 @@ def test_complete_di_flow_with_custom_env_var(tmp_path: Path, monkeypatch) -> No
     config_content = """
 my_app:
   plugins: ["custom-env-plugin"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -113,10 +115,10 @@ def test_app_config_allows_hot_reload_preparation(tmp_path: Path) -> None:
     config_v1 = """
 open_ticket_ai:
   plugins: ["v1"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -124,20 +126,21 @@ open_ticket_ai:
     config_path.write_text(config_v1.strip(), encoding="utf-8")
 
     app_config = AppConfig()
-    config1 = load_config(config_path, app_config)
+    config_loader = ConfigLoader(app_config)
+    config1 = config_loader.load_config(config_path)
     assert config1.plugins == ["v1"]
 
     config_v2 = """
 open_ticket_ai:
   plugins: ["v2"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
     config_path.write_text(config_v2.strip(), encoding="utf-8")
 
-    config2 = load_config(config_path, app_config)
+    config2 = config_loader.load_config(config_path)
     assert config2.plugins == ["v2"]

@@ -12,22 +12,27 @@ plugins:
   - name: plugin_name
     config: {}
 
-# 2. General Configuration
-general_config:
-  setting: value
+# 2. Infrastructure Configuration
+infrastructure:
+  logging:
+    version: 1
+  default_template_renderer: "jinja_default"
 
-# 3. Reusable Definitions
-defs:
-  definition_name: &anchor_name
-    key: value
+# 3. Services (formerly Definitions)
+services:
+  - id: service_id
+    use: "module:ClassName"
+    params: {}
 
 # 4. Orchestrator (Pipelines)
 orchestrator:
-  pipelines:
-    - name: pipeline_name
-      run_every_milli_seconds: 60000
-      pipes:
-        - pipe_name: pipe_name
+  runners:
+    - on:
+        id: trigger_id
+        use: "module:TriggerClass"
+      run:
+        id: pipeline_id
+        steps: []
 ```
 
 ## Main Configuration Sections
@@ -49,34 +54,54 @@ plugins:
       device: "cpu"
 ```
 
-### 2. General Configuration
+### 2. Infrastructure Configuration
 
-Application-wide settings:
-
-```yaml
-general_config:
-  log_level: "INFO"
-  log_format: "json"
-  timezone: "UTC"
-  temp_directory: "/tmp/open-ticket-ai"
-```
-
-### 3. Definitions (defs)
-
-Reusable configuration blocks:
+Core infrastructure settings including logging and template renderer:
 
 ```yaml
-defs:
-  # Reusable search criteria
-  open_tickets: &open_tickets
-    StateType: "Open"
-    limit: 100
+infrastructure:
+  logging:
+    version: 1
+    disable_existing_loggers: false
+    handlers:
+      console:
+        class: logging.StreamHandler
+    formatters:
+      std:
+        format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    root:
+      level: INFO
+      handlers: [console]
   
-  # Reusable queue mapping
-  queues: &queues
-    billing: 1
-    support: 2
+  # Default template renderer (bootstrapped first)
+  default_template_renderer: "jinja_default"
 ```
+
+### 3. Services
+
+Registerable services including template renderers and ticket systems:
+
+```yaml
+services:
+  # Template renderer service (bootstrapped before all other services)
+  - id: "jinja_default"
+    use: "open_ticket_ai.core.template_rendering:JinjaRenderer"
+    params:
+      env_config:
+        prefix: "OTAI_"
+      autoescape: false
+  
+  # Ticket system service (can use templating)
+  - id: "otobo_znuny"
+    use: "otai_otobo_znuny:OTOBOZnunyTicketSystemService"
+    params:
+      base_url: "http://example.com/otobo"
+      password: "{{ env.OTAI_OTOBO_PASSWORD }}"  # Rendered by jinja_default
+```
+
+**Important**: The TemplateRenderer service specified in `infrastructure.default_template_renderer` 
+is always instantiated first, and its params are NEVER templated (raw config only). 
+All other services and pipes can use templating in their configs.
 
 ### 4. Orchestrator
 
@@ -141,7 +166,7 @@ pipes:
     note_text: "Classified at {{ now() }} with {{ context.confidence }}% confidence"
 ```
 
-## Multi-Environment Configuration
+### Multi-Environment Configuration
 
 ### Environment Variables
 
@@ -149,14 +174,18 @@ Different values per environment:
 
 ```yaml
 # production.yml
-general_config:
-  log_level: "WARNING"
-  api_url: "${PROD_API_URL}"
+infrastructure:
+  logging:
+    version: 1
+    root:
+      level: WARNING
 
 # development.yml
-general_config:
-  log_level: "DEBUG"
-  api_url: "${DEV_API_URL}"
+infrastructure:
+  logging:
+    version: 1
+    root:
+      level: DEBUG
 ```
 
 ### Configuration Inheritance

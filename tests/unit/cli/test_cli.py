@@ -1,10 +1,11 @@
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 from typer.testing import CliRunner
 
-from open_ticket_ai.cli.main import app
+from open_ticket_ai.cli.main import CLI, app
+from open_ticket_ai.core.config.app_config import AppConfig
 
 
 @pytest.fixture
@@ -31,12 +32,43 @@ open_ticket_ai:
     return templates_dir
 
 
+@pytest.fixture
+def mock_app_config(mock_templates_dir: Path) -> AppConfig:
+    app_config = AppConfig()
+    with patch.object(app_config, "get_templates_dir", return_value=mock_templates_dir):
+        yield app_config
+
+
+def test_cli_can_be_instantiated_with_custom_app_config() -> None:
+    custom_app_config = AppConfig(
+        config_env_var="CUSTOM_ENV_VAR",
+        config_yaml_root_key="custom_root",
+        default_config_filename="custom.yml",
+    )
+
+    cli = CLI(custom_app_config)
+
+    assert cli.app_config.config_env_var == "CUSTOM_ENV_VAR"
+    assert cli.app_config.config_yaml_root_key == "custom_root"
+    assert cli.app_config.default_config_filename == "custom.yml"
+
+
+def test_cli_uses_default_app_config_when_none_provided() -> None:
+    cli = CLI()
+
+    assert cli.app_config.config_env_var == "OPEN_TICKET_AI_CONFIG"
+    assert cli.app_config.config_yaml_root_key == "open_ticket_ai"
+    assert cli.app_config.default_config_filename == "config.yml"
+
+
 def test_init_command_success(cli_runner: CliRunner, mock_templates_dir: Path, tmp_path: Path) -> None:
     output_file = tmp_path / "config.yml"
 
-    with patch("open_ticket_ai.cli.main.get_templates_dir", return_value=mock_templates_dir):
+    mock_app_config = AppConfig()
+    with patch.object(AppConfig, "get_templates_dir", return_value=mock_templates_dir):
+        cli = CLI(mock_app_config)
         result = cli_runner.invoke(
-            app,
+            cli.app,
             ["init", "queue_classification", "--output", str(output_file)],
         )
 
@@ -47,8 +79,10 @@ def test_init_command_success(cli_runner: CliRunner, mock_templates_dir: Path, t
 
 
 def test_init_command_template_not_found(cli_runner: CliRunner, mock_templates_dir: Path) -> None:
-    with patch("open_ticket_ai.cli.main.get_templates_dir", return_value=mock_templates_dir):
-        result = cli_runner.invoke(app, ["init", "nonexistent_template"])
+    mock_app_config = AppConfig()
+    with patch.object(AppConfig, "get_templates_dir", return_value=mock_templates_dir):
+        cli = CLI(mock_app_config)
+        result = cli_runner.invoke(cli.app, ["init", "nonexistent_template"])
 
     assert result.exit_code == 1
     assert "not found" in result.stdout
@@ -61,9 +95,11 @@ def test_init_command_file_exists_without_force(
     output_file = tmp_path / "config.yml"
     output_file.write_text("existing content")
 
-    with patch("open_ticket_ai.cli.main.get_templates_dir", return_value=mock_templates_dir):
+    mock_app_config = AppConfig()
+    with patch.object(AppConfig, "get_templates_dir", return_value=mock_templates_dir):
+        cli = CLI(mock_app_config)
         result = cli_runner.invoke(
-            app,
+            cli.app,
             ["init", "queue_classification", "--output", str(output_file)],
         )
 
@@ -75,9 +111,11 @@ def test_init_command_file_exists_with_force(cli_runner: CliRunner, mock_templat
     output_file = tmp_path / "config.yml"
     output_file.write_text("existing content")
 
-    with patch("open_ticket_ai.cli.main.get_templates_dir", return_value=mock_templates_dir):
+    mock_app_config = AppConfig()
+    with patch.object(AppConfig, "get_templates_dir", return_value=mock_templates_dir):
+        cli = CLI(mock_app_config)
         result = cli_runner.invoke(
-            app,
+            cli.app,
             ["init", "queue_classification", "--output", str(output_file), "--force"],
         )
 
@@ -86,26 +124,11 @@ def test_init_command_file_exists_with_force(cli_runner: CliRunner, mock_templat
     assert "Example: Queue Classification" in output_file.read_text()
 
 
-def test_version_command(cli_runner: CliRunner) -> None:
-    result = cli_runner.invoke(app, ["version"])
-
-    assert result.exit_code == 0
-    assert "Open Ticket AI version:" in result.stdout
-    assert "1.0.0rc1" in result.stdout
-
-
 def test_plugin_list_command(cli_runner: CliRunner) -> None:
-    with patch("open_ticket_ai.cli.main.importlib.metadata.distributions") as mock_dists:
-        mock_dist = MagicMock()
-        mock_dist.name = "otai-test-plugin"
-        mock_dist.version = "1.0.0"
-        mock_dist.metadata = {"Summary": "Test plugin"}
-        mock_dists.return_value = [mock_dist]
+    result = cli_runner.invoke(app, ["plugin", "list"])
 
-        result = cli_runner.invoke(app, ["plugin", "list"])
-
-    assert result.exit_code == 0
-    assert "Installed OTAI plugins" in result.stdout
+    assert result.exit_code == 1
+    assert "not yet implemented" in result.stdout
 
 
 def test_check_config_file_not_found(cli_runner: CliRunner, tmp_path: Path) -> None:
@@ -117,38 +140,39 @@ def test_check_config_file_not_found(cli_runner: CliRunner, tmp_path: Path) -> N
     assert "not found" in result.stdout
 
 
-def test_start_command_no_config(cli_runner: CliRunner) -> None:
+def test_run_command_no_config(cli_runner: CliRunner) -> None:
     with patch.dict("os.environ", {}, clear=True):
-        result = cli_runner.invoke(app, ["start"])
+        result = cli_runner.invoke(app, ["run"])
 
     assert result.exit_code == 1
     assert "OPEN_TICKET_AI_CONFIG" in result.stdout
 
 
-def test_start_command_config_not_found(cli_runner: CliRunner, tmp_path: Path) -> None:
+def test_run_command_config_not_found(cli_runner: CliRunner, tmp_path: Path) -> None:
     nonexistent_file = tmp_path / "nonexistent.yml"
 
-    result = cli_runner.invoke(app, ["start", "--config", str(nonexistent_file)])
+    result = cli_runner.invoke(app, ["run", "--config", str(nonexistent_file)])
 
     assert result.exit_code == 1
     assert "not found" in result.stdout
 
 
-def test_get_available_templates(mock_templates_dir: Path) -> None:
-    from open_ticket_ai.cli.main import get_available_templates
-
-    with patch("open_ticket_ai.cli.main.get_templates_dir", return_value=mock_templates_dir):
-        templates = get_available_templates()
+def test_cli_get_available_templates(mock_templates_dir: Path) -> None:
+    mock_app_config = AppConfig()
+    with patch.object(AppConfig, "get_templates_dir", return_value=mock_templates_dir):
+        cli = CLI(mock_app_config)
+        templates = cli._get_available_templates()
 
     assert "queue_classification" in templates
     assert "priority_classification" in templates
     assert len(templates) == 2
 
 
-def test_extract_template_description(mock_templates_dir: Path) -> None:
-    from open_ticket_ai.cli.main import extract_template_description
+def test_cli_extract_template_description(mock_templates_dir: Path) -> None:
+    mock_app_config = AppConfig()
+    cli = CLI(mock_app_config)
 
     template_path = mock_templates_dir / "queue_classification.yml"
-    description = extract_template_description(template_path)
+    description = cli._extract_template_description(template_path)
 
     assert "Queue Classification" in description

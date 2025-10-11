@@ -92,7 +92,7 @@ class SentimentAnalysisPipe(Pipe):
         ).model_dump()
 ```
 
-Después de implementarla, regístrala dentro de `open_ticket_ai.defs` (o en `general_config.pipe_classes`) para que la pipeline en YAML pueda referenciarla por su `id`. Gracias a que el orquestador renderiza la configuración con Jinja2, puedes incluir expresiones que reutilicen variables de entorno o resultados de pipes anteriores.
+Después de implementarla, regístrala dentro de `open_ticket_ai.defs` (o en `infrastructure.pipe_classes`) para que la pipeline en YAML pueda referenciarla por su `id`. Gracias a que el orquestador renderiza la configuración con Jinja2, puedes incluir expresiones que reutilicen variables de entorno o resultados de pipes anteriores.
 
 ## Cómo Integrar un Nuevo Sistema de Tickets
 

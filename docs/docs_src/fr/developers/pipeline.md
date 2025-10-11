@@ -14,7 +14,7 @@ pendant l'exécution.
 Toutes les options sont regroupées sous la clé `open_ticket_ai`. Le schéma correspond à `RawOpenTicketAIConfig` et se divise en quatre sections :
 
 - **`plugins`** – modules Python optionnels importés avant la création des pipes.
-- **`general_config`** – paramètres globaux (logging, catalogue `pipe_classes` défini via des ancres YAML réutilisables).
+- **`infrastructure`** – paramètres globaux (logging, catalogue `pipe_classes` défini via des ancres YAML réutilisables).
 - **`defs`** – définitions réutilisables (services, pipes composites, ensembles de paramètres) pouvant être fusionnées dans les pipes planifiées via
   `<<: *ancre`.
 - **`orchestrator`** – tableau d'entrées de planning. Chaque élément précise `run_every_milli_seconds` et la `pipe` (souvent une définition composite
@@ -23,7 +23,7 @@ Toutes les options sont regroupées sous la clé `open_ticket_ai`. Le schéma co
 ```yaml
 open_ticket_ai:
   plugins: []
-  general_config:
+  infrastructure:
     pipe_classes:
       - &ticket_fetch_pipe
         use: "open_ticket_ai.base:FetchTicketsPipe"

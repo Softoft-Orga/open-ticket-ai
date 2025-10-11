@@ -1,8 +1,177 @@
 {
   "$defs": {
-    "RawOpenTicketAIConfig": {
+    "ConcurrencySettings": {
       "properties": {
-        "plugins": {
+        "max_workers": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Max Workers",
+          "type": "integer"
+        },
+        "when_exhausted": {
+          "default": "wait",
+          "title": "When Exhausted",
+          "type": "string"
+        }
+      },
+      "title": "ConcurrencySettings",
+      "type": "object"
+    },
+    "FilterConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "class": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "()": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "()"
+        }
+      },
+      "title": "FilterConfig",
+      "type": "object"
+    },
+    "FormatterConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "class": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class"
+        },
+        "format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Format"
+        },
+        "datefmt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Datefmt"
+        },
+        "style": {
+          "anyOf": [
+            {
+              "enum": [
+                "%",
+                "{",
+                "$"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Style"
+        },
+        "()": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "()"
+        }
+      },
+      "title": "FormatterConfig",
+      "type": "object"
+    },
+    "HandlerConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "class": {
+          "title": "Class",
+          "type": "string"
+        },
+        "level": {
+          "anyOf": [
+            {
+              "enum": [
+                "NOTSET",
+                "DEBUG",
+                "INFO",
+                "WARNING",
+                "ERROR",
+                "CRITICAL"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Level"
+        },
+        "formatter": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Formatter"
+        },
+        "filters": {
           "anyOf": [
             {
               "items": {
@@ -11,85 +180,602 @@
               "type": "array"
             },
             {
-              "type": "string"
+              "type": "null"
             }
           ],
-          "default": [],
-          "title": "Plugins"
+          "default": null,
+          "title": "Filters"
         },
-        "general_config": {
+        "()": {
           "anyOf": [
             {
-              "additionalProperties": {
-                "anyOf": [
-                  {
-                    "additionalProperties": true,
-                    "type": "object"
-                  },
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "integer"
-                  },
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "boolean"
-                  }
-                ]
-              },
-              "type": "object"
+              "type": "string"
             },
             {
-              "type": "string"
+              "type": "null"
             }
           ],
-          "default": {},
-          "title": "General Config"
+          "default": null,
+          "title": "()"
+        }
+      },
+      "required": [
+        "class"
+      ],
+      "title": "HandlerConfig",
+      "type": "object"
+    },
+    "InfrastructureConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "logging": {
+          "$ref": "#/$defs/LoggingDictConfig"
+        }
+      },
+      "title": "InfrastructureConfig",
+      "type": "object"
+    },
+    "LoggerConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "level": {
+          "anyOf": [
+            {
+              "enum": [
+                "NOTSET",
+                "DEBUG",
+                "INFO",
+                "WARNING",
+                "ERROR",
+                "CRITICAL"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Level"
+        },
+        "handlers": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Handlers"
+        },
+        "propagate": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Propagate"
+        },
+        "filters": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Filters"
+        }
+      },
+      "title": "LoggerConfig",
+      "type": "object"
+    },
+    "LoggingDictConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "disable_existing_loggers": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Disable Existing Loggers"
+        },
+        "incremental": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Incremental"
+        },
+        "root": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RootConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "loggers": {
+          "additionalProperties": {
+            "$ref": "#/$defs/LoggerConfig"
+          },
+          "title": "Loggers",
+          "type": "object"
+        },
+        "handlers": {
+          "additionalProperties": {
+            "$ref": "#/$defs/HandlerConfig"
+          },
+          "title": "Handlers",
+          "type": "object"
+        },
+        "formatters": {
+          "additionalProperties": {
+            "$ref": "#/$defs/FormatterConfig"
+          },
+          "title": "Formatters",
+          "type": "object"
+        },
+        "filters": {
+          "additionalProperties": {
+            "$ref": "#/$defs/FilterConfig"
+          },
+          "title": "Filters",
+          "type": "object"
+        }
+      },
+      "title": "LoggingDictConfig",
+      "type": "object"
+    },
+    "OrchestratorConfig": {
+      "properties": {
+        "runners": {
+          "items": {
+            "$ref": "#/$defs/RunnerDefinition"
+          },
+          "title": "Runners",
+          "type": "array"
+        }
+      },
+      "title": "OrchestratorConfig",
+      "type": "object"
+    },
+    "RawOpenTicketAIConfig": {
+      "properties": {
+        "plugins": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Plugins",
+          "type": "array"
+        },
+        "infrastructure": {
+          "$ref": "#/$defs/InfrastructureConfig"
         },
         "defs": {
-          "anyOf": [
-            {
-              "additionalProperties": {
-                "items": {
-                  "anyOf": [
-                    {
-                      "additionalProperties": true,
-                      "type": "object"
-                    },
-                    {
-                      "type": "string"
-                    }
-                  ]
-                },
-                "type": "array"
-              },
-              "type": "object"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "default": {},
-          "title": "Defs"
+          "items": {
+            "$ref": "#/$defs/RegisterableConfig"
+          },
+          "title": "Defs",
+          "type": "array"
         },
         "orchestrator": {
-          "anyOf": [
-            {
-              "additionalProperties": true,
-              "type": "object"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "default": {},
-          "title": "Orchestrator"
+          "$ref": "#/$defs/OrchestratorConfig"
         }
       },
       "title": "RawOpenTicketAIConfig",
+      "type": "object"
+    },
+    "RawPipeConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "uid": {
+          "title": "Uid",
+          "type": "string"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "use": {
+          "default": "open_ticket_ai.base.CompositePipe",
+          "title": "Use",
+          "type": "string"
+        },
+        "injects": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Injects",
+          "type": "object"
+        },
+        "if": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "default": "True",
+          "title": "If"
+        },
+        "depends_on": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "default": [],
+          "title": "Depends On"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        },
+        "steps": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/RenderedPipeConfig"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Steps"
+        }
+      },
+      "title": "RawPipeConfig",
+      "type": "object"
+    },
+    "RegisterableConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "uid": {
+          "title": "Uid",
+          "type": "string"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "use": {
+          "default": "open_ticket_ai.base.CompositePipe",
+          "title": "Use",
+          "type": "string"
+        },
+        "injects": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Injects",
+          "type": "object"
+        }
+      },
+      "title": "RegisterableConfig",
+      "type": "object"
+    },
+    "RenderedPipeConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "uid": {
+          "title": "Uid",
+          "type": "string"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "use": {
+          "default": "open_ticket_ai.base.CompositePipe",
+          "title": "Use",
+          "type": "string"
+        },
+        "injects": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Injects",
+          "type": "object"
+        },
+        "if": {
+          "default": true,
+          "title": "If",
+          "type": "boolean"
+        },
+        "depends_on": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        },
+        "steps": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/RenderedPipeConfig"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Steps"
+        }
+      },
+      "title": "RenderedPipeConfig",
+      "type": "object"
+    },
+    "RetrySettings": {
+      "properties": {
+        "attempts": {
+          "default": 3,
+          "minimum": 1,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "delay": {
+          "default": "5s",
+          "title": "Delay",
+          "type": "string"
+        },
+        "backoff_factor": {
+          "default": 2.0,
+          "minimum": 1.0,
+          "title": "Backoff Factor",
+          "type": "number"
+        },
+        "max_delay": {
+          "default": "30s",
+          "title": "Max Delay",
+          "type": "string"
+        },
+        "jitter": {
+          "default": true,
+          "title": "Jitter",
+          "type": "boolean"
+        }
+      },
+      "title": "RetrySettings",
+      "type": "object"
+    },
+    "RootConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "level": {
+          "anyOf": [
+            {
+              "enum": [
+                "NOTSET",
+                "DEBUG",
+                "INFO",
+                "WARNING",
+                "ERROR",
+                "CRITICAL"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Level"
+        },
+        "handlers": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Handlers"
+        },
+        "filters": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Filters"
+        }
+      },
+      "title": "RootConfig",
+      "type": "object"
+    },
+    "RunnerDefinition": {
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "on": {
+          "items": {
+            "$ref": "#/$defs/TriggerDefinition"
+          },
+          "title": "On",
+          "type": "array"
+        },
+        "pipe": {
+          "$ref": "#/$defs/RawPipeConfig"
+        },
+        "settings": {
+          "$ref": "#/$defs/RunnerSettings"
+        }
+      },
+      "title": "RunnerDefinition",
+      "type": "object"
+    },
+    "RunnerSettings": {
+      "properties": {
+        "concurrency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConcurrencySettings"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RetrySettings"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "timeout": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timeout"
+        },
+        "retry_scope": {
+          "default": "pipeline",
+          "title": "Retry Scope",
+          "type": "string"
+        },
+        "priority": {
+          "default": 10,
+          "title": "Priority",
+          "type": "integer"
+        }
+      },
+      "title": "RunnerSettings",
+      "type": "object"
+    },
+    "TriggerDefinition": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "use": {
+          "title": "Use",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "use"
+      ],
+      "title": "TriggerDefinition",
       "type": "object"
     }
   },

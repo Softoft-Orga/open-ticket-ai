@@ -21,5 +21,9 @@ class AppConfig(BaseModel):
     def get_default_config_path(self) -> Path:
         return Path.cwd() / self.default_config_filename
 
-    def get_logger(self, name: str):
+    def get_logger(self, name: str) -> logging.Logger:
         return logging.getLogger(name)
+
+    def get_templates_dir(self) -> Path:
+        package_root = Path(__file__).parent.parent.parent.parent.parent
+        return package_root / "docs" / "raw_en_docs" / "config_examples"

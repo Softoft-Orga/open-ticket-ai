@@ -9,7 +9,7 @@
 # This is a production-ready example showing the full power of Open Ticket AI.
 
 open_ticket_ai:
-    general_config:
+    infrastructure:
         logging:
             version: 1
             disable_existing_loggers: false
