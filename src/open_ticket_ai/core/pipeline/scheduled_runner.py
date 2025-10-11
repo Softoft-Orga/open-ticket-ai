@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import logging
 
+from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
 from open_ticket_ai.core.pipeline.orchestrator_config import RunnerDefinition
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
-from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
 
 
 class ScheduledPipeRunner:

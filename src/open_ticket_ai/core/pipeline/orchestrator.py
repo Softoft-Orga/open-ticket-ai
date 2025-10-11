@@ -8,8 +8,8 @@ from typing import Any
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from injector import inject, singleton
 
-from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig, RunnerDefinition, TriggerDefinition
 from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
+from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig, RunnerDefinition, TriggerDefinition
 from open_ticket_ai.core.pipeline.scheduled_runner import ScheduledPipeRunner
 
 

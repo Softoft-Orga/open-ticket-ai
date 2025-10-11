@@ -9,8 +9,8 @@ from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
 from open_ticket_ai.core.config.registerable import RegisterableConfig
-from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
+from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.template_rendering import TemplateRendererConfig
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.renderer_config import (

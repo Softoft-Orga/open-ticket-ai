@@ -1,10 +1,10 @@
 import logging
 from typing import Any
 
+from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RawPipeConfig, RenderedPipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
-from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
 
 
 class CompositePipeConfig(RenderedPipeConfig):
