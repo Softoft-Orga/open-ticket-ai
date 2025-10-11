@@ -698,14 +698,14 @@
         "pipe": {
           "$ref": "#/$defs/RawPipeConfig"
         },
-        "settings": {
-          "$ref": "#/$defs/RunnerSettings"
+        "params": {
+          "$ref": "#/$defs/RunnerParams"
         }
       },
       "title": "RunnerDefinition",
       "type": "object"
     },
-    "RunnerSettings": {
+    "RunnerParams": {
       "properties": {
         "concurrency": {
           "anyOf": [
@@ -752,7 +752,7 @@
           "type": "integer"
         }
       },
-      "title": "RunnerSettings",
+      "title": "RunnerParams",
       "type": "object"
     },
     "TriggerDefinition": {

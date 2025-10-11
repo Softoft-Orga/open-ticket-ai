@@ -88,3 +88,48 @@ async def test_orchestrator_starts_and_stops_runners() -> None:
     orchestrator.stop()
     await asyncio.sleep(0.01)
     assert not orchestrator._scheduler.running
+
+
+def test_orchestrator_config_with_params() -> None:
+    raw = {
+        "runners": [
+            {
+                "id": "test-runner-with-params",
+                "triggers": [
+                    {
+                        "id": "interval-trigger",
+                        "use": "apscheduler.triggers.interval:IntervalTrigger",
+                        "params": {"seconds": 10},
+                    }
+                ],
+                "pipe": {"id": "demo"},
+                "params": {
+                    "concurrency": {
+                        "max_workers": 5,
+                        "when_exhausted": "wait",
+                    },
+                    "retry": {
+                        "attempts": 5,
+                        "delay": "10s",
+                    },
+                    "timeout": "30s",
+                    "priority": 20,
+                },
+            }
+        ]
+    }
+
+    config = OrchestratorConfig.model_validate(raw)
+
+    assert len(config.runners) == 1
+    assert config.runners[0].id == "test-runner-with-params"
+    assert config.runners[0].params is not None
+    assert config.runners[0].params.concurrency is not None
+    assert config.runners[0].params.concurrency.max_workers == 5
+    assert config.runners[0].params.concurrency.when_exhausted == "wait"
+    assert config.runners[0].params.retry is not None
+    assert config.runners[0].params.retry.attempts == 5
+    assert config.runners[0].params.retry.delay == "10s"
+    assert config.runners[0].params.timeout == "30s"
+    assert config.runners[0].params.priority == 20
+
