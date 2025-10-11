@@ -8,7 +8,7 @@ The root configuration object with these main sections:
 
 ```yaml
 plugins: []              # Plugin configurations
-general_config: {}       # General settings
+infrastructure: {}       # General settings
 defs: {}                # Reusable definitions
 orchestrator: {}        # Pipeline orchestration
 ```
@@ -33,7 +33,7 @@ plugins:
 Application-wide settings:
 
 ```yaml
-general_config:
+infrastructure:
   log_level: "INFO"
   environment: "production"
   max_workers: 4
@@ -119,7 +119,7 @@ orchestrator:
 
 ### Optional
 - `plugins`: Plugins are optional
-- `general_config`: Uses defaults if not specified
+- `infrastructure`: Uses defaults if not specified
 - `defs`: Only needed for reusable definitions
 - Most pipe-specific fields have defaults
 

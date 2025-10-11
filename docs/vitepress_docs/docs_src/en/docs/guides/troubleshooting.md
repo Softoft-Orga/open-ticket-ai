@@ -390,7 +390,7 @@ plugins:
 
 3. **Clear context between runs**:
 ```yaml
-general_config:
+infrastructure:
   clear_context: true
 ```
 
@@ -403,7 +403,7 @@ general_config:
 open-ticket-ai run --config config.yml --log-level DEBUG
 
 # Or in config
-general_config:
+infrastructure:
   log_level: "DEBUG"
 ```
 

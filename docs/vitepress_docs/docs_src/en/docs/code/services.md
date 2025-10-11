@@ -15,7 +15,7 @@ Services encapsulate business logic and provide reusable functionality to pipes.
 - **PriorityClassifier**: Priority assignment logic
 
 ### Utility Services
-- **TemplateRenderer**: Jinja2 template rendering
+- **TemplateRenderer**: Jinja2 template rendering (can be configured in `defs` for customization)
 - **ConfigurationService**: Access to configuration
 - **LoggerFactory**: Centralized logging with pluggable backends (stdlib/structlog)
 

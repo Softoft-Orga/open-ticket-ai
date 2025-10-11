@@ -14,7 +14,7 @@ Alle Einstellungen liegen unter dem Schlüssel `open_ticket_ai`. Das Schema ents
 Bereiche:
 
 - **`plugins`** – optionale Python-Module, die vor dem Instanziieren der Pipes importiert werden.
-- **`general_config`** – globale Einstellungen wie Logging sowie `pipe_classes` (ein Katalog wiederverwendbarer Pipe-Vorlagen, die über
+- **`infrastructure`** – globale Einstellungen wie Logging sowie `pipe_classes` (ein Katalog wiederverwendbarer Pipe-Vorlagen, die über
   YAML-Anker referenziert werden).
 - **`defs`** – wiederverwendbare Definitionen (Services, Composite-Pipes, Parametersätze), die mit `<<: *anker` in geplante Pipes
   gemischt werden können.
@@ -24,7 +24,7 @@ Bereiche:
 ```yaml
 open_ticket_ai:
   plugins: []
-  general_config:
+  infrastructure:
     pipe_classes:
       - &ticket_fetch_pipe
         use: "open_ticket_ai.base:FetchTicketsPipe"

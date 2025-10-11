@@ -34,18 +34,14 @@ class AppModule(Module):
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
         config_loader = ConfigLoader(self.app_config)
         config = config_loader.load_config(self.config_path)
-        print(config.general_config.logging.model_dump_json(indent=4, by_alias=True, exclude_none=True))
-        dictConfig(config.general_config.logging.model_dump(by_alias=True, exclude_none=True))
+        print(config.infrastructure.logging.model_dump_json(indent=4, by_alias=True, exclude_none=True))
+        dictConfig(config.infrastructure.logging.model_dump(by_alias=True, exclude_none=True))
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(RegisterableFactory, scope=singleton)
 
     @provider
     def provide_template_renderer(self, config: RawOpenTicketAIConfig) -> TemplateRenderer:
-        renderer_config: TemplateRendererConfig = config.general_config.template_renderer
-        if renderer_config.type != "jinja":
-            raise ValueError(f"Unsupported template renderer type: {renderer_config.type}")
-
-        jinja_config = JinjaRendererConfig.model_validate(renderer_config.model_dump())
+        jinja_config = JinjaRendererConfig()
         return JinjaRenderer(config=jinja_config)
 
     @provider

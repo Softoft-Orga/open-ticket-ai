@@ -12,7 +12,7 @@ def test_complete_config_flow_with_defaults(tmp_path: Path) -> None:
     config_content = """
 open_ticket_ai:
   plugins: ["default-plugin"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
   defs:
@@ -39,7 +39,7 @@ def test_complete_config_flow_with_custom_app_config(tmp_path: Path) -> None:
     config_content = """
 custom_app:
   plugins: ["custom-plugin"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
   defs: []
@@ -60,7 +60,7 @@ def test_complete_di_flow_with_env_var(tmp_path: Path, monkeypatch) -> None:
     config_content = """
 open_ticket_ai:
   plugins: ["env-plugin"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
   defs: []
@@ -85,7 +85,7 @@ def test_complete_di_flow_with_custom_env_var(tmp_path: Path, monkeypatch) -> No
     config_content = """
 my_app:
   plugins: ["custom-env-plugin"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
   defs: []
@@ -113,7 +113,7 @@ def test_app_config_allows_hot_reload_preparation(tmp_path: Path) -> None:
     config_v1 = """
 open_ticket_ai:
   plugins: ["v1"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
   defs: []
@@ -130,7 +130,7 @@ open_ticket_ai:
     config_v2 = """
 open_ticket_ai:
   plugins: ["v2"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
   defs: []

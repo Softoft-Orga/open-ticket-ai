@@ -12,9 +12,10 @@ plugins:
   - name: plugin_name
     config: {}
 
-# 2. General Configuration
-general_config:
-  setting: value
+# 2. Infrastructure Configuration
+infrastructure:
+  logging:
+    version: 1
 
 # 3. Reusable Definitions
 defs:
@@ -49,16 +50,24 @@ plugins:
       device: "cpu"
 ```
 
-### 2. General Configuration
+### 2. Infrastructure Configuration
 
-Application-wide settings:
+Core infrastructure settings (currently only logging):
 
 ```yaml
-general_config:
-  log_level: "INFO"
-  log_format: "json"
-  timezone: "UTC"
-  temp_directory: "/tmp/open-ticket-ai"
+infrastructure:
+  logging:
+    version: 1
+    disable_existing_loggers: false
+    handlers:
+      console:
+        class: logging.StreamHandler
+    formatters:
+      std:
+        format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    root:
+      level: INFO
+      handlers: [console]
 ```
 
 ### 3. Definitions (defs)
@@ -141,7 +150,7 @@ pipes:
     note_text: "Classified at {{ now() }} with {{ context.confidence }}% confidence"
 ```
 
-## Multi-Environment Configuration
+### Multi-Environment Configuration
 
 ### Environment Variables
 
@@ -149,14 +158,18 @@ Different values per environment:
 
 ```yaml
 # production.yml
-general_config:
-  log_level: "WARNING"
-  api_url: "${PROD_API_URL}"
+infrastructure:
+  logging:
+    version: 1
+    root:
+      level: WARNING
 
 # development.yml
-general_config:
-  log_level: "DEBUG"
-  api_url: "${DEV_API_URL}"
+infrastructure:
+  logging:
+    version: 1
+    root:
+      level: DEBUG
 ```
 
 ### Configuration Inheritance

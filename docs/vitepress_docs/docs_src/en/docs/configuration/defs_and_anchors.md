@@ -187,7 +187,7 @@ defs:
     log_level: "DEBUG"
     retry_count: 1
 
-general_config:
+infrastructure:
   <<: *prod_settings  # Use appropriate environment
 ```
 
