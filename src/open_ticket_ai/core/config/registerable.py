@@ -3,13 +3,15 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from open_ticket_ai.core.config.params_config_base import ParamsConfigBase
+
 
 class Registerable:
     def __init__(self, params: dict[str, Any] | BaseModel, *args: Any, **kwargs: Any) -> None:
         pass
 
 
-class RegisterableConfig(BaseModel):
+class RegisterableConfig(ParamsConfigBase):
     model_config = ConfigDict(extra="allow")
     uid: str = Field(default_factory=lambda: uuid.uuid4().hex)
     id: str | None = None

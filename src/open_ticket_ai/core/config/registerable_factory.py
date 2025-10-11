@@ -8,6 +8,7 @@ from typing import Any
 from injector import inject, singleton
 from pydantic import BaseModel
 
+from open_ticket_ai.core.config.params_config_base import CONTROL_KEYS
 from open_ticket_ai.core.config.registerable import Registerable, RegisterableConfig
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import RawPipeConfig, RenderedPipeConfig
@@ -23,17 +24,6 @@ def _locate(use: str) -> type:
     if use_class is None:
         raise ValueError(f"Cannot locate class '{use}'")
     return typing.cast(type, locate(use))
-
-
-CONTROL_KEYS = {
-    "id",
-    "uid",
-    "use",
-    "steps",
-    "depends_on",
-    "if",
-    "params",
-}
 
 
 def extract_config_fields(raw: dict[str, Any]) -> dict[str, Any]:

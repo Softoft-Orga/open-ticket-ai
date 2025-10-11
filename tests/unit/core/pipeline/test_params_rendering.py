@@ -1,7 +1,9 @@
+import warnings
+
 import pytest
 
 from open_ticket_ai.core.config.registerable_factory import render_base_model
-from open_ticket_ai.core.pipeline.pipe_config import RawPipeConfig
+from open_ticket_ai.core.pipeline.pipe_config import RawPipeConfig, RenderedPipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
@@ -74,8 +76,6 @@ def test_render_base_model_empty_params(renderer: JinjaRenderer, context: PipeCo
 
 
 def test_render_base_model_with_legacy_fields_migrated(renderer: JinjaRenderer, context: PipeContext) -> None:
-    import warnings
-
     with warnings.catch_warnings(record=True):
         warnings.simplefilter("always")
         config = RawPipeConfig(
@@ -95,8 +95,8 @@ def test_render_base_model_steps_not_rendered() -> None:
     config = RawPipeConfig(
         id="test",
         steps=[
-            RawPipeConfig(id="step1", params={"key": "value"}),
-            RawPipeConfig(id="step2", params={"key": "value"}),
+            RenderedPipeConfig(id="step1", params={"key": "value"}),
+            RenderedPipeConfig(id="step2", params={"key": "value"}),
         ],
     )
 
