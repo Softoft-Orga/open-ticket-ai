@@ -50,16 +50,16 @@ class ConfigLoader:
 
 def load_config(config_path: os.PathLike | None = None, app_config: AppConfig | None = None) -> RawOpenTicketAIConfig:
     """Standalone helper function to load configuration.
-    
+
     Args:
         config_path: Path to the configuration file
         app_config: Optional AppConfig instance (uses default if not provided)
-    
+
     Returns:
         Loaded RawOpenTicketAIConfig instance
     """
     if app_config is None:
         app_config = AppConfig()
-    
+
     loader = ConfigLoader(app_config)
     return loader.load_config(config_path)

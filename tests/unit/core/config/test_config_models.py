@@ -26,7 +26,7 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
                   pipe:
                     id: orchestrator-step
                     type: some.pipe
-                
+
 
         """.strip(),
         encoding="utf-8",
