@@ -227,7 +227,9 @@ def test_orchestrator_config_with_defaults_nested_settings() -> None:
 
     config = OrchestratorConfig.model_validate(raw)
 
+    assert config.runners[0].settings.concurrency is not None
     assert config.runners[0].settings.concurrency.when_exhausted == "drop"
+    assert config.runners[0].settings.retry is not None
     assert config.runners[0].settings.retry.attempts == 5
 
 
