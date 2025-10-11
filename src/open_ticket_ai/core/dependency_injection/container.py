@@ -40,8 +40,53 @@ class AppModule(Module):
 
     @provider
     def provide_template_renderer(self, config: RawOpenTicketAIConfig) -> TemplateRenderer:
-        jinja_config = JinjaRendererConfig()
-        return JinjaRenderer(config=jinja_config)
+        from pydoc import locate  # noqa: PLC0415
+
+        template_renderer_id = config.infrastructure.default_template_renderer
+
+        renderer_service_config = None
+        for service_config in config.services:
+            if service_config.id == template_renderer_id:
+                renderer_service_config = service_config
+                break
+
+        if renderer_service_config is None:
+            raise ValueError(
+                f"Template renderer service with id '{template_renderer_id}' "
+                f"not found in services. Available services: "
+                f"{[s.id for s in config.services]}"
+            )
+
+        use_str = renderer_service_config.use
+        if ":" in use_str:
+            m, c = use_str.split(":", 1)
+            use_str = f"{m}.{c}"
+
+        renderer_class = locate(use_str)
+        if renderer_class is None:
+            raise ValueError(f"Cannot locate template renderer class '{renderer_service_config.use}'")
+
+        if not issubclass(renderer_class, TemplateRenderer):
+            raise TypeError(
+                f"Class '{renderer_service_config.use}' is not a TemplateRenderer subclass"
+            )
+
+        params = renderer_service_config.model_dump().get("params", {})
+        config_class_name = renderer_class.__name__ + "Config"
+        config_module = renderer_class.__module__.rsplit(".", 1)[0] + ".renderer_config"
+
+        config_module_obj = locate(config_module)
+        if config_module_obj is None:
+            raise ValueError(f"Cannot locate config module '{config_module}'")
+
+        config_class = getattr(config_module_obj, config_class_name, None)
+        if config_class is None:
+            raise ValueError(
+                f"Cannot find config class '{config_class_name}' in module '{config_module}'"
+            )
+
+        renderer_config = config_class(**params)
+        return renderer_class(config=renderer_config)
 
     @provider
     def provide_orchestrator_config(self, config: RawOpenTicketAIConfig) -> OrchestratorConfig:
@@ -49,4 +94,4 @@ class AppModule(Module):
 
     @multiprovider
     def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RegisterableConfig]:
-        return config.defs
+        return config.services

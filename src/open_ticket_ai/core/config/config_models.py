@@ -69,12 +69,13 @@ class LoggingDictConfig(BaseModel):
 class InfrastructureConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
+    default_template_renderer: str = Field(default="jinja_default")
 
 
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=lambda: [])
     infrastructure: InfrastructureConfig = Field(default_factory=InfrastructureConfig)
-    defs: list[RegisterableConfig] = Field(default_factory=lambda: [])
+    services: list[RegisterableConfig] = Field(default_factory=lambda: [])
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
 
 
