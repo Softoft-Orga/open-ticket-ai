@@ -1,7 +1,5 @@
 import warnings
 
-import pytest
-
 from open_ticket_ai.core.pipeline.pipe_config import RawPipeConfig, RenderedPipeConfig
 
 
@@ -57,12 +55,12 @@ def test_raw_pipe_config_backwards_compatibility_auto_migration() -> None:
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         config = RawPipeConfig(id="test", queue_model="my-model", min_confidence=0.8)
-        
+
         assert len(w) == 1
         assert issubclass(w[0].category, DeprecationWarning)
         assert "queue_model" in str(w[0].message)
         assert "min_confidence" in str(w[0].message)
-        
+
         assert config.params == {"queue_model": "my-model", "min_confidence": 0.8}
 
 
@@ -70,12 +68,12 @@ def test_rendered_pipe_config_backwards_compatibility_auto_migration() -> None:
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         config = RenderedPipeConfig(id="test", queue_model="my-model", min_confidence=0.8)
-        
+
         assert len(w) == 1
         assert issubclass(w[0].category, DeprecationWarning)
         assert "queue_model" in str(w[0].message)
         assert "min_confidence" in str(w[0].message)
-        
+
         assert config.params == {"queue_model": "my-model", "min_confidence": 0.8}
 
 
@@ -83,7 +81,7 @@ def test_raw_pipe_config_control_fields_not_migrated() -> None:
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         config = RawPipeConfig(id="test", use="SomePipe", depends_on=["other"])
-        
+
         assert len(w) == 0
         assert config.params == {}
         assert config.use == "SomePipe"
@@ -94,7 +92,7 @@ def test_rendered_pipe_config_control_fields_not_migrated() -> None:
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         config = RenderedPipeConfig(id="test", use="SomePipe", depends_on=["other"])
-        
+
         assert len(w) == 0
         assert config.params == {}
         assert config.use == "SomePipe"
@@ -109,11 +107,11 @@ def test_raw_pipe_config_mixed_params_and_top_level_fields_warns() -> None:
             params={"queue_model": "my-model"},
             min_confidence=0.8,
         )
-        
+
         assert len(w) == 1
         assert issubclass(w[0].category, DeprecationWarning)
         assert "min_confidence" in str(w[0].message)
-        
+
         assert config.params == {"queue_model": "my-model"}
 
 
@@ -125,11 +123,11 @@ def test_rendered_pipe_config_mixed_params_and_top_level_fields_warns() -> None:
             params={"queue_model": "my-model"},
             min_confidence=0.8,
         )
-        
+
         assert len(w) == 1
         assert issubclass(w[0].category, DeprecationWarning)
         assert "min_confidence" in str(w[0].message)
-        
+
         assert config.params == {"queue_model": "my-model"}
 
 
@@ -141,7 +139,7 @@ def test_raw_pipe_config_new_style_no_warnings() -> None:
             use="SomePipe",
             params={"queue_model": "my-model", "min_confidence": 0.8},
         )
-        
+
         assert len(w) == 0
         assert config.params == {"queue_model": "my-model", "min_confidence": 0.8}
 
@@ -154,6 +152,6 @@ def test_rendered_pipe_config_new_style_no_warnings() -> None:
             use="SomePipe",
             params={"queue_model": "my-model", "min_confidence": 0.8},
         )
-        
+
         assert len(w) == 0
         assert config.params == {"queue_model": "my-model", "min_confidence": 0.8}

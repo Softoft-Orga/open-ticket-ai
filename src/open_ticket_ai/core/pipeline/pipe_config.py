@@ -37,14 +37,10 @@ class RenderedPipeConfig(RegisterableConfig):
     def migrate_legacy_fields(cls, data: Any) -> Any:
         if not isinstance(data, dict):
             return data
-        
+
         model_fields = set(cls.model_fields.keys())
-        legacy_fields = {
-            k: v
-            for k, v in data.items()
-            if k not in CONTROL_KEYS_FOR_MIGRATION and k not in model_fields
-        }
-        
+        legacy_fields = {k: v for k, v in data.items() if k not in CONTROL_KEYS_FOR_MIGRATION and k not in model_fields}
+
         if legacy_fields and not data.get("params"):
             warnings.warn(
                 f"Deprecated: Found user fields at top-level in rendered pipe config '{data.get('id', 'unknown')}': "
@@ -56,7 +52,7 @@ class RenderedPipeConfig(RegisterableConfig):
             migrated = {k: v for k, v in data.items() if k in CONTROL_KEYS_FOR_MIGRATION or k in model_fields}
             migrated["params"] = legacy_fields
             return migrated
-        
+
         if legacy_fields and data.get("params"):
             warnings.warn(
                 f"Deprecated: Found user fields at both top-level and in 'params' in rendered pipe config "
@@ -65,7 +61,7 @@ class RenderedPipeConfig(RegisterableConfig):
                 DeprecationWarning,
                 stacklevel=4,
             )
-        
+
         return data
 
 
@@ -84,14 +80,10 @@ class RawPipeConfig(RegisterableConfig):
     def migrate_legacy_fields(cls, data: Any) -> Any:
         if not isinstance(data, dict):
             return data
-        
+
         model_fields = set(cls.model_fields.keys())
-        legacy_fields = {
-            k: v
-            for k, v in data.items()
-            if k not in CONTROL_KEYS_FOR_MIGRATION and k not in model_fields
-        }
-        
+        legacy_fields = {k: v for k, v in data.items() if k not in CONTROL_KEYS_FOR_MIGRATION and k not in model_fields}
+
         if legacy_fields and not data.get("params"):
             warnings.warn(
                 f"Deprecated: Found user fields at top-level in raw pipe config '{data.get('id', 'unknown')}': "
@@ -103,7 +95,7 @@ class RawPipeConfig(RegisterableConfig):
             migrated = {k: v for k, v in data.items() if k in CONTROL_KEYS_FOR_MIGRATION or k in model_fields}
             migrated["params"] = legacy_fields
             return migrated
-        
+
         if legacy_fields and data.get("params"):
             warnings.warn(
                 f"Deprecated: Found user fields at both top-level and in 'params' in raw pipe config "
@@ -112,7 +104,7 @@ class RawPipeConfig(RegisterableConfig):
                 DeprecationWarning,
                 stacklevel=4,
             )
-        
+
         return data
 
 
