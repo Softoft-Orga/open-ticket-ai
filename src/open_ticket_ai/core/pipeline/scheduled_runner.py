@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import logging
 
+from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
 from open_ticket_ai.core.pipeline.orchestrator_config import RunnerDefinition
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
-from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 
 
 class ScheduledPipeRunner:
-    def __init__(self, definition: RunnerDefinition, pipe_factory: PipeFactory) -> None:
+    def __init__(self, definition: RunnerDefinition, pipe_factory: RegisterableFactory) -> None:
         self.definition = definition
         self.pipe_factory = pipe_factory
         self._logger = logging.getLogger(f"{self.__class__.__name__}.{definition.pipe_id}")

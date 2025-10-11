@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Literal
+import os
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -64,15 +65,13 @@ class LoggingDictConfig(BaseModel):
     filters: dict[str, FilterConfig] = Field(default_factory=lambda: {})
 
 
-class GeneralConfig(BaseModel):
+class InfrastructureConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
     # noinspection PyTypeHints
-    template_renderer: SpecificTemplateRendererConfig = Field(default_factory=JinjaRendererConfig)
-
 
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=lambda: [])
-    general_config: GeneralConfig = Field(default_factory=GeneralConfig)
+    infrastructure: InfrastructureConfig = Field(default_factory=InfrastructureConfig)
     services: list[RegisterableConfig] = Field(default_factory=lambda: [])
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)

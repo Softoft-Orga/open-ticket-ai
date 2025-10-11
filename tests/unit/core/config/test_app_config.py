@@ -39,6 +39,15 @@ def test_app_config_get_default_config_path_with_custom_filename() -> None:
     assert config.get_default_config_path() == expected
 
 
+def test_app_config_get_templates_dir() -> None:
+    config = AppConfig()
+    templates_dir = config.get_templates_dir()
+
+    assert templates_dir.name == "config_examples"
+    assert templates_dir.parent.name == "raw_en_docs"
+    assert isinstance(templates_dir, Path)
+
+
 def test_app_config_is_pydantic_model() -> None:
     config = AppConfig()
 

@@ -13,7 +13,7 @@ def test_app_module_binds_app_config_as_singleton(tmp_path: Path) -> None:
     config_content = """
 open_ticket_ai:
   plugins: []
-  general_config:
+  infrastructure:
     logging:
       version: 1
   services: []
@@ -36,7 +36,7 @@ def test_app_module_uses_custom_app_config(tmp_path: Path) -> None:
     config_content = """
 my_custom_root:
   plugins: []
-  general_config:
+  infrastructure:
     logging:
       version: 1
   services: []
@@ -59,7 +59,7 @@ def test_app_module_config_loader_uses_app_config(tmp_path: Path) -> None:
     config_content = """
 open_ticket_ai:
   plugins: ["test-plugin"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
   services: []
@@ -80,7 +80,7 @@ def test_app_module_respects_app_config_for_loading(tmp_path: Path) -> None:
     config_content = """
 different_key:
   plugins: ["from-different-key"]
-  general_config:
+  infrastructure:
     logging:
       version: 1
   services: []
@@ -102,7 +102,7 @@ def test_app_module_without_config_path_uses_app_config_env_var(tmp_path: Path, 
     config_content = """
 open_ticket_ai:
   plugins: []
-  general_config:
+  infrastructure:
     logging:
       version: 1
   services: []
