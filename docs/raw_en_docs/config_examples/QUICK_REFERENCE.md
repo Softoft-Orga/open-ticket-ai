@@ -139,9 +139,9 @@ Before deploying to production:
 ## Getting Help
 
 - **Documentation**:
-  See [docs/vitepress_docs/docs_src/en/developers/developer-information.md](../../vitepress_docs/docs_src/en/developers/developer-information.md)
+  See [docs/vitepress_docs/docs_src/en/developers/developer-information.md](../../vitepress_docs/docs_src/en/docs/developers/developer-information.md)
 - **Integration Guide**:
-  See [docs/vitepress_docs/docs_src/en/guide/otobo-znuny-otrs-integration.md](../../vitepress_docs/docs_src/en/guide/otobo-znuny-otrs-integration.md)
+  See [docs/vitepress_docs/docs_src/en/guide/otobo-znuny-otrs-integration.md](../../vitepress_docs/docs_src/en/docs/guide/otobo-znuny-otrs-integration.md)
 - **Issues**: Report problems on GitHub
 
 ## Next Steps

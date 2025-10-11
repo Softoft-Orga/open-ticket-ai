@@ -69,6 +69,6 @@ All examples follow the Open Ticket AI configuration schema with these key secti
 
 ## Further Resources
 
-- [Developer Information](../../vitepress_docs/docs_src/en/developers/developer-information.md)
-- [Architecture Documentation](../../vitepress_docs/docs_src/en/developers/architecture.md)
-- [OTOBO/Znuny Integration Guide](../../vitepress_docs/docs_src/en/guide/otobo-znuny-otrs-integration.md)
+- [Developer Information](../../vitepress_docs/docs_src/en/docs/developers/developer-information.md)
+- [Architecture Documentation](../../vitepress_docs/docs_src/en/docs/developers/architecture.md)
+- [OTOBO/Znuny Integration Guide](../../vitepress_docs/docs_src/en/docs/guide/otobo-znuny-otrs-integration.md)

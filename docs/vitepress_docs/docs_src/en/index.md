@@ -53,7 +53,6 @@ hero:
   text: ''
 layout: home
 ---
-
 ## Explanation Video
 
 <YoutubeVideo
@@ -69,6 +68,7 @@ title="Open Ticket AI — The Open-Source Solution for Automated Ticket Classifi
 
 <ServicePackages/>
 
+<SyntheticDataPackages/>
 <SupportPlans/>
 
 <ContactForm/>
