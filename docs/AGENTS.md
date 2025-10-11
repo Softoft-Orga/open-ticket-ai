@@ -93,11 +93,8 @@ Open Ticket AI uses a three-layer documentation approach to organize content eff
 **Examples:**
 ```
 docs/vitepress_docs/docs_src/en/docs/concepts/
-├── pipeline-architecture.md    # How the pipeline system works
-├── pipe-lifecycle.md           # Pipe execution model
-├── dependency-injection.md     # DI container and services
-├── rendering-system.md         # Template rendering engine
-└── context-management.md       # Execution context
+├── README.md                    # Concepts directory overview
+└── pipeline-architecture.md     # Complete pipeline system architecture
 ```
 
 ### 2. `guides/` - Practical How-To Tutorials
@@ -149,7 +146,8 @@ docs/vitepress_docs/docs_src/en/docs/guides/
 ```
 docs/vitepress_docs/docs_src/en/docs/
 ├── code/                       # Code architecture
-│   ├── pipeline.md
+│   ├── dependency_injection.md
+│   ├── logging.md
 │   ├── services.md
 │   └── template_rendering.md
 ├── configuration/              # Config system reference
