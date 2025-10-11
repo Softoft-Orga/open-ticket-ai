@@ -7,7 +7,6 @@ from open_ticket_ai.core.logging_iface import AppLogger
 
 
 class StdlibLogger:
-
     def __init__(self, logger: logging.Logger, context: dict[str, Any] | None = None):
         self._logger = logger
         self._context = context or {}
@@ -41,7 +40,6 @@ class StdlibLogger:
 
 class StdlibLoggerFactory:
     def get_logger(self, name: str, **context: Any) -> AppLogger:
-
         logger = logging.getLogger(name)
         return StdlibLogger(logger, context)
 
