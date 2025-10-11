@@ -25,6 +25,12 @@ All configuration lives in `config/`. When modifying:
 
 Configuration flows from YAML → RawOpenTicketAIConfig → validated models → runtime objects.
 
+### Config Structure
+- `plugins`: List of plugin names to load
+- `infrastructure`: Core infrastructure config (logging, default_template_renderer)
+- `services`: Registerable services (TemplateRenderer, TicketSystems, etc.)
+- `orchestrator`: Pipeline and runner definitions
+
 ## Dependency Injection Module
 
 The DI container in `dependency_injection/` manages object lifecycles:
@@ -61,11 +67,28 @@ Plugin loading in `plugins/` enables extensibility:
 
 Template system in `template_rendering/` processes dynamic content:
 
-- Uses Jinja2 for templating
+- TemplateRenderer is bootstrapped as a service before all other services
+- Configure the default renderer in `infrastructure.default_template_renderer`
+- Template renderer params are NEVER templated (raw config only)
+- All other service/pipe configs are rendered using the TemplateRenderer
+- Uses Jinja2 for templating by default
 - Context objects passed to templates
 - Templates should be data-driven, not logic-heavy
 - Cache compiled templates for performance
 - Handle missing variables gracefully
+
+Example config:
+```yaml
+infrastructure:
+  default_template_renderer: "jinja_default"
+services:
+  - id: "jinja_default"
+    use: "open_ticket_ai.core.template_rendering:JinjaRenderer"
+    params:
+      env_config:
+        prefix: "OTAI_"
+      autoescape: false
+```
 
 ## Ticket System Integration Module
 

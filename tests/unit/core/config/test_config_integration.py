@@ -15,7 +15,7 @@ open_ticket_ai:
   infrastructure:
     logging:
       version: 1
-  defs:
+  services:
     - id: test-def
       use: some.class
   orchestrator:
@@ -31,8 +31,8 @@ open_ticket_ai:
     config = config_loader.load_config(config_path)
 
     assert config.plugins == ["default-plugin"]
-    assert len(config.defs) == 1
-    assert config.defs[0].id == "test-def"
+    assert len(config.services) == 1
+    assert config.services[0].id == "test-def"
 
 
 def test_complete_config_flow_with_custom_app_config(tmp_path: Path) -> None:
@@ -43,7 +43,7 @@ custom_app:
   infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -65,7 +65,7 @@ open_ticket_ai:
   infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -90,7 +90,7 @@ my_app:
   infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -118,7 +118,7 @@ open_ticket_ai:
   infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -136,7 +136,7 @@ open_ticket_ai:
   infrastructure:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
