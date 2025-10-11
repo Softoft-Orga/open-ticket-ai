@@ -6,14 +6,13 @@ from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.core.config.registerable import RegisterableConfig
+from open_ticket_ai.core.config.registerable import Renderable
 
 
-class RenderedPipeConfig(RegisterableConfig):
+class RenderedPipeConfig(Renderable[BaseModel]):
     model_config = ConfigDict(extra="allow")
     if_: bool = Field(default=True, alias="if")
     depends_on: list[str] = []
-    params: dict[str, Any] = Field(default_factory=dict)
     steps: list[RenderedPipeConfig] | None = None
 
     @property
@@ -21,11 +20,10 @@ class RenderedPipeConfig(RegisterableConfig):
         return self.if_
 
 
-class RawPipeConfig(RegisterableConfig):
+class RawPipeConfig(Renderable[BaseModel]):
     model_config = ConfigDict(extra="allow")
     if_: str | bool = Field(default="True", alias="if")
     depends_on: str | list[str] = []
-    params: dict[str, Any] = Field(default_factory=dict)
     steps: list[RenderedPipeConfig] | None = None
 
     @property
