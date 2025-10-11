@@ -97,7 +97,7 @@ flowchart TB
 ### Configuration Layers
 
 - **Root configuration**: `RawOpenTicketAIConfig` parses the YAML input into
-  top-level groups such as `plugins`, `general_config`, reusable definition
+  top-level groups such as `plugins`, `infrastructure`, reusable definition
   `defs`, and the `orchestrator` pipeline plan.
 - **RegisterableConfig normalisation**: Each pipeline entry is wrapped in a
   `RegisterableConfig` so execution logic can rely on the presence of control

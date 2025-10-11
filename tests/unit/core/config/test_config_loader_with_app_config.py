@@ -3,12 +3,10 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-import pydantic
 import pytest
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_loader import ConfigLoader
-from open_ticket_ai.core.errors import ValidationError
 
 
 def test_config_loader_uses_app_config_env_var(tmp_path: Path) -> None:

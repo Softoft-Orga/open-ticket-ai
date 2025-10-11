@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import os
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.registerable import RegisterableConfig
 from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
+
+if TYPE_CHECKING:
+    from open_ticket_ai.core.config.app_config import AppConfig
 
 LogLevel = Literal["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
@@ -75,12 +78,12 @@ class RawOpenTicketAIConfig(BaseModel):
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
 
 
-def load_config(config_path: str | os.PathLike, app_config: AppConfig | None = None) -> RawOpenTicketAIConfig:
-    from open_ticket_ai.core.config.app_config import AppConfig as DefaultAppConfig
-    from open_ticket_ai.core.config.config_loader import ConfigLoader
-    
+def load_config(config_path: str | os.PathLike[str], app_config: AppConfig | None = None) -> RawOpenTicketAIConfig:
+    from open_ticket_ai.core.config.app_config import AppConfig as DefaultAppConfig  # noqa: PLC0415
+    from open_ticket_ai.core.config.config_loader import ConfigLoader  # noqa: PLC0415
+
     if app_config is None:
         app_config = DefaultAppConfig()
-    
+
     loader = ConfigLoader(app_config)
     return loader.load_config(config_path)

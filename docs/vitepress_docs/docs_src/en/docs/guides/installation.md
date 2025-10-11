@@ -197,7 +197,7 @@ plugins:
       base_url: "${OTOBO_BASE_URL}"
       api_token: "${OTOBO_API_TOKEN}"
 
-general_config:
+infrastructure:
   log_level: "${LOG_LEVEL}"
 
 orchestrator:

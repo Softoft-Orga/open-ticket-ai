@@ -92,7 +92,7 @@ class SentimentAnalysisPipe(Pipe):
         ).model_dump()
 ```
 
-Registrieren Sie die neue Klasse anschließend unter `open_ticket_ai.defs` (oder in `general_config.pipe_classes`), damit die YAML-Pipeline sie über ihre `id` referenzieren kann. Da der Orchestrator die Konfiguration per Jinja2 rendert, lassen sich in den Definitionen auch Umgebungsvariablen oder Ergebnisse vorheriger Pipes einbinden.
+Registrieren Sie die neue Klasse anschließend unter `open_ticket_ai.defs` (oder in `infrastructure.pipe_classes`), damit die YAML-Pipeline sie über ihre `id` referenzieren kann. Da der Orchestrator die Konfiguration per Jinja2 rendert, lassen sich in den Definitionen auch Umgebungsvariablen oder Ergebnisse vorheriger Pipes einbinden.
 
 ## Wie man ein neues Ticketsystem integriert
 

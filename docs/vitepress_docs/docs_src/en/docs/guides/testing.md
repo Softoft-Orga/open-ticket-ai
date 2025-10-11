@@ -553,7 +553,7 @@ def tmp_config(tmp_path: Path) -> Path:
     config_content = """
 open_ticket_ai:
   plugins: []
-  general_config:
+  infrastructure:
     logging:
       version: 1
   defs: []

@@ -38,7 +38,7 @@ plugins:
 Application-wide settings:
 
 ```yaml
-general_config:
+infrastructure:
   log_level: "INFO"
   max_workers: 4
 ```
@@ -205,7 +205,7 @@ plugins:
       model_name: "bert-base-uncased"
       device: "cpu"
 
-general_config:
+infrastructure:
   log_level: "INFO"
 
 defs:
