@@ -5,13 +5,13 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from open_ticket_ai.core.config.params_config_base import ParamsConfigBase
 from open_ticket_ai.core.pipeline.pipe_config import RawPipeConfig
 
 
-class TriggerDefinition(BaseModel):
+class TriggerDefinition(ParamsConfigBase):
     id: str
     use: str
-    params: dict[str, Any] = Field(default_factory=dict)
 
     model_config = ConfigDict(populate_by_name=True)
 
