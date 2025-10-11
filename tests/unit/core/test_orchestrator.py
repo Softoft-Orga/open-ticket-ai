@@ -444,4 +444,3 @@ def test_orchestrator_config_with_defaults_multiple_runners() -> None:
     assert config.runners[1].pipe.params["runner_key"] == "runner_value"
     assert config.runners[1].settings.timeout == "30s"
     assert config.runners[1].settings.priority == 5
-
