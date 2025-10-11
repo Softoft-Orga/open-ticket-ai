@@ -11,7 +11,7 @@ from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 
-def test_orchestrator_config_from_raw() -> None:
+def test_orchestrator_config_from_raw_legacy() -> None:
     raw = {
         "runners": [
             {
@@ -24,8 +24,38 @@ def test_orchestrator_config_from_raw() -> None:
     config = OrchestratorConfig.model_validate(raw)
 
     assert len(config.runners) == 1
-    assert config.runners[0].pipe["id"] == "demo"
-    assert config.runners[0].interval_seconds == 1.0
+    assert config.runners[0].pipe.id == "demo"
+    assert len(config.runners[0].triggers) == 1
+    assert config.runners[0].triggers[0].use == "apscheduler.triggers.interval:IntervalTrigger"
+    assert config.runners[0].triggers[0].params["seconds"] == 1
+
+
+def test_orchestrator_config_from_raw_new_format() -> None:
+    raw = {
+        "runners": [
+            {
+                "id": "test-runner",
+                "triggers": [
+                    {
+                        "id": "interval-trigger",
+                        "use": "apscheduler.triggers.interval:IntervalTrigger",
+                        "params": {"seconds": 10},
+                    }
+                ],
+                "pipe": {"id": "demo"},
+            }
+        ]
+    }
+
+    config = OrchestratorConfig.model_validate(raw)
+
+    assert len(config.runners) == 1
+    assert config.runners[0].id == "test-runner"
+    assert config.runners[0].pipe.id == "demo"
+    assert len(config.runners[0].triggers) == 1
+    assert config.runners[0].triggers[0].id == "interval-trigger"
+    assert config.runners[0].triggers[0].use == "apscheduler.triggers.interval:IntervalTrigger"
+    assert config.runners[0].triggers[0].params["seconds"] == 10
 
 
 @pytest.mark.asyncio
@@ -34,7 +64,13 @@ async def test_orchestrator_starts_and_stops_runners() -> None:
         {
             "runners": [
                 {
-                    "run_every_milli_seconds": 10,
+                    "triggers": [
+                        {
+                            "id": "interval-trigger",
+                            "use": "apscheduler.triggers.interval:IntervalTrigger",
+                            "params": {"seconds": 1},
+                        }
+                    ],
                     "pipe": {"id": "demo"},
                 }
             ]
@@ -46,13 +82,9 @@ async def test_orchestrator_starts_and_stops_runners() -> None:
 
     orchestrator = Orchestrator(pipe_factory, orchestrator_config)
 
-    # Test that start and stop work without errors
-    await orchestrator.start()
-    # Verify the scheduler is running
+    orchestrator.start()
     assert orchestrator._scheduler.running
 
-    await orchestrator.stop()
-    # Give scheduler time to shut down
+    orchestrator.stop()
     await asyncio.sleep(0.01)
-    # Verify the scheduler is stopped
     assert not orchestrator._scheduler.running
