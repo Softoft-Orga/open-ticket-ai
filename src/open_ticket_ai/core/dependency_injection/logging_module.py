@@ -9,7 +9,7 @@ from open_ticket_ai.core.logging_iface import LoggerFactory
 
 class LoggingModule(Module):
     """Dependency injection module for logging configuration.
-    
+
     Selects the logging implementation based on the LOG_IMPL environment variable:
     - LOG_IMPL=structlog: Use structlog adapter
     - LOG_IMPL=stdlib (default): Use stdlib logging adapter
@@ -17,7 +17,7 @@ class LoggingModule(Module):
 
     def __init__(self, log_impl: str | None = None, log_level: str | None = None):
         """Initialize LoggingModule.
-        
+
         Args:
             log_impl: Override for LOG_IMPL env var (structlog or stdlib)
             log_level: Override for LOG_LEVEL env var (DEBUG, INFO, WARNING, ERROR, CRITICAL)
@@ -27,7 +27,7 @@ class LoggingModule(Module):
 
     def configure(self, binder: Binder) -> None:
         """Configure the dependency injection bindings for logging.
-        
+
         Args:
             binder: The injector binder to configure
         """
@@ -37,7 +37,7 @@ class LoggingModule(Module):
     @singleton
     def provide_logger_factory(self) -> LoggerFactory:
         """Provide a LoggerFactory instance based on configuration.
-        
+
         Returns:
             A LoggerFactory implementation (structlog or stdlib)
         """

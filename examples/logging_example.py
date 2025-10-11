@@ -21,7 +21,7 @@ class UserService:
     @inject
     def __init__(self, logger_factory: LoggerFactory):
         """Initialize the service with a logger factory.
-        
+
         Args:
             logger_factory: Factory for creating loggers
         """
@@ -33,18 +33,18 @@ class UserService:
 
     def create_user(self, user_id: str, username: str) -> None:
         """Create a new user.
-        
+
         Args:
             user_id: The user's ID
             username: The user's username
         """
         logger = self._logger.bind(user_id=user_id, operation="create_user")
-        
+
         logger.info("Creating user", username=username)
-        
+
         try:
             logger.debug("Validating user data")
-            
+
             logger.info("User created successfully")
         except Exception as e:
             logger.exception("Failed to create user", error=str(e))
@@ -52,17 +52,17 @@ class UserService:
 
     def update_user(self, user_id: str, email: str) -> None:
         """Update a user's email.
-        
+
         Args:
             user_id: The user's ID
             email: The new email address
         """
         logger = self._logger.bind(user_id=user_id, operation="update_user")
-        
+
         logger.info("Updating user email", email=email)
-        
+
         logger.warning("Email update requires verification")
-        
+
         logger.info("User updated successfully")
 
 
@@ -71,23 +71,23 @@ def main() -> None:
     print("\n" + "=" * 60)
     print("Using stdlib logging (default)")
     print("=" * 60)
-    
+
     injector_stdlib = Injector([LoggingModule(log_impl="stdlib", log_level="DEBUG")])
     service_stdlib = injector_stdlib.get(UserService)
-    
+
     service_stdlib.create_user("user_123", "alice")
     service_stdlib.update_user("user_123", "alice@example.com")
-    
+
     print("\n" + "=" * 60)
     print("Using structlog")
     print("=" * 60)
-    
+
     injector_structlog = Injector([LoggingModule(log_impl="structlog", log_level="DEBUG")])
     service_structlog = injector_structlog.get(UserService)
-    
+
     service_structlog.create_user("user_456", "bob")
     service_structlog.update_user("user_456", "bob@example.com")
-    
+
     print("\n" + "=" * 60)
     print("Example completed!")
     print("=" * 60 + "\n")

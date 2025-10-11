@@ -15,10 +15,10 @@ class StdlibLogger:
 
     def bind(self, **kwargs: Any) -> AppLogger:
         """Bind context variables to the logger.
-        
+
         Args:
             **kwargs: Key-value pairs to bind as context
-            
+
         Returns:
             A new logger instance with merged context
         """
@@ -35,7 +35,7 @@ class StdlibLogger:
 
     def debug(self, message: str, **kwargs: Any) -> None:
         """Log a debug message.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -44,7 +44,7 @@ class StdlibLogger:
 
     def info(self, message: str, **kwargs: Any) -> None:
         """Log an info message.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -53,7 +53,7 @@ class StdlibLogger:
 
     def warning(self, message: str, **kwargs: Any) -> None:
         """Log a warning message.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -62,7 +62,7 @@ class StdlibLogger:
 
     def error(self, message: str, **kwargs: Any) -> None:
         """Log an error message.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -71,7 +71,7 @@ class StdlibLogger:
 
     def exception(self, message: str, **kwargs: Any) -> None:
         """Log an exception with traceback.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -84,11 +84,11 @@ class StdlibLoggerFactory:
 
     def get_logger(self, name: str, **context: Any) -> AppLogger:
         """Create or retrieve a logger instance.
-        
+
         Args:
             name: The name of the logger (typically module or class name)
             **context: Initial context to bind to the logger
-            
+
         Returns:
             An AppLogger instance wrapping stdlib logger
         """
@@ -102,7 +102,7 @@ def configure_stdlib_logging(
     datefmt: str = "%Y-%m-%d %H:%M:%S",
 ) -> None:
     """Configure stdlib logging with standard settings.
-    
+
     Args:
         level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
         format_string: Log format string

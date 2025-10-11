@@ -16,10 +16,10 @@ class StructlogLogger:
 
     def bind(self, **kwargs: Any) -> AppLogger:
         """Bind context variables to the logger.
-        
+
         Args:
             **kwargs: Key-value pairs to bind as context
-            
+
         Returns:
             A new logger instance with bound context
         """
@@ -27,7 +27,7 @@ class StructlogLogger:
 
     def debug(self, message: str, **kwargs: Any) -> None:
         """Log a debug message.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -36,7 +36,7 @@ class StructlogLogger:
 
     def info(self, message: str, **kwargs: Any) -> None:
         """Log an info message.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -45,7 +45,7 @@ class StructlogLogger:
 
     def warning(self, message: str, **kwargs: Any) -> None:
         """Log a warning message.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -54,7 +54,7 @@ class StructlogLogger:
 
     def error(self, message: str, **kwargs: Any) -> None:
         """Log an error message.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -63,7 +63,7 @@ class StructlogLogger:
 
     def exception(self, message: str, **kwargs: Any) -> None:
         """Log an exception with traceback.
-        
+
         Args:
             message: The message to log
             **kwargs: Additional context to include
@@ -76,11 +76,11 @@ class StructlogLoggerFactory:
 
     def get_logger(self, name: str, **context: Any) -> AppLogger:
         """Create or retrieve a logger instance.
-        
+
         Args:
             name: The name of the logger (typically module or class name)
             **context: Initial context to bind to the logger
-            
+
         Returns:
             An AppLogger instance wrapping structlog
         """
@@ -96,7 +96,7 @@ def configure_structlog(
     use_json: bool = False,
 ) -> None:
     """Configure structlog with standard settings.
-    
+
     Args:
         level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
         use_console: Whether to use console output
@@ -116,9 +116,7 @@ def configure_structlog(
 
     structlog.configure(
         processors=processors,
-        wrapper_class=structlog.make_filtering_bound_logger(
-            getattr(logging, level.upper())
-        ),
+        wrapper_class=structlog.make_filtering_bound_logger(getattr(logging, level.upper())),
         context_class=dict,
         logger_factory=structlog.PrintLoggerFactory(),
         cache_logger_on_first_use=True,
