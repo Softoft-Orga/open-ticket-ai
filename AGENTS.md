@@ -98,10 +98,21 @@ addopts = ["-q"]
 - No monkey patching; avoid reflection “magic.”
 - Documentation in Markdown (VitePress), not as docstrings or comments in code.
 
+## Documentation Structure
+
+All documentation lives in `/docs` directory:
+
+- **Primary source:** `docs/vitepress_docs/docs_src/en/` - VitePress English documentation
+- **Architecture diagrams:** `docs/diagrams/` - PlantUML and Mermaid diagrams
+- **API reference:** `docs/man_structured/pipes/` - YAML sidecar files for pipe documentation
+- **Legacy docs:** `docs/raw_en_docs/` - Being phased out, do not use for new content
+
+See [docs/AGENTS.md](./docs/AGENTS.md) for detailed documentation guidelines.
+
 ---
 
 **Checklist for contributors (must pass):**
-- [ ] New unit tests added under `packages/<name>/tests`
+- [ ] New unit tests added under `packages/<name>/tests` or `tests/unit/`
 - [ ] No files under any `src/**/tests`
 - [ ] Root-level integration/e2e tests only in `tests/`
 - [ ] No `__init__.py` in any test directories
@@ -109,3 +120,4 @@ addopts = ["-q"]
 - [ ] `uv run ruff check .` clean
 - [ ] `uv run mypy .` clean
 - [ ] `uv run -m pytest` green
+- [ ] `uv run python scripts/validate_test_structure.py` passes
