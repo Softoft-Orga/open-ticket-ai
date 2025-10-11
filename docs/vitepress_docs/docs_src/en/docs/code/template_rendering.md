@@ -101,5 +101,5 @@ summary: >
 ## Related Documentation
 
 - [Configuration Structure](../configuration/config_structure.md)
-- [Context](context.md)
+- [Pipeline Architecture](../concepts/pipeline-architecture.md)
 - [Configuration Examples](../configuration/examples.md)

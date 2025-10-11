@@ -400,6 +400,6 @@ Now that you have a working pipeline:
 
 - [Configuration Schema](../configuration/config_schema.md)
 - [Configuration Examples](../configuration/examples.md)
-- [Pipes Documentation](../code/pipe.md)
+- [Pipeline Architecture](../concepts/pipeline-architecture.md)
 - [Template Rendering](../code/template_rendering.md)
 - [Troubleshooting](troubleshooting.md)
