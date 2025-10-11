@@ -34,7 +34,7 @@ open_ticket_ai:
             - &jinja_expression_pipe
                 use: "open_ticket_ai.base:JinjaExpressionPipe"
 
-    defs:
+    services:
         # Ticket system connection
         -   id: "otobo_znuny"
             use: "open_ticket_ai.otai_otobo_znuny:OToboZnunyTicketSystemService"

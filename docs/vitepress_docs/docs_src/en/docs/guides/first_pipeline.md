@@ -48,7 +48,7 @@ general_config:
 Reusable configuration blocks:
 
 ```yaml
-defs:
+services:
   search_criteria: &search
     StateType: "Open"
     limit: 50
@@ -208,7 +208,7 @@ plugins:
 general_config:
   log_level: "INFO"
 
-defs:
+services:
   # Reusable search criteria
   open_tickets: &open_tickets
     StateType: "Open"

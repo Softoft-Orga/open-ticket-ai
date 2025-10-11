@@ -9,7 +9,7 @@ The root configuration object with these main sections:
 ```yaml
 plugins: []              # Plugin configurations
 general_config: {}       # General settings
-defs: {}                # Reusable definitions
+services: {}                # Reusable definitions
 orchestrator: {}        # Pipeline orchestration
 ```
 
@@ -49,7 +49,7 @@ general_config:
 Reusable YAML definitions using anchors:
 
 ```yaml
-defs:
+services:
   common_search: &common_search
     StateType: "Open"
     limit: 100

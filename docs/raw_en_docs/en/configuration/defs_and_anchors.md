@@ -18,12 +18,12 @@ definition: &my_anchor
 usage: *my_anchor
 ```
 
-## Reusable Definitions in `defs` Section
+## Reusable Definitions in `services` Section
 
-The `defs` section stores reusable configuration:
+The `services` section stores reusable configuration:
 
 ```yaml
-defs:
+services:
   # Common search criteria
   open_tickets: &open_tickets
     StateType: "Open"
@@ -64,7 +64,7 @@ orchestrator:
 Merge definitions with additional fields:
 
 ```yaml
-defs:
+services:
   base_search: &base_search
     StateType: "Open"
     limit: 100
@@ -92,7 +92,7 @@ search:
 Merge multiple definitions:
 
 ```yaml
-defs:
+services:
   base_config: &base
     timeout: 30
   
@@ -113,13 +113,13 @@ pipes:
 
 ```yaml
 # Good
-defs:
+services:
   open_tickets_last_hour: &recent_open
     StateType: "Open"
     create_time_after: "{{ now() - timedelta(hours=1) }}"
 
 # Bad
-defs:
+services:
   search1: &s1
     StateType: "Open"
 ```
@@ -127,7 +127,7 @@ defs:
 ### 2. Group Related Definitions
 
 ```yaml
-defs:
+services:
   # Search criteria group
   searches:
     open: &search_open
@@ -151,11 +151,11 @@ Only create definitions for values used multiple times:
 
 ```yaml
 # Good: Used in multiple places
-defs:
+services:
   common_timeout: &timeout 30
 
 # Bad: Used only once
-defs:
+services:
   one_time_value: &unused
     rarely_used: true
 ```
@@ -163,7 +163,7 @@ defs:
 ### 4. Document Complex Definitions
 
 ```yaml
-defs:
+services:
   # Advanced search: filters tickets from last 24h
   # with priority > 3 and assigned to support queues
   advanced_search: &advanced
@@ -176,7 +176,7 @@ defs:
 ### 5. Environment-Specific Definitions
 
 ```yaml
-defs:
+services:
   # Production settings
   prod: &prod_settings
     log_level: "WARNING"
@@ -196,7 +196,7 @@ general_config:
 ### Search Criteria Template
 
 ```yaml
-defs:
+services:
   base_search: &base_search
     limit: 100
     OrderBy: "Created"
@@ -214,7 +214,7 @@ defs:
 ### Plugin Configuration
 
 ```yaml
-defs:
+services:
   otobo_common: &otobo_common
     verify_ssl: true
     timeout: 30
@@ -231,7 +231,7 @@ plugins:
 ### Pipe Configuration Template
 
 ```yaml
-defs:
+services:
   classification_config: &classify_config
     confidence_threshold: 0.7
     fallback_queue: "General"
@@ -250,7 +250,7 @@ pipes:
 ### Cannot Override Scalars
 
 ```yaml
-defs:
+services:
   base: &base
     timeout: 30
 
