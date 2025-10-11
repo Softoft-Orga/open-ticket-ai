@@ -54,6 +54,11 @@ These variables must be set for the application to work:
 - Default: INFO
 - Example: `export LOG_LEVEL="DEBUG"`
 
+**LOG_IMPL**
+- Logging implementation: stdlib, structlog
+- Default: stdlib
+- Example: `export LOG_IMPL="structlog"`
+
 **ENVIRONMENT**
 - Deployment environment: development, staging, production
 - Affects logging and error handling

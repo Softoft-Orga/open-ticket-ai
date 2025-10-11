@@ -38,6 +38,7 @@ dependencies = [
     "typer>=0.17.5",
     "rich>=13.0.0",
     "httpx>=0.27.0",
+    "structlog>=24.4.0",
 ]
 
 [project.urls]
