@@ -9,28 +9,14 @@ body:
         ## Configuration Issue
         Report issues related to YAML configuration, template rendering, or DI setup.
 
-  - type: dropdown
-    id: config-area
-    attributes:
-      label: Configuration Area
-      description: Which aspect of configuration is affected?
-      options:
-        - YAML Structure/Schema
-        - Jinja2 Template Rendering
-        - Dependency Injection (injects, defs)
-        - Pipe Configuration (use, steps, if, etc.)
-        - Orchestrator Scheduling
-        - Plugin Registration
-        - Environment Variables
-        - General Config (logging, etc.)
-        - Other
-
   - type: textarea
     id: issue-description
     attributes:
       label: Issue Description
       description: Describe the configuration problem
       placeholder: "When I try to use a Jinja2 template in the 'if' field..."
+    validations:
+      required: true
 
   - type: textarea
     id: config-snippet
@@ -53,6 +39,8 @@ body:
                   steps:
                     - id: step1
                       use: "..."
+    validations:
+      required: true
 
   - type: textarea
     id: expected-behavior
@@ -60,6 +48,8 @@ body:
       label: Expected Behavior
       description: What should happen with this configuration?
       placeholder: "The template should render the ticket ID..."
+    validations:
+      required: true
 
   - type: textarea
     id: actual-behavior
@@ -67,59 +57,17 @@ body:
       label: Actual Behavior
       description: What actually happens?
       placeholder: "Instead, I get a TemplateRenderError..."
-
-  - type: textarea
-    id: error-message
-    attributes:
-      label: Error Message
-      description: Full error message or log output
-      render: shell
-      placeholder: |
-        ERROR: TemplateRenderError in pipe 'my_pipe'
-        jinja2.exceptions.UndefinedError: 'ticket' is undefined
-        ...
-
-  - type: dropdown
-    id: validation-status
-    attributes:
-      label: Configuration Validation
-      description: Does `otai check-config config.yml` pass?
-      options:
-        - Validation passes
-        - Validation fails
-        - Haven't run validation
-        - Don't have CLI installed
-
-  - type: textarea
-    id: workaround
-    attributes:
-      label: Current Workaround (if any)
-      description: Have you found any temporary solution?
-      placeholder: "I can work around this by..."
-
-  - type: input
-    id: version
-    attributes:
-      label: Open Ticket AI Version
-      description: Which version are you using?
-      placeholder: "1.0.0rc1"
+    validations:
+      required: true
 
   - type: textarea
     id: additional-context
     attributes:
-      label: Additional Context
-      description: Any other relevant information
-      placeholder: "This worked in version X.Y.Z but broke in..."
-
-  - type: checkboxes
-    id: resolution
-    attributes:
-      label: Resolution Checklist (for maintainers)
-      options:
-        - label: Issue reproduced
-        - label: Root cause identified
-        - label: Schema/validation updated (if needed)
-        - label: Documentation updated
-        - label: Config example added/updated
-        - label: Test added for this case
-        - label: CHANGELOG.md entry
+      label: Additional Context (Optional)
+      description: Any other information such as error messages, version, workarounds
+      placeholder: |
+        Error message:
+        ERROR: TemplateRenderError in pipe 'my_pipe'
+        jinja2.exceptions.UndefinedError: 'ticket' is undefined
+        
+        Version: Open Ticket AI 1.0.0rc1
