@@ -120,8 +120,8 @@ except (ValueError, ImportError) as e:
     raise typer.Exit(code=1) from e
 
 root_project_path = find_python_code_root_path().parent
-docs_api = root_project_path / "docs" / "vitepress_docs" / "docs_src" / "en" / "api"
-docs_src_path = root_project_path / "docs" / "vitepress_docs" / "docs_src" / "en"
+docs_api = root_project_path / "docs" / "docs" / "docs_src" / "en" / "api"
+docs_src_path = root_project_path / "docs" / "docs" / "docs_src" / "en"
 summary_file_path = root_project_path / "docs" / "_documentation_summaries.json"
 
 EXCLUDE_DIRS = {
@@ -145,7 +145,7 @@ def generate_markdown():
     SRC_ROOT = root_dir  # <-- CHANGE THIS to your project's source folder
 
     # Define where to save the final JSON file
-    OUTPUT_FILE = root_project_path / "docs" / "vitepress_docs" / ".vitepress" / "api_reference.json"
+    OUTPUT_FILE = root_project_path / "docs" / "docs" / ".vitepress" / "api_reference.json"
 
     # Define any patterns to exclude
     EXCLUDE_PATTERNS = [

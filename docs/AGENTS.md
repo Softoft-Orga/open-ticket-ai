@@ -1,7 +1,7 @@
 # AI Agent Guidelines for /docs Folder
 
 **Location:** `C:\Users\PC\PycharmProjects\open-ticket-ai\docs`  
-**Parent Guidelines:** [Root AGENTS.md](../AGENTS.md)  
+**Parent Guidelines:** [Root AGENTS.md](../../AGENTS.md)  
 **Last Updated:** 2025-10-09
 
 ## Quick Reference
