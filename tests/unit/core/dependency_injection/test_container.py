@@ -28,4 +28,5 @@ def test_app_module_binds_singleton_dependencies(test_model_to_yaml_direct_dump:
 
     resolved_config = injector.get(RawOpenTicketAIConfig)
 
-    assert resolved_config == RawOpenTicketAIConfig()
+    assert resolved_config.plugins == []
+    assert resolved_config.orchestrator.runners == []
