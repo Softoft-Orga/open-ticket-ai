@@ -127,10 +127,13 @@ Each runner in the orchestrator defines how and when a pipeline should execute. 
 ### Optional Fields
 
 - `id` – Unique identifier for the runner. If omitted, derived from the pipe ID
-- `triggers` – List of trigger definitions that determine when the pipeline runs. Each trigger has:
+- `triggers` (or `on` as an alias) – List of trigger definitions that determine when the pipeline runs. Each trigger has:
   - `id` – Unique identifier for the trigger
   - `use` – Import path to the trigger class (e.g., `apscheduler.triggers.interval:IntervalTrigger`)
   - `params` – Parameters to pass to the trigger constructor
+  
+  **Note:** Both `triggers` and `on` are supported field names. Use `triggers` for clarity, or `on` if you prefer brevity. They are equivalent.
+  
 - `injects` – Dependency injection mappings for the runner
 - `settings` – Runtime behavior settings:
   - `concurrency.max_workers` – Maximum concurrent executions (default: 1)
