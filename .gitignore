@@ -214,3 +214,7 @@ storybook-static
 packages/*/dist/
 packages/*/build/
 packages/*/*.egg-info/
+
+# Generated config files
+config.yml
+my_config.yml
