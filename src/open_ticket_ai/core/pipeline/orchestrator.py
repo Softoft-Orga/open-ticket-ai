@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from importlib import import_module
+from typing import Any
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.interval import IntervalTrigger
 from injector import inject, singleton
 
-from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig, RunnerDefinition
+from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig, RunnerDefinition, TriggerDefinition
 from open_ticket_ai.core.pipeline.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipeline.scheduled_runner import ScheduledPipeRunner
 
@@ -27,6 +28,12 @@ class Orchestrator:
     def _create_runner(self, definition: RunnerDefinition) -> ScheduledPipeRunner:
         return ScheduledPipeRunner(definition, self._pipe_factory)
 
+    def _instantiate_trigger(self, trigger_def: TriggerDefinition) -> Any:
+        module_path, class_name = trigger_def.use.rsplit(":", 1)
+        module = import_module(module_path)
+        trigger_class = getattr(module, class_name)
+        return trigger_class(**trigger_def.params)
+
     def start(self) -> None:
         """Start the orchestrator and all scheduled runners."""
         if self._scheduler.running:
@@ -40,22 +47,29 @@ class Orchestrator:
             job_id = f"{definition.pipe_id}_{index}"
             self._runners[job_id] = runner
 
-            interval_seconds = definition.interval_seconds
-            if interval_seconds > 0:
-                trigger = IntervalTrigger(seconds=int(interval_seconds))
-                self._scheduler.add_job(
-                    runner.execute,
-                    trigger=trigger,
-                    id=job_id,
-                    name=f"Pipe: {definition.pipe_id}",
-                    max_instances=1,
-                    coalesce=True,
-                )
-                self._logger.info(
-                    "Scheduled pipe '%s' to run every %.2f seconds",
-                    definition.pipe_id,
-                    interval_seconds,
-                )
+            max_instances = 1
+            if definition.settings and definition.settings.concurrency:
+                max_instances = definition.settings.concurrency.max_workers
+
+            if definition.on:
+                for trigger_index, trigger_def in enumerate(definition.on):
+                    trigger = self._instantiate_trigger(trigger_def)
+                    trigger_job_id = f"{job_id}_trigger_{trigger_index}"
+                    
+                    self._scheduler.add_job(
+                        runner.execute,
+                        trigger=trigger,
+                        id=trigger_job_id,
+                        name=f"Pipe: {definition.pipe_id} (trigger: {trigger_def.id})",
+                        max_instances=max_instances,
+                        coalesce=True,
+                    )
+                    self._logger.info(
+                        "Scheduled pipe '%s' with trigger '%s' (%s)",
+                        definition.pipe_id,
+                        trigger_def.id,
+                        trigger_def.use,
+                    )
             else:
                 self._scheduler.add_job(
                     runner.execute,
