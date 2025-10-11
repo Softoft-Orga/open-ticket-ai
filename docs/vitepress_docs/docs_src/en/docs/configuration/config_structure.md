@@ -16,19 +16,23 @@ plugins:
 infrastructure:
   logging:
     version: 1
+  default_template_renderer: "jinja_default"
 
-# 3. Reusable Definitions
-defs:
-  definition_name: &anchor_name
-    key: value
+# 3. Services (formerly Definitions)
+services:
+  - id: service_id
+    use: "module:ClassName"
+    params: {}
 
 # 4. Orchestrator (Pipelines)
 orchestrator:
-  pipelines:
-    - name: pipeline_name
-      run_every_milli_seconds: 60000
-      pipes:
-        - pipe_name: pipe_name
+  runners:
+    - on:
+        id: trigger_id
+        use: "module:TriggerClass"
+      run:
+        id: pipeline_id
+        steps: []
 ```
 
 ## Main Configuration Sections
@@ -52,7 +56,7 @@ plugins:
 
 ### 2. Infrastructure Configuration
 
-Core infrastructure settings (currently only logging):
+Core infrastructure settings including logging and template renderer:
 
 ```yaml
 infrastructure:
@@ -68,24 +72,36 @@ infrastructure:
     root:
       level: INFO
       handlers: [console]
+  
+  # Default template renderer (bootstrapped first)
+  default_template_renderer: "jinja_default"
 ```
 
-### 3. Definitions (defs)
+### 3. Services
 
-Reusable configuration blocks:
+Registerable services including template renderers and ticket systems:
 
 ```yaml
-defs:
-  # Reusable search criteria
-  open_tickets: &open_tickets
-    StateType: "Open"
-    limit: 100
+services:
+  # Template renderer service (bootstrapped before all other services)
+  - id: "jinja_default"
+    use: "open_ticket_ai.core.template_rendering:JinjaRenderer"
+    params:
+      env_config:
+        prefix: "OTAI_"
+      autoescape: false
   
-  # Reusable queue mapping
-  queues: &queues
-    billing: 1
-    support: 2
+  # Ticket system service (can use templating)
+  - id: "otobo_znuny"
+    use: "otai_otobo_znuny:OTOBOZnunyTicketSystemService"
+    params:
+      base_url: "http://example.com/otobo"
+      password: "{{ env.OTAI_OTOBO_PASSWORD }}"  # Rendered by jinja_default
 ```
+
+**Important**: The TemplateRenderer service specified in `infrastructure.default_template_renderer` 
+is always instantiated first, and its params are NEVER templated (raw config only). 
+All other services and pipes can use templating in their configs.
 
 ### 4. Orchestrator
 

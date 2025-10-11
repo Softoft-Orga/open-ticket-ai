@@ -18,7 +18,7 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
           infrastructure:
             service:
               url: https://example.com
-          defs:
+          services:
             - id: def-1
               value: 42
           orchestrator:
@@ -39,8 +39,8 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
     assert isinstance(config, RawOpenTicketAIConfig)
     assert config.plugins == ["plugin_a"]
     assert dict(config.infrastructure)["service"] == {"url": "https://example.com"}
-    assert config.defs[0].id == "def-1"
-    assert dict(config.defs[0])["value"] == 42
+    assert config.services[0].id == "def-1"
+    assert dict(config.services[0])["value"] == 42
 
 
 def test_load_config_missing_root_key(tmp_path: Path) -> None:
@@ -48,5 +48,5 @@ def test_load_config_missing_root_key(tmp_path: Path) -> None:
     config_path.write_text("{}", encoding="utf-8")
 
     config_loader = ConfigLoader(AppConfig())
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         config_loader.load_config(config_path)

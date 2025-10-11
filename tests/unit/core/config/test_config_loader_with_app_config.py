@@ -16,7 +16,7 @@ custom_root:
   general_config:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -43,7 +43,7 @@ my_app:
   general_config:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
@@ -64,7 +64,7 @@ open_ticket_ai:
   general_config:
     logging:
       version: 1
-  defs: []
+  services: []
   orchestrator:
     runners: []
     """
