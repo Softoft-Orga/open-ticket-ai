@@ -121,6 +121,10 @@ class OrchestratorConfig(BaseModel):
 
     @model_validator(mode="after")
     def apply_defaults_to_runners(self) -> OrchestratorConfig:
+        if hasattr(self, "_explicit_pipes") and not self.defaults:
+            delattr(self, "_explicit_pipes")
+            return self
+
         if not self.defaults:
             return self
 
