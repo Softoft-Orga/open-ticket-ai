@@ -46,7 +46,7 @@ class RunnerSettings(BaseModel):
 
 class RunnerDefinition(BaseModel):
     id: str | None = None
-    on: list[TriggerDefinition] = Field(default_factory=list)
+    triggers: list[TriggerDefinition] = Field(default_factory=list, alias="on")
     injects: dict[str, str] = Field(default_factory=dict)
     pipe: RawPipeConfig = Field(default_factory=RawPipeConfig)
     settings: RunnerSettings = Field(default_factory=RunnerSettings)
@@ -62,7 +62,7 @@ class RunnerDefinition(BaseModel):
         if "run_every_milli_seconds" in data:
             warnings.warn(
                 "Deprecated: 'run_every_milli_seconds' field is deprecated. "
-                "Use 'on' field with trigger definitions instead. "
+                "Use 'triggers' or 'on' field with trigger definitions instead. "
                 "Auto-migrating for backwards compatibility, but this will be removed in a future version.",
                 DeprecationWarning,
                 stacklevel=4,
@@ -71,8 +71,8 @@ class RunnerDefinition(BaseModel):
             interval_ms = data.pop("run_every_milli_seconds")
             interval_seconds = interval_ms / 1000.0
             
-            if "on" not in data:
-                data["on"] = [
+            if "triggers" not in data and "on" not in data:
+                data["triggers"] = [
                     {
                         "id": "interval-trigger",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",

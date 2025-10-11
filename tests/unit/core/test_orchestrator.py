@@ -25,9 +25,9 @@ def test_orchestrator_config_from_raw_legacy() -> None:
 
     assert len(config.runners) == 1
     assert config.runners[0].pipe.id == "demo"
-    assert len(config.runners[0].on) == 1
-    assert config.runners[0].on[0].use == "apscheduler.triggers.interval:IntervalTrigger"
-    assert config.runners[0].on[0].params["seconds"] == 1
+    assert len(config.runners[0].triggers) == 1
+    assert config.runners[0].triggers[0].use == "apscheduler.triggers.interval:IntervalTrigger"
+    assert config.runners[0].triggers[0].params["seconds"] == 1
 
 
 def test_orchestrator_config_from_raw_new_format() -> None:
@@ -35,7 +35,7 @@ def test_orchestrator_config_from_raw_new_format() -> None:
         "runners": [
             {
                 "id": "test-runner",
-                "on": [
+                "triggers": [
                     {
                         "id": "interval-trigger",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",
@@ -52,10 +52,10 @@ def test_orchestrator_config_from_raw_new_format() -> None:
     assert len(config.runners) == 1
     assert config.runners[0].id == "test-runner"
     assert config.runners[0].pipe.id == "demo"
-    assert len(config.runners[0].on) == 1
-    assert config.runners[0].on[0].id == "interval-trigger"
-    assert config.runners[0].on[0].use == "apscheduler.triggers.interval:IntervalTrigger"
-    assert config.runners[0].on[0].params["seconds"] == 10
+    assert len(config.runners[0].triggers) == 1
+    assert config.runners[0].triggers[0].id == "interval-trigger"
+    assert config.runners[0].triggers[0].use == "apscheduler.triggers.interval:IntervalTrigger"
+    assert config.runners[0].triggers[0].params["seconds"] == 10
 
 
 @pytest.mark.asyncio
@@ -64,7 +64,7 @@ async def test_orchestrator_starts_and_stops_runners() -> None:
         {
             "runners": [
                 {
-                    "on": [
+                    "triggers": [
                         {
                             "id": "interval-trigger",
                             "use": "apscheduler.triggers.interval:IntervalTrigger",

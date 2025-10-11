@@ -51,8 +51,8 @@ class Orchestrator:
             if definition.settings and definition.settings.concurrency:
                 max_instances = definition.settings.concurrency.max_workers
 
-            if definition.on:
-                for trigger_index, trigger_def in enumerate(definition.on):
+            if definition.triggers:
+                for trigger_index, trigger_def in enumerate(definition.triggers):
                     trigger = self._instantiate_trigger(trigger_def)
                     trigger_job_id = f"{job_id}_trigger_{trigger_index}"
                     
