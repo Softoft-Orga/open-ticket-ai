@@ -989,4 +989,4 @@ Tests run automatically on push/PR via GitHub Actions. Check `.github/workflows/
 - [Configuration Examples](../configuration/examples.md)
 - [Plugin Development](../plugins/plugin_development.md)
 - [Custom Adapters](../integration/custom_adapters.md)
-- [AGENTS.md](../../../../../AGENTS.md) - Authoritative test structure rules
+- [AGENTS.md](../../../../AGENTS.md) - Authoritative test structure rules
