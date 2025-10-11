@@ -11,7 +11,7 @@ const {t} = useI18n()
 const supportPlans = computed(() => [
     {
         name: t('supportPlans.basic.name'),
-        price: 250,
+        price: 500,
         pricePeriod: t('supportPlans.pricePeriod'),
         description: t('supportPlans.basic.description'),
         features: [
@@ -23,7 +23,7 @@ const supportPlans = computed(() => [
     },
     {
         name: t('supportPlans.proactive.name'),
-        price: 500,
+        price: 1000,
         pricePeriod: t('supportPlans.pricePeriod'),
         description: t('supportPlans.proactive.description'),
         features: [

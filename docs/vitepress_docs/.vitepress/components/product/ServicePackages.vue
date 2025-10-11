@@ -3,7 +3,7 @@ var __VUE_PROD_DEVTOOLS__ = false
 
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
-import ProductCards from './ProductCards.vue' // Assuming ProductCards component is in the same directory
+import ProductCards from './ProductCards.vue'
 
 const {t} = useI18n()
 
@@ -11,7 +11,7 @@ const {t} = useI18n()
 const servicePackages = computed(() => [
     {
         name: t('servicePackages.essential.name'),
-        price: 1000,
+        price: 2000,
         description: t('servicePackages.essential.description'),
         features: [
             {text: t('servicePackages.features.coreInstall'), icon: 'fa-rocket'},
@@ -22,7 +22,7 @@ const servicePackages = computed(() => [
     },
     {
         name: t('servicePackages.professional.name'),
-        price: 4000,
+        price: 5000,
         description: t('servicePackages.professional.description'),
         features: [
             {text: t('servicePackages.features.coreInstall'), icon: 'fa-rocket'},

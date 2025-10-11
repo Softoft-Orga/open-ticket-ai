@@ -2,7 +2,7 @@ import {defineConfig} from "vitepress";
 import {NavGenerator, NavGeneratorOptions} from "./util/navgen.ts";
 import viteCompression from 'vite-plugin-compression'
 
-var __VUE_PROD_DEVTOOLS__ = false
+const __VUE_PROD_DEVTOOLS__ = false;
 console.log(__VUE_PROD_DEVTOOLS__)
 const navGeneratorOptions: NavGeneratorOptions = {
     rootPath: './docs_src',
@@ -115,7 +115,7 @@ export default defineConfig({
     },
     themeConfig: {
         footer: {
-            message: '<b>OTAI</b> - Open Ticket AI',
+            message: '<strong>OTAI</strong> - Open Ticket AI',
             copyright: "by <a href='https://www.softoft.de' target='_blank'>Softoft, Tobias Bück Einzelunternehmen</a>"
         }
     },
