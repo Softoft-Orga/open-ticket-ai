@@ -67,9 +67,7 @@ class AppModule(Module):
 
         renderer_class_typed = cast(type, renderer_class)
         if not issubclass(renderer_class_typed, TemplateRenderer):
-            raise TypeError(
-                f"Class '{renderer_service_config.use}' is not a TemplateRenderer subclass"
-            )
+            raise TypeError(f"Class '{renderer_service_config.use}' is not a TemplateRenderer subclass")
 
         params = renderer_service_config.model_dump().get("params", {})
         config_class_name = renderer_class_typed.__name__ + "Config"
@@ -81,9 +79,7 @@ class AppModule(Module):
 
         config_class = getattr(config_module_obj, config_class_name, None)
         if config_class is None:
-            raise ValueError(
-                f"Cannot find config class '{config_class_name}' in module '{config_module}'"
-            )
+            raise ValueError(f"Cannot find config class '{config_class_name}' in module '{config_module}'")
 
         renderer_config = config_class(**params)
         return renderer_class_typed(config=renderer_config)  # type: ignore[call-arg]
