@@ -13,8 +13,10 @@ async def test_update_ticket_updates_subject(
         "id": "test_update",
         "use": "UpdateTicketPipe",
         "_if": True,
-        "ticket_id": "TICKET-1",
-        "updated_ticket": {"subject": "Updated Subject"},
+        "params": {
+            "ticket_id": "TICKET-1",
+            "updated_ticket": {"subject": "Updated Subject"},
+        },
     }
 
     pipe = UpdateTicketPipe(mocked_ticket_system, config)
@@ -41,10 +43,12 @@ async def test_update_ticket_updates_multiple_fields(
         "id": "test_update",
         "use": "UpdateTicketPipe",
         "_if": True,
-        "ticket_id": "TICKET-2",
-        "updated_ticket": {
-            "subject": "New Subject",
-            "body": "New body text",
+        "params": {
+            "ticket_id": "TICKET-2",
+            "updated_ticket": {
+                "subject": "New Subject",
+                "body": "New body text",
+            },
         },
     }
 
@@ -68,8 +72,10 @@ async def test_update_ticket_handles_nonexistent_ticket(
         "id": "test_update",
         "use": "UpdateTicketPipe",
         "_if": True,
-        "ticket_id": "NONEXISTENT-TICKET",
-        "updated_ticket": {"subject": "Updated"},
+        "params": {
+            "ticket_id": "NONEXISTENT-TICKET",
+            "updated_ticket": {"subject": "Updated"},
+        },
     }
 
     pipe = UpdateTicketPipe(empty_mocked_ticket_system, config)

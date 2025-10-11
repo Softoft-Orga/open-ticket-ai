@@ -14,8 +14,10 @@ async def test_add_note_pipe_adds_note_to_ticket(
         "id": "test_add_note",
         "use": "AddNotePipe",
         "_if": True,
-        "ticket_id": "TICKET-1",
-        "note": {"body": "This is a new note"},
+        "params": {
+            "ticket_id": "TICKET-1",
+            "note": {"body": "This is a new note"},
+        },
     }
 
     pipe = AddNotePipe(mocked_ticket_system, config)
@@ -43,8 +45,10 @@ async def test_add_note_pipe_with_note_object(
         "id": "test_add_note",
         "use": "AddNotePipe",
         "_if": True,
-        "ticket_id": "TICKET-2",
-        "note": note,
+        "params": {
+            "ticket_id": "TICKET-2",
+            "note": note,
+        },
     }
 
     pipe = AddNotePipe(mocked_ticket_system, config)
@@ -67,8 +71,10 @@ async def test_add_note_pipe_handles_failure(
         "id": "test_add_note",
         "use": "AddNotePipe",
         "_if": True,
-        "ticket_id": "NONEXISTENT-TICKET",
-        "note": {"body": "Test note"},
+        "params": {
+            "ticket_id": "NONEXISTENT-TICKET",
+            "note": {"body": "Test note"},
+        },
     }
 
     pipe = AddNotePipe(empty_mocked_ticket_system, config)
@@ -90,8 +96,10 @@ async def test_add_note_pipe_skips_when_disabled(
         "id": "test_add_note",
         "use": "AddNotePipe",
         "if": False,
-        "ticket_id": "TICKET-1",
-        "note": {"body": "Test note"},
+        "params": {
+            "ticket_id": "TICKET-1",
+            "note": {"body": "Test note"},
+        },
     }
 
     pipe = AddNotePipe(mocked_ticket_system, config)

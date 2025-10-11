@@ -15,9 +15,11 @@ async def test_fetch_tickets_finds_tickets_by_queue(
         "id": "test_fetch",
         "use": "FetchTicketsPipe",
         "_if": True,
-        "ticket_search_criteria": {
-            "queue": {"id": "1", "name": "Support"},
-            "limit": 10,
+        "params": {
+            "ticket_search_criteria": {
+                "queue": {"id": "1", "name": "Support"},
+                "limit": 10,
+            },
         },
     }
 
@@ -45,9 +47,11 @@ async def test_fetch_tickets_with_pagination(
         "id": "test_fetch",
         "use": "FetchTicketsPipe",
         "_if": True,
-        "ticket_search_criteria": {
-            "limit": 2,
-            "offset": 1,
+        "params": {
+            "ticket_search_criteria": {
+                "limit": 2,
+                "offset": 1,
+            },
         },
     }
 
@@ -70,8 +74,10 @@ async def test_fetch_tickets_returns_empty_when_no_matches(
         "id": "test_fetch",
         "use": "FetchTicketsPipe",
         "_if": True,
-        "ticket_search_criteria": {
-            "queue": {"id": "999", "name": "Nonexistent"},
+        "params": {
+            "ticket_search_criteria": {
+                "queue": {"id": "999", "name": "Nonexistent"},
+            },
         },
     }
 
