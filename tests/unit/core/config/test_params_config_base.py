@@ -67,9 +67,7 @@ def test_params_config_base_mixed_params_and_top_level_fields_warns() -> None:
 def test_params_config_base_no_warnings_with_params() -> None:
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
-        config = ParamsConfigBase(
-            params={"field1": "value1", "field2": "value2"}
-        )
+        config = ParamsConfigBase(params={"field1": "value1", "field2": "value2"})
 
         assert len(w) == 0
         assert config.params == {"field1": "value1", "field2": "value2"}
