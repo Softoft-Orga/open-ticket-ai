@@ -82,6 +82,23 @@ When creating a new issue on GitHub, you can choose from the following templates
 
 ---
 
+### 🔄 CI/CD Issue
+**Use this template when:** You want to propose changes to CI/CD workflows, build processes, deployments, or automation.
+
+**What to include:**
+- Type of CI/CD change (Workflows, Build, Deployment, Testing, etc.)
+- Affected files or workflows
+- Description and motivation
+- Risk level and impact assessment
+- Testing plan
+- Backwards compatibility considerations
+- Rollback plan
+- Configuration examples (YAML workflows)
+
+**Labels:** `ci-cd`, `needs-triage`
+
+---
+
 ## Template Design Principles
 
 All templates are designed to:
