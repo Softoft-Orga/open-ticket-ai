@@ -5,13 +5,13 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from open_ticket_ai.core.config.params_config_base import ParamsConfigBase
 from open_ticket_ai.core.pipeline.pipe_config import RawPipeConfig
 
 
-class TriggerDefinition(BaseModel):
+class TriggerDefinition(ParamsConfigBase):
     id: str
     use: str
-    params: dict[str, Any] = Field(default_factory=dict)
 
     model_config = ConfigDict(populate_by_name=True)
 
@@ -33,7 +33,7 @@ class RetrySettings(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
 
-class RunnerSettings(BaseModel):
+class RunnerParams(BaseModel):
     concurrency: ConcurrencySettings | None = None
     retry: RetrySettings | None = None
     timeout: str | None = None
@@ -54,7 +54,7 @@ class RunnerDefinition(BaseModel):
     id: str | None = None
     triggers: list[TriggerDefinition] = Field(default_factory=list, alias="on")
     pipe: RawPipeConfig = Field(default_factory=RawPipeConfig)
-    settings: RunnerSettings = Field(default_factory=RunnerSettings)
+    params: RunnerParams = Field(default_factory=RunnerParams)
 
     model_config = ConfigDict(populate_by_name=True)
 
@@ -121,6 +121,10 @@ class OrchestratorConfig(BaseModel):
 
     @model_validator(mode="after")
     def apply_defaults_to_runners(self) -> OrchestratorConfig:
+        if hasattr(self, "_explicit_pipes") and not self.defaults:
+            delattr(self, "_explicit_pipes")
+            return self
+
         if not self.defaults:
             return self
 

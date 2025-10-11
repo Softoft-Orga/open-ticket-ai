@@ -48,7 +48,7 @@ infrastructure:
 Reusable configuration blocks:
 
 ```yaml
-defs:
+services:
   search_criteria: &search
     StateType: "Open"
     limit: 50
@@ -208,7 +208,7 @@ plugins:
 infrastructure:
   log_level: "INFO"
 
-defs:
+services:
   # Reusable search criteria
   open_tickets: &open_tickets
     StateType: "Open"

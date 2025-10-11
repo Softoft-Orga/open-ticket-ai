@@ -13,7 +13,6 @@ class RenderedPipeConfig(RegisterableConfig):
     model_config = ConfigDict(extra="allow")
     if_: bool = Field(default=True, alias="if")
     depends_on: list[str] = []
-    params: dict[str, Any] = Field(default_factory=dict)
     steps: list[RenderedPipeConfig] | None = None
 
     @property
@@ -25,7 +24,6 @@ class RawPipeConfig(RegisterableConfig):
     model_config = ConfigDict(extra="allow")
     if_: str | bool = Field(default="True", alias="if")
     depends_on: str | list[str] = []
-    params: dict[str, Any] = Field(default_factory=dict)
     steps: list[RenderedPipeConfig] | None = None
 
     @property

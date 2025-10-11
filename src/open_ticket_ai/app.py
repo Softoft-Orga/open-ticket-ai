@@ -67,7 +67,7 @@ class OpenTicketAIApp:
 
     async def run(self) -> None:
         self._logger.info("🚀 Starting Open Ticket AI orchestration...")
-        self._logger.info(f"📦 Loaded {len(self.config.defs)} definitions")
+        self._logger.info(f"📦 Loaded {len(self.config.services)} services")
         self._logger.info(f"🔧 Orchestrator has {len(self.config.orchestrator.runners)} runners\n")
 
         try:

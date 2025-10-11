@@ -85,7 +85,7 @@ def setup(
     if output_config:
         typer.echo(f"\nGenerating configuration file: {output_config}")
         config_content = f"""open_ticket_ai:
-  defs:
+  services:
     - id: "otobo_znuny"
       use: "open_ticket_ai_otobo_znuny_plugin:OTOBOZnunyTicketSystemService"
       base_url: "{base_url}"
