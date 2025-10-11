@@ -36,6 +36,7 @@ dependencies = [
     "transformers~=4.52.4",
     "python-dotenv>=1.1.1",
     "typer>=0.17.5",
+    "structlog>=24.4.0",
 ]
 
 [project.urls]
