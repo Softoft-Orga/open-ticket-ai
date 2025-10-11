@@ -1,8 +1,3 @@
-from __future__ import annotations
-
-from open_ticket_ai.core.util.path_util import find_python_code_root_path
-from src.scripts.util.display_file_structure import display_dir_tree
-
 """Module for updating project README files using AI-generated content.
 
 This module contains the `ReadmeUpdater` class which automates the process of:
@@ -11,9 +6,14 @@ This module contains the `ReadmeUpdater` class which automates the process of:
 3. Writing the new content to the project's AI_README file
 """
 
+from __future__ import annotations
+
 from pathlib import Path
 
 from openai import AsyncOpenAI
+
+from open_ticket_ai.core.util.path_util import find_python_code_root_path
+from python_extras.scripts.util.display_file_structure import display_dir_tree
 
 
 class ReadmeUpdater:
@@ -86,7 +86,8 @@ class ReadmeUpdater:
         prompt = "\n\n".join(docs_text)
         system_msg = """
             You will write a project summary for the AI_README.md file; The target audience is an LLM;
-            So give the LLM instructions on how to help the Projects Developers, Project Managers and documentation writers;
+            So give the LLM instructions on how to help the Projects Developers, Project Managers and
+            documentation writers;
             Update it using the following documentation, paying special attention to files in the /api directory.
             Since they are always up to date.
             While the rest of the documentation can be outdated.

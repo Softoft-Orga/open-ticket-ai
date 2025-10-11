@@ -8,13 +8,14 @@ representation of the structure using the `rich` library.
 from io import StringIO
 from pathlib import Path
 
-from open_ticket_ai.core.util.path_util import find_python_code_root_path
 from pathspec import PathSpec
 from pathspec.patterns import GitWildMatchPattern
 from pathspec.util import normalize_file
 from rich import print
 from rich.console import Console
 from rich.tree import Tree
+
+from open_ticket_ai.core.util.path_util import find_python_code_root_path
 
 
 def load_gitignore(base_path: Path) -> PathSpec:

@@ -16,15 +16,16 @@ import os
 from pathlib import Path
 
 import typer
-from mdxlate.translator import Translator
-from open_ticket_ai.core.util.path_util import find_python_code_root_path
+from mdxlate.start_translation import start_translation
 from openai import AsyncOpenAI
 from rich.console import Console
-from src.scripts import ReadmeUpdater
-from src.scripts.doc_generation.add_docstrings import DocstringGenerator
-from src.scripts.doc_generation.generate_api_reference import generate_documentation
-from src.scripts.doc_generation.update_frontmatter import update_frontmatter
-from src.scripts.documentation_summary import DocumentationSummarizer
+
+from open_ticket_ai.core.util.path_util import find_python_code_root_path
+from python_extras.scripts import ReadmeUpdater
+from python_extras.scripts.doc_generation.add_docstrings import DocstringGenerator
+from python_extras.scripts.doc_generation.generate_api_reference import generate_documentation
+from python_extras.scripts.doc_generation.update_frontmatter import update_frontmatter
+from python_extras.scripts.documentation_summary import DocumentationSummarizer
 
 # --- CLI Setup ---
 app = typer.Typer(
@@ -93,7 +94,7 @@ class DocGenerationFacade:
         Translates documentation files to multiple target languages.
 
         Processes all files in the source directory, translating them from the base language
-        to each specified target language using an AI model.
+        to each specified target language using mdxlate's translation engine.
 
         Args:
             docs_dir: Directory containing source documentation files.
@@ -102,8 +103,20 @@ class DocGenerationFacade:
             model: Identifier of the AI model to use for translation.
             out_dir: Output directory for translated files.
         """
-        translator = Translator(self.client, base_language, languages, model)
-        await translator.translate_directory(docs_dir, out_dir)
+        api_key = os.getenv("OPEN_ROUTER_API_KEY")
+        base_url = os.getenv("OPEN_ROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+        
+        start_translation(
+            docs_src=docs_dir,
+            out_dir=out_dir,
+            base_language=base_language,
+            languages=languages,
+            model=model,
+            provider="openai",
+            api_key=api_key,
+            base_url=base_url,
+            cache_dir=None,
+        )
 
 
 # --- Global Configurations & Instances ---
