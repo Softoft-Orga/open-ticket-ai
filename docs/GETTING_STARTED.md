@@ -400,7 +400,7 @@ otai info
 3. Explore the [online documentation](https://open-ticket-ai.com)
 
 ### Contributors
-1. Read [CONTRIBUTING.md](docs/raw_en_docs/general/CONTRIBUTING.md)
+1. Review the development setup section above
 2. Set up development environment
 3. Pick an issue to work on
 
