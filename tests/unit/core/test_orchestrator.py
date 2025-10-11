@@ -90,6 +90,11 @@ async def test_orchestrator_starts_and_stops_runners() -> None:
     assert not orchestrator._scheduler.running
 
 
+def test_orchestrator_config_with_params() -> None:
+    raw = {
+        "runners": [
+            {
+                "id": "test-runner-with-params",
 def test_orchestrator_config_with_defaults_pipe_id() -> None:
     raw = {
         "defaults": {
@@ -104,6 +109,19 @@ def test_orchestrator_config_with_defaults_pipe_id() -> None:
                         "params": {"seconds": 10},
                     }
                 ],
+                "pipe": {"id": "demo"},
+                "params": {
+                    "concurrency": {
+                        "max_workers": 5,
+                        "when_exhausted": "wait",
+                    },
+                    "retry": {
+                        "attempts": 5,
+                        "delay": "10s",
+                    },
+                    "timeout": "30s",
+                    "priority": 20,
+                },
             }
         ],
     }
@@ -366,6 +384,18 @@ def test_orchestrator_config_without_defaults() -> None:
     }
 
     config = OrchestratorConfig.model_validate(raw)
+
+    assert len(config.runners) == 1
+    assert config.runners[0].id == "test-runner-with-params"
+    assert config.runners[0].params is not None
+    assert config.runners[0].params.concurrency is not None
+    assert config.runners[0].params.concurrency.max_workers == 5
+    assert config.runners[0].params.concurrency.when_exhausted == "wait"
+    assert config.runners[0].params.retry is not None
+    assert config.runners[0].params.retry.attempts == 5
+    assert config.runners[0].params.retry.delay == "10s"
+    assert config.runners[0].params.timeout == "30s"
+    assert config.runners[0].params.priority == 20
 
     assert config.defaults is None
     assert len(config.runners) == 1

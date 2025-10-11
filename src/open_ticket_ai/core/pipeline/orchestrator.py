@@ -48,8 +48,8 @@ class Orchestrator:
             self._runners[job_id] = runner
 
             max_instances = 1
-            if definition.settings and definition.settings.concurrency:
-                max_instances = definition.settings.concurrency.max_workers
+            if definition.params and definition.params.concurrency:
+                max_instances = definition.params.concurrency.max_workers
 
             if definition.triggers:
                 for trigger_index, trigger_def in enumerate(definition.triggers):

@@ -33,7 +33,7 @@ class RetrySettings(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
 
-class RunnerSettings(BaseModel):
+class RunnerParams(BaseModel):
     concurrency: ConcurrencySettings | None = None
     retry: RetrySettings | None = None
     timeout: str | None = None
@@ -54,7 +54,7 @@ class RunnerDefinition(BaseModel):
     id: str | None = None
     triggers: list[TriggerDefinition] = Field(default_factory=list, alias="on")
     pipe: RawPipeConfig = Field(default_factory=RawPipeConfig)
-    settings: RunnerSettings = Field(default_factory=RunnerSettings)
+    params: RunnerParams = Field(default_factory=RunnerParams)
 
     model_config = ConfigDict(populate_by_name=True)
 
