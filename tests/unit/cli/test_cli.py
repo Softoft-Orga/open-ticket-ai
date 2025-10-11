@@ -39,6 +39,28 @@ def mock_app_config(mock_templates_dir: Path) -> AppConfig:
         yield app_config
 
 
+def test_cli_can_be_instantiated_with_custom_app_config() -> None:
+    custom_app_config = AppConfig(
+        config_env_var="CUSTOM_ENV_VAR",
+        config_yaml_root_key="custom_root",
+        default_config_filename="custom.yml",
+    )
+
+    cli = CLI(custom_app_config)
+
+    assert cli.app_config.config_env_var == "CUSTOM_ENV_VAR"
+    assert cli.app_config.config_yaml_root_key == "custom_root"
+    assert cli.app_config.default_config_filename == "custom.yml"
+
+
+def test_cli_uses_default_app_config_when_none_provided() -> None:
+    cli = CLI()
+
+    assert cli.app_config.config_env_var == "OPEN_TICKET_AI_CONFIG"
+    assert cli.app_config.config_yaml_root_key == "open_ticket_ai"
+    assert cli.app_config.default_config_filename == "config.yml"
+
+
 def test_init_command_success(cli_runner: CliRunner, mock_templates_dir: Path, tmp_path: Path) -> None:
     output_file = tmp_path / "config.yml"
 
