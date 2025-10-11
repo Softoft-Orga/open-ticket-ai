@@ -11,15 +11,11 @@ from open_ticket_ai.core.config.config_models import (
 from open_ticket_ai.core.config.registerable import RegisterableConfig
 from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
 from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
-from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
-from open_ticket_ai.core.template_rendering.renderer_config import (
-    JinjaRendererConfig,
-)
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
 class AppModule(Module):
-    def __init__(self, config_path: str | os.PathLike | None = None, app_config: AppConfig | None = None):
+    def __init__(self, config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None) -> None:
         """Initialize AppModule with optional config path.
 
         Args:
@@ -29,10 +25,12 @@ class AppModule(Module):
         self.config_path = config_path
         self.app_config = app_config or AppConfig()
 
-    def configure(self, binder: Binder):
+    def configure(self, binder: Binder) -> None:
+        from typing import cast  # noqa: PLC0415
+
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
         config_loader = ConfigLoader(self.app_config)
-        config = config_loader.load_config(self.config_path)
+        config = config_loader.load_config(cast(os.PathLike[str], self.config_path))
         print(config.infrastructure.logging.model_dump_json(indent=4, by_alias=True, exclude_none=True))
         dictConfig(config.infrastructure.logging.model_dump(by_alias=True, exclude_none=True))
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
@@ -41,6 +39,7 @@ class AppModule(Module):
     @provider
     def provide_template_renderer(self, config: RawOpenTicketAIConfig) -> TemplateRenderer:
         from pydoc import locate  # noqa: PLC0415
+        from typing import cast  # noqa: PLC0415
 
         template_renderer_id = config.infrastructure.default_template_renderer
 
@@ -66,14 +65,15 @@ class AppModule(Module):
         if renderer_class is None:
             raise ValueError(f"Cannot locate template renderer class '{renderer_service_config.use}'")
 
-        if not issubclass(renderer_class, TemplateRenderer):
+        renderer_class_typed = cast(type, renderer_class)
+        if not issubclass(renderer_class_typed, TemplateRenderer):
             raise TypeError(
                 f"Class '{renderer_service_config.use}' is not a TemplateRenderer subclass"
             )
 
         params = renderer_service_config.model_dump().get("params", {})
-        config_class_name = renderer_class.__name__ + "Config"
-        config_module = renderer_class.__module__.rsplit(".", 1)[0] + ".renderer_config"
+        config_class_name = renderer_class_typed.__name__ + "Config"
+        config_module = renderer_class_typed.__module__.rsplit(".", 1)[0] + ".renderer_config"
 
         config_module_obj = locate(config_module)
         if config_module_obj is None:
@@ -86,7 +86,7 @@ class AppModule(Module):
             )
 
         renderer_config = config_class(**params)
-        return renderer_class(config=renderer_config)
+        return renderer_class_typed(config=renderer_config)  # type: ignore[call-arg]
 
     @provider
     def provide_orchestrator_config(self, config: RawOpenTicketAIConfig) -> OrchestratorConfig:

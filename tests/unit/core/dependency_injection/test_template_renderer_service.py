@@ -5,7 +5,6 @@ from pathlib import Path
 import pytest
 from injector import Injector
 
-from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.container import AppModule
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
@@ -33,7 +32,7 @@ open_ticket_ai:
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
     injector = Injector([AppModule(config_path)])
-    renderer = injector.get(TemplateRenderer)
+    renderer = injector.get(TemplateRenderer)  # type: ignore[type-abstract]
 
     assert isinstance(renderer, JinjaRenderer)
     assert renderer.config.env_config.prefix == "OTAI_"
@@ -65,7 +64,7 @@ open_ticket_ai:
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
     injector = Injector([AppModule(config_path)])
-    renderer = injector.get(TemplateRenderer)
+    renderer = injector.get(TemplateRenderer)  # type: ignore[type-abstract]
 
     assert isinstance(renderer, JinjaRenderer)
     assert renderer.config.env_config.prefix == "CUSTOM_"
@@ -97,7 +96,7 @@ open_ticket_ai:
 
     injector = Injector([AppModule(config_path)])
     with pytest.raises(ValueError, match="Template renderer service with id 'nonexistent' not found"):
-        injector.get(TemplateRenderer)
+        injector.get(TemplateRenderer)  # type: ignore[type-abstract]
 
 
 def test_template_renderer_invalid_class_raises_error(tmp_path: Path) -> None:
@@ -120,7 +119,7 @@ open_ticket_ai:
 
     injector = Injector([AppModule(config_path)])
     with pytest.raises(TypeError, match="is not a TemplateRenderer subclass"):
-        injector.get(TemplateRenderer)
+        injector.get(TemplateRenderer)  # type: ignore[type-abstract]
 
 
 def test_template_renderer_uses_default_when_not_specified(tmp_path: Path) -> None:
@@ -143,6 +142,6 @@ open_ticket_ai:
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
     injector = Injector([AppModule(config_path)])
-    renderer = injector.get(TemplateRenderer)
+    renderer = injector.get(TemplateRenderer)  # type: ignore[type-abstract]
 
     assert isinstance(renderer, JinjaRenderer)
