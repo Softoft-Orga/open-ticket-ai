@@ -39,7 +39,6 @@ class RunnerSettings(BaseModel):
     timeout: str | None = None
     retry_scope: str = Field(default="pipeline")
     priority: int = Field(default=10)
-    tags: list[str] = Field(default_factory=list)
 
     model_config = ConfigDict(populate_by_name=True)
 
@@ -47,7 +46,6 @@ class RunnerSettings(BaseModel):
 class RunnerDefinition(BaseModel):
     id: str | None = None
     triggers: list[TriggerDefinition] = Field(default_factory=list, alias="on")
-    injects: dict[str, str] = Field(default_factory=dict)
     pipe: RawPipeConfig = Field(default_factory=RawPipeConfig)
     settings: RunnerSettings = Field(default_factory=RunnerSettings)
 

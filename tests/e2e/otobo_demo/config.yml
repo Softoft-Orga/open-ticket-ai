@@ -1,159 +1,162 @@
 
 _anchors:
-  - &ticket_fetch_pipe
-    use: "open_ticket_ai.base:FetchTicketsPipe"
-  - &ticket_update_pipe
-    use: "open_ticket_ai.base:UpdateTicketsPipe"
-  - &ticket_add_note_pipe
-    use: "open_ticket_ai.base:AddNoteTicketsPipe"
-  - &ticket_classifier_pipe
-    use: "otai_hf_local:HFLocalTextClassificationPipe"
-  - &jinja_expression_pipe
-    use: "open_ticket_ai.base:JinjaExpressionPipe"
-  - &default_ticket_update
-    <<: *ticket_update_pipe
-    injects: { ticket_system: "otobo_znuny" }
-    ticket_id: "{{ config.ticket.id }}"
-
-  - &default_ticket_add_note
-    <<: *ticket_add_note_pipe
-    injects: { ticket_system: "otobo_znuny" }
-    ticket_id: "{{ config.ticket.id }}"
-
-  - &ticket_classifier
-    <<: *ticket_classifier_pipe
   - &classification_generic
     steps:
       - id: classify
-        <<: *ticket_classifier
-        model: "{{ config.model }}"
-        prompt: "{{ config.ticket.subject }} {{ config.ticket.body }}"
+        use: "otai_hf_local:HFLocalTextClassificationPipe"
+        params:
+          model: "{{ parent.params.model }}"
+          prompt: "{{ parent.params.ticket.subject }} {{ parent.params.ticket.body }}"
+        retry:
+          max_retries: 2
+          on:
+            - "TimeoutError"
+            - "requests.exceptions.RequestException"
+          wait_seconds: 2
 
       - id: select_final
-        <<: *jinja_expression_pipe
-        expression: |-
-          {%- set label = pipe_result('classify','label') -%}
-          {%- set mapped = (config.map_obj or {}).get(label, label) -%}
-          {%- set has_high_confidence = pipe_result('classify','confidence') >= config.min_conf -%}
-          {{ mapped if has_high_confidence else config.low_conf_name }}
-        depends_on: [ "classify" ]
+        use: "open_ticket_ai.base:JinjaExpressionPipe"
+        params:
+          expression: |-
+            {%- set label = pipe_result('classify','label') -%}
+            {%- set mapped = (params.map_obj or {}).get(label, label) -%}
+            {%- set has_high_confidence = pipe_result('classify','confidence') >= params.min_conf -%}
+            {{ mapped if has_high_confidence else params.low_conf_name }}
 
       - id: update_ticket
-        <<: *default_ticket_update
-        updated_ticket: "{{ pipe_result('select_final') | at_path(config.ticket_field) }}"
-        depends_on: [ "select_final" ]
+        use: "open_ticket_ai.base:UpdateTicketsPipe"
+        injects: { ticket_system: "otobo_znuny" }
+        params:
+          ticket_id: "{{ parent.params.ticket.id }}"
+          updated_ticket: "{{ pipe_result('select_final') | at_path(params.ticket_field) }}"
 
       - id: add_note
-        <<: *default_ticket_add_note
-        note: |
-          {{
-            config.note_high if pipe_result('classify','confidence') >= config.min_conf
-            else config.note_low
-          }}
-        depends_on: [ "update_ticket" ]
+        injects: { ticket_system: "otobo_znuny" }
+        params:
+          ticket_id: "{{ parent.params.ticket.id }}"
+          note: |
+            {{
+              params.note_high if pipe_result('classify','confidence') >= params.min_conf
+              else params.note_low
+            }}
 
-      - if: "{{ has_failed('update_ticket') and config.update_on_error }}"
-        <<: *default_ticket_update
-        updated_ticket: "{{ config.on_error_update_value | at_path(config.ticket_field) }}"
-        depends_on: [ "update_ticket" ]
+      - if: "{{ has_failed('update_ticket') and params.update_on_error }}"
+        use: "open_ticket_ai.base:UpdateTicketsPipe"
+        injects: { ticket_system: "otobo_znuny" }
+        params:
+          ticket_id: "{{ params.ticket.id }}"
+          updated_ticket: "{{ params.on_error_update_value | at_path(params.ticket_field) }}"
 
-      - if: "{{ has_failed('update_ticket') and config.error_note }}"
-        <<: *default_ticket_add_note
-        note: "{{ config.error_note }}"
-        depends_on: [ "update_ticket" ]
+      - if: "{{ has_failed('update_ticket') and params.error_note }}"
+        use: "open_ticket_ai.base:AddNoteTicketsPipe"
+        injects: { ticket_system: "otobo_znuny" }
+        params:
+          ticket_id: "{{ params.ticket.id }}"
+          note: "{{ params.error_note }}"
+
 open_ticket_ai:
-  general_config:
+  infrastructure:
     logging:
       version: 1
       disable_existing_loggers: false
       handlers: { console: { class: logging.StreamHandler, stream: ext://sys.stdout } }
       formatters: { std: { format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s" } }
       root: { level: DEBUG, handlers: [ console ] }
-
-    template_renderer:
-      type: "jinja"
-      env_prefix: "OTAI_"
-      env_key: "env"
-  defs:
+  services:
+    - id: "jinja_template_renderer"
+      use: "open_ticket_ai.base:JinjaTemplateRenderer"
+      params:
+          env_prefix: "OTAI_"
+          env_key: "env"
     - id: "otobo_znuny"
       use: "otai_otobo_znuny:OTOBOZnunyTicketSystemService"
-      base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
-      password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
+      params:
+        base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
+        password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
 
   orchestrator:
+    defaults:
+      template_renderer: "jinja_template_renderer"
+      pipe_defaults:
+        retry:
+          max_retries: 1
+          wait_seconds: 0
+
     runners:
-      - run_every_milli_seconds: 10_000
-        pipe:
+      - on:
+          id: "every_10ms"
+          use: "open_ticket_ai.base:IntervalTrigger"
+          params:
+            milliseconds: 10
+
+        run:
           id: ticket-routing
-          ticket_search_criteria:
-            queue:
-              name: "OpenTicketAI::Incoming"
-            limit: 1
-          min_queue_confidence: 0.8
-          min_priority_confidence: 0.8
-          queue_model: "softoft/otai-queue-de-bert-v1"
-          priority_model: "softoft/otai-priority-de-bert-v1"
-          low_confidence_queue_name: "OpenTicketAI::Unclassified"
-          error_queue_name: "OpenTicketAI::Error"
-          low_confidence_priority_name: "medium"
+          params:
+            ticket_search_criteria:
+              queue:
+                name: "OpenTicketAI::Incoming"
+              limit: 1
+            min_queue_confidence: 0.8
+            min_priority_confidence: 0.8
+            queue_model: "softoft/otai-queue-de-bert-v1"
+            priority_model: "softoft/otai-priority-de-bert-v1"
+            low_confidence_queue_name: "OpenTicketAI::Unclassified"
+            error_queue_name: "OpenTicketAI::Error"
+            low_confidence_priority_name: "medium"
           steps:
             - id: ticket_fetcher
-              <<: *ticket_fetch_pipe
+              use: "open_ticket_ai.base:FetchTicketsPipe"
               injects: { ticket_system: "otobo_znuny" }
+              params:
+                  search_criteria: "{{ parent.params.ticket_search_criteria }}"
 
             - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
               id: queue_classification
-              depends_on: [ "ticket_fetcher" ]
               <<: *classification_generic
-              model: "{{ config.queue_model }}"
-              ticket: "{{ pipe_result('ticket_fetcher') | first }}"
-              min_conf: "{{ config.min_queue_confidence }}"
-              low_conf_name: "{{ config.low_confidence_queue_name }}"
-              ticket_field: "queue.name"
-              success_full_high_confidence_note:
-                subject: "Automatische Klassifizierung"
-                body: |
-                  Das Ticket wurde automatisch der Queue {{ pipe_result('select_final') }} zugeordnet;
-                  mit der Konfidenz {{ pipe_result('classify','confidence') }}
-              success_full_low_confidence_note:
-                subject: "Automatische Klassifizierung"
-                body: |
-                  Das Ticket wurde automatisch der Queue {{ pipe_result('select_final') }} zugeordnet;
-                  da die Konfidenz {{ pipe_result('classify','confidence') }} zu gering ist.
-                  Mindest Konfidenz {{ config.min_queue_confidence }}
-
-              update_on_error: true
-              on_error_update_value: "{{ config.error_queue_name }}"
-              error_note:
-                subject: ""
-                body: |
-                  Das Ticket konnte nicht automatisch der Queue zugeordnet werden;
-                  Da ein Fehler aufgetreten ist.
-                  Wurde in die Queue {{ config.error_queue_name }} verschoben.
+              params:
+                model: "{{ parent.params.model }}"
+                min_conf: "{{ parent.params.min_conf }}"
+                low_conf_name: "{{ parent.params.low_conf_name }}"
+                ticket_field: "{{ parent.params.ticket_field }}"
+                note_high: "{{ parent.params.success_full_high_confidence_note }}"
+                note_low: "{{ parent.params.success_full_low_confidence_note }}"
+                update_on_error: "{{ parent.params.update_on_error }}"
+                on_error_update_value: "{{ parent.params.on_error_update_value }}"
+                error_note: "{{ parent.params.error_note }}"
 
             - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
               id: priority_classification
-              depends_on: [ "ticket_fetcher" ]
-              <<: *classification_generic
-              ticket: "{{ pipe_result('ticket_fetcher') | first }}"
-              model: "{{ config.priority_model }}"
-              min_conf: "{{ config.min_priority_confidence }}"
-              low_conf_name: "{{ config.low_confidence_priority_name }}"
-              ticket_field: "priority.name"
-              success_full_high_confidence_note:
-                subject: "Automatische Priorisierung"
-                body: |
-                  Das Ticket wurde automatisch der Priorität {{ pipe_result('select_final') }} zugeordnet;
-                  mit der Konfidenz {{ pipe_result('classify','confidence') }}
-              success_full_low_confidence_note:
-                subject: "Automatische Priorisierung"
-                body: |
-                  Das Ticket wurde automatisch der Priorität {{ pipe_result('select_final') }} zugeordnet;
-                  da die Konfidenz {{ pipe_result('classify','confidence') }} zu gering ist.
-                  Mindest Konfidenz {{ config.min_priority_confidence }}
-              error_note:
-                subject: "Automatische Priorisierung"
-                body: |
-                  Das Ticket konnte nicht automatisch der Priorität zugeordnet werden;
-                  Da ein Fehler aufgetreten ist.
+              params:
+                depends_on: [ "ticket_fetcher" ]
+                <<: *classification_generic
+                ticket: "{{ pipe_result('ticket_fetcher') | first }}"
+                model: "{{ parent.params.priority_model }}"
+                min_conf: "{{ parent.params.min_priority_confidence }}"
+                low_conf_name: "{{ parent.params.low_confidence_priority_name }}"
+                ticket_field: "priority.name"
+                success_full_high_confidence_note:
+                  subject: "Automatische Priorisierung"
+                  body: |
+                    Das Ticket wurde automatisch der Priorität {{ pipe_result('select_final') }} zugeordnet;
+                    mit der Konfidenz {{ pipe_result('classify','confidence') }}
+                success_full_low_confidence_note:
+                  subject: "Automatische Priorisierung"
+                  body: |
+                    Das Ticket wurde automatisch der Priorität {{ pipe_result('select_final') }} zugeordnet;
+                    da die Konfidenz {{ pipe_result('classify','confidence') }} zu gering ist.
+                    Mindest Konfidenz {{ params.min_priority_confidence }}
+                error_note:
+                  subject: "Automatische Priorisierung"
+                  body: |
+                    Das Ticket konnte nicht automatisch der Priorität zugeordnet werden;
+                    Da ein Fehler aufgetreten ist.
 
+          retry:
+            max_retries: 0
+            wait_seconds: 0
+
+          timeout: "10s"
+          priority: 10
+          concurrency:
+            limit: 1
+            on_exceed: "wait"

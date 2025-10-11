@@ -12,7 +12,7 @@ from .pipe_context import PipeContext
 
 
 class Pipe(Registerable, ABC):
-    def __init__(self, pipe_params: RenderedPipeConfig | dict[str, Any] | BaseModel, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, pipe_params: RenderedPipeConfig, *args: Any, **kwargs: Any) -> None:
         super().__init__(pipe_params, *args, **kwargs)
         if isinstance(pipe_params, dict):
             self.pipe_params = RenderedPipeConfig.model_validate(pipe_params)

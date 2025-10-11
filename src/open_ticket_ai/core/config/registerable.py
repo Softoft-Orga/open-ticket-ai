@@ -14,7 +14,7 @@ class RegisterableConfig(BaseModel):
     uid: str = Field(default_factory=lambda: uuid.uuid4().hex)
     id: str | None = None
     use: str = Field(default="open_ticket_ai.base.CompositePipe")
-    injects: dict[str, str] | str = Field(default_factory=dict)
+    injects: dict[str, str] = Field(default_factory=dict)
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)

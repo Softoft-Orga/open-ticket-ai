@@ -80,14 +80,3 @@ class RawOpenTicketAIConfig(BaseModel):
     defs: list[RegisterableConfig] = Field(default_factory=lambda: [])
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
 
-
-def load_config(path: str | Path, app_config: AppConfig | None = None) -> RawOpenTicketAIConfig:
-    if app_config is None:
-        app_config = AppConfig()
-
-    with open(path, encoding="utf-8") as fh:
-        data = yaml.safe_load(fh)
-
-    if app_config.config_yaml_root_key not in data:
-        raise ValueError(f"Config file must have '{app_config.config_yaml_root_key}' as root key")
-    return RawOpenTicketAIConfig(**data[app_config.config_yaml_root_key])
