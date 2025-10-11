@@ -5,7 +5,7 @@
 # receive immediate attention.
 
 open_ticket_ai:
-    general_config:
+    infrastructure:
         logging:
             version: 1
             disable_existing_loggers: false

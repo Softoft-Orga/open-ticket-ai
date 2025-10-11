@@ -1,13 +1,12 @@
 from __future__ import annotations
 
+import os
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.registerable import RegisterableConfig
 from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
-from open_ticket_ai.core.template_rendering import JinjaRendererConfig
-from open_ticket_ai.core.template_rendering.renderer_config import SpecificTemplateRendererConfig
 
 LogLevel = Literal["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
@@ -64,15 +63,24 @@ class LoggingDictConfig(BaseModel):
     filters: dict[str, FilterConfig] = Field(default_factory=lambda: {})
 
 
-class GeneralConfig(BaseModel):
+class InfrastructureConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
-    # noinspection PyTypeHints
-    template_renderer: SpecificTemplateRendererConfig = Field(default_factory=JinjaRendererConfig)
 
 
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=lambda: [])
-    general_config: GeneralConfig = Field(default_factory=GeneralConfig)
+    infrastructure: InfrastructureConfig = Field(default_factory=InfrastructureConfig)
     defs: list[RegisterableConfig] = Field(default_factory=lambda: [])
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
+
+
+def load_config(config_path: str | os.PathLike, app_config: AppConfig | None = None) -> RawOpenTicketAIConfig:
+    from open_ticket_ai.core.config.app_config import AppConfig as DefaultAppConfig
+    from open_ticket_ai.core.config.config_loader import ConfigLoader
+    
+    if app_config is None:
+        app_config = DefaultAppConfig()
+    
+    loader = ConfigLoader(app_config)
+    return loader.load_config(config_path)

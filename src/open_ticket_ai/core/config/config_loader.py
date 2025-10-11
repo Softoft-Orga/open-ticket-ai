@@ -38,7 +38,12 @@ class ConfigLoader:
             )
 
         with open(config_path) as file:
-            config_dict = yaml.safe_load(file)[self.app_config.config_yaml_root_key]
+            yaml_content = yaml.safe_load(file)
+            if yaml_content is None or self.app_config.config_yaml_root_key not in yaml_content:
+                raise ValueError(
+                    f"Config file must contain '{self.app_config.config_yaml_root_key}' root key"
+                )
+            config_dict = yaml_content[self.app_config.config_yaml_root_key]
             try:
                 raw_otai_config = RawOpenTicketAIConfig.model_validate(config_dict)
             except ValidationError as e:

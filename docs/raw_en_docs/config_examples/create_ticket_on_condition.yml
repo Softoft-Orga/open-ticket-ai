@@ -5,7 +5,7 @@
 # For example, creating escalation tickets when high-priority keywords are detected.
 
 open_ticket_ai:
-    general_config:
+    infrastructure:
         logging:
             version: 1
             disable_existing_loggers: false

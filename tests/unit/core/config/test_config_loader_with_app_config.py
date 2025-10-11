@@ -86,7 +86,7 @@ def test_config_loader_raises_when_no_path_and_no_env(tmp_path: Path) -> None:
     if "NON_EXISTENT_VAR" in os.environ:
         del os.environ["NON_EXISTENT_VAR"]
 
-    with pytest.raises((ValidationError, pydantic.ValidationError)):
+    with pytest.raises(FileNotFoundError):
         ConfigLoader(app_config).load_config()
 
 
@@ -96,5 +96,5 @@ def test_config_loader_error_message_includes_custom_env_var(tmp_path: Path) -> 
     if "MY_CUSTOM_VAR" in os.environ:
         del os.environ["MY_CUSTOM_VAR"]
 
-    with pytest.raises((ValidationError, pydantic.ValidationError)):
+    with pytest.raises(FileNotFoundError):
         ConfigLoader(app_config).load_config()

@@ -14,7 +14,7 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
         open_ticket_ai:
           plugins:
             - plugin_a
-          general_config:
+          infrastructure:
             service:
               url: https://example.com
           defs:
@@ -36,7 +36,7 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
 
     assert isinstance(config, RawOpenTicketAIConfig)
     assert config.plugins == ["plugin_a"]
-    assert dict(config.general_config)["service"] == {"url": "https://example.com"}
+    assert dict(config.infrastructure)["service"] == {"url": "https://example.com"}
     assert config.defs[0].id == "def-1"
     assert dict(config.defs[0])["value"] == 42
 
