@@ -50,6 +50,10 @@ jobs:
                     uv run ruff format --check .
                     uv run ruff check .
 
+            -   name: Validate test structure
+                run: |
+                    uv run python scripts/validate_test_structure.py
+
             -   name: Type check with mypy
                 run: |
                     uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src

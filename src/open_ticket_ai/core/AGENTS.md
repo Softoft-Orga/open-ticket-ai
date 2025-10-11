@@ -110,3 +110,13 @@ Core infrastructure tests focus on:
 - Plugin discovery and loading
 - Template rendering with various inputs
 - Adapter contract compliance
+
+**Test Location:** Tests for core modules live in `/tests/unit/core/` at the repository root (NOT under `src/`).
+See [root AGENTS.md](../../../AGENTS.md) for complete test structure rules.
+
+## Documentation
+
+- All documentation lives in `docs/vitepress_docs/docs_src/en/` (see [docs/AGENTS.md](../../../docs/AGENTS.md))
+- Document configuration schemas, APIs, and architecture in VitePress
+- See `docs/vitepress_docs/docs_src/en/docs/code/` for code documentation
+- See `docs/vitepress_docs/docs_src/en/docs/concepts/` for architectural concepts

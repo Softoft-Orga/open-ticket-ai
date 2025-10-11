@@ -66,4 +66,12 @@ Tests for base components should verify:
 - Base implementations work correctly
 - Subclasses can properly extend base behavior
 - Mixins compose correctly without conflicts
-4
+
+**Test Location:** Tests for base components live in `/tests/unit/base/` at the repository root (NOT under `src/`).
+See [root AGENTS.md](../../../AGENTS.md) for complete test structure rules.
+
+## Documentation
+
+- All documentation lives in `docs/vitepress_docs/docs_src/en/` (see [docs/AGENTS.md](../../../docs/AGENTS.md))
+- Document base classes and their contracts in VitePress documentation
+- Keep code comments minimal; prefer clear naming and structure

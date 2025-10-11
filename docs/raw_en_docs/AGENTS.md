@@ -1,3 +1,26 @@
+# ⚠️ DEPRECATED - Legacy Documentation Structure
+
+**This file and directory (`docs/raw_en_docs/`) are DEPRECATED.**
+
+## Use the New Documentation Structure
+
+All documentation should now be written to:
+```
+docs/vitepress_docs/docs_src/en/
+```
+
+See the **authoritative** [docs/AGENTS.md](../AGENTS.md) for:
+- Current documentation structure
+- Where to place new documentation
+- Guidelines for editing documentation
+- VitePress documentation workflow
+
+---
+
+## Legacy Structure Reference (For Migration Only)
+
+The structure below is being phased out. Do NOT create new documentation here.
+
 Follow this directory structure!
 
 docs/raw_en_docs/en/

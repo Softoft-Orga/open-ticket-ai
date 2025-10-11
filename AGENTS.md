@@ -61,8 +61,7 @@ tests/
 - Check existing fixtures before creating new ones: `uv run -m pytest --fixtures`
 - Follow naming conventions: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
 - Document fixtures with clear docstrings
-- See [FIXTURES.md](./docs/FIXTURES.md) for complete fixture reference
-- See [FIXTURE_TEMPLATES.md](./docs/FIXTURE_TEMPLATES.md) for common patterns
+- See [testing guide](./docs/vitepress_docs/docs_src/en/docs/guides/testing.md) for complete fixture reference and patterns
 
 ## Pytest configuration (root `pyproject.toml`)
 
@@ -109,3 +108,11 @@ addopts = ["-q"]
 - [ ] `uv run ruff check .` clean
 - [ ] `uv run mypy .` clean
 - [ ] `uv run -m pytest` green
+- [ ] `uv run python scripts/validate_test_structure.py` passes
+
+## Documentation Structure
+
+All documentation lives in `docs/vitepress_docs/docs_src/en/`:
+- See [docs/AGENTS.md](./docs/AGENTS.md) for complete documentation structure guidelines
+- Edit **only** English source files (`en/` directory)
+- German/Spanish/French translations are auto-generated - do NOT edit them
