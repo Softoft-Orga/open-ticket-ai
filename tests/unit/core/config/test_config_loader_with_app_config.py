@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import pytest
 import os
 from pathlib import Path
+
+import pytest
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_loader import ConfigLoader

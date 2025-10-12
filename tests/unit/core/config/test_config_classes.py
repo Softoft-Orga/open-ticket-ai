@@ -6,7 +6,6 @@ from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 
 
-
 def test_registerable_config_defaults_are_independent() -> None:
     first = RenderableConfig()
     second = RenderableConfig()

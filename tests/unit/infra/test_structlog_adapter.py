@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-pytestmark = pytest.mark.skip(reason="Structlog implementation not available - module 'open_ticket_ai.infra' does not exist")
+pytestmark = pytest.mark.skip(
+    reason="Structlog implementation not available - module 'open_ticket_ai.infra' does not exist"
+)
 
 import structlog
 

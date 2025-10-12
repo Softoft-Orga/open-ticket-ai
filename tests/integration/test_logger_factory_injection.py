@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import pytest
 
-pytestmark = pytest.mark.skip(reason="RenderableFactory passes 'config' but JinjaExpressionPipe expects 'pipe_config' parameter - signature mismatch in source code")
+pytestmark = pytest.mark.skip(
+    reason="RenderableFactory passes 'config' but JinjaExpressionPipe expects 'pipe_config' parameter - signature mismatch in source code"
+)
 
 from injector import Injector
+
 from open_ticket_ai.base.pipes.jinja_expression_pipe import JinjaExpressionPipeConfig
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
-
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
 from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule

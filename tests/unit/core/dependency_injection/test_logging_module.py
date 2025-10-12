@@ -3,7 +3,9 @@ from __future__ import annotations
 import pytest
 from injector import Injector
 
-pytestmark = pytest.mark.skip(reason="Structlog implementation not available - module 'open_ticket_ai.infra' does not exist")
+pytestmark = pytest.mark.skip(
+    reason="Structlog implementation not available - module 'open_ticket_ai.infra' does not exist"
+)
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLoggerFactory
 from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
