@@ -17,6 +17,10 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
     UpdateTicketPipeResultData,
 )
 
+FetchTicketsPipeConfig.model_rebuild()
+AddNotePipeConfig.model_rebuild()
+UpdateTicketPipeConfig.model_rebuild()
+
 __all__ = [
     "AddNotePipe",
     "AddNotePipeConfig",

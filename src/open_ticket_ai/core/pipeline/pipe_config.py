@@ -2,14 +2,11 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from functools import reduce
-from typing import TYPE_CHECKING, Self
+from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.renderable import RenderableConfig
-
-if TYPE_CHECKING:
-    from typing import Any
 
 
 class PipeConfig[ParamsT: BaseModel](RenderableConfig[ParamsT]):

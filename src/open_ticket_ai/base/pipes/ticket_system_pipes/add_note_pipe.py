@@ -22,9 +22,6 @@ class AddNotePipeConfig(PipeConfig[AddNoteParams]):
     pass
 
 
-AddNotePipeConfig.model_rebuild()
-
-
 class AddNotePipe(Pipe[AddNoteParams]):
     def __init__(
         self,
