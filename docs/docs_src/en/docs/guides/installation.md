@@ -369,5 +369,5 @@ pip install --index-url https://pypi.org/simple open-ticket-ai
 
 - [Quick Start](quick_start.md)
 - [First Pipeline](first_pipeline.md)
-- [Configuration Reference](../configuration/config_schema.md)
+- [Configuration Reference](../details/configuration/config_schema.md)
 - [Troubleshooting](troubleshooting.md)

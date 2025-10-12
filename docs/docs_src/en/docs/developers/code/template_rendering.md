@@ -100,6 +100,6 @@ summary: >
 
 ## Related Documentation
 
-- [Configuration Structure](../configuration/config_structure.md)
-- [Pipeline Architecture](../concepts/pipeline-architecture.md)
-- [Configuration Examples](../configuration/examples.md)
+- [Configuration Structure](../../details/configuration/config_structure.md)
+- [Pipeline Architecture](../../concepts/pipeline-architecture.md)
+- [Configuration Examples](../../details/configuration/examples.md)

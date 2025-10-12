@@ -503,60 +503,13 @@ The pipeline system is implemented across several modules:
 
 - **`template_renderer.py`**: Jinja2 template rendering for configuration values
 
-## Best Practices
-
-### Designing Pipelines
-
-✅ **Do:**
-- Keep pipelines focused on a single workflow
-- Use descriptive IDs for pipes
-- Leverage dependencies for clear execution order
-- Use conditionals to skip unnecessary work
-- Document expected context data
-
-❌ **Don't:**
-- Create overly long pipelines (split into multiple if needed)
-- Use ambiguous pipe IDs
-- Create circular dependencies
-- Rely on implicit execution order
-- Modify context data without documenting
-
-### Working with Context
-
-✅ **Do:**
-- Use descriptive keys in `PipeResult.data`
-- Check if data exists before accessing
-- Use Jinja2 templates for safe access: `{{ pipes.step_id.data.field | default('fallback') }}`
-- Clean up large objects after use
-
-❌ **Don't:**
-- Store secrets in context (use environment variables)
-- Mutate context directly (use `model_copy()`)
-- Rely on undocumented context keys
-- Store entire API responses (extract needed fields)
-
-### Composite Pipe Design
-
-✅ **Do:**
-- Use composite pipes to group related operations
-- Make steps atomic and reusable
-- Use clear step IDs
-- Document step dependencies
-- Keep step count manageable (< 10)
-
-❌ **Don't:**
-- Nest composite pipes too deeply (>3 levels)
-- Create tightly coupled steps
-- Share state outside the context
-- Skip error handling in steps
-
 ## Related Documentation
 
 - **[Pipeline Architecture](./pipeline-architecture.md)** - Detailed system architecture
 - **[First Pipeline Tutorial](../guides/first_pipeline.md)** - Step-by-step guide to creating pipelines
-- **[Dependency Injection](../code/dependency_injection.md)** - Service management and injection
-- **[Template Rendering](../code/template_rendering.md)** - Jinja2 template system
-- **[Configuration Structure](../configuration/config_structure.md)** - YAML configuration reference
+- **[Dependency Injection](../developers/code/dependency_injection.md)** - Service management and injection
+- **[Template Rendering](../developers/code/template_rendering.md)** - Jinja2 template system
+- **[Configuration Structure](../details/configuration/config_structure.md)** - YAML configuration reference
 - **[Plugin Development](../plugins/plugin_development.md)** - Creating custom pipes
 
 ## Summary

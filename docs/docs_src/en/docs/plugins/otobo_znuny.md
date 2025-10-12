@@ -146,4 +146,4 @@ pipes:
 
 - [OTOBO/Znuny Integration](../integration/otobo_znuny_integration.md)
 - [Ticket Systems](../integration/ticket_systems.md)
-- [Configuration Examples](../configuration/examples.md)
+- [Configuration Examples](../details/configuration/examples.md)

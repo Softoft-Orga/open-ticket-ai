@@ -178,5 +178,5 @@ open-ticket-ai run --config config.yml --limit 10
 
 - [Configuration Schema](config_schema.md)
 - [Configuration Structure](config_structure.md)
-- [Quick Start Guide](../guides/quick_start.md)
-- [First Pipeline Tutorial](../guides/first_pipeline.md)
+- [Quick Start Guide](../../guides/quick_start.md)
+- [First Pipeline Tutorial](../../guides/first_pipeline.md)

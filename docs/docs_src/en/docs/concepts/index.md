@@ -36,6 +36,6 @@ Read the concepts documentation when you want to:
 
 For practical guides and tutorials, see:
 - [Guides](../guides/) - Step-by-step tutorials
-- [Configuration](../configuration/) - Configuration reference
-- [Code](../code/) - Technical implementation details
+- [Configuration](../details/configuration/) - Configuration reference
+- [Code](../developers/code/) - Technical implementation details
 - [Plugins](../plugins/) - Plugin development

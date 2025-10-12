@@ -170,6 +170,6 @@ See the [HuggingFace Local plugin](hf_local.md) for a complete example.
 ## Related Documentation
 
 - [Plugin System](plugin_system.md)
-- [Dependency Injection](../code/dependency_injection.md)
-- [Services](../code/services.md)
+- [Dependency Injection](../developers/code/dependency_injection.md)
+- [Services](../developers/code/services.md)
 - [Pipeline Architecture](../concepts/pipeline-architecture.md)
