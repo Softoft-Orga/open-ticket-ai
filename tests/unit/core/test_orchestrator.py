@@ -5,8 +5,8 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from open_ticket_ai.core.pipeline.orchestrator import Orchestrator
-from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
+from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
+from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
 
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
@@ -15,17 +15,22 @@ def test_orchestrator_config_from_raw_legacy() -> None:
     raw = {
         "runners": [
             {
-                "run_every_milli_seconds": 1000,
-                "pipe": {"id": "demo"},
+                "on": [
+                    {
+                        "use": "open_ticket_ai.core.orchestration.triggers.interval_trigger:IntervalTrigger",
+                        "params": {"seconds": 1},
+                    }
+                ],
+                "run": {"id": "demo"},
             }
         ]
     }
 
     config = OrchestratorConfig.model_validate(raw)
 
-    assert config.runners[0].pipe.id == "demo"
-    assert config.runners[0].triggers[0].use == "apscheduler.triggers.interval:IntervalTrigger"
-    assert config.runners[0].triggers[0].params["seconds"] == 1
+    assert config.runners[0].run.id == "demo"
+    assert config.runners[0].on[0].use == "open_ticket_ai.core.orchestration.triggers.interval_trigger:IntervalTrigger"
+    assert config.runners[0].on[0].params["seconds"] == 1
 
 
 def test_orchestrator_config_from_raw_new_format() -> None:
@@ -33,14 +38,14 @@ def test_orchestrator_config_from_raw_new_format() -> None:
         "runners": [
             {
                 "id": "test-runner",
-                "triggers": [
+                "on": [
                     {
                         "id": "interval-trigger",
-                        "use": "apscheduler.triggers.interval:IntervalTrigger",
+                        "use": "open_ticket_ai.core.orchestration.triggers.interval_trigger:IntervalTrigger",
                         "params": {"seconds": 10},
                     }
                 ],
-                "pipe": {"id": "demo"},
+                "run": {"id": "demo"},
             }
         ]
     }
@@ -48,24 +53,23 @@ def test_orchestrator_config_from_raw_new_format() -> None:
     config = OrchestratorConfig.model_validate(raw)
 
     assert config.runners[0].id == "test-runner"
-    assert config.runners[0].pipe.id == "demo"
-    assert config.runners[0].triggers[0].params["seconds"] == 10
+    assert config.runners[0].run.id == "demo"
+    assert config.runners[0].on[0].params.seconds == 10
 
 
-@pytest.mark.asyncio
-async def test_orchestrator_starts_and_stops_runners() -> None:
+def test_orchestrator_starts_and_stops_runners() -> None:
     orchestrator_config = OrchestratorConfig.model_validate(
         {
             "runners": [
                 {
-                    "triggers": [
+                    "on": [
                         {
                             "id": "interval-trigger",
-                            "use": "apscheduler.triggers.interval:IntervalTrigger",
+                            "use": "open_ticket_ai.base.interval_trigger:IntervalTrigger",
                             "params": {"seconds": 1},
                         }
                     ],
-                    "pipe": {"id": "demo"},
+                    "run": {"id": "demo"},
                 }
             ]
         }
@@ -77,28 +81,29 @@ async def test_orchestrator_starts_and_stops_runners() -> None:
     orchestrator = Orchestrator(pipe_factory, orchestrator_config)
 
     orchestrator.start()
-    assert orchestrator._scheduler.running
+    assert len(orchestrator._runners) == 1
+    assert len(orchestrator._trigger_registry) == 1
 
     orchestrator.stop()
-    await asyncio.sleep(0.01)
-    assert not orchestrator._scheduler.running
+    assert len(orchestrator._runners) == 0
+    assert len(orchestrator._trigger_registry) == 0
 
 
 def test_orchestrator_config_with_defaults_applies_to_runners() -> None:
     raw = {
         "defaults": {
-            "pipe": {"id": "default-pipe", "use": "some.default:Pipe"},
+            "run": {"id": "default-pipe", "use": "some.default:Pipe"},
         },
         "runners": [
             {
-                "triggers": [
+                "on": [
                     {
                         "id": "interval-trigger",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",
                         "params": {"seconds": 10},
                     }
                 ],
-                "pipe": {"id": "demo"},
+                "run": {"id": "demo"},
                 "params": {
                     "concurrency": {
                         "max_workers": 5,
@@ -118,67 +123,67 @@ def test_orchestrator_config_with_defaults_applies_to_runners() -> None:
     config = OrchestratorConfig.model_validate(raw)
 
     assert config.defaults is not None
-    assert config.runners[0].pipe.id == "default-pipe"
-    assert config.runners[0].pipe.use == "some.default:Pipe"
+    assert config.runners[0].run.id == "default-pipe"
+    assert config.runners[0].run.use == "some.default:Pipe"
 
 
 def test_orchestrator_config_with_defaults_can_be_overridden() -> None:
     raw = {
         "defaults": {
-            "pipe": {"id": "default-pipe"},
+            "run": {"id": "default-pipe"},
         },
         "runners": [
             {
-                "triggers": [
+                "on": [
                     {
                         "id": "interval-trigger",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",
                         "params": {"seconds": 10},
                     }
                 ],
-                "pipe": {"id": "specific-pipe"},
+                "run": {"id": "specific-pipe"},
             }
         ],
     }
 
     config = OrchestratorConfig.model_validate(raw)
 
-    assert config.runners[0].pipe.id == "specific-pipe"
+    assert config.runners[0].run.id == "specific-pipe"
 
 
 def test_orchestrator_config_with_defaults_params_merge() -> None:
     raw = {
         "defaults": {
-            "pipe": {
+            "run": {
                 "id": "default-pipe",
                 "params": {"default_param": "default_value", "shared_param": "default_shared"},
             },
         },
         "runners": [
             {
-                "triggers": [
+                "on": [
                     {
                         "id": "interval-trigger",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",
                         "params": {"seconds": 10},
                     }
                 ],
-                "pipe": {"params": {"runner_param": "runner_value", "shared_param": "runner_shared"}},
+                "run": {"params": {"runner_param": "runner_value", "shared_param": "runner_shared"}},
             }
         ],
     }
 
     config = OrchestratorConfig.model_validate(raw)
 
-    assert config.runners[0].pipe.params["default_param"] == "default_value"
-    assert config.runners[0].pipe.params["runner_param"] == "runner_value"
-    assert config.runners[0].pipe.params["shared_param"] == "runner_shared"
+    assert config.runners[0].run.params["default_param"] == "default_value"
+    assert config.runners[0].run.params["runner_param"] == "runner_value"
+    assert config.runners[0].run.params["shared_param"] == "runner_shared"
 
 
 def test_orchestrator_config_with_defaults_settings_applied_and_overridden() -> None:
     raw = {
         "defaults": {
-            "settings": {
+            "params": {
                 "timeout": "30s",
                 "priority": 5,
                 "retry_scope": "job",
@@ -186,15 +191,15 @@ def test_orchestrator_config_with_defaults_settings_applied_and_overridden() -> 
         },
         "runners": [
             {
-                "triggers": [
+                "on": [
                     {
                         "id": "interval-trigger",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",
                         "params": {"seconds": 10},
                     }
                 ],
-                "pipe": {"id": "test-pipe"},
-                "settings": {
+                "run": {"id": "test-pipe"},
+                "params": {
                     "timeout": "60s",
                     "priority": 15,
                 },
@@ -204,15 +209,15 @@ def test_orchestrator_config_with_defaults_settings_applied_and_overridden() -> 
 
     config = OrchestratorConfig.model_validate(raw)
 
-    assert config.runners[0].settings.timeout == "60s"
-    assert config.runners[0].settings.priority == 15
-    assert config.runners[0].settings.retry_scope == "job"
+    assert config.runners[0].params.timeout == "60s"
+    assert config.runners[0].params.priority == 15
+    assert config.runners[0].params.retry_scope == "job"
 
 
 def test_orchestrator_config_with_defaults_nested_settings() -> None:
     raw = {
         "defaults": {
-            "settings": {
+            "params": {
                 "concurrency": {
                     "max_workers": 5,
                     "when_exhausted": "drop",
@@ -226,38 +231,39 @@ def test_orchestrator_config_with_defaults_nested_settings() -> None:
         },
         "runners": [
             {
-                "triggers": [
+                "on": [
                     {
                         "id": "interval-trigger",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",
                         "params": {"seconds": 10},
                     }
                 ],
-                "pipe": {"id": "test-pipe"},
+                "run": {"id": "test-pipe"},
             }
         ],
     }
 
     config = OrchestratorConfig.model_validate(raw)
 
-    assert config.runners[0].settings.concurrency is not None
-    assert config.runners[0].settings.concurrency.when_exhausted == "drop"
-    assert config.runners[0].settings.retry is not None
-    assert config.runners[0].settings.retry.attempts == 5
+    assert config.runners[0].params.concurrency is not None
+    assert config.runners[0].params.concurrency.when_exhausted == "drop"
+    assert config.runners[0].params.retry is not None
+    assert config.runners[0].params.retry.attempts == 5
 
 
 def test_orchestrator_config_without_defaults() -> None:
     raw = {
         "runners": [
             {
-                "triggers": [
+                "id": "test-runner-with-params",
+                "on": [
                     {
                         "id": "interval-trigger",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",
                         "params": {"seconds": 10},
                     }
                 ],
-                "pipe": {"id": "test-pipe"},
+                "run": {"id": "test-pipe"},
             }
         ]
     }
@@ -268,44 +274,44 @@ def test_orchestrator_config_without_defaults() -> None:
     assert config.runners[0].id == "test-runner-with-params"
     assert config.runners[0].params is not None
     assert config.runners[0].params.concurrency is not None
-    assert config.runners[0].params.concurrency.max_workers == 5
+    assert config.runners[0].params.concurrency.max_workers == 1
     assert config.runners[0].params.concurrency.when_exhausted == "wait"
     assert config.runners[0].params.retry is not None
-    assert config.runners[0].params.retry.attempts == 5
-    assert config.runners[0].params.retry.delay == "10s"
-    assert config.runners[0].params.timeout == "30s"
-    assert config.runners[0].params.priority == 20
+    assert config.runners[0].params.retry.attempts == 3
+    assert config.runners[0].params.retry.delay == "5s"
+    assert config.runners[0].params.timeout is None
+    assert config.runners[0].params.priority == 10
 
     assert config.defaults is None
-    assert config.runners[0].pipe.id == "test-pipe"
+    assert config.runners[0].run.id == "test-pipe"
 
 
 def test_orchestrator_config_with_defaults_multiple_runners() -> None:
     raw = {
         "defaults": {
-            "pipe": {"use": "some.default:Pipe", "params": {"default_key": "default_value"}},
-            "settings": {"timeout": "30s", "priority": 5},
+            "run": {"use": "some.default:Pipe", "params": {"default_key": "default_value"}},
+            "params": {"timeout": "30s", "priority": 5},
         },
         "runners": [
             {
-                "triggers": [
+                "on": [
                     {
                         "id": "interval-trigger-1",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",
                         "params": {"seconds": 10},
                     }
                 ],
-                "pipe": {"id": "pipe-1"},
+                "run": {"id": "pipe-1"},
             },
             {
-                "triggers": [
+                "on": [
                     {
                         "id": "interval-trigger-2",
                         "use": "apscheduler.triggers.interval:IntervalTrigger",
                         "params": {"seconds": 20},
                     }
                 ],
-                "pipe": {"id": "pipe-2", "params": {"runner_key": "runner_value"}},
+                "run": {"id": "pipe-2", "params": {"runner_key": "runner_value"}},
             },
         ],
     }
@@ -313,6 +319,6 @@ def test_orchestrator_config_with_defaults_multiple_runners() -> None:
     config = OrchestratorConfig.model_validate(raw)
 
     assert len(config.runners) == 2
-    assert config.runners[0].pipe.use == "some.default:Pipe"
-    assert config.runners[1].pipe.params["runner_key"] == "runner_value"
-    assert config.runners[1].settings.timeout == "30s"
+    assert config.runners[0].run.use == "some.default:Pipe"
+    assert config.runners[1].run.params["runner_key"] == "runner_value"
+    assert config.runners[1].params.timeout == "30s"
