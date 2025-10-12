@@ -1,0 +1,98 @@
+export default {
+    otai_prediction_demo_component: {
+        title: 'Open Ticket AI Demo',
+        pickExampleText: 'Example',
+        exampleSelectDefault: 'Select an example...',
+        subjectLabel: 'Subject',
+        subjectPlaceholder: 'Enter the subject of the ticket',
+        messageLabel: 'Message',
+        messagePlaceholder: 'Enter the message of the ticket',
+        submitButtonText: 'Predict Ticket Attributes',
+        loadingText: 'Analyzing...',
+        predictionError: 'Prediction failed. Please try again later.',
+        resultTitle: 'Prediction Result',
+        typeColumnHeader: 'Type',
+        predictionColumnHeader: 'Prediction',
+        confidenceColumnHeader: 'Confidence',
+        queueRowHeader: 'Queue',
+        priorityRowHeader: 'Priority',
+        apiText: 'You can use the Model that powers this demo through our API'
+    },
+    otai_animation: {
+        startAnimationText: 'Send Email',
+        processingText: 'Processing...',
+        title: 'OTAI Animation',
+    },
+    servicePackages: {
+        title: 'Services',
+        buttonText: 'Choose Plan',
+        essential: {
+            name: 'Essential Launch',
+            description: 'Perfect for getting started with core AI capabilities.',
+        },
+        professional: {
+            name: 'Professional Acceleration',
+            description: 'Tailor the AI to your specific business data and needs.',
+        },
+        enterprise: {
+            name: 'Enterprise Integration',
+            description: 'Full integration and custom development for complex workflows.',
+        },
+        features: {
+            coreInstall: 'Core Installation & System Setup',
+            standardModel: 'Deployment of Standard Prediction Model',
+            prioEngine: 'Ticket Prioritization Engine',
+            queueClassification: 'Automated Queue Classification',
+            trainingQueue: 'Training of Queue Model on your data',
+            trainingPrio: 'Training of Priority Model on your data',
+            thirdPartyIntegration: 'Custom Third-Party Ticket System Integration',
+            customAttributePrediction: 'Includes up to 3 Custom Attribute Predictions',
+            additionalAttributePrediction: 'Each Additional Attribute Prediction: €3000',
+            bespokeDevelopment: 'Bespoke Feature & Workflow Development',
+        }
+    },
+    supportPlans: {
+        title: 'Support Packages',
+        buttonText: 'Choose Plan',
+        pricePeriod: 'month',
+        basic: {
+            name: 'Basic Care',
+            description: 'Ensures your system remains stable, secure, and up-to-date.',
+        },
+        proactive: {
+            name: 'Proactive Support',
+            description: 'Advanced monitoring and reporting for optimal performance.',
+        },
+        enterprise: {
+            name: 'Enterprise Assurance',
+            description: 'Complete operational oversight with strategic AI optimization.',
+        },
+        features: {
+            systemUpdates: 'Proactive System Updates & Patching',
+            uptimeMonitoring: 'Uptime & Core Log Monitoring',
+            monthlyHealthCheck: 'Monthly AI Performance Health Check',
+            responseTime: 'Support Response Time: Within 1 Business Day',
+            allBasic: 'All Basic Care Services',
+            weeklyMonitoring: 'Weekly In-Depth Performance Monitoring',
+            monthlyReports: 'Comprehensive Monthly Performance Reports',
+            priorityResponse: 'Priority Support Response: Within 1 Business Day',
+            allProactive: 'All Proactive Support Services',
+            realtimeAlerts: 'Real-Time Monitoring & Anomaly Alerts',
+            strategicReview: 'Strategic AI Review & Optimization',
+            guaranteedResponse: 'Guaranteed Response Time: Within 1 Business Day',
+        },
+    },
+    otai_contact_form: {
+        title: 'Contact',
+        email_label: 'Your email',
+        message_label: 'Your message',
+        submit_text: 'Send',
+        email_us_text: 'or Email us at',
+    },
+    sdg_waitlist: {
+        title: 'Join the Synthetic Ticket Generator Waitlist',
+        email_label: 'Your email',
+        submit_text: 'Join Waitlist',
+        privacy_note: 'We’ll only use your email to notify you about the launch.',
+    },
+}

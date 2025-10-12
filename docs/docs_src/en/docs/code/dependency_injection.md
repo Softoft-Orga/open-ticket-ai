@@ -24,7 +24,7 @@ The UnifiedRegistry is the central registry for:
 
 ## Injecting Services into Pipes
 
-Pipes can request services via constructor injection using the `@inject` decorator. The DI container automatically provides the required service instances when creating pipe instances.
+Pipes can request services via constructor injection using decorators. The DI container automatically provides the required service instances when creating pipe instances.
 
 ## Service Scopes
 

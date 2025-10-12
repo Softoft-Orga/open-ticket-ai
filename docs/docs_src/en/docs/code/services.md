@@ -31,7 +31,7 @@ Services are typically singletons:
 1. Define service interface
 2. Implement service
 3. Register with DI container using the injector module
-4. Inject into pipes using the `@inject` decorator
+4. Inject into pipes using dependency injection
 
 ## Service Best Practices
 
