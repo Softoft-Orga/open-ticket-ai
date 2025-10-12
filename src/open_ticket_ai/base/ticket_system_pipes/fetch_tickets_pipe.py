@@ -2,6 +2,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
@@ -22,9 +23,14 @@ class FetchTicketsPipeConfig(PipeConfig[FetchTicketsParams]):
 
 class FetchTicketsPipe(Pipe[FetchTicketsParams]):
     def __init__(
-        self, ticket_system: TicketSystemService, pipe_config: FetchTicketsPipeConfig, *args: Any, **kwargs: Any
+        self,
+        ticket_system: TicketSystemService,
+        pipe_config: FetchTicketsPipeConfig,
+        logger_factory: LoggerFactory | None = None,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
-        super().__init__(pipe_config)
+        super().__init__(pipe_config, logger_factory=logger_factory)
         self.ticket_system = ticket_system
         self.pipe_config = pipe_config
 
