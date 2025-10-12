@@ -27,16 +27,16 @@ classifiers = [
 ]
 
 dependencies = [
-    "pydantic~=2.11.7",
+    "pydantic~=2.12.0",
     "pyyaml>=6.0",
     "injector~=0.22.0",
     "pyfiglet>=1.0.2",
     "apscheduler>=3.11.0",
     "jinja2>=3.1.6",
-    "transformers~=4.52.4",
+    "transformers~=4.57.0",
     "python-dotenv>=1.1.1",
-    "typer>=0.17.5",
-    "rich>=13.0.0",
+    "typer>=0.19.2",
+    "rich>=14.2.0",
     "httpx>=0.27.0",
     "structlog>=24.4.0",
     "mdxlate>=1.1.2",

@@ -27,8 +27,8 @@ classifiers = [
 dependencies = [
     "open-ticket-ai>=1.0.0rc1,<2.0.0",
     "otobo-znuny>=1.4.0",
-    "injector~=0.22.0",
-    "pydantic~=2.11.7",
+    "injector>=0.22.0",
+    "pydantic>=2.11.7",
 ]
 
 [project.urls]
