@@ -4,7 +4,7 @@ from unittest.mock import patch
 import pytest
 from typer.testing import CliRunner
 
-from open_ticket_ai.cli.main import CLI, app
+from open_ticket_ai.core.cli import CLI, app
 from open_ticket_ai.core.config.app_config import AppConfig
 
 

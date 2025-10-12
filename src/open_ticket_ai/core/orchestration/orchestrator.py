@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import asyncio
-import logging
 from importlib import import_module
 
 from injector import inject, singleton
 
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import (
     OrchestratorConfig,
     TriggerDefinition,
@@ -20,10 +20,12 @@ class Orchestrator:
     """Manages pipeline execution using Observer Pattern for triggers."""
 
     @inject
-    def __init__(self, pipe_factory: RenderableFactory, orchestrator_config: OrchestratorConfig) -> None:
+    def __init__(
+        self, pipe_factory: RenderableFactory, orchestrator_config: OrchestratorConfig, logger_factory: LoggerFactory
+    ) -> None:
         self._pipe_factory = pipe_factory
         self._config = orchestrator_config
-        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger = logger_factory.get_logger(self.__class__.__name__)
         self._trigger_registry: dict[str, Trigger] = {}
         self._runners: dict[str, PipeRunner] = {}
 
@@ -35,7 +37,7 @@ class Orchestrator:
 
     def start(self) -> None:
         """Start the orchestrator and all runners."""
-        self._logger.info("Starting orchestrator with %d runner(s)", len(self._config.runners))
+        self._logger.info(f"Starting orchestrator with {len(self._config.runners)} runner(s)")
 
         for index, definition in enumerate(self._config.runners):
             runner = PipeRunner(definition, self._pipe_factory)
@@ -53,15 +55,12 @@ class Orchestrator:
 
                     trigger.attach(runner)
                     self._logger.info(
-                        "Attached pipe '%s' to trigger '%s' (%s)",
-                        definition.pipe_id,
-                        trigger_def.id,
-                        trigger_def.use,
+                        f"Attached pipe '{definition.pipe_id}' to trigger '{trigger_def.id}' ({trigger_def.use})"
                     )
             else:
                 # One-time execution
                 asyncio.create_task(runner.execute())
-                self._logger.info("Scheduled pipe '%s' for one-time execution", definition.pipe_id)
+                self._logger.info(f"Scheduled pipe '{definition.pipe_id}' for one-time execution")
 
         # Start all triggers
         for trigger in self._trigger_registry.values():
@@ -85,5 +84,5 @@ class Orchestrator:
         try:
             await asyncio.Future()  # Run forever
         except (KeyboardInterrupt, SystemExit) as e:
-            self._logger.info("%s received; shutting down orchestrator", e.__class__.__name__)
+            self._logger.info(f"{e.__class__.__name__} received; shutting down orchestrator")
             self.stop()

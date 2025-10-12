@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
@@ -58,5 +60,20 @@ class RunnerDefinition(BaseModel):
 
 class OrchestratorConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
-    defaults: RunnerParams | None = None
+    defaults: dict[str, Any] | None = None
     runners: list[RunnerDefinition] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def merge_defaults(self):
+        if self.defaults:
+            for runner in self.runners:
+                if "run" in self.defaults:
+                    run_defaults = self.defaults["run"]
+                    runner.run = runner.run.model_copy(update=run_defaults)
+                if "params" in self.defaults:
+                    params_defaults = self.defaults["params"]
+                    if runner.params:
+                        runner.params = runner.params.model_copy(update=params_defaults)
+                    else:
+                        runner.params = RunnerParams.model_validate(params_defaults)
+        return self

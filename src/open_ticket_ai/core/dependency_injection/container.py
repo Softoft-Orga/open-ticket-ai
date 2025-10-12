@@ -3,6 +3,7 @@ from logging.config import dictConfig
 
 from injector import Binder, Module, multiprovider, provider, singleton
 
+from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
@@ -12,7 +13,6 @@ from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig
-from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 

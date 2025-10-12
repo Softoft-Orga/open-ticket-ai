@@ -20,6 +20,22 @@ Services can inject the `LoggerFactory` and use it to create loggers with bound 
 ### Direct Usage (without DI)
 
 The logging adapters can be configured and used directly without the dependency injection container. Configure the logging system at application startup and create loggers as needed.
+```python
+from open_ticket_ai.base.loggers.stdlib_logging_adapter import (
+    StdlibLoggerFactory,
+    configure_stdlib_logging,
+)
+
+# Configure logging
+configure_stdlib_logging(level="INFO")
+
+# Create factory and logger
+factory = StdlibLoggerFactory()
+logger = factory.get_logger("my_module")
+
+# Use logger
+logger.info("Application started")
+```
 
 ## Configuration
 
@@ -59,6 +75,15 @@ The stdlib adapter wraps Python's built-in `logging` module.
 **Configuration:**
 
 The stdlib logging can be configured with custom format strings and date formats.
+```python
+from open_ticket_ai.base.loggers.stdlib_logging_adapter import configure_stdlib_logging
+
+configure_stdlib_logging(
+    level="INFO",
+    format_string="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+```
 
 ### Structlog
 

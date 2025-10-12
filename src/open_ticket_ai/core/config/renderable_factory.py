@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import typing
 from pydoc import locate
 from typing import Any
@@ -10,6 +9,7 @@ from pydantic import BaseModel
 
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.renderable import Renderable, RenderableConfig
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
@@ -35,16 +35,21 @@ def render_base_model[T: BaseModel](config: T, scope: PipeContext, renderer: Tem
 class RenderableFactory:
     @inject
     def __init__(
-        self, template_renderer: TemplateRenderer, app_config: AppConfig, registerable_configs: list[RenderableConfig]
+        self,
+        template_renderer: TemplateRenderer,
+        app_config: AppConfig,
+        registerable_configs: list[RenderableConfig],
+        logger_factory: LoggerFactory,
     ):
-        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger = logger_factory.get_logger(self.__class__.__name__)
         self._template_renderer = template_renderer
         self._registerable_configs = registerable_configs
         self._app_config = app_config
+        self._logger_factory = logger_factory
 
     def create_pipe(self, pipe_config_raw: PipeConfig, scope: PipeContext) -> Pipe:
-        self._logger.debug("Creating pipe with config: %s", pipe_config_raw)
-        self._logger.info("Creating pipe '%s' with config %s", pipe_config_raw.id, pipe_config_raw)
+        self._logger.debug(f"Creating pipe with config id: {pipe_config_raw.id}")
+        self._logger.info(f"Creating pipe '{pipe_config_raw.id}'")
         rendered_params = render_base_model(pipe_config_raw.params, scope, self._template_renderer)
         pipe_config_raw.params = rendered_params
         registerable = self.__create_renderable_instance(pipe_config_raw, scope)
@@ -65,6 +70,7 @@ class RenderableFactory:
         kwargs["config"] = registerable_config
         kwargs["factory"] = self
         kwargs["app_config"] = self._app_config
+        kwargs["logger_factory"] = self._logger_factory
         return cls(**kwargs)
 
     def __resolve_injects(self, injects: dict[str, Any], scope: PipeContext) -> dict[str, Renderable]:

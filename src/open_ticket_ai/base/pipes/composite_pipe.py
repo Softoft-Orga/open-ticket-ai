@@ -1,9 +1,9 @@
-import logging
 from typing import Any
 
 from pydantic import BaseModel
 
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import CompositePipeResultData, PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
@@ -23,11 +23,15 @@ class CompositePipe(Pipe[CompositeParams]):
     """
 
     def __init__(
-        self, pipe_config: CompositePipeConfig, factory: RenderableFactory | None = None, *args: Any, **kwargs: Any
+        self,
+        pipe_config: CompositePipeConfig,
+        factory: RenderableFactory | None = None,
+        logger_factory: LoggerFactory | None = None,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
-        super().__init__(pipe_config)
+        super().__init__(pipe_config, logger_factory=logger_factory)
         self.pipe_config = pipe_config
-        self._logger = logging.getLogger(self.__class__.__name__)
         self._factory = factory
         self._context: PipeContext | None = None
 
@@ -46,6 +50,7 @@ class CompositePipe(Pipe[CompositeParams]):
         results: list[PipeResult] = []
         current_context = context
         for step_pipe_config_raw in self.pipe_config.steps:
+            current_context.parent = context
             step_pipe = self._build_pipe_from_step_config(step_pipe_config_raw, current_context)
             current_context = await step_pipe.process(current_context)
             results.append(current_context.pipes[step_pipe_config_raw.id])
@@ -65,9 +70,9 @@ class CompositePipe(Pipe[CompositeParams]):
         Public API. Runs composite pipe and returns updated Context.
         Overrides base implementation to access context during _process.
         """
-        self._logger.info("Processing pipe '%s'", self.pipe_config.id)
+        self._logger.info(f"Processing pipe '{self.pipe_config.id}'")
         if self.pipe_config.should_run and self.have_dependent_pipes_been_run(context):
-            self._logger.info("Pipe '%s' is running.", self.pipe_config.id)
+            self._logger.info(f"Pipe '{self.pipe_config.id}' is running.")
             new_context = context.model_copy()
             try:
                 steps_result: list[PipeResult] = await self._process_steps(new_context)
@@ -80,5 +85,5 @@ class CompositePipe(Pipe[CompositeParams]):
                     success=False, failed=True, message=str(e), data=CompositePipeResultData()
                 )
             return self._save_pipe_result(new_context, composite_result)
-        self._logger.info("Skipping pipe '%s'.", self.pipe_config.id)
+        self._logger.info(f"Skipping pipe '{self.pipe_config.id}'.")
         return context

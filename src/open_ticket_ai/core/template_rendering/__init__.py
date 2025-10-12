@@ -1,4 +1,4 @@
-from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
     TemplateRendererConfig,

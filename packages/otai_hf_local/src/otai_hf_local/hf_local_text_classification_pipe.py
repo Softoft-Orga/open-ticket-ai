@@ -1,7 +1,7 @@
-import logging
 from functools import cache
 from typing import Any
 
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from pydantic import BaseModel
@@ -30,12 +30,17 @@ class HFLocalTextClassificationPipeConfig(PipeConfig[HFLocalTextClassificationPa
 class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
     _pipeline: Any
 
-    def __init__(self, pipe_config: HFLocalTextClassificationPipeConfig, *args: Any, **kwargs: Any) -> None:
-        super().__init__(pipe_config)
+    def __init__(
+        self,
+        pipe_config: HFLocalTextClassificationPipeConfig,
+        logger_factory: LoggerFactory | None = None,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(pipe_config, logger_factory=logger_factory)
         self.model = pipe_config.params.model
         self.token = pipe_config.params.token
         self.prompt = pipe_config.params.prompt
-        self.logger = logging.getLogger(self.__class__.__name__)
         self._pipeline = None
 
     @staticmethod
@@ -46,7 +51,7 @@ class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 
     async def _process(self) -> PipeResult[HFLocalTextClassificationPipeResultData]:
-        self.logger.info(f"Running {self.__class__.__name__}")
+        self._logger.info(f"Running {self.__class__.__name__}")
         if self._pipeline is None:
             self._pipeline = self._load_pipeline(self.model, self.token)
 
@@ -56,7 +61,7 @@ class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
         label = top["label"]
         score = float(top["score"])
 
-        self.logger.info(f"Prediction: label {label} with score {score}")
+        self._logger.info(f"Prediction: label {label} with score {score}")
 
         return PipeResult[HFLocalTextClassificationPipeResultData](
             success=True, failed=False, data=HFLocalTextClassificationPipeResultData(label=label, confidence=score)

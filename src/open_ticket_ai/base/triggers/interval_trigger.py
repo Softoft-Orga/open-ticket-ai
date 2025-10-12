@@ -17,7 +17,7 @@ class IntervalTriggerParams(BaseModel):
 class IntervalTrigger(Trigger):
     def __init__(self, trigger_def: TriggerDefinition[IntervalTriggerParams]) -> None:
         super().__init__(trigger_def)
-        params = trigger_def.params
+        params = IntervalTriggerParams.model_validate(trigger_def.params)
         self.interval = (
             params.days * 86400
             + params.hours * 3600
