@@ -84,9 +84,9 @@ export default defineConfig({
             link: '/de/',
             themeConfig: {
                 nav: [
-                    ...navGenerator.generateNavbar('de'),
+                    ...navGenerator.generateNavbar('en'),
                 ],
-                sidebar: navGenerator.generateSidebar("de")
+                sidebar: navGenerator.generateSidebar("en")
             }
         },
         fr: {
@@ -95,9 +95,9 @@ export default defineConfig({
             link: '/fr/',
             themeConfig: {
                 nav: [
-                    ...navGenerator.generateNavbar('fr'),
+                    ...navGenerator.generateNavbar('en'),
                 ],
-                sidebar: navGenerator.generateSidebar("fr")
+                sidebar: navGenerator.generateSidebar("en")
             }
         },
         es: {
@@ -106,9 +106,9 @@ export default defineConfig({
             link: '/es/',
             themeConfig: {
                 nav: [
-                    ...navGenerator.generateNavbar('es'),
+                    ...navGenerator.generateNavbar('en'),
                 ],
-                sidebar: navGenerator.generateSidebar("es")
+                sidebar: navGenerator.generateSidebar("en")
             }
         }
 

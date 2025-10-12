@@ -10,6 +10,15 @@
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress_docs/docs_src/de" />
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress_docs/docs_src/es" />
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress_docs/docs_src/fr" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/.storybook" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/.vitepress" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/_extra" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/_internal" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/docs_src/de" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/docs_src/es" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/docs_src/fr" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/netlify" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/stories" />
     </content>
     <orderEntry type="jdk" jdkName="uv (open-ticket-ai)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
