@@ -15,50 +15,11 @@ The logging system provides:
 
 ### Using with Dependency Injection
 
-```python
-from injector import Injector, inject
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
-from open_ticket_ai.core.logging_iface import LoggerFactory
-
-class MyService:
-    @inject
-    def __init__(self, logger_factory: LoggerFactory):
-        self._logger = logger_factory.get_logger(
-            self.__class__.__name__,
-            service="my_service",
-            version="1.0"
-        )
-    
-    def do_something(self):
-        logger = self._logger.bind(operation="do_something")
-        logger.info("Starting operation")
-        logger.debug("Processing data")
-        logger.info("Operation complete")
-
-# Create injector with logging module
-injector = Injector([LoggingModule()])
-service = injector.get(MyService)
-service.do_something()
-```
+Services can inject the `LoggerFactory` and use it to create loggers with bound context. The logger factory creates logger instances with optional initial context data.
 
 ### Direct Usage (without DI)
 
-```python
-from open_ticket_ai.infra.stdlib_logging_adapter import (
-    StdlibLoggerFactory,
-    configure_stdlib_logging,
-)
-
-# Configure logging
-configure_stdlib_logging(level="INFO")
-
-# Create factory and logger
-factory = StdlibLoggerFactory()
-logger = factory.get_logger("my_module")
-
-# Use logger
-logger.info("Application started")
-```
+The logging adapters can be configured and used directly without the dependency injection container. Configure the logging system at application startup and create loggers as needed.
 
 ## Configuration
 
@@ -77,15 +38,7 @@ logger.info("Application started")
 
 ### Runtime Configuration
 
-```python
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
-
-# Use stdlib with DEBUG level
-module = LoggingModule(log_impl="stdlib", log_level="DEBUG")
-
-# Use structlog with INFO level
-module = LoggingModule(log_impl="structlog", log_level="INFO")
-```
+The LoggingModule can be configured with specific log implementation and level at runtime.
 
 ## Logging Implementations
 
@@ -105,15 +58,7 @@ The stdlib adapter wraps Python's built-in `logging` module.
 
 **Configuration:**
 
-```python
-from open_ticket_ai.infra.stdlib_logging_adapter import configure_stdlib_logging
-
-configure_stdlib_logging(
-    level="INFO",
-    format_string="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
-```
+The stdlib logging can be configured with custom format strings and date formats.
 
 ### Structlog
 
@@ -136,38 +81,12 @@ The structlog adapter provides structured logging with rich formatting options.
 ```
 
 **Configuration:**
-```python
-from open_ticket_ai.infra.structlog_adapter import configure_structlog
 
-# Console output with colors
-configure_structlog(level="INFO", use_console=True, use_json=False)
-
-# JSON output for production
-configure_structlog(level="INFO", use_console=False, use_json=True)
-```
+Structlog can be configured for console output with colors or JSON output for production environments.
 
 ## Context Binding
 
-Context binding allows you to attach structured data to log messages:
-
-```python
-# Create base logger with service context
-logger = factory.get_logger(
-    "OrderService",
-    service="orders",
-    version="2.0"
-)
-
-# Bind request-specific context
-request_logger = logger.bind(
-    request_id="req-123",
-    user_id="user-456"
-)
-
-# All log messages will include the bound context
-request_logger.info("Processing order", order_id="order-789")
-# Output includes: service=orders version=2.0 request_id=req-123 user_id=user-456 order_id=order-789
-```
+Context binding allows you to attach structured data to log messages. Create a base logger with service context, then bind request-specific context. All subsequent log messages from that logger will include the bound context automatically.
 
 ## Logger Methods
 
@@ -184,25 +103,11 @@ The `AppLogger` protocol defines the following methods:
 
 ### 1. Use Dependency Injection
 
-Always inject the `LoggerFactory` rather than creating loggers directly:
-
-```python
-class MyService:
-    @inject
-    def __init__(self, logger_factory: LoggerFactory):
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
-```
+Always inject the `LoggerFactory` rather than creating loggers directly. This allows for easier testing and configuration management.
 
 ### 2. Bind Context Early
 
-Create scoped loggers with bound context for better traceability:
-
-```python
-def process_ticket(self, ticket_id: str):
-    logger = self._logger.bind(ticket_id=ticket_id, operation="process")
-    logger.info("Starting ticket processing")
-    # All subsequent logs will include ticket_id and operation
-```
+Create scoped loggers with bound context for better traceability. Bind context data like request IDs, user IDs, or operation names early so all subsequent logs include this information.
 
 ### 3. Use Appropriate Log Levels
 
@@ -214,135 +119,39 @@ def process_ticket(self, ticket_id: str):
 
 ### 4. Include Relevant Context
 
-Add context that helps with debugging and monitoring:
-
-```python
-logger.info(
-    "Database query executed",
-    query_time_ms=45,
-    rows_affected=3,
-    table="users"
-)
-```
+Add context that helps with debugging and monitoring, such as:
+- Query execution time
+- Number of rows affected
+- Table or resource names
+- Operation identifiers
 
 ### 5. Don't Log Sensitive Data
 
-Never log passwords, tokens, or personal information:
-
-```python
-# Bad
-logger.info("User logged in", password=user_password)
-
-# Good
-logger.info("User logged in", user_id=user_id)
-```
+Never log passwords, tokens, or personal information. Always log identifiers instead of sensitive values.
 
 ## Testing with Logging
 
-When writing tests, you can verify logging behavior:
-
-```python
-def test_service_logs_user_creation(caplog):
-    factory = StdlibLoggerFactory()
-    service = MyService(factory)
-    
-    service.create_user("user_123", "alice")
-    
-    assert "Creating user" in caplog.text
-    assert "user_123" in caplog.text
-```
+When writing tests, you can verify logging behavior by capturing log output and asserting on the messages and context data.
 
 ## Migration Guide
 
 ### From Direct logging.getLogger()
 
-**Before:**
-```python
-import logging
-
-class MyService:
-    def __init__(self):
-        self._logger = logging.getLogger(self.__class__.__name__)
-    
-    def process(self):
-        self._logger.info("Processing")
-```
-
-**After:**
-```python
-from injector import inject
-from open_ticket_ai.core.logging_iface import LoggerFactory
-
-class MyService:
-    @inject
-    def __init__(self, logger_factory: LoggerFactory):
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
-    
-    def process(self):
-        self._logger.info("Processing")
-```
+Replace direct use of Python's logging module with dependency injection of the LoggerFactory. This allows the logging implementation to be swapped without code changes.
 
 ### From AppConfig.get_logger()
 
-**Before:**
-```python
-class MyService:
-    def __init__(self, app_config: AppConfig):
-        self._logger = app_config.get_logger(self.__class__.__name__)
-```
-
-**After:**
-```python
-class MyService:
-    @inject
-    def __init__(self, logger_factory: LoggerFactory):
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
-```
+Replace AppConfig-based logger creation with LoggerFactory injection. This decouples logging from the global configuration object.
 
 ## Advanced Usage
 
 ### Custom Structlog Processors
 
-You can customize structlog configuration:
-
-```python
-import structlog
-from open_ticket_ai.infra.structlog_adapter import StructlogLoggerFactory
-
-# Custom configuration
-structlog.configure(
-    processors=[
-        structlog.processors.add_log_level,
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.processors.JSONRenderer()
-    ],
-    logger_factory=structlog.PrintLoggerFactory(),
-)
-
-factory = StructlogLoggerFactory()
-```
+Structlog configuration can be customized with custom processors for specialized formatting or filtering needs.
 
 ### Multiple Logger Instances
 
-Different parts of your application can have different loggers:
-
-```python
-class TicketService:
-    @inject
-    def __init__(self, logger_factory: LoggerFactory):
-        self._logger = logger_factory.get_logger(
-            "TicketService",
-            component="ticket_processing"
-        )
-
-class EmailService:
-    @inject
-    def __init__(self, logger_factory: LoggerFactory):
-        self._logger = logger_factory.get_logger(
-            "EmailService",
-            component="notifications"
-        )
-```
+Different parts of your application can have different loggers with different bound context to help distinguish log sources.
 
 ## Related Documentation
 
