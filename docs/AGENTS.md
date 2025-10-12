@@ -8,8 +8,8 @@
 
 | Directory | Purpose | AI Task |
 |-----------|---------|---------|
-| `vitepress_docs/docs_src/en/` | **PRIMARY SOURCE** - English documentation | Edit high-quality, ready documentation here |
-| `vitepress_docs/docs_src/{de,es,fr}/` | **AUTO-GENERATED** - Translated docs | ⚠️ DO NOT EDIT - Auto-translated from English |
+| `docs_src/en/` | **PRIMARY SOURCE** - English documentation | Edit high-quality, ready documentation here |
+| `docs_src/{de,es,fr}/` | **AUTO-GENERATED** - Translated docs | ⚠️ DO NOT EDIT - Auto-translated from English |
 | `diagrams/` | Architecture diagrams (PlantUML, Mermaid) | Visual documentation, flow diagrams |
 | `man_structured/` | Structured pipe reference (YAML sidecar files) | API documentation for pipes |
 | `internal_docs/` | Internal development notes | Project structure guidelines |
@@ -32,18 +32,18 @@ The `/docs` folder contains **all documentation** for the Open Ticket AI project
 
 **High-quality, ready documentation MUST be written to:**
 ```
-/docs/vitepress_docs/docs_src/en/docs/
+/docs/docs_src/en/docs/
 ```
 
 This is the **authoritative source** for all documentation. The structure is:
 
 ```
-docs/vitepress_docs/docs_src/
+docs/docs_src/
 ├── en/                          # ✅ EDIT THIS - English source
 │   ├── docs/
-│   │   ├── concepts/           # ✨ NEW - Core concepts & architecture
+│   │   ├── concepts/           # ✨ Core concepts & architecture
 │   │   ├── guides/             # HOW-TO tutorials and guides
-│   │   ├── code/               # Code architecture details
+│   │   ├── code/               # Code architecture details (minimal)
 │   │   ├── configuration/      # Configuration system
 │   │   └── plugins/            # Plugin system
 │   ├── products/               # Product-specific docs
@@ -92,7 +92,7 @@ Open Ticket AI uses a three-layer documentation approach to organize content eff
 
 **Examples:**
 ```
-docs/vitepress_docs/docs_src/en/docs/concepts/
+docs/docs_src/en/docs/concepts/
 ├── README.md                    # Concepts directory overview
 └── pipeline-architecture.md     # Complete pipeline system architecture
 ```
@@ -117,7 +117,7 @@ docs/vitepress_docs/docs_src/en/docs/concepts/
 
 **Examples:**
 ```
-docs/vitepress_docs/docs_src/en/docs/guides/
+docs/docs_src/en/docs/guides/
 ├── quick_start.md              # Getting started
 ├── installation.md             # Setup instructions
 ├── first_pipeline.md           # Creating your first pipeline
@@ -144,7 +144,7 @@ docs/vitepress_docs/docs_src/en/docs/guides/
 
 **Examples:**
 ```
-docs/vitepress_docs/docs_src/en/docs/
+docs/docs_src/en/docs/
 ├── code/                       # Code architecture
 │   ├── dependency_injection.md
 │   ├── logging.md
@@ -198,6 +198,30 @@ Use this decision tree to choose the right location for your documentation:
 ```
 docs/
 ├── AGENTS.md                        # THIS FILE - AI guidelines for docs
+├── .vitepress/                      # VitePress configuration
+│   ├── config.mts                   # Main config
+│   └── util/navgen.ts               # Navigation generator
+│
+├── docs_src/                        # ✅ PRIMARY - Documentation source files
+│   ├── en/                          # ✅ EDIT THIS - English source
+│   │   ├── index.md                 # Homepage
+│   │   ├── messages.ts              # i18n messages
+│   │   │
+│   │   ├── docs/                    # Main documentation
+│   │   │   ├── concepts/            # ✨ Architecture & theory
+│   │   │   ├── guides/              # How-to tutorials
+│   │   │   ├── code/                # Code architecture (minimal)
+│   │   │   ├── configuration/       # Configuration reference
+│   │   │   └── plugins/             # Plugin system
+│   │   │
+│   │   ├── products/                # Product-specific docs
+│   │   └── blog/                    # Blog posts
+│   │
+│   ├── de/                          # ❌ DO NOT EDIT - Auto-generated German
+│   ├── es/                          # ❌ DO NOT EDIT - Auto-generated Spanish
+│   ├── fr/                          # ❌ DO NOT EDIT - Auto-generated French
+│   └── public/                      # Static assets
+│
 ├── diagrams/                        # Architecture & flow diagrams
 │   ├── architecture_overview.puml   # PlantUML system architecture
 │   ├── pipeline_flow.md             # Mermaid pipeline execution flow
@@ -214,43 +238,18 @@ docs/
 │       ├── fetch_tickets_pipe.sidecar.yml
 │       └── *.sidecar.yml            # Other pipe sidecars
 │
-├── raw_en_docs/                     # ⚠️ LEGACY - DEPRECATED
-│   └── ...                          # Old documentation structure
-│
-└── vitepress_docs/                  # ✅ PRIMARY - VitePress documentation
-    ├── .vitepress/                  # VitePress configuration
-    │   ├── config.mts               # Main config
-    │   └── util/navgen.ts           # Navigation generator
-    │
-    └── docs_src/                    # Documentation source files
-        ├── en/                      # ✅ EDIT THIS - English source
-        │   ├── index.md             # Homepage
-        │   ├── messages.ts          # i18n messages
-        │   │
-        │   ├── docs/                # Main documentation
-        │   │   ├── concepts/        # ✨ NEW - Architecture & theory
-        │   │   ├── guides/          # How-to tutorials
-        │   │   ├── code/            # Code architecture details
-        │   │   ├── configuration/   # Configuration reference
-        │   │   └── plugins/         # Plugin system
-        │   │
-        │   ├── products/            # Product-specific docs
-        │   └── blog/                # Blog posts
-        │
-        ├── de/                      # ❌ DO NOT EDIT - Auto-generated German
-        ├── es/                      # ❌ DO NOT EDIT - Auto-generated Spanish
-        ├── fr/                      # ❌ DO NOT EDIT - Auto-generated French
-        └── public/                  # Static assets
+└── raw_en_docs/                     # ⚠️ LEGACY - DEPRECATED
+    └── ...                          # Old documentation structure
 ```
 
 ## Critical Information for AI Agents
 
 ### 1. Documentation Sources
 
-**PRIMARY SOURCE**: `/docs/vitepress_docs/docs_src/en/` contains the **authoritative** English documentation.
+**PRIMARY SOURCE**: `/docs/docs_src/en/` contains the **authoritative** English documentation.
 
-- When users ask about "the documentation", refer to `/docs/vitepress_docs/docs_src/en/`
-- Always edit `/docs/vitepress_docs/docs_src/en/` for documentation changes
+- When users ask about "the documentation", refer to `/docs/docs_src/en/`
+- Always edit `/docs/docs_src/en/` for documentation changes
 - **NEVER** edit `de/`, `es/`, or `fr/` directories - they are auto-generated and will be overwritten
 - The `raw_en_docs/` directory is **deprecated** and should not be used for new documentation
 
@@ -258,7 +257,7 @@ docs/
 
 The `concepts/` directory is a **new addition** to the documentation structure:
 
-**Location:** `/docs/vitepress_docs/docs_src/en/docs/concepts/`
+**Location:** `/docs/docs_src/en/docs/concepts/`
 
 **Purpose:** Provide architectural overviews and foundational knowledge
 
@@ -292,7 +291,7 @@ Configuration examples can be found in the legacy `raw_en_docs/config_examples/`
 
 1. **`diagrams/pipeline_flow.md`** - Mermaid diagram showing pipeline execution
 2. **`diagrams/architecture_overview.puml`** - PlantUML system architecture
-3. **`docs/vitepress_docs/docs_src/en/docs/concepts/`** - Architectural concepts (when populated)
+3. **`docs/docs_src/en/docs/concepts/`** - Architectural concepts (when populated)
 
 ### 5. Pipe Documentation (man_structured/)
 
@@ -329,7 +328,7 @@ _errors:
 Supported languages: **EN** (English), **DE** (German), **ES** (Spanish), **FR** (French)
 
 **Critical workflow:**
-1. ✅ **ALWAYS** edit English first: `/docs/vitepress_docs/docs_src/en/`
+1. ✅ **ALWAYS** edit English first: `/docs/docs_src/en/`
 2. ❌ **NEVER** edit translation directories directly: `de/`, `es/`, `fr/`
 3. 🔄 Translations are auto-generated by running: `uv run python python_extras/scripts/translate_documentation.py translate`
 4. Each language has a `messages.ts` file for UI strings
@@ -339,7 +338,7 @@ Supported languages: **EN** (English), **DE** (German), **ES** (Spanish), **FR**
 
 ### When Reading Documentation
 
-1. **Start with the new structure** - `/docs/vitepress_docs/docs_src/en/docs/`
+1. **Start with the new structure** - `/docs/docs_src/en/docs/`
 2. **Check `concepts/`** - For architectural understanding (when populated)
 3. **Review `guides/`** - For practical examples and tutorials
 4. **Reference diagrams** - Visual understanding in `/docs/diagrams/`
@@ -347,7 +346,7 @@ Supported languages: **EN** (English), **DE** (German), **ES** (Spanish), **FR**
 
 ### When Editing Documentation
 
-1. ✅ **DO** edit `/docs/vitepress_docs/docs_src/en/` for all documentation changes
+1. ✅ **DO** edit `/docs/docs_src/en/` for all documentation changes
 2. ✅ **DO** use the three-layer strategy: `concepts/`, `guides/`, or technical reference
 3. ✅ **DO** follow the decision tree to choose the right location
 4. ✅ **DO** follow existing Markdown structure and formatting
@@ -444,7 +443,7 @@ The `concepts/` directory is for **architectural and theoretical content**:
 The `raw_en_docs/` directory is being phased out. When you encounter content that needs to be updated:
 
 1. **If content is high quality and ready:**
-   - Migrate it to the appropriate location in `/docs/vitepress_docs/docs_src/en/docs/`
+   - Migrate it to the appropriate location in `/docs/docs_src/en/docs/`
    - Use the three-layer strategy to choose the right location
    - Update any links that reference the old location
 
@@ -460,7 +459,7 @@ The `raw_en_docs/` directory is being phased out. When you encounter content tha
 
 ### Adding New Conceptual Documentation
 
-1. Create a new file in `/docs/vitepress_docs/docs_src/en/docs/concepts/`
+1. Create a new file in `/docs/docs_src/en/docs/concepts/`
 2. Use descriptive filename: `pipeline-architecture.md`
 3. Add frontmatter with title and description
 4. Write content focusing on "what" and "why"
@@ -469,7 +468,7 @@ The `raw_en_docs/` directory is being phased out. When you encounter content tha
 
 ### Adding a New Tutorial or Guide
 
-1. Create a new file in `/docs/vitepress_docs/docs_src/en/docs/guides/`
+1. Create a new file in `/docs/docs_src/en/docs/guides/`
 2. Use descriptive filename: `creating-custom-pipes.md`
 3. Add frontmatter with title and description
 4. Write step-by-step instructions
@@ -479,9 +478,9 @@ The `raw_en_docs/` directory is being phased out. When you encounter content tha
 ### Adding Technical Reference Documentation
 
 1. Determine the right subdirectory:
-   - Code architecture → `/docs/vitepress_docs/docs_src/en/docs/code/`
-   - Configuration → `/docs/vitepress_docs/docs_src/en/docs/configuration/`
-   - Plugins → `/docs/vitepress_docs/docs_src/en/docs/plugins/`
+   - Code architecture → `/docs/docs_src/en/docs/code/`
+   - Configuration → `/docs/docs_src/en/docs/configuration/`
+   - Plugins → `/docs/docs_src/en/docs/plugins/`
 2. Create or update the relevant file
 3. Document APIs, schemas, and technical details
 4. Include code examples and type information
@@ -498,7 +497,7 @@ The `raw_en_docs/` directory is being phased out. When you encounter content tha
 
 **DO NOT** edit translation directories manually. Instead:
 
-1. Edit the English source: `/docs/vitepress_docs/docs_src/en/`
+1. Edit the English source: `/docs/docs_src/en/`
 2. Run the translation script:
    ```bash
    uv run python python_extras/scripts/translate_documentation.py translate
@@ -543,9 +542,9 @@ Understanding these concepts helps when writing documentation:
 ## VitePress Navigation
 
 The VitePress navigation is automatically generated from the directory structure. When you add new files to:
-- `/docs/vitepress_docs/docs_src/en/docs/concepts/`
-- `/docs/vitepress_docs/docs_src/en/docs/guides/`
-- `/docs/vitepress_docs/docs_src/en/docs/code/`
+- `/docs/docs_src/en/docs/concepts/`
+- `/docs/docs_src/en/docs/guides/`
+- `/docs/docs_src/en/docs/code/`
 - etc.
 
 The navigation will automatically include them. No manual configuration is needed.
@@ -577,7 +576,7 @@ Before committing documentation:
 ## Summary: Key Takeaways
 
 🎯 **Primary Documentation Location:**
-- `/docs/vitepress_docs/docs_src/en/` is the authoritative source
+- `/docs/docs_src/en/` is the authoritative source
 - All new documentation goes here
 
 🚫 **Never Edit:**
