@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from open_ticket_ai.core.logging_iface import AppLogger
+from open_ticket_ai.core.logging_iface import AppLogger, LoggerFactory
 
 
-class StdlibLogger:
+class StdlibLogger(AppLogger):
     def __init__(self, logger: logging.Logger, context: dict[str, Any] | None = None):
         self._logger = logger
         self._context = context or {}
@@ -38,7 +38,7 @@ class StdlibLogger:
         self._logger.exception(self._format_message(message, **kwargs))
 
 
-class StdlibLoggerFactory:
+class StdlibLoggerFactory(LoggerFactory):
     def get_logger(self, name: str, **context: Any) -> AppLogger:
         logger = logging.getLogger(name)
         return StdlibLogger(logger, context)

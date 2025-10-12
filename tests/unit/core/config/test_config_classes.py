@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from open_ticket_ai.core.config.registerable import RegisterableConfig
+from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.pipeline.pipe_config import (
     RawPipeConfig,
     RenderedPipeConfig,
@@ -10,13 +10,13 @@ from open_ticket_ai.core.pipeline.pipe_config import (
 
 
 def test_registerable_config_defaults_are_independent() -> None:
-    first = RegisterableConfig()
-    second = RegisterableConfig()
+    first = RenderableConfig()
+    second = RenderableConfig()
 
     assert first.id != second.id
     assert first.use == "open_ticket_ai.base.CompositePipe"
 
-    custom = RegisterableConfig(use="collections.Counter", id="custom")
+    custom = RenderableConfig(use="collections.Counter", id="custom")
     assert custom.use == "collections.Counter"
     assert custom.id == "custom"
 

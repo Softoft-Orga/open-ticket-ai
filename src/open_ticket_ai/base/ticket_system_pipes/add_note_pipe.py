@@ -1,12 +1,14 @@
 from typing import Any
 
+from pydantic import BaseModel
+
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
+from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 
 
-class AddNotePipeConfig(RenderedPipeConfig):
+class AddNotePipeConfig(PipeConfig):
     ticket_id: str | int
     note: UnifiedNote
 
@@ -17,16 +19,13 @@ class AddNotePipe(Pipe):
     ) -> None:
         super().__init__(pipe_params)
         self.ticket_system = ticket_system
-        if isinstance(pipe_params, dict):
-            self.pipe_config = AddNotePipeConfig.model_validate(pipe_params)
-        else:
-            self.pipe_config = AddNotePipeConfig.model_validate(pipe_params.model_dump())
+        self.pipe_config = pipe_params
 
     async def _process(self) -> PipeResult:
         try:
             success = await self.ticket_system.add_note(self.pipe_config.ticket_id, self.pipe_config.note)
             if not success:
-                return PipeResult(success=False, failed=True, message="Failed to add note to ticket", data={})
-            return PipeResult(success=True, failed=False, data={})
+                return PipeResult(success=False, failed=True, message="Failed to add note to ticket", data=BaseModel())
+            return PipeResult(success=True, failed=False, data=BaseModel())
         except Exception as e:
-            return PipeResult(success=False, failed=True, message=str(e), data={})
+            return PipeResult(success=False, failed=True, message=str(e), data=BaseModel())

@@ -50,7 +50,7 @@ class LoggingModule(Module):
             configure_structlog(level=self.log_level)
             return StructlogLoggerFactory()
         else:
-            from open_ticket_ai.infra.stdlib_adapter import (  # noqa: PLC0415
+            from open_ticket_ai.infra.stdlib_logging_adapter import (  # noqa: PLC0415
                 StdlibLoggerFactory,
                 configure_stdlib_logging,
             )

@@ -8,6 +8,7 @@ from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 class PipeContext(BaseModel):
     pipes: dict[str, PipeResult] = Field(default_factory=dict)
     params: dict[str, Any] = Field(default_factory=dict)
+    parent: PipeContext | None = None
 
     def has_succeeded(self, pipe_id: str) -> bool:
         pipe_result = self.pipes.get(pipe_id)

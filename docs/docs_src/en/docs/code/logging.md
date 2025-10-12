@@ -44,7 +44,7 @@ service.do_something()
 ### Direct Usage (without DI)
 
 ```python
-from open_ticket_ai.infra.stdlib_adapter import (
+from open_ticket_ai.infra.stdlib_logging_adapter import (
     StdlibLoggerFactory,
     configure_stdlib_logging,
 )
@@ -104,8 +104,9 @@ The stdlib adapter wraps Python's built-in `logging` module.
 ```
 
 **Configuration:**
+
 ```python
-from open_ticket_ai.infra.stdlib_adapter import configure_stdlib_logging
+from open_ticket_ai.infra.stdlib_logging_adapter import configure_stdlib_logging
 
 configure_stdlib_logging(
     level="INFO",

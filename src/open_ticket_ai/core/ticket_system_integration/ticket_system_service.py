@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from ..config.registerable import Registerable
+from ..config.renderable import Registerable
 from .unified_models import (
     TicketSearchCriteria,
     UnifiedNote,

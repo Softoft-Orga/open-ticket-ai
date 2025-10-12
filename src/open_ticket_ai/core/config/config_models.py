@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.core.config.registerable import RegisterableConfig
+from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
 
 LogLevel = Literal["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -71,5 +71,5 @@ class InfrastructureConfig(BaseModel):
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=lambda: [])
     infrastructure: InfrastructureConfig = Field(default_factory=InfrastructureConfig)
-    services: list[RegisterableConfig] = Field(default_factory=lambda: [])
+    services: list[RenderableConfig] = Field(default_factory=lambda: [])
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
