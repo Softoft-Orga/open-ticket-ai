@@ -44,23 +44,18 @@ class Orchestrator:
             job_id = f"{definition.pipe_id}_{index}"
             self._runners[job_id] = runner
 
-            if definition.on:
-                for _trigger_index, trigger_def in enumerate(definition.on):
-                    trigger_id = trigger_def.id
-                    if trigger_id in self._trigger_registry:
-                        trigger = self._trigger_registry[trigger_id]
-                    else:
-                        trigger = self._instantiate_trigger(trigger_def)
-                        self._trigger_registry[trigger_id] = trigger
+            for _trigger_index, trigger_def in enumerate(definition.on):
+                trigger_id = trigger_def.id
+                if trigger_id in self._trigger_registry:
+                    trigger = self._trigger_registry[trigger_id]
+                else:
+                    trigger = self._instantiate_trigger(trigger_def)
+                    self._trigger_registry[trigger_id] = trigger
 
-                    trigger.attach(runner)
-                    self._logger.info(
-                        f"Attached pipe '{definition.pipe_id}' to trigger '{trigger_def.id}' ({trigger_def.use})"
-                    )
-            else:
-                # One-time execution
-                asyncio.create_task(runner.execute())
-                self._logger.info(f"Scheduled pipe '{definition.pipe_id}' for one-time execution")
+                trigger.attach(runner)
+                self._logger.info(
+                    f"Attached pipe '{definition.pipe_id}' to trigger '{trigger_def.id}' ({trigger_def.use})"
+                )
 
         # Start all triggers
         for trigger in self._trigger_registry.values():
