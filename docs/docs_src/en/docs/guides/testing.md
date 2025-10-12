@@ -2,6 +2,63 @@
 
 Guide to testing Open Ticket AI configurations, pipelines, and custom components.
 
+## Testing Philosophy
+
+Write tests that focus on **core functionality and contracts**, not implementation details:
+
+### DO ✅
+- Test main input/output behavior
+- Test error handling and edge cases that matter
+- Test public interfaces and contracts
+- Focus on "what" the code does, not "how"
+- Keep tests simple and maintainable
+
+### DON'T ❌
+- Don't test trivial getters/setters
+- Don't assert every field value in complex objects
+- Don't duplicate test logic across multiple files
+- Don't test private implementation details
+- Don't create excessive edge case tests that don't add value
+
+### Example: Good vs Bad
+
+```python
+# ❌ Bad: Testing trivial field values
+def test_config_fields():
+    config = MyConfig(id="test", timeout=30, priority=5, workers=10)
+    assert config.id == "test"
+    assert config.timeout == 30
+    assert config.priority == 5
+    assert config.workers == 10
+
+# ✅ Good: Testing behavior
+def test_config_applies_defaults():
+    config = MyConfig(id="test")
+    # Only assert the key behavior
+    assert config.id == "test"
+    assert config.timeout > 0  # Has a valid default
+```
+
+```python
+# ❌ Bad: Over-specific edge cases
+def test_path_with_dots_at_start():
+    result = process(".a.b")
+    assert result == expected
+    
+def test_path_with_dots_at_end():
+    result = process("a.b.")
+    assert result == expected
+    
+def test_path_with_double_dots():
+    result = process("a..b")
+    assert result == expected
+
+# ✅ Good: Core behavior with meaningful cases
+def test_path_processing():
+    assert process("a.b.c") == {"a": {"b": {"c": "value"}}}
+    assert process("") == "value"  # Edge case that matters
+```
+
 ## Testing Overview
 
 Open Ticket AI supports multiple testing levels:

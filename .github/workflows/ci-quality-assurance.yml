@@ -59,6 +59,10 @@ jobs:
                 run: |
                     uv run pytest -v
 
+            -   name: Validate test structure
+                run: |
+                    uv run python scripts/validate_test_structure.py
+
             -   name: Generate pytest coverage report
                 run: |
                     uv run pytest --cov=src --cov=packages/otai_hf_local/src --cov=packages/otai_otobo_znuny/src --cov-report=xml:coverage.xml --cov-report=term
