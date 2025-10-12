@@ -6,8 +6,7 @@ from open_ticket_ai.core.orchestration.orchestrator_config import TriggerDefinit
 
 
 class PipeRunnerObserver(Protocol):
-    async def on_trigger_fired(self) -> None:
-        ...
+    async def on_trigger_fired(self) -> None: ...
 
 
 class Trigger(ABC):

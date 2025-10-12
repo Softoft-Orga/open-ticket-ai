@@ -37,4 +37,6 @@ class FetchTicketsPipe(Pipe[FetchTicketsParams]):
                 data=FetchTicketsPipeResultData(fetched_tickets=[ticket.model_dump() for ticket in tickets]),
             )
         except Exception as e:
-            return PipeResult[FetchTicketsPipeResultData](success=False, failed=True, message=str(e), data=FetchTicketsPipeResultData(fetched_tickets=[]))
+            return PipeResult[FetchTicketsPipeResultData](
+                success=False, failed=True, message=str(e), data=FetchTicketsPipeResultData(fetched_tickets=[])
+            )

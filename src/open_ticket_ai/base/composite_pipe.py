@@ -76,7 +76,9 @@ class CompositePipe(Pipe[CompositeParams]):
                     new_context = self._context.model_copy()
             except Exception as e:
                 self._logger.error(f"Error in pipe {self.pipe_config.id}: {str(e)}", exc_info=True)
-                composite_result = PipeResult[CompositePipeResultData](success=False, failed=True, message=str(e), data=CompositePipeResultData())
+                composite_result = PipeResult[CompositePipeResultData](
+                    success=False, failed=True, message=str(e), data=CompositePipeResultData()
+                )
             return self._save_pipe_result(new_context, composite_result)
         self._logger.info("Skipping pipe '%s'.", self.pipe_config.id)
         return context
