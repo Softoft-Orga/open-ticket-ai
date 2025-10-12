@@ -3,13 +3,13 @@ from unittest.mock import MagicMock
 
 from pydantic import BaseModel
 
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     at_path,
     build_filtered_env,
     has_failed,
     pipe_result,
 )
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 from open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
     TemplateRendererEnvConfig,

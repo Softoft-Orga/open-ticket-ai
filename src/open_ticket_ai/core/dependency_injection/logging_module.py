@@ -8,7 +8,6 @@ from open_ticket_ai.core.logging_iface import LoggerFactory
 
 
 class LoggingModule(Module):
-
     def __init__(self, log_impl: str | None = None, log_level: str | None = None):
         self.log_impl = log_impl or os.getenv("LOG_IMPL", "stdlib").lower()
         self.log_level = log_level or os.getenv("LOG_LEVEL", "INFO").upper()
