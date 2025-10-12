@@ -26,9 +26,11 @@ def _locate(use: str) -> type:
     return typing.cast(type, locate(use))
 
 
-def render_base_model[T: BaseModel](config: T | dict, scope: PipeContext, renderer: TemplateRenderer) -> T | dict:
+def render_base_model[T: BaseModel](
+    config: T | dict[str, Any], scope: PipeContext, renderer: TemplateRenderer
+) -> T | dict[str, Any]:
     if isinstance(config, dict):
-        return renderer.render_recursive(config, scope)
+        return renderer.render_recursive(config, scope)  # type: ignore[return-value]
     rendered_dict = renderer.render_recursive(config.model_dump(), scope)
     return type(config)(**rendered_dict)
 

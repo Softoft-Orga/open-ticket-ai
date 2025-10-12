@@ -3,9 +3,9 @@ from __future__ import annotations
 import pytest
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import (
+    FetchTicketsParams,
     FetchTicketsPipe,
     FetchTicketsPipeConfig,
-    FetchTicketsParams,
 )
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedEntity

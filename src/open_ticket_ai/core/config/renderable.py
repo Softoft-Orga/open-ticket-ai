@@ -76,7 +76,7 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
         return self
 
     def __eq__(self, other: Any) -> bool:
-        if isinstance(other, RenderableConfig):
+        if isinstance(other, RenderableConfig):  # type: ignore[misc]
             return self.uid == other.uid
         return False
 

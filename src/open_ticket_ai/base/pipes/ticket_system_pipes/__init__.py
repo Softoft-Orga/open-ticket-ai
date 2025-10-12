@@ -1,19 +1,19 @@
 from open_ticket_ai.base.pipes.ticket_system_pipes.add_note_pipe import (
+    AddNoteParams,
     AddNotePipe,
     AddNotePipeConfig,
-    AddNoteParams,
     AddNotePipeResultData,
 )
 from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import (
+    FetchTicketsParams,
     FetchTicketsPipe,
     FetchTicketsPipeConfig,
-    FetchTicketsParams,
     FetchTicketsPipeResultData,
 )
 from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
+    UpdateTicketParams,
     UpdateTicketPipe,
     UpdateTicketPipeConfig,
-    UpdateTicketParams,
     UpdateTicketPipeResultData,
 )
 

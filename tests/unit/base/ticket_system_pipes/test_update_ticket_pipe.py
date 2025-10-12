@@ -3,9 +3,9 @@ from __future__ import annotations
 import pytest
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
+    UpdateTicketParams,
     UpdateTicketPipe,
     UpdateTicketPipeConfig,
-    UpdateTicketParams,
 )
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket

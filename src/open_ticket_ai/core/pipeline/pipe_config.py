@@ -31,8 +31,8 @@ class PipeResult[DataT: BaseModel](BaseModel):
     message: str = ""
     data: DataT
 
-    def __and__(self, other: Self) -> Self:
-        merged_data_dict: dict = {**self.data.model_dump(), **other.data.model_dump()}
+    def __and__(self, other: Self) -> PipeResult[CompositePipeResultData]:  # type: ignore[misc]
+        merged_data_dict: dict[str, Any] = {**self.data.model_dump(), **other.data.model_dump()}
         merged_data = CompositePipeResultData.model_validate(merged_data_dict)
         merged_msg = ";\n ".join([m for m in [self.message, other.message] if m])
         return PipeResult[CompositePipeResultData](
