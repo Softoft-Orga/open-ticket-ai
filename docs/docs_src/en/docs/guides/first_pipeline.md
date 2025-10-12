@@ -398,7 +398,7 @@ Now that you have a working pipeline:
 
 ## Related Documentation
 
-- [Configuration Schema](../details/configuration/config_schema.md)
+- [Configuration Reference](../details/config_reference.md)
 - [Configuration Examples](../details/configuration/examples.md)
 - [Pipeline Architecture](../concepts/pipeline-architecture.md)
 - [Template Rendering](../developers/code/template_rendering.md)
