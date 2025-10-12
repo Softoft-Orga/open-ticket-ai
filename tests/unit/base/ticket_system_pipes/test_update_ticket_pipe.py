@@ -1,6 +1,6 @@
 import pytest
 
-from open_ticket_ai.base.ticket_system_pipes.update_ticket_pipe import UpdateTicketPipe
+from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import UpdateTicketPipe
 
 
 @pytest.mark.asyncio

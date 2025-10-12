@@ -6,7 +6,7 @@ import pytest
 from injector import Injector
 
 from open_ticket_ai.core.dependency_injection.container import AppModule
-from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer
+from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
