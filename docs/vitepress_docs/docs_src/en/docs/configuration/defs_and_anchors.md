@@ -18,9 +18,9 @@ definition: &my_anchor
 usage: *my_anchor
 ```
 
-## Reusable Definitions in `defs` Section
+## Reusable Definitions in `services` Section
 
-The `defs` section stores reusable configuration:
+The `services` section stores reusable configuration:
 
 ```yaml
 defs:
@@ -187,7 +187,7 @@ defs:
     log_level: "DEBUG"
     retry_count: 1
 
-infrastructure:
+general_config:
   <<: *prod_settings  # Use appropriate environment
 ```
 

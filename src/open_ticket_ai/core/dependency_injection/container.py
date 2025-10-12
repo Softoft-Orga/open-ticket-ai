@@ -8,7 +8,7 @@ from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
-from open_ticket_ai.core.config.registerable import RegisterableConfig
+from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
 from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
@@ -89,5 +89,5 @@ class AppModule(Module):
         return config.orchestrator
 
     @multiprovider
-    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RegisterableConfig]:
+    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RenderableConfig]:
         return config.services

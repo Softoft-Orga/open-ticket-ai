@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from open_ticket_ai.infra.stdlib_adapter import (
+from open_ticket_ai.infra.stdlib_logging_adapter import (
     StdlibLogger,
     StdlibLoggerFactory,
     configure_stdlib_logging,

@@ -1,6 +1,18 @@
 # Core Infrastructure Guidelines
 
+**Location:** `/src/open_ticket_ai/core/` directory  
+**Parent Guidelines:** [Source AGENTS.md](../../AGENTS.md) | [Root AGENTS.md](../../../AGENTS.md)  
+**Last Updated:** 2025-10-11
+
 Guidelines for `src/open_ticket_ai/core/` - the foundational infrastructure of the application.
+
+## Critical Test Placement Rules
+
+⚠️ **NEVER place tests in this directory:**
+- ❌ Forbidden: `src/open_ticket_ai/core/tests/`
+- ✅ Tests for core components: `tests/unit/core/`
+
+See [Root AGENTS.md](../../../AGENTS.md) for complete test structure rules.
 
 ## Core Responsibilities
 
@@ -110,3 +122,12 @@ Core infrastructure tests focus on:
 - Plugin discovery and loading
 - Template rendering with various inputs
 - Adapter contract compliance
+
+**Test location:** All tests for core components are in `tests/unit/core/`
+
+## Documentation
+
+- Architecture concepts: `docs/vitepress_docs/docs_src/en/docs/concepts/`
+- Code architecture details: `docs/vitepress_docs/docs_src/en/docs/code/`
+- Configuration guides: `docs/vitepress_docs/docs_src/en/docs/configuration/`
+- See [docs/AGENTS.md](../../../docs/AGENTS.md) for documentation structure
