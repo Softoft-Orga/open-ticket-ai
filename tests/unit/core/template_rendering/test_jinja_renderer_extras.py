@@ -9,7 +9,7 @@ from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     has_failed,
     pipe_result,
 )
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_config import CompositePipeResultData, PipeResult
 from open_ticket_ai.core.template_rendering.renderer_config import (
     JinjaRendererConfig,
     TemplateRendererEnvConfig,
@@ -53,7 +53,12 @@ class TestHasFailed:
         assert result is False
 
     def test_has_failed_with_failed_pipe_result(self):
-        pipe_res = PipeResult(success=False, failed=True, message="Error occurred")
+        pipe_res = PipeResult(
+            success=False, 
+            failed=True, 
+            message="Error occurred",
+            data=CompositePipeResultData()
+        )
         ctx = MagicMock()
         ctx.get.return_value = {"test_pipe": pipe_res}
         result = has_failed(ctx, "test_pipe")
@@ -71,7 +76,7 @@ class TestPipeResult:
         pipe_res = PipeResult(
             success=True,
             failed=False,
-            data={"value": "test_result", "extra": "data"},
+            data=CompositePipeResultData(value="test_result", extra="data"),
         )
         ctx = MagicMock()
         ctx.get.return_value = {"test_pipe": pipe_res}
@@ -82,7 +87,7 @@ class TestPipeResult:
         pipe_res = PipeResult(
             success=True,
             failed=False,
-            data={"value": "default", "custom_key": "custom_value"},
+            data=CompositePipeResultData(value="default", custom_key="custom_value"),
         )
         ctx = MagicMock()
         ctx.get.return_value = {"test_pipe": pipe_res}
@@ -93,7 +98,7 @@ class TestPipeResult:
         pipe_res = PipeResult(
             success=True,
             failed=False,
-            data={"other_key": "value"},
+            data=CompositePipeResultData(other_key="value"),
         )
         ctx = MagicMock()
         ctx.get.return_value = {"test_pipe": pipe_res}

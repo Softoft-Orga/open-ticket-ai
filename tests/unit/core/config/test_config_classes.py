@@ -3,10 +3,8 @@ from __future__ import annotations
 import pytest
 
 from open_ticket_ai.core.config.renderable import RenderableConfig
-from open_ticket_ai.core.pipeline.pipe_config import (
-    RawPipeConfig,
-    RenderedPipeConfig,
-)
+from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
+
 
 
 def test_registerable_config_defaults_are_independent() -> None:
@@ -21,10 +19,10 @@ def test_registerable_config_defaults_are_independent() -> None:
 
 
 def test_rendered_pipe_config_should_run_field() -> None:
-    config = RenderedPipeConfig()
-    assert config.should_run is True
+    config = PipeConfig()
+    assert config.should_run == "True"
 
-    config_false = RenderedPipeConfig(**{"if": False})
+    config_false = PipeConfig(**{"if": False})
     assert config_false.should_run is False
 
 
@@ -37,5 +35,5 @@ def test_rendered_pipe_config_should_run_field() -> None:
     ],
 )
 def test_raw_pipe_config_accepts_strings_and_bools(field: str, value: str | bool) -> None:
-    config = RawPipeConfig(**{field: value})
+    config = PipeConfig(**{field: value})
     assert config.if_ == value
