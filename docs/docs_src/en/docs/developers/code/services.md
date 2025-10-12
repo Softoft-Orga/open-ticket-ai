@@ -55,5 +55,5 @@ Services should be unit tested independently from the pipes that use them. Creat
 ## Related Documentation
 
 - [Dependency Injection](dependency_injection.md)
-- [Pipeline Architecture](../concepts/pipeline-architecture.md)
-- [Plugin Development](../plugins/plugin_development.md)
+- [Pipeline Architecture](../../concepts/pipeline-architecture.md)
+- [Plugin Development](../../plugins/plugin_development.md)

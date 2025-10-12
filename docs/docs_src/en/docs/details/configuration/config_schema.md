@@ -162,4 +162,4 @@ See [Configuration Examples](examples.md) for complete working configurations.
 - [Configuration Structure](config_structure.md)
 - [YAML Definitions and Anchors](defs_and_anchors.md)
 - [Environment Variables](environment_variables.md)
-- [Template Rendering](../code/template_rendering.md)
+- [Template Rendering](../../developers/code/template_rendering.md)

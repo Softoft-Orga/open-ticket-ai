@@ -121,4 +121,4 @@ plugins:
 
 - [Plugin System](plugin_system.md)
 - [Plugin Development](plugin_development.md)
-- [Configuration Examples](../configuration/examples.md)
+- [Configuration Examples](../details/configuration/examples.md)

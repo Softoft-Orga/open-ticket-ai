@@ -182,4 +182,4 @@ Different parts of your application can have different loggers with different bo
 
 - [Dependency Injection](dependency_injection.md)
 - [Services](services.md)
-- [Configuration](../configuration/config_structure.md)
+- [Configuration](../../details/configuration/config_structure.md)

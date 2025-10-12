@@ -1,5 +1,22 @@
 {
   "$defs": {
+    "ConcurrencySettings": {
+      "properties": {
+        "max_workers": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Max Workers",
+          "type": "integer"
+        },
+        "when_exhausted": {
+          "default": "wait",
+          "title": "When Exhausted",
+          "type": "string"
+        }
+      },
+      "title": "ConcurrencySettings",
+      "type": "object"
+    },
     "FilterConfig": {
       "additionalProperties": true,
       "properties": {
@@ -115,34 +132,6 @@
       "title": "FormatterConfig",
       "type": "object"
     },
-    "GeneralConfig": {
-      "additionalProperties": true,
-      "properties": {
-        "logging": {
-          "$ref": "#/$defs/LoggingDictConfig"
-        },
-        "template_renderer": {
-          "discriminator": {
-            "mapping": {
-              "jinja": "#/$defs/JinjaRendererConfig",
-              "mustache": "#/$defs/MustacheRendererConfig"
-            },
-            "propertyName": "type"
-          },
-          "oneOf": [
-            {
-              "$ref": "#/$defs/JinjaRendererConfig"
-            },
-            {
-              "$ref": "#/$defs/MustacheRendererConfig"
-            }
-          ],
-          "title": "Template Renderer"
-        }
-      },
-      "title": "GeneralConfig",
-      "type": "object"
-    },
     "HandlerConfig": {
       "additionalProperties": true,
       "properties": {
@@ -216,39 +205,18 @@
       "title": "HandlerConfig",
       "type": "object"
     },
-    "JinjaRendererConfig": {
+    "InfrastructureConfig": {
       "additionalProperties": true,
       "properties": {
-        "type": {
-          "const": "jinja",
-          "default": "jinja",
-          "title": "Type",
-          "type": "string"
+        "logging": {
+          "$ref": "#/$defs/LoggingDictConfig"
         },
-        "env_config": {
-          "$ref": "#/$defs/TemplateRendererEnvConfig",
-          "description": "Environment variable configuration"
-        },
-        "autoescape": {
-          "default": false,
-          "description": "Enable autoescaping in Jinja2",
-          "title": "Autoescape",
-          "type": "boolean"
-        },
-        "trim_blocks": {
-          "default": true,
-          "description": "Trim blocks in Jinja2",
-          "title": "Trim Blocks",
-          "type": "boolean"
-        },
-        "lstrip_blocks": {
-          "default": true,
-          "description": "Left-strip blocks in Jinja2",
-          "title": "Lstrip Blocks",
-          "type": "boolean"
+        "template_renderer_config": {
+          "$ref": "#/$defs/TemplateRendererConfig",
+          "description": "(Deprecated) in future versions will be set through the services section"
         }
       },
-      "title": "JinjaRendererConfig",
+      "title": "InfrastructureConfig",
       "type": "object"
     },
     "LoggerConfig": {
@@ -396,25 +364,22 @@
       "title": "LoggingDictConfig",
       "type": "object"
     },
-    "MustacheRendererConfig": {
+    "OrchestratorConfig": {
       "additionalProperties": true,
       "properties": {
-        "type": {
-          "const": "mustache",
-          "default": "mustache",
-          "title": "Type",
-          "type": "string"
+        "defaults": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Defaults"
         },
-        "env_config": {
-          "$ref": "#/$defs/TemplateRendererEnvConfig",
-          "description": "Environment variable configuration"
-        }
-      },
-      "title": "MustacheRendererConfig",
-      "type": "object"
-    },
-    "OrchestratorConfig": {
-      "properties": {
         "runners": {
           "items": {
             "$ref": "#/$defs/RunnerDefinition"
@@ -426,33 +391,7 @@
       "title": "OrchestratorConfig",
       "type": "object"
     },
-    "RawOpenTicketAIConfig": {
-      "properties": {
-        "plugins": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Plugins",
-          "type": "array"
-        },
-        "general_config": {
-          "$ref": "#/$defs/GeneralConfig"
-        },
-        "defs": {
-          "items": {
-            "$ref": "#/$defs/RegisterableConfig"
-          },
-          "title": "Defs",
-          "type": "array"
-        },
-        "orchestrator": {
-          "$ref": "#/$defs/OrchestratorConfig"
-        }
-      },
-      "title": "RawOpenTicketAIConfig",
-      "type": "object"
-    },
-    "RawPipeConfig": {
+    "PipeConfig": {
       "additionalProperties": true,
       "properties": {
         "uid": {
@@ -477,18 +416,14 @@
           "type": "string"
         },
         "injects": {
-          "anyOf": [
-            {
-              "additionalProperties": {
-                "type": "string"
-              },
-              "type": "object"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "title": "Injects"
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Injects",
+          "type": "object"
+        },
+        "params": {
+          "title": "Params"
         },
         "if": {
           "anyOf": [
@@ -516,12 +451,51 @@
           ],
           "default": [],
           "title": "Depends On"
+        },
+        "steps": {
+          "anyOf": [
+            {
+              "items": {},
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Steps"
         }
       },
-      "title": "RawPipeConfig",
+      "title": "PipeConfig",
       "type": "object"
     },
-    "RegisterableConfig": {
+    "RawOpenTicketAIConfig": {
+      "properties": {
+        "plugins": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Plugins",
+          "type": "array"
+        },
+        "infrastructure": {
+          "$ref": "#/$defs/InfrastructureConfig"
+        },
+        "services": {
+          "items": {
+            "$ref": "#/$defs/RenderableConfig"
+          },
+          "title": "Services",
+          "type": "array"
+        },
+        "orchestrator": {
+          "$ref": "#/$defs/OrchestratorConfig"
+        }
+      },
+      "title": "RawOpenTicketAIConfig",
+      "type": "object"
+    },
+    "RenderableConfig": {
       "additionalProperties": true,
       "properties": {
         "uid": {
@@ -546,21 +520,50 @@
           "type": "string"
         },
         "injects": {
-          "anyOf": [
-            {
-              "additionalProperties": {
-                "type": "string"
-              },
-              "type": "object"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "title": "Injects"
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Injects",
+          "type": "object"
+        },
+        "params": {
+          "title": "Params"
         }
       },
-      "title": "RegisterableConfig",
+      "title": "RenderableConfig",
+      "type": "object"
+    },
+    "RetrySettings": {
+      "properties": {
+        "attempts": {
+          "default": 3,
+          "minimum": 1,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "delay": {
+          "default": "5s",
+          "title": "Delay",
+          "type": "string"
+        },
+        "backoff_factor": {
+          "default": 2.0,
+          "minimum": 1.0,
+          "title": "Backoff Factor",
+          "type": "number"
+        },
+        "max_delay": {
+          "default": "30s",
+          "title": "Max Delay",
+          "type": "string"
+        },
+        "jitter": {
+          "default": true,
+          "title": "Jitter",
+          "type": "boolean"
+        }
+      },
+      "title": "RetrySettings",
       "type": "object"
     },
     "RootConfig": {
@@ -622,19 +625,105 @@
     },
     "RunnerDefinition": {
       "properties": {
-        "run_every_milli_seconds": {
-          "minimum": 1,
-          "title": "Run Every Milli Seconds",
-          "type": "integer"
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
         },
-        "pipe": {
-          "$ref": "#/$defs/RawPipeConfig"
+        "on": {
+          "items": {
+            "$ref": "#/$defs/TriggerDefinition"
+          },
+          "title": "On",
+          "type": "array"
+        },
+        "run": {
+          "$ref": "#/$defs/PipeConfig"
+        },
+        "params": {
+          "$ref": "#/$defs/RunnerParams"
         }
       },
       "required": [
-        "run_every_milli_seconds"
+        "run"
       ],
       "title": "RunnerDefinition",
+      "type": "object"
+    },
+    "RunnerParams": {
+      "properties": {
+        "concurrency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ConcurrencySettings"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RetrySettings"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "timeout": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timeout"
+        },
+        "retry_scope": {
+          "default": "pipeline",
+          "title": "Retry Scope",
+          "type": "string"
+        },
+        "priority": {
+          "default": 10,
+          "title": "Priority",
+          "type": "integer"
+        }
+      },
+      "title": "RunnerParams",
+      "type": "object"
+    },
+    "TemplateRendererConfig": {
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "description": "Type of template renderer",
+          "title": "Type",
+          "type": "string"
+        },
+        "env_config": {
+          "$ref": "#/$defs/TemplateRendererEnvConfig",
+          "description": "Environment variable configuration"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "TemplateRendererConfig",
       "type": "object"
     },
     "TemplateRendererEnvConfig": {
@@ -688,6 +777,44 @@
         }
       },
       "title": "TemplateRendererEnvConfig",
+      "type": "object"
+    },
+    "TriggerDefinition": {
+      "additionalProperties": true,
+      "properties": {
+        "uid": {
+          "title": "Uid",
+          "type": "string"
+        },
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "use": {
+          "default": "open_ticket_ai.base.CompositePipe",
+          "title": "Use",
+          "type": "string"
+        },
+        "injects": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Injects",
+          "type": "object"
+        },
+        "params": {
+          "title": "Params"
+        }
+      },
+      "title": "TriggerDefinition",
       "type": "object"
     }
   },

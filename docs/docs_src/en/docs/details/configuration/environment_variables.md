@@ -259,4 +259,4 @@ base_url: "${OTOBO_URL:-https://default.com}"
 
 - [Configuration Schema](config_schema.md)
 - [Configuration Structure](config_structure.md)
-- [Installation Guide](../guides/installation.md)
+- [Installation Guide](../../guides/installation.md)

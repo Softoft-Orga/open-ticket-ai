@@ -533,7 +533,7 @@ Include:
 
 ## Related Documentation
 
-- [Configuration Reference](../configuration/config_schema.md)
+- [Configuration Reference](../details/configuration/config_schema.md)
 - [Testing Guide](testing.md)
 - [Installation Guide](installation.md)
 - [First Pipeline](first_pipeline.md)
