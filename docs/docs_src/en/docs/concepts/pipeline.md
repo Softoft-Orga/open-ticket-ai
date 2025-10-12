@@ -14,140 +14,69 @@ A **pipeline** in Open Ticket AI is a configured sequence of pipes that execute 
 
 ## Pipeline Architecture
 
-```plantuml
-@startuml Pipeline Architecture
+```mermaid
+%%{init: {
+  "classDiagram": { "layout": "elk", "useMaxWidth": false },
+  "elk": { "spacing": { "nodeNode": 20, "nodeNodeBetweenLayers": 20, "componentComponent": 15 } }
+}}%%
+classDiagram
+direction TD
 
-skinparam classAttributeIconSize 0
-skinparam classFontSize 11
-
-package "Core Pipeline Components" {
-    abstract class Pipe<ParamsT> {
-        +pipe_config: PipeConfig
-        --
-        +process(context: PipeContext): PipeContext
-        +have_dependent_pipes_been_run(context): bool
-        #{abstract} _process(): PipeResult
-        #_save_pipe_result(context, result): PipeContext
-    }
-
-    class CompositePipe {
-        -_factory: RenderableFactory
-        -_context: PipeContext
-        --
-        +_process_steps(context): list[PipeResult]
-        +_build_pipe_from_step_config(step_config, context): Pipe
-        +process(context): PipeContext
-    }
-
-    class PipeConfig<ParamsT> {
-        +id: str
-        +use: str
-        +params: ParamsT
-        +if_: str | bool
-        +depends_on: list[str]
-        +steps: list[PipeConfig] | None
-        --
-        +should_run: bool
-    }
-
-    class PipeContext {
-        +pipes: dict[str, PipeResult]
-        +params: dict[str, Any]
-        +parent: PipeContext | None
-        --
-        +has_succeeded(pipe_id: str): bool
-    }
-
-    class PipeResult<DataT> {
-        +success: bool
-        +failed: bool
-        +message: str
-        +data: DataT
-        --
-        +__and__(other): PipeResult
-        +union(results): PipeResult
-    }
+namespace Core {
+  class Pipe {
+    +process(ctx: PipeContext): PipeContext
+  }
+  class CompositePipe {
+    +process(ctx: PipeContext): PipeContext
+  }
+  class PipeConfig {
+    +id: str
+    +use: str
+    +steps: list[PipeConfig]?
+  }
+  class PipeContext {
+    +has_succeeded(id: str): bool
+  }
+  class PipeResult {
+    +success: bool
+  }
 }
 
-package "Pipeline Construction" {
-    class RenderableFactory {
-        -_template_renderer: TemplateRenderer
-        -_registerable_configs: list[RenderableConfig]
-        --
-        +create_pipe(pipe_config_raw, scope): Pipe
-        -__create_renderable_instance(config, scope): Renderable
-        -__resolve_injects(injects, scope): dict
-    }
-
-    class TemplateRenderer {
-        --
-        +render_template(template, context): str
-        +render_object(obj, context): Any
-    }
+namespace Rendering {
+  class RenderableFactory {
+    +create_pipe(cfg: PipeConfig, scope)
+  }
+  class TemplateRenderer {
+    +render_template(tpl: str, ctx): str
+  }
 }
 
-package "Orchestration" {
-    class PipeRunner {
-        +definition: RunnerDefinition
-        +pipe_factory: RenderableFactory
-        --
-        +execute(): void
-        +on_trigger_fired(): void
-    }
-
-    class RunnerDefinition {
-        +pipe_id: str
-        +run: PipeConfig
-        +trigger: Trigger
-    }
-
-    class Trigger {
-        +interval_ms: int
-    }
+namespace Runner {
+  class PipeRunner {
+    +execute(): void
+  }
+  class RunnerDefinition {
+    +run: PipeConfig
+    +trigger: Trigger
+  }
+  class Trigger {
+    +interval_ms: int
+  }
 }
 
-' Inheritance relationships
 CompositePipe --|> Pipe
-
-' Composition relationships
 Pipe --> PipeConfig : configured by
-Pipe --> PipeContext : reads/writes
-Pipe --> PipeResult : produces
+Pipe --> PipeContext : uses
+Pipe --> PipeResult : outputs
 PipeContext --> PipeResult : stores
-CompositePipe --> RenderableFactory : uses to create child pipes
-PipeConfig --> PipeConfig : contains steps
-
-' Factory relationships
+CompositePipe --> RenderableFactory : builds steps with
+PipeConfig *-- PipeConfig : steps
 RenderableFactory --> Pipe : creates
 RenderableFactory --> TemplateRenderer : uses
-RenderableFactory --> PipeConfig : renders
-
-' Orchestration relationships
 PipeRunner --> RunnerDefinition : configured by
 PipeRunner --> RenderableFactory : uses
 RunnerDefinition --> PipeConfig : contains
 RunnerDefinition --> Trigger : scheduled by
-
-note right of Pipe
-    Base class for all pipes.
-    Handles dependency checking,
-    conditional execution, and
-    result persistence.
-end note
-
-note right of CompositePipe
-    Special pipe that orchestrates
-    multiple child pipes defined
-    in its "steps" configuration.
-end note
-
-note bottom of PipeContext
-    Shared state that flows through
-    the pipeline. Maps pipe IDs to
-    their results for data sharing.
-end note
-
-@enduml
 ```
 
 ## Pipeline Orchestration Lifecycle
@@ -176,63 +105,46 @@ The orchestrator sets up pipeline execution schedules:
 
 When a pipeline is triggered, its configuration is rendered:
 
-```plantuml
-@startuml Pipeline Rendering Flow
+```mermaid
+sequenceDiagram
+    actor Orchestrator
+    participant Runner as PipeRunner
+    participant Factory as RenderableFactory
+    participant Renderer as TemplateRenderer
+    participant Config as PipeConfig
 
-actor Orchestrator
-participant "PipeRunner" as Runner
-participant "RenderableFactory" as Factory
-participant "TemplateRenderer" as Renderer
-participant "PipeConfig" as Config
+    Orchestrator ->> Runner: on_trigger_fired()
+    activate Runner
 
-Orchestrator -> Runner: on_trigger_fired()
-activate Runner
+    Runner ->> Factory: create_pipe(pipe_config_raw, scope)
+    activate Factory
 
-Runner -> Factory: create_pipe(pipe_config_raw, scope)
-activate Factory
+    Factory ->> Renderer: render_base_model(pipe_config, scope)
+    activate Renderer
 
-Factory -> Renderer: render_base_model(pipe_config, scope)
-activate Renderer
+    Renderer ->> Renderer: Process Jinja2 templates\nin configuration strings
 
-Renderer -> Renderer: Process Jinja2 templates\nin configuration strings
+    note right of Renderer: Template rendering resolves:\n- Environment variables\n- Previous pipe results\n- Context parameters\n- Service references
 
-note right
-    Template rendering resolves:
-    - Environment variables
-    - Previous pipe results
-    - Context parameters
-    - Service references
-end note
+    Renderer -->> Factory: rendered_config
+    deactivate Renderer
 
-Renderer --> Factory: rendered_config
-deactivate Renderer
+    Factory ->> Config: Validate rendered configuration
+    activate Config
+    Config -->> Factory: validated PipeConfig
+    deactivate Config
 
-Factory -> Config: Validate rendered configuration
-activate Config
-Config --> Factory: validated PipeConfig
-deactivate Config
+    Factory ->> Factory: __resolve_injects(injects, scope)
+    note right of Factory: Resolve dependency injections:\n- Service lookups\n- Nested pipe configurations\n- Shared adapters
 
-Factory -> Factory: __resolve_injects(injects, scope)
-note right
-    Resolve dependency injections:
-    - Service lookups
-    - Nested pipe configurations
-    - Shared adapters
-end note
+    Factory ->> Factory: __create_renderable_instance(config, scope)
+    note right of Factory: Instantiate the Pipe class\nspecified in "use" field
 
-Factory -> Factory: __create_renderable_instance(config, scope)
-note right
-    Instantiate the Pipe class
-    specified in "use" field
-end note
+    Factory -->> Runner: Pipe instance
+    deactivate Factory
 
-Factory --> Runner: Pipe instance
-deactivate Factory
-
-Runner --> Orchestrator: Ready for execution
-deactivate Runner
-
-@enduml
+    Runner -->> Orchestrator: Ready for execution
+    deactivate Runner
 ```
 
 **Key rendering concepts:**
@@ -246,72 +158,200 @@ deactivate Runner
 
 Once rendered, the pipeline executes:
 
-```plantuml
-@startuml Pipeline Execution Flow
+```mermaid
+%%{init:{
+  "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
+  "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","primaryColor":"#1a1a2e","primaryTextColor":"#e0e0e0","primaryBorderColor":"#4a5568","lineColor":"#718096","background":"#0f0f1a","mainBkg":"#1a1a2e","secondBkg":"#16213e","tertiaryColor":"#0f3460","clusterBkg":"#0a0a15","clusterBorder":"#2d3748","edgeLabelBackground":"#1a1a2e","nodeTextColor":"#e0e0e0"},
+  "elk":{"spacing":{"nodeNode":18,"nodeNodeBetweenLayers":16,"componentComponent":12}}
+}}%%
 
-participant "PipeRunner" as Runner
-participant "Pipe" as Pipe
-participant "PipeContext" as Context
-participant "CompositePipe" as Composite
-participant "Child Pipe" as Child
+flowchart TB
 
-Runner -> Pipe: process(context)
-activate Pipe
-
-Pipe -> Pipe: Check if_condition
-alt if_ == False
-    Pipe --> Runner: Return context unchanged
-    note right: Pipe is skipped
-else if_ == True
-    
-    Pipe -> Pipe: have_dependent_pipes_been_run(context)
-    
-    alt dependencies not met
-        Pipe --> Runner: Return context unchanged
-        note right: Pipe is skipped
-    else dependencies met
-        
-        alt Pipe is CompositePipe
-            Pipe -> Composite: _process_steps(context)
-            activate Composite
-            
-            loop for each step in steps
-                Composite -> Composite: _build_pipe_from_step_config(step, context)
-                Composite -> Child: process(context)
-                activate Child
-                Child -> Child: _process()
-                Child -> Context: Save result to context.pipes[step_id]
-                activate Context
-                Child --> Composite: Updated context
-                deactivate Child
-                deactivate Context
-            end
-            
-            Composite -> Composite: PipeResult.union(all_step_results)
-            Composite --> Pipe: Aggregated PipeResult
-            deactivate Composite
-            
-        else Regular Pipe
-            Pipe -> Pipe: _process()
-            note right
-                Execute pipe's
-                business logic
-            end note
-            Pipe --> Pipe: PipeResult
-        end
-        
-        Pipe -> Context: _save_pipe_result(context, pipe_result)
-        activate Context
-        note right: Store result at context.pipes[pipe_id]
-        Context --> Pipe: Updated context
-        deactivate Context
-    end
+%% ===================== BOOTSTRAP & DI =====================
+subgraph BOOT["🚀 Application Bootstrap"]
+  direction TB
+  Start([Start App]):::start
+  LoadEnv["Load .env / Environment"]:::cfg
+  CreateDI["Create DI Container<br/>(AppModule)"]:::di
+  LoadConfig["ConfigLoader.load_config()"]:::cfg
+  ParseYAML["Parse YAML → RawOpenTicketAIConfig"]:::cfg
+  SetupLog["Configure Logging<br/>(dictConfig)"]:::cfg
+  RegisterServices["Register Services & TemplateRenderer"]:::di
+  InitFactory["Initialize RenderableFactory"]:::di
+  CreateOrch["Create Orchestrator"]:::di
+  
+  Start --> LoadEnv --> CreateDI --> LoadConfig --> ParseYAML --> SetupLog
+  SetupLog --> RegisterServices --> InitFactory --> CreateOrch
 end
 
-Pipe --> Runner: Final context with results
-deactivate Pipe
+%% ===================== ORCHESTRATOR SETUP =====================
+subgraph ORCH_SETUP["🎯 Orchestrator Setup"]
+  direction TB
+  StartOrch["Orchestrator.start()"]:::proc
+  LoopRunners{"For each<br/>RunnerDefinition"}:::dec
+  CreateRunner["Create PipeRunner<br/>(definition, factory)"]:::proc
+  HasTrigger{"Has triggers<br/>(on: [...])?":::dec}
+  
+  StartOrch --> LoopRunners --> CreateRunner --> HasTrigger
+end
 
-@enduml
+%% ===================== TRIGGER SYSTEM =====================
+subgraph TRIGGER["⏰ Trigger System (Observer Pattern)"]
+  direction TB
+  GetOrCreateTrigger["Get/Create Trigger<br/>(IntervalTrigger, etc.)"]:::proc
+  AttachRunner["trigger.attach(runner)"]:::proc
+  StartTrigger["trigger.start()"]:::proc
+  
+  GetOrCreateTrigger --> AttachRunner --> StartTrigger
+end
+
+subgraph ONETIME["▶️ One-Time Execution"]
+  direction TB
+  ScheduleTask["asyncio.create_task(<br/>runner.execute())"]:::proc
+end
+
+%% ===================== EXECUTION TRIGGER =====================
+subgraph EXEC_TRIGGER["⚡ Trigger Fires"]
+  direction TB
+  TriggerEvent["Trigger fires<br/>(interval/event)"]:::event
+  NotifyObservers["trigger.notify()"]:::proc
+  CallObserver["runner.on_trigger_fired()"]:::proc
+  
+  TriggerEvent --> NotifyObservers --> CallObserver
+end
+
+%% ===================== RUNNER EXECUTION =====================
+subgraph RUNNER["🔄 PipeRunner Execution"]
+  direction TB
+  RunnerExec["PipeRunner.execute()"]:::proc
+  CreatePipeCtx["Create PipeContext<br/>(params from run config)"]:::ctx
+  FactoryCreate["factory.create_pipe<br/>(pipe_config, scope)"]:::factory
+  RenderParams["Render params with Jinja<br/>(render_base_model)"]:::render
+  InstantiatePipe["Instantiate Pipe class"]:::proc
+  CallProcess["pipe.process(context)"]:::proc
+  
+  RunnerExec --> CreatePipeCtx --> FactoryCreate --> RenderParams
+  RenderParams --> InstantiatePipe --> CallProcess
+end
+
+%% ===================== PIPE PROCESSING =====================
+subgraph PIPE_PROC["🔧 Pipe.process() Logic"]
+  direction TB
+  CheckShould{"should_run?<br/>(if_ condition)"}:::dec
+  CheckDeps{"Dependencies met?<br/>(depends_on)"}:::dec
+  ProcessAndSave["__process_and_save()"]:::proc
+  SkipPipe["Skip → return context"]:::skip
+  
+  CheckShould -- ✓ --> CheckDeps
+  CheckShould -- ✗ --> SkipPipe
+  CheckDeps -- ✓ --> ProcessAndSave
+  CheckDeps -- ✗ --> SkipPipe
+end
+
+%% ===================== PIPE EXECUTION =====================
+subgraph PIPE_EXEC["⚙️ Pipe Execution"]
+  direction TB
+  TryCatch["try-catch wrapper"]:::proc
+  IsComposite{"Composite<br/>Pipe?"}:::dec
+  
+  TryCatch --> IsComposite
+end
+
+%% ===================== SIMPLE PIPE =====================
+subgraph SIMPLE["📦 Simple Pipe"]
+  direction TB
+  ExecProcess["await _process()"]:::proc
+  CreateResult["Create PipeResult"]:::proc
+  
+  ExecProcess --> CreateResult
+end
+
+%% ===================== COMPOSITE PIPE =====================
+subgraph COMPOSITE["🔀 Composite Pipe"]
+  direction TB
+  LoopSteps{"For each step"}:::dec
+  MergeCtx["Merge parent + step params"]:::proc
+  BuildChild["factory.create_pipe<br/>(step_config, child_scope)"]:::factory
+  RenderStep["Render step params"]:::render
+  RunChild["child.process(context)"]:::proc
+  CollectResult["Collect result in context"]:::ctx
+  AllDone{"All steps<br/>done?"}:::dec
+  UnionResults["PipeResult.union(results)"]:::proc
+  
+  LoopSteps -- Has step --> MergeCtx --> BuildChild --> RenderStep
+  RenderStep --> RunChild --> CollectResult --> LoopSteps
+  LoopSteps -- Done --> AllDone --> UnionResults
+end
+
+%% ===================== RESULT HANDLING =====================
+subgraph RESULT["💾 Result Persistence"]
+  direction TB
+  SaveResult["context.pipes[pipe_id] = result"]:::ctx
+  LogResult["Logger.info/warning"]:::log
+  ReturnContext["Return updated context"]:::ctx
+  
+  SaveResult --> LogResult --> ReturnContext
+end
+
+%% ===================== ERROR HANDLING =====================
+subgraph ERROR["❌ Error Handling"]
+  direction TB
+  CatchEx["Catch Exception"]:::error
+  CreateFailed["Create failed PipeResult<br/>(success=False, failed=True)"]:::error
+  LogError["Logger.error + traceback"]:::log
+  
+  CatchEx --> LogError --> CreateFailed
+end
+
+%% ===================== CONNECTIONS =====================
+CreateOrch --> StartOrch
+
+HasTrigger -- Yes --> GetOrCreateTrigger
+StartTrigger --> TriggerEvent
+HasTrigger -- No --> ScheduleTask
+ScheduleTask --> RunnerExec
+
+CallObserver --> RunnerExec
+CallProcess --> CheckShould
+ProcessAndSave --> TryCatch
+
+IsComposite -- No --> ExecProcess
+IsComposite -- Yes --> LoopSteps
+
+CreateResult --> SaveResult
+UnionResults --> SaveResult
+ReturnContext --> LoopRunners
+
+TryCatch --> CatchEx
+CreateFailed --> SaveResult
+
+%% ===================== STYLES =====================
+classDef start fill:#2d6a4f,stroke:#1b4332,stroke-width:3px,color:#fff,font-weight:bold
+classDef cfg fill:#1e3a5f,stroke:#0d1f3d,stroke-width:2px,color:#e0e0e0
+classDef di fill:#5a189a,stroke:#3c096c,stroke-width:2px,color:#e0e0e0
+classDef proc fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
+classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
+classDef dec fill:#d97706,stroke:#b45309,stroke-width:2px,color:#fff,font-weight:bold
+classDef factory fill:#7c2d12,stroke:#5c1a0a,stroke-width:2px,color:#e0e0e0
+classDef render fill:#4338ca,stroke:#312e81,stroke-width:2px,color:#e0e0e0
+classDef event fill:#be123c,stroke:#9f1239,stroke-width:3px,color:#fff,font-weight:bold
+classDef skip fill:#374151,stroke:#1f2937,stroke-width:2px,color:#9ca3af
+classDef error fill:#dc2626,stroke:#991b1b,stroke-width:2px,color:#fff
+classDef log fill:#0891b2,stroke:#0e7490,stroke-width:2px,color:#fff
+
+%% Apply styles
+class Start start
+class LoadEnv,LoadConfig,ParseYAML,SetupLog cfg
+class CreateDI,RegisterServices,InitFactory,CreateOrch di
+class StartOrch,CreateRunner,GetOrCreateTrigger,AttachRunner,StartTrigger,ScheduleTask,NotifyObservers,CallObserver,RunnerExec,CreatePipeCtx,InstantiatePipe,CallProcess,ProcessAndSave,TryCatch,ExecProcess,CreateResult,RunChild,CollectResult proc
+class CheckShould,CheckDeps,HasTrigger,IsComposite,LoopSteps,AllDone,LoopRunners dec
+class FactoryCreate,BuildChild factory
+class RenderParams,RenderStep render
+class TriggerEvent event
+class SkipPipe skip
+class CatchEx,CreateFailed error
+class LogResult,LogError log
+class CreatePipeCtx,MergeCtx,CollectResult,SaveResult,ReturnContext ctx
 ```
 
 **Execution flow details:**
