@@ -24,6 +24,15 @@ The concepts documentation focuses on **what** the system is and **why** it's de
   - Pipe factory pattern and registration
   - Best practices for pipeline design
 
+- **[Configuration and Template Rendering](config_rendering.md)** - Visual guide to configuration loading and rendering:
+  - Configuration lifecycle from YAML to runtime objects
+  - Template rendering architecture and process flow
+  - Environment variable substitution
+  - Jinja2 template evaluation
+  - Context scopes (global, pipeline, pipe)
+  - Validation and dependency resolution
+  - Implementation references
+
 ## When to Read This
 
 Read the concepts documentation when you want to:
