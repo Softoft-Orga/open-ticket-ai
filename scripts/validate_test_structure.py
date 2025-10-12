@@ -86,9 +86,7 @@ def main() -> int:
         print("❌ Test structure violations found:\n")
         for violation in violations:
             print(f"  {violation}")
-        print(
-            f"\n❌ Found {len(violations)} violation(s). Please fix them to comply with AGENTS.md rules."
-        )
+        print(f"\n❌ Found {len(violations)} violation(s). Please fix them to comply with AGENTS.md rules.")
         print("\nRules:")
         print("  1. Never place tests under src/")
         print("  2. No __init__.py files in test directories")
