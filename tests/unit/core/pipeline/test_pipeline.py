@@ -6,7 +6,7 @@ import pytest
 from open_ticket_ai.base.pipes.composite_pipe import CompositePipe
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
@@ -78,9 +78,10 @@ def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.mark.asyncio
-async def test_process_skips_pipe_when_condition_is_false():
+async def test_process_skips_pipe_when_condition_is_false() -> None:
     context = PipeContext(pipes={"existing": PipeResult(success=True, failed=False, data={"value": 1})})
-    skip_pipe = SkipPipe({"id": "skip", "use": "SkipPipe", "if": False})
+    skip_config = PipeConfig(id="skip", use="SkipPipe", **{"if": False})
+    skip_pipe = SkipPipe(skip_config)
 
     result_context = await skip_pipe.process(context)
 

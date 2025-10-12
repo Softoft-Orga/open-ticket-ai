@@ -40,6 +40,8 @@ class CompositePipe(Pipe[CompositeParams]):
         Build a child pipe from step config.
         Returns Pipe.
         """
+        if self._factory is None:
+            raise ValueError("RenderableFactory is required but not provided to CompositePipe")
         return self._factory.create_pipe(step_config, context)
 
     async def _process_steps(self, context: PipeContext) -> list[PipeResult]:

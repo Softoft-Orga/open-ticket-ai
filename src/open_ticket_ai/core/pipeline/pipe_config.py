@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from functools import reduce
-from typing import Self
+from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -10,9 +10,10 @@ from open_ticket_ai.core.config.renderable import RenderableConfig
 
 
 class PipeConfig[ParamsT: BaseModel](RenderableConfig[ParamsT]):
+    model_config = ConfigDict(populate_by_name=True)
     if_: str | bool = Field(default="True", alias="if")
     depends_on: str | list[str] = []
-    steps: list[PipeConfig[ParamsT]] | None = None
+    steps: list[Any] | None = None
 
     @property
     def should_run(self) -> str | bool:
@@ -30,8 +31,8 @@ class PipeResult[DataT: BaseModel](BaseModel):
     message: str = ""
     data: DataT
 
-    def __and__(self, other: Self) -> Self:
-        merged_data_dict: dict = {**self.data.model_dump(), **other.data.model_dump()}
+    def __and__(self, other: Self) -> PipeResult[CompositePipeResultData]:  # type: ignore[misc]
+        merged_data_dict: dict[str, Any] = {**self.data.model_dump(), **other.data.model_dump()}
         merged_data = CompositePipeResultData.model_validate(merged_data_dict)
         merged_msg = ";\n ".join([m for m in [self.message, other.message] if m])
         return PipeResult[CompositePipeResultData](
