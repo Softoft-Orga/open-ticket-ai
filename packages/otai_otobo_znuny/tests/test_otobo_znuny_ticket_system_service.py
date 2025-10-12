@@ -2,18 +2,18 @@ import asyncio
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
-from otobo_znuny.mappers import _to_id_name
-
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
-    UnifiedEntity,
-    UnifiedNote,
     UnifiedTicket,
 )
-from packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service import OTOBOZnunyTicketSystemService
-from packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service_config import \
-    RenderedOTOBOZnunyTicketsystemServiceConfig
+from otobo_znuny.mappers import _to_id_name
+from packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service import (
+    OTOBOZnunyTicketSystemService,
+)
+from packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service_config import (
+    RenderedOTOBOZnunyTicketsystemServiceConfig,
+)
 
 
 class TestToIdName:
@@ -95,7 +95,6 @@ class TestOTOBOZnunyTicketSystemService:
 
             mock_recreate.assert_called_once()
 
-
     def test_find_tickets_without_queue(self, service, mock_client, patch_ticket_conversion):
         service._client = mock_client
         mock_client.search_and_get.return_value = []
@@ -119,7 +118,6 @@ class TestOTOBOZnunyTicketSystemService:
         result = asyncio.run(service.find_first_ticket(criteria))
 
         assert result is None
-
 
     def test_inheritance_from_ticket_system_service(self, service):
         assert isinstance(service, TicketSystemService)

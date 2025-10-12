@@ -4,7 +4,6 @@ import types
 from unittest.mock import MagicMock
 
 import pytest
-
 from packages.otai_hf_local.src.otai_hf_local import HFLocalTextClassificationPipe
 
 

@@ -8,7 +8,6 @@ from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.cli.main import CLI, app
 
 
-
 @pytest.fixture
 def cli_runner() -> CliRunner:
     return CliRunner()
