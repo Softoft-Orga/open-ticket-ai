@@ -172,4 +172,4 @@ See the [HuggingFace Local plugin](hf_local.md) for a complete example.
 - [Plugin System](plugin_system.md)
 - [Dependency Injection](../code/dependency_injection.md)
 - [Services](../code/services.md)
-- [Pipes](../code/pipe.md)
+- [Pipeline Architecture](../concepts/pipeline-architecture.md)

@@ -28,40 +28,10 @@ Services are typically singletons:
 
 ## Creating Custom Services
 
-1. Define service interface:
-
-```python
-class MyService:
-    def do_something(self, data):
-        pass
-```
-
-2. Implement service:
-
-```python
-class MyServiceImpl(MyService):
-    def do_something(self, data):
-        # Implementation here
-        return result
-```
-
-3. Register with DI container:
-
-```python
-def configure_services(binder):
-    binder.bind(MyService, to=MyServiceImpl, scope=singleton)
-```
-
-4. Inject into pipes:
-
-```python
-from injector import inject
-
-class MyPipe(BasePipe):
-    @inject
-    def __init__(self, my_service: MyService):
-        self.my_service = my_service
-```
+1. Define service interface
+2. Implement service
+3. Register with DI container using the injector module
+4. Inject into pipes using the `@inject` decorator
 
 ## Service Best Practices
 
@@ -80,17 +50,10 @@ class MyPipe(BasePipe):
 
 ## Testing Services
 
-Services should be unit tested independently:
-
-```python
-def test_my_service():
-    service = MyServiceImpl()
-    result = service.do_something(test_data)
-    assert result == expected_result
-```
+Services should be unit tested independently from the pipes that use them. Create test instances of services and verify their behavior with test data.
 
 ## Related Documentation
 
 - [Dependency Injection](dependency_injection.md)
-- [Pipes](pipe.md)
+- [Pipeline Architecture](../concepts/pipeline-architecture.md)
 - [Plugin Development](../plugins/plugin_development.md)
