@@ -27,13 +27,12 @@ If you're looking for:
 
 ## Content Coming Soon
 
-This is a new section of the documentation. Content is being migrated and created to provide comprehensive architectural documentation. Check back soon for:
+This section provides comprehensive architectural documentation:
 
-- Pipeline Architecture Deep Dive
-- Pipe Execution Model
-- Dependency Injection Patterns
-- Template Rendering System
-- And more...
+- [Pipeline Architecture](pipeline-architecture.md) - Complete pipeline system overview
+- More architectural documentation coming soon...
+
+For practical guides, see [Guides](/docs/guides/).
 
 ## Contributing
 

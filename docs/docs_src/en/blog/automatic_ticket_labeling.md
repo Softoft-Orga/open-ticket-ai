@@ -38,70 +38,16 @@ model training.
 >
 > This helps integrate the response into your pipeline.
 
-## Example: Python Code for Pre-Labeling
+## Automated Pre-Labeling with AI APIs
 
-Below is a Python example using OpenAI’s API via the `openai` library. It loops over a dummy ticket
-list, prompts GPT-4 to classify each ticket, and records the category. (You can also
-use [OpenRouter](https://openrouter.ai) similarly by setting
-`base_url="https://openrouter.ai/api/v1"` and changing the `model` parameter.)
+You can use AI APIs like OpenAI or OpenRouter to automatically pre-label tickets before human review. The process involves:
 
-```python
-import openai
+1. Loop through your ticket list
+2. Send each ticket text to an AI model with a classification prompt
+3. Store the predicted category as a pre-label
+4. Human reviewers verify and correct the pre-labels
 
-openai.api_key = "YOUR_OPENAI_API_KEY"
-tickets = [
-    {"id": 1, "text": "User cannot login to account", "category": None},
-    {"id": 2, "text": "Error 404 when uploading file", "category": None},
-    {"id": 3, "text": "Request to add dark mode feature", "category": None},
-    {"id": 4, "text": "Payment declined on checkout", "category": None},
-]
-categories = ["Bug", "Feature Request", "Question"]
-
-for ticket in tickets:
-    prompt = f"Ticket: \"{ticket['text']}\". Classify it as one of {categories}."
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.0
-    )
-    # Extract the category from GPT's reply
-    ticket["category"] = response.choices[0].message.content.strip()
-
-print(tickets)
-```
-
-After running this, `tickets` might become:
-
-```python
-[
-    {'id': 1, 'text': 'User cannot login to account', 'category': 'Bug'},
-    {'id': 2, 'text': 'Error 404 when uploading file', 'category': 'Bug'},
-    {'id': 3, 'text': 'Request to add dark mode feature', 'category': 'Feature Request'},
-    {'id': 4, 'text': 'Payment declined on checkout', 'category': 'Bug'}
-]
-```
-
-These are **pre-labels** that human reviewers will check. Note how OpenRouter makes switching models
-easy: by changing `model="openai/gpt-4"` to another provider (e.g. Claude or a lighter model), the
-same code works. In fact, OpenRouter’s unified API lets you try multiple providers or use fallback
-models if one is down. For example:
-
-```python
-from openai import OpenAI
-
-client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key="YOUR_OPENROUTER_API_KEY",
-)
-client.chat.completions.create(
-    model="openai/gpt-4o",  # try GPT-4 first
-    extra_body={"models": ["anthropic/claude-3.5-sonnet", "google/palm-2"]},
-    messages=[{"role": "user", "content": "Ticket: 'Login page error'. Classify it."}]
-)
-```
-
-This will use GPT-4 if available, otherwise fallback to Claude or PaLM as shown in OpenRouter’s
-docs. Such flexibility is useful for companies needing high availability or comparing models.
+This approach significantly reduces manual labeling time while maintaining quality through human oversight. OpenRouter provides a unified API that works with multiple AI providers (OpenAI, Anthropic Claude, Google PaLM, etc.), allowing you to switch between models or use fallback options for high availability.
 
 ## Integrating Pre-Labels with Labeling Tools
 
