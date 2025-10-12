@@ -33,6 +33,15 @@ The concepts documentation focuses on **what** the system is and **why** it's de
   - Validation and dependency resolution
   - Implementation references
 
+- **[Plugin System](plugins.md)** - Architectural overview of the plugin system:
+  - Modular design and extensibility principles
+  - Plugin discovery via entry points
+  - Registration and integration process
+  - API compatibility and versioning
+  - Service and pipe registration
+  - Plugin lifecycle management
+  - Design principles and benefits
+
 ## When to Read This
 
 Read the concepts documentation when you want to:
