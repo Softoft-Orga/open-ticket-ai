@@ -1,6 +1,20 @@
 # Source Code Guidelines
 
+**Location:** `/src` directory in Open Ticket AI repository  
+**Parent Guidelines:** [Root AGENTS.md](../AGENTS.md)  
+**Last Updated:** 2025-10-11
+
 This document provides Python-specific guidelines for all source code in the `src/` directory.
+
+## Critical Test Placement Rules
+
+⚠️ **NEVER place tests under `src/`:**
+- ❌ Forbidden: `src/**/tests/`, `src/**/test_*.py`
+- ✅ Unit tests for root package: `tests/unit/`
+- ✅ Package-specific tests: `packages/<name>/tests/`
+- ✅ Integration/e2e tests: `tests/integration/`, `tests/e2e/`
+
+See [Root AGENTS.md](../AGENTS.md) for complete test structure rules.
 
 ## Python Standards
 
@@ -38,3 +52,10 @@ Use pydantic models for complex data structures rather than TypedDict or plain d
 - Don't catch broad exceptions unless absolutely necessary
 - Provide context in exception messages to aid debugging
 - Let exceptions propagate when you can't handle them meaningfully
+
+## Documentation
+
+- All documentation lives in `/docs` directory, not in code comments
+- See [docs/AGENTS.md](../docs/AGENTS.md) for documentation structure
+- Use VitePress documentation for user-facing content: `docs/vitepress_docs/docs_src/en/`
+- Architecture diagrams go in `docs/diagrams/`

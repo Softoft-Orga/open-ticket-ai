@@ -1,6 +1,18 @@
 # Base Components Guidelines
 
+**Location:** `/src/open_ticket_ai/base/` directory  
+**Parent Guidelines:** [Source AGENTS.md](../../AGENTS.md) | [Root AGENTS.md](../../../AGENTS.md)  
+**Last Updated:** 2025-10-11
+
 Guidelines for `src/open_ticket_ai/base/` - reusable pipes and foundational components.
+
+## Critical Test Placement Rules
+
+⚠️ **NEVER place tests in this directory:**
+- ❌ Forbidden: `src/open_ticket_ai/base/tests/`
+- ✅ Tests for base components: `tests/unit/base/`
+
+See [Root AGENTS.md](../../../AGENTS.md) for complete test structure rules.
 
 ## Purpose of Base
 
@@ -66,4 +78,11 @@ Tests for base components should verify:
 - Base implementations work correctly
 - Subclasses can properly extend base behavior
 - Mixins compose correctly without conflicts
-4
+
+**Test location:** All tests for base components are in `tests/unit/base/`
+
+## Documentation
+
+- Architecture concepts: `docs/vitepress_docs/docs_src/en/docs/concepts/`
+- Code details: `docs/vitepress_docs/docs_src/en/docs/code/pipe.md`
+- See [docs/AGENTS.md](../../../docs/AGENTS.md) for documentation structure
