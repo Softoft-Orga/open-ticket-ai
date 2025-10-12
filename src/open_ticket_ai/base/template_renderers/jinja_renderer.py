@@ -4,7 +4,7 @@ from typing import Any
 from injector import inject
 from jinja2.sandbox import SandboxedEnvironment
 
-from open_ticket_ai.core.template_rendering.jinja_renderer_extras import (
+from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     at_path,
     build_filtered_env,
     has_failed,

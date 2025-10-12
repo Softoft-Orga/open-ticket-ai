@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from open_ticket_ai.base.ticket_system_pipes.fetch_tickets_pipe import FetchTicketsPipe
+from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import FetchTicketsPipe
 
 
 @pytest.mark.asyncio

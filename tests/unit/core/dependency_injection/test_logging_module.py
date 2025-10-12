@@ -3,9 +3,9 @@ from __future__ import annotations
 from injector import Injector
 from open_ticket_ai.infra.structlog_adapter import StructlogLoggerFactory
 
+from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLoggerFactory
 from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.infra.stdlib_logging_adapter import StdlibLoggerFactory
 
 
 def test_logging_module_binds_stdlib_factory_by_default() -> None:

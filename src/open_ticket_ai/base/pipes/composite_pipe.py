@@ -50,6 +50,7 @@ class CompositePipe(Pipe[CompositeParams]):
         results: list[PipeResult] = []
         current_context = context
         for step_pipe_config_raw in self.pipe_config.steps:
+            current_context.parent = context
             step_pipe = self._build_pipe_from_step_config(step_pipe_config_raw, current_context)
             current_context = await step_pipe.process(current_context)
             results.append(current_context.pipes[step_pipe_config_raw.id])
