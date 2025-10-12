@@ -73,8 +73,10 @@ def test_load_pipeline_caches_transformers_instances(monkeypatch):
 
 
 @pytest.mark.skip(
-    reason="PipeConfig validation issue: params field stays as dict instead of being validated to HFLocalTextClassificationParams. "
-    "Source code expects params to be a Pydantic model but RenderableConfig defines it as Any with default_factory=dict."
+    reason="PipeConfig validation issue: params field stays as dict instead of "
+    "being validated to HFLocalTextClassificationParams. "
+    "Source code expects params to be a Pydantic model but RenderableConfig "
+    "defines it as Any with default_factory=dict."
 )
 def test_process_runs_pipeline_and_returns_top_result(monkeypatch):
     mock_pipeline = MagicMock(return_value=[{"label": "BUG", "score": 0.87}])
@@ -107,8 +109,10 @@ def test_process_runs_pipeline_and_returns_top_result(monkeypatch):
 
 
 @pytest.mark.skip(
-    reason="PipeConfig validation issue: params field stays as dict instead of being validated to HFLocalTextClassificationParams. "
-    "Source code expects params to be a Pydantic model but RenderableConfig defines it as Any with default_factory=dict."
+    reason="PipeConfig validation issue: params field stays as dict instead of "
+    "being validated to HFLocalTextClassificationParams. "
+    "Source code expects params to be a Pydantic model but RenderableConfig "
+    "defines it as Any with default_factory=dict."
 )
 def test_process_handles_direct_dict_response(monkeypatch):
     mock_pipeline = MagicMock(return_value={"label": "QUESTION", "score": 0.42})

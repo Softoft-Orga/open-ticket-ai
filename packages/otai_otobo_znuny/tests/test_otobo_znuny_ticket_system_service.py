@@ -39,7 +39,10 @@ class TestOTOBOZnunyTicketSystemService:
 
     @pytest.fixture
     def service(self, config):
-        with patch("packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyTicketSystemService._recreate_client"):
+        with patch(
+            "packages.otai_otobo_znuny.src.otai_otobo_znuny."
+            "otobo_znuny_ticket_system_service.OTOBOZnunyTicketSystemService._recreate_client"
+        ):
             return OTOBOZnunyTicketSystemService(config)
 
     @pytest.fixture
@@ -53,7 +56,10 @@ class TestOTOBOZnunyTicketSystemService:
 
     @pytest.fixture
     def patch_ticket_conversion(self):
-        with patch("packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service.otobo_ticket_to_unified_ticket") as mock_convert:
+        with patch(
+            "packages.otai_otobo_znuny.src.otai_otobo_znuny."
+            "otobo_znuny_ticket_system_service.otobo_ticket_to_unified_ticket"
+        ) as mock_convert:
             mock_convert.side_effect = lambda ticket: UnifiedTicket(
                 id=str(ticket.id),
                 subject=ticket.title,
@@ -61,7 +67,7 @@ class TestOTOBOZnunyTicketSystemService:
             yield mock_convert
 
     def test_initialization(self, service, config):
-        assert service.config == config
+        assert service.params == config
         assert service._client is None
         assert service.logger is not None
 
@@ -75,17 +81,20 @@ class TestOTOBOZnunyTicketSystemService:
         assert service.client == mock_client
 
     def test_recreate_client(self, service, mock_client):
-        with patch("packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyClient") as MockClientClass:
+        with patch(
+            "packages.otai_otobo_znuny.src.otai_otobo_znuny."
+            "otobo_znuny_ticket_system_service.OTOBOZnunyClient"
+        ) as MockClientClass:
             MockClientClass.return_value = mock_client
 
             result = service._recreate_client()
 
             assert result == mock_client
             assert service._client == mock_client
-            MockClientClass.assert_called_once_with(config=service.config.to_client_config())
+            MockClientClass.assert_called_once_with(config=service.params.to_client_config())
             mock_client.login.assert_called_once()
             login_arg = mock_client.login.call_args.args[0]
-            assert login_arg.user_login == service.config.username
+            assert login_arg.user_login == service.params.username
 
     def test_initialize(self, service, mock_client):
         with patch.object(service, "_recreate_client") as mock_recreate:

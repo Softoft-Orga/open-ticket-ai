@@ -3,11 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
-pytestmark = pytest.mark.skip(
-    reason="RenderableFactory passes 'config' but JinjaExpressionPipe expects 'pipe_config' parameter - signature mismatch in source code"
-)
-
 from injector import Injector
 
 from open_ticket_ai.base.pipes.jinja_expression_pipe import JinjaExpressionPipeConfig
@@ -18,6 +13,11 @@ from open_ticket_ai.core.dependency_injection.logging_module import LoggingModul
 from open_ticket_ai.core.logging_iface import AppLogger, LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
+
+pytestmark = pytest.mark.skip(
+    reason="RenderableFactory passes 'config' but JinjaExpressionPipe expects "
+    "'pipe_config' parameter - signature mismatch in source code"
+)
 
 
 def test_renderable_factory_injects_logger_factory_into_pipes():
