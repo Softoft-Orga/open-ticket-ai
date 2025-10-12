@@ -276,6 +276,6 @@ Anchors only work within the same YAML file. For multi-file configurations, use 
 
 ## Related Documentation
 
-- [Configuration Schema](config_schema.md)
+- [Configuration Reference](../config_reference.md)
 - [Configuration Structure](config_structure.md)
 - [Environment Variables](environment_variables.md)

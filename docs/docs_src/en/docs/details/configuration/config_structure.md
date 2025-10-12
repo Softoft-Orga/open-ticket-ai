@@ -231,7 +231,7 @@ Configuration is validated on load:
 
 ## Related Documentation
 
-- [Configuration Schema](config_schema.md)
+- [Configuration Reference](../config_reference.md)
 - [Definitions and Anchors](defs_and_anchors.md)
 - [Environment Variables](environment_variables.md)
 - [Configuration Examples](examples.md)
