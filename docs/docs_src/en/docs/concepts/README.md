@@ -8,6 +8,14 @@ The concepts documentation focuses on **what** the system is and **why** it's de
 
 ### Available Documentation
 
+- **[Pipeline System](pipeline.md)** - Comprehensive guide to pipelines with diagrams explaining:
+  - What pipelines are and how they work
+  - Pipeline orchestration lifecycle (rendering and execution)
+  - When and how pipelines are triggered and executed
+  - Relationship between pipes, composite pipes, and steps
+  - PlantUML architecture and sequence diagrams
+  - Implementation references and best practices
+
 - **[Pipeline Architecture](pipeline-architecture.md)** - Complete overview of the pipeline system including:
   - Pipeline execution model and lifecycle
   - Pipe system and interface
