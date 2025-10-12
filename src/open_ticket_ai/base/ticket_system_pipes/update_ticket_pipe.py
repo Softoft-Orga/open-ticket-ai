@@ -1,34 +1,41 @@
 from typing import Any
 
+from pydantic import BaseModel
+
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
+from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
 
 
-class UpdateTicketPipeConfig(RenderedPipeConfig):
+class UpdateTicketParams(BaseModel):
     ticket_id: str | int
     updated_ticket: UnifiedTicket
 
 
-class UpdateTicketPipe(Pipe):
-    def __init__(
-        self, ticket_system: TicketSystemService, pipe_params: UpdateTicketPipeConfig, *args: Any, **kwargs: Any
-    ) -> None:
-        super().__init__(pipe_params)
-        self.ticket_system = ticket_system
-        if isinstance(pipe_params, dict):
-            self.pipe_config = UpdateTicketPipeConfig.model_validate(pipe_params)
-        else:
-            self.pipe_config = UpdateTicketPipeConfig.model_validate(pipe_params.model_dump())
+class UpdateTicketPipeResultData(BaseModel):
+    ticket_updated: bool
 
-    async def _process(self) -> PipeResult:
+
+class UpdateTicketPipeConfig(PipeConfig[UpdateTicketParams]):
+    pass
+
+
+class UpdateTicketPipe(Pipe[UpdateTicketParams]):
+    def __init__(
+        self, ticket_system: TicketSystemService, pipe_config: UpdateTicketPipeConfig, *args: Any, **kwargs: Any
+    ) -> None:
+        super().__init__(pipe_config)
+        self.ticket_system = ticket_system
+        self.pipe_config = pipe_config
+
+    async def _process(self) -> PipeResult[UpdateTicketPipeResultData]:
         try:
             success = await self.ticket_system.update_ticket(
-                self.pipe_config.ticket_id, self.pipe_config.updated_ticket
+                self.pipe_config.params.ticket_id, self.pipe_config.params.updated_ticket
             )
             if not success:
-                return PipeResult(success=False, failed=True, message="Failed to update ticket", data={})
-            return PipeResult(success=True, failed=False, data={})
+                return PipeResult[UpdateTicketPipeResultData](success=False, failed=True, message="Failed to update ticket", data=UpdateTicketPipeResultData(ticket_updated=False))
+            return PipeResult[UpdateTicketPipeResultData](success=True, failed=False, data=UpdateTicketPipeResultData(ticket_updated=True))
         except Exception as e:
-            return PipeResult(success=False, failed=True, message=str(e), data={})
+            return PipeResult[UpdateTicketPipeResultData](success=False, failed=True, message=str(e), data=UpdateTicketPipeResultData(ticket_updated=False))

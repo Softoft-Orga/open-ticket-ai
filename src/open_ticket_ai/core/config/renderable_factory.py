@@ -8,8 +8,8 @@ from typing import Any
 from injector import inject, singleton
 from pydantic import BaseModel
 
-from open_ticket_ai.core.config.params_config_base import CONTROL_KEYS
-from open_ticket_ai.core.config.renderable import Registerable, RenderableConfig
+from open_ticket_ai.core import AppConfig
+from open_ticket_ai.core.config.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
@@ -26,47 +26,19 @@ def _locate(use: str) -> type:
     return typing.cast(type, locate(use))
 
 
-def extract_config_fields(raw: dict[str, Any]) -> dict[str, Any]:
-    result: dict[str, Any] = {}
-    legacy_fields = {k: v for k, v in raw.items() if k not in CONTROL_KEYS}
-    if legacy_fields:
-        result.update(legacy_fields)
-    if "params" in raw and raw["params"]:
-        result["params"] = raw["params"]
-    return result
-
-
-def deep_merge(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
-    out: dict[str, Any] = {}
-    out.update(a)
-    for k, v in b.items():
-        if k in out and isinstance(out[k], dict) and isinstance(v, dict):
-            out[k] = deep_merge(out[k], v)
-        else:
-            out[k] = v
-    return out
-
-
-def resolve_config(parent_config: RawPipeConfig | None, pipe_config: RawPipeConfig) -> RawPipeConfig:
-    parent_config_dict = parent_config.model_dump() if parent_config else {}
-    pipe_config_dict = pipe_config.model_dump()
-
-    parent_config_cleaned = extract_config_fields(parent_config_dict)
-    return RawPipeConfig.model_validate(deep_merge(parent_config_cleaned, pipe_config_dict))
-
-
-def render_base_model(config: BaseModel, scope: PipeContext, renderer: TemplateRenderer) -> BaseModel:
+def render_base_model[T: BaseModel](config: T, scope: PipeContext, renderer: TemplateRenderer) -> T:
     rendered_dict = renderer.render_recursive(config.model_dump(), scope)
     return type(config)(**rendered_dict)
 
 
 @singleton
-class RegisterableFactory:
+class RenderableFactory:
     @inject
-    def __init__(self, template_renderer: TemplateRenderer, registerable_configs: list[RenderableConfig]):
+    def __init__(self, template_renderer: TemplateRenderer, app_config: AppConfig, registerable_configs: list[RenderableConfig]):
         self._logger = logging.getLogger(self.__class__.__name__)
         self._template_renderer = template_renderer
         self._registerable_configs = registerable_configs
+        self._app_config = app_config
 
     def create_pipe(
         self, pipe_config_raw: PipeConfig, scope: PipeContext
@@ -75,30 +47,31 @@ class RegisterableFactory:
         self._logger.info("Creating pipe '%s' with config %s", pipe_config_raw.id, pipe_config_raw)
         rendered_params = render_base_model(pipe_config_raw.params, scope, self._template_renderer)
         pipe_config_raw.params = rendered_params
-        registerable = self.__create_registerable_instance(pipe_config_raw, scope)
+        registerable = self.__create_renderable_instance(pipe_config_raw, scope)
         if not isinstance(registerable, Pipe):
             raise TypeError(f"Registerable with id '{pipe_config_raw.id}' is not a Pipe")
         return registerable
 
     def __create_service_instance(
         self, registerable_config_raw: RenderableConfig, scope: PipeContext
-    ) -> Registerable:
+    ) -> Renderable:
         rendered_config = render_base_model(registerable_config_raw, scope, self._template_renderer)
-        return self.__create_registerable_instance(rendered_config, scope)
+        return self.__create_renderable_instance(rendered_config, scope)
 
-    def __create_registerable_instance(
+    def __create_renderable_instance(
         self, registerable_config: RenderableConfig, scope: PipeContext
-    ) -> Registerable:
+    ) -> Renderable:
         cls: type = _locate(registerable_config.use)
-        if not issubclass(cls, Registerable):
+        if not issubclass(cls, Renderable):
             raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")
         kwargs: dict[str, Any] = {}
         kwargs |= self.__resolve_injects(registerable_config.injects, scope)
         kwargs["config"] = registerable_config
         kwargs["factory"] = self
+        kwargs["app_config"] = self._app_config
         return cls(**kwargs)
 
-    def __resolve_injects(self, injects: dict[str, Any], scope: PipeContext) -> dict[str, Registerable]:
+    def __resolve_injects(self, injects: dict[str, Any], scope: PipeContext) -> dict[str, Renderable]:
         out: dict[str, Any] = {}
         for param, ref in injects.items():
             out[param] = self.__resolve_by_id(ref, scope)

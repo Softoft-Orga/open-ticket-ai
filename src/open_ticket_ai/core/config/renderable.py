@@ -4,7 +4,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class Registerable:
+class Renderable:
     def __init__(self, params: BaseModel, *args: Any, **kwargs: Any) -> None:
         pass
 

@@ -3,17 +3,25 @@ from typing import Any
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 
 
-class JinjaExpressionPipeConfig(BaseModel):
+class JinjaExpressionParams(BaseModel):
     expression: Any
 
 
-class JinjaExpressionPipe(Pipe):
-    def __init__(self, pipe_params: dict[str, Any], *args, **kwargs) -> None:
-        super().__init__(pipe_params)
-        self.expression = JinjaExpressionPipeConfig.model_validate(pipe_params).expression
+class JinjaExpressionPipeResultData(BaseModel):
+    value: Any
 
-    async def _process(self) -> PipeResult:
-        return PipeResult(success=True, failed=False, data={"value": self.expression})
+
+class JinjaExpressionPipeConfig(PipeConfig[JinjaExpressionParams]):
+    pass
+
+
+class JinjaExpressionPipe(Pipe[JinjaExpressionParams]):
+    def __init__(self, pipe_config: JinjaExpressionPipeConfig, *args, **kwargs) -> None:
+        super().__init__(pipe_config)
+        self.expression = pipe_config.params.expression
+
+    async def _process(self) -> PipeResult[JinjaExpressionPipeResultData]:
+        return PipeResult[JinjaExpressionPipeResultData](success=True, failed=False, data=JinjaExpressionPipeResultData(value=self.expression))

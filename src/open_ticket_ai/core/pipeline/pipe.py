@@ -6,12 +6,12 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from ..config.renderable import Registerable
+from ..config.renderable import Renderable
 from .pipe_config import PipeConfig, PipeResult
 from .pipe_context import PipeContext
 
 
-class Pipe[ParamsT](Registerable, ABC):
+class Pipe[ParamsT](Renderable, ABC):
     def __init__(self, pipe_params: PipeConfig[ParamsT], *args: Any, **kwargs: Any) -> None:
         super().__init__(pipe_params.params, *args, **kwargs)
         self.pipe_config = pipe_params

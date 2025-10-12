@@ -2,7 +2,7 @@ import warnings
 
 import pytest
 
-from open_ticket_ai.core.config.registerable_factory import render_base_model
+from open_ticket_ai.core.config.renderable_factory import render_base_model
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.jinja_renderer import JinjaRenderer

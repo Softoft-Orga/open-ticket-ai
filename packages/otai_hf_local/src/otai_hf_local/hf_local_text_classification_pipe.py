@@ -2,8 +2,10 @@ import logging
 from functools import cache
 from typing import Any
 
+from pydantic import BaseModel
+
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult, RenderedPipeConfig
+from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -11,20 +13,29 @@ from transformers import (
 )
 
 
-class HFLocalTextClassificationPipeConfig(RenderedPipeConfig):
+class HFLocalTextClassificationParams(BaseModel):
     model: str
     token: str | None = None
     prompt: str
 
 
-class HFLocalTextClassificationPipe(Pipe):
+class HFLocalTextClassificationPipeResultData(BaseModel):
+    label: str
+    confidence: float
+
+
+class HFLocalTextClassificationPipeConfig(PipeConfig[HFLocalTextClassificationParams]):
+    pass
+
+
+class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
     _pipeline: Any
 
-    def __init__(self, pipe_params: HFLocalTextClassificationPipeConfig, *args: Any, **kwargs: Any) -> None:
-        super().__init__(pipe_params)
-        self.model = pipe_params.model
-        self.token = pipe_params.token
-        self.prompt = pipe_params.prompt
+    def __init__(self, pipe_config: HFLocalTextClassificationPipeConfig, *args: Any, **kwargs: Any) -> None:
+        super().__init__(pipe_config)
+        self.model = pipe_config.params.model
+        self.token = pipe_config.params.token
+        self.prompt = pipe_config.params.prompt
         self.logger = logging.getLogger(self.__class__.__name__)
         self._pipeline = None
 
@@ -35,7 +46,7 @@ class HFLocalTextClassificationPipe(Pipe):
         model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 
-    async def _process(self) -> PipeResult:
+    async def _process(self) -> PipeResult[HFLocalTextClassificationPipeResultData]:
         self.logger.info(f"Running {self.__class__.__name__}")
         if self._pipeline is None:
             self._pipeline = self._load_pipeline(self.model, self.token)
@@ -48,4 +59,4 @@ class HFLocalTextClassificationPipe(Pipe):
 
         self.logger.info(f"Prediction: label {label} with score {score}")
 
-        return PipeResult(success=True, failed=False, data={"label": label, "confidence": score})
+        return PipeResult[HFLocalTextClassificationPipeResultData](success=True, failed=False, data=HFLocalTextClassificationPipeResultData(label=label, confidence=score))

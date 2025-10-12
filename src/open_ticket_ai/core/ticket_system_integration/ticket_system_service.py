@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from ..config.renderable import Registerable
+from ..config.renderable import Renderable
 from .unified_models import (
     TicketSearchCriteria,
     UnifiedNote,
@@ -8,7 +8,7 @@ from .unified_models import (
 )
 
 
-class TicketSystemService(Registerable, ABC):
+class TicketSystemService(Renderable, ABC):
     @abstractmethod
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         pass

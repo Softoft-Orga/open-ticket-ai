@@ -8,24 +8,32 @@ from open_ticket_ai.core.ticket_system_integration.ticket_system_service import 
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 
 
-class AddNotePipeConfig(PipeConfig):
+class AddNoteParams(BaseModel):
     ticket_id: str | int
     note: UnifiedNote
 
 
-class AddNotePipe(Pipe):
-    def __init__(
-        self, ticket_system: TicketSystemService, pipe_params: AddNotePipeConfig, *args: Any, **kwargs: Any
-    ) -> None:
-        super().__init__(pipe_params)
-        self.ticket_system = ticket_system
-        self.pipe_config = pipe_params
+class AddNotePipeResultData(BaseModel):
+    note_added: bool
 
-    async def _process(self) -> PipeResult:
+
+class AddNotePipeConfig(PipeConfig[AddNoteParams]):
+    pass
+
+
+class AddNotePipe(Pipe[AddNoteParams]):
+    def __init__(
+        self, ticket_system: TicketSystemService, pipe_config: AddNotePipeConfig, *args: Any, **kwargs: Any
+    ) -> None:
+        super().__init__(pipe_config)
+        self.ticket_system = ticket_system
+        self.pipe_config = pipe_config
+
+    async def _process(self) -> PipeResult[AddNotePipeResultData]:
         try:
-            success = await self.ticket_system.add_note(self.pipe_config.ticket_id, self.pipe_config.note)
+            success = await self.ticket_system.add_note(self.pipe_config.params.ticket_id, self.pipe_config.params.note)
             if not success:
-                return PipeResult(success=False, failed=True, message="Failed to add note to ticket", data=BaseModel())
-            return PipeResult(success=True, failed=False, data=BaseModel())
+                return PipeResult[AddNotePipeResultData](success=False, failed=True, message="Failed to add note to ticket", data=AddNotePipeResultData(note_added=False))
+            return PipeResult[AddNotePipeResultData](success=True, failed=False, data=AddNotePipeResultData(note_added=True))
         except Exception as e:
-            return PipeResult(success=False, failed=True, message=str(e), data=BaseModel())
+            return PipeResult[AddNotePipeResultData](success=False, failed=True, message=str(e), data=AddNotePipeResultData(note_added=False))

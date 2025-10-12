@@ -2,25 +2,27 @@ from __future__ import annotations
 
 import logging
 
-from open_ticket_ai.core.config.registerable_factory import RegisterableFactory
-from open_ticket_ai.core.pipeline.orchestrator_config import RunnerDefinition
+from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.orchestration.orchestrator_config import RunnerDefinition
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 
-class ScheduledPipeRunner:
-    def __init__(self, definition: RunnerDefinition, pipe_factory: RegisterableFactory) -> None:
+class PipeRunner:
+    def __init__(self, definition: RunnerDefinition, pipe_factory: RenderableFactory) -> None:
         self.definition = definition
         self.pipe_factory = pipe_factory
         self._logger = logging.getLogger(f"{self.__class__.__name__}.{definition.pipe_id}")
+
+    async def on_trigger_fired(self) -> None:
+        await self.execute()
 
     async def execute(self) -> None:
         self._logger.info("Executing pipe '%s'", self.definition.pipe_id)
         try:
             pipe = self.pipe_factory.create_pipe(
-                parent_config=None,
-                pipe_config_raw=self.definition.pipe,
-                scope=PipeContext(params=self.definition.pipe.model_dump()),
+                pipe_config_raw=self.definition.run,
+                scope=PipeContext(params=self.definition.run.model_dump()),
             )
             if pipe is None:
                 self._logger.error("Failed to create pipe '%s'", self.definition.pipe_id)

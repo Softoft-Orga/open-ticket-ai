@@ -1,6 +1,6 @@
-ttriimport warnings
+import warnings
 
-bute should be a Generic bound to BaseModel with the new from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
+from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 
 
 def test_pipe_config_params_field_exists() -> None:
