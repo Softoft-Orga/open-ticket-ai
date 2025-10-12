@@ -195,6 +195,8 @@ Configuration for a pipeline or pipe.
 
 **Example:**
 
+<div v-pre>
+
 ```yaml
 # Simple pipe
 - id: fetch_tickets
@@ -220,6 +222,8 @@ Configuration for a pipeline or pipe.
       use: "my_plugin.Pipe2"
       depends_on: step1
 ```
+
+</div>
 
 ### RenderableConfig
 
@@ -416,6 +420,8 @@ retry:
 
 Use environment variables in configuration with the `${VAR_NAME}` syntax:
 
+<div v-pre>
+
 ```yaml
 # Required variable (fails if not set)
 api_token: "${OTOBO_API_TOKEN}"
@@ -427,6 +433,8 @@ base_url: "${OTOBO_BASE_URL:-https://default.example.com}"
 note: "User: ${USER}, Time: {{ now() }}"
 ```
 
+</div>
+
 **Syntax:**
 - `${VAR}` - Required variable (error if missing)
 - `${VAR:-default}` - Optional with default value
@@ -435,6 +443,8 @@ note: "User: ${USER}, Time: {{ now() }}"
 ## Template Expressions
 
 Use Jinja2 template expressions for dynamic values:
+
+<div v-pre>
 
 ```yaml
 # Access context values
@@ -447,10 +457,17 @@ if: "{{ context.pipes.classify.confidence > 0.8 }}"
 queue_id: "{{ context.pipes.fetch_tickets.results[0].queue_id }}"
 ```
 
+</div>
+
 **Common template functions:**
+
+<div v-pre>
+
 - `{{ now() }}` - Current timestamp
 - `{{ env.VAR_NAME }}` - Environment variable access
 - `{{ context.pipes.pipe_id.result }}` - Access pipe outputs
+
+</div>
 
 ## YAML Anchors and Aliases
 
