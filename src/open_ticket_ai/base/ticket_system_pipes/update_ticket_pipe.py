@@ -35,7 +35,16 @@ class UpdateTicketPipe(Pipe[UpdateTicketParams]):
                 self.pipe_config.params.ticket_id, self.pipe_config.params.updated_ticket
             )
             if not success:
-                return PipeResult[UpdateTicketPipeResultData](success=False, failed=True, message="Failed to update ticket", data=UpdateTicketPipeResultData(ticket_updated=False))
-            return PipeResult[UpdateTicketPipeResultData](success=True, failed=False, data=UpdateTicketPipeResultData(ticket_updated=True))
+                return PipeResult[UpdateTicketPipeResultData](
+                    success=False,
+                    failed=True,
+                    message="Failed to update ticket",
+                    data=UpdateTicketPipeResultData(ticket_updated=False),
+                )
+            return PipeResult[UpdateTicketPipeResultData](
+                success=True, failed=False, data=UpdateTicketPipeResultData(ticket_updated=True)
+            )
         except Exception as e:
-            return PipeResult[UpdateTicketPipeResultData](success=False, failed=True, message=str(e), data=UpdateTicketPipeResultData(ticket_updated=False))
+            return PipeResult[UpdateTicketPipeResultData](
+                success=False, failed=True, message=str(e), data=UpdateTicketPipeResultData(ticket_updated=False)
+            )

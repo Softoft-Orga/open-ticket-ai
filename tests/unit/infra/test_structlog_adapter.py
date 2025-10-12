@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import structlog
-
 from open_ticket_ai.infra.structlog_adapter import (
     StructlogLogger,
     StructlogLoggerFactory,

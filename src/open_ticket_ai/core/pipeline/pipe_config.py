@@ -44,6 +44,5 @@ class PipeResult[DataT: BaseModel](BaseModel):
     @classmethod
     def union(cls, results: Iterable[PipeResult[DataT]]) -> PipeResult[CompositePipeResultData]:
         if not results:
-            return PipeResult[CompositePipeResultData](success=True, failed=False,
-                                                       data=CompositePipeResultData())  # type: ignore
+            return PipeResult[CompositePipeResultData](success=True, failed=False, data=CompositePipeResultData())  # type: ignore
         return reduce(lambda a, b: a & b, results)

@@ -9,7 +9,6 @@ from injector import inject, singleton
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import (
     OrchestratorConfig,
-    RunnerDefinition,
     TriggerDefinition,
 )
 from open_ticket_ai.core.orchestration.scheduled_runner import PipeRunner
@@ -27,7 +26,6 @@ class Orchestrator:
         self._logger = logging.getLogger(self.__class__.__name__)
         self._trigger_registry: dict[str, Trigger] = {}
         self._runners: dict[str, PipeRunner] = {}
-
 
     def _instantiate_trigger(self, trigger_def: TriggerDefinition) -> Trigger:
         module_path, class_name = trigger_def.use.rsplit(":", 1)

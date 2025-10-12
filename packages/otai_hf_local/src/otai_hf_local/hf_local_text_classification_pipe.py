@@ -2,10 +2,9 @@ import logging
 from functools import cache
 from typing import Any
 
-from pydantic import BaseModel
-
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
+from pydantic import BaseModel
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -59,4 +58,6 @@ class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
 
         self.logger.info(f"Prediction: label {label} with score {score}")
 
-        return PipeResult[HFLocalTextClassificationPipeResultData](success=True, failed=False, data=HFLocalTextClassificationPipeResultData(label=label, confidence=score))
+        return PipeResult[HFLocalTextClassificationPipeResultData](
+            success=True, failed=False, data=HFLocalTextClassificationPipeResultData(label=label, confidence=score)
+        )

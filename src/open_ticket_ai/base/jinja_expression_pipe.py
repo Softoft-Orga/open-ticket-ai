@@ -24,4 +24,6 @@ class JinjaExpressionPipe(Pipe[JinjaExpressionParams]):
         self.expression = pipe_config.params.expression
 
     async def _process(self) -> PipeResult[JinjaExpressionPipeResultData]:
-        return PipeResult[JinjaExpressionPipeResultData](success=True, failed=False, data=JinjaExpressionPipeResultData(value=self.expression))
+        return PipeResult[JinjaExpressionPipeResultData](
+            success=True, failed=False, data=JinjaExpressionPipeResultData(value=self.expression)
+        )

@@ -5,9 +5,9 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
 from open_ticket_ai.core.pipeline.orchestrator import Orchestrator
 from open_ticket_ai.core.pipeline.orchestrator_config import OrchestratorConfig
+
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 

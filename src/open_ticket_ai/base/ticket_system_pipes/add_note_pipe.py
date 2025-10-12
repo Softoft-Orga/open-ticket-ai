@@ -33,7 +33,16 @@ class AddNotePipe(Pipe[AddNoteParams]):
         try:
             success = await self.ticket_system.add_note(self.pipe_config.params.ticket_id, self.pipe_config.params.note)
             if not success:
-                return PipeResult[AddNotePipeResultData](success=False, failed=True, message="Failed to add note to ticket", data=AddNotePipeResultData(note_added=False))
-            return PipeResult[AddNotePipeResultData](success=True, failed=False, data=AddNotePipeResultData(note_added=True))
+                return PipeResult[AddNotePipeResultData](
+                    success=False,
+                    failed=True,
+                    message="Failed to add note to ticket",
+                    data=AddNotePipeResultData(note_added=False),
+                )
+            return PipeResult[AddNotePipeResultData](
+                success=True, failed=False, data=AddNotePipeResultData(note_added=True)
+            )
         except Exception as e:
-            return PipeResult[AddNotePipeResultData](success=False, failed=True, message=str(e), data=AddNotePipeResultData(note_added=False))
+            return PipeResult[AddNotePipeResultData](
+                success=False, failed=True, message=str(e), data=AddNotePipeResultData(note_added=False)
+            )

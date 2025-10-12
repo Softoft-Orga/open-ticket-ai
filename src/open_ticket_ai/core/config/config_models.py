@@ -68,7 +68,7 @@ class InfrastructureConfig(BaseModel):
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
     template_renderer_config: TemplateRendererConfig = Field(
         default_factory=TemplateRendererConfig,
-        description="(Deprecated) in future versions will be set through the services section"
+        description="(Deprecated) in future versions will be set through the services section",
     )
 
 
