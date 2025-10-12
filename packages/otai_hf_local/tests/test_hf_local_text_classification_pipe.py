@@ -5,9 +5,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from otai_hf_local.hf_local_text_classification_pipe import (
-    HFLocalTextClassificationPipe,
-)
+from packages.otai_hf_local.src.otai_hf_local import HFLocalTextClassificationPipe
 
 
 @pytest.fixture(autouse=True)

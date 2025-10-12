@@ -5,11 +5,8 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 )
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 
-from otai_otobo_znuny.models import (
-    _to_unified_entity,
-    otobo_article_to_unified_note,
-    otobo_ticket_to_unified_ticket,
-)
+from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import _to_unified_entity, otobo_article_to_unified_note, \
+    otobo_ticket_to_unified_ticket
 
 
 class TestToUnifiedEntity:

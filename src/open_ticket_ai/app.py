@@ -6,7 +6,7 @@ import pyfiglet
 from injector import inject
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
-from open_ticket_ai.core.pipeline.orchestrator import Orchestrator
+from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 
 
 def get_project_info():

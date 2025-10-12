@@ -4,10 +4,9 @@ from unittest.mock import patch
 import pytest
 from typer.testing import CliRunner
 
-pytestmark = pytest.mark.skip(reason="CLI module import fails due to orchestrator import issue in app.py")
+from open_ticket_ai.core import AppConfig
+from open_ticket_ai.core.cli.main import CLI, app
 
-from open_ticket_ai.core.cli import CLI, app
-from open_ticket_ai.core.config.app_config import AppConfig
 
 
 @pytest.fixture
