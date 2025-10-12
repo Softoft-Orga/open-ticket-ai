@@ -68,9 +68,7 @@ class RegisterableFactory:
         self._template_renderer = template_renderer
         self._registerable_configs = registerable_configs
 
-    def create_pipe(
-        self, pipe_config_raw: PipeConfig, scope: PipeContext
-    ) -> Pipe:
+    def create_pipe(self, pipe_config_raw: PipeConfig, scope: PipeContext) -> Pipe:
         self._logger.debug("Creating pipe with config: %s", pipe_config_raw)
         self._logger.info("Creating pipe '%s' with config %s", pipe_config_raw.id, pipe_config_raw)
         rendered_params = render_base_model(pipe_config_raw.params, scope, self._template_renderer)
@@ -80,15 +78,11 @@ class RegisterableFactory:
             raise TypeError(f"Registerable with id '{pipe_config_raw.id}' is not a Pipe")
         return registerable
 
-    def __create_service_instance(
-        self, registerable_config_raw: RenderableConfig, scope: PipeContext
-    ) -> Registerable:
+    def __create_service_instance(self, registerable_config_raw: RenderableConfig, scope: PipeContext) -> Registerable:
         rendered_config = render_base_model(registerable_config_raw, scope, self._template_renderer)
         return self.__create_registerable_instance(rendered_config, scope)
 
-    def __create_registerable_instance(
-        self, registerable_config: RenderableConfig, scope: PipeContext
-    ) -> Registerable:
+    def __create_registerable_instance(self, registerable_config: RenderableConfig, scope: PipeContext) -> Registerable:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Registerable):
             raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")

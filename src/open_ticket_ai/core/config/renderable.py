@@ -8,6 +8,7 @@ class Registerable:
     def __init__(self, params: BaseModel, *args: Any, **kwargs: Any) -> None:
         pass
 
+
 class RenderableConfig[ParamsT: BaseModel](BaseModel):
     model_config = ConfigDict(extra="allow")
     uid: str = Field(default_factory=lambda: uuid.uuid4().hex)
