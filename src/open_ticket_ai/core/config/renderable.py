@@ -40,7 +40,7 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
             return data
 
         control_fields = {"uid", "id", "use", "injects", "params", "if", "if_", "depends_on", "steps"}
-        
+
         params_dict = data.get("params", {})
         if not isinstance(params_dict, dict):
             return data
