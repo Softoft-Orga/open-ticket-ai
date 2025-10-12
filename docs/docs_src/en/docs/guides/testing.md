@@ -987,6 +987,6 @@ Tests run automatically on push/PR via GitHub Actions. Check `.github/workflows/
 ## Related Documentation
 
 - [Configuration Examples](../details/configuration/examples.md)
-- [Plugin Development](../plugins/plugin_development.md)
+- [Plugin Development](../developers/plugin_development.md)
 - [Custom Adapters](../integration/custom_adapters.md)
 - [AGENTS.md](../../../../AGENTS.md) - Authoritative test structure rules

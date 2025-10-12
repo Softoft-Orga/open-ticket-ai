@@ -120,5 +120,5 @@ plugins:
 ## Related Documentation
 
 - [Plugin System](plugin_system.md)
-- [Plugin Development](plugin_development.md)
+- [Plugin Development](../developers/plugin_development.md)
 - [Configuration Examples](../details/configuration/examples.md)

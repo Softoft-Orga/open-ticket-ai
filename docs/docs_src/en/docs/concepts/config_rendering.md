@@ -17,228 +17,147 @@ This process enables dynamic, context-aware pipelines that adapt to runtime cond
 
 The following diagram illustrates the complete lifecycle of configuration from YAML to runtime objects:
 
-```plantuml
-@startuml Configuration Lifecycle
+```mermaid
+flowchart TD
+    subgraph "Configuration Loading"
+        YAML["config.yml"]
+        Loader["ConfigLoader"]
+        RawConfig["RawOpenTicketAIConfig"]
+    end
 
-skinparam componentStyle rectangle
-skinparam defaultFontSize 11
+    subgraph "Bootstrap Phase"
+        InfraConfig["InfrastructureConfig"]
+        RendererConfig["TemplateRendererConfig"]
+        BootstrapRenderer["JinjaRenderer"]
+    end
 
-package "Configuration Loading" {
-    [config.yml] as YAML
-    [ConfigLoader] as Loader
-    [RawOpenTicketAIConfig] as RawConfig
-}
+    subgraph "Service Rendering Phase"
+        Renderer["TemplateRenderer"]
+        Factory["RenderableFactory"]
+        ServiceConfigs["RenderableConfig List"]
+    end
 
-package "Bootstrap Phase" {
-    [InfrastructureConfig] as InfraConfig
-    [TemplateRendererConfig] as RendererConfig
-    [JinjaRenderer] as BootstrapRenderer
-}
+    subgraph "Runtime Objects"
+        Services["Service Instances"]
+        Orchestrator["Orchestrator"]
+        Runners["PipeRunner"]
+    end
 
-package "Service Rendering Phase" {
-    [TemplateRenderer] as Renderer
-    [RenderableFactory] as Factory
-    [RenderableConfig List] as ServiceConfigs
-}
-
-package "Runtime Objects" {
-    [Service Instances] as Services
-    [Orchestrator] as Orchestrator
-    [PipeRunner] as Runners
-}
-
-YAML --> Loader : Read & Parse
-Loader --> RawConfig : Validate with Pydantic
-note right of RawConfig
-    Validated structure:
-    - plugins
-    - infrastructure
-    - services
-    - orchestrator
-end note
-
-RawConfig --> InfraConfig : Extract infrastructure
-InfraConfig --> RendererConfig : Get template_renderer_config
-RendererConfig --> BootstrapRenderer : Instantiate (NO rendering)
-note right of BootstrapRenderer
-    ⚠️ CRITICAL: Template renderer
-    config is NEVER rendered.
-    It's used raw to bootstrap
-    the rendering system.
-end note
-
-BootstrapRenderer --> Renderer : Register as service
-RawConfig --> ServiceConfigs : Extract service definitions
-ServiceConfigs --> Factory : Pass renderable configs
-Renderer --> Factory : Inject template renderer
-
-Factory --> Services : Render & instantiate each service
-note right of Services
-    Template rendering happens here:
-    - Environment variables
-    - Context substitution
-    - Jinja2 evaluation
-end note
-
-Services --> Orchestrator : Register services
-RawConfig --> Orchestrator : Extract orchestrator config
-Orchestrator --> Runners : Create pipeline runners
-
-@enduml
+    YAML -->|Read & Parse| Loader
+    Loader -->|Validate with Pydantic| RawConfig
+    RawConfig -->|Extract infrastructure| InfraConfig
+    InfraConfig -->|Get template_renderer_config| RendererConfig
+    RendererConfig -->|Instantiate NO rendering| BootstrapRenderer
+    BootstrapRenderer -->|Register as service| Renderer
+    RawConfig -->|Extract service definitions| ServiceConfigs
+    ServiceConfigs -->|Pass renderable configs| Factory
+    Renderer -->|Inject template renderer| Factory
+    Factory -->|Render & instantiate each service| Services
+    Services -->|Register services| Orchestrator
+    RawConfig -->|Extract orchestrator config| Orchestrator
+    Orchestrator -->|Create pipeline runners| Runners
 ```
 
 ## Template Rendering Architecture
 
 Template rendering operates at multiple scopes, each with different available variables and context:
 
-```plantuml
-@startuml Template Rendering Architecture
+```mermaid
+flowchart TD
+    subgraph "Rendering Scopes"
+        subgraph "Global Scope"
+            Global1["Environment Variables"]
+            Global2["Infrastructure Config"]
+        end
+        
+        subgraph "Pipeline Scope"
+            Pipeline1["Pipeline Parameters"]
+            Pipeline2["Previous Pipeline Results"]
+            Pipeline3["Global Scope Variables"]
+        end
+        
+        subgraph "Pipe Scope"
+            Pipe1["Pipe Parameters"]
+            Pipe2["Previous Pipe Results"]
+            Pipe3["Pipeline Context"]
+        end
+    end
 
-skinparam componentStyle rectangle
+    subgraph "Template Renderer"
+        Jinja["JinjaRenderer"]
+        Sandbox["SandboxedEnvironment"]
+    end
 
-package "Rendering Scopes" {
-    rectangle "Global Scope" as Global {
-        [Environment Variables]
-        [Infrastructure Config]
-    }
-    
-    rectangle "Pipeline Scope" as Pipeline {
-        [Pipeline Parameters]
-        [Previous Pipeline Results]
-        [Global Scope Variables]
-    }
-    
-    rectangle "Pipe Scope" as Pipe {
-        [Pipe Parameters]
-        [Previous Pipe Results]
-        [Pipeline Context]
-    }
-}
+    subgraph "Template Functions"
+        EnvFunc["env()"]
+        PipeFunc["pipe_result()"]
+        FailFunc["has_failed()"]
+        PathFunc["at_path()"]
+    end
 
-package "Template Renderer" {
-    [JinjaRenderer] as Jinja
-    [SandboxedEnvironment] as Sandbox
-}
+    Global1 --> Pipeline1
+    Global2 --> Pipeline1
+    Pipeline1 --> Pipe1
+    Pipeline2 --> Pipe1
+    Pipeline3 --> Pipe1
 
-package "Template Functions" {
-    [env()] as EnvFunc
-    [pipe_result()] as PipeFunc
-    [has_failed()] as FailFunc
-    [at_path()] as PathFunc
-}
-
-Global --> Pipeline : Inherited
-Pipeline --> Pipe : Inherited
-
-Pipe --> Jinja : Render with scope
-Jinja --> Sandbox : Execute in sandboxed env
-Sandbox --> EnvFunc : Access env vars
-Sandbox --> PipeFunc : Access pipe results
-Sandbox --> FailFunc : Check failure status
-Sandbox --> PathFunc : Navigate data paths
-
-note right of Sandbox
-    Security:
-    - Sandboxed execution
-    - No dangerous operations
-    - Auto-escaping optional
-end note
-
-@enduml
+    Pipe1 -->|Render with scope| Jinja
+    Jinja -->|Execute in sandboxed env| Sandbox
+    Sandbox -->|Access env vars| EnvFunc
+    Sandbox -->|Access pipe results| PipeFunc
+    Sandbox -->|Check failure status| FailFunc
+    Sandbox -->|Navigate data paths| PathFunc
 ```
 
 ## Rendering Process Flow
 
 When a pipeline is triggered, configuration rendering follows this sequence:
 
-```plantuml
-@startuml Configuration Rendering Flow
+```mermaid
+sequenceDiagram
+    actor Orchestrator
+    participant Runner as PipeRunner
+    participant Factory as RenderableFactory
+    participant Renderer as TemplateRenderer
+    participant Model as "Pydantic Model"
 
-actor Orchestrator
-participant "PipeRunner" as Runner
-participant "RenderableFactory" as Factory
-participant "TemplateRenderer" as Renderer
-participant "Pydantic Model" as Model
+    Orchestrator ->> Runner: trigger()
+    activate Runner
 
-Orchestrator -> Runner: trigger()
-activate Runner
+    Runner ->> Factory: create_pipe(pipe_config_raw, scope)
+    activate Factory
 
-Runner -> Factory: create_pipe(pipe_config_raw, scope)
-activate Factory
+    Factory ->> Factory: Build PipeContext scope
 
-Factory -> Factory: Build PipeContext scope
-note right
-    Scope includes:
-    - Previous pipe results
-    - Pipeline parameters
-    - Parent context
-end note
+    Factory ->> Renderer: render_base_model(pipe_config, scope)
+    activate Renderer
 
-Factory -> Renderer: render_base_model(pipe_config, scope)
-activate Renderer
+    Renderer ->> Renderer: config.model_dump()
 
-Renderer -> Renderer: config.model_dump()
-note right
-    Convert Pydantic model to dict
-end note
+    Renderer ->> Renderer: render_recursive(config_dict, scope)
 
-Renderer -> Renderer: render_recursive(config_dict, scope)
-note right
-    Recursively render all strings:
-    - Process Jinja2 templates
-    - Substitute variables
-    - Evaluate expressions
-end note
+    loop For each string in config
+        Renderer ->> Renderer: render(template_str, scope)
+    end
 
-loop For each string in config
-    Renderer -> Renderer: render(template_str, scope)
-    note right
-        Template evaluation:
-        {{ env('OTAI_VAR') }}
-        {{ pipe_result('fetch_tickets').data }}
-        {{ context.params.threshold }}
-    end note
-end
+    Renderer -->> Factory: rendered_dict
+    deactivate Renderer
 
-Renderer --> Factory: rendered_dict
-deactivate Renderer
+    Factory ->> Model: PipeConfig(**rendered_dict)
+    activate Model
+    Model ->> Model: Validate rendered values
+    Model -->> Factory: validated_config
+    deactivate Model
 
-Factory -> Model: PipeConfig(**rendered_dict)
-activate Model
-Model -> Model: Validate rendered values
-note right
-    Pydantic validation ensures:
-    - Type correctness
-    - Required fields present
-    - Value constraints met
-end note
+    Factory ->> Factory: __resolve_injects(injects, scope)
 
-Model --> Factory: validated_config
-deactivate Model
+    Factory ->> Factory: __create_renderable_instance(config, scope)
 
-Factory -> Factory: __resolve_injects(injects, scope)
-note right
-    Resolve service dependencies:
-    - Lookup by service ID
-    - Retrieve from registry
-    - Inject into constructor
-end note
+    Factory -->> Runner: Pipe instance (ready to execute)
+    deactivate Factory
 
-Factory -> Factory: __create_renderable_instance(config, scope)
-note right
-    Instantiate the actual Pipe:
-    - Locate class by 'use' field
-    - Pass resolved dependencies
-    - Pass factory reference
-end note
-
-Factory --> Runner: Pipe instance (ready to execute)
-deactivate Factory
-
-Runner --> Orchestrator: Pipe ready
-deactivate Runner
-
-@enduml
+    Runner -->> Orchestrator: Pipe ready
+    deactivate Runner
 ```
 
 ## Key Concepts

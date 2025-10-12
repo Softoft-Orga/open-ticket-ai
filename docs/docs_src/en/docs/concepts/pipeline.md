@@ -24,16 +24,15 @@ A **pipeline** in Open Ticket AI is a configured sequence of pipes that execute 
 classDiagram
 direction TD
 
-namespace Core {
   class Pipe {
     <<abstract>>
-    +pipe_config: PipeConfig
-    +process(ctx: PipeContext): PipeContext
-    #_process(): PipeResult
+    +config: PipeConfig
+    +process(ctx: PipeContext) PipeContext
+    #process(): PipeResult
   }
   class CompositePipe {
     +steps: list[PipeConfig]
-    +process(ctx: PipeContext): PipeContext
+    +process(ctx: ctx) PipeContext
   }
   class PipeConfig {
     +id: str
@@ -46,7 +45,7 @@ namespace Core {
   class PipeContext {
     +pipes: dict[str, PipeResult]
     +params: dict
-    +has_succeeded(id: str): bool
+    +has_succeeded(id: str) bool
   }
   class PipeResult {
     +success: bool
@@ -54,22 +53,16 @@ namespace Core {
     +message: str
     +data: BaseModel
   }
-}
-
-namespace Rendering {
   class RenderableFactory {
-    +create_pipe(cfg: PipeConfig, scope: PipeContext): Pipe
+    +create(cfg: PipeConfig, ctx: PipeContext) Pipe
   }
   class TemplateRenderer {
-    +render(template: str, context: dict): Any
-    +render_recursive(obj: Any, scope: dict): Any
+    +render(templ: str, ctx: dict) Any
+    +render(obj: Any, scope: dict) Any
   }
-}
-
-namespace Orchestration {
   class PipeRunner {
     +definition: RunnerDefinition
-    +execute(): void
+    +execute() void
   }
   class RunnerDefinition {
     +id: str
@@ -80,7 +73,6 @@ namespace Orchestration {
     +attach(observer: PipeRunner): void
     +notify(): void
   }
-}
 
 CompositePipe --|> Pipe
 Pipe --> PipeConfig : configured by
@@ -88,7 +80,6 @@ Pipe --> PipeContext : receives & updates
 Pipe --> PipeResult : produces
 PipeContext --> PipeResult : stores by pipe_id
 CompositePipe --> RenderableFactory : builds child pipes
-PipeConfig *-- PipeConfig : contains steps
 RenderableFactory --> Pipe : instantiates
 RenderableFactory --> TemplateRenderer : renders params
 PipeRunner --> RunnerDefinition : configured by
@@ -110,7 +101,6 @@ When Open Ticket AI starts:
 %%{init:{
   "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
   "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","lineColor":"#718096"},
-  "elk":{"spacing":{"nodeNode":20,"nodeNodeBetweenLayers":18}}
 }}%%
 
 flowchart TB
@@ -119,7 +109,6 @@ flowchart TB
 subgraph BOOT["🚀 Application Bootstrap"]
   direction TB
   Start([Start App]):::start
-  LoadEnv["Load .env"]:::cfg
   CreateDI["Create DI Container<br/>(AppModule)"]:::di
   LoadConfig["ConfigLoader.load_config()"]:::cfg
   SetupLog["Configure Logging"]:::cfg
@@ -206,7 +195,6 @@ When a trigger fires or one-time task runs:
 %%{init:{
   "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
   "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","lineColor":"#718096"},
-  "elk":{"spacing":{"nodeNode":18}}
 }}%%
 
 flowchart TB
@@ -268,7 +256,6 @@ How individual pipes execute:
 %%{init:{
   "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
   "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","lineColor":"#718096"},
-  "elk":{"spacing":{"nodeNode":18}}
 }}%%
 
 flowchart TB
@@ -634,10 +621,10 @@ The pipeline system provides:
 
 - **[Pipeline Architecture](./pipeline-architecture.md)** - System architecture diagrams
 - **[First Pipeline Tutorial](../guides/first_pipeline.md)** - Step-by-step guide
-- **[Dependency Injection](../developers/code/dependency_injection.md)** - Service management
-- **[Template Rendering](../developers/code/template_rendering.md)** - Jinja2 system
+- **[Dependency Injection](../developers/dependency_injection.md)** - Service management
+- **[Template Rendering](../developers/template_rendering.md)** - Jinja2 system
 - **[Configuration Reference](../details/configuration/config_structure.md)** - YAML structure
-- **[Plugin Development](../plugins/plugin_development.md)** - Creating custom pipes
+- **[Plugin Development](../developers/plugin_development.md)** - Creating custom pipes
 
 ## Summary
 

@@ -13,16 +13,8 @@ The concepts documentation focuses on **what** the system is and **why** it's de
   - Pipeline orchestration lifecycle (rendering and execution)
   - When and how pipelines are triggered and executed
   - Relationship between pipes, composite pipes, and steps
-  - PlantUML architecture and sequence diagrams
+  - Mermaid architecture and sequence diagrams
   - Implementation references and best practices
-
-- **[Pipeline Architecture](pipeline-architecture.md)** - Complete overview of the pipeline system including:
-  - Pipeline execution model and lifecycle
-  - Pipe system and interface
-  - Orchestrator scheduling and supervision
-  - Execution context and data sharing
-  - Pipe factory pattern and registration
-  - Best practices for pipeline design
 
 - **[Configuration and Template Rendering](config_rendering.md)** - Visual guide to configuration loading and rendering:
   - Configuration lifecycle from YAML to runtime objects
@@ -41,6 +33,20 @@ The concepts documentation focuses on **what** the system is and **why** it's de
   - Service and pipe registration
   - Plugin lifecycle management
   - Design principles and benefits
+
+- **[Application Flow](app_flow.md)** - Diagram illustrating the application startup and orchestration process:
+  - Application bootstrap sequence
+  - Dependency injection container setup
+  - Orchestrator initialization and runner creation
+  - Trigger setup and execution strategy
+  - Visual flowchart of the complete app lifecycle
+
+- **[Versioning Policy](versioning.md)** - Guidelines for product and documentation versioning:
+  - Semantic versioning principles
+  - Branching and release channel strategy
+  - Documentation versioning with VitePress and Netlify
+  - Version switcher UX and SEO considerations
+  - Communication of changes and feature availability
 
 ## When to Read This
 

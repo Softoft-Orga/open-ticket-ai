@@ -1,6 +1,7 @@
 import {defineConfig} from "vitepress";
 import {NavGenerator, NavGeneratorOptions} from "./util/navgen.ts";
 import viteCompression from 'vite-plugin-compression'
+import { withMermaid } from "vitepress-plugin-mermaid";
 
 const __VUE_PROD_DEVTOOLS__ = false;
 console.log(__VUE_PROD_DEVTOOLS__)
@@ -18,7 +19,7 @@ const navGeneratorOptions: NavGeneratorOptions = {
 }
 const navGenerator = new NavGenerator(navGeneratorOptions);
 const gaId = 'G-FBWC3JDZJ4'
-export default defineConfig({
+export default withMermaid({
 
     title: 'Open Ticket AI',
     srcDir: './docs_src',

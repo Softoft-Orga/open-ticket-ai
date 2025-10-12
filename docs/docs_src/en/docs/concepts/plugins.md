@@ -167,8 +167,8 @@ The plugin architecture provides several organizational and technical benefits:
 
 ## Related Documentation
 
-- [Plugin Development](../plugins/plugin_development.md) - How to create plugins
+- [Plugin Development](../developers/plugin_development.md) - How to create plugins
 - [Plugin System Reference](../plugins/plugin_system.md) - Technical details and available plugins
-- [Dependency Injection](../developers/code/dependency_injection.md) - Understanding the DI container
+- [Dependency Injection](../developers/dependency_injection.md) - Understanding the DI container
 - [Pipeline Architecture](pipeline.md) - How pipes work in pipelines
 - [Configuration Structure](../details/configuration/config_structure.md) - Configuring plugins

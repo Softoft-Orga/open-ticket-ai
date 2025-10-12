@@ -527,7 +527,7 @@ Validation errors will include:
 - [Configuration Structure](configuration/config_structure.md) - File organization and best practices
 - [YAML Definitions and Anchors](configuration/defs_and_anchors.md) - Advanced YAML techniques
 - [Environment Variables](configuration/environment_variables.md) - Environment variable reference
-- [Template Rendering](../developers/code/template_rendering.md) - Template syntax and functions
+- [Template Rendering](../developers/template_rendering.md) - Template syntax and functions
 
 ---
 

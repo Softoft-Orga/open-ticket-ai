@@ -46,4 +46,4 @@ DI makes testing easier by allowing you to inject mock services into pipes durin
 
 - [Services](services.md)
 - [Pipeline Architecture](../../concepts/pipeline-architecture.md)
-- [Plugin System](../../plugins/plugin_system.md)
+- [Plugin System](../plugins/plugin_system.md)

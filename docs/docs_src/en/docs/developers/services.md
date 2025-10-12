@@ -56,4 +56,4 @@ Services should be unit tested independently from the pipes that use them. Creat
 
 - [Dependency Injection](dependency_injection.md)
 - [Pipeline Architecture](../../concepts/pipeline-architecture.md)
-- [Plugin Development](../../plugins/plugin_development.md)
+- [Plugin Development](plugin_development.md)

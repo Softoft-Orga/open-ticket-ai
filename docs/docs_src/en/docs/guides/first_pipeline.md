@@ -401,5 +401,5 @@ Now that you have a working pipeline:
 - [Configuration Reference](../details/config_reference.md)
 - [Configuration Examples](../details/configuration/examples.md)
 - [Pipeline Architecture](../concepts/pipeline-architecture.md)
-- [Template Rendering](../developers/code/template_rendering.md)
+- [Template Rendering](../developers/template_rendering.md)
 - [Troubleshooting](troubleshooting.md)

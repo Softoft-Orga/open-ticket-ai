@@ -165,11 +165,11 @@ def test_pipeline_with_plugin():
 
 ## Example Plugin
 
-See the [HuggingFace Local plugin](hf_local.md) for a complete example.
+See the [HuggingFace Local plugin](../plugins/hf_local.md) for a complete example.
 
 ## Related Documentation
 
-- [Plugin System](plugin_system.md)
-- [Dependency Injection](../developers/code/dependency_injection.md)
-- [Services](../developers/code/services.md)
+- [Plugin System](../plugins/plugin_system.md)
+- [Dependency Injection](dependency_injection.md)
+- [Services](services.md)
 - [Pipeline Architecture](../concepts/pipeline-architecture.md)
