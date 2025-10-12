@@ -22,6 +22,9 @@ class UpdateTicketPipeConfig(PipeConfig[UpdateTicketParams]):
     pass
 
 
+UpdateTicketPipeConfig.model_rebuild()
+
+
 class UpdateTicketPipe(Pipe[UpdateTicketParams]):
     def __init__(
         self,

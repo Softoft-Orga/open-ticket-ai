@@ -1,21 +1,31 @@
+from __future__ import annotations
+
 import pytest
 
-from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import UpdateTicketPipe
+from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
+    UpdateTicketPipe,
+    UpdateTicketPipeConfig,
+    UpdateTicketParams,
+)
+from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
+from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 
 @pytest.mark.asyncio
 async def test_update_ticket_updates_subject(
-    empty_pipeline_context,
-    mocked_ticket_system,
-):
+    empty_pipeline_context: PipeContext,
+    mocked_ticket_system: MockedTicketSystem,
+) -> None:
     """Test that UpdateTicketPipe successfully updates ticket subject."""
-    config = {
-        "id": "test_update",
-        "use": "UpdateTicketPipe",
-        "_if": True,
-        "ticket_id": "TICKET-1",
-        "updated_ticket": {"subject": "Updated Subject"},
-    }
+    config = UpdateTicketPipeConfig(
+        id="test_update",
+        use="UpdateTicketPipe",
+        params=UpdateTicketParams(
+            ticket_id="TICKET-1",
+            updated_ticket=UnifiedTicket(subject="Updated Subject"),
+        ),
+    )
 
     pipe = UpdateTicketPipe(mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)
@@ -33,20 +43,21 @@ async def test_update_ticket_updates_subject(
 
 @pytest.mark.asyncio
 async def test_update_ticket_updates_multiple_fields(
-    empty_pipeline_context,
-    mocked_ticket_system,
-):
+    empty_pipeline_context: PipeContext,
+    mocked_ticket_system: MockedTicketSystem,
+) -> None:
     """Test that UpdateTicketPipe can update multiple fields."""
-    config = {
-        "id": "test_update",
-        "use": "UpdateTicketPipe",
-        "_if": True,
-        "ticket_id": "TICKET-2",
-        "updated_ticket": {
-            "subject": "New Subject",
-            "body": "New body text",
-        },
-    }
+    config = UpdateTicketPipeConfig(
+        id="test_update",
+        use="UpdateTicketPipe",
+        params=UpdateTicketParams(
+            ticket_id="TICKET-2",
+            updated_ticket=UnifiedTicket(
+                subject="New Subject",
+                body="New body text",
+            ),
+        ),
+    )
 
     pipe = UpdateTicketPipe(mocked_ticket_system, config)
     await pipe.process(empty_pipeline_context)
@@ -60,17 +71,18 @@ async def test_update_ticket_updates_multiple_fields(
 
 @pytest.mark.asyncio
 async def test_update_ticket_handles_nonexistent_ticket(
-    empty_pipeline_context,
-    empty_mocked_ticket_system,
-):
+    empty_pipeline_context: PipeContext,
+    empty_mocked_ticket_system: MockedTicketSystem,
+) -> None:
     """Test that pipe handles updating a nonexistent ticket."""
-    config = {
-        "id": "test_update",
-        "use": "UpdateTicketPipe",
-        "_if": True,
-        "ticket_id": "NONEXISTENT-TICKET",
-        "updated_ticket": {"subject": "Updated"},
-    }
+    config = UpdateTicketPipeConfig(
+        id="test_update",
+        use="UpdateTicketPipe",
+        params=UpdateTicketParams(
+            ticket_id="NONEXISTENT-TICKET",
+            updated_ticket=UnifiedTicket(subject="Updated"),
+        ),
+    )
 
     pipe = UpdateTicketPipe(empty_mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)

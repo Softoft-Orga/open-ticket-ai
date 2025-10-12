@@ -1,22 +1,31 @@
+from __future__ import annotations
+
 import pytest
 
-from open_ticket_ai.base.pipes.ticket_system_pipes import AddNotePipe
+from open_ticket_ai.base.pipes.ticket_system_pipes import (
+    AddNotePipe,
+    AddNotePipeConfig,
+    AddNoteParams,
+)
+from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
+from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 
 @pytest.mark.asyncio
 async def test_add_note_pipe_adds_note_to_ticket(
-    empty_pipeline_context,
-    mocked_ticket_system,
-):
+    empty_pipeline_context: PipeContext,
+    mocked_ticket_system: MockedTicketSystem,
+) -> None:
     """Test that AddNotePipe successfully adds a note to a ticket."""
-    config = {
-        "id": "test_add_note",
-        "use": "AddNotePipe",
-        "_if": True,
-        "ticket_id": "TICKET-1",
-        "note": {"body": "This is a new note"},
-    }
+    config = AddNotePipeConfig(
+        id="test_add_note",
+        use="AddNotePipe",
+        params=AddNoteParams(
+            ticket_id="TICKET-1",
+            note=UnifiedNote(body="This is a new note"),
+        ),
+    )
 
     pipe = AddNotePipe(mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)
@@ -34,18 +43,19 @@ async def test_add_note_pipe_adds_note_to_ticket(
 
 @pytest.mark.asyncio
 async def test_add_note_pipe_with_note_object(
-    empty_pipeline_context,
-    mocked_ticket_system,
-):
+    empty_pipeline_context: PipeContext,
+    mocked_ticket_system: MockedTicketSystem,
+) -> None:
     """Test adding a note using a UnifiedNote object."""
     note = UnifiedNote(subject="Test Subject", body="Note body with subject")
-    config = {
-        "id": "test_add_note",
-        "use": "AddNotePipe",
-        "_if": True,
-        "ticket_id": "TICKET-2",
-        "note": note,
-    }
+    config = AddNotePipeConfig(
+        id="test_add_note",
+        use="AddNotePipe",
+        params=AddNoteParams(
+            ticket_id="TICKET-2",
+            note=note,
+        ),
+    )
 
     pipe = AddNotePipe(mocked_ticket_system, config)
     await pipe.process(empty_pipeline_context)
@@ -59,17 +69,18 @@ async def test_add_note_pipe_with_note_object(
 
 @pytest.mark.asyncio
 async def test_add_note_pipe_handles_failure(
-    empty_pipeline_context,
-    empty_mocked_ticket_system,
-):
+    empty_pipeline_context: PipeContext,
+    empty_mocked_ticket_system: MockedTicketSystem,
+) -> None:
     """Test that pipe handles failure when ticket doesn't exist."""
-    config = {
-        "id": "test_add_note",
-        "use": "AddNotePipe",
-        "_if": True,
-        "ticket_id": "NONEXISTENT-TICKET",
-        "note": {"body": "Test note"},
-    }
+    config = AddNotePipeConfig(
+        id="test_add_note",
+        use="AddNotePipe",
+        params=AddNoteParams(
+            ticket_id="NONEXISTENT-TICKET",
+            note=UnifiedNote(body="Test note"),
+        ),
+    )
 
     pipe = AddNotePipe(empty_mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)
@@ -82,17 +93,19 @@ async def test_add_note_pipe_handles_failure(
 
 @pytest.mark.asyncio
 async def test_add_note_pipe_skips_when_disabled(
-    empty_pipeline_context,
-    mocked_ticket_system,
-):
+    empty_pipeline_context: PipeContext,
+    mocked_ticket_system: MockedTicketSystem,
+) -> None:
     """Test that pipe skips when disabled."""
-    config = {
-        "id": "test_add_note",
-        "use": "AddNotePipe",
-        "if": False,
-        "ticket_id": "TICKET-1",
-        "note": {"body": "Test note"},
-    }
+    config = AddNotePipeConfig(
+        id="test_add_note",
+        use="AddNotePipe",
+        if_=False,
+        params=AddNoteParams(
+            ticket_id="TICKET-1",
+            note=UnifiedNote(body="Test note"),
+        ),
+    )
 
     pipe = AddNotePipe(mocked_ticket_system, config)
     result_context = await pipe.process(empty_pipeline_context)

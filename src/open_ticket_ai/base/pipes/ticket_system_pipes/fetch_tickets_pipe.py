@@ -21,6 +21,9 @@ class FetchTicketsPipeConfig(PipeConfig[FetchTicketsParams]):
     pass
 
 
+FetchTicketsPipeConfig.model_rebuild()
+
+
 class FetchTicketsPipe(Pipe[FetchTicketsParams]):
     def __init__(
         self,

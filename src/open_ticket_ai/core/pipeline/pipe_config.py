@@ -2,17 +2,21 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from functools import reduce
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.renderable import RenderableConfig
 
+if TYPE_CHECKING:
+    from typing import Any
+
 
 class PipeConfig[ParamsT: BaseModel](RenderableConfig[ParamsT]):
+    model_config = ConfigDict(populate_by_name=True)
     if_: str | bool = Field(default="True", alias="if")
     depends_on: str | list[str] = []
-    steps: list[PipeConfig[ParamsT]] | None = None
+    steps: list[Any] | None = None
 
     @property
     def should_run(self) -> str | bool:

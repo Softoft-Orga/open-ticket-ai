@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Renderable:
@@ -17,10 +17,11 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
     injects: dict[str, str] = Field(default_factory=dict)
     params: ParamsT = Field(default_factory=dict)
 
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__(**kwargs)
+    @model_validator(mode="after")
+    def set_id_from_uid(self) -> "RenderableConfig":
         if self.id is None:
             self.id = self.uid
+        return self
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, RenderableConfig):
