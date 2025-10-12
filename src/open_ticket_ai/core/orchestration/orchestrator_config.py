@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
