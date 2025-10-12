@@ -7,15 +7,21 @@ from typing import Any
 from pydantic import BaseModel
 
 from ..config.renderable import Renderable
+from ..logging_iface import LoggerFactory
 from .pipe_config import PipeConfig, PipeResult
 from .pipe_context import PipeContext
 
 
 class Pipe[ParamsT](Renderable, ABC):
-    def __init__(self, pipe_params: PipeConfig[ParamsT], *args: Any, **kwargs: Any) -> None:
+    def __init__(
+        self, pipe_params: PipeConfig[ParamsT], logger_factory: LoggerFactory | None = None, *args: Any, **kwargs: Any
+    ) -> None:
         super().__init__(pipe_params.params, *args, **kwargs)
         self.pipe_config = pipe_params
-        self._logger = logging.getLogger(self.__class__.__name__)
+        if logger_factory is not None:
+            self._logger = logger_factory.get_logger(self.__class__.__name__)
+        else:
+            self._logger = logging.getLogger(self.__class__.__name__)
 
     def _save_pipe_result(self, context: PipeContext, pipe_result: PipeResult) -> PipeContext:
         context.pipes[self.pipe_config.id] = pipe_result
@@ -25,11 +31,11 @@ class Pipe[ParamsT](Renderable, ABC):
         return all(context.has_succeeded(dependency_id) for dependency_id in self.pipe_config.depends_on)
 
     async def process(self, context: PipeContext) -> PipeContext:
-        self._logger.info("Processing pipe '%s'", self.pipe_config.id)
+        self._logger.info(f"Processing pipe '{self.pipe_config.id}'")
         if self.pipe_config.should_run and self.have_dependent_pipes_been_run(context):
-            self._logger.info("Pipe '%s' is running.", self.pipe_config.id)
+            self._logger.info(f"Pipe '{self.pipe_config.id}' is running.")
             return await self.__process_and_save(context)
-        self._logger.info("Skipping pipe '%s'.", self.pipe_config.id)
+        self._logger.info(f"Skipping pipe '{self.pipe_config.id}'.")
         return context
 
     async def __process_and_save(self, context: PipeContext) -> PipeContext:

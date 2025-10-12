@@ -2,6 +2,7 @@ import logging
 from typing import Any
 
 from injector import inject
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -29,11 +30,20 @@ def _to_id_name(entity: UnifiedEntity | None) -> IdName | None:
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
-    def __init__(self, params: RenderedOTOBOZnunyTicketsystemServiceConfig, *args: Any, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        params: RenderedOTOBOZnunyTicketsystemServiceConfig,
+        logger_factory: LoggerFactory | None = None,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         super().__init__(params, *args, **kwargs)
         self.params = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(params.model_dump())
         self._client: OTOBOZnunyClient | None = None
-        self.logger = logging.getLogger(self.__class__.__name__)
+        if logger_factory is not None:
+            self.logger = logger_factory.get_logger(self.__class__.__name__)
+        else:
+            self.logger = logging.getLogger(self.__class__.__name__)
         self.initialize()
 
     @property
@@ -54,9 +64,9 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         search = TicketSearch(queues=[_to_id_name(criteria.queue)] if criteria.queue else None, limit=criteria.limit)
-        self.logger.debug("OTOBO search criteria: %s", search)
+        self.logger.debug(f"OTOBO search criteria: {search}")
         tickets: list[Ticket] = await self.client.search_and_get(search)
-        self.logger.info("OTOBO search returned %d tickets", len(tickets))
+        self.logger.info(f"OTOBO search returned {len(tickets)} tickets")
         return [otobo_ticket_to_unified_ticket(t) for t in tickets]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
@@ -74,7 +84,7 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
             priority=_to_id_name(updates.priority),
             article=Article(subject=updates.notes[-1].subject, body=updates.notes[-1].body),
         )
-        logging.info(ticket)
+        self.logger.info(ticket)
         await self.client.update_ticket(ticket)
         return True
 
