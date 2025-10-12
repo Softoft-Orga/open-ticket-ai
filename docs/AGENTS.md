@@ -38,8 +38,8 @@ docs/docs_src/
 │   ├── docs/
 │   │   ├── concepts/           # ✨ NEW - Core concepts & architecture
 │   │   ├── guides/             # HOW-TO tutorials and guides
-│   │   ├── code/               # Code architecture details
-│   │   ├── configuration/      # Configuration system
+│   │   ├── details/            # Technical details & configuration
+│   │   ├── developers/         # Developer documentation
 │   │   └── plugins/            # Plugin system
 │   ├── products/               # Product-specific docs
 │   └── blog/                   # Blog posts and articles
@@ -137,9 +137,13 @@ docs/vitepress_docs/docs_src/en/docs/
 │   ├── logging.md
 │   ├── services.md
 │   └── template_rendering.md
-├── configuration/              # Config system reference
-│   ├── config_schema.md
-│   └── environment_variables.md
+├── details/                    # Technical details
+│   ├── config_reference.md     # Complete config schema reference
+│   └── configuration/          # Configuration guides
+│       ├── config_structure.md
+│       ├── defs_and_anchors.md
+│       ├── environment_variables.md
+│       └── examples.md
 └── plugins/                    # Plugin development
     ├── plugin_system.md
     └── plugin_development.md
@@ -406,7 +410,8 @@ The `raw_en_docs/` directory is being phased out. When you encounter content tha
 
 1. Determine the right subdirectory:
    - Code architecture → `/docs/vitepress_docs/docs_src/en/docs/code/`
-   - Configuration → `/docs/vitepress_docs/docs_src/en/docs/configuration/`
+   - Configuration schema → `/docs/vitepress_docs/docs_src/en/docs/details/config_reference.md`
+   - Configuration guides → `/docs/vitepress_docs/docs_src/en/docs/details/configuration/`
    - Plugins → `/docs/vitepress_docs/docs_src/en/docs/plugins/`
 2. Create or update the relevant file
 3. Document APIs, schemas, and technical details
