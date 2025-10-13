@@ -3,6 +3,8 @@
 from typing import Any
 from unittest.mock import MagicMock
 
+from injector import Injector
+
 from open_ticket_ai.base.triggers.interval_trigger import IntervalTrigger
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import TriggerDefinition
@@ -25,8 +27,9 @@ def test_trigger_instantiation_via_factory() -> None:
     app_config = MagicMock()
     logger_factory = MagicMock()
     logger_factory.get_logger.return_value = MagicMock()
+    injector = Injector()
 
-    factory = RenderableFactory(template_renderer, app_config, [], logger_factory)
+    factory = RenderableFactory(template_renderer, app_config, [], logger_factory, injector)
     scope = PipeContext()
 
     # Create trigger via factory
@@ -55,8 +58,9 @@ def test_trigger_receives_logger_factory() -> None:
     logger_factory = MagicMock()
     mock_logger = MagicMock()
     logger_factory.get_logger.return_value = mock_logger
+    injector = Injector()
 
-    factory = RenderableFactory(template_renderer, app_config, [], logger_factory)
+    factory = RenderableFactory(template_renderer, app_config, [], logger_factory, injector)
     scope = PipeContext()
 
     # Create trigger via factory
@@ -99,8 +103,9 @@ def test_trigger_config_rendering() -> None:
     app_config = MagicMock()
     logger_factory = MagicMock()
     logger_factory.get_logger.return_value = MagicMock()
+    injector = Injector()
 
-    factory = RenderableFactory(template_renderer, app_config, [], logger_factory)
+    factory = RenderableFactory(template_renderer, app_config, [], logger_factory, injector)
     scope = PipeContext()
 
     # Create trigger via factory
