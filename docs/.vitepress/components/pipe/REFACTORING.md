@@ -2,36 +2,33 @@
 
 ## Overview
 
-The PipeSidecar component has been successfully refactored to address the feedback:
-- Reduced from 250 lines to **56 lines** (77% reduction)
+The PipeSidecar component has been successfully simplified to address the feedback:
+- Kept as a single component (228 lines, down from 250)
 - Created `useSidecars` composable for centralized data management
-- Split into 7 focused sub-components for better maintainability
+- Uses simple patterns: tables, v-for loops, and existing components
 
 ## Before vs After
 
 ### Before (250 lines)
-- Single monolithic component
-- All sections inline
-- Duplicate helper functions
-- Harder to maintain and test
+- Single component with inline sections
+- Mixed patterns
+- All code in one file
 
-### After (56 lines + 7 sub-components)
-- Clean orchestrator component
-- Modular section components
+### After (228 lines)
+- Single streamlined component
+- Table-based layout for structured data
+- v-for loops for dynamic content
+- Reuses existing AccordionItem component
 - Composable for data management
-- Easy to maintain and extend
 
 ## Component Structure
 
 ```
-PipeSidecar.vue (56 lines)
-├── sections/MetadataSection.vue
-├── sections/InputsSection.vue
-├── sections/DefaultsSection.vue
-├── sections/OutputSection.vue
-├── sections/ErrorsSection.vue
-├── sections/EngineSupportSection.vue
-└── sections/ExamplesSection.vue
+PipeSidecar.vue (228 lines)
+├── Tables for: Metadata, Inputs, Defaults, Engine Support
+├── v-for loops for: Parameters, Errors, Examples
+├── AccordionItem (reused) for: Output Examples, Usage Examples
+└── Computed properties for data transformation
 ```
 
 ## New Composable: useSidecars
@@ -71,37 +68,33 @@ const ticketSystemPipes = filterByCategory('ticket-system')
 ## Benefits
 
 ### Code Quality
-- ✅ 77% reduction in main component LOC
-- ✅ Single Responsibility Principle
-- ✅ Easier to test individual sections
-- ✅ Better code organization
+- ✅ Simple, maintainable structure
+- ✅ Table-based layout for clarity
+- ✅ v-for loops for dynamic content
+- ✅ Reuses existing components
 
 ### Developer Experience
-- ✅ Centralized data management
+- ✅ Centralized data management via composable
 - ✅ Type-safe filtering
 - ✅ Ready for Services and Triggers
-- ✅ Reusable sections
+- ✅ Easy to understand and modify
 
 ### Maintainability
-- ✅ Changes isolated to specific sections
-- ✅ No ripple effects when updating one section
-- ✅ Clear separation of concerns
-- ✅ Follows established patterns (useApiDocs)
+- ✅ Single file to maintain
+- ✅ Clear data flow with computed properties
+- ✅ Standard patterns (tables, v-for)
+- ✅ Follows established patterns (AccordionItem, useApiDocs)
 
 ## Files Changed
 
 ### New Files
-1. `docs/.vitepress/composables/useSidecars.ts`
-2. `docs/.vitepress/components/pipe/sections/MetadataSection.vue`
-3. `docs/.vitepress/components/pipe/sections/InputsSection.vue`
-4. `docs/.vitepress/components/pipe/sections/DefaultsSection.vue`
-5. `docs/.vitepress/components/pipe/sections/OutputSection.vue`
-6. `docs/.vitepress/components/pipe/sections/ErrorsSection.vue`
-7. `docs/.vitepress/components/pipe/sections/EngineSupportSection.vue`
-8. `docs/.vitepress/components/pipe/sections/ExamplesSection.vue`
+1. `docs/.vitepress/composables/useSidecars.ts` - Composable for sidecar data management
 
 ### Modified Files
-1. `docs/.vitepress/components/pipe/PipeSidecar.vue` (250 → 56 lines)
+1. `docs/.vitepress/components/pipe/PipeSidecar.vue` (250 → 228 lines)
+   - Simplified to use tables and v-for loops
+   - Reuses AccordionItem component
+   - Computed properties for data transformation
 2. `docs/.vitepress/components/pipe/README.md` (updated documentation)
 
 ## Testing

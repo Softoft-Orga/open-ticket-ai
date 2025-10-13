@@ -1,20 +1,15 @@
 # PipeSidecar Component
 
 ## Overview
-The PipeSidecar component displays comprehensive information about pipeline pipe configurations from sidecar YAML specifications. The component is now refactored into smaller, focused sub-components for better maintainability.
+The PipeSidecar component displays comprehensive information about pipeline pipe configurations from sidecar YAML specifications. The component uses a simple, table-based layout with v-for loops for clean, maintainable code.
 
 ## Architecture
 
-The component has been refactored from a single 250-line file into a modular structure:
-
-- **PipeSidecar.vue** (56 lines) - Main component that composes all sections
-- **sections/MetadataSection.vue** - Displays class and inheritance information
-- **sections/InputsSection.vue** - Shows input parameters and configuration
-- **sections/DefaultsSection.vue** - Displays default values
-- **sections/OutputSection.vue** - Shows output states and examples
-- **sections/ErrorsSection.vue** - Displays error categories (fail/break/continue)
-- **sections/EngineSupportSection.vue** - Shows engine capability flags
-- **sections/ExamplesSection.vue** - Displays usage examples
+A single, streamlined component (228 lines) that uses:
+- **Tables** for structured data display (metadata, inputs, defaults, engine support)
+- **v-for loops** for iterating over dynamic data
+- **AccordionItem** (reused from existing components) for collapsible sections
+- **Computed properties** for data transformation
 
 ## Composable: useSidecars
 
@@ -101,15 +96,17 @@ const allPipes = filterByType('pipe')
 
 ## Features
 
-- **Modular Structure**: Component split into focused sub-components (56 lines vs 250 lines)
+- **Simple Structure**: Single component (228 lines) using tables and v-for loops
 - **Centralized Data**: `useSidecars` composable for loading and filtering sidecars
 - **Type Support**: Works with Pipes, Services, and Triggers
+- **Table-Based Layout**: Clean, structured display using HTML tables
+- **Reuses Components**: Uses existing AccordionItem for collapsible sections
 - **Metadata Display**: Shows pipe class, inheritance, title, summary, category, and version
 - **Input Configuration**: Displays input parameters with descriptions, placement, and alongside fields
-- **Default Values**: Lists all default parameter values
+- **Default Values**: Lists all default parameter values in a table
 - **Output States**: Shows possible output states (ok, skipped, failed) with color-coded badges
 - **Error Handling**: Categorizes errors into fail, break, and continue with visual distinction
-- **Engine Support**: Displays engine capability flags
+- **Engine Support**: Displays engine capability flags in a table
 - **Usage Examples**: Collapsible accordion sections for minimal, full, and large configuration examples
 - **Responsive Design**: Uses Tailwind CSS for responsive layouts
 - **Dark Mode Support**: Compatible with VitePress dark/light theme switching
