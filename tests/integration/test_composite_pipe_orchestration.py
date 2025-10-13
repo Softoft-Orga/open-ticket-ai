@@ -166,7 +166,8 @@ async def test_composite_pipe_error_propagation(logger_factory: LoggerFactory) -
         id="step1",
         use="open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe:UpdateTicketPipe",
         params=UpdateTicketParams(
-            ticket_id="NONEXISTENT-999", updated_ticket=UnifiedTicket(priority=UnifiedEntity(id="priority-5", name="High"))
+            ticket_id="NONEXISTENT-999",
+            updated_ticket=UnifiedTicket(priority=UnifiedEntity(id="priority-5", name="High")),
         ),
     )
 
@@ -242,7 +243,9 @@ async def test_realistic_multi_step_pipeline(logger_factory: LoggerFactory) -> N
     composite = CompositePipe(create_composite("workflow", configs), SimpleFactory(), logger_factory)
     result_ctx = await composite.process(PipeContext())
 
-    assert result_ctx.pipes["fetch_tickets"].success and len(result_ctx.pipes["fetch_tickets"].data.fetched_tickets) == 2
+    assert (
+        result_ctx.pipes["fetch_tickets"].success and len(result_ctx.pipes["fetch_tickets"].data.fetched_tickets) == 2
+    )
     assert result_ctx.pipes["update_ticket"].success and result_ctx.pipes["update_ticket"].data.ticket_updated
     assert result_ctx.pipes["add_note"].success and result_ctx.pipes["add_note"].data.note_added
 
@@ -254,7 +257,10 @@ async def test_realistic_multi_step_pipeline(logger_factory: LoggerFactory) -> N
 
 @pytest.mark.asyncio
 async def test_composite_pipe_context_propagation(renderable_factory: RenderableFactory) -> None:
-    steps = [create_jinja_step("step1", "step1_output"), create_jinja_step("step2", "step2_output", depends_on=["step1"])]
+    steps = [
+        create_jinja_step("step1", "step1_output"),
+        create_jinja_step("step2", "step2_output", depends_on=["step1"]),
+    ]
     composite_config = create_composite("composite", steps)
     initial_context = PipeContext(pipes={}, params={"initial_param": "test_value"})
 

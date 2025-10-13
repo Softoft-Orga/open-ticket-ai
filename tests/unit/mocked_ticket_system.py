@@ -96,7 +96,6 @@ class MockedTicketSystem(TicketSystemService):
 
         return True
 
-
     def add_test_ticket(self, **kwargs) -> str:
         ticket = UnifiedTicket(**kwargs)
 
