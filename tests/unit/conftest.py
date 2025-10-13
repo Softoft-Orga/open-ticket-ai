@@ -36,7 +36,7 @@ def empty_mocked_ticket_system() -> MockedTicketSystem:
     return MockedTicketSystem({})
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def mocked_ticket_system() -> MockedTicketSystem:
     system = MockedTicketSystem({})
 

@@ -41,8 +41,7 @@ class MockedTicketSystem(TicketSystemService):
         existing_ticket = self._tickets[ticket_id]
 
         update_data = updates.model_dump(exclude_unset=True, exclude_none=True)
-        new_ticket = existing_ticket.model_copy(**update_data)
-        self._tickets[ticket_id] = new_ticket
+        self._tickets[ticket_id] = UnifiedTicket.model_validate(existing_ticket.model_dump() | update_data)
 
         return True
 
