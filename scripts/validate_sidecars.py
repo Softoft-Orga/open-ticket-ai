@@ -2,7 +2,6 @@
 """
 Validate that all Pipes, Services, and Triggers have corresponding sidecar files.
 """
-import os
 import re
 import sys
 from pathlib import Path
@@ -34,7 +33,7 @@ def find_components(root_dir: Path) -> list[Component]:
                 continue
                 
             try:
-                with open(py_file, 'r') as f:
+                with open(py_file) as f:
                     content = f.read()
                     
                 # Find Pipe classes
@@ -130,7 +129,7 @@ def main() -> int:
     # List components by type
     if with_sidecars:
         print("Components with sidecars:")
-        by_type = {}
+        by_type: dict[str, list[Component]] = {}
         for component in with_sidecars:
             by_type.setdefault(component.type, []).append(component)
         
@@ -142,13 +141,13 @@ def main() -> int:
     # List missing sidecars
     if without_sidecars:
         print("\n⚠️  Missing sidecars:")
-        by_type = {}
+        by_type_missing: dict[str, list[Component]] = {}
         for component in without_sidecars:
-            by_type.setdefault(component.type, []).append(component)
-        
-        for comp_type in sorted(by_type.keys()):
+            by_type_missing.setdefault(component.type, []).append(component)
+
+        for comp_type in sorted(by_type_missing.keys()):
             print(f"\n  {comp_type.upper()}S:")
-            for component in sorted(by_type[comp_type], key=lambda c: c.name):
+            for component in sorted(by_type_missing[comp_type], key=lambda c: c.name):
                 print(f"    ❌ {component.name}")
                 print(f"       Expected: {component.expected_sidecar}")
                 print(f"       Source: {component.file_path}")
