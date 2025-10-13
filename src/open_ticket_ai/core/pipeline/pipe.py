@@ -18,7 +18,7 @@ class Pipe[ParamsT: BaseModel](Renderable, ABC):
     def __init__(
         self, pipe_params: PipeConfig[ParamsT], logger_factory: LoggerFactory | None = None, *args: Any, **kwargs: Any
     ) -> None:
-        super().__init__(pipe_params.params, *args, **kwargs)  # type: ignore[arg-type]
+        super().__init__(pipe_params.params, *args, **kwargs)
         self.pipe_config = pipe_params
         if logger_factory is not None:
             self._logger = logger_factory.get_logger(self.__class__.__name__)

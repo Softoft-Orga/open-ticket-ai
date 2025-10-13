@@ -11,7 +11,12 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
 )
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient  # type: ignore[import-untyped]
-from otobo_znuny.domain_models.ticket_models import Article, Ticket, TicketSearch, TicketUpdate  # type: ignore[import-untyped]
+from otobo_znuny.domain_models.ticket_models import (  # type: ignore[import-untyped]
+    Article,
+    Ticket,
+    TicketSearch,
+    TicketUpdate,
+)
 from otobo_znuny.mappers import _to_id_name  # type: ignore[import-untyped]
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import otobo_ticket_to_unified_ticket
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service_config import (
@@ -71,7 +76,7 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         article = None
         if updates.notes and len(updates.notes) > 0:
             article = Article(subject=updates.notes[-1].subject, body=updates.notes[-1].body)
-        
+
         ticket = TicketUpdate(
             id=int(ticket_id),
             title=updates.subject,

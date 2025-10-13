@@ -33,8 +33,10 @@ class ConfigLoader:
                     f"or provide a valid config path "
                     f"or set the {self.app_config.config_env_var} environment variable."
                 )
-        else:
+        elif config_path is not None:
             config_path_resolved = config_path
+        else:
+            raise ValueError("Config path is None and no environment variable set")
 
         if not os.path.exists(config_path_resolved):
             raise FileNotFoundError(
@@ -57,7 +59,9 @@ class ConfigLoader:
         return raw_otai_config
 
 
-def load_config(config_path: os.PathLike | None = None, app_config: AppConfig | None = None) -> RawOpenTicketAIConfig:
+def load_config(
+    config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None
+) -> RawOpenTicketAIConfig:
     """Standalone helper function to load configuration.
 
     Args:
