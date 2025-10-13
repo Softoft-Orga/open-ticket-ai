@@ -194,6 +194,7 @@ def test_pipe_service_injection_with_renderable_factory(
     This test verifies that the factory properly registers services and makes them
     available for injection into pipes via the injects configuration.
     """
+    from injector import Injector
 
     from open_ticket_ai.core.config.renderable import EmptyParams
 
@@ -204,10 +205,11 @@ def test_pipe_service_injection_with_renderable_factory(
     )
 
     factory = RenderableFactory(
-        template_renderer=JinjaRenderer(JinjaRendererConfig()),
+        template_renderer=JinjaRenderer(JinjaRendererConfig(), logger_factory),
         app_config=AppConfig(),
         registerable_configs=[ticket_system_config],
         logger_factory=logger_factory,
+        injector=Injector(),
     )
 
     assert factory is not None

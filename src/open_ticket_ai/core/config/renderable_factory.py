@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import inspect
 import typing
 from pydoc import locate
@@ -56,7 +57,7 @@ class RenderableFactory:
         self._logger.debug(f"Creating pipe with config id: {pipe_config_raw.id}")
         self._logger.info(f"Creating pipe '{pipe_config_raw.id}'")
         rendered_params = render_base_model(pipe_config_raw.params, scope, self._template_renderer)
-        pipe_config_raw.params = rendered_params
+        pipe_config_raw.params = rendered_params  # type: ignore[assignment]
         registerable = self.__create_renderable_instance(pipe_config_raw, scope)
         if not isinstance(registerable, Pipe):
             raise TypeError(f"Registerable with id '{pipe_config_raw.id}' is not a Pipe")
@@ -66,7 +67,7 @@ class RenderableFactory:
         self._logger.debug(f"Creating trigger with config id: {trigger_config_raw.id}")
         self._logger.info(f"Creating trigger '{trigger_config_raw.id}'")
         rendered_params = render_base_model(trigger_config_raw.params, scope, self._template_renderer)
-        trigger_config_raw.params = rendered_params
+        trigger_config_raw.params = rendered_params  # type: ignore[assignment]
         return self.__create_renderable_instance(trigger_config_raw, scope)
 
     def __create_service_instance(
@@ -96,7 +97,7 @@ class RenderableFactory:
         self, cls: type, explicit_deps: dict[str, Any]
     ) -> Injector:
         try:
-            type_hints = get_type_hints(cls.__init__)
+            type_hints = get_type_hints(cls.__init__)  # type: ignore[misc]
         except Exception:
             type_hints = {}
         
@@ -111,32 +112,41 @@ class RenderableFactory:
     def __instantiate_with_injector(
         self, cls: type, registerable_config: RenderableConfig[BaseModel], inj: Injector
     ) -> Renderable:
-        sig = inspect.signature(cls.__init__)
+        sig = inspect.signature(cls.__init__)  # type: ignore[misc]
         try:
-            type_hints = get_type_hints(cls.__init__)
+            type_hints = get_type_hints(cls.__init__)  # type: ignore[misc]
         except Exception:
             type_hints = {}
         
+        kwargs = self.__resolve_constructor_dependencies(sig, type_hints, inj)
+        self.__add_standard_dependencies(kwargs, sig, registerable_config)
+        
+        return cls(**kwargs)  # type: ignore[no-any-return]
+
+    def __resolve_constructor_dependencies(
+        self, sig: inspect.Signature, type_hints: dict[str, Any], inj: Injector
+    ) -> dict[str, Any]:
         kwargs: dict[str, Any] = {}
-        first_config_param: str | None = None
-        has_var_kwargs = False
         
         for param_name, param in sig.parameters.items():
             if param_name == 'self':
                 continue
             
-            if param.kind == inspect.Parameter.VAR_KEYWORD:
-                has_var_kwargs = True
-            
             param_type = type_hints.get(param_name, param.annotation)
             if param_type != inspect.Parameter.empty and param_type not in (str, int, float, bool, dict, list):
-                try:
+                with contextlib.suppress(Exception):
                     kwargs[param_name] = inj.get(param_type)
-                except Exception:
-                    pass
-            
-            if param_name in ('config', 'trigger_config') and first_config_param is None:
-                first_config_param = param_name
+        
+        return kwargs
+
+    def __add_standard_dependencies(
+        self, kwargs: dict[str, Any], sig: inspect.Signature, registerable_config: RenderableConfig[BaseModel]
+    ) -> None:
+        has_var_kwargs = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+        first_config_param = next(
+            (name for name in ('config', 'trigger_config') if name in sig.parameters), 
+            None
+        )
         
         if 'params' in sig.parameters:
             kwargs["params"] = registerable_config.params
@@ -150,8 +160,7 @@ class RenderableFactory:
             kwargs["pipe_config"] = registerable_config
         if first_config_param and first_config_param not in kwargs:
             kwargs[first_config_param] = registerable_config
-        
-        return cls(**kwargs)
+
 
     def __resolve_injects(self, injects: dict[str, str], scope: PipeContext) -> dict[str, Renderable]:
         out: dict[str, Any] = {}
@@ -164,5 +173,5 @@ class RenderableFactory:
             definition_config: RenderableConfig[Any] = RenderableConfig.model_validate(definition_config_raw)
             if definition_config.id != service_id:
                 continue
-            return self.__create_service_instance(definition_config_raw, scope)
+            return self.__create_service_instance(definition_config_raw, scope)  # type: ignore[arg-type]
         raise KeyError(service_id)
