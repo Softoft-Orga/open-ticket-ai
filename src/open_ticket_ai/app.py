@@ -5,6 +5,7 @@ import pyfiglet
 from injector import inject
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 
 
@@ -48,11 +49,11 @@ def get_project_info() -> dict[str, str]:
 
 class OpenTicketAIApp:
     @inject
-    def __init__(self, config: RawOpenTicketAIConfig, orchestrator: Orchestrator):
+    def __init__(self, config: RawOpenTicketAIConfig, orchestrator: Orchestrator, logger_factory: LoggerFactory):
         self.config = config
         self.orchestrator = orchestrator
 
-        self._logger = logging.getLogger("open-ticket-ai")
+        self._logger = logger_factory.get_logger(self.__class__.__name__)
         self.print_info()
 
     def print_info(self) -> None:

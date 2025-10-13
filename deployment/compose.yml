@@ -1,6 +1,10 @@
 services:
   open-ticket-ai:
-    image: softotobo/open-ticket-ai:otobo-znuny-mvp
-    restart: "always"
+    image: softotobo/open-ticket-ai:1
+    restart: "unless-stopped"
+    environment:
+      OPEN_TICKET_AI_CONFIG: "/app/config.yml"
+      OTAI_OTOBO_ZNUNY_PASSWORD: "${OTAI_OTOBO_ZNUNY_PASSWORD}"
+      HUGGINGFACE_TOKEN: "${OTAI_HUGGINGFACE_TOKEN}"
     volumes:
       - ./config.yml:/app/config.yml:ro

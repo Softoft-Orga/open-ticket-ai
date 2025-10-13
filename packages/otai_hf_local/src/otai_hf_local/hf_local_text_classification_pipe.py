@@ -28,6 +28,7 @@ class HFLocalTextClassificationPipeConfig(PipeConfig[HFLocalTextClassificationPa
 
 
 class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
+    params_class = HFLocalTextClassificationParams
     _pipeline: Any
 
     def __init__(
@@ -38,9 +39,9 @@ class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
         **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
-        self.model = pipe_config.params.model
-        self.token = pipe_config.params.token
-        self.prompt = pipe_config.params.prompt
+        self.model = self.params.model
+        self.token = self.params.token
+        self.prompt = self.params.prompt
         self._pipeline = None
 
     @staticmethod

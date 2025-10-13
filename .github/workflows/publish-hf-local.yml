@@ -3,26 +3,16 @@ permissions:
   contents: read
 
 on:
-  release:
-    types: [published]
   push:
     tags:
       - 'hf-local-v*'
       - 'open-ticket-ai-hf-local-v*'
   workflow_dispatch:
-    inputs:
-      dry-run:
-        description: 'Run in dry-run mode (build but do not publish)'
-        required: false
-        type: boolean
-        default: false
-
 jobs:
   publish:
     uses: ./.github/workflows/publish-to-pypi.yml
     with:
-      package-name: open-ticket-ai-hf-local
-      package-path: src/otai_hf_local
-      dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
+      package-name: otai-hf-local
+      package-path: packages/otai_hf_local
     secrets:
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}

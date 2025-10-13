@@ -4,16 +4,16 @@ from logging.config import dictConfig
 from injector import Binder, Module, multiprovider, provider, singleton
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
-from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
-from open_ticket_ai.core.config.renderable import EmptyParams, RenderableConfig
+from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory, _locate
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
+from open_ticket_ai.core.pipeline.pipe import ParamsModel
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
@@ -43,19 +43,18 @@ class AppModule(Module):
         binder.bind(RenderableFactory, scope=singleton)
 
     @provider
-    def _create_renderer_from_service(self, config: RawOpenTicketAIConfig) -> TemplateRenderer:
+    def _create_renderer_from_service(
+        self, config: RawOpenTicketAIConfig, logger_factory: LoggerFactory
+    ) -> TemplateRenderer:
         service_id = config.infrastructure.default_template_renderer
         service_config = next((s for s in config.services if s.id == service_id), None)
         if not service_config:
             raise ValueError(f"Template renderer service with id '{service_id}' not found")
 
         cls = _locate(service_config.use)
-        if cls is JinjaRenderer:
-            raise TypeError(f"Service '{service_id}' (class '{service_config.use}') is not JinjaRenderer")
-
         params = service_config.params.model_dump()
         config_obj = JinjaRendererConfig.model_validate(params)
-        return cls(config_obj)  # type: ignore[abstract]
+        return cls(config_obj, logger_factory=logger_factory)  # type: ignore[abstract]
 
     @provider
     @singleton
@@ -67,5 +66,5 @@ class AppModule(Module):
         return config.orchestrator
 
     @multiprovider
-    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RenderableConfig[EmptyParams]]:
+    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RenderableConfig[ParamsModel]]:
         return config.services

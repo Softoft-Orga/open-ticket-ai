@@ -22,6 +22,8 @@ class FetchTicketsPipeConfig(PipeConfig[FetchTicketsParams]):
 
 
 class FetchTicketsPipe(Pipe[FetchTicketsParams]):
+    params_class = FetchTicketsParams
+
     def __init__(
         self,
         ticket_system: TicketSystemService,
@@ -31,19 +33,19 @@ class FetchTicketsPipe(Pipe[FetchTicketsParams]):
         **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
+        self.pipe_config = FetchTicketsPipeConfig.model_validate(pipe_config.model_dump())
         self.ticket_system = ticket_system
-        self.pipe_config = pipe_config
 
     async def _process(self) -> PipeResult[FetchTicketsPipeResultData]:
         try:
-            search_criteria = self.pipe_config.params.ticket_search_criteria
+            search_criteria = self.params.ticket_search_criteria
             if search_criteria is None:
                 search_criteria = TicketSearchCriteria()
             tickets = await self.ticket_system.find_tickets(search_criteria) or []
             return PipeResult[FetchTicketsPipeResultData](
                 success=True,
                 failed=False,
-                data=FetchTicketsPipeResultData(fetched_tickets=[ticket.model_dump() for ticket in tickets]),
+                data=FetchTicketsPipeResultData(fetched_tickets=[ticket for ticket in tickets]),
             )
         except Exception as e:
             return PipeResult[FetchTicketsPipeResultData](

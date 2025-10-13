@@ -14,6 +14,8 @@ class PipeRunnerObserver(Protocol):
 
 
 class Trigger[ParamsT: BaseModel](Renderable, ABC):
+    params_class: type[ParamsT]
+
     def __init__(
         self,
         config: TriggerDefinition[ParamsT],
@@ -25,6 +27,11 @@ class Trigger[ParamsT: BaseModel](Renderable, ABC):
         self._observers: list[PipeRunnerObserver] = []
         self._running = False
         self._logger = logger_factory.get_logger(self.__class__.__name__)
+
+        if isinstance(config.params, dict):
+            self.params: ParamsT = self.params_class.model_validate(config.params)
+        else:
+            self.params: ParamsT = config.params
 
     def attach(self, observer: PipeRunnerObserver) -> None:
         if observer not in self._observers:

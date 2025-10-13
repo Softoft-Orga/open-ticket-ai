@@ -11,7 +11,7 @@ LogLevel = Literal["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
 class FormatterConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
     class_: str | None = Field(default=None, alias="class")
     format: str | None = None
     datefmt: str | None = None
@@ -20,14 +20,14 @@ class FormatterConfig(BaseModel):
 
 
 class FilterConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
     class_: str | None = Field(default=None, alias="class")
     name: str | None = None
     call: str | None = Field(default=None, alias="()")
 
 
 class HandlerConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
     class_: str = Field(alias="class")
     level: LogLevel | None = None
     formatter: str | None = None
@@ -36,7 +36,7 @@ class HandlerConfig(BaseModel):
 
 
 class LoggerConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
     level: LogLevel | None = None
     handlers: list[str] | None = None
     propagate: bool | None = None
@@ -44,14 +44,14 @@ class LoggerConfig(BaseModel):
 
 
 class RootConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
     level: LogLevel | None = None
     handlers: list[str] | None = None
     filters: list[str] | None = None
 
 
 class LoggingDictConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
     version: Literal[1] = 1
     disable_existing_loggers: bool | None = None
     incremental: bool | None = None
@@ -63,13 +63,13 @@ class LoggingDictConfig(BaseModel):
 
 
 class InfrastructureConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
-    default_template_renderer: str | None = None
+    default_template_renderer: str
 
 
 class RawOpenTicketAIConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
     plugins: list[str] = Field(default_factory=lambda: [])
     infrastructure: InfrastructureConfig = Field(default_factory=InfrastructureConfig)
     services: list[RenderableConfig[EmptyParams]] = Field(default_factory=lambda: [])

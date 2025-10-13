@@ -3,13 +3,13 @@ from typing import Any
 from pydantic import BaseModel
 
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe import ParamsModel, Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 
 
-class AddNoteParams(BaseModel):
+class AddNoteParams(ParamsModel):
     ticket_id: str | int
     note: UnifiedNote
 
@@ -23,6 +23,8 @@ class AddNotePipeConfig(PipeConfig[AddNoteParams]):
 
 
 class AddNotePipe(Pipe[AddNoteParams]):
+    params_class = AddNoteParams
+
     def __init__(
         self,
         ticket_system: TicketSystemService,
@@ -32,13 +34,13 @@ class AddNotePipe(Pipe[AddNoteParams]):
         **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
+        self.pipe_config = AddNotePipeConfig.model_validate(pipe_config.model_dump())
         self.ticket_system = ticket_system
-        self.pipe_config = pipe_config
 
     async def _process(self) -> PipeResult[AddNotePipeResultData]:
         try:
-            ticket_id_str = str(self.pipe_config.params.ticket_id)
-            success = await self.ticket_system.add_note(ticket_id_str, self.pipe_config.params.note)
+            ticket_id_str = str(self.params.ticket_id)
+            success = await self.ticket_system.add_note(ticket_id_str, self.params.note)
             if not success:
                 return PipeResult[AddNotePipeResultData](
                     success=False,

@@ -21,11 +21,11 @@ class IntervalTrigger(Trigger[IntervalTriggerParams]):
         params_data = config.params.model_dump() if hasattr(config.params, 'model_dump') else config.params
         params = IntervalTriggerParams.model_validate(params_data)
         self.seconds_interval: float = (
-            params.days * 86400
-            + params.hours * 3600
-            + params.minutes * 60
-            + params.seconds
-            + params.milliseconds / 1000
+            self.params.days * 86400
+            + self.params.hours * 3600
+            + self.params.minutes * 60
+            + self.params.seconds
+            + self.params.milliseconds / 1000
         )
         self._task: asyncio.Task[None] | None = None
 

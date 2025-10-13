@@ -5,12 +5,11 @@ from pydoc import locate
 from typing import Any
 
 from injector import inject, singleton
-from pydantic import BaseModel
 
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe import ParamsModel, Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
@@ -26,9 +25,20 @@ def _locate(use: str) -> type:
     return typing.cast(type, locate(use))
 
 
-def render_base_model[T: BaseModel](config: T, scope: PipeContext, renderer: TemplateRenderer) -> T | dict[str, Any]:
-    rendered_dict = renderer.render_recursive(config.model_dump(), scope)
-    return type(config)(**rendered_dict)
+def render_params(params: ParamsModel, scope: PipeContext, renderer: TemplateRenderer) -> dict[str, Any]:
+    if isinstance(params, dict):
+        return params
+
+    try:
+        params_dict = params.model_dump()
+    except Exception:
+        params_dict = {}
+        if hasattr(params, "__dict__"):
+            for key, value in params.__dict__.items():
+                if not key.startswith("_"):
+                    params_dict[key] = value
+
+    return renderer.render_recursive(params_dict, scope)
 
 
 @singleton
@@ -38,7 +48,7 @@ class RenderableFactory:
         self,
         template_renderer: TemplateRenderer,
         app_config: AppConfig,
-        registerable_configs: list[RenderableConfig[BaseModel]],
+        registerable_configs: list[RenderableConfig[ParamsModel]],
         logger_factory: LoggerFactory,
     ):
         self._logger = logger_factory.get_logger(self.__class__.__name__)
@@ -47,33 +57,32 @@ class RenderableFactory:
         self._app_config = app_config
         self._logger_factory = logger_factory
 
-    def create_pipe(self, pipe_config_raw: PipeConfig[BaseModel], scope: PipeContext) -> Pipe[Any]:
+    def create_pipe(self, pipe_config_raw: PipeConfig[ParamsModel], scope: PipeContext) -> Pipe[Any]:
         self._logger.debug(f"Creating pipe with config id: {pipe_config_raw.id}")
         self._logger.info(f"Creating pipe '{pipe_config_raw.id}'")
-        rendered_params = render_base_model(pipe_config_raw.params, scope, self._template_renderer)
+        rendered_params = render_params(pipe_config_raw.params, scope, self._template_renderer)
         pipe_config_raw.params = rendered_params
         registerable = self.__create_renderable_instance(pipe_config_raw, scope)
         if not isinstance(registerable, Pipe):
             raise TypeError(f"Registerable with id '{pipe_config_raw.id}' is not a Pipe")
         return registerable
 
-    def create_trigger(self, trigger_config_raw: RenderableConfig[BaseModel], scope: PipeContext) -> Renderable:
+    def create_trigger(self, trigger_config_raw: RenderableConfig[ParamsModel], scope: PipeContext) -> Renderable:
         self._logger.debug(f"Creating trigger with config id: {trigger_config_raw.id}")
         self._logger.info(f"Creating trigger '{trigger_config_raw.id}'")
-        rendered_params = render_base_model(trigger_config_raw.params, scope, self._template_renderer)
+        rendered_params = render_params(trigger_config_raw.params, scope, self._template_renderer)
         trigger_config_raw.params = rendered_params
         return self.__create_renderable_instance(trigger_config_raw, scope)
 
     def __create_service_instance(
-        self, registerable_config_raw: RenderableConfig[BaseModel], scope: PipeContext
+        self, registerable_config_raw: RenderableConfig[ParamsModel], scope: PipeContext
     ) -> Renderable:
-        rendered_config = render_base_model(registerable_config_raw, scope, self._template_renderer)
-        if not isinstance(rendered_config, RenderableConfig):
-            raise TypeError("Rendered config must be a RenderableConfig instance")
-        return self.__create_renderable_instance(rendered_config, scope)
+        rendered_params = render_params(registerable_config_raw.params, scope, self._template_renderer)
+        registerable_config_raw.params = rendered_params
+        return self.__create_renderable_instance(registerable_config_raw, scope)
 
     def __create_renderable_instance(
-        self, registerable_config: RenderableConfig[BaseModel], scope: PipeContext
+        self, registerable_config: RenderableConfig[ParamsModel], scope: PipeContext
     ) -> Renderable:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):
@@ -84,6 +93,7 @@ class RenderableFactory:
         kwargs["factory"] = self
         kwargs["app_config"] = self._app_config
         kwargs["logger_factory"] = self._logger_factory
+        kwargs["config"] = registerable_config
         kwargs["pipe_config"] = registerable_config
         kwargs["config"] = registerable_config
         return cls(**kwargs)

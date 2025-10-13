@@ -6,21 +6,14 @@ on:
   push:
     tags:
       - 'otobo-znuny-v*'
-      - 'open-ticket-ai-otobo-znuny-v*'
+      - 'otai-otobo-znuny-v*'
   workflow_dispatch:
-    inputs:
-      dry-run:
-        description: 'Run in dry-run mode (build but do not publish)'
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   publish:
     uses: ./.github/workflows/publish-to-pypi.yml
     with:
-      package-name: open-ticket-ai-otobo-znuny-plugin
-      package-path: src/otai_otobo_znuny
-      dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
+      package-name: otai-otobo-znuny
+      package-path: packages/otai_otobo_znuny
     secrets:
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN_OTOBO_ZNUNY }}
