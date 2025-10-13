@@ -12,7 +12,7 @@ from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
 
-class DummyChildPipe(Pipe[Any]):
+class DummyChildPipe(Pipe):
     processed_contexts: list[PipeContext] = []
     process_count: int = 0
 
@@ -40,7 +40,7 @@ class DummyParentPipe(CompositePipe):
         )
 
 
-class SkipPipe(Pipe[Any]):
+class SkipPipe(Pipe):
     executed: bool = False
 
     async def _process(self) -> PipeResult[CompositePipeResultData]:
@@ -88,7 +88,7 @@ async def test_process_skips_pipe_when_condition_is_false(logger_factory: Logger
     context = PipeContext(
         pipes={"existing": PipeResult(success=True, failed=False, data=CompositePipeResultData(value=1))}
     )
-    skip_config: PipeConfig[Any] = PipeConfig(id="skip", use="SkipPipe", **{"if": False})
+    skip_config: PipeConfig = PipeConfig(id="skip", use="SkipPipe", **{"if": False})
     skip_pipe = SkipPipe(skip_config, logger_factory)
 
     result_context = await skip_pipe.process(context)

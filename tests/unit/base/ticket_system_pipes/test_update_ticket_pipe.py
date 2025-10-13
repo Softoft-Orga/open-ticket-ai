@@ -26,7 +26,7 @@ async def test_update_ticket_updates_subject(
         params=UpdateTicketParams(
             ticket_id="TICKET-1",
             updated_ticket=UnifiedTicket(subject="Updated Subject"),
-        ),
+        ).model_dump(),
     )
 
     pipe = UpdateTicketPipe(mocked_ticket_system, config, logger_factory)
@@ -60,7 +60,7 @@ async def test_update_ticket_updates_multiple_fields(
                 subject="New Subject",
                 body="New body text",
             ),
-        ),
+        ).model_dump(),
     )
 
     pipe = UpdateTicketPipe(mocked_ticket_system, config, logger_factory)
@@ -88,7 +88,7 @@ async def test_update_ticket_handles_nonexistent_ticket(
         params=UpdateTicketParams(
             ticket_id="NONEXISTENT-TICKET",
             updated_ticket=UnifiedTicket(subject="Updated"),
-        ),
+        ).model_dump(),
     )
 
     pipe = UpdateTicketPipe(empty_mocked_ticket_system, config, logger_factory)

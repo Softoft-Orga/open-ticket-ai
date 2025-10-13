@@ -42,10 +42,12 @@ class FetchTicketsPipe(Pipe):
             if search_criteria is None:
                 search_criteria = TicketSearchCriteria()
             tickets = await self.ticket_system.find_tickets(search_criteria) or []
+            # Convert UnifiedTicket objects to dicts
+            tickets_dict = [ticket.model_dump() if hasattr(ticket, 'model_dump') else ticket for ticket in tickets]
             return PipeResult[FetchTicketsPipeResultData](
                 success=True,
                 failed=False,
-                data=FetchTicketsPipeResultData(fetched_tickets=[ticket for ticket in tickets]),
+                data=FetchTicketsPipeResultData(fetched_tickets=tickets_dict),
             )
         except Exception as e:
             return PipeResult[FetchTicketsPipeResultData](
