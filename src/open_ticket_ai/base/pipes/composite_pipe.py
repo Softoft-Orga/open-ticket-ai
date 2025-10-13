@@ -8,6 +8,7 @@ from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import CompositePipeResultData, PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
+
 class CompositeParams(BaseModel):
     pass
 
