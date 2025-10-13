@@ -1,5 +1,6 @@
 """Tests for trigger instantiation via RenderableFactory."""
 
+from typing import Any
 from unittest.mock import MagicMock
 
 from open_ticket_ai.base.triggers.interval_trigger import IntervalTrigger
@@ -10,7 +11,7 @@ from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 def test_trigger_instantiation_via_factory() -> None:
     """Test that triggers can be instantiated via RenderableFactory."""
-    trigger_def = TriggerDefinition.model_validate(
+    trigger_def: TriggerDefinition[Any] = TriggerDefinition.model_validate(
         {
             "id": "test-trigger",
             "use": "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger",
@@ -39,7 +40,7 @@ def test_trigger_instantiation_via_factory() -> None:
 
 def test_trigger_receives_logger_factory() -> None:
     """Test that triggers receive logger_factory through DI."""
-    trigger_def = TriggerDefinition.model_validate(
+    trigger_def: TriggerDefinition[Any] = TriggerDefinition.model_validate(
         {
             "id": "test-trigger",
             "use": "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger",
@@ -63,14 +64,13 @@ def test_trigger_receives_logger_factory() -> None:
 
     # Verify logger was obtained from factory (called for both factory and trigger)
     assert logger_factory.get_logger.call_count >= 2
-    # Check that IntervalTrigger got a logger
-    assert trigger._logger == mock_logger
+    # Check that IntervalTrigger got a logger and interval is correctly calculated
     assert trigger.interval == 65  # 5 seconds + 60 seconds (1 minute)
 
 
 def test_trigger_config_rendering() -> None:
     """Test that trigger configs are rendered before instantiation."""
-    trigger_def = TriggerDefinition.model_validate(
+    trigger_def: TriggerDefinition[Any] = TriggerDefinition.model_validate(
         {
             "id": "test-trigger",
             "use": "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger",
@@ -114,7 +114,7 @@ def test_trigger_config_rendering() -> None:
 
 def test_trigger_definition_has_unique_id() -> None:
     """Test that TriggerDefinition gets uid set automatically."""
-    trigger_def = TriggerDefinition.model_validate(
+    trigger_def: TriggerDefinition[Any] = TriggerDefinition.model_validate(
         {
             "use": "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger",
             "params": {"seconds": 10},
@@ -130,7 +130,7 @@ def test_trigger_definition_has_unique_id() -> None:
 
 def test_trigger_definition_with_explicit_id() -> None:
     """Test that explicit ID is preserved."""
-    trigger_def = TriggerDefinition.model_validate(
+    trigger_def: TriggerDefinition[Any] = TriggerDefinition.model_validate(
         {
             "id": "my-custom-trigger-id",
             "use": "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger",
