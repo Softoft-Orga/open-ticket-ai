@@ -28,10 +28,8 @@ def _locate(use: str) -> type:
 
 
 def render_base_model[T: BaseModel](
-    config: T | dict[str, Any], scope: PipeContext, renderer: TemplateRenderer
+    config: T, scope: PipeContext, renderer: TemplateRenderer
 ) -> T | dict[str, Any]:
-    if isinstance(config, dict):
-        return renderer.render_recursive(config, scope)  # type: ignore[no-any-return]
     rendered_dict = renderer.render_recursive(config.model_dump(), scope)
     return type(config)(**rendered_dict)
 
@@ -52,7 +50,7 @@ class RenderableFactory:
         self._app_config = app_config
         self._logger_factory = logger_factory
 
-    def create_pipe(self, pipe_config_raw: PipeConfig[Any], scope: PipeContext) -> Pipe[Any]:
+    def create_pipe(self, pipe_config_raw: PipeConfig[BaseModel], scope: PipeContext) -> Pipe[Any]:
         self._logger.debug(f"Creating pipe with config id: {pipe_config_raw.id}")
         self._logger.info(f"Creating pipe '{pipe_config_raw.id}'")
         rendered_params = render_base_model(pipe_config_raw.params, scope, self._template_renderer)
@@ -62,17 +60,15 @@ class RenderableFactory:
             raise TypeError(f"Registerable with id '{pipe_config_raw.id}' is not a Pipe")
         return registerable
 
-    def create_trigger(self, trigger_config_raw: RenderableConfig[Any], scope: PipeContext) -> Renderable:
-        """Create a trigger instance with rendered config and dependency injection."""
+    def create_trigger(self, trigger_config_raw: RenderableConfig[BaseModel], scope: PipeContext) -> Renderable:
         self._logger.debug(f"Creating trigger with config id: {trigger_config_raw.id}")
         self._logger.info(f"Creating trigger '{trigger_config_raw.id}'")
-        # Render only the params like create_pipe does
         rendered_params = render_base_model(trigger_config_raw.params, scope, self._template_renderer)
         trigger_config_raw.params = rendered_params
         return self.__create_renderable_instance(trigger_config_raw, scope)
 
     def __create_service_instance(
-        self, registerable_config_raw: RenderableConfig[Any], scope: PipeContext
+        self, registerable_config_raw: RenderableConfig[BaseModel], scope: PipeContext
     ) -> Renderable:
         rendered_config = render_base_model(registerable_config_raw, scope, self._template_renderer)
         if not isinstance(rendered_config, RenderableConfig):
@@ -80,7 +76,7 @@ class RenderableFactory:
         return self.__create_renderable_instance(rendered_config, scope)
 
     def __create_renderable_instance(
-        self, registerable_config: RenderableConfig[Any], scope: PipeContext
+        self, registerable_config: RenderableConfig[BaseModel], scope: PipeContext
     ) -> Renderable:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):
@@ -92,17 +88,10 @@ class RenderableFactory:
         kwargs["factory"] = self
         kwargs["app_config"] = self._app_config
         kwargs["logger_factory"] = self._logger_factory
+        kwargs["pipe_config"] = registerable_config
+        return cls(**kwargs)
 
-        # Pass config as first positional argument for Pipe and Trigger classes
-        # This avoids parameter name conflicts between different subclasses
-        if issubclass(cls, (Pipe, Trigger)):
-            return cls(registerable_config, **kwargs)
-        else:
-            # For other Renderable types, use pipe_config as kwarg for backward compatibility
-            kwargs["pipe_config"] = registerable_config
-            return cls(**kwargs)
-
-    def __resolve_injects(self, injects: dict[str, Any], scope: PipeContext) -> dict[str, Renderable]:
+    def __resolve_injects(self, injects: dict[str, str], scope: PipeContext) -> dict[str, Renderable]:
         out: dict[str, Any] = {}
         for param, ref in injects.items():
             out[param] = self.__resolve_by_id(ref, scope)

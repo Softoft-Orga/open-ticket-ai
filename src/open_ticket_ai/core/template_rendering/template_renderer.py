@@ -1,24 +1,23 @@
 import ast
 import json
-import logging
 from abc import ABC, abstractmethod
 from typing import Any
 
 from pydantic import BaseModel
 
+from open_ticket_ai.core.logging_iface import LoggerFactory
+
 
 class TemplateRenderer(ABC):
-    def __init__(self) -> None:
-        self._logger = logging.getLogger(self.__class__.__name__)
+    def __init__(self, logger_factory: LoggerFactory) -> None:
+        self._logger = logger_factory.get_logger(self.__class__.__name__)
 
-    @staticmethod
-    def _to_dict(scope: BaseModel | dict[str, Any]) -> dict[str, Any]:
+    def _to_dict(self, scope: BaseModel | dict[str, Any]) -> dict[str, Any]:
         if isinstance(scope, BaseModel):
             return scope.model_dump()
         return scope
 
-    @staticmethod
-    def _parse_rendered_value(s: str) -> Any:
+    def _parse_rendered_value(self, s: str) -> Any:
         if not s.strip():
             return s
 
@@ -27,13 +26,13 @@ class TemplateRenderer(ABC):
         try:
             return json.loads(s)
         except Exception as e:
-            logging.debug(f"Failed to parse JSON: {str(e)}")
+            self._logger.debug(f"Failed to parse JSON: {str(e)}")
 
             if stripped.startswith(("[", "{", "(", '"', "'")):
                 try:
                     return ast.literal_eval(s)
                 except Exception as e:
-                    logging.debug(f"Failed to parse literal: {str(e)}")
+                    self._logger.debug(f"Failed to parse literal: {str(e)}")
 
             return s
 

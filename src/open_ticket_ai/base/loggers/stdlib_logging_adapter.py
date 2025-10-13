@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from logging.config import dictConfig
 import logging
 from typing import Any
 
+from open_ticket_ai.core.config.config_models import LoggingDictConfig
 from open_ticket_ai.core.logging_iface import AppLogger, LoggerFactory
 
 
@@ -44,20 +46,8 @@ class StdlibLoggerFactory(LoggerFactory):
         return StdlibLogger(logger, context)
 
 
-def configure_stdlib_logging(
-    level: str = "INFO",
-    format_string: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    datefmt: str = "%Y-%m-%d %H:%M:%S",
-) -> None:
-    """Configure stdlib logging with standard settings.
-
-    Args:
-        level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-        format_string: Log format string
-        datefmt: Date format string
-    """
-    logging.basicConfig(
-        level=getattr(logging, level.upper()),
-        format=format_string,
-        datefmt=datefmt,
-    )
+def create_logger_factory(
+    logging_config: LoggingDictConfig
+) -> LoggerFactory:
+    dictConfig(logging_config.model_dump())
+    return StdlibLoggerFactory()

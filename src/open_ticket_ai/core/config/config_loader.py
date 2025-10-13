@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import injector
 import yaml
@@ -6,14 +7,15 @@ from injector import singleton
 
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+from open_ticket_ai.core.logging_iface import LoggerFactory
 
 
 @singleton
 class ConfigLoader:
     @injector.inject
-    def __init__(self, app_config: AppConfig):
+    def __init__(self, app_config: AppConfig, logger_factory: LoggerFactory):
         self.app_config = app_config
-        self._logger = app_config.get_logger(self.__class__.__name__)
+        self._logger = logger_factory.get_logger(self.__class__.__name__)
 
     def load_config(self, config_path: str | os.PathLike[str] | None = None) -> RawOpenTicketAIConfig:
         config_path_resolved: str | os.PathLike[str]
@@ -24,7 +26,7 @@ class ConfigLoader:
             config_path_resolved = config_path_str
         elif config_path is None and os.getenv(self.app_config.config_env_var) is None:
             config_path_resolved = self.app_config.get_default_config_path()
-            if not config_path_resolved.exists():
+            if not Path(config_path_resolved).exists():
                 raise FileNotFoundError(
                     f"Config file not found at {config_path_resolved}."
                     f"To fix this error:"
@@ -57,15 +59,6 @@ class ConfigLoader:
 def load_config(
     config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None
 ) -> RawOpenTicketAIConfig:
-    """Standalone helper function to load configuration.
-
-    Args:
-        config_path: Path to the configuration file
-        app_config: Optional AppConfig instance (uses default if not provided)
-
-    Returns:
-        Loaded RawOpenTicketAIConfig instance
-    """
     if app_config is None:
         app_config = AppConfig()
 

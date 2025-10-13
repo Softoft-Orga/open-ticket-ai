@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 from injector import Injector
 
+from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.base.pipes.composite_pipe import CompositeParams, CompositePipe, CompositePipeConfig
 from open_ticket_ai.base.pipes.jinja_expression_pipe import JinjaExpressionParams, JinjaExpressionPipeConfig
 from open_ticket_ai.base.pipes.ticket_system_pipes import (
@@ -20,9 +21,9 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import Fet
 from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import UpdateTicketPipe
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
+from open_ticket_ai.core.config.config_models import LoggingDictConfig
 from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
@@ -51,12 +52,12 @@ def create_composite(composite_id: str, steps: list) -> CompositePipeConfig:
 
 @pytest.fixture
 def logger_factory() -> LoggerFactory:
-    return Injector([LoggingModule(log_impl="stdlib", log_level="DEBUG")]).get(LoggerFactory)
+    return create_logger_factory(LoggingDictConfig())
 
 
 @pytest.fixture
-def template_renderer() -> JinjaRenderer:
-    return JinjaRenderer(JinjaRendererConfig())
+def template_renderer(logger_factory) -> JinjaRenderer:
+    return JinjaRenderer(JinjaRendererConfig(), logger_factory)
 
 
 @pytest.fixture

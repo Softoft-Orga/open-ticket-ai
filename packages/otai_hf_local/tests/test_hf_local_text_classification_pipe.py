@@ -64,7 +64,7 @@ def test_process_runs_pipeline_and_returns_top_result(monkeypatch):
     assert result.failed is False
 
 
-def test_process_handles_direct_dict_response(monkeypatch):
+def test_process_handles_direct_dict_response(monkeypatch, logger_factory):
     mock_pipeline = MagicMock(return_value={"label": "QUESTION", "score": 0.42})
     monkeypatch.setattr(HFLocalTextClassificationPipe, "_load_pipeline", MagicMock(return_value=mock_pipeline))
 
@@ -76,7 +76,7 @@ def test_process_handles_direct_dict_response(monkeypatch):
         id="test-pipe",
         params=HFLocalTextClassificationParams(model="local-model", token=None, prompt="Summarise the ticket"),
     )
-    pipe = HFLocalTextClassificationPipe(pipe_config)
+    pipe = HFLocalTextClassificationPipe(pipe_config, logger_factory)
 
     result = asyncio.run(pipe._process())
 

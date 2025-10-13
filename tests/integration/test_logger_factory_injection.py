@@ -3,24 +3,26 @@
 from __future__ import annotations
 
 import pytest
-from injector import Injector
 
+from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.base.pipes.jinja_expression_pipe import JinjaExpressionParams, JinjaExpressionPipeConfig
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
+from open_ticket_ai.core.config.config_models import LoggingDictConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 from open_ticket_ai.core.logging_iface import AppLogger, LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
 
-def test_renderable_factory_injects_logger_factory_into_pipes():
+@pytest.fixture
+def logger_factory() -> LoggerFactory:
+    return create_logger_factory(LoggingDictConfig())
+
+
+def test_renderable_factory_injects_logger_factory_into_pipes(logger_factory: LoggerFactory):
     """Test that RenderableFactory correctly injects logger_factory into created pipes."""
 
-    injector = Injector([LoggingModule(log_impl="stdlib", log_level="DEBUG")])
-
-    logger_factory = injector.get(LoggerFactory)
     renderer_config = JinjaRendererConfig()
     template_renderer = JinjaRenderer(renderer_config)
     app_config = AppConfig()
@@ -46,12 +48,9 @@ def test_renderable_factory_injects_logger_factory_into_pipes():
     assert isinstance(pipe._logger, AppLogger)
 
 
-def test_logger_factory_creates_logger_with_class_name():
+def test_logger_factory_creates_logger_with_class_name(logger_factory: LoggerFactory):
     """Test that logger_factory creates loggers with the correct class name."""
 
-    injector = Injector([LoggingModule(log_impl="stdlib", log_level="DEBUG")])
-
-    logger_factory = injector.get(LoggerFactory)
     renderer_config = JinjaRendererConfig()
     template_renderer = JinjaRenderer(renderer_config)
     app_config = AppConfig()
@@ -79,9 +78,7 @@ def test_logger_factory_creates_logger_with_class_name():
 async def test_pipe_can_use_injected_logger():
     """Test that a pipe can successfully use the injected logger."""
 
-    injector = Injector([LoggingModule(log_impl="stdlib", log_level="DEBUG")])
-
-    logger_factory = injector.get(LoggerFactory)
+    logger_factory = create_logger_factory(LoggingDictConfig())
     renderer_config = JinjaRendererConfig()
     template_renderer = JinjaRenderer(renderer_config)
     app_config = AppConfig()

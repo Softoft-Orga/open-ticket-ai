@@ -1,4 +1,3 @@
-import logging
 from typing import Any
 
 from injector import inject
@@ -10,21 +9,20 @@ from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     has_failed,
     pipe_result,
 )
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
 class JinjaRenderer(TemplateRenderer):
     @inject
-    def __init__(
-        self,
-        config: JinjaRendererConfig,
-    ):
+    def __init__(self, config: JinjaRendererConfig, logger_factory: LoggerFactory):
+        super().__init__()
         self.config = config
         self.jinja_env = SandboxedEnvironment(
             autoescape=config.autoescape, trim_blocks=config.trim_blocks, lstrip_blocks=config.lstrip_blocks
         )
-        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger = logger_factory.get_logger(self.__class__.__name__)
 
     def render(self, template_str: str, scope: dict[str, Any], fail_silently: bool = False) -> Any:
         self.jinja_env.globals.update(scope)

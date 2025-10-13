@@ -55,34 +55,24 @@ class CompositePipe(Pipe[CompositeParams]):
             current_context.parent = context
             step_pipe = self._build_pipe_from_step_config(step_pipe_config_raw, current_context)
             current_context = await step_pipe.process(current_context)
-            # Only add to results if the pipe actually ran and produced a result
             if step_pipe_config_raw.id in current_context.pipes:
                 results.append(current_context.pipes[step_pipe_config_raw.id])
         self._context = current_context
         return results
 
     async def _process(self) -> PipeResult[CompositePipeResultData]:
-        """
-        Internal business logic. Runs all steps and returns aggregated PipeResult.
-        Returns PipeResult.
-        """
-        # We need context to process steps, so we override process() to pass it
         raise NotImplementedError("CompositePipe must override process() to access context")
 
     async def process(self, context: PipeContext) -> PipeContext:
-        """
-        Public API. Runs composite pipe and returns updated Context.
-        Overrides base implementation to access context during _process.
-        """
         self._logger.info(f"Processing pipe '{self.pipe_config.id}'")
         if self.pipe_config.should_run and self.have_dependent_pipes_been_run(context):
             self._logger.info(f"Pipe '{self.pipe_config.id}' is running.")
-            new_context = context.model_copy(deep=False)
+            new_context = context.model_copy()
             try:
                 steps_result: list[PipeResult[Any]] = await self._process_steps(new_context)
                 composite_result = PipeResult.union(steps_result)
                 if self._context:
-                    new_context = self._context.model_copy(deep=False)
+                    new_context = self._context.model_copy()
             except Exception as e:
                 self._logger.error(f"Error in pipe {self.pipe_config.id}: {str(e)}", exc_info=True)
                 composite_result = PipeResult[CompositePipeResultData](
