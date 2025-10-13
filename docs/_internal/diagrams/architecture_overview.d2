@@ -1,0 +1,502 @@
+# Open Ticket AI - Core Architecture Overview (D2)
+# Multi-layered class diagram showing core components, pipeline, DI, and integration layers
+#
+# References:
+# - PlantUML diagram: architecture_overview.puml
+# - Related to: Softoft-Orga/open-ticket-ai#353 (PlantUML), #355 (Mermaid)
+
+direction: down
+
+# ============================================================================
+# Layer 1: Core Pipeline Components
+# ============================================================================
+
+Pipe: {
+  shape: class
+  +config: RenderedPipeConfig
+  +process(ctx: PipeContext): PipeContext
+  +have_dependent_pipes_been_run(ctx: PipeContext): bool
+  \#_process(): PipeResult
+}
+
+CompositePipe: {
+  shape: class
+  +_process_steps(ctx: PipeContext): list[PipeResult]
+  +_build_pipe_from_step_config(step_config: PipeConfig, ctx: PipeContext): Pipe
+  +process(ctx: PipeContext): PipeContext
+}
+
+PipeContext: {
+  shape: class
+  +pipes: dict[str, PipeResult]
+  +config: dict
+  +has(key: str): bool
+  +has_succeeded(pipe_id: str): bool
+  +model_copy(): PipeContext
+}
+
+PipeResult: {
+  shape: class
+  +success: bool
+  +failed: bool
+  +message: str
+  +data: BaseModel
+}
+
+# ============================================================================
+# Layer 2: Pipeline Construction & Factory
+# ============================================================================
+
+RenderableFactory: {
+  shape: class
+  +create_pipe(pipe_config: PipeConfig, scope: PipeContext): Pipe
+  +create_registerable_instance(config: RenderableConfig, scope: PipeContext): Renderable
+  -_resolve_injects(injects: dict, scope: PipeContext): dict
+  -_template_renderer: TemplateRenderer
+  -_registerable_configs: list[RenderableConfig]
+}
+
+Orchestrator: {
+  shape: class
+  +run_all_runners(): None
+  +run_runner(runner_id: str): None
+  -_runner_definitions: list[RunnerDefinition]
+}
+
+RunnerDefinition: {
+  shape: class
+  +id: str
+  +name: str
+  +trigger: Trigger
+  +pipeline: PipeConfig
+}
+
+# ============================================================================
+# Layer 3: Configuration System
+# ============================================================================
+
+RenderableConfig: {
+  shape: class
+  +uid: str
+  +id: str
+  +use: str
+  +injects: dict
+  +params: BaseModel
+}
+
+PipeConfig: {
+  shape: class
+  +_if: bool
+  +depends_on: list[str]
+  +steps: list[PipeConfig]
+  +should_run: bool
+}
+
+RawOpenTicketAIConfig: {
+  shape: class
+  +plugins: list[str]
+  +infrastructure: InfrastructureConfig
+  +services: list[RenderableConfig]
+  +orchestrator: OrchestratorConfig
+}
+
+AppConfig: {
+  shape: class
+  +config: RawOpenTicketAIConfig
+  +get_service_config(uid: str): RenderableConfig
+}
+
+ConfigLoader: {
+  shape: class
+  +load_from_file(path: str): RawOpenTicketAIConfig
+  +load_from_yaml(yaml_str: str): RawOpenTicketAIConfig
+}
+
+# ============================================================================
+# Layer 4: Dependency Injection
+# ============================================================================
+
+UnifiedRegistry: {
+  shape: class
+  +instances_registry: dict[str, Any]
+  +get_registry_instance(id: str): Any
+  +register_instance(id: str, inst: Any): None
+  +get_instance(id: str): Any
+}
+
+Container: {
+  shape: class
+  +bind(interface: type, implementation: type): None
+  +get(interface: type): Any
+}
+
+AppModule: {
+  shape: class
+  +configure(binder: Binder): None
+}
+
+# ============================================================================
+# Layer 5: Ticket System Integration (Abstract)
+# ============================================================================
+
+TicketSystemService: {
+  shape: class
+  style.italic: true
+  +update_ticket(ticket_id: str, updates: UnifiedTicket): bool
+  +find_tickets(criteria: TicketSearchCriteria): list[UnifiedTicket]
+  +find_first_ticket(criteria: TicketSearchCriteria): UnifiedTicket | None
+  +add_note(ticket_id: str, note: UnifiedNote): bool
+}
+
+UnifiedTicket: {
+  shape: class
+  +id: str
+  +title: str
+  +state: str
+  +priority: int
+  +queue: str
+  +customer: str
+  +description: str
+}
+
+UnifiedNote: {
+  shape: class
+  +body: str
+  +subject: str
+  +article_type: str
+  +is_visible_to_customer: bool
+}
+
+TicketSearchCriteria: {
+  shape: class
+  +title: str
+  +state: str
+  +queue: str
+  +customer_user: str
+  +limit: int
+}
+
+# ============================================================================
+# Layer 6: Ticket System Implementation (OTOBO/Znuny)
+# ============================================================================
+
+OTOBOZnunyTicketSystemService: {
+  shape: class
+  +client: OTOBOZnunyClient
+  +update_ticket(ticket_id: str, updates: UnifiedTicket): bool
+  +find_tickets(criteria: TicketSearchCriteria): list[UnifiedTicket]
+  +add_note(ticket_id: str, note: UnifiedNote): bool
+}
+
+RawOTOBOZnunyConfig: {
+  shape: class
+  +password: str
+  +base_url: str
+  +username: str
+  +webservice_name: str
+  +operation_urls: dict
+}
+
+RenderedOTOBOZnunyConfig: {
+  shape: class
+  +password: SecretStr
+  +base_url: str
+  +username: str
+  +to_client_config(): dict
+}
+
+# ============================================================================
+# Layer 7: Ticket System Pipes
+# ============================================================================
+
+AddNotePipe: {
+  shape: class
+  +ticket_id: str
+  +note: UnifiedNote
+  \#_process(): PipeResult
+}
+
+FetchTicketsPipe: {
+  shape: class
+  +criteria: TicketSearchCriteria
+  \#_process(): PipeResult
+}
+
+UpdateTicketPipe: {
+  shape: class
+  +ticket_id: str
+  +updates: UnifiedTicket
+  \#_process(): PipeResult
+}
+
+TicketSystemBasePipeConfig: {
+  shape: class
+  +ticket_system: str | TicketSystemService
+}
+
+# ============================================================================
+# Layer 8: Base Pipes
+# ============================================================================
+
+JinjaExpressionPipe: {
+  shape: class
+  +expression: str
+  \#_process(): PipeResult
+}
+
+# ============================================================================
+# Layer 9: Template Rendering
+# ============================================================================
+
+TemplateRenderer: {
+  shape: class
+  style.italic: true
+  +render(template: str, context: dict): str
+  +render_recursive(data: dict, context: dict): dict
+}
+
+# ============================================================================
+# Core Relationships - Inheritance
+# ============================================================================
+
+CompositePipe -> Pipe: {
+  target-arrowhead: {
+    shape: triangle
+    style.filled: false
+  }
+}
+
+JinjaExpressionPipe -> Pipe: {
+  target-arrowhead: {
+    shape: triangle
+    style.filled: false
+  }
+}
+
+AddNotePipe -> Pipe: {
+  target-arrowhead: {
+    shape: triangle
+    style.filled: false
+  }
+}
+
+FetchTicketsPipe -> Pipe: {
+  target-arrowhead: {
+    shape: triangle
+    style.filled: false
+  }
+}
+
+UpdateTicketPipe -> Pipe: {
+  target-arrowhead: {
+    shape: triangle
+    style.filled: false
+  }
+}
+
+PipeConfig -> RenderableConfig: {
+  target-arrowhead: {
+    shape: triangle
+    style.filled: false
+  }
+}
+
+OTOBOZnunyTicketSystemService -> TicketSystemService: {
+  target-arrowhead: {
+    shape: triangle
+    style.filled: false
+  }
+  label: implements
+}
+
+# ============================================================================
+# Core Relationships - Associations
+# ============================================================================
+
+Pipe -> PipeContext: uses {
+  target-arrowhead: triangle
+}
+
+Pipe -> PipeConfig: configured by {
+  target-arrowhead: triangle
+}
+
+PipeContext -> PipeResult: stores {
+  source-arrowhead: "1"
+  target-arrowhead: "0..*"
+}
+
+CompositePipe -> RenderableFactory: uses {
+  target-arrowhead: triangle
+}
+
+RenderableFactory -> Pipe: creates {
+  target-arrowhead: triangle
+}
+
+RenderableFactory -> RenderableConfig: validates {
+  target-arrowhead: triangle
+}
+
+RenderableFactory -> TemplateRenderer: uses {
+  target-arrowhead: triangle
+}
+
+Orchestrator -> RunnerDefinition: manages {
+  source-arrowhead: "1"
+  target-arrowhead: "0..*"
+}
+
+RunnerDefinition -> PipeConfig: executes {
+  target-arrowhead: triangle
+}
+
+ConfigLoader -> RawOpenTicketAIConfig: creates {
+  target-arrowhead: triangle
+}
+
+AppConfig -> RawOpenTicketAIConfig: contains {
+  target-arrowhead: {
+    shape: diamond
+    style.filled: true
+  }
+}
+
+RawOpenTicketAIConfig -> RenderableConfig: normalizes {
+  target-arrowhead: triangle
+}
+
+Pipe -> UnifiedRegistry: requests services {
+  style.stroke-dash: 4
+}
+
+UnifiedRegistry -> Container: manages {
+  target-arrowhead: triangle
+}
+
+Container -> AppModule: configured by {
+  target-arrowhead: triangle
+}
+
+# ============================================================================
+# Ticket System Relationships
+# ============================================================================
+
+TicketSystemService -> UnifiedTicket: works with {
+  target-arrowhead: triangle
+}
+
+TicketSystemService -> UnifiedNote: works with {
+  target-arrowhead: triangle
+}
+
+TicketSystemService -> TicketSearchCriteria: uses {
+  target-arrowhead: triangle
+}
+
+OTOBOZnunyTicketSystemService -> RenderedOTOBOZnunyConfig: configured by {
+  target-arrowhead: triangle
+}
+
+RawOTOBOZnunyConfig -> RenderedOTOBOZnunyConfig: renders to {
+  target-arrowhead: triangle
+}
+
+AddNotePipe -> TicketSystemBasePipeConfig: configured by {
+  target-arrowhead: triangle
+}
+
+FetchTicketsPipe -> TicketSystemBasePipeConfig: configured by {
+  target-arrowhead: triangle
+}
+
+UpdateTicketPipe -> TicketSystemBasePipeConfig: configured by {
+  target-arrowhead: triangle
+}
+
+TicketSystemBasePipeConfig -> TicketSystemService: contains {
+  target-arrowhead: {
+    shape: diamond
+    style.filled: true
+  }
+}
+
+# ============================================================================
+# Multi-Layer View: Drill Down to Core Components
+# ============================================================================
+
+layers: {
+  config_detail: {
+    direction: down
+    
+    RawOpenTicketAIConfig_detail: "RawOpenTicketAIConfig" {
+      shape: class
+      +plugins: list[str]
+      +infrastructure: InfrastructureConfig
+      +services: list[RenderableConfig]
+      +orchestrator: OrchestratorConfig
+    }
+    
+    InfrastructureConfig: {
+      shape: class
+      +logging: LoggingConfig
+      +default_template_renderer: str
+    }
+    
+    OrchestratorConfig: {
+      shape: class
+      +runners: list[RunnerDefinition]
+    }
+    
+    RawOpenTicketAIConfig_detail -> InfrastructureConfig: contains {
+      target-arrowhead: {
+        shape: diamond
+        style.filled: true
+      }
+    }
+    
+    RawOpenTicketAIConfig_detail -> OrchestratorConfig: contains {
+      target-arrowhead: {
+        shape: diamond
+        style.filled: true
+      }
+    }
+  }
+  
+  pipeline_execution: {
+    direction: right
+    
+    Orchestrator_exec: "Orchestrator" {
+      shape: class
+      +run_all_runners(): None
+    }
+    
+    Runner: "RunnerDefinition" {
+      shape: class
+      +id: str
+      +pipeline: PipeConfig
+    }
+    
+    Pipeline: "CompositePipe" {
+      shape: class
+      +process(ctx: PipeContext): PipeContext
+    }
+    
+    Context: "PipeContext" {
+      shape: class
+      +pipes: dict[str, PipeResult]
+    }
+    
+    Orchestrator_exec -> Runner: executes {
+      target-arrowhead: triangle
+    }
+    
+    Runner -> Pipeline: runs {
+      target-arrowhead: triangle
+    }
+    
+    Pipeline -> Context: updates {
+      target-arrowhead: triangle
+    }
+  }
+}
