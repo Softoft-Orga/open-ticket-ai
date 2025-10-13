@@ -11,10 +11,10 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from injector import Injector
+from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 
 from open_ticket_ai.base.triggers.interval_trigger import IntervalTrigger, IntervalTriggerParams
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 from open_ticket_ai.core.orchestration.orchestrator_config import (
@@ -79,9 +79,7 @@ async def test_pipe_runner_executes_pipe_on_trigger(logger_factory: LoggerFactor
             return PipeResult(success=True, failed=False, data=EmptyData())
 
     mock_factory = MagicMock(spec=RenderableFactory)
-    mock_factory.create_pipe.return_value = TestPipe(
-        PipeConfig(id="test_pipe", use="TestPipe"), logger_factory
-    )
+    mock_factory.create_pipe.return_value = TestPipe(PipeConfig(id="test_pipe", use="TestPipe"), logger_factory)
 
     runner_def = RunnerDefinition(
         id="test_runner",

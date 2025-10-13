@@ -10,10 +10,10 @@ from __future__ import annotations
 from pathlib import Path
 
 from injector import Injector
+from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 
 from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
@@ -312,7 +312,7 @@ my_custom_app:
 
 def test_pipe_instantiation_via_renderable_factory(tmp_path: Path) -> None:
     """Test that config with services is properly loaded and can be used for DI.
-    
+
     This test verifies that services defined in config are registered and available
     for dependency injection into pipes.
     """

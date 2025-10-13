@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import pytest
 from injector import Injector
+from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 
 from open_ticket_ai.base.pipes.ticket_system_pipes import (
     AddNoteParams,
@@ -24,7 +25,6 @@ from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
@@ -106,7 +106,7 @@ async def test_update_ticket_pipe_with_injected_service(
     logger_factory: LoggerFactory,
 ) -> None:
     """Test UpdateTicketPipe with injected TicketSystemService.
-    
+
     This test verifies that the pipe is properly instantiated with the service.
     """
     config = UpdateTicketPipeConfig(
@@ -198,11 +198,10 @@ def test_pipe_service_injection_with_renderable_factory(
     logger_factory: LoggerFactory,
 ) -> None:
     """Test that RenderableFactory correctly configures service injection.
-    
+
     This test verifies that the factory properly registers services and makes them
     available for injection into pipes via the injects configuration.
     """
-    from pydantic import BaseModel
 
     from open_ticket_ai.core.config.renderable import EmptyParams
 
