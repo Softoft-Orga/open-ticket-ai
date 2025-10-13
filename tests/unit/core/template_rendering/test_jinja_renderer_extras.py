@@ -53,7 +53,9 @@ class TestHasFailed:
         assert result is False
 
     def test_has_failed_with_failed_pipe_result(self):
-        pipe_res: PipeResult[CompositePipeResultData] = PipeResult(success=False, failed=True, message="Error occurred", data=CompositePipeResultData())
+        pipe_res: PipeResult[CompositePipeResultData] = PipeResult(
+            success=False, failed=True, message="Error occurred", data=CompositePipeResultData()
+        )
         ctx = MagicMock()
         ctx.get.return_value = {"test_pipe": pipe_res}
         result = has_failed(ctx, "test_pipe")
