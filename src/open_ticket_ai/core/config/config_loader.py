@@ -3,7 +3,6 @@ import os
 import injector
 import yaml  # type: ignore[import-untyped]
 from injector import singleton
-from pydantic import ValidationError
 
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
