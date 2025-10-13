@@ -30,6 +30,7 @@ class ExpressionPipe(Pipe[ExpressionParams]):
         **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
+        self.pipe_config = ExpressionPipeConfig.model_validate(pipe_config.model_dump())
         self.expression = self.params.expression
 
     async def _process(self) -> PipeResult[ExpressionPipeResultData]:

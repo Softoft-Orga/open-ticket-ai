@@ -21,6 +21,5 @@ jobs:
     with:
       package-name: open-ticket-ai
       package-path: .
-      dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
     secrets:
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}

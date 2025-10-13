@@ -33,6 +33,7 @@ class FetchTicketsPipe(Pipe[FetchTicketsParams]):
         **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
+        self.pipe_config = FetchTicketsPipeConfig.model_validate(pipe_config.model_dump())
         self.ticket_system = ticket_system
 
     async def _process(self) -> PipeResult[FetchTicketsPipeResultData]:

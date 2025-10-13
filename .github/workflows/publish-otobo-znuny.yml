@@ -21,6 +21,5 @@ jobs:
     with:
       package-name: otai-otobo-znuny
       package-path: packages/otai_otobo_znuny
-      dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run || false }}
     secrets:
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN_OTOBO_ZNUNY }}

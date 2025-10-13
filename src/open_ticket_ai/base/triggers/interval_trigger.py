@@ -16,7 +16,6 @@ class IntervalTriggerParams(BaseModel):
 
 
 class IntervalTrigger(Trigger[IntervalTriggerParams]):
-    params_class = IntervalTriggerParams
 
     def __init__(self, config: TriggerDefinition[IntervalTriggerParams], *args: Any, **kwargs: Any) -> None:
         super().__init__(config, *args, **kwargs)
