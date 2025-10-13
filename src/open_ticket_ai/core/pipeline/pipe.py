@@ -16,8 +16,7 @@ from .pipe_context import PipeContext
 
 class Pipe[ParamsT: BaseModel](Renderable, ABC):
     def __init__(
-            self, pipe_params: PipeConfig[ParamsT], logger_factory: LoggerFactory | None = None, *args: Any,
-            **kwargs: Any
+        self, pipe_params: PipeConfig[ParamsT], logger_factory: LoggerFactory | None = None, *args: Any, **kwargs: Any
     ) -> None:
         super().__init__(pipe_params.params, *args, **kwargs)
         self.pipe_config = pipe_params

@@ -63,10 +63,10 @@ class CLI:
             return " ".join(description_lines) if description_lines else "No description available"
 
     def init(
-            self,
-            template: str = typer.Argument(..., help="Template name to initialize from"),
-            output: Path = typer.Option("config.yml", "--output", "-o", help="Output file path"),
-            force: bool = typer.Option(False, "--force", "-f", help="Overwrite existing file"),
+        self,
+        template: str = typer.Argument(..., help="Template name to initialize from"),
+        output: Path = typer.Option("config.yml", "--output", "-o", help="Output file path"),
+        force: bool = typer.Option(False, "--force", "-f", help="Overwrite existing file"),
     ) -> None:
         templates = self._get_available_templates()
 
@@ -103,13 +103,13 @@ class CLI:
             raise typer.Exit(1) from e
 
     def run_app(
-            self,
-            config: Path | None = typer.Option(
-                None,
-                "--config",
-                "-c",
-                help="Path to config.yml file (uses OPEN_TICKET_AI_CONFIG env var if not provided)",
-            ),
+        self,
+        config: Path | None = typer.Option(
+            None,
+            "--config",
+            "-c",
+            help="Path to config.yml file (uses OPEN_TICKET_AI_CONFIG env var if not provided)",
+        ),
     ) -> None:
         config_path = config
 
@@ -143,8 +143,8 @@ class CLI:
             raise typer.Exit(1) from e
 
     def check_config(
-            self,
-            config_path: Path = typer.Argument("config.yml", help="Path to config.yml file to validate"),
+        self,
+        config_path: Path = typer.Argument("config.yml", help="Path to config.yml file to validate"),
     ) -> None:
         if not config_path.exists():
             self.console.print(f"[red]❌ Error: Config file not found: {config_path}[/red]")
@@ -186,26 +186,26 @@ class CLI:
         raise NotImplementedError("Plugin list command will be implemented in a future version")
 
     def _plugin_install_stub(
-            self,
-            package_name: str = typer.Argument(..., help="Plugin package name to install"),
-            upgrade: bool = typer.Option(False, "--upgrade", "-U", help="Upgrade if already installed"),
+        self,
+        package_name: str = typer.Argument(..., help="Plugin package name to install"),
+        upgrade: bool = typer.Option(False, "--upgrade", "-U", help="Upgrade if already installed"),
     ) -> None:
         self.console.print("[yellow]⚠️  Plugin management is not yet implemented[/yellow]")
         self.console.print("This feature will be available in a future version.")
         raise NotImplementedError("Plugin install command will be implemented in a future version")
 
     def _plugin_remove_stub(
-            self,
-            package_name: str = typer.Argument(..., help="Plugin package name to remove"),
-            yes: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation prompt"),
+        self,
+        package_name: str = typer.Argument(..., help="Plugin package name to remove"),
+        yes: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation prompt"),
     ) -> None:
         self.console.print("[yellow]⚠️  Plugin management is not yet implemented[/yellow]")
         self.console.print("This feature will be available in a future version.")
         raise NotImplementedError("Plugin remove command will be implemented in a future version")
 
     def _upgrade_stub(
-            self,
-            check_only: bool = typer.Option(False, "--check-only", help="Only check for updates, don't install"),
+        self,
+        check_only: bool = typer.Option(False, "--check-only", help="Only check for updates, don't install"),
     ) -> None:
         self.console.print("[yellow]⚠️  Upgrade command is not yet implemented[/yellow]")
         self.console.print("This feature will be available in a future version.")

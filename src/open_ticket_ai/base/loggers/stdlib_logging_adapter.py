@@ -45,9 +45,9 @@ class StdlibLoggerFactory(LoggerFactory):
 
 
 def configure_stdlib_logging(
-        level: str = "INFO",
-        format_string: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        datefmt: str = "%Y-%m-%d %H:%M:%S",
+    level: str = "INFO",
+    format_string: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt: str = "%Y-%m-%d %H:%M:%S",
 ) -> None:
     """Configure stdlib logging with standard settings.
 

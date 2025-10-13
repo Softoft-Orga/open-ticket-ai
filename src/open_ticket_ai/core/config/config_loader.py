@@ -55,7 +55,7 @@ class ConfigLoader:
 
 
 def load_config(
-        config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None
+    config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None
 ) -> RawOpenTicketAIConfig:
     """Standalone helper function to load configuration.
 
