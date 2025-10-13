@@ -84,25 +84,26 @@ class RenderableFactory:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):
             raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")
-        kwargs: dict[str, Any] = {}
-        kwargs |= self.__resolve_injects(registerable_config.injects, scope)
         
-        # Pass config with the appropriate parameter name based on the class type
+        # Import classes to check type
         from open_ticket_ai.core.orchestration.trigger import Trigger
         from open_ticket_ai.core.pipeline.pipe import Pipe
         
-        if issubclass(cls, Trigger):
-            kwargs["config"] = registerable_config
-        elif issubclass(cls, Pipe):
-            kwargs["pipe_params"] = registerable_config
-        else:
-            # For other Renderable types, use pipe_config as default
-            kwargs["pipe_config"] = registerable_config
-            
+        # Build kwargs for additional parameters
+        kwargs: dict[str, Any] = {}
+        kwargs |= self.__resolve_injects(registerable_config.injects, scope)
         kwargs["factory"] = self
         kwargs["app_config"] = self._app_config
         kwargs["logger_factory"] = self._logger_factory
-        return cls(**kwargs)
+        
+        # Pass config as first positional argument for Pipe and Trigger classes
+        # This avoids parameter name conflicts between different subclasses
+        if issubclass(cls, (Pipe, Trigger)):
+            return cls(registerable_config, **kwargs)
+        else:
+            # For other Renderable types, use pipe_config as kwarg for backward compatibility
+            kwargs["pipe_config"] = registerable_config
+            return cls(**kwargs)
 
     def __resolve_injects(self, injects: dict[str, Any], scope: PipeContext) -> dict[str, Renderable]:
         out: dict[str, Any] = {}
