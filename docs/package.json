@@ -4,7 +4,7 @@
     "main": "index.js",
     "scripts": {
         "docs:dev": "vitepress dev",
-        "docs:build": "vitepress build",
+        "docs:build": "python3 ../scripts/build_sidecars_json.py && vitepress build",
         "docs:preview": "vitepress preview",
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build"
