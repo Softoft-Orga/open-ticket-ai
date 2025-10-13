@@ -1,3 +1,7 @@
+---
+description: Open Ticket AI logging system documentation covering abstract interfaces, stdlib and structlog implementations, and structured logging patterns.
+---
+
 # Logging System
 
 Open Ticket AI uses an abstract logging interface that allows developers to switch between different logging implementations without modifying application code.

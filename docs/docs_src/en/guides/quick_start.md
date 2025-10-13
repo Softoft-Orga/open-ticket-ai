@@ -1,3 +1,7 @@
+---
+description: Get started with Open Ticket AI in 5 minutes. Quick setup guide for Python 3.13+ with OTOBO, Znuny, or OTRS ticket system integration.
+---
+
 # Quick Start Guide
 
 Get started with Open Ticket AI in 5 minutes.

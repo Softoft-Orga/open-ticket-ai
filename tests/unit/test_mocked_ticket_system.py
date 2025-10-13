@@ -1,4 +1,3 @@
-"""Tests for MockedTicketSystem to demonstrate usage."""
 
 import pytest
 
@@ -12,7 +11,6 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 
 @pytest.mark.asyncio
 async def test_create_ticket(empty_mocked_ticket_system):
-    """Test creating a ticket returns an ID."""
     ticket = UnifiedTicket(subject="Test ticket", body="Test body")
 
     ticket_id = await empty_mocked_ticket_system.create_ticket(ticket)
@@ -23,7 +21,6 @@ async def test_create_ticket(empty_mocked_ticket_system):
 
 @pytest.mark.asyncio
 async def test_get_ticket(mocked_ticket_system):
-    """Test retrieving a ticket by ID."""
     ticket = await mocked_ticket_system.get_ticket("TICKET-1")
 
     assert ticket is not None
@@ -33,7 +30,6 @@ async def test_get_ticket(mocked_ticket_system):
 
 @pytest.mark.asyncio
 async def test_update_ticket(mocked_ticket_system):
-    """Test updating a ticket."""
     updates = UnifiedTicket(subject="Updated subject")
 
     success = await mocked_ticket_system.update_ticket("TICKET-1", updates)
@@ -48,14 +44,12 @@ async def test_update_ticket(mocked_ticket_system):
 
 @pytest.mark.asyncio
 async def test_add_note_to_ticket(mocked_ticket_system):
-    """Test adding a note to a ticket."""
     note = UnifiedNote(subject="Test note", body="Note body")
 
     success = await mocked_ticket_system.add_note("TICKET-1", note)
 
     assert success is True
 
-    # Verify the note was added
     ticket = await mocked_ticket_system.get_ticket("TICKET-1")
     assert len(ticket.notes) == 1
     assert ticket.notes[0].body == "Note body"
@@ -64,8 +58,6 @@ async def test_add_note_to_ticket(mocked_ticket_system):
 
 @pytest.mark.asyncio
 async def test_add_note_with_int_ticket_id(mocked_ticket_system):
-    """Test adding a note using an integer ticket ID."""
-    # First create a ticket with numeric ID
     ticket = UnifiedTicket(id="123", subject="Numeric ID ticket")
     await mocked_ticket_system.create_ticket(ticket)
 
@@ -77,7 +69,6 @@ async def test_add_note_with_int_ticket_id(mocked_ticket_system):
 
 @pytest.mark.asyncio
 async def test_find_tickets_by_queue(mocked_ticket_system):
-    """Test finding tickets by queue."""
     criteria = TicketSearchCriteria(
         queue=UnifiedEntity(id="1", name="Support"),
         limit=10,
@@ -85,13 +76,12 @@ async def test_find_tickets_by_queue(mocked_ticket_system):
 
     tickets = await mocked_ticket_system.find_tickets(criteria)
 
-    assert len(tickets) == 2  # TICKET-1 and TICKET-3 are in Support
+    assert len(tickets) == 2
     assert all(t.queue.name == "Support" for t in tickets)
 
 
 @pytest.mark.asyncio
 async def test_find_first_ticket(mocked_ticket_system):
-    """Test finding the first ticket matching criteria."""
     criteria = TicketSearchCriteria(queue=UnifiedEntity(id="1"))
 
     ticket = await mocked_ticket_system.find_first_ticket(criteria)
@@ -102,7 +92,6 @@ async def test_find_first_ticket(mocked_ticket_system):
 
 @pytest.mark.asyncio
 async def test_pagination(mocked_ticket_system):
-    """Test pagination with limit and offset."""
     criteria = TicketSearchCriteria(limit=2, offset=1)
 
     tickets = await mocked_ticket_system.find_tickets(criteria)
@@ -112,7 +101,6 @@ async def test_pagination(mocked_ticket_system):
 
 @pytest.mark.asyncio
 async def test_update_nonexistent_ticket(empty_mocked_ticket_system):
-    """Test updating a ticket that doesn't exist."""
     updates = UnifiedTicket(subject="Updated")
 
     success = await empty_mocked_ticket_system.update_ticket("TICKET-999", updates)
@@ -122,7 +110,6 @@ async def test_update_nonexistent_ticket(empty_mocked_ticket_system):
 
 @pytest.mark.asyncio
 async def test_add_note_to_nonexistent_ticket(empty_mocked_ticket_system):
-    """Test adding a note to a ticket that doesn't exist."""
     note = UnifiedNote(body="Test")
 
     success = await empty_mocked_ticket_system.add_note("TICKET-999", note)
@@ -131,7 +118,6 @@ async def test_add_note_to_nonexistent_ticket(empty_mocked_ticket_system):
 
 
 def test_clear_all_data(mocked_ticket_system):
-    """Test clearing all data from the system."""
     assert mocked_ticket_system.get_ticket_count() == 3
 
     mocked_ticket_system.clear_all_data()
@@ -140,7 +126,6 @@ def test_clear_all_data(mocked_ticket_system):
 
 
 def test_get_all_tickets(mocked_ticket_system):
-    """Test getting all tickets."""
     tickets = mocked_ticket_system.get_all_tickets()
 
     assert len(tickets) == 3

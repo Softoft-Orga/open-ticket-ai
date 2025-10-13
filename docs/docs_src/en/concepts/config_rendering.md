@@ -1,3 +1,9 @@
+---
+description: Understand Open Ticket AI's configuration lifecycle, template rendering with Jinja2, dependency injection, and how YAML transforms into runtime objects.
+pageClass: full-page
+aside: false
+---
+
 # Configuration and Template Rendering
 
 The configuration and template rendering system is the foundation of Open Ticket AI's dynamic behavior. It transforms static YAML files into live, context-aware application objects through a multi-stage process involving validation, template rendering, and dependency injection.
@@ -18,149 +24,177 @@ This process enables dynamic, context-aware pipelines that adapt to runtime cond
 The following diagram illustrates the complete lifecycle of configuration from YAML to runtime objects:
 
 ```mermaid
-flowchart TD
-    subgraph "Configuration Loading"
-        YAML["config.yml"]
-        Loader["ConfigLoader"]
-        RawConfig["RawOpenTicketAIConfig"]
+%%{init:{
+  "flowchart":{
+    "defaultRenderer":"elk",
+    "htmlLabels":true,
+    "curve":"basis"
+  },
+  "themeVariables":{
+    "fontSize":"14px",
+    "fontFamily":"system-ui, -apple-system, sans-serif",
+    "primaryColor":"#3b82f6",
+    "primaryTextColor":"#fff",
+    "lineColor":"#64748b"
+  }
+}}%%
+
+flowchart TB
+    %% ===================== CONFIGURATION LOADING =====================
+    subgraph LOAD["📁 Configuration Loading"]
+        direction TB
+        YAML["config.yml<br/><small>YAML File</small>"]
+        Loader["ConfigLoader<br/><small>Parse & Load</small>"]
+        RawConfig["RawOpenTicketAIConfig<br/><small>Validated Model</small>"]
+        
+        YAML -->|Read & Parse| Loader
+        Loader -->|Validate with<br/>Pydantic| RawConfig
     end
 
-    subgraph "Bootstrap Phase"
-        InfraConfig["InfrastructureConfig"]
-        RendererConfig["TemplateRendererConfig"]
-        BootstrapRenderer["JinjaRenderer"]
+    %% ===================== BOOTSTRAP PHASE =====================
+    subgraph BOOT["🔧 Bootstrap Phase"]
+        direction TB
+        InfraConfig["InfrastructureConfig<br/><small>Extract Infrastructure</small>"]
+        RendererConfig["TemplateRendererConfig<br/><small>Renderer Settings</small>"]
+        BootstrapRenderer["JinjaRenderer<br/><small>⚠️ NOT Rendered</small>"]:::critical
+        
+        InfraConfig --> RendererConfig
+        RendererConfig -->|Instantiate<br/>NO rendering| BootstrapRenderer
     end
 
-    subgraph "Service Rendering Phase"
-        Renderer["TemplateRenderer"]
-        Factory["RenderableFactory"]
-        ServiceConfigs["RenderableConfig List"]
+    %% ===================== SERVICE RENDERING PHASE =====================
+    subgraph RENDER["🎨 Service Rendering Phase"]
+        direction TB
+        Renderer["TemplateRenderer<br/><small>Active Renderer</small>"]
+        Factory["RenderableFactory<br/><small>Service Factory</small>"]
+        ServiceConfigs["RenderableConfig List<br/><small>Service Definitions</small>"]
+        
+        BootstrapRenderer -.->|Register as<br/>singleton| Renderer
+        ServiceConfigs --> Factory
+        Renderer -.->|Inject template<br/>renderer| Factory
     end
 
-    subgraph "Runtime Objects"
-        Services["Service Instances"]
-        Orchestrator["Orchestrator"]
-        Runners["PipeRunner"]
+    %% ===================== RUNTIME OBJECTS =====================
+    subgraph RUNTIME["⚡ Runtime Objects"]
+        direction TB
+        Services["Service Instances<br/><small>Ticket System, etc.</small>"]
+        Orchestrator["Orchestrator<br/><small>Pipeline Manager</small>"]
+        Runners["PipeRunner<br/><small>Execution Units</small>"]
+        
+        Factory -->|Render &<br/>instantiate| Services
+        Services -.->|Register| Orchestrator
+        Orchestrator -->|Create| Runners
     end
 
-    YAML -->|Read & Parse| Loader
-    Loader -->|Validate with Pydantic| RawConfig
-    RawConfig -->|Extract infrastructure| InfraConfig
-    InfraConfig -->|Get template_renderer_config| RendererConfig
-    RendererConfig -->|Instantiate NO rendering| BootstrapRenderer
-    BootstrapRenderer -->|Register as service| Renderer
-    RawConfig -->|Extract service definitions| ServiceConfigs
-    ServiceConfigs -->|Pass renderable configs| Factory
-    Renderer -->|Inject template renderer| Factory
-    Factory -->|Render & instantiate each service| Services
-    Services -->|Register services| Orchestrator
-    RawConfig -->|Extract orchestrator config| Orchestrator
-    Orchestrator -->|Create pipeline runners| Runners
+    %% ===================== MAIN FLOW =====================
+    RawConfig ==>|Extract<br/>infrastructure| InfraConfig
+    RawConfig ==>|Extract<br/>services| ServiceConfigs
+    RawConfig ==>|Extract<br/>orchestrator| Orchestrator
+
+    %% ===================== STYLES =====================
+    classDef critical fill:#dc2626,stroke:#b91c1c,stroke-width:3px,color:#fff,font-weight:bold
+    
+    %% ===================== SUBGRAPH STYLES =====================
+    style LOAD fill:#f8fafc,stroke:#64748b,stroke-width:2px
+    style BOOT fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style RENDER fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+    style RUNTIME fill:#dcfce7,stroke:#16a34a,stroke-width:2px
 ```
 
-## Template Rendering Architecture
+## Template Rendering Scope
 
-Template rendering operates at multiple scopes, each with different available variables and context:
-
-```mermaid
-flowchart TD
-    subgraph "Rendering Scopes"
-        subgraph "Global Scope"
-            Global1["Environment Variables"]
-            Global2["Infrastructure Config"]
-        end
-        
-        subgraph "Pipeline Scope"
-            Pipeline1["Pipeline Parameters"]
-            Pipeline2["Previous Pipeline Results"]
-            Pipeline3["Global Scope Variables"]
-        end
-        
-        subgraph "Pipe Scope"
-            Pipe1["Pipe Parameters"]
-            Pipe2["Previous Pipe Results"]
-            Pipe3["Pipeline Context"]
-        end
-    end
-
-    subgraph "Template Renderer"
-        Jinja["JinjaRenderer"]
-        Sandbox["SandboxedEnvironment"]
-    end
-
-    subgraph "Template Functions"
-        EnvFunc["env()"]
-        PipeFunc["pipe_result()"]
-        FailFunc["has_failed()"]
-        PathFunc["at_path()"]
-    end
-
-    Global1 --> Pipeline1
-    Global2 --> Pipeline1
-    Pipeline1 --> Pipe1
-    Pipeline2 --> Pipe1
-    Pipeline3 --> Pipe1
-
-    Pipe1 -->|Render with scope| Jinja
-    Jinja -->|Execute in sandboxed env| Sandbox
-    Sandbox -->|Access env vars| EnvFunc
-    Sandbox -->|Access pipe results| PipeFunc
-    Sandbox -->|Check failure status| FailFunc
-    Sandbox -->|Navigate data paths| PathFunc
-```
-
-## Rendering Process Flow
-
-When a pipeline is triggered, configuration rendering follows this sequence:
+When templates are rendered during pipe execution, the rendering scope is built from the **PipeContext** structure:
 
 ```mermaid
-sequenceDiagram
-    actor Orchestrator
-    participant Runner as PipeRunner
-    participant Factory as RenderableFactory
-    participant Renderer as TemplateRenderer
-    participant Model as "Pydantic Model"
+%%{init:{
+  "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
+  "themeVariables":{"fontSize":"14px","fontFamily":"system-ui"},
+}}%%
 
-    Orchestrator ->> Runner: trigger()
-    activate Runner
-
-    Runner ->> Factory: create_pipe(pipe_config_raw, scope)
-    activate Factory
-
-    Factory ->> Factory: Build PipeContext scope
-
-    Factory ->> Renderer: render_base_model(pipe_config, scope)
-    activate Renderer
-
-    Renderer ->> Renderer: config.model_dump()
-
-    Renderer ->> Renderer: render_recursive(config_dict, scope)
-
-    loop For each string in config
-        Renderer ->> Renderer: render(template_str, scope)
+flowchart TB
+    subgraph ENV["🌍 Environment Variables"]
+        direction TB
+        EnvVars["Filtered by prefix<br/>(default: OTAI_*)"]
+        EnvAccess["Accessed via env() function"]
     end
 
-    Renderer -->> Factory: rendered_dict
-    deactivate Renderer
+    subgraph CONTEXT["📦 PipeContext Structure"]
+        direction TB
+        
+        subgraph CURRENT["Current Pipe Context"]
+            direction TB
+            CurParams["params: dict<br/>(This pipe's parameters)"]
+            CurPipes["pipes: dict<br/>(All previous pipe results)"]
+            ParentRef["parent: PipeContext | None<br/>(Link to parent context)"]
+        end
+        
+        subgraph PARENT["Parent Context (if in CompositePipe)"]
+            direction TB
+            ParParams["params: dict<br/>(Parent pipe parameters)"]
+            ParPipes["pipes: dict<br/>(Parent's pipe results)"]
+            ParParent["parent: PipeContext | None<br/>(Grandparent context)"]
+        end
+    end
 
-    Factory ->> Model: PipeConfig(**rendered_dict)
-    activate Model
-    Model ->> Model: Validate rendered values
-    Model -->> Factory: validated_config
-    deactivate Model
+    subgraph RENDER["🎨 Template Rendering Scope"]
+        direction TB
+        Scope1["params → Current pipe params"]
+        Scope2["pipes → All accumulated results"]
+        Scope3["parent → Parent context chain"]
+        Scope4["env() → Filtered env vars"]
+    end
 
-    Factory ->> Factory: __resolve_injects(injects, scope)
+    EnvVars --> EnvAccess
+    
+    CurParams --> Scope1
+    CurPipes --> Scope2
+    ParentRef --> PARENT
+    
+    ParParams -.-> Scope1
+    ParPipes -.-> Scope2
+    ParParent -.-> Scope3
+    
+    EnvAccess --> Scope4
+    
+    CURRENT --> RENDER
+    PARENT -.-> RENDER
 
-    Factory ->> Factory: __create_renderable_instance(config, scope)
-
-    Factory -->> Runner: Pipe instance (ready to execute)
-    deactivate Factory
-
-    Runner -->> Orchestrator: Pipe ready
-    deactivate Runner
+    style ENV fill:#1e3a5f,stroke:#0d1f3d,stroke-width:2px,color:#e0e0e0
+    style CONTEXT fill:#5a189a,stroke:#3c096c,stroke-width:2px,color:#e0e0e0
+    style RENDER fill:#2d6a4f,stroke:#1b4332,stroke-width:2px,color:#e0e0e0
+    style CURRENT fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
+    style PARENT fill:#374151,stroke:#1f2937,stroke-width:2px,color:#9ca3af
 ```
 
 ## Key Concepts
+
+### PipeContext Structure
+
+The `PipeContext` is the core data structure that holds execution state and is used as the rendering scope:
+
+```python
+class PipeContext(BaseModel):
+    pipes: dict[str, PipeResult[Any]]  # All previous pipe results
+    params: dict[str, Any]              # Current pipe parameters
+    parent: PipeContext | None          # Parent context (for nested pipes)
+```
+
+**What each field provides:**
+
+- **`pipes`**: Contains results from all previously executed pipes in the pipeline, keyed by pipe ID
+  - Accumulated as each pipe completes
+  - In CompositePipe: merged results from all child steps
+  - Access via `pipe_result('pipe_id')` in templates
+
+- **`params`**: Current pipe's parameters
+  - Set when the pipe is created
+  - Accessible via `params.*` in templates
+  - For nested pipes, inherits from parent via the context chain
+
+- **`parent`**: Reference to parent context (if this pipe is inside a CompositePipe)
+  - Allows access to parent scope variables
+  - Creates hierarchical context chain
+  - Can traverse multiple levels (`parent.parent...`)
 
 ### Environment Variable Substitution
 
@@ -175,18 +209,23 @@ services:
       endpoint: "{{ env('OTAI_ENDPOINT', 'https://default.example.com') }}"
 ```
 
-Environment variables can be filtered by prefix using the `env_config.prefix` setting in the template renderer configuration.
+**Environment variable filtering:**
+- By default, only environment variables with the `OTAI_` prefix are accessible
+- Configurable via `template_renderer_config.env_config.prefix`
+- Prevents accidental exposure of system environment variables
 
 ### Jinja2 Template Evaluation
 
 All string values in service and pipe configurations are treated as Jinja2 templates and evaluated against the current scope:
 
 **Available in templates:**
-- `{{ variable }}`: Variable substitution
+- `{{ params.field_name }}`: Access current pipe parameters
+- `{{ pipe_result('pipe_id').data.field }}`: Access previous pipe results
+- `{{ parent.params.field }}`: Access parent context parameters
+- `{{ env('VAR_NAME', 'default') }}`: Access environment variables
 - `{% if condition %}...{% endif %}`: Conditional blocks
 - `{% for item in list %}...{% endfor %}`: Iteration
 - `{{ value | filter }}`: Jinja2 filters
-- Custom functions: `env()`, `pipe_result()`, `has_failed()`, `at_path()`
 
 **Template rendering is recursive:**
 - Strings are rendered as Jinja2 templates
@@ -194,46 +233,43 @@ All string values in service and pipe configurations are treated as Jinja2 templ
 - Dictionaries have each value rendered
 - Objects are converted to dicts, rendered, then reconstructed
 
-### Context Scopes
+### Context Flow in Pipelines
 
-Context flows hierarchically through the rendering system:
-
-**Global Context:**
-- Environment variables (via `env()` function)
-- Infrastructure configuration
-- Available at all levels
-
-**Pipeline Context:**
-- Pipeline-level parameters from `orchestrator.pipelines[].params`
-- Results from previous pipeline runs
-- Inherits global context
-
-**Pipe Context (PipeContext):**
-- Results from previous pipes in the pipeline: `context.pipes[pipe_id]`
-- Pipe-specific parameters
-- Parent pipeline context
-- Inherits all parent scopes
-
-Example of context access:
-
+**Simple Pipeline (no nesting):**
 ```yaml
-orchestrator:
-  pipelines:
-    - name: process_tickets
-      params:
-        threshold: 0.8
-      pipes:
-        - id: fetch_tickets
-          use: "mypackage:FetchTickets"
-          
-        - id: classify_tickets
-          use: "mypackage:ClassifyTickets"
-          params:
-            # Access pipeline parameter
-            confidence_threshold: "{{ context.params.threshold }}"
-            # Access previous pipe result
-            tickets: "{{ pipe_result('fetch_tickets').data.tickets }}"
+pipes:
+  - id: fetch_tickets
+    params:
+      limit: 50
+    # Context: { pipes: {}, params: { limit: 50 }, parent: None }
+  
+  - id: classify
+    params:
+      threshold: "{{ params.threshold }}"  # Access own params
+      tickets: "{{ pipe_result('fetch_tickets').data.tickets }}"  # Access previous result
+    # Context: { pipes: { fetch_tickets: <result> }, params: { threshold: 0.8, tickets: ... }, parent: None }
 ```
+
+**Nested Pipeline (CompositePipe):**
+```yaml
+- id: workflow
+  use: CompositePipe
+  params:
+    threshold: 0.8
+  steps:
+    - id: inner_step
+      params:
+        # Can access parent params via context chain
+        value: "{{ parent.params.threshold }}"
+      # Context: { pipes: {}, params: { value: 0.8 }, parent: <workflow context> }
+```
+
+**CompositePipe Result Merging:**
+When a CompositePipe completes:
+1. All child pipe results are collected
+2. Results are merged into a single `PipeResult`
+3. The merged result is stored in the parent context's `pipes` dict
+4. Child results remain accessible via their individual pipe IDs
 
 ### Bootstrap Exception: Template Renderer Config
 
@@ -299,6 +335,41 @@ The `RenderableFactory` resolves these dependencies by:
 2. Instantiating it if not already created
 3. Passing it to the dependent service's constructor
 
+## Template Functions and Helpers
+
+### Available Template Functions
+
+**`env(var_name, default=None)`**
+Access environment variables (filtered by prefix):
+```yaml
+api_key: "{{ env('OTAI_API_KEY') }}"
+endpoint: "{{ env('OTAI_ENDPOINT', 'https://default.com') }}"
+```
+
+**`pipe_result(pipe_id, key=None)`**
+Access results from previously executed pipes:
+```yaml
+# Get entire result
+tickets: "{{ pipe_result('fetch_tickets').data.fetched_tickets }}"
+
+# Get specific field
+count: "{{ pipe_result('fetch_tickets', 'data.count') }}"
+```
+
+**`has_succeeded(pipe_id)`**
+Check if a pipe executed successfully:
+```yaml
+if: "{{ has_succeeded('classify') }}"
+queue: "{{ pipe_result('classify').data.queue if has_succeeded('classify') else 'default' }}"
+```
+
+**`has_failed(pipe_id)`**
+Check if a pipe failed:
+```yaml
+if: "{{ has_failed('classify') }}"
+note: "Classification failed, using default routing"
+```
+
 ## Implementation References
 
 ### Configuration Module
@@ -323,6 +394,14 @@ The `RenderableFactory` resolves these dependencies by:
 - **`jinja_renderer.py`**: `JinjaRenderer` implementation using Jinja2
 - **`jinja_renderer_extras.py`**: Custom Jinja2 functions (`env`, `pipe_result`, etc.)
 
+### Pipeline Context
+
+**Location**: `src/open_ticket_ai/core/pipeline/`
+
+- **`pipe_context.py`**: `PipeContext` model with `pipes`, `params`, and `parent` fields
+- **`pipe_config.py`**: `PipeResult` and configuration models
+- **`pipe.py`**: Base `Pipe` class that uses `PipeContext`
+
 ### Dependency Injection
 
 **Location**: `src/open_ticket_ai/core/dependency_injection/`
@@ -332,10 +411,9 @@ The `RenderableFactory` resolves these dependencies by:
 ## Related Documentation
 
 - [Pipeline System](pipeline.md) - How pipelines use rendered configurations
-- [Template Rendering Code Details](../code/template_rendering.md) - Code-level documentation
-- [Configuration Structure](../configuration/config_structure.md) - YAML configuration reference
-- [Environment Variables](../configuration/environment_variables.md) - Environment variable usage
-- [Services](../code/services.md) - Service registration and dependency injection
+- [Configuration Structure](../details/config_reference.md) - YAML configuration reference
+- [Template Rendering](../developers/template_rendering.md) - Developer guide for templates
+- [Services](../developers/services.md) - Service registration and dependency injection
 
 ## Best Practices
 
@@ -343,22 +421,22 @@ The `RenderableFactory` resolves these dependencies by:
 - Keep template logic simple and readable
 - Use environment variables for secrets and environment-specific values
 - Validate configurations early in development
-- Document custom template functions and filters
+- Document expected context variables
 
 **Template Usage:**
 - Prefer simple variable substitution over complex logic
-- Use conditional blocks sparingly
-- Keep templates focused on data transformation
+- Use `has_succeeded()` before accessing pipe results
+- Provide defaults with `env()` function
 - Test templates with various input scenarios
 
 **Scope Management:**
-- Understand which scope variables are available in each context
-- Avoid relying on implicit scope inheritance
-- Use explicit context references for clarity
-- Document expected context variables in pipe configurations
+- Understand the PipeContext structure (`pipes`, `params`, `parent`)
+- Use `parent` chain to access parent scope in nested pipes
+- Remember that `pipes` accumulates all previous results
+- Access own parameters via `params.*`
 
 **Security:**
 - Never hardcode secrets in YAML files
-- Use environment variables for sensitive data
-- Trust the sandboxed Jinja2 environment
+- Use environment variables for sensitive data with proper prefix filtering
+- The sandboxed Jinja2 environment prevents code injection
 - Be cautious with user-provided template input

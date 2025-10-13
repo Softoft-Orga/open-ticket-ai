@@ -1,3 +1,7 @@
+---
+description: OTOBO, Znuny, and OTRS plugin for Open Ticket AI providing ticket system integration with fetching, updating, and username/password authentication.
+---
+
 # OTOBO/Znuny Plugin
 
 The OTOBO/Znuny plugin provides integration with OTOBO, Znuny, and OTRS ticket systems.
@@ -7,31 +11,20 @@ The OTOBO/Znuny plugin provides integration with OTOBO, Znuny, and OTRS ticket s
 This plugin implements:
 - Ticket system adapter for OTOBO/Znuny/OTRS
 - Ticket fetching and updating
-- Custom field support
-- Authentication handling
+- Username/password authentication
+- Queue-based ticket search
 
 ## Ticket System Adapter Implementation
 
 The plugin provides a complete `TicketSystemAdapter` implementation that:
 - Connects to OTOBO/Znuny REST API
-- Fetches tickets based on search criteria
+- Fetches tickets based on queue criteria
 - Updates ticket properties
-- Manages custom fields
+- Manages authentication sessions
 
 ## Authentication and Connection
 
-### API Token Authentication
-
-```yaml
-plugins:
-  - name: otobo_znuny
-    config:
-      base_url: "https://your-otobo-instance.com"
-      api_token: "${OTOBO_API_TOKEN}"
-      verify_ssl: true
-```
-
-### Session-based Authentication
+The plugin uses **username and password authentication** only. Configure your credentials:
 
 ```yaml
 plugins:
@@ -40,19 +33,68 @@ plugins:
       base_url: "https://your-otobo-instance.com"
       username: "${OTOBO_USERNAME}"
       password: "${OTOBO_PASSWORD}"
+      verify_ssl: true
 ```
+
+**Important**: API token authentication is not supported. You must use username and password credentials.
 
 ## Supported Operations
 
 ### Fetch Tickets
 
+The plugin supports queue-based ticket search with pagination:
+
 ```yaml
 pipes:
   - pipe_name: fetch_tickets
     search_criteria:
-      StateType: "Open"
-      QueueIDs: [1, 2, 3]
+      queue:
+        id: "1"
+        name: "Support"
+      limit: 50
+      offset: 0
+```
+
+**Search Criteria Fields:**
+- `queue`: (Optional) UnifiedEntity with `id` and/or `name` to filter by queue
+- `limit`: (Optional) Maximum number of tickets to fetch (default: 10)
+- `offset`: (Optional) Number of tickets to skip for pagination (default: 0)
+
+**Example - Fetch by Queue Name:**
+```yaml
+pipes:
+  - pipe_name: fetch_tickets
+    search_criteria:
+      queue:
+        name: "Support"
       limit: 100
+```
+
+**Example - Fetch All (No Queue Filter):**
+```yaml
+pipes:
+  - pipe_name: fetch_tickets
+    search_criteria:
+      limit: 50
+      offset: 0
+```
+
+**Example - Pagination:**
+```yaml
+pipes:
+  - pipe_name: fetch_tickets_page_1
+    search_criteria:
+      queue:
+        name: "Billing"
+      limit: 25
+      offset: 0
+
+  - pipe_name: fetch_tickets_page_2
+    search_criteria:
+      queue:
+        name: "Billing"
+      limit: 25
+      offset: 25
 ```
 
 ### Update Tickets
@@ -74,47 +116,35 @@ pipes:
     note_type: "internal"
 ```
 
-## Custom Field Handling
-
-### Reading Custom Fields
-
-```yaml
-pipes:
-  - pipe_name: read_custom_field
-    field_name: "CustomerCategory"
-```
-
-### Updating Custom Fields
-
-```yaml
-pipes:
-  - pipe_name: update_custom_field
-    field_name: "AIClassification"
-    field_value: "{{ context.classification_result }}"
-```
-
 ## Known Limitations
+
+### Search Functionality
+- **Only queue-based search is supported**
+- No support for StateType, TicketNumber, or other advanced filters
+- Cannot search by priority, state, or custom fields
+- Use queue filtering and post-process results if needed
+
+### Authentication
+- **No API token support** - only username/password authentication
+- Session management handled automatically by the plugin
+- Credentials must have appropriate permissions
 
 ### API Rate Limits
 - Respect API rate limits
 - Implement backoff strategies
-- Use batch operations when possible
+- Use pagination for large result sets
 
 ### Version Compatibility
 - OTOBO 10.0+
 - Znuny 6.0+
 - OTRS 6.0+ (limited support)
 
-### Custom Field Types
-- Not all custom field types supported
-- Test with your schema
-- Check field type compatibility
-
 ## Configuration Reference
 
 ### Required Settings
 - `base_url`: OTOBO/Znuny instance URL
-- Authentication credentials (token or username/password)
+- `username`: Username for authentication
+- `password`: Password for authentication
 
 ### Optional Settings
 - `verify_ssl`: SSL certificate verification (default: true)
@@ -125,25 +155,81 @@ pipes:
 ## Troubleshooting
 
 ### Connection Issues
-- Verify base URL is correct
+- Verify base URL is correct and accessible
 - Check network connectivity
-- Verify SSL certificates
-- Check firewall rules
+- Verify SSL certificates (or temporarily disable with `verify_ssl: false` for testing)
+- Check firewall rules allow outbound connections
 
 ### Authentication Failures
-- Verify credentials are correct
-- Check token expiration
-- Verify user permissions
-- Check authentication method
+- Verify username and password are correct
+- Check user account is active and not locked
+- Verify user has appropriate permissions
+- Ensure credentials are properly set in environment variables
+
+### No Tickets Returned
+- Verify queue name or ID is correct
+- Check user has permission to access the specified queue
+- Try fetching without queue filter to verify connection works
+- Verify tickets exist in the specified queue
 
 ### Update Failures
-- Verify ticket exists
-- Check user permissions
-- Validate field values
-- Review error logs
+- Verify ticket exists and user has write permissions
+- Check that QueueID and PriorityID values are valid
+- Validate field values match OTOBO/Znuny requirements
+- Review error logs for specific error messages
+
+## Workarounds for Search Limitations
+
+Since only queue-based search is supported, you can work around limitations by:
+
+**1. Fetch and Filter in Pipeline:**
+```yaml
+pipes:
+  - pipe_name: fetch_all_tickets
+    search_criteria:
+      limit: 100
+  
+  - pipe_name: filter_open_tickets
+    # Use custom pipe to filter by state
+    filter_condition: "{{ ticket.state == 'Open' }}"
+```
+
+**2. Fetch Multiple Queues:**
+```yaml
+pipes:
+  - pipe_name: fetch_support_queue
+    search_criteria:
+      queue:
+        name: "Support"
+      limit: 50
+  
+  - pipe_name: fetch_billing_queue
+    search_criteria:
+      queue:
+        name: "Billing"
+      limit: 50
+```
+
+**3. Use Pagination for Large Datasets:**
+```yaml
+pipes:
+  - pipe_name: fetch_page_1
+    search_criteria:
+      queue:
+        name: "Support"
+      limit: 50
+      offset: 0
+  
+  - pipe_name: fetch_page_2
+    search_criteria:
+      queue:
+        name: "Support"
+      limit: 50
+      offset: 50
+```
 
 ## Related Documentation
 
-- [OTOBO/Znuny Integration](../integration/otobo_znuny_integration.md)
-- [Ticket Systems](../integration/ticket_systems.md)
-- [Configuration Examples](../details/configuration/examples.md)
+- [Ticket System Integration](../concepts/ticket_system_integration.md)
+- [First Pipeline Tutorial](../guides/first_pipeline.md)
+- [Configuration Examples](../details/config_reference.md)

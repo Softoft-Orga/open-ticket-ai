@@ -1,3 +1,7 @@
+---
+description: Complete guide to developing custom plugins for Open Ticket AI including project structure, entry points, and best practices.
+---
+
 # Plugin Development Guide
 
 Learn how to create custom plugins to extend Open Ticket AI functionality.

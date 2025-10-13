@@ -52,7 +52,7 @@ Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
 Documentation = "https://open-ticket-ai.com"
 
 [project.scripts]
-open-ticket-ai = "open_ticket_ai.cli:main"
+open-ticket-ai = "open_ticket_ai.core.cli:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]

@@ -1,166 +1,330 @@
-# Open Ticket AI — Versioning Policy (Product & Docs)
-
-**Effective:** 11.10.2025
-**Starting line:** `1.0.0`
-
+---
+description: Open Ticket AI versioning policy using semantic versioning for products and documentation with clear backward compatibility guidelines.
 ---
 
-## 1) Semantic Versioning (Product)
+# Versioning Policy
 
-We use **SemVer**: `MAJOR.MINOR.PATCH`.
+**Effective Date:** October 11, 2025  
+**Starting Version:** `1.0.0`
 
-* **MAJOR (1 → 2):** Breaking changes. Requires migration notes.
-* **MINOR (1.1 → 1.2):** Backward-compatible features. May introduce deprecations.
-* **PATCH (1.1.1 → 1.1.2):** Bug/security fixes only.
+## Overview
 
-**Pre-releases:** `1.1.0-alpha.N`, `-beta.N`, `-rc.N` for public testing.
+Open Ticket AI follows semantic versioning for the product and maintains separate documentation sites for each major version.
 
-**Support window**
+## Semantic Versioning
 
-* **Current major (vN):** All fixes and features.
-* **Previous major (vN-1):** Security/critical fixes for **6 months** after vN ships.
-* **Older:** End-of-life (EOL).
+We use **SemVer** format: `MAJOR.MINOR.PATCH`
 
-**Deprecations**
+| Version Type | Format | When to Use | Example |
+|-------------|---------|-------------|---------|
+| **MAJOR** | `1.0.0` → `2.0.0` | Breaking changes, requires migration | API changes, removed features |
+| **MINOR** | `1.0.0` → `1.1.0` | New backward-compatible features | New pipes, new config options |
+| **PATCH** | `1.0.0` → `1.0.1` | Bug fixes and security patches | Bug fixes, security updates |
 
-* Announced in `CHANGELOG.md` under **Deprecated**.
-* Remain available for the rest of the current **major**.
-* Removed in the **next major**.
-* Each deprecation links to a migration note.
+### Pre-Release Versions
 
----
+- **Alpha**: `1.1.0-alpha.1` - Early testing, unstable
+- **Beta**: `1.1.0-beta.1` - Feature complete, testing
+- **RC**: `1.1.0-rc.1` - Release candidate, final testing
 
-## 2) Branching, Tags & Release Channels
+### Support Policy
 
-**Git**
+| Version | Support Level | Duration |
+|---------|---------------|----------|
+| **Current Major (vN)** | Full support | Until next major |
+| **Previous Major (vN-1)** | Security/critical fixes only | 6 months after new major |
+| **Older** | End of Life (EOL) | No support |
 
-* Tags: every release gets a tag (e.g., `v1.0.0`).
-* Long-lived branches:
+### Deprecation Policy
 
-  * `latest` → current stable line (what users should install now)
-  * `next` → pre-releases toward the next minor/major
-  * `v1`, `v2`, … → maintenance branches for each major
+1. **Announcement**: Deprecated features announced in `CHANGELOG.md`
+2. **Availability**: Remain available for rest of current major version
+3. **Removal**: Removed only in next major version
+4. **Migration**: Each deprecation includes migration guide link
 
-**Flow**
+**Example Timeline:**
+```
+v1.2.0: Feature X deprecated
+v1.3.0: Feature X still available (with warnings)
+v1.4.0: Feature X still available (with warnings)
+v2.0.0: Feature X removed
+```
 
-* Develop features on short-lived branches → merge into `next`.
-* Stabilize → tag `1.1.0-rc.N` on `next`.
-* Release → fast-forward `latest` to the new stable tag, and if it’s a **new major**, create/advance `vN`.
-* Backports → cherry-pick into the relevant `vN` branch and tag patch releases there.
+## Git Branching Strategy
 
----
+### Long-Lived Branches
 
-## 3) Documentation Versioning (VitePress + Netlify)
+- **`latest`** - Current stable version (users should install from here)
+- **`next`** - Pre-releases for upcoming minor/major versions
+- **`v1`, `v2`, `v3`...** - Maintenance branches for each major version
 
-**Goals**
+### Release Flow
 
-* One docs site **per major** (`v1`, `v2`, …).
-* Root domain always shows **latest stable**.
-* Older docs stay accessible but aren’t indexed.
+```mermaid
+%%{init:{
+  "gitGraph":{"showCommitLabel":true,"mainBranchName":"latest"},
+  "themeVariables":{"commitLabelFontSize":"12px"}
+}}%%
+gitGraph
+  commit id: "1.0.0"
+  branch next
+  checkout next
+  commit id: "feature"
+  commit id: "1.1.0-rc.1"
+  checkout latest
+  merge next tag: "1.1.0"
+  checkout next
+  commit id: "breaking"
+  checkout latest
+  checkout latest
+  merge next tag: "2.0.0"
+```
 
-**Domains**
+**Process:**
 
-* **Latest:** [https://open-ticket-ai.com](https://open-ticket-ai.com)
-* **Next (pre-releases):** [https://next.open-ticket-ai.com](https://next.open-ticket-ai.com)
-* **Pinned majors:** [https://v1.open-ticket-ai.com](https://v1.open-ticket-ai.com), [https://v2.open-ticket-ai.com](https://v2.open-ticket-ai.com), …
+1. **Development**: Feature branches → merge to `next`
+2. **Stabilization**: Tag pre-releases on `next` (`1.1.0-rc.1`)
+3. **Release**: Fast-forward `latest` to stable tag
+4. **New Major**: Create/advance `vN` branch for old major
+5. **Backports**: Cherry-pick fixes to `vN` branches, tag patches
 
-These are powered by **Netlify Branch Deploys + Branch Subdomains**.
-Branches map as:
+## Documentation Versioning
 
-* `latest` → `open-ticket-ai.com`
-* `next` → `next.open-ticket-ai.com`
-* `v1` → `v1.open-ticket-ai.com`
-* `v2` → `v2.open-ticket-ai.com`
-* …
+### URL Structure
 
-**Indexing & SEO**
+| Branch | URL | Purpose |
+|--------|-----|---------|
+| `latest` | [open-ticket-ai.com](https://open-ticket-ai.com) | Current stable docs |
+| `next` | [next.open-ticket-ai.com](https://next.open-ticket-ai.com) | Pre-release docs |
+| `v1` | [v1.open-ticket-ai.com](https://v1.open-ticket-ai.com) | Version 1.x docs |
+| `v2` | [v2.open-ticket-ai.com](https://v2.open-ticket-ai.com) | Version 2.x docs |
 
-* Only **latest** publishes a sitemap.
-* Non-latest sites add `<meta name="robots" content="noindex,follow">`.
-* Canonical URLs point to the matching host of that version.
-* Internal links are **relative** so the same path works across versions.
+### SEO & Indexing
 
-**Version switcher UX**
+- ✅ **Only `latest`** has sitemap and is indexed by search engines
+- ❌ **All other versions** use `<meta name="robots" content="noindex,follow">`
+- 🔗 Canonical URLs point to same version's domain
+- 📝 Internal links use relative paths (work across all versions)
 
-* Navbar dropdown lists: `latest, v3, v2, v1, next`.
-* Changing version preserves the current path and navigates to the corresponding subdomain.
-* User preference is stored in `localStorage`.
-* Optional: if a visitor opens `open-ticket-ai.com` and has a stored preference for `vN`, auto-redirect.
+### Version Switcher
 
-**Content rules per version**
+**Features:**
+- Dropdown in navbar showing all available versions
+- Preserves current page path when switching versions
+- Stores user preference in `localStorage`
+- Optional auto-redirect based on stored preference
 
-* **Major changes:** live only on that major’s site (e.g., new command semantics).
-* **Minor updates:** document on **latest**; for older majors, add small notes if necessary.
-* **Patches:** no separate docs site; fix typos/examples inline.
+**Example:**
+```
+User on: v1.open-ticket-ai.com/guides/installation.md
+Switches to: v2
+Navigates to: v2.open-ticket-ai.com/guides/installation.md
+```
 
----
+### Content Strategy
 
-## 4) How we communicate changes in docs
+| Change Type | Where Documented | Example |
+|------------|------------------|---------|
+| **Major changes** | Only on that major's docs site | New CLI command syntax |
+| **Minor updates** | Latest docs with version badges | New config option |
+| **Patches** | Inline fixes, no new site | Fix code example typo |
 
-Inside pages we annotate feature availability with terse badges:
+### Version Badges
 
-* **Added in 1.1**
-* **Changed in 1.2**
-* **Deprecated in 1.4**
-* **Removed in 2.0**
-* **Available since 1.5**
+Use inline badges to indicate feature availability:
 
-Use short in-line labels near the relevant heading or option. For longer explanations, include a **Migration** section at the bottom of the page. Each deprecation in the product changelog links to its doc’s migration note.
+```markdown
+## New Feature <Badge type="tip" text="Added in 1.2" />
+## Updated API <Badge type="warning" text="Changed in 1.3" />
+## Old Feature <Badge type="danger" text="Deprecated in 1.4" />
+```
 
----
+**Renders as:**
+- **Added in 1.2** - New feature introduced
+- **Changed in 1.3** - Behavior modified
+- **Deprecated in 1.4** - Will be removed in next major
+- **Removed in 2.0** - No longer available
 
-## 5) Changelog & Releases
+## Changelog Structure
 
-* Repository-root `CHANGELOG.md` tracks **product** changes per SemVer with sections: **Added**, **Changed**, **Deprecated**, **Removed**, **Fixed**, **Security**.
-* Each **docs** site also has a `/changelog/` page summarizing user-visible changes relevant to that major.
-* Every release tag is generated from the changelog; release notes link to migration guides when needed.
+### Product Changelog (`CHANGELOG.md`)
 
----
+Located at repository root, follows [Keep a Changelog](https://keepachangelog.com/) format:
 
-## 6) Minimal implementation details
+```markdown
+## [1.2.0] - 2025-10-13
 
-**Netlify**
+### Added
+- New HuggingFace plugin for local ML inference
+- Support for nested composite pipes
 
-* Enable Branch Deploys and map branch subdomains for `latest`, `next`, and each `vN`.
-* Environment variable `VITE_DOCS_VERSIONS=latest,v3,v2,v1,next` to feed the switcher.
-* Build command points to VitePress build; publish the generated `dist`.
+### Changed
+- Improved error messages in pipe execution
+- Updated OTOBO adapter to support version 11
 
-**VitePress**
+### Deprecated
+- Old configuration format (use new YAML structure)
+- Legacy pipe naming convention
 
-* Read `process.env.BRANCH || process.env.HEAD` at build time to compute `docsVersion` (`latest`, `next`, or `vN`).
-* Only set `sitemap` on `latest`.
-* On non-latest, inject a `noindex,follow` meta tag.
-* Version switcher maps subdomain by selected version and keeps `location.pathname + search + hash`.
+### Fixed
+- Fixed memory leak in template rendering
+- Corrected timezone handling in interval triggers
 
----
+### Security
+- Updated dependencies to patch CVE-2025-1234
+```
 
-## 7) Examples
+### Documentation Changelog
 
-* **1.0.0** ships:
+Each docs site has `/changelog/` page with version-specific changes:
 
-  * Branches: `latest` and `v1` are identical; both deployed.
-  * Users see latest at [https://open-ticket-ai.com](https://open-ticket-ai.com) and pinned at [https://v1.open-ticket-ai.com](https://v1.open-ticket-ai.com)
+```markdown
+# Changelog - Version 1.x
 
-* **1.1.0** ships:
+## What's New in 1.2.0
+- Added ML classification guide
+- New plugin development tutorial
+- Updated troubleshooting section
+```
 
-  * Docs remain on **latest** only; pages add badges like **Added in 1.1**.
+## Release Examples
 
-* **2.0.0** ships:
+### Example 1: Minor Release (1.0.0 → 1.1.0)
 
-  * Create `v2` branch and deploy [https://v2.open-ticket-ai.com](https://v2.open-ticket-ai.com)
-  * Move `latest` to point to `v2`.
-  * `v1` enters maintenance for 6 months with security-only patches.
+**Git Actions:**
+```bash
+git checkout next
+git tag v1.1.0
+git checkout latest
+git merge --ff-only next
+git push origin latest v1.1.0
+```
 
----
+**Documentation:**
+- Docs stay on `latest` branch
+- Add version badges: "Added in 1.1"
+- No new docs site needed
 
-## 8) Quick FAQ
+**User Impact:**
+- Backward compatible
+- Users can upgrade without changes
 
-* **Do we ever show patch versions in the URL?** No. Patch changes don’t get their own docs site.
-* **Where do pre-releases live?** On `next` ([https://next.open-ticket-ai.com](https://next.open-ticket-ai.com)).
-* **How long are old majors available?** Indefinitely to read; supported for 6 months after a new major.
-* **When can we remove deprecated features?** Only in the next **major**.
+### Example 2: Major Release (1.4.0 → 2.0.0)
 
----
+**Git Actions:**
+```bash
+# Create maintenance branch for v1
+git checkout latest
+git branch v1
+git push origin v1
 
-**Canonical docs:** [https://open-ticket-ai.com](https://open-ticket-ai.com)
-**Versioned docs:** [https://v1.open-ticket-ai.com](https://v1.open-ticket-ai.com), [https://next.open-ticket-ai.com](https://next.open-ticket-ai.com)
+# Release v2
+git checkout next
+git tag v2.0.0
+git checkout latest
+git merge next
+git push origin latest v2.0.0
+```
+
+**Documentation:**
+- Create `v2` branch from `latest`
+- Deploy new sites: `v2.open-ticket-ai.com` and update `open-ticket-ai.com`
+- `v1.open-ticket-ai.com` remains for old users
+- Add migration guide from v1 to v2
+
+**User Impact:**
+- Breaking changes require migration
+- v1 gets security fixes for 6 months
+- Users can stay on v1 temporarily
+
+### Example 3: Patch Release (1.1.0 → 1.1.1)
+
+**Git Actions:**
+```bash
+git checkout latest
+# Fix applied directly or cherry-picked
+git tag v1.1.1
+git push origin latest v1.1.1
+```
+
+**Documentation:**
+- No changes to docs structure
+- Fix inline if needed (typos, broken links)
+- No version badges needed
+
+**User Impact:**
+- Safe to upgrade immediately
+- No breaking changes
+
+## Implementation Details
+
+### Netlify Configuration
+
+```toml
+# netlify.toml
+[build]
+  command = "npm run docs:build"
+  publish = "docs/.vitepress/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  VITE_DOCS_VERSIONS = "latest,v3,v2,v1,next"
+
+[[redirects]]
+  from = "/latest/*"
+  to = "/:splat"
+  status = 301
+
+[context.production]
+  command = "npm run docs:build"
+
+[context.branch-deploy]
+  command = "npm run docs:build"
+```
+
+**Branch Subdomain Mapping:**
+- Enable "Branch deploys" in Netlify
+- Configure branch subdomains for each version
+- Set environment variables per branch context
+
+### VitePress Configuration
+
+```typescript
+// docs/.vitepress/config.ts
+export default defineConfig({
+  base: '/',
+  sitemap: process.env.BRANCH === 'latest' ? {
+    hostname: 'https://open-ticket-ai.com'
+  } : undefined,
+  head: process.env.BRANCH !== 'latest' ? [
+    ['meta', { name: 'robots', content: 'noindex,follow' }]
+  ] : []
+})
+```
+
+## FAQ
+
+**Q: Do patch versions get their own URLs?**  
+A: No. Patches update the same docs site (e.g., both 1.1.0 and 1.1.1 use `v1` docs).
+
+**Q: Where can I find pre-release documentation?**  
+A: Pre-releases are documented at [next.open-ticket-ai.com](https://next.open-ticket-ai.com)
+
+**Q: How long are old major versions supported?**  
+A: Old versions remain accessible indefinitely for reading, but only receive security fixes for 6 months after a new major release.
+
+**Q: When can deprecated features be removed?**  
+A: Only in the next major version. They must remain available throughout the current major version.
+
+**Q: What if I need a feature from an older version?**  
+A: Visit the version-specific docs (e.g., v1.open-ticket-ai.com) or downgrade your installation.
+
+**Q: How do I know which version introduced a feature?**  
+A: Look for version badges in the documentation (e.g., "Added in 1.2").
+
+## Related Documentation
+
+- [Release Notes](https://github.com/Softoft-Orga/open-ticket-ai/releases)
+- [Migration Guides](../guides/migration/)
+- [Installation Guide](../guides/installation.md)
+- [Changelog](https://github.com/Softoft-Orga/open-ticket-ai/blob/latest/CHANGELOG.md)

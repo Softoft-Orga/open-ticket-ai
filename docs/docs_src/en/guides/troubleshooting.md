@@ -1,3 +1,7 @@
+---
+description: Troubleshooting guide for Open Ticket AI covering connection issues, configuration errors, pipeline problems, and common solutions.
+---
+
 # Troubleshooting Guide
 
 Common issues and their solutions when working with Open Ticket AI.
@@ -534,6 +538,6 @@ Include:
 ## Related Documentation
 
 - [Configuration Reference](../details/config_reference.md)
-- [Testing Guide](testing.md)
+- [Testing Guide](../developers/testing.md)
 - [Installation Guide](installation.md)
 - [First Pipeline](first_pipeline.md)

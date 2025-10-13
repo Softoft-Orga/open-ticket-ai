@@ -17,6 +17,7 @@
       <excludeFolder url="file://$MODULE_DIR$/docs/docs_src/fr" />
       <excludeFolder url="file://$MODULE_DIR$/docs/netlify" />
       <excludeFolder url="file://$MODULE_DIR$/docs/stories" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
     </content>
     <orderEntry type="jdk" jdkName="uv (open-ticket-ai)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

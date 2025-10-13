@@ -1,3 +1,7 @@
+---
+description: Detailed installation guide for Open Ticket AI with system requirements, Python setup, Docker deployment, and ML model configuration.
+---
+
 # Installation Guide
 
 Detailed installation instructions for Open Ticket AI and its components.

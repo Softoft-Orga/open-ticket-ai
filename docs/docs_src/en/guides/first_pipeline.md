@@ -1,3 +1,7 @@
+---
+description: Step-by-step tutorial for creating your first ticket classification pipeline with Open Ticket AI including fetching, classification, and updates.
+---
+
 # Creating Your First Pipeline
 
 Step-by-step tutorial for creating a complete ticket classification pipeline.

@@ -1,18 +1,51 @@
-# Pipeline System
+---
+description: Learn how Open Ticket AI pipes process data through sequential execution, context sharing, dependencies, and conditional logic.
+pageClass: full-page
+aside: false
+---
 
-The pipeline system is Open Ticket AI's core orchestration mechanism that coordinates the execution of data processing workflows through sequences of interconnected processing components called **pipes**.
+# Pipe System
 
-## What is a Pipeline?
+Pipes are the fundamental processing units in Open Ticket AI. Each pipe performs a specific task, receives context from previous pipes, executes its logic, and passes updated context forward.
 
-A **pipeline** in Open Ticket AI is a configured sequence of pipes that execute in order to accomplish a specific task, such as fetching tickets, classifying them, and updating their properties.
+## Basic Pipeline Flow
 
-**Key characteristics:**
+A pipeline is a sequence of pipes that execute one after another:
 
-- **Sequential execution**: Pipes run one after another in defined order
-- **Context-driven**: Data flows through a shared execution context
-- **Declarative**: Defined in YAML configuration files
-- **Event-driven**: Triggered by time intervals or external events
-- **Composable**: Pipes can contain nested sub-pipelines
+```mermaid
+flowchart TD
+    Start([Start]):::startNode
+    Pipe1[Pipe 1 - Fetch Tickets]:::pipeNode
+    Pipe2[Pipe 2 - Classify Tickets]:::pipeNode
+    Pipe3[Pipe 3 - Update Tickets]:::pipeNode
+    End([Complete]):::endNode
+    
+    Start --> Pipe1
+    Pipe1 --> Pipe2
+    Pipe2 --> Pipe3
+    Pipe3 --> End
+    
+    classDef startNode fill:#2d6a4f,stroke:#1b4332,stroke-width:3px,color:#fff,font-weight:bold
+    classDef endNode fill:#2d6a4f,stroke:#1b4332,stroke-width:3px,color:#fff,font-weight:bold
+    classDef pipeNode fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
+```
+
+Each pipe:
+1. Receives the `PipeContext` (containing results from previous pipes)
+2. Executes its specific task
+3. Creates a `PipeResult` with output data
+4. Updates the context with its result
+5. Passes the updated context to the next pipe
+
+## What is a Pipe?
+
+A **pipe** is a self-contained processing unit that:
+- Implements specific business logic (fetch data, classify, update, etc.)
+- Receives input via `PipeContext`
+- Produces output as `PipeResult`
+- Can depend on other pipes
+- Can execute conditionally
+- Can be composed into larger workflows
 
 ## Core Architecture
 
@@ -25,253 +58,66 @@ classDiagram
 direction TD
 
   class Pipe {
-    <<abstract>>
     +config: PipeConfig
     +process(ctx: PipeContext) PipeContext
-    #process(): PipeResult
+    #_process()* PipeResult
   }
+  
   class CompositePipe {
     +steps: list[PipeConfig]
-    +process(ctx: ctx) PipeContext
+    +_factory: RenderableFactory
+    +_process_steps(ctx) list~PipeResult~
+    +process(ctx) PipeContext
   }
+  
   class PipeConfig {
     +id: str
     +use: str
-    +params: dict
+    +params: BaseModel
     +if_: str | bool
     +depends_on: list[str]
-    +steps: list[PipeConfig]?
+    +steps: list[PipeConfig]
   }
+  
   class PipeContext {
     +pipes: dict[str, PipeResult]
-    +params: dict
-    +has_succeeded(id: str) bool
+    +params: dict[str, Any]
+    +parent: PipeContext | None
   }
+  
   class PipeResult {
     +success: bool
-    +failed: bool
     +message: str
     +data: BaseModel
   }
-  class RenderableFactory {
-    +create(cfg: PipeConfig, ctx: PipeContext) Pipe
-  }
-  class TemplateRenderer {
-    +render(templ: str, ctx: dict) Any
-    +render(obj: Any, scope: dict) Any
-  }
-  class PipeRunner {
-    +definition: RunnerDefinition
-    +execute() void
-  }
-  class RunnerDefinition {
-    +id: str
-    +run: PipeConfig
-    +on: list[TriggerDefinition]
-  }
-  class Trigger {
-    +attach(observer: PipeRunner): void
-    +notify(): void
-  }
 
-CompositePipe --|> Pipe
-Pipe --> PipeConfig : configured by
-Pipe --> PipeContext : receives & updates
-Pipe --> PipeResult : produces
-PipeContext --> PipeResult : stores by pipe_id
-CompositePipe --> RenderableFactory : builds child pipes
-RenderableFactory --> Pipe : instantiates
-RenderableFactory --> TemplateRenderer : renders params
-PipeRunner --> RunnerDefinition : configured by
-PipeRunner --> RenderableFactory : creates pipes
-RunnerDefinition --> PipeConfig : defines pipeline
-RunnerDefinition --> Trigger : scheduled by
-Trigger --> PipeRunner : notifies
+  CompositePipe --|> Pipe
+  Pipe --> PipeConfig : configured by
+  Pipe --> PipeContext : receives & updates
+  Pipe --> PipeResult : produces
+  PipeContext --> PipeResult : stores by pipe_id
+  CompositePipe --> Pipe : contains
 ```
 
-## Pipeline Execution Lifecycle
+## Pipe Execution Lifecycle
 
-The pipeline system follows a well-defined lifecycle from startup to execution:
-
-### 1. **Application Bootstrap**
-
-When Open Ticket AI starts:
+How individual pipes execute their logic:
 
 ```mermaid
-%%{init:{
-  "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
-  "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","lineColor":"#718096"},
-}}%%
-
-flowchart TB
-
-%% ===================== BOOTSTRAP =====================
-subgraph BOOT["🚀 Application Bootstrap"]
-  direction TB
-  Start([Start App]):::start
-  CreateDI["Create DI Container<br/>(AppModule)"]:::di
-  LoadConfig["ConfigLoader.load_config()"]:::cfg
-  SetupLog["Configure Logging"]:::cfg
-  InitFactory["Initialize RenderableFactory"]:::di
-  
-  Start --> LoadEnv --> CreateDI --> LoadConfig --> SetupLog --> InitFactory
-end
-
-%% ===================== ORCHESTRATOR =====================
-subgraph ORCH["🎯 Orchestrator Setup"]
-  direction TB
-  CreateOrch["Create Orchestrator"]:::di
-  StartOrch["Orchestrator.start()"]:::proc
-  LoopRunners{"For each<br/>RunnerDefinition"}:::dec
-  CreateRunner["Create PipeRunner"]:::proc
-  
-  CreateOrch --> StartOrch --> LoopRunners --> CreateRunner
-end
-
-%% ===================== TRIGGER DECISION =====================
-subgraph TRIGGER_DECISION["⏰ Execution Strategy"]
-  direction TB
-  HasTrigger{"Has triggers<br/>(on: [...])?":::dec}
-  SetupTrigger["Setup Trigger<br/>(IntervalTrigger, etc.)"]:::proc
-  AttachRunner["trigger.attach(runner)"]:::proc
-  StartTrigger["trigger.start()"]:::proc
-  ScheduleOnce["asyncio.create_task<br/>(runner.execute())"]:::proc
-  
-  HasTrigger -- Yes --> SetupTrigger --> AttachRunner --> StartTrigger
-  HasTrigger -- No --> ScheduleOnce
-end
-
-%% ===================== RUNTIME =====================
-subgraph RUNTIME["🔄 Runtime Loop"]
-  direction TB
-  TriggerFires["⚡ Trigger fires"]:::event
-  CallRunner["runner.on_trigger_fired()"]:::proc
-  ExecutePipe["runner.execute()"]:::proc
-  
-  TriggerFires --> CallRunner --> ExecutePipe
-  ScheduleOnce --> ExecutePipe
-end
-
-%% ===================== CONNECTIONS =====================
-InitFactory --> CreateOrch
-CreateRunner --> HasTrigger
-StartTrigger --> TriggerFires
-
-%% ===================== STYLES =====================
-classDef start fill:#2d6a4f,stroke:#1b4332,stroke-width:3px,color:#fff,font-weight:bold
-classDef cfg fill:#1e3a5f,stroke:#0d1f3d,stroke-width:2px,color:#e0e0e0
-classDef di fill:#5a189a,stroke:#3c096c,stroke-width:2px,color:#e0e0e0
-classDef proc fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
-classDef dec fill:#d97706,stroke:#b45309,stroke-width:2px,color:#fff,font-weight:bold
-classDef event fill:#be123c,stroke:#9f1239,stroke-width:3px,color:#fff,font-weight:bold
-```
-
-**Key steps:**
-
-1. **Environment Loading**: `.env` file and environment variables loaded
-2. **DI Container Creation**: `AppModule` initializes dependency injection
-3. **Configuration Loading**: `config.yml` parsed into `RawOpenTicketAIConfig`
-4. **Logging Setup**: `dictConfig` applied from infrastructure settings
-5. **Service Registration**: `TemplateRenderer` and other services registered
-6. **Factory Initialization**: `RenderableFactory` created with renderer and service configs
-7. **Orchestrator Creation**: Main orchestrator instantiated
-
-### 2. **Pipeline Scheduling**
-
-The orchestrator sets up execution schedules:
-
-**For each `RunnerDefinition`:**
-
-1. **Runner Creation**: `PipeRunner(definition, factory)` instantiated
-2. **Trigger Decision**: Check if `on` field has triggers
-3. **Trigger Path**: If triggers exist → create trigger → attach runner → start trigger
-4. **One-Time Path**: If no triggers → schedule immediate execution via `asyncio.create_task()`
-
-### 3. **Pipeline Execution**
-
-When a trigger fires or one-time task runs:
-
-```mermaid
-%%{init:{
-  "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
-  "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","lineColor":"#718096"},
-}}%%
-
-flowchart TB
-
-%% ===================== RUNNER EXECUTION =====================
-subgraph RUNNER["🔄 PipeRunner.execute()"]
-  direction TB
-  Start([Trigger fired]):::event
-  CreateCtx["Create PipeContext<br/>(params from run config)"]:::ctx
-  FactoryCreate["factory.create_pipe<br/>(pipe_config, scope)"]:::factory
-  RenderParams["🎨 Render params with Jinja<br/>(render_base_model)"]:::render
-  InstantiatePipe["Instantiate Pipe class"]:::proc
-  CallProcess["pipe.process(context)"]:::proc
-  
-  Start --> CreateCtx --> FactoryCreate --> RenderParams
-  RenderParams --> InstantiatePipe --> CallProcess
-end
-
-%% ===================== RESULT HANDLING =====================
-subgraph RESULT["📊 Result Handling"]
-  direction TB
-  GetResult["Get PipeResult"]:::proc
-  CheckSuccess{"Success?"}:::dec
-  LogSuccess["✅ Log success"]:::log
-  LogFailure["❌ Log failure"]:::log
-  
-  GetResult --> CheckSuccess
-  CheckSuccess -- Yes --> LogSuccess
-  CheckSuccess -- No --> LogFailure
-end
-
-%% ===================== CONNECTIONS =====================
-CallProcess --> GetResult
-
-%% ===================== STYLES =====================
-classDef event fill:#be123c,stroke:#9f1239,stroke-width:3px,color:#fff,font-weight:bold
-classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
-classDef factory fill:#7c2d12,stroke:#5c1a0a,stroke-width:2px,color:#e0e0e0
-classDef render fill:#4338ca,stroke:#312e81,stroke-width:2px,color:#e0e0e0
-classDef proc fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
-classDef dec fill:#d97706,stroke:#b45309,stroke-width:2px,color:#fff,font-weight:bold
-classDef log fill:#0891b2,stroke:#0e7490,stroke-width:2px,color:#fff
-```
-
-**Execution flow:**
-
-1. **Context Creation**: Fresh `PipeContext` with params from `run` config
-2. **Pipe Creation**: `RenderableFactory.create_pipe()` called
-3. **Template Rendering**: All params rendered via Jinja2 (except template renderer config itself)
-4. **Pipe Instantiation**: Pipe class constructed with rendered config
-5. **Processing**: `pipe.process(context)` invoked
-6. **Result Logging**: Success or failure logged with pipe ID
-
-### 4. **Pipe Processing**
-
-How individual pipes execute:
-
-```mermaid
-%%{init:{
-  "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
-  "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","lineColor":"#718096"},
-}}%%
-
 flowchart TB
 
 %% ===================== PIPE ENTRY =====================
-subgraph ENTRY["📥 Pipe.process(context)"]
+subgraph ENTRY["📥 Pipe.process()"]
   direction TB
   Start([pipe.process]):::start
-  CheckShould{"should_run?<br/>(if_ condition)"}:::dec
-  CheckDeps{"Dependencies met?<br/>(depends_on)"}:::dec
-  Skip["⏭️ Skip → return context"]:::skip
+  CheckShould{"should_run?"}:::dec
+  CheckDeps{"Dependencies met?"}:::dec
+  Skip["⏭️ Skip execution"]:::skip
   
   Start --> CheckShould
-  CheckShould -- ✓ --> CheckDeps
-  CheckShould -- ✗ --> Skip
-  CheckDeps -- ✗ --> Skip
+  CheckShould -- ✓ True --> CheckDeps
+  CheckShould -- ✗ False --> Skip
+  CheckDeps -- ✗ Missing --> Skip
 end
 
 %% ===================== EXECUTION =====================
@@ -279,8 +125,8 @@ subgraph EXEC["⚙️ Execution"]
   direction TB
   ProcessAndSave["__process_and_save()"]:::proc
   TryCatch["try-catch wrapper"]:::proc
-  RunProcess["await _process()"]:::proc
-  CreateResult["Create PipeResult"]:::proc
+  RunProcess["await _process()<br/>(subclass implementation)"]:::proc
+  CreateResult["Create PipeResult<br/>with data"]:::proc
   
   ProcessAndSave --> TryCatch --> RunProcess --> CreateResult
 end
@@ -289,24 +135,24 @@ end
 subgraph ERROR["❌ Error Handling"]
   direction TB
   CatchEx["Catch Exception"]:::error
-  LogError["Logger.error + traceback"]:::log
-  CreateFailed["Create failed PipeResult"]:::error
+  LogError["Logger.error<br/>+ traceback"]:::log
+  CreateFailed["Create failed<br/>PipeResult"]:::error
   
   CatchEx --> LogError --> CreateFailed
 end
 
 %% ===================== PERSISTENCE =====================
-subgraph PERSIST["💾 Persistence"]
+subgraph PERSIST["💾 Context Update"]
   direction TB
-  SaveResult["context.pipes[pipe_id] = result"]:::ctx
-  LogResult["Logger.info/warning"]:::log
-  Return["Return updated context"]:::ctx
+  SaveResult["context.pipes[pipe_id]<br/>= result"]:::ctx
+  LogResult["Log result<br/>(info/warning)"]:::log
+  Return["Return updated<br/>context"]:::ctx
   
   SaveResult --> LogResult --> Return
 end
 
 %% ===================== CONNECTIONS =====================
-CheckDeps -- ✓ --> ProcessAndSave
+CheckDeps -- ✓ Met --> ProcessAndSave
 TryCatch --> CatchEx
 CreateResult --> SaveResult
 CreateFailed --> SaveResult
@@ -321,28 +167,105 @@ classDef log fill:#0891b2,stroke:#0e7490,stroke-width:2px,color:#fff
 classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
 ```
 
-**Processing steps:**
+**Processing Steps:**
 
-1. **Condition Check**: Evaluate `if_` field (defaults to `"True"`)
-2. **Dependency Check**: Verify `context.has_succeeded(dep_id)` for each `depends_on` entry
-3. **Skip Path**: If conditions fail → return original context unchanged
-4. **Execute Path**: If conditions pass:
-   - Wrap in try-catch
-   - Call `_process()` (implemented by subclass)
+1. **Condition Check**: Evaluate `if_` field (defaults to `True`)
+2. **Dependency Check**: Verify all `depends_on` pipes succeeded
+3. **Skip Path**: If checks fail → return original context unchanged
+4. **Execute Path**: If checks pass:
+   - Wrap execution in try-catch
+   - Call `_process()` (implemented by pipe subclass)
    - Create `PipeResult` from return value
    - On exception: create failed `PipeResult` with error message
 5. **Persistence**: Save result to `context.pipes[pipe_id]`
-6. **Return**: Return updated context
+6. **Return**: Return updated context to next pipe
 
-### 5. **Composite Pipe Processing**
+## Pipe Types
 
-How composite pipes orchestrate child steps:
+### Simple Pipes
+
+Atomic processing units that implement specific business logic:
+
+```yaml
+- id: fetch_tickets
+  use: open_ticket_ai.base:FetchTicketsPipe
+  injects:
+    ticket_system: "otobo_znuny"
+  params:
+    search_criteria:
+      queue:
+        name: "Support"
+      limit: 10
+```
+
+**Characteristics:**
+- Implements `_process()` method
+- Returns single `PipeResult`
+- No child pipes
+- Accesses injected services via `self.<service_name>`
+
+**Example Implementation:**
+```python
+class FetchTicketsPipe(Pipe):
+    def __init__(self, ticket_system: TicketSystemService, config: PipeConfig, logger_factory: LoggerFactory):
+        super().__init__(config, logger_factory)
+        self.ticket_system = ticket_system
+    
+    async def _process(self, context: PipeContext) -> FetchTicketsResult:
+        criteria = self.config.params.search_criteria
+        tickets = await self.ticket_system.find_tickets(criteria)
+        return FetchTicketsResult(fetched_tickets=tickets)
+```
+
+### Composite Pipes
+
+Orchestrators that contain and execute child pipes:
+
+```yaml
+- id: ticket_workflow
+  use: open_ticket_ai.base:CompositePipe
+  params:
+    threshold: 0.8
+  steps:
+    - id: fetch
+      use: open_ticket_ai.base:FetchTicketsPipe
+      injects: { ticket_system: "otobo_znuny" }
+      params:
+        search_criteria:
+          queue: { name: "Incoming" }
+          limit: 10
+    
+    - id: classify
+      use: otai_hf_local:HFLocalTextClassificationPipe
+      params:
+        model: "bert-base-german-cased"
+        text: "{{ pipe_result('fetch').data.fetched_tickets[0].subject }}"
+      depends_on: [fetch]
+    
+    - id: update
+      use: open_ticket_ai.base:UpdateTicketPipe
+      injects: { ticket_system: "otobo_znuny" }
+      params:
+        ticket_id: "{{ pipe_result('fetch').data.fetched_tickets[0].id }}"
+        updated_ticket:
+          queue:
+            name: "{{ pipe_result('classify').data.predicted_queue }}"
+      depends_on: [classify]
+```
+
+**Characteristics:**
+- Contains `steps` list of child pipe configs
+- Uses `RenderableFactory` to build child pipes
+- Executes children sequentially
+- Merges results via `PipeResult.union()`
+- Children can access parent params via `parent.params`
+
+### Composite Pipe Execution
 
 ```mermaid
 %%{init:{
   "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
   "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","lineColor":"#718096"},
-  "elk":{"spacing":{"nodeNode":18}}
 }}%%
 
 flowchart TB
@@ -350,8 +273,8 @@ flowchart TB
 %% ===================== COMPOSITE START =====================
 subgraph START["🔀 CompositePipe.process()"]
   direction TB
-  Entry([Composite pipe starts]):::start
-  InitLoop["Initialize step iteration"]:::proc
+  Entry([Composite pipe<br/>starts]):::start
+  InitLoop["Initialize step<br/>iteration"]:::proc
   
   Entry --> InitLoop
 end
@@ -360,11 +283,11 @@ end
 subgraph STEP_LOOP["🔁 For Each Step"]
   direction TB
   HasStep{"Has next<br/>step?"}:::dec
-  MergeCtx["Merge parent + step params"]:::proc
-  RenderStep["🎨 Render step config with Jinja"]:::render
-  BuildChild["factory.create_pipe<br/>(step_config, child_scope)"]:::factory
-  RunChild["child.process(context)"]:::proc
-  CollectResult["Collect result in context"]:::ctx
+  MergeCtx["Merge parent +<br/>step params"]:::proc
+  RenderStep["🎨 Render step config<br/>with Jinja"]:::render
+  BuildChild["factory.create_pipe<br/>(step_config)"]:::factory
+  RunChild["child.process<br/>(context)"]:::proc
+  CollectResult["Collect result<br/>in context"]:::ctx
   
   HasStep -- Yes --> MergeCtx --> RenderStep --> BuildChild
   BuildChild --> RunChild --> CollectResult --> HasStep
@@ -373,10 +296,10 @@ end
 %% ===================== FINALIZATION =====================
 subgraph FINAL["✅ Finalization"]
   direction TB
-  AllDone["All steps done"]:::proc
-  UnionResults["PipeResult.union(results)"]:::proc
-  SaveComposite["Save composite result to context"]:::ctx
-  Return["Return updated context"]:::ctx
+  AllDone["All steps<br/>done"]:::proc
+  UnionResults["PipeResult.union<br/>(all results)"]:::proc
+  SaveComposite["Save composite<br/>result"]:::ctx
+  Return["Return updated<br/>context"]:::ctx
   
   AllDone --> UnionResults --> SaveComposite --> Return
 end
@@ -394,11 +317,11 @@ classDef factory fill:#7c2d12,stroke:#5c1a0a,stroke-width:2px,color:#e0e0e0
 classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
 ```
 
-**Composite execution:**
+**Composite Execution:**
 
 1. **Initialization**: Prepare to iterate through `steps` list
 2. **For Each Step**:
-   - **Merge**: Combine parent params with step params (step params override)
+   - **Merge**: Combine parent params with step params (step overrides)
    - **Render**: Apply Jinja2 template rendering to step config
    - **Build**: Use factory to create child pipe instance
    - **Execute**: Call `child.process(context)` → updates context
@@ -409,119 +332,9 @@ classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
    - **Save**: Store composite result in context
    - **Return**: Return final updated context
 
-## Trigger Mechanisms
+## Dependency Management
 
-### Time-Based Triggers
-
-Most common trigger type using `IntervalTrigger`:
-
-```yaml
-orchestrator:
-  runners:
-    - on:
-        - id: "every_5_minutes"
-          use: "open_ticket_ai.base.interval_trigger:IntervalTrigger"
-          params:
-            milliseconds: 300000
-      run:
-        id: ticket_classifier
-        use: open_ticket_ai.base:CompositePipe
-        steps: [...]
-```
-
-**How it works:**
-
-1. `IntervalTrigger` created with millisecond interval
-2. Runner attached as observer via `trigger.attach(runner)`
-3. `trigger.start()` begins periodic timer
-4. On fire → `trigger.notify()` → calls `runner.on_trigger_fired()` → executes pipeline
-
-### One-Time Execution
-
-Pipelines without triggers run once at startup:
-
-```yaml
-orchestrator:
-  runners:
-    - run:  # No "on" field
-        id: startup_task
-        use: SomePipe
-```
-
-**Flow:**
-
-1. No `on` field → orchestrator detects one-time execution
-2. `asyncio.create_task(runner.execute())` scheduled immediately
-3. Runs once, then completes
-
-## Pipe Types and Relationships
-
-### Simple Pipes
-
-Atomic processing units that implement business logic:
-
-```yaml
-- id: fetch_tickets
-  use: open_ticket_ai.base:FetchTicketsPipe
-  injects:
-    ticket_system: "otobo_znuny"
-  params:
-    search_criteria:
-      queue:
-        name: "Support"
-      limit: 10
-```
-
-**Characteristics:**
-
-- Implements `_process()` method
-- Returns single `PipeResult`
-- No child pipes
-- Accesses injected services via `self.<service_name>`
-
-### Composite Pipes
-
-Orchestrators that contain and execute child pipes:
-
-```yaml
-- id: ticket_workflow
-  use: open_ticket_ai.base:CompositePipe
-  steps:
-    - id: fetch
-      use: open_ticket_ai.base:FetchTicketsPipe
-      injects: { ticket_system: "otobo_znuny" }
-      params:
-        search_criteria: { queue: { name: "Incoming" } }
-    
-    - id: classify
-      use: otai_hf_local:HFLocalTextClassificationPipe
-      params:
-        model: "bert-base-german-cased"
-        prompt: "{{ pipe_result('fetch', 'fetched_tickets') | first | attr('subject') }}"
-      depends_on: [fetch]
-    
-    - id: update
-      use: open_ticket_ai.base:UpdateTicketPipe
-      injects: { ticket_system: "otobo_znuny" }
-      params:
-        ticket_id: "{{ pipe_result('fetch', 'fetched_tickets') | first | attr('id') }}"
-        updated_ticket:
-          queue:
-            name: "{{ pipe_result('classify', 'label') }}"
-      depends_on: [classify]
-```
-
-**Characteristics:**
-
-- Contains `steps` list of child pipe configs
-- Uses `RenderableFactory` to build children
-- Executes children in sequence
-- Merges results via `PipeResult.union()`
-- Children can access parent params via `parent.params`
-
-### Dependency Management
-
-The `depends_on` field creates execution dependencies:
+The `depends_on` field creates execution dependencies between pipes:
 
 ```yaml
 - id: step_a
@@ -536,118 +349,221 @@ The `depends_on` field creates execution dependencies:
 - id: step_c
   use: PipeC
   depends_on: [step_a, step_b]
-  # Executes only if both succeeded
+  # Executes only if both step_a and step_b succeeded
 ```
 
-**Dependency rules:**
+**Dependency Rules:**
 
 - Pipe executes only if `context.has_succeeded(dep_id)` returns `True` for all dependencies
 - `has_succeeded()` checks: `pipes[dep_id].success == True` and `pipes[dep_id].failed == False`
-- If dependencies fail → pipe is skipped → original context returned
+- If any dependency fails → pipe is skipped → original context returned unchanged
 - **Warning**: Circular dependencies are NOT detected and will cause execution failures
 
-### Conditional Execution
+**Example with Dependencies:**
 
-The `if` field enables runtime conditional logic:
+```yaml
+steps:
+  - id: fetch
+    use: FetchTicketsPipe
+    # No dependencies, executes first
+  
+  - id: validate
+    use: ValidateTicketsPipe
+    depends_on: [fetch]
+    # Only runs if fetch succeeded
+  
+  - id: classify
+    use: ClassifyPipe
+    depends_on: [fetch, validate]
+    # Only runs if both fetch and validate succeeded
+  
+  - id: update
+    use: UpdateTicketPipe
+    depends_on: [classify]
+    # Only runs if classify succeeded
+```
+
+## Conditional Execution
+
+The `if_` field enables runtime conditional logic:
 
 ```yaml
 - id: high_confidence_update
   use: UpdateTicketPipe
-  if: "{{ pipe_result('classify', 'confidence') > 0.8 }}"
+  if_: "{{ pipe_result('classify').data.confidence > 0.8 }}"
   params:
     ticket_id: "{{ ticket.id }}"
     updated_ticket:
       queue:
-        name: "{{ pipe_result('classify', 'label') }}"
+        name: "{{ pipe_result('classify').data.predicted_queue }}"
 ```
 
-**Condition evaluation:**
+**Condition Evaluation:**
 
-- `if` value rendered as Jinja2 template
+- `if_` value rendered as Jinja2 template
 - Result converted to Python truthy/falsy
 - Can reference:
-  - `params.*` - parent or context params
-  - `pipe_result(pipe_id, key)` - results from previous pipes
-  - `env.*` - environment variables
+  - `params.*` - current pipe or parent params
+  - `pipe_result(pipe_id)` - results from previous pipes
+  - `env('VAR')` - environment variables
+  - `has_succeeded(pipe_id)` - check if pipe succeeded
   - `has_failed(pipe_id)` - check if pipe failed
-- Defaults to `"True"` if omitted
+- Defaults to `True` if omitted
+
+**Conditional Examples:**
+
+```yaml
+# Only run if previous pipe succeeded
+- id: send_notification
+  if_: "{{ has_succeeded('classify') }}"
+  use: NotificationPipe
+
+# Only run if confidence is high
+- id: auto_update
+  if_: "{{ pipe_result('classify').data.confidence > 0.9 }}"
+  use: UpdateTicketPipe
+
+# Only run if ticket priority is urgent
+- id: escalate
+  if_: "{{ pipe_result('fetch').data.fetched_tickets[0].priority.name == 'Urgent' }}"
+  use: EscalationPipe
+
+# Multiple conditions
+- id: complex_condition
+  if_: "{{ has_succeeded('fetch') and pipe_result('fetch').data.fetched_tickets | length > 0 }}"
+  use: ProcessPipe
+```
+
+## PipeContext Structure
+
+The `PipeContext` is the core data structure for data flow between pipes:
+
+```python
+class PipeContext(BaseModel):
+    pipes: dict[str, PipeResult[Any]]  # All previous pipe results
+    params: dict[str, Any]              # Current pipe parameters
+    parent: PipeContext | None          # Parent context (for nested pipes)
+```
+
+**Field Details:**
+
+- **`pipes`**: Contains results from all previously executed pipes, keyed by pipe ID
+  - Accumulated as each pipe completes
+  - In CompositePipe: merged results from all child steps
+  - Access via `pipe_result('pipe_id')` in templates
+
+- **`params`**: Current pipe's parameters
+  - Set when the pipe is created
+  - Accessible via `params.*` in templates
+  - For nested pipes, can reference parent via `parent.params`
+
+- **`parent`**: Reference to parent context (if inside a CompositePipe)
+  - Allows access to parent scope variables
+  - Creates hierarchical context chain
+  - Can traverse multiple levels (`parent.parent...`)
+
+**Accessing Context in Templates:**
+
+```yaml
+- id: child_pipe
+  params:
+    # Access previous pipe result
+    tickets: "{{ pipe_result('fetch').data.fetched_tickets }}"
+    
+    # Access parent parameter
+    threshold: "{{ parent.params.confidence_threshold }}"
+    
+    # Access own parameter
+    limit: "{{ params.limit }}"
+    
+    # Check if pipe succeeded
+    should_update: "{{ has_succeeded('classify') }}"
+```
+
+## PipeResult Structure
+
+Each pipe produces a `PipeResult` containing execution outcome and data:
+
+```python
+class PipeResult[T]():
+    success: bool      # True if execution succeeded
+    failed: bool       # True if execution failed
+    message: str       # Human-readable message
+    data: T            # Pipe-specific result data (Pydantic model)
+```
+
+## Best Practices
+
+### Pipe Design
+- Keep pipes focused on single responsibility
+- Make pipes reusable across different workflows
+- Use descriptive pipe IDs
+- Document expected input and output
+- Handle errors gracefully
+
+### Configuration
+- Use template variables for dynamic values
+- Leverage `depends_on` for clear execution order
+- Use `if_` conditions to skip unnecessary work
+- Group related pipes in CompositePipe
+
+### Performance
+- Avoid blocking operations in `_process()`
+- Use async/await for I/O operations
+- Keep pipe execution time reasonable
+- Consider batching for large datasets
+
+### Testing
+- Test pipes independently with mock services
+- Test dependency chains
+- Test conditional execution paths
+- Test error scenarios
 
 ## Key Implementation Files
 
 ### Core Pipeline
 - **`src/open_ticket_ai/core/pipeline/pipe.py`** - Base `Pipe` class
 - **`src/open_ticket_ai/core/pipeline/pipe_config.py`** - `PipeConfig`, `PipeResult` models
-- **`src/open_ticket_ai/core/pipeline/pipe_context.py`** - `PipeContext` for data flow
+- **`src/open_ticket_ai/core/pipeline/pipe_context.py`** - `PipeContext` model
 
-### Base Implementations
+### Base Pipes
 - **`src/open_ticket_ai/base/pipes/composite_pipe.py`** - `CompositePipe` implementation
-- **`src/open_ticket_ai/base/pipes/jinja_expression_pipe.py`** - Expression evaluation pipe
-- **`src/open_ticket_ai/base/pipes/ticket_system_pipes/`** - Built-in ticket operations
+- **`src/open_ticket_ai/base/pipes/jinja_expression_pipe.py`** - Expression evaluation
+- **`src/open_ticket_ai/base/pipes/ticket_system_pipes/`** - Ticket operations
 
-### Orchestration
-- **`src/open_ticket_ai/core/orchestration/orchestrator.py`** - Main scheduler
-- **`src/open_ticket_ai/core/orchestration/scheduled_runner.py`** - `PipeRunner` implementation
-- **`src/open_ticket_ai/core/orchestration/trigger.py`** - Trigger base class
-
-### Configuration & Rendering
+### Configuration
 - **`src/open_ticket_ai/core/config/renderable_factory.py`** - Pipe instantiation
 - **`src/open_ticket_ai/core/config/renderable.py`** - `Renderable` interface
-- **`src/open_ticket_ai/core/template_rendering/template_renderer.py`** - Jinja2 rendering
-
-## Execution Guarantees
-
-The pipeline system provides:
-
-### Non-Overlapping Execution
-- A pipeline won't start if previous execution is still running
-- Managed by orchestrator's trigger system
-
-### Error Isolation
-- Pipe failures don't affect other pipes
-- Exceptions caught and converted to failed `PipeResult`
-- Failed pipes don't stop pipeline (dependent pipes skip)
-
-### Consistent Context
-- Each execution gets fresh `PipeContext`
-- No state carried between executions
-- Context only lives during single pipeline run
-
-### Ordered Execution
-- Pipes execute in configuration order (for simple pipes)
-- Dependencies respected via `depends_on`
-- Composite pipes execute steps sequentially
 
 ## Related Documentation
 
-- **[Pipeline Architecture](./pipeline-architecture.md)** - System architecture diagrams
+- **[Orchestrator System](orchestrator.md)** - How pipelines are scheduled and executed
+- **[Configuration & Rendering](config_rendering.md)** - Template rendering and context
 - **[First Pipeline Tutorial](../guides/first_pipeline.md)** - Step-by-step guide
-- **[Dependency Injection](../developers/dependency_injection.md)** - Service management
-- **[Template Rendering](../developers/template_rendering.md)** - Jinja2 system
-- **[Configuration Reference](../details/configuration/config_structure.md)** - YAML structure
 - **[Plugin Development](../developers/plugin_development.md)** - Creating custom pipes
+- **[Configuration Reference](../details/config_reference.md)** - YAML structure
 
 ## Summary
 
-The Open Ticket AI pipeline system provides a powerful framework for building data processing workflows through:
+Pipes are the building blocks of Open Ticket AI workflows:
 
-**Declarative Configuration**
-- YAML-based pipeline definitions
-- Template-driven parameter values
-- Clear dependency specifications
+**Core Concepts:**
+- Self-contained processing units
+- Context-driven data flow
+- Sequential execution with dependencies
+- Conditional and composable
 
-**Flexible Execution**
-- Time-based and event-driven triggers
-- Conditional and dependency-based execution
-- Nested composite pipelines
+**Key Features:**
+- Dependency management (`depends_on`)
+- Conditional execution (`if_`)
+- Nested composition (CompositePipe)
+- Error isolation and handling
+- Template-driven configuration
 
-**Robust Data Flow**
-- Shared context for inter-pipe communication
-- Type-safe results via Pydantic models
-- Error handling and result aggregation
+**Design Principles:**
+- Single responsibility
+- Reusability across workflows
+- Type-safe results
+- Graceful error handling
 
-**Extensibility**
-- Custom pipes via inheritance
-- Service injection for external integrations
-- Plugin system for distribution
-
-This architecture enables building sophisticated automation workflows that are maintainable, testable, and production-ready.
+This architecture enables building complex automation workflows from simple, testable, composable components.

@@ -1,3 +1,7 @@
+---
+description: Core services documentation for Open Ticket AI covering ticket system adapters, business logic encapsulation, and dependency injection.
+---
+
 # Core Services
 
 Services encapsulate business logic and provide reusable functionality to pipes. They are managed by the dependency injection container.

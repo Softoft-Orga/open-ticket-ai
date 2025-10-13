@@ -1,3 +1,7 @@
+---
+description: HuggingFace Local plugin for Open Ticket AI enabling local ML model inference with GPU acceleration and model caching from HuggingFace Hub.
+---
+
 # HuggingFace Local Plugin
 
 The HuggingFace Local plugin enables local ML model inference using models from the HuggingFace Hub.

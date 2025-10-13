@@ -1,3 +1,7 @@
+---
+description: Explore Open Ticket AI's core architectural concepts including pipelines, configuration rendering, plugins, and versioning strategies.
+---
+
 # Core Concepts
 
 This directory contains architectural documentation that explains the fundamental concepts and design of Open Ticket AI.

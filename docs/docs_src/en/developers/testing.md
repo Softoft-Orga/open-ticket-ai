@@ -1,3 +1,7 @@
+---
+description: Comprehensive testing guide for Open Ticket AI configurations, pipelines, and custom components with best practices and examples.
+---
+
 # Testing Guide
 
 Guide to testing Open Ticket AI configurations, pipelines, and custom components.
@@ -987,6 +991,6 @@ Tests run automatically on push/PR via GitHub Actions. Check `.github/workflows/
 ## Related Documentation
 
 - [Configuration Examples](../details/configuration/examples.md)
-- [Plugin Development](../developers/plugin_development.md)
+- [Plugin Development](plugin_development.md)
 - [Custom Adapters](../integration/custom_adapters.md)
 - [AGENTS.md](../../../../AGENTS.md) - Authoritative test structure rules
