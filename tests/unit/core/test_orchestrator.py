@@ -461,7 +461,7 @@ def test_orchestrator_registry_uses_trigger_ids_correctly() -> None:
             ]
         }
     )
-    
+
     trigger_def = orchestrator_config.runners[0].on[0]
     assert trigger_def.id is not None
     assert trigger_def.id == trigger_def.uid
@@ -495,10 +495,10 @@ def test_orchestrator_reuses_trigger_with_same_id_across_runners() -> None:
             ]
         }
     )
-    
+
     trigger1 = orchestrator_config.runners[0].on[0]
     trigger2 = orchestrator_config.runners[1].on[0]
-    
+
     assert trigger1.id == shared_trigger_id
     assert trigger2.id == shared_trigger_id
     assert trigger1.id == trigger2.id
