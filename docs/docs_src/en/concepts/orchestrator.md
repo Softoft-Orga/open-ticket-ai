@@ -6,224 +6,212 @@ aside: false
 
 # Orchestrator System
 
-The orchestrator coordinates pipeline scheduling, trigger mechanisms, and execution lifecycle.
+The orchestrator coordinates pipeline execution by managing triggers and runners. It implements the Observer pattern, where triggers notify runners when conditions are met, and runners execute pipelines in response.
 
-## What is the Orchestrator?
+## Core Components
 
-Manages:
-- Pipeline runners and their lifecycle
-- Trigger mechanisms (time-based, event-driven)
-- Execution scheduling
+The orchestrator system consists of three main components that work together:
 
-## Orchestrator Architecture
+**Orchestrator**  
+The central coordinator that manages the lifecycle of triggers and runners. It initializes the system, attaches runners to triggers, and handles startup and shutdown.
+
+**Trigger**  
+An event source that monitors for conditions (like time intervals or external events). When a condition is met, it notifies all attached runners. Multiple runners can observe the same trigger.
+
+**PipeRunner**  
+An execution unit that runs a pipeline when notified by a trigger. Each runner is configured with a specific pipeline to execute and can be attached to one or more triggers.
+
+## Component Relationships
 
 ```mermaid
-%%{init:{
-  "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
-  "themeVariables":{"fontSize":"14px","fontFamily":"system-ui"},
+%%{init: {
+  "classDiagram": { "layout": "elk", "useMaxWidth": false },
+  "elk": { "spacing": { "nodeNode": 25, "nodeNodeBetweenLayers": 30 } },
+  "themeVariables": { "fontSize": "13px" }
 }}%%
+classDiagram
+direction TD
 
-flowchart TB
-    subgraph CONFIG["📝 Configuration"]
-        OrchestratorConfig["OrchestratorConfig"]
-        RunnerDef["RunnerDefinition[]"]
-        TriggerDef["TriggerDefinition[]"]
-    end
-    
-    subgraph ORCH["🎯 Orchestrator"]
-        Orchestrator["Orchestrator"]
-        Runners["PipeRunner[]"]
-    end
-    
-    subgraph EXEC["⚡ Execution"]
-        Triggers["Triggers"]
-        Factory["RenderableFactory"]
-    end
-    
-    OrchestratorConfig --> Orchestrator
-    RunnerDef --> Orchestrator
-    TriggerDef --> Orchestrator
-    Orchestrator --> Runners
-    Runners --> Triggers
-    Triggers --> Factory
-    
-    style CONFIG fill:#1e3a5f,stroke:#0d1f3d,stroke-width:2px,color:#e0e0e0
-    style ORCH fill:#5a189a,stroke:#3c096c,stroke-width:2px,color:#e0e0e0
-    style EXEC fill:#2d6a4f,stroke:#1b4332,stroke-width:2px,color:#e0e0e0
+  class Orchestrator {
+    +start()
+    +stop()
+    +run()
+    -triggers
+    -runners
+  }
+  
+  class Trigger {
+    +attach(observer)
+    +detach(observer)
+    +notify()
+    +start()
+    +stop()
+    -observers
+  }
+  
+  class PipeRunner {
+    +execute()
+    +on_trigger_fired()
+    -definition
+  }
+
+  Orchestrator "1" --> "*" Trigger : manages
+  Orchestrator "1" --> "*" PipeRunner : manages
+  Trigger "1" --> "*" PipeRunner : observes
+  
+  note for Orchestrator "Coordinates lifecycle\nof triggers and runners"
+  note for Trigger "Notifies runners when\nconditions are met"
+  note for PipeRunner "Executes pipeline\nin response to trigger"
 ```
 
+**How they work together:**
+1. The **Orchestrator** creates triggers and runners based on configuration
+2. Each **PipeRunner** is attached as an observer to one or more **Triggers**
+3. When a **Trigger** fires, it notifies all attached **PipeRunners**
+4. Each notified **PipeRunner** executes its configured pipeline
 
-## Trigger Mechanisms
+## Configuration
 
-### Time-Based Triggers
+The orchestrator is configured through YAML with three main sections:
+
+### Basic Structure
 
 ```yaml
 orchestrator:
   runners:
-    - id: periodic_classifier
+    - id: "unique_id"           # Optional identifier
+      on:                       # Optional triggers (omit for one-time execution)
+        - id: "trigger_id"
+          use: "module:TriggerClass"
+          params: {}
+      run:                      # Required: pipeline to execute
+        id: "pipeline_id"
+        use: "module:PipeClass"
+        params: {}
+```
+
+### Configuration Elements
+
+**Runner Definition** - Defines what pipeline to run and when:
+- `id`: Optional unique identifier for the runner
+- `on`: List of triggers that will execute this pipeline (optional)
+- `run`: The pipeline configuration to execute (required)
+
+**Trigger Definition** - Specifies when to execute:
+- `id`: Unique identifier for trigger reuse
+- `use`: Fully qualified class path to trigger implementation
+- `params`: Trigger-specific parameters (e.g., interval duration)
+
+## Common Usage Patterns
+
+### Time-Based Execution
+
+Execute a pipeline at regular intervals:
+
+```yaml
+orchestrator:
+  runners:
+    - id: periodic_task
       on:
-        - id: "every_5_minutes"
-          use: "open_ticket_ai.base.interval_trigger:IntervalTrigger"
+        - id: "every_5_min"
+          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
           params:
-            milliseconds: 300000
+            minutes: 5
       run:
         id: ticket_classifier
         use: open_ticket_ai.base:CompositePipe
         steps: [...]
 ```
 
-**How it works:**
-1. Trigger created with interval (e.g., 300000ms = 5 minutes)
-2. Trigger fires periodically
-3. Runner executes pipeline
-4. Cycle repeats
+### Startup Execution
 
-### One-Time Execution
+Execute once at application startup (no triggers):
 
 ```yaml
 orchestrator:
   runners:
-    - id: startup_task
-      run:  # No "on" field
-        id: initialization
-        use: SomePipe
+    - id: initialization
+      run:  # No "on" field = runs once at startup
+        id: cache_warmup
+        use: CacheWarmupPipe
 ```
-
-Runs once at startup, then completes.
 
 ### Multiple Triggers
 
+Execute the same pipeline from different triggers:
+
 ```yaml
 orchestrator:
   runners:
-    - id: multi_trigger
+    - id: multi_trigger_task
       on:
         - id: "hourly"
-          use: "open_ticket_ai.base.interval_trigger:IntervalTrigger"
+          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
           params:
-            milliseconds: 3600000
+            hours: 1
         - id: "daily"
-          use: "open_ticket_ai.base.interval_trigger:IntervalTrigger"
+          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
           params:
-            milliseconds: 86400000
+            days: 1
       run:
         id: maintenance
         use: MaintenancePipe
 ```
 
-Each trigger independently executes the pipeline.
+### Shared Triggers
 
-## Configuration
-
-### OrchestratorConfig
+Reuse the same trigger for multiple pipelines:
 
 ```yaml
 orchestrator:
   runners:
-    - id: runner_1
-      on: [...]  # Optional triggers
-      run: {...} # Required pipe config
-```
-
-### RunnerDefinition
-
-```yaml
-- id: "unique_runner_id"
-  on:  # Optional triggers
-    - id: "trigger_id"
-      use: "module:TriggerClass"
-      params: {}
-  run:  # Required pipeline
-    id: "pipeline_id"
-    use: "module:PipeClass"
-    params: {}
-```
-
-### TriggerDefinition
-
-```yaml
-- id: "trigger_id"
-  use: "open_ticket_ai.base.interval_trigger:IntervalTrigger"
-  params:
-    milliseconds: 60000  # 1 minute
+    - id: task_one
+      on:
+        - id: "shared_timer"  # Same trigger ID
+          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
+          params:
+            minutes: 10
+      run: {...}
+    
+    - id: task_two
+      on:
+        - id: "shared_timer"  # Reuses the trigger above
+      run: {...}
 ```
 
 ## Execution Guarantees
 
-- **Non-Overlapping**: Pipeline won't start if previous execution still running
-- **Error Isolation**: Runner failures don't affect other runners
-- **Clean Lifecycle**: Graceful startup and shutdown
+The orchestrator provides these execution characteristics:
 
-## Common Patterns
-
-### Periodic Processing
-```yaml
-runners:
-  - id: ticket_processor
-    on:
-      - id: "every_10_minutes"
-        use: "open_ticket_ai.base.interval_trigger:IntervalTrigger"
-        params:
-          milliseconds: 600000
-    run:
-      id: process_tickets
-      use: CompositePipe
-      steps: [...]
-```
-
-### Startup Initialization
-```yaml
-runners:
-  - id: init_cache
-    run:  # No triggers = one-time
-      id: cache_warmup
-      use: CacheWarmupPipe
-```
-
-### Multiple Schedules
-```yaml
-runners:
-  - id: quick_check
-    on:
-      - id: "every_minute"
-        params:
-          milliseconds: 60000
-    run: {...}
-  
-  - id: deep_scan
-    on:
-      - id: "every_hour"
-        params:
-          milliseconds: 3600000
-    run: {...}
-```
+- **Clean Lifecycle**: Graceful startup and shutdown of all components
+- **Error Isolation**: A failure in one runner doesn't affect others
+- **Non-Overlapping**: Pipelines won't start if a previous execution is still running (per runner)
+- **Multiple Observers**: One trigger can notify multiple runners
 
 ## Best Practices
 
-**Trigger Intervals:**
-- Don't run too frequently (respect resource limits)
-- Consider processing time when setting intervals
-- Use appropriate intervals for data freshness needs
+**Trigger Design**
+- Use appropriate intervals based on data freshness requirements
+- Avoid overly frequent execution that wastes resources
+- Consider pipeline execution time when setting intervals
+- Reuse triggers with the same schedule to reduce overhead
 
-**Runner Configuration:**
-- Use descriptive runner IDs
-- Group related operations in one runner
-- Separate fast checks from slow operations
-
-**Performance:**
-- Monitor execution times
-- Adjust intervals based on actual processing time
-- Limit concurrent runners to avoid resource exhaustion
+**Runner Organization**
+- Use descriptive IDs for easier debugging
+- Group related operations in a single pipeline
+- Separate fast checks from slow batch operations
+- Monitor execution times and adjust intervals accordingly
 
 ## Key Implementation Files
 
-- **`src/open_ticket_ai/core/orchestration/orchestrator.py`** - Main orchestrator
-- **`src/open_ticket_ai/core/orchestration/scheduled_runner.py`** - PipeRunner
-- **`src/open_ticket_ai/core/orchestration/trigger.py`** - Trigger base class
-- **`src/open_ticket_ai/base/triggers/interval_trigger.py`** - IntervalTrigger
+- **`orchestrator.py`** - Main orchestrator class
+- **`trigger.py`** - Base trigger class and observer protocol
+- **`scheduled_runner.py`** - PipeRunner implementation
+- **`orchestrator_config.py`** - Configuration models
 
 ## Related Documentation
 
-- [Pipe System](pipeline.md)
-- [Configuration Reference](../details/config_reference.md)
-- [First Pipeline Tutorial](../guides/first_pipeline.md)
+- [Pipe System](pipeline.md) - Understanding pipeline structure
+- [Configuration Reference](../details/config_reference.md) - Full config options
+- [First Pipeline Tutorial](../guides/first_pipeline.md) - Getting started guide
+
