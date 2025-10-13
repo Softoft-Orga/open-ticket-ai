@@ -8,12 +8,6 @@ on:
       - 'otobo-znuny-v*'
       - 'otai-otobo-znuny-v*'
   workflow_dispatch:
-    inputs:
-      dry-run:
-        description: 'Run in dry-run mode (build but do not publish)'
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   publish:
