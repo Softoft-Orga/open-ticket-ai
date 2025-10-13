@@ -10,7 +10,7 @@ from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
 from open_ticket_ai.core.config.renderable import EmptyParams, RenderableConfig
-from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.config.renderable_factory import RenderableFactory, _locate
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
@@ -46,10 +46,12 @@ class AppModule(Module):
                 raise ValueError(f"Template renderer service with id '{service_id}' not found")
             
             # Import and check the class
-            from open_ticket_ai.core.config.renderable_factory import _locate
             cls = _locate(service_config.use)
             if not issubclass(cls, TemplateRenderer):
-                raise TypeError(f"Service '{service_id}' (class '{service_config.use}') is not a TemplateRenderer subclass")
+                raise TypeError(
+                    f"Service '{service_id}' (class '{service_config.use}') "
+                    f"is not a TemplateRenderer subclass"
+                )
             
             # For JinjaRenderer, we need to convert params to JinjaRendererConfig
             if cls == JinjaRenderer:

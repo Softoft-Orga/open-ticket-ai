@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.renderable import EmptyParams, Renderable, RenderableConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
+from open_ticket_ai.core.orchestration.trigger import Trigger
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
@@ -84,10 +85,6 @@ class RenderableFactory:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):
             raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")
-        
-        # Import classes to check type
-        from open_ticket_ai.core.orchestration.trigger import Trigger
-        from open_ticket_ai.core.pipeline.pipe import Pipe
         
         # Build kwargs for additional parameters
         kwargs: dict[str, Any] = {}
