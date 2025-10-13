@@ -65,18 +65,22 @@ class RenderableFactory:
         """Create a trigger instance with rendered config and dependency injection."""
         self._logger.debug(f"Creating trigger with config id: {trigger_config_raw.id}")
         self._logger.info(f"Creating trigger '{trigger_config_raw.id}'")
-        rendered_config = render_base_model(trigger_config_raw, scope, self._template_renderer)
-        if not isinstance(rendered_config, RenderableConfig):
-            raise TypeError("Rendered config must be a RenderableConfig instance")
-        return self.__create_renderable_instance(rendered_config, scope)
+        # Render only the params like create_pipe does
+        rendered_params = render_base_model(trigger_config_raw.params, scope, self._template_renderer)
+        trigger_config_raw.params = rendered_params
+        return self.__create_renderable_instance(trigger_config_raw, scope)
 
-    def __create_service_instance(self, registerable_config_raw: RenderableConfig[Any], scope: PipeContext) -> Renderable:
+    def __create_service_instance(
+        self, registerable_config_raw: RenderableConfig[Any], scope: PipeContext
+    ) -> Renderable:
         rendered_config = render_base_model(registerable_config_raw, scope, self._template_renderer)
         if not isinstance(rendered_config, RenderableConfig):
             raise TypeError("Rendered config must be a RenderableConfig instance")
         return self.__create_renderable_instance(rendered_config, scope)
 
-    def __create_renderable_instance(self, registerable_config: RenderableConfig[Any], scope: PipeContext) -> Renderable:
+    def __create_renderable_instance(
+        self, registerable_config: RenderableConfig[Any], scope: PipeContext
+    ) -> Renderable:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):
             raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")
