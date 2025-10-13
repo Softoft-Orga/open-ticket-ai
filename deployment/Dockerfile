@@ -9,6 +9,8 @@ COPY ../pyproject.toml ./
 # Create a virtual environment and install dependencies into it
 # We allow caching here to speed up rebuilds
 RUN uv sync
+RUN uv add otai-hf-local
+RUN uv add otai-otobo-znuny
 
 ENV PYTHONPATH="/app"
 
@@ -20,4 +22,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 COPY ../src ./open_ticket_ai
 
 # Command to run your application
-CMD ["python", "-m", "open_ticket_ai.src.main"]
+CMD ["uv", "run", "./src/open_ticket_ai/main.py"]
