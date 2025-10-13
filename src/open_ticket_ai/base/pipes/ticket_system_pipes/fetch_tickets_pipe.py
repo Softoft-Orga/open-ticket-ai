@@ -6,7 +6,7 @@ from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
-from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedTicket
+from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
 
 
 class FetchTicketsParams(BaseModel):

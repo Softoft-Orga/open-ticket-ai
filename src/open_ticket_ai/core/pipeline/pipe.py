@@ -10,8 +10,10 @@ from ..logging_iface import LoggerFactory
 from .pipe_config import PipeConfig, PipeResult
 from .pipe_context import PipeContext
 
+
 class ParamsModel(BaseModel):
     model_config = ConfigDict(extra="allow")
+
 
 class Pipe[ParamsT: ParamsModel](Renderable, ABC):
     params_class: type[ParamsT]

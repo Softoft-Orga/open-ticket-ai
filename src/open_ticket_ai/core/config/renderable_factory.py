@@ -9,7 +9,7 @@ from injector import inject, singleton
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipeline.pipe import Pipe, ParamsModel
+from open_ticket_ai.core.pipeline.pipe import ParamsModel, Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
@@ -33,9 +33,9 @@ def render_params(params: ParamsModel, scope: PipeContext, renderer: TemplateRen
         params_dict = params.model_dump()
     except Exception:
         params_dict = {}
-        if hasattr(params, '__dict__'):
+        if hasattr(params, "__dict__"):
             for key, value in params.__dict__.items():
-                if not key.startswith('_'):
+                if not key.startswith("_"):
                     params_dict[key] = value
 
     return renderer.render_recursive(params_dict, scope)
