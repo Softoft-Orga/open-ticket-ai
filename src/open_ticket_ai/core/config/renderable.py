@@ -7,7 +7,8 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 class Renderable:
     """Marker interface for renderable configurations."""
 
-    pass
+    def __init__(self, *args, **kwargs) -> None:  # type: ignore[no-untyped-def]
+        pass
 
 
 class EmptyParams(BaseModel):

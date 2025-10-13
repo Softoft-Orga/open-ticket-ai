@@ -39,7 +39,7 @@ class TestOTOBOZnunyTicketSystemService:
     def service(self, config):
         with patch(
             "packages.otai_otobo_znuny.src.otai_otobo_znuny."
-            "otobo_znuny_ticket_system_service.OTOBOZnunyTicketSystemService._recreate_client"
+            "oto_znuny_ts_service.OTOBOZnunyTicketSystemService._recreate_client"
         ):
             return OTOBOZnunyTicketSystemService(config)
 
@@ -56,7 +56,7 @@ class TestOTOBOZnunyTicketSystemService:
     def patch_ticket_conversion(self):
         with patch(
             "packages.otai_otobo_znuny.src.otai_otobo_znuny."
-            "otobo_znuny_ticket_system_service.otobo_ticket_to_unified_ticket"
+            "models.otobo_ticket_to_unified_ticket"
         ) as mock_convert:
             mock_convert.side_effect = lambda ticket: UnifiedTicket(
                 id=str(ticket.id),
@@ -80,7 +80,7 @@ class TestOTOBOZnunyTicketSystemService:
 
     def test_recreate_client(self, service, mock_client):
         with patch(
-            "packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyClient"
+            "packages.otai_otobo_znuny.src.otai_otobo_znuny.oto_znuny_ts_service.OTOBOZnunyClient"
         ) as MockClientClass:
             MockClientClass.return_value = mock_client
 

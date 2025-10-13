@@ -37,11 +37,6 @@ from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 
 @pytest.fixture
-def logger_factory(injector_with_mocked_ticket_system: Injector) -> LoggerFactory:
-    return injector_with_mocked_ticket_system.get(LoggerFactory)
-
-
-@pytest.fixture
 def mocked_ticket_system() -> MockedTicketSystem:
     """Create a MockedTicketSystem with sample data."""
     system = MockedTicketSystem({})
@@ -204,7 +199,7 @@ def test_pipe_service_injection_with_renderable_factory(
     )
 
     factory = RenderableFactory(
-        template_renderer=JinjaRenderer(JinjaRendererConfig()),
+        template_renderer=JinjaRenderer(JinjaRendererConfig(), logger_factory),
         app_config=AppConfig(),
         registerable_configs=[ticket_system_config],
         logger_factory=logger_factory,
