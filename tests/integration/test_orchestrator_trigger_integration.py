@@ -27,11 +27,11 @@ from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 
-def create_trigger_def(trigger_id: str, **params: int) -> TriggerDefinition[IntervalTriggerParams]:
-    return TriggerDefinition[IntervalTriggerParams](
+def create_trigger_def(trigger_id: str, **params: int) -> TriggerDefinition:
+    return TriggerDefinition(
         id=trigger_id,
         use="open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger",
-        params=IntervalTriggerParams(**params),
+        params=IntervalTriggerParams(**params).model_dump(),
     )
 
 
@@ -78,7 +78,7 @@ async def test_pipe_runner_executes_pipe_on_trigger(logger_factory: LoggerFactor
     class EmptyData(BaseModel):
         pass
 
-    class TestPipe(Pipe[EmptyData]):
+    class TestPipe(Pipe):
         async def _process(self) -> PipeResult[EmptyData]:
             nonlocal pipe_executed
             pipe_executed = True
