@@ -65,6 +65,7 @@ def test_trigger_receives_logger_factory() -> None:
     # Verify logger was obtained from factory (called for both factory and trigger)
     assert logger_factory.get_logger.call_count >= 2
     # Check that IntervalTrigger got a logger and interval is correctly calculated
+    assert isinstance(trigger, IntervalTrigger)
     assert trigger.interval == 65  # 5 seconds + 60 seconds (1 minute)
 
 

@@ -6,42 +6,45 @@ import pytest
 from open_ticket_ai.base.pipes.composite_pipe import CompositePipe
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
+from open_ticket_ai.core.pipeline.pipe_config import CompositePipeResultData, PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 
 
-class DummyChildPipe(Pipe):
+class DummyChildPipe(Pipe[Any]):
     processed_contexts: list[PipeContext] = []
     process_count: int = 0
 
-    async def process(self, context: PipeContext) -> PipeContext:  # type: ignore[override]
+    async def process(self, context: PipeContext) -> PipeContext:
         self.__class__.processed_contexts.append(context)
         return await super().process(context)
 
-    async def _process(self) -> PipeResult:
+    async def _process(self) -> PipeResult[CompositePipeResultData]:
         self.__class__.process_count += 1
-        return PipeResult(success=True, failed=False, data={"value": self.pipe_params.id})
+        return PipeResult(success=True, failed=False, data=CompositePipeResultData(value=self.pipe_config.id))
 
 
 class DummyParentPipe(CompositePipe):
-    async def _process(self) -> PipeResult:
+    async def _process(self) -> PipeResult[CompositePipeResultData]:
+        context = self._context
+        if context is None:
+            return PipeResult(success=False, failed=True, data=CompositePipeResultData(message="No context"))
         return PipeResult(
             success=True,
             failed=False,
-            data={
-                "child_names": list(self._current_context.pipes.keys()),
-                "context_id": id(self._current_context),
-            },
+            data=CompositePipeResultData(
+                child_names=list(context.pipes.keys()),
+                context_id=id(context),
+            ),
         )
 
 
-class SkipPipe(Pipe):
+class SkipPipe(Pipe[Any]):
     executed: bool = False
 
-    async def _process(self) -> PipeResult:
+    async def _process(self) -> PipeResult[CompositePipeResultData]:
         self.__class__.executed = True
-        return PipeResult(success=True, failed=False, data={"value": "should not run"})
+        return PipeResult(success=True, failed=False, data=CompositePipeResultData(value="should not run"))
 
 
 @pytest.fixture(autouse=True)
@@ -55,17 +58,19 @@ def reset_dummy_pipes() -> None:
 def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
     jinja_renderer = JinjaRenderer(JinjaRendererConfig())
 
-    def _resolve_class(import_path: str):
+    def _resolve_class(import_path: str) -> type:
         module_path, separator, attr_name = import_path.partition(":")
         if not separator:
             module_path, _, attr_name = import_path.rpartition(".")
         module = importlib.import_module(module_path)
         return getattr(module, attr_name)
 
-    def _build_pipe_from_step_config(self, step_config: dict[str, Any], context: PipeContext):
+    def _build_pipe_from_step_config(self: Any, step_config: dict[str, Any], context: PipeContext) -> Any:
         rendered_step_config = jinja_renderer.render_recursive(step_config, context)
         resolved_config = dict(rendered_step_config)
         use_value = resolved_config.get("use")
+        if use_value is None:
+            raise ValueError("use value is required")
         pipe_class = _resolve_class(use_value) if isinstance(use_value, str) else use_value
         return pipe_class(resolved_config)
 
@@ -79,8 +84,8 @@ def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.mark.asyncio
 async def test_process_skips_pipe_when_condition_is_false() -> None:
-    context = PipeContext(pipes={"existing": PipeResult(success=True, failed=False, data={"value": 1})})
-    skip_config = PipeConfig(id="skip", use="SkipPipe", **{"if": False})
+    context = PipeContext(pipes={"existing": PipeResult(success=True, failed=False, data=CompositePipeResultData(value=1))})
+    skip_config: PipeConfig[Any] = PipeConfig(id="skip", use="SkipPipe", **{"if": False})
     skip_pipe = SkipPipe(skip_config)
 
     result_context = await skip_pipe.process(context)

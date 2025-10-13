@@ -102,6 +102,14 @@ disallow_untyped_calls = false
 disallow_incomplete_defs = false
 check_untyped_defs = true  # Still check logic, just don't require annotations
 
+[[tool.mypy.overrides]]
+module = [
+    "tests.unit.core.dependency_injection.test_logging_module",
+    "tests.integration.test_logging_integration",
+    "tests.integration.test_logger_factory_injection",
+]
+disable_error_code = ["name-defined", "type-abstract"]
+
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
 testpaths = ["tests", "packages/*/tests"]

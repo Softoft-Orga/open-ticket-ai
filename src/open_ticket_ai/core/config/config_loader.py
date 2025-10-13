@@ -1,7 +1,7 @@
 import os
 
 import injector
-import yaml  # type: ignore[import-untyped]
+import yaml
 from injector import singleton
 
 from open_ticket_ai.core import AppConfig
