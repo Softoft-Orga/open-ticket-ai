@@ -17,7 +17,7 @@ class Trigger[ParamsT: BaseModel](Renderable, ABC):
     def __init__(
         self,
         config: TriggerDefinition[ParamsT],
-        logger_factory: LoggerFactory | None = None,
+        logger_factory: LoggerFactory,
         *args: Any,
         **kwargs: Any,
     ) -> None:
@@ -25,10 +25,7 @@ class Trigger[ParamsT: BaseModel](Renderable, ABC):
         self.trigger_def = config
         self._observers: list[PipeRunnerObserver] = []
         self._running = False
-        if logger_factory is not None:
-            self._logger = logger_factory.get_logger(self.__class__.__name__)
-        else:
-            self._logger = logging.getLogger(self.__class__.__name__)  # type: ignore[assignment]
+        self._logger = logger_factory.get_logger(self.__class__.__name__)
 
     def attach(self, observer: PipeRunnerObserver) -> None:
         if observer not in self._observers:

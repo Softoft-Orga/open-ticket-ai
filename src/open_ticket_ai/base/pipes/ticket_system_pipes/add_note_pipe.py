@@ -27,7 +27,7 @@ class AddNotePipe(Pipe[AddNoteParams]):
         self,
         ticket_system: TicketSystemService,
         pipe_config: AddNotePipeConfig,
-        logger_factory: LoggerFactory | None = None,
+        logger_factory: LoggerFactory,
         *args: Any,
         **kwargs: Any,
     ) -> None:

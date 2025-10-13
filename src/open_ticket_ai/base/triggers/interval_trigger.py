@@ -19,7 +19,7 @@ class IntervalTrigger(Trigger[IntervalTriggerParams]):
     def __init__(self, config: TriggerDefinition[IntervalTriggerParams], *args: Any, **kwargs: Any) -> None:
         super().__init__(config, *args, **kwargs)
         params = IntervalTriggerParams.model_validate(config.params)
-        self.interval = (
+        self.seconds_interval: float = (
             params.days * 86400
             + params.hours * 3600
             + params.minutes * 60
@@ -41,5 +41,5 @@ class IntervalTrigger(Trigger[IntervalTriggerParams]):
 
     async def _run(self) -> None:
         while self._running:
-            await asyncio.sleep(self.interval)
+            await asyncio.sleep(self.seconds_interval)
             self.notify()

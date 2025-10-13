@@ -7,22 +7,22 @@ from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 
 
-class JinjaExpressionParams(BaseModel):
-    expression: Any
+class ExpressionParams(BaseModel):
+    expression: str
 
 
-class JinjaExpressionPipeResultData(BaseModel):
+class ExpressionPipeResultData(BaseModel):
     value: Any
 
 
-class JinjaExpressionPipeConfig(PipeConfig[JinjaExpressionParams]):
+class ExpressionPipeConfig(PipeConfig[ExpressionParams]):
     pass
 
 
-class JinjaExpressionPipe(Pipe[JinjaExpressionParams]):
+class ExpressionPipe(Pipe[ExpressionParams]):
     def __init__(
         self,
-        pipe_config: JinjaExpressionPipeConfig,
+        pipe_config: ExpressionPipeConfig,
         logger_factory: LoggerFactory | None = None,
         *args: Any,
         **kwargs: Any,
@@ -30,7 +30,7 @@ class JinjaExpressionPipe(Pipe[JinjaExpressionParams]):
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.expression = pipe_config.params.expression
 
-    async def _process(self) -> PipeResult[JinjaExpressionPipeResultData]:
-        return PipeResult[JinjaExpressionPipeResultData](
-            success=True, failed=False, data=JinjaExpressionPipeResultData(value=self.expression)
+    async def _process(self) -> PipeResult[ExpressionPipeResultData]:
+        return PipeResult[ExpressionPipeResultData](
+            success=True, failed=False, data=ExpressionPipeResultData(value=self.expression)
         )

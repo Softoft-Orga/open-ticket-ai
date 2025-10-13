@@ -6,7 +6,7 @@ import pytest
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.base.pipes.composite_pipe import CompositeParams, CompositePipe, CompositePipeConfig
-from open_ticket_ai.base.pipes.jinja_expression_pipe import JinjaExpressionParams, JinjaExpressionPipeConfig
+from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams, ExpressionPipeConfig
 from open_ticket_ai.base.pipes.ticket_system_pipes import (
     AddNoteParams,
     AddNotePipeConfig,
@@ -39,9 +39,9 @@ JINJA_PIPE_USE = "open_ticket_ai.base.pipes.jinja_expression_pipe:JinjaExpressio
 COMPOSITE_PIPE_USE = "open_ticket_ai.base.pipes.composite_pipe:CompositePipe"
 
 
-def create_jinja_step(step_id: str, expression: str, **kwargs) -> JinjaExpressionPipeConfig:
-    return JinjaExpressionPipeConfig(
-        id=step_id, use=JINJA_PIPE_USE, params=JinjaExpressionParams(expression=expression), **kwargs
+def create_jinja_step(step_id: str, expression: str, **kwargs) -> ExpressionPipeConfig:
+    return ExpressionPipeConfig(
+        id=step_id, use=JINJA_PIPE_USE, params=ExpressionParams(expression=expression), **kwargs
     )
 
 

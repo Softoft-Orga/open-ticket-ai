@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import pytest
 from injector import Injector
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 
 from open_ticket_ai.base.pipes.ticket_system_pipes import (
     AddNoteParams,
@@ -35,13 +34,6 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
 )
 from tests.unit.mocked_ticket_system import MockedTicketSystem
-
-
-@pytest.fixture
-def injector_with_mocked_ticket_system() -> Injector:
-    """Create an injector with MockedTicketSystem registered as a service."""
-    injector = Injector([LoggingModule(log_impl="stdlib", log_level="DEBUG")])
-    return injector
 
 
 @pytest.fixture

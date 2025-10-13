@@ -35,7 +35,7 @@ def test_trigger_instantiation_via_factory() -> None:
     # Verify it's an IntervalTrigger instance
     assert isinstance(trigger, IntervalTrigger)
     assert trigger.trigger_def.id == "test-trigger"
-    assert trigger.interval == 10
+    assert trigger.seconds_interval == 10
 
 
 def test_trigger_receives_logger_factory() -> None:
@@ -66,7 +66,7 @@ def test_trigger_receives_logger_factory() -> None:
     assert logger_factory.get_logger.call_count >= 2
     # Check that IntervalTrigger got a logger and interval is correctly calculated
     assert isinstance(trigger, IntervalTrigger)
-    assert trigger.interval == 65  # 5 seconds + 60 seconds (1 minute)
+    assert trigger.seconds_interval == 65  # 5 seconds + 60 seconds (1 minute)
 
 
 def test_trigger_config_rendering() -> None:
@@ -110,7 +110,7 @@ def test_trigger_config_rendering() -> None:
     assert template_renderer.render_recursive.called
     # Verify the trigger received the rendered value
     assert isinstance(trigger, IntervalTrigger)
-    assert trigger.interval == 30
+    assert trigger.seconds_interval == 30
 
 
 def test_trigger_definition_has_unique_id() -> None:

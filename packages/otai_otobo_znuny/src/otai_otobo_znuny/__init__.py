@@ -1,4 +1,4 @@
-from .otobo_znuny_ticket_system_service import OTOBOZnunyTicketSystemService
+from .oto_znuny_ts_service import OTOBOZnunyTicketSystemService
 
 __all__ = [
     "OTOBOZnunyTicketSystemService",
@@ -9,7 +9,7 @@ def get_metadata() -> dict[str, str]:
     return {
         "name": "otobo_znuny",
         "version": "1.0.0rc1",
-        "core_api": "2.0",
+        "core_api": "1.0",
         "description": "OTOBO/Znuny ticket system plugin for Open Ticket AI",
     }
 

@@ -8,20 +8,6 @@ from injector import Injector
 from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig
 
 
-@pytest.fixture
-def mock_ticket_system_config():
-    """Create a mock ticket system pipe configuration for testing.
-
-    Returns a dictionary with ticket_system_id for ticket system pipes.
-    """
-    return {
-        "id": "test_ticket_pipe",
-        "use": "TestTicketPipe",
-        "when": True,
-        "steps": [],
-        "ticket_system_id": "mock_ticket_system",
-    }
-
 
 @pytest.fixture
 def tmp_config(tmp_path: Path) -> Path:
@@ -50,16 +36,6 @@ open_ticket_ai:
     config_path.write_text(config_content.strip(), encoding="utf-8")
     return config_path
 
-
-@pytest.fixture
-def app_injector(tmp_config: Path) -> Injector:
-    return Injector([AppModule(tmp_config)])
-
-
-@pytest.fixture
-def test_config(tmp_config: Path, logger_factory) -> RawOpenTicketAIConfig:
-    config_loader = ConfigLoader(AppConfig(), logger_factory)
-    return config_loader.load_config(tmp_config)
 
 
 @pytest.fixture

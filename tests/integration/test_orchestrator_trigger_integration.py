@@ -11,7 +11,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from injector import Injector
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 
 from open_ticket_ai.base.triggers.interval_trigger import IntervalTrigger, IntervalTriggerParams
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
@@ -28,10 +27,6 @@ from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 
-@pytest.fixture
-def logger_factory() -> LoggerFactory:
-    injector = Injector([LoggingModule(log_impl="stdlib", log_level="DEBUG")])
-    return injector.get(LoggerFactory)
 
 
 @pytest.mark.asyncio
@@ -155,8 +150,6 @@ async def test_orchestrator_starts_and_triggers_fire(logger_factory: LoggerFacto
 async def test_orchestrator_with_multiple_triggers() -> None:
     """Test Orchestrator with multiple triggers attached to different runners."""
 
-    injector = Injector([LoggingModule(log_impl="stdlib", log_level="DEBUG")])
-    logger_factory = injector.get(LoggerFactory)
 
     orchestrator_config = OrchestratorConfig(
         runners=[
@@ -217,8 +210,6 @@ async def test_orchestrator_with_multiple_triggers() -> None:
 @pytest.mark.asyncio
 async def test_orchestrator_reuses_trigger_with_same_id() -> None:
     """Test that Orchestrator reuses triggers with the same ID across multiple runners."""
-    injector = Injector([LoggingModule(log_impl="stdlib", log_level="DEBUG")])
-    logger_factory = injector.get(LoggerFactory)
 
     shared_trigger_id = "shared_trigger"
     orchestrator_config = OrchestratorConfig(

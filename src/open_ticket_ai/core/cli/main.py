@@ -181,36 +181,35 @@ class CLI:
             raise typer.Exit(1) from e
 
     def _plugin_list_stub(self) -> None:
-        self.console.print("[yellow]⚠️  Plugin management is not yet implemented[/yellow]")
-        self.console.print("This feature will be available in a future version.")
-        raise NotImplementedError("Plugin list command will be implemented in a future version")
+        self.__not_yet_implemented_warning()
+
+
 
     def _plugin_install_stub(
         self,
         package_name: str = typer.Argument(..., help="Plugin package name to install"),
         upgrade: bool = typer.Option(False, "--upgrade", "-U", help="Upgrade if already installed"),
     ) -> None:
-        self.console.print("[yellow]⚠️  Plugin management is not yet implemented[/yellow]")
-        self.console.print("This feature will be available in a future version.")
-        raise NotImplementedError("Plugin install command will be implemented in a future version")
+        self.__not_yet_implemented_warning()
 
     def _plugin_remove_stub(
         self,
         package_name: str = typer.Argument(..., help="Plugin package name to remove"),
         yes: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation prompt"),
     ) -> None:
-        self.console.print("[yellow]⚠️  Plugin management is not yet implemented[/yellow]")
-        self.console.print("This feature will be available in a future version.")
-        raise NotImplementedError("Plugin remove command will be implemented in a future version")
+        self.__not_yet_implemented_warning()
 
     def _upgrade_stub(
         self,
         check_only: bool = typer.Option(False, "--check-only", help="Only check for updates, don't install"),
     ) -> None:
-        self.console.print("[yellow]⚠️  Upgrade command is not yet implemented[/yellow]")
-        self.console.print("This feature will be available in a future version.")
-        raise NotImplementedError("Upgrade command will be implemented in a future version")
+        self.__not_yet_implemented_warning()
 
+
+    def __not_yet_implemented_warning(self) -> None:
+        self.console.print("[yellow]⚠️  This feature is not yet implemented[/yellow]")
+        self.console.print("This feature will be available in a future version.")
+        raise NotImplementedError("This command will be implemented in a future version")
 
 app = CLI().app
 

@@ -10,7 +10,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from injector import Injector
-from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 
 from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
@@ -86,7 +85,6 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    injector = Injector([AppModule(config_path), LoggingModule()])
 
     config = injector.get(RawOpenTicketAIConfig)
     assert config.services is not None
@@ -134,7 +132,6 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    injector = Injector([AppModule(config_path), LoggingModule()])
 
     orchestrator_config = injector.get(OrchestratorConfig)
     assert orchestrator_config is not None

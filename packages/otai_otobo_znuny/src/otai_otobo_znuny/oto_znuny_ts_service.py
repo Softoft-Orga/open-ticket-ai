@@ -18,10 +18,8 @@ from otobo_znuny.domain_models.ticket_models import (  # type: ignore[import-unt
     TicketUpdate,
 )
 from otobo_znuny.mappers import _to_id_name  # type: ignore[import-untyped]
-from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import otobo_ticket_to_unified_ticket
-from packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service_config import (
-    RenderedOTOBOZnunyTicketsystemServiceConfig,
-)
+from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import otobo_ticket_to_unified_ticket, \
+    unified_entity_to_id_name, RenderedOTOBOZnunyTicketsystemServiceConfig
 
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
@@ -80,11 +78,11 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         ticket = TicketUpdate(
             id=int(ticket_id),
             title=updates.subject,
-            queue=_to_id_name(updates.queue),
-            priority=_to_id_name(updates.priority),
+            queue=unified_entity_to_id_name(updates.queue),
+            priority=unified_entity_to_id_name(updates.priority),
             article=article,
         )
-        self.logger.info(ticket)
+        self.logger.info(str(ticket))
         await self.client.update_ticket(ticket)
         return True
 
