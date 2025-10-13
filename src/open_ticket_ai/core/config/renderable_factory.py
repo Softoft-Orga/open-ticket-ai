@@ -8,7 +8,7 @@ from injector import inject, singleton
 from pydantic import BaseModel
 
 from open_ticket_ai.core import AppConfig
-from open_ticket_ai.core.config.renderable import EmptyParams, Renderable, RenderableConfig
+from open_ticket_ai.core.config.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
