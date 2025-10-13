@@ -167,10 +167,12 @@ Defines when a pipeline should be executed.
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | `uid` | string |  |  | Auto-generated unique identifier |
-| `id` | string or null |  | None | Optional user-defined identifier |
+| `id` | string or null |  | None | User-defined identifier (auto-set to `uid` if not provided) |
 | `use` | string |  | `"open_ticket_ai.base.CompositePipe"` | Fully qualified class name |
 | `injects` | object |  |  | Dependencies to inject |
 | `params` | any |  |  | Trigger-specific parameters |
+
+**Note:** When `id` is not explicitly set, it automatically defaults to the `uid` value. This ensures all triggers have a valid identifier for the orchestrator registry, preventing collisions and enabling trigger reuse across multiple runners.
 
 **Common Triggers:**
 
@@ -185,7 +187,7 @@ Configuration for a pipeline or pipe.
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | `uid` | string |  |  | Auto-generated unique identifier |
-| `id` | string or null |  | None | Optional user-defined identifier |
+| `id` | string or null |  | None | User-defined identifier (auto-set to `uid` if not provided) |
 | `use` | string |  | `"open_ticket_ai.base.CompositePipe"` | Fully qualified class name |
 | `injects` | object |  |  | Dependencies to inject |
 | `params` | any |  |  | Pipe-specific parameters |
@@ -232,10 +234,12 @@ Base configuration for renderable components.
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | `uid` | string |  |  | Auto-generated unique identifier |
-| `id` | string or null |  | None | Optional user-defined identifier |
+| `id` | string or null |  | None | User-defined identifier (auto-set to `uid` if not provided) |
 | `use` | string |  | `"open_ticket_ai.base.CompositePipe"` | Fully qualified class name |
 | `injects` | object |  |  | Dependencies to inject |
 | `params` | any |  |  | Component-specific parameters |
+
+**Note:** When `id` is not explicitly set, it automatically defaults to the `uid` value. This ensures all components have a valid identifier.
 
 ### InfrastructureConfig
 
