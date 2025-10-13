@@ -6,7 +6,6 @@ with the dependency injection container and can be used in real services.
 
 from __future__ import annotations
 
-import pytest
 from injector import Injector, inject
 
 from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
@@ -116,4 +115,3 @@ def test_context_binding_persists_across_calls(caplog):
 
     for record in log_records:
         assert "user_id=user-789" in record.message
-

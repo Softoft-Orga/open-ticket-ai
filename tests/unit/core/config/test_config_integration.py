@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 from injector import Injector
 
 from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig

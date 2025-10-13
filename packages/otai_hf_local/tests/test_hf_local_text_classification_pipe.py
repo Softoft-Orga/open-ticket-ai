@@ -71,13 +71,10 @@ def test_process_handles_direct_dict_response(monkeypatch):
     from packages.otai_hf_local.src.otai_hf_local.hf_local_text_classification_pipe import (
         HFLocalTextClassificationPipeConfig,
     )
+
     pipe_config = HFLocalTextClassificationPipeConfig(
         id="test-pipe",
-        params=HFLocalTextClassificationParams(
-            model="local-model",
-            token=None,
-            prompt="Summarise the ticket"
-        )
+        params=HFLocalTextClassificationParams(model="local-model", token=None, prompt="Summarise the ticket"),
     )
     pipe = HFLocalTextClassificationPipe(pipe_config)
 
