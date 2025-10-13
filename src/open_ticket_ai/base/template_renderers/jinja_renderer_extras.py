@@ -51,16 +51,16 @@ def at_path(value: Any, path: Any) -> str:
 
 
 @pass_context
-def has_failed(ctx, pipe_id: str) -> bool:
+def has_failed(ctx: Any, pipe_id: str) -> bool:
     pipes = ctx.get("pipes", {})
     pipe = pipes.get(pipe_id)
     if pipe is None:
         return False
-    return pipe.failed or pipe.get("failed")
+    return bool(pipe.failed or pipe.get("failed"))
 
 
 @pass_context
-def pipe_result(ctx, pipe_id: str, data_key: str = "value") -> Any:
+def pipe_result(ctx: Any, pipe_id: str, data_key: str = "value") -> Any:
     pipes = ctx.get("pipes", {})
     pipe = pipes.get(pipe_id)
     if pipe is None:

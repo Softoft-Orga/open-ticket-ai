@@ -36,7 +36,10 @@ class FetchTicketsPipe(Pipe[FetchTicketsParams]):
 
     async def _process(self) -> PipeResult[FetchTicketsPipeResultData]:
         try:
-            tickets = await self.ticket_system.find_tickets(self.pipe_config.params.ticket_search_criteria) or []
+            search_criteria = self.pipe_config.params.ticket_search_criteria
+            if search_criteria is None:
+                search_criteria = TicketSearchCriteria()
+            tickets = await self.ticket_system.find_tickets(search_criteria) or []
             return PipeResult[FetchTicketsPipeResultData](
                 success=True,
                 failed=False,
