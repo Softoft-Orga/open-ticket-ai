@@ -11,6 +11,10 @@ from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 class EmptyTriggerDefinitionParams(BaseModel):
     model_config = ConfigDict(extra="allow")
 
+    def __getitem__(self, key: str) -> Any:
+        """Allow dict-style access to params for backward compatibility."""
+        return getattr(self, key)
+
 
 class TriggerDefinition[TriggerDefinitionParamsT: BaseModel](RenderableConfig[TriggerDefinitionParamsT]):
     pass
