@@ -85,14 +85,14 @@ class RenderableFactory:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):
             raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")
-        
+
         # Build kwargs for additional parameters
         kwargs: dict[str, Any] = {}
         kwargs |= self.__resolve_injects(registerable_config.injects, scope)
         kwargs["factory"] = self
         kwargs["app_config"] = self._app_config
         kwargs["logger_factory"] = self._logger_factory
-        
+
         # Pass config as first positional argument for Pipe and Trigger classes
         # This avoids parameter name conflicts between different subclasses
         if issubclass(cls, (Pipe, Trigger)):

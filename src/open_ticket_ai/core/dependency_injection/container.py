@@ -44,15 +44,14 @@ class AppModule(Module):
             service_config = next((s for s in config.services if s.id == service_id), None)
             if not service_config:
                 raise ValueError(f"Template renderer service with id '{service_id}' not found")
-            
+
             # Import and check the class
             cls = _locate(service_config.use)
             if not issubclass(cls, TemplateRenderer):
                 raise TypeError(
-                    f"Service '{service_id}' (class '{service_config.use}') "
-                    f"is not a TemplateRenderer subclass"
+                    f"Service '{service_id}' (class '{service_config.use}') is not a TemplateRenderer subclass"
                 )
-            
+
             # For JinjaRenderer, we need to convert params to JinjaRendererConfig
             if cls == JinjaRenderer:
                 if isinstance(service_config.params, dict):
@@ -60,10 +59,10 @@ class AppModule(Module):
                 else:
                     renderer_config = JinjaRendererConfig.model_validate(service_config.params.model_dump())
                 return cls(renderer_config)  # type: ignore[abstract]
-            
+
             # For other renderers, pass params directly
             return cls(service_config.params)  # type: ignore[abstract]
-        
+
         # Fallback to legacy template_renderer_config
         template_renderer_config = config.infrastructure.template_renderer_config
         if template_renderer_config.type == "jinja":
