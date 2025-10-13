@@ -4,7 +4,8 @@ import pytest
 import structlog
 
 pytestmark = pytest.mark.skip(
-    reason="Structlog implementation not available - module 'open_ticket_ai.infra' does not exist"
+    reason="Structlog implementation not available - module 'open_ticket_ai.infra' does not exist. "
+    "TODO: Implement structlog adapter in open_ticket_ai.infra module."
 )
 
 

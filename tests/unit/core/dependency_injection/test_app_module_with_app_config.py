@@ -2,17 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 from injector import Injector
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.container import AppModule
-
-pytestmark = pytest.mark.skip(
-    reason="Infrastructure.template_renderer_config default_factory is broken - "
-    "uses TemplateRendererConfig() without type argument. Cannot test without fixing source code."
-)
 
 
 def test_app_module_binds_app_config_as_singleton(tmp_path: Path) -> None:

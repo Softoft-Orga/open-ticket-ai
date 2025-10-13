@@ -7,10 +7,6 @@ from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLoggerFacto
 from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 from open_ticket_ai.core.logging_iface import LoggerFactory
 
-pytestmark = pytest.mark.skip(
-    reason="Structlog implementation not available - module 'open_ticket_ai.infra' does not exist"
-)
-
 
 def test_logging_module_binds_stdlib_factory_by_default() -> None:
     """Test that LoggingModule binds stdlib factory by default."""
@@ -30,6 +26,7 @@ def test_logging_module_binds_stdlib_factory_explicitly() -> None:
     assert isinstance(factory, StdlibLoggerFactory)
 
 
+@pytest.mark.skip(reason="Structlog implementation not available. TODO: Implement structlog support in LoggingModule.")
 def test_logging_module_binds_structlog_factory() -> None:
     """Test that LoggingModule binds structlog factory when specified."""
     injector = Injector([LoggingModule(log_impl="structlog")])
@@ -49,6 +46,7 @@ def test_logging_module_respects_env_var_stdlib(monkeypatch) -> None:
     assert isinstance(factory, StdlibLoggerFactory)
 
 
+@pytest.mark.skip(reason="Structlog implementation not available. TODO: Implement structlog support in LoggingModule.")
 def test_logging_module_respects_env_var_structlog(monkeypatch) -> None:
     """Test that LoggingModule respects LOG_IMPL environment variable for structlog."""
     monkeypatch.setenv("LOG_IMPL", "structlog")

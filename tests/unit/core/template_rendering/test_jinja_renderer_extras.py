@@ -1,7 +1,6 @@
 import os
 from unittest.mock import MagicMock
 
-import pytest
 from pydantic import BaseModel
 
 from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
@@ -68,10 +67,6 @@ class TestPipeResult:
         result = pipe_result(ctx, "nonexistent_pipe")
         assert result is None
 
-    @pytest.mark.skip(
-        reason="Source code bug: pipe_result function calls .get() on CompositePipeResultData (BaseModel), "
-        "which doesn't have a .get() method. Cannot fix without modifying source code."
-    )
     def test_pipe_result_with_default_key(self):
         pipe_res = PipeResult(
             success=True,
@@ -83,10 +78,6 @@ class TestPipeResult:
         result = pipe_result(ctx, "test_pipe")
         assert result == "test_result"
 
-    @pytest.mark.skip(
-        reason="Source code bug: pipe_result function calls .get() on CompositePipeResultData (BaseModel), "
-        "which doesn't have a .get() method. Cannot fix without modifying source code."
-    )
     def test_pipe_result_with_custom_key(self):
         pipe_res = PipeResult(
             success=True,
@@ -98,10 +89,6 @@ class TestPipeResult:
         result = pipe_result(ctx, "test_pipe", "custom_key")
         assert result == "custom_value"
 
-    @pytest.mark.skip(
-        reason="Source code bug: pipe_result function calls .get() on CompositePipeResultData (BaseModel), "
-        "which doesn't have a .get() method. Cannot fix without modifying source code."
-    )
     def test_pipe_result_with_missing_key(self):
         pipe_res = PipeResult(
             success=True,

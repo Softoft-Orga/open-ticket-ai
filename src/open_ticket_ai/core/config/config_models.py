@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
-from open_ticket_ai.core.template_rendering import TemplateRendererConfig
+from open_ticket_ai.core.template_rendering import JinjaRendererConfig
 
 LogLevel = Literal["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
@@ -66,8 +66,8 @@ class LoggingDictConfig(BaseModel):
 class InfrastructureConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
-    template_renderer_config: TemplateRendererConfig = Field(
-        default_factory=TemplateRendererConfig,
+    template_renderer_config: JinjaRendererConfig = Field(
+        default_factory=JinjaRendererConfig,
         description="(Deprecated) in future versions will be set through the services section",
     )
 

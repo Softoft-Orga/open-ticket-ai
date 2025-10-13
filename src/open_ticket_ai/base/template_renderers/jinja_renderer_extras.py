@@ -66,6 +66,9 @@ def pipe_result(ctx, pipe_id: str, data_key: str = "value") -> Any:
     if pipe is None:
         return None
     pipe_data = pipe.data if isinstance(pipe, PipeResult) else pipe.get("data")
+    if isinstance(pipe_data, BaseModel):
+        pipe_data_dict = pipe_data.model_dump()
+        return pipe_data_dict.get(data_key)
     return pipe_data.get(data_key)
 
 
