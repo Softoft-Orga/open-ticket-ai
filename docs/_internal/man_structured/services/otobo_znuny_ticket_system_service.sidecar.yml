@@ -1,0 +1,100 @@
+_version: 1.0.x
+_class: otai_otobo_znuny.OTOBOZnunyTicketSystemService
+_extends: open_ticket_ai.core.ticket_system_integration.TicketSystemService
+
+_title: OTOBO/Znuny Ticket System Service
+_summary: Provides integration with OTOBO and Znuny ticket management systems via REST API.
+_category: ticket-system
+
+_inputs:
+    placement: services
+    alongside: [ id ]
+    params:
+        base_url: Base URL of the OTOBO/Znuny instance (e.g., https://otobo.example.com)
+        username: Authentication username for API access
+        password: Authentication password (use environment variables)
+        webservice_name: Name of the configured webservice (default OpenTicketAI)
+        operation_urls: Optional mapping of ticket operations to API endpoint paths
+_defaults:
+    username: "open_ticket_ai"
+    webservice_name: "OpenTicketAI"
+    operation_urls:
+        ticket-search: "ticket-search"
+        ticket-get: "ticket-get"
+        ticket-update: "ticket-update"
+
+_output:
+    state_enum: [ connected, disconnected, error ]
+    description: Service provides methods for ticket operations (find, get, update, add_note).
+    payload_schema_ref: OpenTicketAI.Services.OTOBOZnuny.Result
+    examples:
+        connected:
+            state: connected
+            payload:
+                base_url: "https://otobo.example.com"
+                webservice: "OpenTicketAI"
+        error:
+            state: error
+            error: authentication_failed
+
+_errors:
+    fail:
+        -   code: authentication_failed
+            when: Username/password authentication failed
+        -   code: connection_error
+            when: Cannot connect to OTOBO/Znuny instance
+        -   code: api_error
+            when: OTOBO/Znuny API returned an error
+        -   code: ticket_not_found
+            when: Requested ticket ID does not exist
+    break:
+        -   code: config_invalid
+            when: Required configuration (base_url, username, password) missing
+        -   code: webservice_not_configured
+            when: Specified webservice name not found on server
+    continue: [ ]
+
+_engine_support:
+    on_failure: false
+    on_success: false
+
+_examples:
+    minimal: |
+        services:
+          - id: otobo_znuny
+            use: otai_otobo_znuny.OTOBOZnunyTicketSystemService
+            base_url: "{{ env.OTOBO_BASE_URL }}"
+            username: "{{ env.OTOBO_USERNAME }}"
+            password: "{{ env.OTOBO_PASSWORD }}"
+
+    full: |
+        services:
+          - id: otobo_main
+            use: otai_otobo_znuny.OTOBOZnunyTicketSystemService
+            base_url: "https://otobo.company.com"
+            username: "otai_integration"
+            password: "{{ env.OTOBO_PASSWORD }}"
+            webservice_name: "OpenTicketAI"
+            operation_urls:
+              ticket-search: "ticket-search"
+              ticket-get: "ticket-get"
+              ticket-update: "ticket-update"
+
+    large: |
+        services:
+          - id: otobo_production
+            use: otai_otobo_znuny.OTOBOZnunyTicketSystemService
+            base_url: "https://tickets.production.company.com"
+            username: "automation_service"
+            password: "{{ env.OTOBO_PROD_PASSWORD }}"
+            webservice_name: "OpenTicketAI_Production"
+            operation_urls:
+              ticket-search: "custom-ticket-search"
+              ticket-get: "custom-ticket-get"
+              ticket-update: "custom-ticket-update"
+          - id: otobo_staging
+            use: otai_otobo_znuny.OTOBOZnunyTicketSystemService
+            base_url: "https://tickets.staging.company.com"
+            username: "automation_service"
+            password: "{{ env.OTOBO_STAGING_PASSWORD }}"
+            webservice_name: "OpenTicketAI_Staging"

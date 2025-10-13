@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 class Renderable:
     """Marker interface for renderable configurations."""
+
     pass
 
 

@@ -1,0 +1,74 @@
+_version: 1.0.x
+_class: otai_hf_local.HFLocalTextClassificationPipe
+_extends: open_ticket_ai.core.pipeline.ConfigurablePipe
+
+_title: HuggingFace Local Text Classification
+_summary: Classifies text using a locally-loaded HuggingFace transformer model for sequence classification.
+_category: ml-classification
+
+_inputs:
+    placement: flat
+    alongside: [ id, use ]
+    params:
+        model: HuggingFace model name or path
+        prompt: Input text to classify
+        token: Optional HuggingFace API token for private models
+_defaults:
+    token: null
+
+_output:
+    state_enum: [ ok, failed ]
+    description: Pipe returns classification result with label and confidence score.
+    payload_schema_ref: OpenTicketAI.Pipes.HFLocalTextClassification.Result
+    examples:
+        ok:
+            state: ok
+            payload:
+                label: "POSITIVE"
+                confidence: 0.9876
+        failed:
+            state: failed
+            error: model_load_failed
+
+_errors:
+    fail:
+        -   code: model_load_failed
+            when: HuggingFace model could not be loaded
+        -   code: classification_failed
+            when: Model inference failed during classification
+        -   code: invalid_model_output
+            when: Model returned unexpected output format
+    break:
+        -   code: config_invalid
+            when: Required config missing (model or prompt)
+        -   code: token_auth_failed
+            when: HuggingFace token authentication failed
+    continue: [ ]
+
+_engine_support:
+    on_failure: false
+    on_success: false
+
+_examples:
+    minimal: |
+        - id: classify_text
+          use: otai_hf_local.HFLocalTextClassificationPipe
+          model: "distilbert-base-uncased-finetuned-sst-2-english"
+          prompt: "{{ context.ticket.subject }}"
+
+    full: |
+        - id: classify_sentiment
+          use: otai_hf_local.HFLocalTextClassificationPipe
+          model: "cardiffnlp/twitter-roberta-base-sentiment-latest"
+          prompt: "{{ context.ticket.description }}"
+          token: "{{ env.HF_TOKEN }}"
+
+    large: |
+        - id: classify_multiclass
+          use: otai_hf_local.HFLocalTextClassificationPipe
+          model: "facebook/bart-large-mnli"
+          prompt: |
+            Ticket subject: {{ context.ticket.subject }}
+            Description: {{ context.ticket.description }}
+            Customer: {{ context.ticket.customer_name }}
+          token: "{{ env.HF_TOKEN }}"

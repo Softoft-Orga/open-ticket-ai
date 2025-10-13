@@ -11,7 +11,7 @@ Open Ticket AI uses an abstract logging interface that allows developers to swit
 The logging system provides:
 - **Abstract interfaces**: `AppLogger` and `LoggerFactory` protocols
 - **Multiple implementations**: stdlib and structlog adapters
-- **Dependency injection**: LoggingModule for automatic setup
+- **Dependency injection**: AppModule provides LoggerFactory for automatic setup
 - **Context binding**: Attach structured context to log messages
 - **Environment-based selection**: Choose implementation via `LOG_IMPL` environment variable
 
@@ -59,7 +59,7 @@ logger.info("Application started")
 
 ### Runtime Configuration
 
-The LoggingModule can be configured with specific log implementation and level at runtime.
+The logging system is configured through the application's YAML configuration file under the `infrastructure.logging` section, which is loaded by the AppModule during dependency injection setup.
 
 ## Logging Implementations
 
