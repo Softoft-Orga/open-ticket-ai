@@ -197,7 +197,8 @@ def test_orchestrator_config_with_defaults_can_be_overridden() -> None:
 
 @pytest.mark.skip(
     reason="Orchestrator config defaults merging not implemented in source code. "
-    "Test expects defaults.run.params to be merged with runner.run.params but this feature is not implemented."
+    "Test expects defaults.run.params to be merged with runner.run.params but this feature is not implemented. "
+    "TODO: Implement defaults merging feature in OrchestratorConfig."
 )
 def test_orchestrator_config_with_defaults_params_merge() -> None:
     raw = {
@@ -230,7 +231,8 @@ def test_orchestrator_config_with_defaults_params_merge() -> None:
 
 @pytest.mark.skip(
     reason="Orchestrator config defaults merging not implemented in source code. "
-    "Test expects defaults.params to be merged with runner.params but this feature is not implemented."
+    "Test expects defaults.params to be merged with runner.params but this feature is not implemented. "
+    "TODO: Implement defaults merging feature in OrchestratorConfig."
 )
 def test_orchestrator_config_with_defaults_settings_applied_and_overridden() -> None:
     raw = {
@@ -268,7 +270,8 @@ def test_orchestrator_config_with_defaults_settings_applied_and_overridden() -> 
 
 @pytest.mark.skip(
     reason="Orchestrator config defaults merging not implemented in source code. "
-    "Test expects defaults.params to be merged with runner.params but this feature is not implemented."
+    "Test expects defaults.params to be merged with runner.params but this feature is not implemented. "
+    "TODO: Implement defaults merging feature in OrchestratorConfig."
 )
 def test_orchestrator_config_with_defaults_nested_settings() -> None:
     raw = {
@@ -340,7 +343,8 @@ def test_orchestrator_config_without_defaults() -> None:
 
 @pytest.mark.skip(
     reason="Orchestrator config defaults merging not implemented in source code. "
-    "Test expects defaults to be merged with runners but this feature is not implemented."
+    "Test expects defaults to be merged with runners but this feature is not implemented. "
+    "TODO: Implement defaults merging feature in OrchestratorConfig."
 )
 def test_orchestrator_config_with_defaults_multiple_runners() -> None:
     raw = {

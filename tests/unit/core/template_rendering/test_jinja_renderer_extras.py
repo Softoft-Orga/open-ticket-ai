@@ -1,7 +1,6 @@
 import os
 from unittest.mock import MagicMock
 
-import pytest
 from pydantic import BaseModel
 
 from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
