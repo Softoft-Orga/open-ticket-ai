@@ -40,6 +40,7 @@ export default {
         app.component('ContactForm', defineAsyncComponent(() => import('../components/forms/ContactForm.vue')))
         app.component('YoutubeVideo', defineAsyncComponent(() => import('../components/YoutubeVideo.vue')))
         app.component('ArchitectureOverview', defineAsyncComponent(() => import('../components/ArchitectureOverview.vue')))
+        app.component('PipeSidecar', defineAsyncComponent(() => import('../components/pipe/PipeSidecar.vue')))
         app.mixin({
             computed: {
                 lang() {
