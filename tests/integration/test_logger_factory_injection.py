@@ -36,7 +36,7 @@ def test_renderable_factory_injects_logger_factory_into_pipes(logger_factory: Lo
 
     pipe_config = ExpressionPipeConfig(
         id="test_jinja_pipe",
-        use="open_ticket_ai.base.pipes.jinja_expression_pipe:JinjaExpressionPipe",
+        use="open_ticket_ai.base.pipes.expression_pipe:ExpressionPipe",
         params=ExpressionParams(expression="Hello"),
     )
     context = PipeContext(pipes={}, params={}, parent=None)
@@ -64,7 +64,7 @@ def test_logger_factory_creates_logger_with_class_name(logger_factory: LoggerFac
 
     pipe_config = ExpressionPipeConfig(
         id="test_jinja_pipe",
-        use="open_ticket_ai.base.pipes.jinja_expression_pipe:JinjaExpressionPipe",
+        use="open_ticket_ai.base.pipes.expression_pipe:ExpressionPipe",
         params=ExpressionParams(expression="test"),
     )
     context = PipeContext(pipes={}, params={}, parent=None)
@@ -92,7 +92,7 @@ async def test_pipe_can_use_injected_logger():
 
     pipe_config = ExpressionPipeConfig(
         id="test_jinja_pipe",
-        use="open_ticket_ai.base.pipes.jinja_expression_pipe:JinjaExpressionPipe",
+        use="open_ticket_ai.base.pipes.expression_pipe:ExpressionPipe",
         params=ExpressionParams(expression="Hello World"),
     )
     context = PipeContext(pipes={}, params={}, parent=None)

@@ -2,17 +2,26 @@ import uuid
 from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic_core import core_schema
 
 
 class Renderable:
     """Marker interface for renderable configurations."""
 
-    pass
+    def __init__(self, *args, **kwargs) -> None:  # type: ignore[no-untyped-def]
+        pass
 
 
 class EmptyParams(BaseModel):
     model_config = ConfigDict(extra="allow")
-    pass
+
+    def __getitem__(self, key: str) -> Any:
+        return getattr(self, key)
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, dict):
+            return self.model_dump() == other
+        return super().__eq__(other)
 
 
 class RenderableConfig[ParamsT: BaseModel](BaseModel):
@@ -22,6 +31,18 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
     use: str = Field(default="open_ticket_ai.base.CompositePipe")
     injects: dict[str, str] = Field(default_factory=dict)
     params: ParamsT | dict[str, Any] = Field(default_factory=EmptyParams)  # type: ignore[assignment]
+
+    @model_validator(mode="before")
+    @classmethod
+    def handle_dict_params(cls, values: Any) -> Any:
+        if not isinstance(values, dict):
+            return values
+        
+        # Convert dict params to EmptyParams immediately
+        if "params" in values and isinstance(values["params"], dict):
+            values["params"] = EmptyParams(**values["params"])
+        
+        return values
 
     @model_validator(mode="after")
     def set_id_from_uid(self) -> Self:

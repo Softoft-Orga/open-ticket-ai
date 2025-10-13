@@ -95,6 +95,7 @@ class RenderableFactory:
         kwargs["logger_factory"] = self._logger_factory
         kwargs["config"] = registerable_config
         kwargs["pipe_config"] = registerable_config
+        kwargs["config"] = registerable_config
         return cls(**kwargs)
 
     def __resolve_injects(self, injects: dict[str, str], scope: PipeContext) -> dict[str, Renderable]:

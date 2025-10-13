@@ -36,7 +36,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 )
 from tests.unit.mocked_ticket_system import MockedTicketSystem
 
-JINJA_PIPE_USE = "open_ticket_ai.base.pipes.jinja_expression_pipe:JinjaExpressionPipe"
+JINJA_PIPE_USE = "open_ticket_ai.base.pipes.expression_pipe:ExpressionPipe"
 COMPOSITE_PIPE_USE = "open_ticket_ai.base.pipes.composite_pipe:CompositePipe"
 
 
@@ -178,9 +178,21 @@ async def test_composite_pipe_error_propagation(logger_factory: LoggerFactory) -
 
     update_pipe = UpdateTicketPipe(mock_system, update_pipe_config, logger_factory)
 
+    from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
+    from open_ticket_ai.core import AppConfig
+    from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
+
     class SimpleFactory(RenderableFactory):
-        def create_pipe(self, config: PipeConfig, context: PipeContext):
-            return update_pipe if config.id == "step1" else None
+        def __init__(self) -> None:
+            super().__init__(
+                JinjaRenderer(JinjaRendererConfig(), logger_factory),
+                AppConfig(),
+                [],
+                logger_factory
+            )
+        
+        def create_pipe(self, pipe_config_raw: PipeConfig, scope: PipeContext):
+            return update_pipe if pipe_config_raw.id == "step1" else None
 
     composite_pipe = CompositePipe(create_composite("composite", [update_pipe_config]), SimpleFactory(), logger_factory)
     result_ctx = await composite_pipe.process(PipeContext())
@@ -241,9 +253,21 @@ async def test_realistic_multi_step_pipeline(logger_factory: LoggerFactory) -> N
         "add_note": AddNotePipe(mock_system, configs[2], logger_factory),
     }
 
+    from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
+    from open_ticket_ai.core import AppConfig
+    from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
+
     class SimpleFactory(RenderableFactory):
-        def create_pipe(self, config: PipeConfig, context: PipeContext):
-            return pipes.get(config.id)
+        def __init__(self) -> None:
+            super().__init__(
+                JinjaRenderer(JinjaRendererConfig(), logger_factory),
+                AppConfig(),
+                [],
+                logger_factory
+            )
+        
+        def create_pipe(self, pipe_config_raw: PipeConfig, scope: PipeContext):
+            return pipes.get(pipe_config_raw.id)
 
     composite = CompositePipe(create_composite("workflow", configs), SimpleFactory(), logger_factory)
     result_ctx = await composite.process(PipeContext())

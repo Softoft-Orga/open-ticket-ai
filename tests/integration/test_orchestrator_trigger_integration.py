@@ -52,9 +52,9 @@ def create_runner_def(runner_id: str, trigger_id: str, pipe_id: str, **trigger_p
 
 
 @pytest.mark.asyncio
-async def test_interval_trigger_fires_and_notifies_observers() -> None:
+async def test_interval_trigger_fires_and_notifies_observers(logger_factory: LoggerFactory) -> None:
     """Test that IntervalTrigger fires and notifies attached observers."""
-    trigger = IntervalTrigger(create_trigger_def("test_interval_trigger", milliseconds=100))
+    trigger = IntervalTrigger(create_trigger_def("test_interval_trigger", milliseconds=100), logger_factory)
     fired_count = 0
 
     class TestObserver:
@@ -87,7 +87,7 @@ async def test_pipe_runner_executes_pipe_on_trigger(logger_factory: LoggerFactor
     mock_factory = MagicMock(spec=RenderableFactory)
     mock_factory.create_pipe.return_value = TestPipe(PipeConfig(id="test_pipe", use="TestPipe"), logger_factory)
 
-    runner = PipeRunner(create_runner_def("test_runner", "test_trigger", "test_pipe", seconds=1), mock_factory)
+    runner = PipeRunner(create_runner_def("test_runner", "test_trigger", "test_pipe", seconds=1), mock_factory, logger_factory)
     await runner.on_trigger_fired()
 
     assert pipe_executed is True
@@ -177,7 +177,7 @@ async def test_runner_handles_pipe_execution_failure(logger_factory: LoggerFacto
     mock_factory = MagicMock(spec=RenderableFactory)
     mock_factory.create_pipe.return_value = MagicMock(process=AsyncMock(side_effect=Exception("Pipe execution failed")))
 
-    runner = PipeRunner(create_runner_def("failing_runner", "trigger", "failing_pipe", seconds=1), mock_factory)
+    runner = PipeRunner(create_runner_def("failing_runner", "trigger", "failing_pipe", seconds=1), mock_factory, logger_factory)
     await runner.on_trigger_fired()
 
     mock_factory.create_pipe.assert_called_once()
