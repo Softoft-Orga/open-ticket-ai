@@ -98,16 +98,15 @@ def test_render_base_model_empty_params(renderer: JinjaRenderer, context: PipeCo
     assert rendered.model_dump() == {}
 
 
-def test_render_base_model_with_legacy_fields_migrated(renderer: JinjaRenderer, context: PipeContext) -> None:
+def test_render_base_model_with_params_template(renderer: JinjaRenderer, context: PipeContext) -> None:
     with warnings.catch_warnings(record=True):
         warnings.simplefilter("always")
         config = PipeConfig[ModelParams](
             id="test",
-            model="{{ params.global_model }}",
+            params=ModelParams.model_construct(model="{{ params.global_model }}"),
         )
 
     rendered = render_base_model(config.params, context, renderer)
 
-    assert isinstance(rendered, (ModelParams, BaseModel))
-    if hasattr(rendered, "model"):
-        assert rendered.model == "my-global-model"
+    assert isinstance(rendered, ModelParams)
+    assert rendered.model == "my-global-model"
