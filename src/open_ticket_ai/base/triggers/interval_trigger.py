@@ -1,4 +1,5 @@
 import asyncio
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -14,10 +15,10 @@ class IntervalTriggerParams(BaseModel):
     days: int = 0
 
 
-class IntervalTrigger(Trigger):
-    def __init__(self, trigger_def: TriggerDefinition[IntervalTriggerParams]) -> None:
-        super().__init__(trigger_def)
-        params = IntervalTriggerParams.model_validate(trigger_def.params)
+class IntervalTrigger(Trigger[IntervalTriggerParams]):
+    def __init__(self, config: TriggerDefinition[IntervalTriggerParams], *args: Any, **kwargs: Any) -> None:
+        super().__init__(config, *args, **kwargs)
+        params = IntervalTriggerParams.model_validate(config.params)
         self.interval = (
             params.days * 86400
             + params.hours * 3600

@@ -81,6 +81,14 @@ def test_orchestrator_starts_and_stops_runners() -> None:
     pipe_factory = MagicMock()
     process_mock = AsyncMock(return_value=PipeContext())
     pipe_factory.create_pipe.return_value = SimpleNamespace(process=process_mock)
+    
+    # Mock the create_trigger method to return a proper trigger
+    trigger_mock = MagicMock()
+    trigger_mock.start = MagicMock()
+    trigger_mock.stop = MagicMock()
+    trigger_mock.attach = MagicMock()
+    pipe_factory.create_trigger.return_value = trigger_mock
+    
 
     logger_factory = MagicMock()
     logger_factory.get_logger.return_value = MagicMock()
@@ -90,16 +98,47 @@ def test_orchestrator_starts_and_stops_runners() -> None:
     orchestrator.start()
     assert len(orchestrator._runners) == 1
     assert len(orchestrator._trigger_registry) == 1
+    # Verify that create_trigger was called
+    pipe_factory.create_trigger.assert_called_once()
 
     orchestrator.stop()
     assert len(orchestrator._runners) == 0
     assert len(orchestrator._trigger_registry) == 0
 
 
-@pytest.mark.skip(
-    reason="Orchestrator config defaults merging not implemented in source code. "
-    "Test expects defaults.run to be merged with runner.run but this feature is not implemented."
-)
+def test_orchestrator_rejects_trigger_without_id() -> None:
+    """Test that triggers without id raise ValueError."""
+    # Create a config with a trigger that has id=None
+    orchestrator_config = OrchestratorConfig.model_validate(
+        {
+            "runners": [
+                {
+                    "on": [
+                        {
+                            "use": "open_ticket_ai.base.interval_trigger:IntervalTrigger",
+                            "params": {"seconds": 1},
+                        }
+                    ],
+                    "run": {"id": "demo"},
+                }
+            ]
+        }
+    )
+    
+    # Manually set id to None to simulate the bug scenario
+    orchestrator_config.runners[0].on[0].id = None
+    
+    pipe_factory = MagicMock()
+    logger_factory = MagicMock()
+    logger_factory.get_logger.return_value = MagicMock()
+
+    orchestrator = Orchestrator(pipe_factory, orchestrator_config, logger_factory)
+
+    # Should raise ValueError when trying to start with None trigger ID
+    with pytest.raises(ValueError, match="has no ID"):
+        orchestrator.start()
+
+
 def test_orchestrator_config_with_defaults_applies_to_runners() -> None:
     raw = {
         "defaults": {
