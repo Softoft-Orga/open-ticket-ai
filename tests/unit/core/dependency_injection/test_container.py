@@ -9,11 +9,6 @@ from injector import Injector
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.container import AppModule
 
-pytestmark = pytest.mark.skip(
-    reason="Infrastructure.template_renderer_config default_factory is broken - "
-    "uses TemplateRendererConfig() without type argument. Cannot test without fixing source code."
-)
-
 
 @pytest.fixture(scope="function")
 def test_model_to_yaml_direct_dump(tmp_path: Path):

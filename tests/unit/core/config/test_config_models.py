@@ -7,11 +7,6 @@ import pytest
 from open_ticket_ai.core import AppConfig, ConfigLoader
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 
-pytestmark = pytest.mark.skip(
-    reason="Infrastructure.template_renderer_config default_factory is broken - "
-    "uses TemplateRendererConfig() without type argument. Cannot test without fixing source code."
-)
-
 
 def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
     config_path = tmp_path / "config.yml"

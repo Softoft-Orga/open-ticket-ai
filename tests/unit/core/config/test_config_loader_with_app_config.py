@@ -8,11 +8,6 @@ import pytest
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_loader import ConfigLoader
 
-pytestmark = pytest.mark.skip(
-    reason="Infrastructure.template_renderer_config default_factory is broken - "
-    "uses TemplateRendererConfig() without type argument. Cannot test without fixing source code."
-)
-
 
 def test_config_loader_uses_app_config_env_var(tmp_path: Path) -> None:
     config_content = """
