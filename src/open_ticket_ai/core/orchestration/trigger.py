@@ -21,7 +21,6 @@ class Trigger[ParamsT: BaseModel](Renderable, ABC):
         *args: Any,
         **kwargs: Any,
     ) -> None:
-        super().__init__(config.params, *args, **kwargs)
         self.trigger_def = config
         self._observers: list[PipeRunnerObserver] = []
         self._running = False

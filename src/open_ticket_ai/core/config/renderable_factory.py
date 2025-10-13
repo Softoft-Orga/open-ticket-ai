@@ -77,9 +77,8 @@ class RenderableFactory:
     ) -> Renderable:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):
-            raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")
+            raise TypeError(f"Class '{registerable_config.use}' is not a {Renderable.__class__.__name__}")
 
-        # Build kwargs for additional parameters
         kwargs: dict[str, Any] = {}
         kwargs |= self.__resolve_injects(registerable_config.injects, scope)
         kwargs["factory"] = self
