@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.config.renderable_factory import render_base_model
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
@@ -29,8 +30,8 @@ class ModelParams(BaseModel):
 
 
 @pytest.fixture
-def renderer() -> JinjaRenderer:
-    return JinjaRenderer(JinjaRendererConfig())
+def renderer(logger_factory: LoggerFactory) -> JinjaRenderer:
+    return JinjaRenderer(JinjaRendererConfig(), logger_factory)
 
 
 @pytest.fixture
