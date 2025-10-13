@@ -71,7 +71,7 @@ class RenderableFactory:
             raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")
         kwargs: dict[str, Any] = {}
         kwargs |= self.__resolve_injects(registerable_config.injects, scope)
-        kwargs["config"] = registerable_config
+        kwargs["pipe_config"] = registerable_config
         kwargs["factory"] = self
         kwargs["app_config"] = self._app_config
         kwargs["logger_factory"] = self._logger_factory

@@ -10,7 +10,7 @@ def test_pipe_config_params_field_exists() -> None:
 
 def test_pipe_config_params_defaults_to_empty_dict() -> None:
     config = PipeConfig(id="test")
-    assert config.params == {}
+    assert config.params.model_dump() == {}
 
 
 def test_pipe_config_with_nested_params() -> None:
@@ -46,7 +46,7 @@ def test_pipe_config_control_fields_not_migrated() -> None:
         config = PipeConfig(id="test", use="SomePipe", depends_on=["other"])
 
         assert len(w) == 0
-        assert config.params == {}
+        assert config.params.model_dump() == {}
         assert config.use == "SomePipe"
         assert config.depends_on == ["other"]
 
