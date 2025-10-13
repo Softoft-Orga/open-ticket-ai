@@ -16,8 +16,8 @@ def get_type_description(type_info: dict[str, Any]) -> str:
     if "type" in type_info:
         type_val = type_info["type"]
         if isinstance(type_val, list):
-            return " or ".join(type_val)
-        return type_val
+            return " or ".join(str(t) for t in type_val)
+        return str(type_val)
 
     if "anyOf" in type_info:
         types = [get_type_description(t) for t in type_info["anyOf"]]
@@ -111,8 +111,8 @@ def generate_markdown_docs(schema: dict[str, Any]) -> str:
 
 if __name__ == "__main__":
     """Generates JSON schema for RootConfig and writes it to config.schema.json."""
-    schema: dict = RootConfig.model_json_schema()
-    generate_markdown_docs(schema)  # for side effects, if needed
+    schema: dict[str, Any] = RootConfig.model_json_schema()
+    generate_markdown_docs(schema)
     with open(Path.cwd() / "CONFIG_SCHEMA.md", "w", encoding="utf-8") as f:
         f.write(generate_markdown_docs(schema))
     with open(Path.cwd() / "config.schema.json", "w", encoding="utf-8") as f:

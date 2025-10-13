@@ -20,7 +20,7 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
     id: str | None = None
     use: str = Field(default="open_ticket_ai.base.CompositePipe")
     injects: dict[str, str] = Field(default_factory=dict)
-    params: ParamsT = Field(default_factory=EmptyParams)
+    params: ParamsT = Field(default_factory=EmptyParams)  # type: ignore[assignment]
 
     @field_validator("params", mode="wrap")
     @classmethod
@@ -74,13 +74,13 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
         return data
 
     @model_validator(mode="after")
-    def set_id_from_uid(self) -> "RenderableConfig":
+    def set_id_from_uid(self) -> "RenderableConfig[ParamsT]":
         if self.id is None:
             self.id = self.uid
         return self
 
     def __eq__(self, other: Any) -> bool:
-        if isinstance(other, RenderableConfig):  # type: ignore[misc]
+        if isinstance(other, RenderableConfig):
             return self.uid == other.uid
         return False
 

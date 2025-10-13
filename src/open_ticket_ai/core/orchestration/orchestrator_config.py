@@ -41,17 +41,19 @@ class RunnerParams(BaseModel):
 
 class RunnerDefinition(BaseModel):
     id: str | None = None
-    on: list[TriggerDefinition]
-    run: PipeConfig
+    on: list[TriggerDefinition[Any]]
+    run: PipeConfig[Any]
     params: RunnerParams = Field(default_factory=RunnerParams)
 
     model_config = ConfigDict(populate_by_name=True)
 
     @property
     def pipe_id(self) -> str:
-        if self.id:
+        if self.id is not None:
             return self.id
-        return self.run.id
+        if self.run.id is not None:
+            return self.run.id
+        return ""
 
 
 class OrchestratorConfig(BaseModel):

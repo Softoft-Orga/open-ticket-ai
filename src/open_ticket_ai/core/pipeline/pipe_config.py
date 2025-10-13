@@ -31,7 +31,7 @@ class PipeResult[DataT: BaseModel](BaseModel):
     message: str = ""
     data: DataT
 
-    def __and__(self, other: Self) -> PipeResult[CompositePipeResultData]:  # type: ignore[misc]
+    def __and__(self, other: Self) -> PipeResult[CompositePipeResultData]:
         merged_data_dict: dict[str, Any] = {**self.data.model_dump(), **other.data.model_dump()}
         merged_data = CompositePipeResultData.model_validate(merged_data_dict)
         merged_msg = ";\n ".join([m for m in [self.message, other.message] if m])
@@ -45,5 +45,5 @@ class PipeResult[DataT: BaseModel](BaseModel):
     @classmethod
     def union(cls, results: Iterable[PipeResult[DataT]]) -> PipeResult[CompositePipeResultData]:
         if not results:
-            return PipeResult[CompositePipeResultData](success=True, failed=False, data=CompositePipeResultData())  # type: ignore
-        return reduce(lambda a, b: a & b, results)
+            return PipeResult[CompositePipeResultData](success=True, failed=False, data=CompositePipeResultData())
+        return reduce(lambda a, b: a & b, results)  # type: ignore[arg-type]

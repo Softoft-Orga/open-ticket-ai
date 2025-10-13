@@ -21,7 +21,11 @@ class JinjaExpressionPipeConfig(PipeConfig[JinjaExpressionParams]):
 
 class JinjaExpressionPipe(Pipe[JinjaExpressionParams]):
     def __init__(
-        self, pipe_config: JinjaExpressionPipeConfig, logger_factory: LoggerFactory | None = None, *args, **kwargs
+        self,
+        pipe_config: JinjaExpressionPipeConfig,
+        logger_factory: LoggerFactory | None = None,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.expression = pipe_config.params.expression

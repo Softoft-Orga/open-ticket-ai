@@ -37,9 +37,8 @@ class UpdateTicketPipe(Pipe[UpdateTicketParams]):
 
     async def _process(self) -> PipeResult[UpdateTicketPipeResultData]:
         try:
-            success = await self.ticket_system.update_ticket(
-                self.pipe_config.params.ticket_id, self.pipe_config.params.updated_ticket
-            )
+            ticket_id_str = str(self.pipe_config.params.ticket_id)
+            success = await self.ticket_system.update_ticket(ticket_id_str, self.pipe_config.params.updated_ticket)
             if not success:
                 return PipeResult[UpdateTicketPipeResultData](
                     success=False,

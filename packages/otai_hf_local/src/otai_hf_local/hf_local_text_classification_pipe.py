@@ -46,7 +46,7 @@ class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
     @staticmethod
     @cache
     def _load_pipeline(model_name: str, token: str | None) -> Any:
-        tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)
+        tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)  # type: ignore[no-untyped-call]
         model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 

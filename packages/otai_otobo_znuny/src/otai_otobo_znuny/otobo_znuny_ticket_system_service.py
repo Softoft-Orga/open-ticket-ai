@@ -2,6 +2,7 @@ import logging
 from typing import Any
 
 from injector import inject
+from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLogger
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
@@ -9,9 +10,14 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
     UnifiedTicket,
 )
-from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
-from otobo_znuny.domain_models.ticket_models import Article, Ticket, TicketSearch, TicketUpdate
-from otobo_znuny.mappers import _to_id_name
+from otobo_znuny.clients.otobo_client import OTOBOZnunyClient  # type: ignore[import-untyped]
+from otobo_znuny.domain_models.ticket_models import (  # type: ignore[import-untyped]
+    Article,
+    Ticket,
+    TicketSearch,
+    TicketUpdate,
+)
+from otobo_znuny.mappers import _to_id_name  # type: ignore[import-untyped]
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import otobo_ticket_to_unified_ticket
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service_config import (
     RenderedOTOBOZnunyTicketsystemServiceConfig,
@@ -33,7 +39,7 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         if logger_factory is not None:
             self.logger = logger_factory.get_logger(self.__class__.__name__)
         else:
-            self.logger = logging.getLogger(self.__class__.__name__)
+            self.logger = StdlibLogger(logging.getLogger(self.__class__.__name__))
         self.initialize()
 
     @property
@@ -67,12 +73,16 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         return otobo_ticket_to_unified_ticket(await self.client.get_ticket(int(ticket_id)))
 
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
+        article = None
+        if updates.notes and len(updates.notes) > 0:
+            article = Article(subject=updates.notes[-1].subject, body=updates.notes[-1].body)
+
         ticket = TicketUpdate(
             id=int(ticket_id),
             title=updates.subject,
             queue=_to_id_name(updates.queue),
             priority=_to_id_name(updates.priority),
-            article=Article(subject=updates.notes[-1].subject, body=updates.notes[-1].body),
+            article=article,
         )
         self.logger.info(ticket)
         await self.client.update_ticket(ticket)

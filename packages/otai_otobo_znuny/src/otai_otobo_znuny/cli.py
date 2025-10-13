@@ -40,7 +40,7 @@ def setup(
         "--output-config",
         help="Path to output a config.yml file",
     ),
-):
+) -> None:
     typer.echo("\n=== OTOBO/Znuny Ticket System Setup ===\n")
 
     operation_urls = {
@@ -55,10 +55,10 @@ def setup(
     typer.echo()
 
     if verify_connection:
-        from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
-        from otobo_znuny.domain_models.basic_auth_model import BasicAuth
-        from otobo_znuny.domain_models.otobo_client_config import ClientConfig
-        from otobo_znuny.domain_models.ticket_operation import TicketOperation
+        from otobo_znuny.clients.otobo_client import OTOBOZnunyClient  # type: ignore[import-untyped]
+        from otobo_znuny.domain_models.basic_auth_model import BasicAuth  # type: ignore[import-untyped]
+        from otobo_znuny.domain_models.otobo_client_config import ClientConfig  # type: ignore[import-untyped]
+        from otobo_znuny.domain_models.ticket_operation import TicketOperation  # type: ignore[import-untyped]
         from pydantic import SecretStr
 
         typer.echo("Verifying connection...")
@@ -118,5 +118,5 @@ def setup(
     typer.echo()
 
 
-def get_commands():
+def get_commands() -> list[typer.Typer]:
     return [otobo_znuny]
