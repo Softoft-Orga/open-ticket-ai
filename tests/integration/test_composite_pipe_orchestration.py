@@ -36,7 +36,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 )
 from tests.unit.mocked_ticket_system import MockedTicketSystem
 
-JINJA_PIPE_USE = "open_ticket_ai.base.pipes.jinja_expression_pipe:JinjaExpressionPipe"
+JINJA_PIPE_USE = "open_ticket_ai.base.pipes.expression_pipe:ExpressionPipe"
 COMPOSITE_PIPE_USE = "open_ticket_ai.base.pipes.composite_pipe:CompositePipe"
 
 
