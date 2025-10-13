@@ -86,7 +86,19 @@ class RenderableFactory:
             raise TypeError(f"Class '{registerable_config.use}' is not a Registerable")
         kwargs: dict[str, Any] = {}
         kwargs |= self.__resolve_injects(registerable_config.injects, scope)
-        kwargs["pipe_config"] = registerable_config
+        
+        # Pass config with the appropriate parameter name based on the class type
+        from open_ticket_ai.core.orchestration.trigger import Trigger
+        from open_ticket_ai.core.pipeline.pipe import Pipe
+        
+        if issubclass(cls, Trigger):
+            kwargs["config"] = registerable_config
+        elif issubclass(cls, Pipe):
+            kwargs["pipe_params"] = registerable_config
+        else:
+            # For other Renderable types, use pipe_config as default
+            kwargs["pipe_config"] = registerable_config
+            
         kwargs["factory"] = self
         kwargs["app_config"] = self._app_config
         kwargs["logger_factory"] = self._logger_factory
