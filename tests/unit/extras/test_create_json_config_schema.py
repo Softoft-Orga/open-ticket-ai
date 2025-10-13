@@ -17,7 +17,7 @@ from open_ticket_ai.extras.create_json_config_schema import (
 
 def test_root_config_generates_schema() -> None:
     schema = RootConfig.model_json_schema()
-    
+
     assert schema is not None
     assert isinstance(schema, dict)
     assert "$defs" in schema
@@ -83,16 +83,10 @@ def test_generate_property_table_empty() -> None:
 
 
 def test_generate_property_table_with_properties() -> None:
-    properties = {
-        "test_prop": {
-            "type": "string",
-            "default": "test",
-            "description": "A test property"
-        }
-    }
+    properties = {"test_prop": {"type": "string", "default": "test", "description": "A test property"}}
     required = ["test_prop"]
     result = generate_property_table(properties, required, {})
-    
+
     assert "| Field | Type | Required | Default | Description |" in result
     assert "test_prop" in result
     assert "string" in result
@@ -101,15 +95,9 @@ def test_generate_property_table_with_properties() -> None:
 
 
 def test_generate_model_docs() -> None:
-    schema = {
-        "properties": {
-            "field1": {"type": "string"}
-        },
-        "required": ["field1"],
-        "description": "Test model"
-    }
+    schema = {"properties": {"field1": {"type": "string"}}, "required": ["field1"], "description": "Test model"}
     result = generate_model_docs("TestModel", schema, {}, level=2)
-    
+
     assert "## TestModel" in result
     assert "Test model" in result
     assert "field1" in result
@@ -118,7 +106,7 @@ def test_generate_model_docs() -> None:
 def test_generate_markdown_docs() -> None:
     schema = RootConfig.model_json_schema()
     result = generate_markdown_docs(schema)
-    
+
     assert "# Configuration Schema Reference" in result
     assert "_Auto-generated from Pydantic models_" in result
     assert "## Root Configuration" in result
@@ -132,21 +120,21 @@ def test_main_execution_creates_files(tmp_path: Path) -> None:
         capture_output=True,
         text=True,
         timeout=30,
-        check=False
+        check=False,
     )
-    
+
     assert result.returncode == 0
-    
+
     md_file = tmp_path / "CONFIG_SCHEMA.md"
     json_file = tmp_path / "config.schema.json"
-    
+
     assert md_file.exists(), "CONFIG_SCHEMA.md should be created"
     assert json_file.exists(), "config.schema.json should be created"
-    
+
     md_content = md_file.read_text(encoding="utf-8")
     assert "# Configuration Schema Reference" in md_content
     assert "## Root Configuration" in md_content
-    
+
     json_content = json.loads(json_file.read_text(encoding="utf-8"))
     assert "$defs" in json_content
     assert "properties" in json_content
@@ -154,11 +142,11 @@ def test_main_execution_creates_files(tmp_path: Path) -> None:
 
 def test_generated_json_schema_structure() -> None:
     schema = RootConfig.model_json_schema()
-    
+
     assert "properties" in schema
     assert "open_ticket_ai" in schema["properties"]
     assert "$defs" in schema
-    
+
     open_ticket_ai_ref = schema["properties"]["open_ticket_ai"]
     assert "$ref" in open_ticket_ai_ref or "anyOf" in open_ticket_ai_ref or "allOf" in open_ticket_ai_ref
 
@@ -166,7 +154,7 @@ def test_generated_json_schema_structure() -> None:
 def test_markdown_docs_includes_definitions() -> None:
     schema = RootConfig.model_json_schema()
     result = generate_markdown_docs(schema)
-    
+
     defs = schema.get("$defs", {})
     if defs:
         for def_name in list(defs.keys())[:3]:
