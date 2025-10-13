@@ -27,6 +27,8 @@ class ExpressionPipe(Pipe):
         *args: Any,
         **kwargs: Any,
     ) -> None:
+        if logger_factory is None:
+            raise ValueError("logger_factory is required")
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.pipe_config = ExpressionPipeConfig.model_validate(pipe_config.model_dump())
         # Validate params at runtime

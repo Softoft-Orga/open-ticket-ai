@@ -28,13 +28,13 @@ class Orchestrator:
         self._config = orchestrator_config
         self._logger = logger_factory.get_logger(self.__class__.__name__)
         self._logger_factory = logger_factory
-        self._trigger_registry: dict[str, Trigger[Any]] = {}
+        self._trigger_registry: dict[str, Trigger] = {}
         self._runners: dict[str, PipeRunner] = {}
 
-    def _instantiate_trigger(self, trigger_def: TriggerDefinition[Any]) -> Trigger[Any]:
+    def _instantiate_trigger(self, trigger_def: TriggerDefinition) -> Trigger:
         """Instantiate trigger using RenderableFactory for consistency with pipe instantiation."""
         scope = PipeContext()
-        trigger: Trigger[Any] = self._pipe_factory.create_trigger(trigger_def, scope)  # type: ignore[assignment]
+        trigger: Trigger = self._pipe_factory.create_trigger(trigger_def, scope)  # type: ignore[assignment]
         return trigger
 
     def start(self) -> None:

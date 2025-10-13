@@ -37,6 +37,8 @@ class HFLocalTextClassificationPipe(Pipe):
         *args: Any,
         **kwargs: Any,
     ) -> None:
+        if logger_factory is None:
+            raise ValueError("logger_factory is required")
         super().__init__(pipe_config, logger_factory=logger_factory)
         # Validate params at runtime
         self.validated_params = HFLocalTextClassificationParams.model_validate(self.params)
