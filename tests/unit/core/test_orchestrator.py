@@ -81,14 +81,13 @@ def test_orchestrator_starts_and_stops_runners() -> None:
     pipe_factory = MagicMock()
     process_mock = AsyncMock(return_value=PipeContext())
     pipe_factory.create_pipe.return_value = SimpleNamespace(process=process_mock)
-    
+
     # Mock the create_trigger method to return a proper trigger
     trigger_mock = MagicMock()
     trigger_mock.start = MagicMock()
     trigger_mock.stop = MagicMock()
     trigger_mock.attach = MagicMock()
     pipe_factory.create_trigger.return_value = trigger_mock
-    
 
     logger_factory = MagicMock()
     logger_factory.get_logger.return_value = MagicMock()
@@ -124,10 +123,10 @@ def test_orchestrator_rejects_trigger_without_id() -> None:
             ]
         }
     )
-    
+
     # Manually set id to None to simulate the bug scenario
     orchestrator_config.runners[0].on[0].id = None
-    
+
     pipe_factory = MagicMock()
     logger_factory = MagicMock()
     logger_factory.get_logger.return_value = MagicMock()

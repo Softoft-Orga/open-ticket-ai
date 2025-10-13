@@ -53,7 +53,7 @@ class Orchestrator:
                         f"Trigger in runner '{definition.pipe_id}' has no ID. "
                         f"All triggers must have a unique 'id' field."
                     )
-                
+
                 if trigger_id in self._trigger_registry:
                     trigger = self._trigger_registry[trigger_id]
                 else:

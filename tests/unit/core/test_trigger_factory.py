@@ -80,7 +80,7 @@ def test_trigger_config_rendering() -> None:
 
     # Mock template renderer to simulate rendering
     template_renderer = MagicMock()
-    
+
     def mock_render_recursive(config_dict, scope):
         # Simulate template rendering
         if isinstance(config_dict, dict):
@@ -92,9 +92,9 @@ def test_trigger_config_rendering() -> None:
                     result[key] = value
             return result
         return config_dict
-    
+
     template_renderer.render_recursive.side_effect = mock_render_recursive
-    
+
     app_config = MagicMock()
     logger_factory = MagicMock()
     logger_factory.get_logger.return_value = MagicMock()
@@ -120,7 +120,7 @@ def test_trigger_definition_has_unique_id() -> None:
             "params": {"seconds": 10},
         }
     )
-    
+
     # Even without explicit id, uid should be set
     assert trigger_def.uid is not None
     # And id should be set from uid (via set_id_from_uid validator)
@@ -137,7 +137,7 @@ def test_trigger_definition_with_explicit_id() -> None:
             "params": {"seconds": 10},
         }
     )
-    
+
     # Explicit id should be preserved
     assert trigger_def.id == "my-custom-trigger-id"
     # uid should still be generated
