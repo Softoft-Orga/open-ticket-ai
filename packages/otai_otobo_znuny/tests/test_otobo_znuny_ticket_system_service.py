@@ -82,8 +82,7 @@ class TestOTOBOZnunyTicketSystemService:
 
     def test_recreate_client(self, service, mock_client):
         with patch(
-            "packages.otai_otobo_znuny.src.otai_otobo_znuny."
-            "otobo_znuny_ticket_system_service.OTOBOZnunyClient"
+            "packages.otai_otobo_znuny.src.otai_otobo_znuny.otobo_znuny_ticket_system_service.OTOBOZnunyClient"
         ) as MockClientClass:
             MockClientClass.return_value = mock_client
 

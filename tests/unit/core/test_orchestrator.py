@@ -81,7 +81,7 @@ def test_orchestrator_starts_and_stops_runners() -> None:
     pipe_factory = MagicMock()
     process_mock = AsyncMock(return_value=PipeContext())
     pipe_factory.create_pipe.return_value = SimpleNamespace(process=process_mock)
-    
+
     logger_factory = MagicMock()
     logger_factory.get_logger.return_value = MagicMock()
 
