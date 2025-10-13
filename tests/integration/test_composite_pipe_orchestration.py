@@ -184,13 +184,8 @@ async def test_composite_pipe_error_propagation(logger_factory: LoggerFactory) -
 
     class SimpleFactory(RenderableFactory):
         def __init__(self) -> None:
-            super().__init__(
-                JinjaRenderer(JinjaRendererConfig(), logger_factory),
-                AppConfig(),
-                [],
-                logger_factory
-            )
-        
+            super().__init__(JinjaRenderer(JinjaRendererConfig(), logger_factory), AppConfig(), [], logger_factory)
+
         def create_pipe(self, pipe_config_raw: PipeConfig, scope: PipeContext):
             return update_pipe if pipe_config_raw.id == "step1" else None
 
@@ -259,13 +254,8 @@ async def test_realistic_multi_step_pipeline(logger_factory: LoggerFactory) -> N
 
     class SimpleFactory(RenderableFactory):
         def __init__(self) -> None:
-            super().__init__(
-                JinjaRenderer(JinjaRendererConfig(), logger_factory),
-                AppConfig(),
-                [],
-                logger_factory
-            )
-        
+            super().__init__(JinjaRenderer(JinjaRendererConfig(), logger_factory), AppConfig(), [], logger_factory)
+
         def create_pipe(self, pipe_config_raw: PipeConfig, scope: PipeContext):
             return pipes.get(pipe_config_raw.id)
 

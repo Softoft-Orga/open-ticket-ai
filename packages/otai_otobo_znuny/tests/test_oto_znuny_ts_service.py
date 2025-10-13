@@ -55,8 +55,7 @@ class TestOTOBOZnunyTicketSystemService:
     @pytest.fixture
     def patch_ticket_conversion(self):
         with patch(
-            "packages.otai_otobo_znuny.src.otai_otobo_znuny."
-            "models.otobo_ticket_to_unified_ticket"
+            "packages.otai_otobo_znuny.src.otai_otobo_znuny.models.otobo_ticket_to_unified_ticket"
         ) as mock_convert:
             mock_convert.side_effect = lambda ticket: UnifiedTicket(
                 id=str(ticket.id),

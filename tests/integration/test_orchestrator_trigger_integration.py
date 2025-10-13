@@ -87,7 +87,9 @@ async def test_pipe_runner_executes_pipe_on_trigger(logger_factory: LoggerFactor
     mock_factory = MagicMock(spec=RenderableFactory)
     mock_factory.create_pipe.return_value = TestPipe(PipeConfig(id="test_pipe", use="TestPipe"), logger_factory)
 
-    runner = PipeRunner(create_runner_def("test_runner", "test_trigger", "test_pipe", seconds=1), mock_factory, logger_factory)
+    runner = PipeRunner(
+        create_runner_def("test_runner", "test_trigger", "test_pipe", seconds=1), mock_factory, logger_factory
+    )
     await runner.on_trigger_fired()
 
     assert pipe_executed is True
@@ -177,7 +179,9 @@ async def test_runner_handles_pipe_execution_failure(logger_factory: LoggerFacto
     mock_factory = MagicMock(spec=RenderableFactory)
     mock_factory.create_pipe.return_value = MagicMock(process=AsyncMock(side_effect=Exception("Pipe execution failed")))
 
-    runner = PipeRunner(create_runner_def("failing_runner", "trigger", "failing_pipe", seconds=1), mock_factory, logger_factory)
+    runner = PipeRunner(
+        create_runner_def("failing_runner", "trigger", "failing_pipe", seconds=1), mock_factory, logger_factory
+    )
     await runner.on_trigger_fired()
 
     mock_factory.create_pipe.assert_called_once()

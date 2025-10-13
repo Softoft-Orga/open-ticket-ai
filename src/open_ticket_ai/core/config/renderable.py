@@ -2,7 +2,6 @@ import uuid
 from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-from pydantic_core import core_schema
 
 
 class Renderable:
@@ -37,11 +36,11 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
     def handle_dict_params(cls, values: Any) -> Any:
         if not isinstance(values, dict):
             return values
-        
+
         # Convert dict params to EmptyParams immediately
         if "params" in values and isinstance(values["params"], dict):
             values["params"] = EmptyParams(**values["params"])
-        
+
         return values
 
     @model_validator(mode="after")

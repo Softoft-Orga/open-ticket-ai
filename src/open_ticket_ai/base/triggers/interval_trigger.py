@@ -18,7 +18,7 @@ class IntervalTriggerParams(BaseModel):
 class IntervalTrigger(Trigger[IntervalTriggerParams]):
     def __init__(self, config: TriggerDefinition[IntervalTriggerParams], *args: Any, **kwargs: Any) -> None:
         super().__init__(config, *args, **kwargs)
-        params_data = config.params.model_dump() if hasattr(config.params, 'model_dump') else config.params
+        params_data = config.params.model_dump() if hasattr(config.params, "model_dump") else config.params
         params = IntervalTriggerParams.model_validate(params_data)
         self.seconds_interval: float = (
             self.params.days * 86400

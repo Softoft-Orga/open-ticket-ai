@@ -7,7 +7,6 @@ and that the DI container resolves dependencies properly for realistic workflows
 from __future__ import annotations
 
 import pytest
-from injector import Injector
 
 from open_ticket_ai.base.pipes.ticket_system_pipes import (
     AddNoteParams,
