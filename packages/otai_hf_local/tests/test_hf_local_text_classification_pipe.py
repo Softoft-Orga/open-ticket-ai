@@ -4,7 +4,11 @@ import types
 from unittest.mock import MagicMock
 
 import pytest
+
+from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLoggerFactory
 from packages.otai_hf_local.src.otai_hf_local import HFLocalTextClassificationPipe
+from packages.otai_hf_local.src.otai_hf_local.hf_local_text_classification_pipe import \
+    HFLocalTextClassificationPipeConfig, HFLocalTextClassificationParams
 
 
 @pytest.fixture(autouse=True)
@@ -70,12 +74,15 @@ def test_process_runs_pipeline_and_returns_top_result(monkeypatch):
     monkeypatch.setattr(HFLocalTextClassificationPipe, "_load_pipeline", mock_loader)
 
     pipe = HFLocalTextClassificationPipe(
-        {
-            "id": "test-pipe",
-            "model": "local-model",
-            "token": "hf-token",
-            "prompt": "Explain the issue",
-        }
+        HFLocalTextClassificationPipeConfig(
+            id="test-pipe",
+            params=HFLocalTextClassificationParams(
+                model="local-model",
+                token="hf-token",
+                prompt="Explain the issue"
+            )
+        ),
+        logger_factory=StdlibLoggerFactory()
     )
 
     result = asyncio.run(pipe._process())
