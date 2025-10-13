@@ -9,8 +9,10 @@ class Renderable:
     def __init__(self, params: BaseModel, *args: Any, **kwargs: Any) -> None:
         pass
 
+
 class EmptyParams(BaseModel):
     pass
+
 
 class RenderableConfig[ParamsT: BaseModel](BaseModel):
     model_config = ConfigDict(extra="allow", arbitrary_types_allowed=True)
