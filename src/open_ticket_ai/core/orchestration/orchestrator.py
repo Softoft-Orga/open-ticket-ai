@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-from importlib import import_module
+from typing import Any
 
 from injector import inject, singleton
 
@@ -13,6 +13,7 @@ from open_ticket_ai.core.orchestration.orchestrator_config import (
 )
 from open_ticket_ai.core.orchestration.scheduled_runner import PipeRunner
 from open_ticket_ai.core.orchestration.trigger import Trigger
+from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 
 @singleton
@@ -26,14 +27,14 @@ class Orchestrator:
         self._pipe_factory = pipe_factory
         self._config = orchestrator_config
         self._logger = logger_factory.get_logger(self.__class__.__name__)
-        self._trigger_registry: dict[str, Trigger] = {}
+        self._trigger_registry: dict[str, Trigger[Any]] = {}
         self._runners: dict[str, PipeRunner] = {}
 
-    def _instantiate_trigger(self, trigger_def: TriggerDefinition) -> Trigger:
-        module_path, class_name = trigger_def.use.rsplit(":", 1)
-        module = import_module(module_path)
-        trigger_class = getattr(module, class_name)
-        return trigger_class(trigger_def)
+    def _instantiate_trigger(self, trigger_def: TriggerDefinition[Any]) -> Trigger[Any]:
+        """Instantiate trigger using RenderableFactory for consistency with pipe instantiation."""
+        scope = PipeContext()
+        trigger: Trigger[Any] = self._pipe_factory.create_trigger(trigger_def, scope)  # type: ignore[assignment]
+        return trigger
 
     def start(self) -> None:
         """Start the orchestrator and all runners."""
@@ -45,7 +46,14 @@ class Orchestrator:
             self._runners[job_id] = runner
 
             for _trigger_index, trigger_def in enumerate(definition.on):
+                # Ensure trigger has a valid ID (never None)
                 trigger_id = trigger_def.id
+                if trigger_id is None:
+                    raise ValueError(
+                        f"Trigger in runner '{definition.pipe_id}' has no ID. "
+                        f"All triggers must have a unique 'id' field."
+                    )
+
                 if trigger_id in self._trigger_registry:
                     trigger = self._trigger_registry[trigger_id]
                 else:
