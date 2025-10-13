@@ -57,6 +57,15 @@ def app_injector(tmp_config: Path) -> Injector:
 
 
 @pytest.fixture
-def test_config(tmp_config: Path) -> RawOpenTicketAIConfig:
-    config_loader = ConfigLoader(AppConfig())
+def test_config(tmp_config: Path, logger_factory) -> RawOpenTicketAIConfig:
+    config_loader = ConfigLoader(AppConfig(), logger_factory)
     return config_loader.load_config(tmp_config)
+
+
+@pytest.fixture
+def logger_factory():
+    """Create a logger factory for testing."""
+    from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
+    from open_ticket_ai.core.config.config_models import LoggingDictConfig
+    
+    return create_logger_factory(LoggingDictConfig())

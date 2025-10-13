@@ -7,6 +7,7 @@ from open_ticket_ai.base.pipes.ticket_system_pipes import (
     AddNotePipe,
     AddNotePipeConfig,
 )
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 from tests.unit.mocked_ticket_system import MockedTicketSystem
@@ -16,6 +17,7 @@ from tests.unit.mocked_ticket_system import MockedTicketSystem
 async def test_add_note_pipe_adds_note_to_ticket(
     empty_pipeline_context: PipeContext,
     mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test that AddNotePipe successfully adds a note to a ticket."""
     config = AddNotePipeConfig(
@@ -27,7 +29,7 @@ async def test_add_note_pipe_adds_note_to_ticket(
         ),
     )
 
-    pipe = AddNotePipe(mocked_ticket_system, config)
+    pipe = AddNotePipe(mocked_ticket_system, config, logger_factory)
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify the note was added to the ticket
@@ -47,6 +49,7 @@ async def test_add_note_pipe_adds_note_to_ticket(
 async def test_add_note_pipe_with_note_object(
     empty_pipeline_context: PipeContext,
     mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test adding a note using a UnifiedNote object."""
     note = UnifiedNote(subject="Test Subject", body="Note body with subject")
@@ -59,7 +62,7 @@ async def test_add_note_pipe_with_note_object(
         ),
     )
 
-    pipe = AddNotePipe(mocked_ticket_system, config)
+    pipe = AddNotePipe(mocked_ticket_system, config, logger_factory)
     await pipe.process(empty_pipeline_context)
 
     # Verify note was added with correct fields
@@ -75,6 +78,7 @@ async def test_add_note_pipe_with_note_object(
 async def test_add_note_pipe_handles_failure(
     empty_pipeline_context: PipeContext,
     empty_mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test that pipe handles failure when ticket doesn't exist."""
     config = AddNotePipeConfig(
@@ -86,7 +90,7 @@ async def test_add_note_pipe_handles_failure(
         ),
     )
 
-    pipe = AddNotePipe(empty_mocked_ticket_system, config)
+    pipe = AddNotePipe(empty_mocked_ticket_system, config, logger_factory)
     result_context = await pipe.process(empty_pipeline_context)
 
     # Pipe should return failed result (add_note returns False for nonexistent ticket)
@@ -99,6 +103,7 @@ async def test_add_note_pipe_handles_failure(
 async def test_add_note_pipe_skips_when_disabled(
     empty_pipeline_context: PipeContext,
     mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test that pipe skips when disabled."""
     config = AddNotePipeConfig(
@@ -111,7 +116,7 @@ async def test_add_note_pipe_skips_when_disabled(
         ),
     )
 
-    pipe = AddNotePipe(mocked_ticket_system, config)
+    pipe = AddNotePipe(mocked_ticket_system, config, logger_factory)
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify pipe result

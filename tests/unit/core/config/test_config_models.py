@@ -6,9 +6,10 @@ import pytest
 
 from open_ticket_ai.core import AppConfig, ConfigLoader
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
+from open_ticket_ai.core.logging_iface import LoggerFactory
 
 
-def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
+def test_load_config_parses_expected_structure(tmp_path: Path, logger_factory: LoggerFactory) -> None:
     config_path = tmp_path / "config.yml"
     config_path.write_text(
         """
@@ -34,7 +35,7 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    config_loader = ConfigLoader(AppConfig())
+    config_loader = ConfigLoader(AppConfig(), logger_factory)
     config = config_loader.load_config(config_path)
 
     assert isinstance(config, RawOpenTicketAIConfig)
@@ -43,10 +44,10 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
     assert config.services[0].params["value"] == 42
 
 
-def test_load_config_missing_root_key(tmp_path: Path) -> None:
+def test_load_config_missing_root_key(tmp_path: Path, logger_factory: LoggerFactory) -> None:
     config_path = tmp_path / "config.yml"
     config_path.write_text("{}", encoding="utf-8")
 
-    config_loader = ConfigLoader(AppConfig())
+    config_loader = ConfigLoader(AppConfig(), logger_factory)
     with pytest.raises(ValueError):
         config_loader.load_config(config_path)

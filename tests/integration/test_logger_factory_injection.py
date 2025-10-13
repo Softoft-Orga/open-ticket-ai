@@ -24,7 +24,7 @@ def test_renderable_factory_injects_logger_factory_into_pipes(logger_factory: Lo
     """Test that RenderableFactory correctly injects logger_factory into created pipes."""
 
     renderer_config = JinjaRendererConfig()
-    template_renderer = JinjaRenderer(renderer_config)
+    template_renderer = JinjaRenderer(renderer_config, logger_factory)
     app_config = AppConfig()
 
     factory = RenderableFactory(
@@ -52,7 +52,7 @@ def test_logger_factory_creates_logger_with_class_name(logger_factory: LoggerFac
     """Test that logger_factory creates loggers with the correct class name."""
 
     renderer_config = JinjaRendererConfig()
-    template_renderer = JinjaRenderer(renderer_config)
+    template_renderer = JinjaRenderer(renderer_config, logger_factory)
     app_config = AppConfig()
 
     factory = RenderableFactory(
@@ -80,7 +80,7 @@ async def test_pipe_can_use_injected_logger():
 
     logger_factory = create_logger_factory(LoggingDictConfig())
     renderer_config = JinjaRendererConfig()
-    template_renderer = JinjaRenderer(renderer_config)
+    template_renderer = JinjaRenderer(renderer_config, logger_factory)
     app_config = AppConfig()
 
     factory = RenderableFactory(

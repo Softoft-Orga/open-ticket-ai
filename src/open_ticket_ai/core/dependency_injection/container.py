@@ -31,7 +31,10 @@ class AppModule(Module):
 
     def configure(self, binder: Binder) -> None:
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
-        config_loader = ConfigLoader(self.app_config)
+        # Create a temporary logger factory for config loading
+        from open_ticket_ai.core.config.config_models import LoggingDictConfig
+        temp_logger_factory = create_logger_factory(LoggingDictConfig())
+        config_loader = ConfigLoader(self.app_config, temp_logger_factory)
         config = config_loader.load_config(self.config_path)
         print(config.infrastructure.logging.model_dump_json(indent=4, by_alias=True, exclude_none=True))
         dictConfig(config.infrastructure.logging.model_dump(by_alias=True, exclude_none=True))

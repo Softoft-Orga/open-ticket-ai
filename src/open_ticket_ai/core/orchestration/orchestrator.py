@@ -27,6 +27,7 @@ class Orchestrator:
         self._pipe_factory = pipe_factory
         self._config = orchestrator_config
         self._logger = logger_factory.get_logger(self.__class__.__name__)
+        self._logger_factory = logger_factory
         self._trigger_registry: dict[str, Trigger[Any]] = {}
         self._runners: dict[str, PipeRunner] = {}
 
@@ -41,7 +42,7 @@ class Orchestrator:
         self._logger.info(f"Starting orchestrator with {len(self._config.runners)} runner(s)")
 
         for index, definition in enumerate(self._config.runners):
-            runner = PipeRunner(definition, self._pipe_factory)
+            runner = PipeRunner(definition, self._pipe_factory, self._logger_factory)
             job_id = f"{definition.pipe_id}_{index}"
             self._runners[job_id] = runner
 

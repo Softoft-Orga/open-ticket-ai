@@ -7,6 +7,7 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import (
     FetchTicketsPipe,
     FetchTicketsPipeConfig,
 )
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedEntity
 from tests.unit.mocked_ticket_system import MockedTicketSystem
@@ -16,6 +17,7 @@ from tests.unit.mocked_ticket_system import MockedTicketSystem
 async def test_fetch_tickets_finds_tickets_by_queue(
     empty_pipeline_context: PipeContext,
     mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test that FetchTicketsPipe finds tickets by queue."""
     config = FetchTicketsPipeConfig(
@@ -29,7 +31,7 @@ async def test_fetch_tickets_finds_tickets_by_queue(
         ),
     )
 
-    pipe = FetchTicketsPipe(mocked_ticket_system, config)
+    pipe = FetchTicketsPipe(mocked_ticket_system, config, logger_factory)
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify pipe result
@@ -47,6 +49,7 @@ async def test_fetch_tickets_finds_tickets_by_queue(
 async def test_fetch_tickets_with_pagination(
     empty_pipeline_context: PipeContext,
     mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test that FetchTicketsPipe respects pagination."""
     config = FetchTicketsPipeConfig(
@@ -60,7 +63,7 @@ async def test_fetch_tickets_with_pagination(
         ),
     )
 
-    pipe = FetchTicketsPipe(mocked_ticket_system, config)
+    pipe = FetchTicketsPipe(mocked_ticket_system, config, logger_factory)
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify pagination worked
@@ -73,6 +76,7 @@ async def test_fetch_tickets_with_pagination(
 async def test_fetch_tickets_returns_empty_when_no_matches(
     empty_pipeline_context: PipeContext,
     mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test that FetchTicketsPipe returns empty list when no tickets match."""
     config = FetchTicketsPipeConfig(
@@ -85,7 +89,7 @@ async def test_fetch_tickets_returns_empty_when_no_matches(
         ),
     )
 
-    pipe = FetchTicketsPipe(mocked_ticket_system, config)
+    pipe = FetchTicketsPipe(mocked_ticket_system, config, logger_factory)
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify empty result

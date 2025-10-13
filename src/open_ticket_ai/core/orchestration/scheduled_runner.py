@@ -1,16 +1,19 @@
 from __future__ import annotations
 
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import RunnerDefinition
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 
 class PipeRunner:
-    def __init__(self, definition: RunnerDefinition, pipe_factory: RenderableFactory) -> None:
+    def __init__(
+        self, definition: RunnerDefinition, pipe_factory: RenderableFactory, logger_factory: LoggerFactory
+    ) -> None:
         self.definition = definition
         self.pipe_factory = pipe_factory
-        self._logger = logging.getLogger(f"{self.__class__.__name__}.{definition.pipe_id}")
+        self._logger = logger_factory.get_logger(f"{self.__class__.__name__}.{definition.pipe_id}")
 
     async def on_trigger_fired(self) -> None:
         await self.execute()

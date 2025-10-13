@@ -17,12 +17,11 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class JinjaRenderer(TemplateRenderer):
     @inject
     def __init__(self, config: JinjaRendererConfig, logger_factory: LoggerFactory):
-        super().__init__()
+        super().__init__(logger_factory)
         self.config = config
         self.jinja_env = SandboxedEnvironment(
             autoescape=config.autoescape, trim_blocks=config.trim_blocks, lstrip_blocks=config.lstrip_blocks
         )
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
 
     def render(self, template_str: str, scope: dict[str, Any], fail_silently: bool = False) -> Any:
         self.jinja_env.globals.update(scope)
