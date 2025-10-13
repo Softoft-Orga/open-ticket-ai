@@ -7,13 +7,13 @@ from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_fac
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
+    LoggingDictConfig,
     RawOpenTicketAIConfig,
 )
 from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory, _locate
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
-from open_ticket_ai.core.pipeline.pipe import ParamsModel
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
@@ -32,8 +32,6 @@ class AppModule(Module):
     def configure(self, binder: Binder) -> None:
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
         # Create a temporary logger factory for config loading
-        from open_ticket_ai.core.config.config_models import LoggingDictConfig
-
         temp_logger_factory = create_logger_factory(LoggingDictConfig())
         config_loader = ConfigLoader(self.app_config, temp_logger_factory)
         config = config_loader.load_config(self.config_path)
@@ -52,8 +50,7 @@ class AppModule(Module):
             raise ValueError(f"Template renderer service with id '{service_id}' not found")
 
         cls = _locate(service_config.use)
-        params = service_config.params.model_dump()
-        config_obj = JinjaRendererConfig.model_validate(params)
+        config_obj = JinjaRendererConfig.model_validate(service_config.params)
         return cls(config_obj, logger_factory=logger_factory)  # type: ignore[abstract]
 
     @provider
@@ -66,5 +63,5 @@ class AppModule(Module):
         return config.orchestrator
 
     @multiprovider
-    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RenderableConfig[ParamsModel]]:
+    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RenderableConfig]:
         return config.services

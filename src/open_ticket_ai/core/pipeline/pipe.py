@@ -15,19 +15,14 @@ class ParamsModel(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-class Pipe[ParamsT: ParamsModel](Renderable, ABC):
-    params_class: type[ParamsT]
-
+class Pipe(Renderable, ABC):
     def __init__(
-        self, pipe_params: PipeConfig[ParamsT], logger_factory: LoggerFactory, *args: Any, **kwargs: Any
+        self, pipe_params: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any
     ) -> None:
         self.pipe_config = pipe_params
         self._logger = logger_factory.get_logger(self.__class__.__name__)
-
-        if isinstance(pipe_params.params, dict):
-            self.params: ParamsT = self.params_class.model_validate(pipe_params.params)
-        else:
-            self.params: ParamsT = pipe_params.params
+        # Child classes should validate params in their __init__ using Pydantic models
+        self.params: dict[str, Any] = pipe_params.params
 
     def _save_pipe_result(self, context: PipeContext, pipe_result: PipeResult[Any]) -> PipeContext:
         if self.pipe_config.id is not None:

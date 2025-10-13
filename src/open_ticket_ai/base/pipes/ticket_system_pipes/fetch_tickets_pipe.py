@@ -17,13 +17,11 @@ class FetchTicketsPipeResultData(BaseModel):
     fetched_tickets: list[dict[str, Any]]
 
 
-class FetchTicketsPipeConfig(PipeConfig[FetchTicketsParams]):
+class FetchTicketsPipeConfig(PipeConfig):
     pass
 
 
-class FetchTicketsPipe(Pipe[FetchTicketsParams]):
-    params_class = FetchTicketsParams
-
+class FetchTicketsPipe(Pipe):
     def __init__(
         self,
         ticket_system: TicketSystemService,
@@ -34,11 +32,13 @@ class FetchTicketsPipe(Pipe[FetchTicketsParams]):
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.pipe_config = FetchTicketsPipeConfig.model_validate(pipe_config.model_dump())
+        # Validate params at runtime
+        self.validated_params = FetchTicketsParams.model_validate(self.params)
         self.ticket_system = ticket_system
 
     async def _process(self) -> PipeResult[FetchTicketsPipeResultData]:
         try:
-            search_criteria = self.params.ticket_search_criteria
+            search_criteria = self.validated_params.ticket_search_criteria
             if search_criteria is None:
                 search_criteria = TicketSearchCriteria()
             tickets = await self.ticket_system.find_tickets(search_criteria) or []

@@ -23,12 +23,11 @@ class HFLocalTextClassificationPipeResultData(BaseModel):
     confidence: float
 
 
-class HFLocalTextClassificationPipeConfig(PipeConfig[HFLocalTextClassificationParams]):
+class HFLocalTextClassificationPipeConfig(PipeConfig):
     pass
 
 
-class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
-    params_class = HFLocalTextClassificationParams
+class HFLocalTextClassificationPipe(Pipe):
     _pipeline: Any
 
     def __init__(
@@ -39,9 +38,11 @@ class HFLocalTextClassificationPipe(Pipe[HFLocalTextClassificationParams]):
         **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
-        self.model = self.params.model
-        self.token = self.params.token
-        self.prompt = self.params.prompt
+        # Validate params at runtime
+        self.validated_params = HFLocalTextClassificationParams.model_validate(self.params)
+        self.model = self.validated_params.model
+        self.token = self.validated_params.token
+        self.prompt = self.validated_params.prompt
         self._pipeline = None
 
     @staticmethod

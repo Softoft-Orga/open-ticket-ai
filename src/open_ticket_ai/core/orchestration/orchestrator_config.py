@@ -8,7 +8,7 @@ from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 
 
-class TriggerDefinition[TriggerDefinitionParamsT: BaseModel](RenderableConfig[TriggerDefinitionParamsT]):
+class TriggerDefinition(RenderableConfig):
     pass
 
 
@@ -41,8 +41,8 @@ class RunnerParams(BaseModel):
 
 class RunnerDefinition(BaseModel):
     id: str | None = None
-    on: list[TriggerDefinition[BaseModel]]
-    run: PipeConfig[Any]
+    on: list[TriggerDefinition]
+    run: PipeConfig
     params: RunnerParams = Field(default_factory=RunnerParams)
 
     model_config = ConfigDict(populate_by_name=True)
