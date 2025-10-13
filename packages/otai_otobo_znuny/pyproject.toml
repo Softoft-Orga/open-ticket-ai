@@ -1,6 +1,6 @@
 [project]
 name = "otai-otobo-znuny"
-version = "1.0.0rc1"
+version = "1.0.1"
 description = "OTOBO/Znuny ticket system plugin for Open Ticket AI"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -25,7 +25,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "open-ticket-ai>=1.0.0rc1,<2.0.0",
+    "open-ticket-ai>=1.0.0,<2.0.0",
     "otobo-znuny>=1.4.0",
     "injector>=0.22.0",
     "pydantic>=2.11.7",
