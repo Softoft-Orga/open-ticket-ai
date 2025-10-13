@@ -40,7 +40,7 @@ def setup(
         "--output-config",
         help="Path to output a config.yml file",
     ),
-):
+) -> None:
     typer.echo("\n=== OTOBO/Znuny Ticket System Setup ===\n")
 
     operation_urls = {
@@ -118,5 +118,5 @@ def setup(
     typer.echo()
 
 
-def get_commands():
+def get_commands() -> list[typer.Typer]:
     return [otobo_znuny]

@@ -49,5 +49,5 @@ class AppModule(Module):
         return config.orchestrator
 
     @multiprovider
-    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RenderableConfig]:
+    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RenderableConfig[Any]]:
         return config.services

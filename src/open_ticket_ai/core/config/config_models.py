@@ -75,5 +75,5 @@ class InfrastructureConfig(BaseModel):
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=lambda: [])
     infrastructure: InfrastructureConfig = Field(default_factory=InfrastructureConfig)
-    services: list[RenderableConfig] = Field(default_factory=lambda: [])
+    services: list[RenderableConfig[Any]] = Field(default_factory=lambda: [])
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)

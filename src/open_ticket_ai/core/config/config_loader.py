@@ -1,7 +1,7 @@
 import os
 
 import injector
-import yaml
+import yaml  # type: ignore[import-untyped]
 from injector import singleton
 from pydantic import ValidationError
 
