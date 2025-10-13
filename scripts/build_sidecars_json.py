@@ -5,6 +5,7 @@ Generate sidecars.json for runtime consumption by VitePress documentation.
 This script scans the man_structured directory and creates a JSON file
 containing all sidecar data organized by type and name.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -16,7 +17,7 @@ import yaml
 def to_snake_case(name: str) -> str:
     """Convert filename to snake_case identifier."""
     # Remove .sidecar.yml suffix
-    if name.endswith('.sidecar.yml'):
+    if name.endswith(".sidecar.yml"):
         name = name[:-12]
     return name
 
@@ -39,26 +40,26 @@ def generate_sidecars_json(root_dir: Path, output_path: Path) -> int:
     Returns:
         0 on success, 1 on error
     """
-    man_structured_dir = root_dir / 'docs' / '_internal' / 'man_structured'
+    man_structured_dir = root_dir / "docs" / "_internal" / "man_structured"
 
     if not man_structured_dir.exists():
         print(f"Error: {man_structured_dir} does not exist", file=sys.stderr)
         return 1
-    
+
     sidecars = []
 
     # Process each type directory
-    for type_dir in ['pipes', 'services', 'triggers']:
+    for type_dir in ["pipes", "services", "triggers"]:
         type_path = man_structured_dir / type_dir
 
         if not type_path.exists():
             continue
 
         # Get singular form for type (pipe, service, trigger)
-        sidecar_type = type_dir.rstrip('s')
+        sidecar_type = type_dir.rstrip("s")
 
         # Process each sidecar file
-        for sidecar_file in sorted(type_path.glob('*.sidecar.yml')):
+        for sidecar_file in sorted(type_path.glob("*.sidecar.yml")):
             data = load_sidecar(sidecar_file)
 
             if data is None:
@@ -68,19 +69,14 @@ def generate_sidecars_json(root_dir: Path, output_path: Path) -> int:
             name = to_snake_case(sidecar_file.name)
 
             # Create sidecar entry
-            entry = {
-                'name': name,
-                'type': sidecar_type,
-                'path': str(sidecar_file.relative_to(root_dir)),
-                'data': data
-            }
+            entry = {"name": name, "type": sidecar_type, "path": str(sidecar_file.relative_to(root_dir)), "data": data}
 
             sidecars.append(entry)
 
     # Write output file
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(output_path, 'w') as f:
+    with open(output_path, "w") as f:
         json.dump(sidecars, f, indent=2, sort_keys=False)
 
     print(f"✅ Generated {output_path}")
@@ -90,7 +86,7 @@ def generate_sidecars_json(root_dir: Path, output_path: Path) -> int:
     by_type: dict[str, int] = {}
     for entry in sidecars:
         # entry is dict[str, Any], extract type field
-        entry_type = str(entry.get('type', 'unknown'))
+        entry_type = str(entry.get("type", "unknown"))
         by_type[entry_type] = by_type.get(entry_type, 0) + 1
 
     for sidecar_type, count in sorted(by_type.items()):
@@ -102,7 +98,7 @@ def generate_sidecars_json(root_dir: Path, output_path: Path) -> int:
 def main() -> int:
     """Main entry point."""
     root_dir = Path(__file__).parent.parent
-    output_path = root_dir / 'docs' / 'public' / 'assets' / 'sidecars.json'
+    output_path = root_dir / "docs" / "public" / "assets" / "sidecars.json"
 
     print("🔨 Building sidecars.json...")
     print()
@@ -119,5 +115,5 @@ def main() -> int:
     return result
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())
