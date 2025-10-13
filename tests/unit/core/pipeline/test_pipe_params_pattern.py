@@ -9,16 +9,16 @@ that by directly passing dicts to test the Pipe validation logic.
 
 from typing import Any
 
+import pydantic
 import pytest
-from pydantic import BaseModel
 
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe import ParamsModel, Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 
-class ExamplePipeParams(BaseModel):
+class ExamplePipeParams(ParamsModel):
     """Example params model as shown in documentation."""
 
     threshold: float
@@ -26,7 +26,7 @@ class ExamplePipeParams(BaseModel):
     max_items: int = 100
 
 
-class ExamplePipeResultData(BaseModel):
+class ExamplePipeResultData(pydantic.BaseModel):
     """Example result data model."""
 
     processed_count: int
@@ -163,7 +163,7 @@ async def test_pipe_params_validation_error(logger_factory: LoggerFactory) -> No
     config.params = params_dict
 
     # Error should occur in Pipe.__init__ when validating dict -> ExamplePipeParams
-    with pytest.raises(Exception):
+    with pytest.raises(pydantic.ValidationError):
         ExamplePipe(pipe_config=config, logger_factory=logger_factory)
 
 
