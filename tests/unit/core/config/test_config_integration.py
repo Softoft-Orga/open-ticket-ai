@@ -5,9 +5,10 @@ from pathlib import Path
 from injector import Injector
 
 from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig
+from open_ticket_ai.core.logging_iface import LoggerFactory
 
 
-def test_complete_config_flow_with_defaults(tmp_path: Path) -> None:
+def test_complete_config_flow_with_defaults(tmp_path: Path, logger_factory: LoggerFactory) -> None:
     """Test the complete config loading flow with default AppConfig."""
     config_content = """
 open_ticket_ai:
@@ -27,7 +28,7 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    config_loader = ConfigLoader(AppConfig())
+    config_loader = ConfigLoader(AppConfig(), logger_factory)
     config = config_loader.load_config(config_path)
 
     assert config.plugins == ["default-plugin"]
@@ -35,7 +36,7 @@ open_ticket_ai:
     assert config.services[0].id == "test-def"
 
 
-def test_complete_config_flow_with_custom_app_config(tmp_path: Path) -> None:
+def test_complete_config_flow_with_custom_app_config(tmp_path: Path, logger_factory: LoggerFactory) -> None:
     """Test the complete config loading flow with custom AppConfig."""
     config_content = """
 custom_app:
@@ -48,7 +49,7 @@ custom_app:
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
     app_config = AppConfig(config_yaml_root_key="custom_app")
-    config_loader = ConfigLoader(app_config)
+    config_loader = ConfigLoader(app_config, logger_factory)
     config = config_loader.load_config(config_path)
 
     assert config.plugins == ["custom-plugin"]
@@ -101,7 +102,7 @@ my_app:
     assert app_config.config_yaml_root_key == "my_app"
 
 
-def test_app_config_allows_hot_reload_preparation(tmp_path: Path) -> None:
+def test_app_config_allows_hot_reload_preparation(tmp_path: Path, logger_factory: LoggerFactory) -> None:
     """Test that AppConfig design supports future hot-reload functionality."""
     config_v1 = """
 open_ticket_ai:
@@ -114,7 +115,7 @@ open_ticket_ai:
     config_path.write_text(config_v1.strip(), encoding="utf-8")
 
     app_config = AppConfig()
-    config_loader = ConfigLoader(app_config)
+    config_loader = ConfigLoader(app_config, logger_factory)
     config1 = config_loader.load_config(config_path)
     assert config1.plugins == ["v1"]
 

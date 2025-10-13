@@ -57,8 +57,8 @@ def app_injector(tmp_config: Path) -> Injector:
 
 
 @pytest.fixture
-def test_config(tmp_config: Path) -> RawOpenTicketAIConfig:
-    config_loader = ConfigLoader(AppConfig())
+def test_config(tmp_config: Path, logger_factory) -> RawOpenTicketAIConfig:
+    config_loader = ConfigLoader(AppConfig(), logger_factory)
     return config_loader.load_config(tmp_config)
 
 
