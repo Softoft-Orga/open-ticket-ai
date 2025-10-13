@@ -9,7 +9,7 @@ from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 
 
-def get_project_info():
+def get_project_info() -> dict[str, str]:
     pyproject_path = Path("../../pyproject.toml")
 
     defaults = {
@@ -74,6 +74,6 @@ class OpenTicketAIApp:
             await self.orchestrator.run()
         except KeyboardInterrupt:
             self._logger.info("\n⚠️  Shutdown requested...")
-            await self.orchestrator.stop()
+            self.orchestrator.stop()
 
         self._logger.info("✅ Orchestration complete")

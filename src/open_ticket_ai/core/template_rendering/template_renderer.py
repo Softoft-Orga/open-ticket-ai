@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 
 class TemplateRenderer(ABC):
-    def __init__(self):
+    def __init__(self) -> None:
         self._logger = logging.getLogger(self.__class__.__name__)
 
     @staticmethod

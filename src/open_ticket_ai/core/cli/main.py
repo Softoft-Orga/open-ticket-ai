@@ -159,12 +159,12 @@ class CLI:
             config = RawOpenTicketAIConfig.model_validate(raw_config.get(self.app_config.config_yaml_root_key, {}))
 
             num_plugins = len(config.plugins) if config.plugins else 0
-            num_defs = len(config.defs) if config.defs else 0
+            num_services = len(config.services) if config.services else 0
             num_orchestrator = len(config.orchestrator.runners) if config.orchestrator else 0
 
             self.console.print("[green]✅ Config file is valid![/green]")
             self.console.print(f"   - Plugins: {num_plugins}")
-            self.console.print(f"   - Definitions: {num_defs}")
+            self.console.print(f"   - Services: {num_services}")
             self.console.print(f"   - Orchestrator steps: {num_orchestrator}")
 
         except ValidationError as e:

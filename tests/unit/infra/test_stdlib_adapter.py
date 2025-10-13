@@ -138,8 +138,11 @@ def test_stdlib_logger_exception(caplog) -> None:
     logger_obj = logging.getLogger("test_exception")
     logger = StdlibLogger(logger_obj)
 
-    try:
+    def raise_error() -> None:
         raise ValueError("Test error")
+
+    try:
+        raise_error()
     except ValueError:
         with caplog.at_level(logging.ERROR):
             logger.exception("Exception occurred")

@@ -83,6 +83,7 @@ fixable = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["PLR2004"]
 "src/open_ticket_ai/cli/**/*.py" = ["B008"]
+"src/open_ticket_ai/core/cli/**/*.py" = ["B008"]
 "tests/unit/core/dependency_injection/test_logging_module.py" = ["F821"]
 "tests/unit/infra/test_structlog_adapter.py" = ["F821"]
 
@@ -95,12 +96,8 @@ explicit_package_bases = true
 mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = ["*tests.*"]
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = ["tests.*", "*.tests.*", "packages.*.tests.*"]
-disallow_untyped_defs = false  # Allow functions without return type hints
+module = ["tests.*", "packages.*.tests.*"]
+disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
