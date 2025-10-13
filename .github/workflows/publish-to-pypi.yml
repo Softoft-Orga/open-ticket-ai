@@ -33,16 +33,14 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: Build package
-        run: |
-          cd ${{ inputs.package-path }}
-          uv build
+        working-directory: ${{ inputs.package-path }}
+        run: uv build
 
       - name: Publish to PyPI
+        working-directory: ${{ inputs.package-path }}
         env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
-        run: |
-          cd ${{ inputs.package-path }}
-          uv publish
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: uv publish
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
