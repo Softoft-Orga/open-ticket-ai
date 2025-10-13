@@ -1,7 +1,56 @@
 # PipeSidecar Component
 
 ## Overview
-The PipeSidecar component displays comprehensive information about pipeline pipe configurations from sidecar YAML specifications.
+The PipeSidecar component displays comprehensive information about pipeline pipe configurations from sidecar YAML specifications. The component is now refactored into smaller, focused sub-components for better maintainability.
+
+## Architecture
+
+The component has been refactored from a single 250-line file into a modular structure:
+
+- **PipeSidecar.vue** (56 lines) - Main component that composes all sections
+- **sections/MetadataSection.vue** - Displays class and inheritance information
+- **sections/InputsSection.vue** - Shows input parameters and configuration
+- **sections/DefaultsSection.vue** - Displays default values
+- **sections/OutputSection.vue** - Shows output states and examples
+- **sections/ErrorsSection.vue** - Displays error categories (fail/break/continue)
+- **sections/EngineSupportSection.vue** - Shows engine capability flags
+- **sections/ExamplesSection.vue** - Displays usage examples
+
+## Composable: useSidecars
+
+A new composable `useSidecars` provides centralized access to sidecar data:
+
+```typescript
+import { useSidecars } from '@/.vitepress/composables/useSidecars'
+
+const { sidecars, isLoading, error, getSidecar, filterByType, filterByCategory } = useSidecars()
+
+// Get a specific sidecar
+const addNotePipe = getSidecar('pipe', 'add_note_pipe')
+
+// Filter by type (pipe, service, trigger)
+const allPipes = filterByType('pipe')
+
+// Filter by category
+const ticketSystemPipes = filterByCategory('ticket-system')
+```
+
+### Composable API
+
+| Method | Description |
+|--------|-------------|
+| `getSidecar(type, name)` | Get a specific sidecar by type and name |
+| `filterByType(type)` | Get all sidecars of a specific type ('pipe', 'service', 'trigger') |
+| `filterByCategory(category)` | Get all sidecars in a specific category |
+| `getAllSidecars()` | Get all available sidecars |
+
+### Reactive State
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `sidecars` | `Map<string, SidecarEntry>` | Map of all loaded sidecars |
+| `isLoading` | `boolean` | Loading state |
+| `error` | `Error \| null` | Error state if loading fails |
 
 ## Usage
 
@@ -20,6 +69,24 @@ The PipeSidecar component displays comprehensive information about pipeline pipe
 </PipeSidecar>
 ```
 
+### Using the Composable
+```vue
+<script setup>
+import { useSidecars } from '@/.vitepress/composables/useSidecars'
+import PipeSidecar from '@/.vitepress/components/pipe/PipeSidecar.vue'
+
+const { getSidecar, filterByType, isLoading } = useSidecars()
+
+const addNotePipe = getSidecar('pipe', 'add_note_pipe')
+const allPipes = filterByType('pipe')
+</script>
+
+<template>
+  <div v-if="isLoading">Loading...</div>
+  <PipeSidecar v-else-if="addNotePipe" :sidecar="addNotePipe.data" />
+</template>
+```
+
 ## Props
 
 | Prop | Type | Required | Description |
@@ -34,6 +101,9 @@ The PipeSidecar component displays comprehensive information about pipeline pipe
 
 ## Features
 
+- **Modular Structure**: Component split into focused sub-components (56 lines vs 250 lines)
+- **Centralized Data**: `useSidecars` composable for loading and filtering sidecars
+- **Type Support**: Works with Pipes, Services, and Triggers
 - **Metadata Display**: Shows pipe class, inheritance, title, summary, category, and version
 - **Input Configuration**: Displays input parameters with descriptions, placement, and alongside fields
 - **Default Values**: Lists all default parameter values
