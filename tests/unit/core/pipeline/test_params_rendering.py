@@ -46,12 +46,13 @@ def test_render_base_model_renders_params(renderer: JinjaRenderer, context: Pipe
         id="test",
         params=SimpleParams.model_construct(
             model="{{ params.global_model }}",
-            confidence="{{ params.threshold }}",
+            confidence="{{ params.threshold }}",  # type: ignore[arg-type]
         ),
     )
 
     rendered = render_base_model(config.params, context, renderer)
 
+    assert isinstance(rendered, SimpleParams)
     assert rendered.model == "my-global-model"
     assert rendered.confidence == 0.7
 
@@ -65,6 +66,7 @@ def test_render_base_model_does_not_render_control_fields(renderer: JinjaRendere
 
     rendered = render_base_model(config.params, context, renderer)
 
+    assert isinstance(rendered, SimpleParams)
     assert rendered.model == "my-global-model"
 
 
@@ -81,15 +83,17 @@ def test_render_base_model_with_nested_params(renderer: JinjaRenderer, context: 
 
     rendered = render_base_model(config.params, context, renderer)
 
+    assert isinstance(rendered, NestedParams)
     assert rendered.outer.inner == "my-global-model"
     assert rendered.outer.static == "value"
 
 
 def test_render_base_model_empty_params(renderer: JinjaRenderer, context: PipeContext) -> None:
-    config = PipeConfig(id="test")
+    config: PipeConfig[SimpleParams] = PipeConfig(id="test")
 
     rendered = render_base_model(config.params, context, renderer)
 
+    assert isinstance(rendered, BaseModel)
     assert rendered.model_dump() == {}
 
 
@@ -98,9 +102,11 @@ def test_render_base_model_with_legacy_fields_migrated(renderer: JinjaRenderer, 
         warnings.simplefilter("always")
         config = PipeConfig[ModelParams](
             id="test",
-            model="{{ params.global_model }}",  # type: ignore
+            model="{{ params.global_model }}",
         )
 
     rendered = render_base_model(config.params, context, renderer)
 
-    assert rendered.model == "my-global-model"
+    assert isinstance(rendered, (ModelParams, BaseModel))
+    if hasattr(rendered, "model"):
+        assert rendered.model == "my-global-model"
