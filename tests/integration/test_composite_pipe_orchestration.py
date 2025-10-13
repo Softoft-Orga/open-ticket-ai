@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 from injector import Injector
 
@@ -24,6 +26,7 @@ from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
 from open_ticket_ai.core.dependency_injection.logging_module import LoggingModule
 from open_ticket_ai.core.logging_iface import LoggerFactory
+from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
@@ -88,7 +91,7 @@ def renderable_factory(
     app_config: AppConfig,
 ) -> RenderableFactory:
     """Create a RenderableFactory for testing."""
-    ticket_system_config = RenderableConfig(
+    ticket_system_config: RenderableConfig[Any] = RenderableConfig(
         id="mock_ticket_system",
         use="tests.unit.mocked_ticket_system:MockedTicketSystem",
         params={},
@@ -293,12 +296,12 @@ async def test_composite_pipe_error_propagation(
     )
 
     class SimpleFactory:
-        def create_pipe(self, config: PipeConfig, context: PipeContext):
+        def create_pipe(self, config: PipeConfig[Any], context: PipeContext) -> Pipe[Any]:
             if config.id == "step1":
                 return update_pipe
             raise ValueError(f"Unknown pipe: {config.id}")
 
-    composite_pipe = CompositePipe(composite_config, factory=SimpleFactory(), logger_factory=logger_factory)
+    composite_pipe = CompositePipe(composite_config, factory=SimpleFactory(), logger_factory=logger_factory)  # type: ignore[arg-type]
 
     context = PipeContext(pipes={}, params={})
     result_context = await composite_pipe.process(context)
@@ -378,7 +381,7 @@ async def test_realistic_multi_step_pipeline(
     )
 
     class SimpleFactory:
-        def create_pipe(self, config: PipeConfig, context: PipeContext):
+        def create_pipe(self, config: PipeConfig[Any], context: PipeContext) -> Pipe[Any]:
             if config.id == "fetch_tickets":
                 return fetch_pipe
             elif config.id == "update_ticket":
@@ -387,7 +390,7 @@ async def test_realistic_multi_step_pipeline(
                 return add_note_pipe
             raise ValueError(f"Unknown pipe: {config.id}")
 
-    composite_pipe = CompositePipe(composite_config, factory=SimpleFactory(), logger_factory=logger_factory)
+    composite_pipe = CompositePipe(composite_config, factory=SimpleFactory(), logger_factory=logger_factory)  # type: ignore[arg-type]
 
     context = PipeContext(pipes={}, params={})
     result_context = await composite_pipe.process(context)
@@ -410,18 +413,11 @@ async def test_realistic_multi_step_pipeline(
     ticket = await mock_system.get_ticket("TICKET-1")
     assert ticket is not None
     assert ticket.priority is not None
-    if hasattr(ticket.priority, "id"):
-        assert ticket.priority.id == "priority-5"
-        assert ticket.priority.name == "High"
-    else:
-        assert ticket.priority["id"] == "priority-5"
-        assert ticket.priority["name"] == "High"
+    assert ticket.priority.id == "priority-5"
+    assert ticket.priority.name == "High"
     assert ticket.notes is not None
     assert len(ticket.notes) == 1
-    if hasattr(ticket.notes[0], "body"):
-        assert ticket.notes[0].body == "Priority was updated to High"
-    else:
-        assert ticket.notes[0]["body"] == "Priority was updated to High"
+    assert ticket.notes[0].body == "Priority was updated to High"
 
     assert "workflow" in result_context.pipes
     workflow_result = result_context.pipes["workflow"]

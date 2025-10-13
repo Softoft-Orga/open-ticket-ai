@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 import typer
-import yaml  # type: ignore[import-untyped]
+import yaml
 from pydantic import ValidationError
 from rich.console import Console
 

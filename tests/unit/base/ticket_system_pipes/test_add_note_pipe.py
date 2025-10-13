@@ -32,6 +32,8 @@ async def test_add_note_pipe_adds_note_to_ticket(
 
     # Verify the note was added to the ticket
     ticket = await mocked_ticket_system.get_ticket("TICKET-1")
+    assert ticket is not None
+    assert ticket.notes is not None
     assert len(ticket.notes) == 1
     assert ticket.notes[0].body == "This is a new note"
 
@@ -62,6 +64,8 @@ async def test_add_note_pipe_with_note_object(
 
     # Verify note was added with correct fields
     ticket = await mocked_ticket_system.get_ticket("TICKET-2")
+    assert ticket is not None
+    assert ticket.notes is not None
     assert len(ticket.notes) == 2  # Already has 1 note in fixture
     assert ticket.notes[1].subject == "Test Subject"
     assert ticket.notes[1].body == "Note body with subject"

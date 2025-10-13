@@ -107,8 +107,13 @@ module = [
     "tests.unit.core.dependency_injection.test_logging_module",
     "tests.integration.test_logging_integration",
     "tests.integration.test_logger_factory_injection",
+    "tests.integration.test_composite_pipe_orchestration",
 ]
 disable_error_code = ["name-defined", "type-abstract"]
+
+[[tool.mypy.overrides]]
+module = ["otobo_znuny.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]

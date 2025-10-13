@@ -63,7 +63,7 @@ def resolve_step_imports(monkeypatch: pytest.MonkeyPatch) -> None:
         if not separator:
             module_path, _, attr_name = import_path.rpartition(".")
         module = importlib.import_module(module_path)
-        return getattr(module, attr_name)
+        return getattr(module, attr_name)  # type: ignore[no-any-return]
 
     def _build_pipe_from_step_config(self: Any, step_config: dict[str, Any], context: PipeContext) -> Any:
         rendered_step_config = jinja_renderer.render_recursive(step_config, context)

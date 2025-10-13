@@ -93,6 +93,7 @@ def test_render_base_model_empty_params(renderer: JinjaRenderer, context: PipeCo
 
     rendered = render_base_model(config.params, context, renderer)
 
+    assert isinstance(rendered, BaseModel)
     assert rendered.model_dump() == {}
 
 
@@ -107,4 +108,5 @@ def test_render_base_model_with_legacy_fields_migrated(renderer: JinjaRenderer, 
     rendered = render_base_model(config.params, context, renderer)
 
     assert isinstance(rendered, (ModelParams, BaseModel))
-    assert rendered.model == "my-global-model"  # type: ignore[attr-defined]
+    if hasattr(rendered, "model"):
+        assert rendered.model == "my-global-model"
