@@ -2,6 +2,7 @@ import uuid
 from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic_core import core_schema
 
 
 class Renderable:
@@ -38,8 +39,8 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
         
         if not isinstance(values, dict):
             return values
-            
-        # Convert dict params to EmptyParams
+        
+        # Convert dict params to EmptyParams immediately
         if "params" in values and isinstance(values["params"], dict):
             values["params"] = EmptyParams(**values["params"])
         
@@ -69,7 +70,7 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
                     DeprecationWarning,
                     stacklevel=2,
                 )
-                # Migrate extra fields to params
+                # Migrate extra fields to params as EmptyParams
                 values["params"] = EmptyParams(**extra_fields)
                 # Remove extra fields from top level
                 for k in extra_fields:
