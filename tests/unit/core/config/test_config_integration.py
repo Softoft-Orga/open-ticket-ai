@@ -17,8 +17,11 @@ open_ticket_ai:
       use: some.class
   orchestrator:
     runners:
-      - run_every_milli_seconds: 5000
-        pipe:
+      - "on":
+          - use: open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger
+            params:
+              milliseconds: 5000
+        run:
           id: test-pipe
     """
     config_path = tmp_path / "config.yml"

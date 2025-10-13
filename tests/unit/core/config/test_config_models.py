@@ -17,13 +17,17 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
             - plugin_a
           services:
             - id: def-1
-              value: 42
+              params:
+                value: 42
           orchestrator:
             runners:
-                - run_every_milli_seconds: 5000
-                  pipe:
+                - "on":
+                    - use: open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger
+                      params:
+                        milliseconds: 5000
+                  run:
                     id: orchestrator-step
-                    type: some.pipe
+                    use: some.pipe
                 
 
         """.strip(),
@@ -36,7 +40,7 @@ def test_load_config_parses_expected_structure(tmp_path: Path) -> None:
     assert isinstance(config, RawOpenTicketAIConfig)
     assert config.plugins == ["plugin_a"]
     assert config.services[0].id == "def-1"
-    assert dict(config.services[0])["value"] == 42
+    assert config.services[0].params["value"] == 42
 
 
 def test_load_config_missing_root_key(tmp_path: Path) -> None:

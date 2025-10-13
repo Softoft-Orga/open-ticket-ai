@@ -11,7 +11,7 @@ from open_ticket_ai.core.config.config_loader import ConfigLoader
 
 def test_config_loader_uses_app_config_env_var(tmp_path: Path) -> None:
     config_content = """
-open_ticket_ai:
+custom_root:
   plugins: []
   infrastructure:
     logging:

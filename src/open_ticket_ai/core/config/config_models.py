@@ -66,6 +66,7 @@ class LoggingDictConfig(BaseModel):
 class InfrastructureConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
+    default_template_renderer: str | None = None
     template_renderer_config: JinjaRendererConfig = Field(
         default_factory=JinjaRendererConfig,
         description="(Deprecated) in future versions will be set through the services section",
