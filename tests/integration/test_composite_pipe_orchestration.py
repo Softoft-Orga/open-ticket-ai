@@ -67,6 +67,7 @@ def app_config() -> AppConfig:
 @pytest.fixture
 def mocked_ticket_system() -> MockedTicketSystem:
     system = MockedTicketSystem({})
+
     system.add_test_ticket(
         id="TICKET-1",
         subject="Test ticket 1",
@@ -75,6 +76,7 @@ def mocked_ticket_system() -> MockedTicketSystem:
         priority=UnifiedEntity(id="priority-3", name="Medium"),
         notes=[],
     )
+
     system.add_test_ticket(
         id="TICKET-2",
         subject="Urgent issue",
@@ -83,6 +85,7 @@ def mocked_ticket_system() -> MockedTicketSystem:
         priority=UnifiedEntity(id="priority-5", name="High"),
         notes=[],
     )
+
     return system
 
 
@@ -166,6 +169,7 @@ async def test_composite_pipe_error_propagation(logger_factory: LoggerFactory) -
             ticket_id="NONEXISTENT-999", updated_ticket=UnifiedTicket(priority=UnifiedEntity(id="priority-5", name="High"))
         ),
     )
+
     update_pipe = UpdateTicketPipe(mock_system, update_pipe_config, logger_factory)
 
     class SimpleFactory:

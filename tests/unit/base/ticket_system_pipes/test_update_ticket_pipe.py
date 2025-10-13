@@ -32,6 +32,7 @@ async def test_update_ticket_updates_subject(
 
     # Verify ticket was updated
     ticket = await mocked_ticket_system.get_ticket("TICKET-1")
+    assert ticket is not None
     assert ticket.subject == "Updated Subject"
     assert ticket.body == "This is the first test ticket"  # Other fields unchanged
 
@@ -64,8 +65,10 @@ async def test_update_ticket_updates_multiple_fields(
 
     # Verify both fields were updated
     ticket = await mocked_ticket_system.get_ticket("TICKET-2")
+    assert ticket is not None
     assert ticket.subject == "New Subject"
     assert ticket.body == "New body text"
+    assert ticket.queue is not None
     assert ticket.queue.name == "Development"  # Queue unchanged
 
 

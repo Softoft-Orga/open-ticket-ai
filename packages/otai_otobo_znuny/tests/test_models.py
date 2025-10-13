@@ -119,6 +119,7 @@ class TestTicketAdapter:
 
         notes = adapter.notes
 
+        assert notes is not None
         assert len(notes) == 3
         assert all(isinstance(note, UnifiedNote) for note in notes)
         assert notes[0].body == "First article body"

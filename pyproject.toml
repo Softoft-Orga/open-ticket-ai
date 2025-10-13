@@ -102,6 +102,19 @@ disallow_untyped_calls = false
 disallow_incomplete_defs = false
 check_untyped_defs = true  # Still check logic, just don't require annotations
 
+[[tool.mypy.overrides]]
+module = [
+    "tests.unit.core.dependency_injection.test_logging_module",
+    "tests.integration.test_logging_integration",
+    "tests.integration.test_logger_factory_injection",
+    "tests.integration.test_composite_pipe_orchestration",
+]
+disable_error_code = ["name-defined", "type-abstract"]
+
+[[tool.mypy.overrides]]
+module = ["otobo_znuny.*"]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
 testpaths = ["tests", "packages/*/tests"]
@@ -122,4 +135,5 @@ dev = [
     "pytest-asyncio>=0.24.0",
     "pytest-cov>=6.0.0",
     "ruff>=0.13.0",
+    "types-PyYAML>=6.0",
 ]

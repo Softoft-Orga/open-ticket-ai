@@ -46,7 +46,7 @@ class RunnerParams(BaseModel):
 class RunnerDefinition(BaseModel):
     id: str | None = None
     on: list[TriggerDefinition[EmptyTriggerDefinitionParams]]
-    run: PipeConfig
+    run: PipeConfig[Any]
     params: RunnerParams = Field(default_factory=RunnerParams)
 
     model_config = ConfigDict(populate_by_name=True)
