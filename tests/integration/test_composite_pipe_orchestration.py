@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from pydantic import BaseModel
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.base.pipes.composite_pipe import CompositeParams, CompositePipe, CompositePipeConfig
@@ -37,6 +38,10 @@ from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 JINJA_PIPE_USE = "open_ticket_ai.base.pipes.jinja_expression_pipe:JinjaExpressionPipe"
 COMPOSITE_PIPE_USE = "open_ticket_ai.base.pipes.composite_pipe:CompositePipe"
+
+
+class Empty(BaseModel):
+    pass
 
 
 def create_jinja_step(step_id: str, expression: str, **kwargs) -> ExpressionPipeConfig:
@@ -91,12 +96,12 @@ def mocked_ticket_system() -> MockedTicketSystem:
 
 @pytest.fixture
 def renderable_factory(
-    logger_factory: LoggerFactory,
-    template_renderer: JinjaRenderer,
-    app_config: AppConfig,
+        logger_factory: LoggerFactory,
+        template_renderer: JinjaRenderer,
+        app_config: AppConfig,
 ) -> RenderableFactory:
-    ticket_system_config = RenderableConfig(
-        id="mock_ticket_system", use="tests.unit.mocked_ticket_system:MockedTicketSystem", params={}
+    ticket_system_config = RenderableConfig[Empty](
+        id="mock_ticket_system", use="tests.unit.mocked_ticket_system:MockedTicketSystem", params=Empty()
     )
     return RenderableFactory(
         template_renderer=template_renderer,
@@ -173,11 +178,14 @@ async def test_composite_pipe_error_propagation(logger_factory: LoggerFactory) -
 
     update_pipe = UpdateTicketPipe(mock_system, update_pipe_config, logger_factory)
 
-    class SimpleFactory:
+    class SimpleFactory(RenderableFactory):
         def create_pipe(self, config: PipeConfig, context: PipeContext):
             return update_pipe if config.id == "step1" else None
 
-    composite_pipe = CompositePipe(create_composite("composite", [update_pipe_config]), SimpleFactory(), logger_factory)
+    composite_pipe = CompositePipe(
+        create_composite("composite", [update_pipe_config]),
+        SimpleFactory(),
+        logger_factory)
     result_ctx = await composite_pipe.process(PipeContext())
 
     assert not result_ctx.pipes["step1"].success and result_ctx.pipes["step1"].failed
@@ -236,7 +244,7 @@ async def test_realistic_multi_step_pipeline(logger_factory: LoggerFactory) -> N
         "add_note": AddNotePipe(mock_system, configs[2], logger_factory),
     }
 
-    class SimpleFactory:
+    class SimpleFactory(RenderableFactory):
         def create_pipe(self, config: PipeConfig, context: PipeContext):
             return pipes.get(config.id)
 
@@ -244,7 +252,8 @@ async def test_realistic_multi_step_pipeline(logger_factory: LoggerFactory) -> N
     result_ctx = await composite.process(PipeContext())
 
     assert (
-        result_ctx.pipes["fetch_tickets"].success and len(result_ctx.pipes["fetch_tickets"].data.fetched_tickets) == 2
+            result_ctx.pipes["fetch_tickets"].success and len(
+        result_ctx.pipes["fetch_tickets"].data.fetched_tickets) == 2
     )
     assert result_ctx.pipes["update_ticket"].success and result_ctx.pipes["update_ticket"].data.ticket_updated
     assert result_ctx.pipes["add_note"].success and result_ctx.pipes["add_note"].data.note_added

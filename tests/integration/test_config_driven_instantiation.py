@@ -184,7 +184,7 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    injector = Injector([AppModule(config_path), LoggingModule()])
+    injector = Injector([AppModule(config_path)])
 
     config = injector.get(RawOpenTicketAIConfig)
     assert config is not None
@@ -338,7 +338,7 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    injector = Injector([AppModule(config_path), LoggingModule()])
+    injector = Injector([AppModule(config_path)])
     renderable_factory = injector.get(RenderableFactory)
 
     assert renderable_factory is not None

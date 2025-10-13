@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import os
 
+from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.template_rendering import JinjaRenderer, JinjaRendererConfig, TemplateRendererEnvConfig
+from open_ticket_ai.core.template_rendering import JinjaRendererConfig, TemplateRendererEnvConfig
 
 
 def test_jinja_renderer_backward_compatibility_default_params(logger_factory: LoggerFactory):

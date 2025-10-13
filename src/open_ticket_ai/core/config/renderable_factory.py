@@ -38,7 +38,7 @@ class RenderableFactory:
         self,
         template_renderer: TemplateRenderer,
         app_config: AppConfig,
-        registerable_configs: list[RenderableConfig[EmptyParams]],
+        registerable_configs: list[RenderableConfig[BaseModel]],
         logger_factory: LoggerFactory,
     ):
         self._logger = logger_factory.get_logger(self.__class__.__name__)

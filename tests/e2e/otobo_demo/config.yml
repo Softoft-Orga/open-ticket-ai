@@ -7,18 +7,21 @@ open_ticket_ai:
       formatters: { std: { format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s" } }
       root: { level: DEBUG, handlers: [ console ] }
     template_renderer_config:
-      id: "jinja_default"
+
+  services:
+    - id: "jinja_default"
       use: "open_ticket_ai.core.template_rendering:JinjaRenderer"
       params:
         env_config:
           prefix: "OTAI_"
         autoescape: false
-  services:
+
     - id: "otobo_znuny"
       use: "otai_otobo_znuny:OTOBOZnunyTicketSystemService"
       params:
         base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
         password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
+
   orchestrator:
     defaults:
       template_renderer: "jinja_template_renderer"
@@ -47,11 +50,15 @@ open_ticket_ai:
             error_queue_name: "OpenTicketAI::Error"
             low_confidence_priority_name: "medium"
           steps:
+            # ===== FETCHING TICKET BY QUEUE =========
             - id: ticket_fetcher
               use: "open_ticket_ai.base:FetchTicketsPipe"
               injects: { ticket_system: "otobo_znuny" }
               params:
                 search_criteria: "{{ parent.params.ticket_search_criteria }}"
+
+            # ===== QUEUE CLASSIFICATION =========
+
             - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
               id: queue_classification
               params:
@@ -111,6 +118,9 @@ open_ticket_ai:
                   params:
                     ticket_id: "{{ params.ticket.id }}"
                     note: "{{ params.error_note }}"
+
+            # ===== PRIORITY CLASSIFICATION =========
+
             - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
               id: priority_classification
               params:
