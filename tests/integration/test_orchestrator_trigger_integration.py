@@ -10,7 +10,6 @@ import asyncio
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from injector import Injector
 
 from open_ticket_ai.base.triggers.interval_trigger import IntervalTrigger, IntervalTriggerParams
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
@@ -25,8 +24,6 @@ from open_ticket_ai.core.orchestration.scheduled_runner import PipeRunner
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
-
-
 
 
 @pytest.mark.asyncio
@@ -149,7 +146,6 @@ async def test_orchestrator_starts_and_triggers_fire(logger_factory: LoggerFacto
 @pytest.mark.asyncio
 async def test_orchestrator_with_multiple_triggers() -> None:
     """Test Orchestrator with multiple triggers attached to different runners."""
-
 
     orchestrator_config = OrchestratorConfig(
         runners=[
