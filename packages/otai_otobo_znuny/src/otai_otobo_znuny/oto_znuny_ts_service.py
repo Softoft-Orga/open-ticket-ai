@@ -18,8 +18,11 @@ from otobo_znuny.domain_models.ticket_models import (  # type: ignore[import-unt
     TicketUpdate,
 )
 from otobo_znuny.mappers import _to_id_name  # type: ignore[import-untyped]
-from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import otobo_ticket_to_unified_ticket, \
-    unified_entity_to_id_name, RenderedOTOBOZnunyTicketsystemServiceConfig
+from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
+    RenderedOTOBOZnunyTicketsystemServiceConfig,
+    otobo_ticket_to_unified_ticket,
+    unified_entity_to_id_name,
+)
 
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):

@@ -183,8 +183,6 @@ class CLI:
     def _plugin_list_stub(self) -> None:
         self.__not_yet_implemented_warning()
 
-
-
     def _plugin_install_stub(
         self,
         package_name: str = typer.Argument(..., help="Plugin package name to install"),
@@ -205,11 +203,11 @@ class CLI:
     ) -> None:
         self.__not_yet_implemented_warning()
 
-
     def __not_yet_implemented_warning(self) -> None:
         self.console.print("[yellow]⚠️  This feature is not yet implemented[/yellow]")
         self.console.print("This feature will be available in a future version.")
         raise NotImplementedError("This command will be implemented in a future version")
+
 
 app = CLI().app
 

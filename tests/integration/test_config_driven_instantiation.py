@@ -85,7 +85,6 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-
     config = injector.get(RawOpenTicketAIConfig)
     assert config.services is not None
     assert len(config.services) == 1
@@ -131,7 +130,6 @@ open_ticket_ai:
     """
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
-
 
     orchestrator_config = injector.get(OrchestratorConfig)
     assert orchestrator_config is not None
