@@ -184,21 +184,4 @@ TicketSystemService --> TicketSearchCriteria : uses
 UnifiedTicket --> UnifiedEntity : contains
 UnifiedTicket --> UnifiedNote : contains
 
-note right of Pipe
-  Abstract base class for all
-  pipeline processing units.
-  Implements template method pattern.
-end note
-
-note right of Orchestrator
-  Coordinates pipeline execution
-  using Observer pattern with
-  triggers and runners.
-end note
-
-note right of TicketSystemService
-  Abstract adapter interface for
-  ticket systems (OTOBO, Znuny, etc.)
-end note
-
 @enduml

@@ -11,6 +11,7 @@ class Renderable:
 
 
 class EmptyParams(BaseModel):
+    model_config = ConfigDict(extra="allow")
     pass
 
 

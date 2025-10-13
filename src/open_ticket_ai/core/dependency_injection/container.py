@@ -1,6 +1,5 @@
 import os
 from logging.config import dictConfig
-from typing import Any
 
 from injector import Binder, Module, multiprovider, provider, singleton
 
@@ -50,5 +49,5 @@ class AppModule(Module):
         return config.orchestrator
 
     @multiprovider
-    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RenderableConfig[Any]]:
+    def provide_registerable_configs(self, config: RawOpenTicketAIConfig) -> list[RenderableConfig[EmptyParams]]:
         return config.services

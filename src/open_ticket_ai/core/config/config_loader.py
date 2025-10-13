@@ -50,11 +50,7 @@ class ConfigLoader:
             if yaml_content is None or self.app_config.config_yaml_root_key not in yaml_content:
                 raise ValueError(f"Config file must contain '{self.app_config.config_yaml_root_key}' root key")
             config_dict = yaml_content[self.app_config.config_yaml_root_key]
-            try:
-                raw_otai_config = RawOpenTicketAIConfig.model_validate(config_dict)
-            except ValidationError as e:
-                self._logger.exception(f"Validation error while Loading config from {config_path}")
-                raise ValidationError(e) from e
+            raw_otai_config = RawOpenTicketAIConfig.model_validate(config_dict)
         self._logger.info(f"Loaded config from {config_path}")
         return raw_otai_config
 

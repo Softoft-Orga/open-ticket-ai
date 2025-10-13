@@ -331,7 +331,7 @@ The `RenderableFactory` resolves these dependencies by:
 
 ## Related Documentation
 
-- [Pipeline System](./pipeline.md) - How pipelines use rendered configurations
+- [Pipeline System](pipeline.md) - How pipelines use rendered configurations
 - [Template Rendering Code Details](../code/template_rendering.md) - Code-level documentation
 - [Configuration Structure](../configuration/config_structure.md) - YAML configuration reference
 - [Environment Variables](../configuration/environment_variables.md) - Environment variable usage

@@ -7,6 +7,9 @@ from pydantic import BaseModel, ConfigDict, Field
 from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 
+class EmptyTriggerDefinitionParams(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
 
 class TriggerDefinition[TriggerDefinitionParamsT: BaseModel](RenderableConfig[TriggerDefinitionParamsT]):
     pass
@@ -41,8 +44,8 @@ class RunnerParams(BaseModel):
 
 class RunnerDefinition(BaseModel):
     id: str | None = None
-    on: list[TriggerDefinition[Any]]
-    run: PipeConfig[Any]
+    on: list[TriggerDefinition[EmptyTriggerDefinitionParams]]
+    run: PipeConfig
     params: RunnerParams = Field(default_factory=RunnerParams)
 
     model_config = ConfigDict(populate_by_name=True)
