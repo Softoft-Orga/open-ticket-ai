@@ -1,4 +1,5 @@
 from __future__ import annotations
+from open_ticket_ai.core.logging_iface import LoggerFactory
 
 import pytest
 
@@ -16,6 +17,7 @@ from tests.unit.mocked_ticket_system import MockedTicketSystem
 async def test_update_ticket_updates_subject(
     empty_pipeline_context: PipeContext,
     mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test that UpdateTicketPipe successfully updates ticket subject."""
     config = UpdateTicketPipeConfig(
@@ -27,7 +29,7 @@ async def test_update_ticket_updates_subject(
         ),
     )
 
-    pipe = UpdateTicketPipe(mocked_ticket_system, config)
+    pipe = UpdateTicketPipe(mocked_ticket_system, config, logger_factory)
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify ticket was updated
@@ -46,6 +48,7 @@ async def test_update_ticket_updates_subject(
 async def test_update_ticket_updates_multiple_fields(
     empty_pipeline_context: PipeContext,
     mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test that UpdateTicketPipe can update multiple fields."""
     config = UpdateTicketPipeConfig(
@@ -60,7 +63,7 @@ async def test_update_ticket_updates_multiple_fields(
         ),
     )
 
-    pipe = UpdateTicketPipe(mocked_ticket_system, config)
+    pipe = UpdateTicketPipe(mocked_ticket_system, config, logger_factory)
     await pipe.process(empty_pipeline_context)
 
     # Verify both fields were updated
@@ -76,6 +79,7 @@ async def test_update_ticket_updates_multiple_fields(
 async def test_update_ticket_handles_nonexistent_ticket(
     empty_pipeline_context: PipeContext,
     empty_mocked_ticket_system: MockedTicketSystem,
+    logger_factory: LoggerFactory,
 ) -> None:
     """Test that pipe handles updating a nonexistent ticket."""
     config = UpdateTicketPipeConfig(
@@ -87,7 +91,7 @@ async def test_update_ticket_handles_nonexistent_ticket(
         ),
     )
 
-    pipe = UpdateTicketPipe(empty_mocked_ticket_system, config)
+    pipe = UpdateTicketPipe(empty_mocked_ticket_system, config, logger_factory)
     result_context = await pipe.process(empty_pipeline_context)
 
     # Pipe should return failed result
