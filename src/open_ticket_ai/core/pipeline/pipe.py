@@ -5,8 +5,6 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLogger
-
 from ..config.renderable import Renderable
 from ..logging_iface import LoggerFactory
 from .pipe_config import PipeConfig, PipeResult

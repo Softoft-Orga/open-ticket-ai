@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.core.config.renderable import RenderableConfig, EmptyParams
+from open_ticket_ai.core.config.renderable import EmptyParams, RenderableConfig
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
 
 LogLevel = Literal["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]

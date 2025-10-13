@@ -10,7 +10,6 @@ from pydantic import BaseModel
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.renderable import EmptyParams, Renderable, RenderableConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.orchestration.trigger import Trigger
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
@@ -27,9 +26,7 @@ def _locate(use: str) -> type:
     return typing.cast(type, locate(use))
 
 
-def render_base_model[T: BaseModel](
-    config: T, scope: PipeContext, renderer: TemplateRenderer
-) -> T | dict[str, Any]:
+def render_base_model[T: BaseModel](config: T, scope: PipeContext, renderer: TemplateRenderer) -> T | dict[str, Any]:
     rendered_dict = renderer.render_recursive(config.model_dump(), scope)
     return type(config)(**rendered_dict)
 

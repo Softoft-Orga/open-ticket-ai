@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-from injector import Injector
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.base.pipes.composite_pipe import CompositeParams, CompositePipe, CompositePipeConfig

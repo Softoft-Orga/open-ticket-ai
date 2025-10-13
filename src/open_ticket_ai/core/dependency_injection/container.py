@@ -38,7 +38,6 @@ class AppModule(Module):
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
         binder.bind(RenderableFactory, scope=singleton)
 
-
     @provider
     def _create_renderer_from_service(self, config: RawOpenTicketAIConfig) -> TemplateRenderer:
         service_id = config.infrastructure.default_template_renderer

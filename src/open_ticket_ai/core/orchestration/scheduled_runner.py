@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import RunnerDefinition
 from open_ticket_ai.core.pipeline.pipe import Pipe

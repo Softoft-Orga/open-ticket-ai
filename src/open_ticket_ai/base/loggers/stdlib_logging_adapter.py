@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from logging.config import dictConfig
 import logging
+from logging.config import dictConfig
 from typing import Any
 
 from open_ticket_ai.core.config.config_models import LoggingDictConfig
@@ -46,8 +46,6 @@ class StdlibLoggerFactory(LoggerFactory):
         return StdlibLogger(logger, context)
 
 
-def create_logger_factory(
-    logging_config: LoggingDictConfig
-) -> LoggerFactory:
+def create_logger_factory(logging_config: LoggingDictConfig) -> LoggerFactory:
     dictConfig(logging_config.model_dump())
     return StdlibLoggerFactory()
