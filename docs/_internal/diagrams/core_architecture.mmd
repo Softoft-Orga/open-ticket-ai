@@ -1,0 +1,213 @@
+%%{init: {
+  "classDiagram": { "layout": "elk", "useMaxWidth": false },
+  "elk": { "spacing": { "nodeNode": 30, "nodeNodeBetweenLayers": 30, "componentComponent": 20 } }
+}}%%
+classDiagram
+direction TB
+
+%% ==================== Core Pipeline Classes ====================
+class Pipe {
+  <<abstract>>
+  +config: PipeConfig
+  +process(ctx: PipeContext) PipeContext
+  #_process()* PipeResult
+  +have_dependent_pipes_been_run(ctx) bool
+}
+
+class CompositePipe {
+  +_factory: RenderableFactory
+  +_process_steps(ctx) list~PipeResult~
+  +_build_pipe_from_step_config(cfg, ctx) Pipe
+  +process(ctx) PipeContext
+}
+
+class PipeConfig {
+  +id: str
+  +use: str
+  +params: BaseModel
+  +if_: str | bool
+  +depends_on: list~str~
+  +steps: list~PipeConfig~
+  +should_run: bool
+}
+
+class PipeContext {
+  +pipes: dict~str, PipeResult~
+  +params: dict
+  +has_succeeded(id: str) bool
+}
+
+class PipeResult {
+  +success: bool
+  +failed: bool
+  +message: str
+  +data: BaseModel
+  +union(results) PipeResult
+}
+
+%% ==================== Factory & Rendering ====================
+class RenderableFactory {
+  +create_pipe(cfg, scope) Pipe
+  +create_trigger(def, scope) Trigger
+  -__create_renderable_instance(cfg, scope) Renderable
+}
+
+class TemplateRenderer {
+  <<abstract>>
+  +render(template: str, ctx: dict) Any
+  +render_recursive(obj, scope) Any
+}
+
+class Renderable {
+  <<interface>>
+}
+
+class RenderableConfig {
+  +uid: str
+  +id: str
+  +use: str
+  +injects: dict~str, str~
+  +params: BaseModel
+}
+
+%% ==================== Orchestration ====================
+class Orchestrator {
+  -_pipe_factory: RenderableFactory
+  -_config: OrchestratorConfig
+  -_trigger_registry: dict~str, Trigger~
+  -_runners: dict~str, PipeRunner~
+  +start() void
+  -_instantiate_trigger(def) Trigger
+}
+
+class PipeRunner {
+  +definition: RunnerDefinition
+  +pipe_factory: RenderableFactory
+  +execute() void
+  +on_trigger_fired() void
+}
+
+class RunnerDefinition {
+  +id: str
+  +on: list~TriggerDefinition~
+  +run: PipeConfig
+  +params: RunnerParams
+  +pipe_id: str
+}
+
+class OrchestratorConfig {
+  +defaults: dict
+  +runners: list~RunnerDefinition~
+}
+
+class TriggerDefinition {
+  <<config>>
+}
+
+class Trigger {
+  <<abstract>>
+  +attach(observer: PipeRunner) void
+  +notify() void
+  +start() void
+}
+
+%% ==================== Ticket System Integration ====================
+class TicketSystemService {
+  <<abstract>>
+  +update_ticket(id, updates)* bool
+  +find_tickets(criteria)* list~UnifiedTicket~
+  +find_first_ticket(criteria)* UnifiedTicket
+  +add_note(id, note)* bool
+}
+
+class UnifiedTicket {
+  +id: str
+  +subject: str
+  +queue: UnifiedEntity
+  +priority: UnifiedEntity
+  +body: str
+  +notes: list~UnifiedNote~
+}
+
+class UnifiedNote {
+  +id: str
+  +subject: str
+  +body: str
+}
+
+class UnifiedEntity {
+  +id: str
+  +name: str
+}
+
+class TicketSearchCriteria {
+  +queue: UnifiedEntity
+  +limit: int
+  +offset: int
+}
+
+%% ==================== Base Pipes ====================
+class UpdateTicketPipe {
+  +ticket_system: TicketSystemService
+  +pipe_config: UpdateTicketPipeConfig
+  +_process() PipeResult
+}
+
+class FetchTicketsPipe {
+  +ticket_system: TicketSystemService
+  +_process() PipeResult
+}
+
+class AddNotePipe {
+  +ticket_system: TicketSystemService
+  +_process() PipeResult
+}
+
+%% ==================== Relationships ====================
+
+%% Core Pipeline Relationships
+CompositePipe --|> Pipe : extends
+UpdateTicketPipe --|> Pipe : extends
+FetchTicketsPipe --|> Pipe : extends
+AddNotePipe --|> Pipe : extends
+
+Pipe ..|> Renderable : implements
+Pipe --> PipeConfig : configured by
+Pipe --> PipeContext : receives & updates
+Pipe --> PipeResult : produces
+PipeContext --> PipeResult : stores by id
+CompositePipe --> RenderableFactory : uses
+
+%% Config Relationships
+PipeConfig --|> RenderableConfig : extends
+RenderableConfig ..|> Renderable : configures
+
+%% Factory & Rendering
+RenderableFactory --> Pipe : instantiates
+RenderableFactory --> TemplateRenderer : renders with
+RenderableFactory --> Trigger : creates
+
+%% Orchestration
+Orchestrator --> OrchestratorConfig : configured by
+Orchestrator --> PipeRunner : manages
+Orchestrator --> RenderableFactory : uses
+Orchestrator --> Trigger : instantiates
+PipeRunner --> RunnerDefinition : configured by
+PipeRunner --> RenderableFactory : creates pipes with
+RunnerDefinition --> PipeConfig : defines pipeline
+RunnerDefinition --> TriggerDefinition : triggered by
+Trigger --> PipeRunner : notifies
+
+%% Ticket System
+TicketSystemService ..|> Renderable : implements
+UpdateTicketPipe --> TicketSystemService : uses
+FetchTicketsPipe --> TicketSystemService : uses
+AddNotePipe --> TicketSystemService : uses
+TicketSystemService --> UnifiedTicket : works with
+TicketSystemService --> UnifiedNote : works with
+TicketSystemService --> TicketSearchCriteria : uses
+UnifiedTicket --> UnifiedEntity : contains
+UnifiedTicket --> UnifiedNote : contains
+
+%% Styling
+class Pipe,TicketSystemService,Trigger,Renderable cssClass abstractClass
