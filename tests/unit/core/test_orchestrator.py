@@ -319,3 +319,160 @@ def test_orchestrator_config_with_defaults_multiple_runners() -> None:
     assert config.runners[0].run.use == "some.default:Pipe"
     assert config.runners[1].run.params["runner_key"] == "runner_value"
     assert config.runners[1].params.timeout == "30s"
+
+
+def test_trigger_definition_auto_sets_id_from_uid_when_missing() -> None:
+    raw = {
+        "runners": [
+            {
+                "on": [
+                    {
+                        "use": "open_ticket_ai.core.orchestration.triggers.interval_trigger:IntervalTrigger",
+                        "params": {"seconds": 1},
+                    }
+                ],
+                "run": {"id": "demo"},
+            }
+        ]
+    }
+
+    config = OrchestratorConfig.model_validate(raw)
+    trigger = config.runners[0].on[0]
+
+    assert trigger.id is not None
+    assert trigger.id == trigger.uid
+
+
+def test_trigger_definition_auto_sets_id_from_uid_when_explicitly_none() -> None:
+    raw = {
+        "runners": [
+            {
+                "on": [
+                    {
+                        "id": None,
+                        "use": "open_ticket_ai.core.orchestration.triggers.interval_trigger:IntervalTrigger",
+                        "params": {"seconds": 1},
+                    }
+                ],
+                "run": {"id": "demo"},
+            }
+        ]
+    }
+
+    config = OrchestratorConfig.model_validate(raw)
+    trigger = config.runners[0].on[0]
+
+    assert trigger.id is not None
+    assert trigger.id == trigger.uid
+
+
+def test_trigger_definition_preserves_explicit_id() -> None:
+    raw = {
+        "runners": [
+            {
+                "on": [
+                    {
+                        "id": "my-custom-trigger-id",
+                        "use": "open_ticket_ai.core.orchestration.triggers.interval_trigger:IntervalTrigger",
+                        "params": {"seconds": 1},
+                    }
+                ],
+                "run": {"id": "demo"},
+            }
+        ]
+    }
+
+    config = OrchestratorConfig.model_validate(raw)
+    trigger = config.runners[0].on[0]
+
+    assert trigger.id == "my-custom-trigger-id"
+    assert trigger.id != trigger.uid
+
+
+def test_multiple_triggers_without_id_have_unique_ids() -> None:
+    raw = {
+        "runners": [
+            {
+                "on": [
+                    {
+                        "use": "open_ticket_ai.core.orchestration.triggers.interval_trigger:IntervalTrigger",
+                        "params": {"seconds": 1},
+                    },
+                    {
+                        "use": "open_ticket_ai.core.orchestration.triggers.interval_trigger:IntervalTrigger",
+                        "params": {"seconds": 2},
+                    },
+                ],
+                "run": {"id": "demo"},
+            }
+        ]
+    }
+
+    config = OrchestratorConfig.model_validate(raw)
+    trigger1 = config.runners[0].on[0]
+    trigger2 = config.runners[0].on[1]
+
+    assert trigger1.id is not None
+    assert trigger2.id is not None
+    assert trigger1.id != trigger2.id
+    assert trigger1.id == trigger1.uid
+    assert trigger2.id == trigger2.uid
+
+
+def test_orchestrator_registry_uses_trigger_ids_correctly() -> None:
+    orchestrator_config = OrchestratorConfig.model_validate(
+        {
+            "runners": [
+                {
+                    "on": [
+                        {
+                            "use": "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger",
+                            "params": {"seconds": 1},
+                        }
+                    ],
+                    "run": {"id": "demo"},
+                }
+            ]
+        }
+    )
+    
+    trigger_def = orchestrator_config.runners[0].on[0]
+    assert trigger_def.id is not None
+    assert trigger_def.id == trigger_def.uid
+
+
+def test_orchestrator_reuses_trigger_with_same_id_across_runners() -> None:
+    shared_trigger_id = "shared-interval-trigger"
+    orchestrator_config = OrchestratorConfig.model_validate(
+        {
+            "runners": [
+                {
+                    "on": [
+                        {
+                            "id": shared_trigger_id,
+                            "use": "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger",
+                            "params": {"seconds": 1},
+                        }
+                    ],
+                    "run": {"id": "demo1"},
+                },
+                {
+                    "on": [
+                        {
+                            "id": shared_trigger_id,
+                            "use": "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger",
+                            "params": {"seconds": 1},
+                        }
+                    ],
+                    "run": {"id": "demo2"},
+                },
+            ]
+        }
+    )
+    
+    trigger1 = orchestrator_config.runners[0].on[0]
+    trigger2 = orchestrator_config.runners[1].on[0]
+    
+    assert trigger1.id == shared_trigger_id
+    assert trigger2.id == shared_trigger_id
+    assert trigger1.id == trigger2.id
