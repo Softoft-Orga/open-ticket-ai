@@ -18,7 +18,7 @@ from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
 
 
-def test_config_loading_and_service_registration(tmp_path: Path) -> None:
+def test_config_loading_and_service_registration(tmp_path: Path, logger_factory: LoggerFactory) -> None:
     """Test that config loading registers services correctly."""
     config_content = """
 open_ticket_ai:
@@ -47,7 +47,7 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    config_loader = ConfigLoader(AppConfig())
+    config_loader = ConfigLoader(AppConfig(), logger_factory)
     config = config_loader.load_config(config_path)
 
     assert config.services is not None
@@ -84,6 +84,8 @@ open_ticket_ai:
     """
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
+
+    injector = Injector([AppModule(config_path)])
 
     config = injector.get(RawOpenTicketAIConfig)
     assert config.services is not None
@@ -130,6 +132,8 @@ open_ticket_ai:
     """
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
+
+    injector = Injector([AppModule(config_path)])
 
     orchestrator_config = injector.get(OrchestratorConfig)
     assert orchestrator_config is not None
@@ -184,7 +188,7 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    injector = Injector([AppModule(config_path), LoggingModule()])
+    injector = Injector([AppModule(config_path)])
 
     config = injector.get(RawOpenTicketAIConfig)
     assert config is not None
@@ -338,7 +342,7 @@ open_ticket_ai:
     config_path = tmp_path / "config.yml"
     config_path.write_text(config_content.strip(), encoding="utf-8")
 
-    injector = Injector([AppModule(config_path), LoggingModule()])
+    injector = Injector([AppModule(config_path)])
     renderable_factory = injector.get(RenderableFactory)
 
     assert renderable_factory is not None
