@@ -154,7 +154,7 @@ def test_stdlib_logger_exception(caplog) -> None:
 def test_configure_stdlib_logging() -> None:
     """Test that configure_stdlib_logging sets up logging."""
     from open_ticket_ai.core.config.config_models import LoggingDictConfig
-    
+
     create_logger_factory(LoggingDictConfig())
 
     logger = logging.getLogger("test_configure")

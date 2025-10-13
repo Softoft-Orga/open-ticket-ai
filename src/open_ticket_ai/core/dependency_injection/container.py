@@ -33,6 +33,7 @@ class AppModule(Module):
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
         # Create a temporary logger factory for config loading
         from open_ticket_ai.core.config.config_models import LoggingDictConfig
+
         temp_logger_factory = create_logger_factory(LoggingDictConfig())
         config_loader = ConfigLoader(self.app_config, temp_logger_factory)
         config = config_loader.load_config(self.config_path)

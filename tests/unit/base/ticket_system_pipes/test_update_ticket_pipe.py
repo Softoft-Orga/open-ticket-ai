@@ -1,5 +1,4 @@
 from __future__ import annotations
-from open_ticket_ai.core.logging_iface import LoggerFactory
 
 import pytest
 
@@ -8,6 +7,7 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
     UpdateTicketPipe,
     UpdateTicketPipeConfig,
 )
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
 from tests.unit.mocked_ticket_system import MockedTicketSystem
