@@ -8,7 +8,6 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
 )
 from otobo_znuny.mappers import _to_id_name
-
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import RenderedOTOBOZnunyTicketsystemServiceConfig
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.oto_znuny_ts_service import (
     OTOBOZnunyTicketSystemService,

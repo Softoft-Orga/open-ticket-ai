@@ -96,9 +96,9 @@ def mocked_ticket_system() -> MockedTicketSystem:
 
 @pytest.fixture
 def renderable_factory(
-        logger_factory: LoggerFactory,
-        template_renderer: JinjaRenderer,
-        app_config: AppConfig,
+    logger_factory: LoggerFactory,
+    template_renderer: JinjaRenderer,
+    app_config: AppConfig,
 ) -> RenderableFactory:
     ticket_system_config = RenderableConfig[Empty](
         id="mock_ticket_system", use="tests.unit.mocked_ticket_system:MockedTicketSystem", params=Empty()
@@ -182,10 +182,7 @@ async def test_composite_pipe_error_propagation(logger_factory: LoggerFactory) -
         def create_pipe(self, config: PipeConfig, context: PipeContext):
             return update_pipe if config.id == "step1" else None
 
-    composite_pipe = CompositePipe(
-        create_composite("composite", [update_pipe_config]),
-        SimpleFactory(),
-        logger_factory)
+    composite_pipe = CompositePipe(create_composite("composite", [update_pipe_config]), SimpleFactory(), logger_factory)
     result_ctx = await composite_pipe.process(PipeContext())
 
     assert not result_ctx.pipes["step1"].success and result_ctx.pipes["step1"].failed
@@ -252,8 +249,7 @@ async def test_realistic_multi_step_pipeline(logger_factory: LoggerFactory) -> N
     result_ctx = await composite.process(PipeContext())
 
     assert (
-            result_ctx.pipes["fetch_tickets"].success and len(
-        result_ctx.pipes["fetch_tickets"].data.fetched_tickets) == 2
+        result_ctx.pipes["fetch_tickets"].success and len(result_ctx.pipes["fetch_tickets"].data.fetched_tickets) == 2
     )
     assert result_ctx.pipes["update_ticket"].success and result_ctx.pipes["update_ticket"].data.ticket_updated
     assert result_ctx.pipes["add_note"].success and result_ctx.pipes["add_note"].data.note_added
