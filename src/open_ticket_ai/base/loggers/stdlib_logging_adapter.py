@@ -24,20 +24,35 @@ class StdlibLogger(AppLogger):
             return f"{message} [{context_str}]"
         return message
 
-    def debug(self, message: str, **kwargs: Any) -> None:
-        self._logger.debug(self._format_message(message, **kwargs))
+    def debug(self, message: str, *args: Any, **kwargs: Any) -> None:
+        if args:
+            self._logger.debug(message, *args)
+        else:
+            self._logger.debug(self._format_message(message, **kwargs))
 
-    def info(self, message: str, **kwargs: Any) -> None:
-        self._logger.info(self._format_message(message, **kwargs))
+    def info(self, message: str, *args: Any, **kwargs: Any) -> None:
+        if args:
+            self._logger.info(message, *args)
+        else:
+            self._logger.info(self._format_message(message, **kwargs))
 
-    def warning(self, message: str, **kwargs: Any) -> None:
-        self._logger.warning(self._format_message(message, **kwargs))
+    def warning(self, message: str, *args: Any, **kwargs: Any) -> None:
+        if args:
+            self._logger.warning(message, *args)
+        else:
+            self._logger.warning(self._format_message(message, **kwargs))
 
-    def error(self, message: str, **kwargs: Any) -> None:
-        self._logger.error(self._format_message(message, **kwargs))
+    def error(self, message: str, *args: Any, **kwargs: Any) -> None:
+        if args:
+            self._logger.error(message, *args)
+        else:
+            self._logger.error(self._format_message(message, **kwargs))
 
-    def exception(self, message: str, **kwargs: Any) -> None:
-        self._logger.exception(self._format_message(message, **kwargs))
+    def exception(self, message: str, *args: Any, **kwargs: Any) -> None:
+        if args:
+            self._logger.exception(message, *args)
+        else:
+            self._logger.exception(self._format_message(message, **kwargs))
 
 
 class StdlibLoggerFactory(LoggerFactory):
@@ -47,5 +62,6 @@ class StdlibLoggerFactory(LoggerFactory):
 
 
 def create_logger_factory(logging_config: LoggingDictConfig) -> LoggerFactory:
-    dictConfig(logging_config.model_dump())
+    print(logging_config.model_dump_json(indent=2, by_alias=True, exclude_none=True))
+    dictConfig(logging_config.model_dump(by_alias=True, exclude_none=True))
     return StdlibLoggerFactory()

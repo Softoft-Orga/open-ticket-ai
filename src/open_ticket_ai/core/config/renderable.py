@@ -21,7 +21,7 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
     id: str | None = None
     use: str = Field(default="open_ticket_ai.base.CompositePipe")
     injects: dict[str, str] = Field(default_factory=dict)
-    params: ParamsT = Field(default_factory=EmptyParams)  # type: ignore[assignment]
+    params: ParamsT | dict[str, Any] = Field(default_factory=EmptyParams)  # type: ignore[assignment]
 
     @model_validator(mode="after")
     def set_id_from_uid(self) -> Self:

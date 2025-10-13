@@ -23,6 +23,8 @@ class UpdateTicketPipeConfig(PipeConfig[UpdateTicketParams]):
 
 
 class UpdateTicketPipe(Pipe[UpdateTicketParams]):
+    params_class = UpdateTicketParams
+
     def __init__(
         self,
         ticket_system: TicketSystemService,
@@ -33,12 +35,11 @@ class UpdateTicketPipe(Pipe[UpdateTicketParams]):
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.ticket_system = ticket_system
-        self.pipe_config = pipe_config
 
     async def _process(self) -> PipeResult[UpdateTicketPipeResultData]:
         try:
-            ticket_id_str = str(self.pipe_config.params.ticket_id)
-            success = await self.ticket_system.update_ticket(ticket_id_str, self.pipe_config.params.updated_ticket)
+            ticket_id_str = str(self.params.ticket_id)
+            success = await self.ticket_system.update_ticket(ticket_id_str, self.params.updated_ticket)
             if not success:
                 return PipeResult[UpdateTicketPipeResultData](
                     success=False,

@@ -16,15 +16,16 @@ class IntervalTriggerParams(BaseModel):
 
 
 class IntervalTrigger(Trigger[IntervalTriggerParams]):
+    params_class = IntervalTriggerParams
+
     def __init__(self, config: TriggerDefinition[IntervalTriggerParams], *args: Any, **kwargs: Any) -> None:
         super().__init__(config, *args, **kwargs)
-        params = IntervalTriggerParams.model_validate(config.params)
         self.seconds_interval: float = (
-            params.days * 86400
-            + params.hours * 3600
-            + params.minutes * 60
-            + params.seconds
-            + params.milliseconds / 1000
+            self.params.days * 86400
+            + self.params.hours * 3600
+            + self.params.minutes * 60
+            + self.params.seconds
+            + self.params.milliseconds / 1000
         )
         self._task: asyncio.Task[None] | None = None
 

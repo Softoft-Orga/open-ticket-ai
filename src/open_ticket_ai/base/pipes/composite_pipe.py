@@ -8,7 +8,6 @@ from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import CompositePipeResultData, PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
-
 class CompositeParams(BaseModel):
     pass
 
@@ -22,6 +21,8 @@ class CompositePipe(Pipe[CompositeParams]):
     Composite pipe that runs multiple steps. Returns PipeResult from _process, Context from process.
     """
 
+    params_class = CompositeParams
+
     def __init__(
         self,
         pipe_config: CompositePipeConfig,
@@ -31,7 +32,7 @@ class CompositePipe(Pipe[CompositeParams]):
         **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
-        self.pipe_config = pipe_config
+        self.pipe_config = CompositePipeConfig.model_validate(pipe_config.model_dump())
         self._factory = factory
         self._context: PipeContext | None = None
 
