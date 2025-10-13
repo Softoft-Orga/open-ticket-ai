@@ -23,12 +23,12 @@ class CompositePipe(Pipe[CompositeParams]):
     """
 
     def __init__(
-        self,
-        pipe_config: CompositePipeConfig,
-        factory: RenderableFactory | None = None,
-        logger_factory: LoggerFactory | None = None,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            pipe_config: CompositePipeConfig,
+            factory: RenderableFactory | None = None,
+            logger_factory: LoggerFactory | None = None,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.pipe_config = pipe_config

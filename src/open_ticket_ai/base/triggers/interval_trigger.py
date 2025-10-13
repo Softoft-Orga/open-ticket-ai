@@ -20,11 +20,11 @@ class IntervalTrigger(Trigger[IntervalTriggerParams]):
         super().__init__(config, *args, **kwargs)
         params = IntervalTriggerParams.model_validate(config.params)
         self.interval = (
-            params.days * 86400
-            + params.hours * 3600
-            + params.minutes * 60
-            + params.seconds
-            + params.milliseconds / 1000
+                params.days * 86400
+                + params.hours * 3600
+                + params.minutes * 60
+                + params.seconds
+                + params.milliseconds / 1000
         )
         self._task: asyncio.Task[None] | None = None
 

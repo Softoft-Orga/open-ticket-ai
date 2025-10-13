@@ -8,7 +8,7 @@ from injector import inject, singleton
 from pydantic import BaseModel
 
 from open_ticket_ai.core import AppConfig
-from open_ticket_ai.core.config.renderable import Renderable, RenderableConfig
+from open_ticket_ai.core.config.renderable import EmptyParams, Renderable, RenderableConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
@@ -27,7 +27,7 @@ def _locate(use: str) -> type:
 
 
 def render_base_model[T: BaseModel](
-    config: T | dict[str, Any], scope: PipeContext, renderer: TemplateRenderer
+        config: T | dict[str, Any], scope: PipeContext, renderer: TemplateRenderer
 ) -> T | dict[str, Any]:
     if isinstance(config, dict):
         return renderer.render_recursive(config, scope)  # type: ignore[no-any-return]
@@ -39,11 +39,11 @@ def render_base_model[T: BaseModel](
 class RenderableFactory:
     @inject
     def __init__(
-        self,
-        template_renderer: TemplateRenderer,
-        app_config: AppConfig,
-        registerable_configs: list[RenderableConfig[EmptyParams]],
-        logger_factory: LoggerFactory,
+            self,
+            template_renderer: TemplateRenderer,
+            app_config: AppConfig,
+            registerable_configs: list[RenderableConfig[EmptyParams]],
+            logger_factory: LoggerFactory,
     ):
         self._logger = logger_factory.get_logger(self.__class__.__name__)
         self._template_renderer = template_renderer
@@ -71,7 +71,7 @@ class RenderableFactory:
         return self.__create_renderable_instance(trigger_config_raw, scope)
 
     def __create_service_instance(
-        self, registerable_config_raw: RenderableConfig[Any], scope: PipeContext
+            self, registerable_config_raw: RenderableConfig[Any], scope: PipeContext
     ) -> Renderable:
         rendered_config = render_base_model(registerable_config_raw, scope, self._template_renderer)
         if not isinstance(rendered_config, RenderableConfig):
@@ -79,7 +79,7 @@ class RenderableFactory:
         return self.__create_renderable_instance(rendered_config, scope)
 
     def __create_renderable_instance(
-        self, registerable_config: RenderableConfig[Any], scope: PipeContext
+            self, registerable_config: RenderableConfig[Any], scope: PipeContext
     ) -> Renderable:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):

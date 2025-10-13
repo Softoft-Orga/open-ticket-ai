@@ -9,7 +9,7 @@ from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
-from open_ticket_ai.core.config.renderable import RenderableConfig
+from open_ticket_ai.core.config.renderable import EmptyParams, RenderableConfig
 from open_ticket_ai.core.config.renderable_factory import RenderableFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig

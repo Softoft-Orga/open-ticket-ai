@@ -9,6 +9,7 @@ Guidelines for `src/open_ticket_ai/core/` - the foundational infrastructure of t
 ## Critical Test Placement Rules
 
 ⚠️ **NEVER place tests in this directory:**
+
 - ❌ Forbidden: `src/open_ticket_ai/core/tests/`
 - ✅ Tests for core components: `tests/unit/core/`
 
@@ -38,6 +39,7 @@ All configuration lives in `config/`. When modifying:
 Configuration flows from YAML → RawOpenTicketAIConfig → validated models → runtime objects.
 
 ### Config Structure
+
 - `plugins`: List of plugin names to load
 - `infrastructure`: Core infrastructure config (logging, default_template_renderer)
 - `services`: Registerable services (TemplateRenderer, TicketSystems, etc.)
@@ -90,6 +92,7 @@ Template system in `template_rendering/` processes dynamic content:
 - Handle missing variables gracefully
 
 Example config:
+
 ```yaml
 infrastructure:
   default_template_renderer: "jinja_default"

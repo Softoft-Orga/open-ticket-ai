@@ -24,12 +24,12 @@ class UpdateTicketPipeConfig(PipeConfig[UpdateTicketParams]):
 
 class UpdateTicketPipe(Pipe[UpdateTicketParams]):
     def __init__(
-        self,
-        ticket_system: TicketSystemService,
-        pipe_config: UpdateTicketPipeConfig,
-        logger_factory: LoggerFactory | None = None,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            ticket_system: TicketSystemService,
+            pipe_config: UpdateTicketPipeConfig,
+            logger_factory: LoggerFactory | None = None,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.ticket_system = ticket_system

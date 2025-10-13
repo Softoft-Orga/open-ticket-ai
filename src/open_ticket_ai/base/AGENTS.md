@@ -9,6 +9,7 @@ Guidelines for `src/open_ticket_ai/base/` - reusable pipes and foundational comp
 ## Critical Test Placement Rules
 
 ⚠️ **NEVER place tests in this directory:**
+
 - ❌ Forbidden: `src/open_ticket_ai/base/tests/`
 - ✅ Tests for base components: `tests/unit/base/`
 
@@ -16,7 +17,8 @@ See [Root AGENTS.md](../../../AGENTS.md) for complete test structure rules.
 
 ## Purpose of Base
 
-The `base/` module provides abstract base classes and concrete implementations that can be reused across the application and plugins. This is the foundation layer that other modules build upon.
+The `base/` module provides abstract base classes and concrete implementations that can be reused across the application
+and plugins. This is the foundation layer that other modules build upon.
 
 ## Base Pipe Classes
 

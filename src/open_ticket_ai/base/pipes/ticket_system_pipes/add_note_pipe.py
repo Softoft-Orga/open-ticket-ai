@@ -24,12 +24,12 @@ class AddNotePipeConfig(PipeConfig[AddNoteParams]):
 
 class AddNotePipe(Pipe[AddNoteParams]):
     def __init__(
-        self,
-        ticket_system: TicketSystemService,
-        pipe_config: AddNotePipeConfig,
-        logger_factory: LoggerFactory | None = None,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            ticket_system: TicketSystemService,
+            pipe_config: AddNotePipeConfig,
+            logger_factory: LoggerFactory | None = None,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.ticket_system = ticket_system

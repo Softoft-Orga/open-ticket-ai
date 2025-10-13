@@ -16,11 +16,11 @@ class PipeRunnerObserver(Protocol):
 
 class Trigger[ParamsT: BaseModel](Renderable, ABC):
     def __init__(
-        self,
-        config: TriggerDefinition[ParamsT],
-        logger_factory: LoggerFactory | None = None,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            config: TriggerDefinition[ParamsT],
+            logger_factory: LoggerFactory | None = None,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(config.params, *args, **kwargs)
         self.trigger_def = config

@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from open_ticket_ai.core.config.renderable import RenderableConfig
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 
+
 class EmptyTriggerDefinitionParams(BaseModel):
     model_config = ConfigDict(extra="allow")
 

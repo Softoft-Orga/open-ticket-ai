@@ -9,6 +9,7 @@ This document provides Python-specific guidelines for all source code in the `sr
 ## Critical Test Placement Rules
 
 ⚠️ **NEVER place tests under `src/`:**
+
 - ❌ Forbidden: `src/**/tests/`, `src/**/test_*.py`
 - ✅ Unit tests for root package: `tests/unit/`
 - ✅ Package-specific tests: `packages/<name>/tests/`

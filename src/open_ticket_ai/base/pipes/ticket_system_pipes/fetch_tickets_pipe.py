@@ -23,12 +23,12 @@ class FetchTicketsPipeConfig(PipeConfig[FetchTicketsParams]):
 
 class FetchTicketsPipe(Pipe[FetchTicketsParams]):
     def __init__(
-        self,
-        ticket_system: TicketSystemService,
-        pipe_config: FetchTicketsPipeConfig,
-        logger_factory: LoggerFactory | None = None,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            ticket_system: TicketSystemService,
+            pipe_config: FetchTicketsPipeConfig,
+            logger_factory: LoggerFactory | None = None,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.ticket_system = ticket_system

@@ -3,7 +3,6 @@ import os
 import injector
 import yaml  # type: ignore[import-untyped]
 from injector import singleton
-from pydantic import ValidationError
 
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
@@ -56,7 +55,7 @@ class ConfigLoader:
 
 
 def load_config(
-    config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None
+        config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None
 ) -> RawOpenTicketAIConfig:
     """Standalone helper function to load configuration.
 
