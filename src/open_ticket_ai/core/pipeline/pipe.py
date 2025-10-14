@@ -22,7 +22,7 @@ class Pipe(Renderable, ABC):
         # Child classes should validate params in their __init__ using Pydantic models
         self.params: dict[str, Any] = pipe_params.params
 
-    def _save_pipe_result(self, context: PipeContext, pipe_result: PipeResult[Any]) -> PipeContext:
+    def _save_pipe_result(self, context: PipeContext, pipe_result: PipeResult) -> PipeContext:
         if self.pipe_config.id is not None:
             context.pipes[self.pipe_config.id] = pipe_result
         return context
@@ -44,10 +44,10 @@ class Pipe(Renderable, ABC):
             pipe_result = await self._process()
         except Exception as e:
             self._logger.error(f"Error in pipe {self.pipe_config.id}: {str(e)}", exc_info=True)
-            pipe_result = PipeResult[ParamsModel](success=False, failed=True, message=str(e), data=ParamsModel())
+            pipe_result = PipeResult(success=False, failed=True, message=str(e), data=ParamsModel())
         updated_context = self._save_pipe_result(new_context, pipe_result)
         return updated_context
 
     @abstractmethod
-    async def _process(self) -> PipeResult[Any]:
+    async def _process(self) -> PipeResult:
         pass

@@ -10,7 +10,7 @@ from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 class PipeContext(BaseModel):
     model_config = ConfigDict(ser_json_inf_nan="constants")
 
-    pipes: dict[str, PipeResult[Any]] = Field(default_factory=dict)
+    pipes: dict[str, PipeResult] = Field(default_factory=dict)
     params: dict[str, Any] = Field(default_factory=dict)
     parent: PipeContext | None = Field(default=None, exclude=True)
 

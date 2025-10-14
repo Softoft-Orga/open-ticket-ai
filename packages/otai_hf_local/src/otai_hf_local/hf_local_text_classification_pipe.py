@@ -54,7 +54,7 @@ class HFLocalTextClassificationPipe(Pipe):
         model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 
-    async def _process(self) -> PipeResult[HFLocalTextClassificationPipeResultData]:
+    async def _process(self) -> PipeResult:
         self._logger.info(f"Running {self.__class__.__name__}")
         if self._pipeline is None:
             self._pipeline = self._load_pipeline(self.model, self.token)
@@ -67,6 +67,6 @@ class HFLocalTextClassificationPipe(Pipe):
 
         self._logger.info(f"Prediction: label {label} with score {score}")
 
-        return PipeResult[HFLocalTextClassificationPipeResultData](
+        return PipeResult(
             success=True, failed=False, data=HFLocalTextClassificationPipeResultData(label=label, confidence=score)
         )

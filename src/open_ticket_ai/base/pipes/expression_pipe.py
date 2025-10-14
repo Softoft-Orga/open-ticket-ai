@@ -35,7 +35,7 @@ class ExpressionPipe(Pipe):
         self.validated_params = ExpressionParams.model_validate(self.params)
         self.expression = self.validated_params.expression
 
-    async def _process(self) -> PipeResult[ExpressionPipeResultData]:
-        return PipeResult[ExpressionPipeResultData](
+    async def _process(self) -> PipeResult:
+        return PipeResult(
             success=True, failed=False, data=ExpressionPipeResultData(value=self.expression)
         )

@@ -48,12 +48,12 @@ class CompositePipe(Pipe):
             raise ValueError("RenderableFactory is required but not provided to CompositePipe")
         return self._factory.create_pipe(step_config, context)
 
-    async def _process_steps(self, context: PipeContext) -> list[PipeResult[Any]]:
+    async def _process_steps(self, context: PipeContext) -> list[PipeResult]:
         """
         Run all steps and collect their PipeResults.
         Returns list[PipeResult].
         """
-        results: list[PipeResult[Any]] = []
+        results: list[PipeResult] = []
         current_context = context
         for step_pipe_config_raw in self.pipe_config.steps or []:
             current_context.parent = context
@@ -64,7 +64,7 @@ class CompositePipe(Pipe):
         self._context = current_context
         return results
 
-    async def _process(self) -> PipeResult[CompositePipeResultData]:
+    async def _process(self) -> PipeResult:
         raise NotImplementedError("CompositePipe must override process() to access context")
 
     async def process(self, context: PipeContext) -> PipeContext:
@@ -73,13 +73,13 @@ class CompositePipe(Pipe):
             self._logger.info(f"Pipe '{self.pipe_config.id}' is running.")
             new_context = context.model_copy()
             try:
-                steps_result: list[PipeResult[Any]] = await self._process_steps(new_context)
+                steps_result: list[PipeResult] = await self._process_steps(new_context)
                 composite_result = PipeResult.union(steps_result)
                 if self._context:
                     new_context = self._context.model_copy()
             except Exception as e:
                 self._logger.error(f"Error in pipe {self.pipe_config.id}: {str(e)}", exc_info=True)
-                composite_result = PipeResult[CompositePipeResultData](
+                composite_result = PipeResult(
                     success=False, failed=True, message=str(e), data=CompositePipeResultData()
                 )
             return self._save_pipe_result(new_context, composite_result)
