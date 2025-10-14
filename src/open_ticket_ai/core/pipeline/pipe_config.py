@@ -51,5 +51,5 @@ class PipeResult(BaseModel):
         return PipeResult(success=False, message=message)
 
     @classmethod
-    def skipped(cls, message: str="") -> PipeResult:
+    def skipped(cls, message: str = "") -> PipeResult:
         return PipeResult(was_skipped=True, message=message)

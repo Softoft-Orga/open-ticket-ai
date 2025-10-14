@@ -12,20 +12,17 @@ class CompositePipe(Pipe):
         return PipeConfig
 
     def __init__(
-            self,
-            factory: RenderableFactory,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        factory: RenderableFactory,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._factory = factory
 
     async def _process_steps(self, context: PipeContext) -> list[PipeResult]:
         context = context.model_copy(update={"parent": context.params})
-        return [
-            await self.process_step(step_config, context)
-            for step_config in self._config.steps
-        ]
+        return [await self.process_step(step_config, context) for step_config in self._config.steps]
 
     async def process_step(self, step_config: PipeConfig, context: PipeContext) -> PipeResult:
         step_pipe = self._factory.render(step_config, context)

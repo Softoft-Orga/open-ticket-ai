@@ -1,9 +1,6 @@
 from typing import Any
 
 from injector import inject
-from pydantic import BaseModel
-
-from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -18,23 +15,25 @@ from otobo_znuny.domain_models.ticket_models import (
     TicketUpdate,
 )
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
+    RenderedOTOBOZnunyTSServiceParams,
     otobo_ticket_to_unified_ticket,
-    unified_entity_to_id_name, RenderedOTOBOZnunyTSServiceParams,
+    unified_entity_to_id_name,
 )
+from pydantic import BaseModel
 
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @staticmethod
     def get_params_model() -> type[BaseModel]:
-
         return RenderedOTOBOZnunyTSServiceParams
+
     @inject
     def __init__(
         self,
         *args: Any,
         **kwargs: Any,
     ) -> None:
-        super().__init__( *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._client: OTOBOZnunyClient | None = None
         self.initialize()
 

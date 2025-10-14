@@ -1,5 +1,5 @@
 import uuid
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
