@@ -165,5 +165,3 @@ async def test_pipe_params_validation_error(logger_factory: LoggerFactory) -> No
     # Error should occur in Pipe.__init__ when validating dict -> ExamplePipeParams
     with pytest.raises(pydantic.ValidationError):
         ExamplePipe(pipe_config=config, logger_factory=logger_factory)
-
-
