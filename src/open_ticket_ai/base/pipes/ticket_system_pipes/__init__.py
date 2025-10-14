@@ -2,7 +2,6 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.add_note_pipe import (
     AddNoteParams,
     AddNotePipe,
     AddNotePipeConfig,
-    AddNotePipeResultData,
 )
 from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import (
     FetchTicketsParams,
@@ -14,7 +13,6 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
     UpdateTicketParams,
     UpdateTicketPipe,
     UpdateTicketPipeConfig,
-    UpdateTicketPipeResultData,
 )
 
 FetchTicketsPipeConfig.model_rebuild()
@@ -25,7 +23,6 @@ __all__ = [
     "AddNotePipe",
     "AddNotePipeConfig",
     "AddNoteParams",
-    "AddNotePipeResultData",
     "FetchTicketsPipe",
     "FetchTicketsPipeConfig",
     "FetchTicketsParams",
@@ -33,5 +30,4 @@ __all__ = [
     "UpdateTicketPipe",
     "UpdateTicketPipeConfig",
     "UpdateTicketParams",
-    "UpdateTicketPipeResultData",
 ]

@@ -17,7 +17,7 @@ class AddNoteParams(BaseModel):
 
 
 class AddNotePipeConfig(PipeConfig):
-    params = AddNoteParams
+    params: AddNoteParams
 
 
 class AddNotePipe(Pipe):

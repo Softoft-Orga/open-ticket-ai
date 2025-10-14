@@ -42,7 +42,7 @@ open_ticket_ai:
           - id: "every_10ms"
             use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
             params:
-              milliseconds: 100000
+              milliseconds: 10000
         run:
           id: ticket-routing
           params:

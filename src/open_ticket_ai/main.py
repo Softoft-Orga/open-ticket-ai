@@ -17,4 +17,4 @@ async def run(config_path: str | None = None) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(run())
+    asyncio.run(run(r"C:\Users\PC\PycharmProjects\open-ticket-ai\tests\e2e\otobo_demo\config.yml"))

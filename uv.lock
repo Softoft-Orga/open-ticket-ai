@@ -647,7 +647,7 @@ wheels = [
 
 [[package]]
 name = "open-ticket-ai"
-version = "1.0.14"
+version = "1.0.17"
 source = { editable = "." }
 dependencies = [
     { name = "apscheduler" },
@@ -731,7 +731,7 @@ wheels = [
 
 [[package]]
 name = "otai-hf-local"
-version = "1.0.1"
+version = "1.0.2"
 source = { editable = "packages/otai_hf_local" }
 dependencies = [
     { name = "open-ticket-ai" },
@@ -761,7 +761,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "otai-otobo-znuny"
-version = "1.0.1"
+version = "1.0.2"
 source = { editable = "packages/otai_otobo_znuny" }
 dependencies = [
     { name = "injector" },

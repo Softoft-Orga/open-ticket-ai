@@ -22,7 +22,7 @@ class IntervalTriggerConfig(TriggerConfig):
 class IntervalTrigger(Trigger):
     def __init__(self, config: TriggerConfig, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, *args, **kwargs)
-        validated_params = IntervalTriggerParams.model_validate(config)
+        validated_params = IntervalTriggerParams.model_validate(config.model_dump())
         self.seconds_interval: float = (
                 validated_params.days * 86400
                 + validated_params.hours * 3600
