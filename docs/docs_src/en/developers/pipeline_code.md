@@ -155,10 +155,10 @@ The parameter validation happens automatically in the `Pipe` base class:
 
 ```python
 # In Pipe.__init__ (src/open_ticket_ai/core/pipeline/pipe.py:27-30)
-if isinstance(pipe_params.params, dict):
-    self.params: ParamsT = self.params_class.model_validate(pipe_params.params)
+if isinstance(pipe_params._config, dict):
+    self._config: ParamsT = self.params_class.model_validate(pipe_params._config)
 else:
-    self.params: ParamsT = pipe_params.params
+    self._config: ParamsT = pipe_params._config
 ```
 
 **Flow:**
@@ -296,9 +296,9 @@ async def test_my_pipe_processes_correctly(logger_factory):
 async def _process(self) -> PipeResult[MyPipeResultData]:
     # Access via pipe_config context (if needed)
     # Usually accessed via templates in YAML, but can also be done in code
-    
+
     # Use self.params which were set from templates
-    input_data = self.params.input_field  # Already resolved from template
+    input_data = self._config.input_field  # Already resolved from template
     return PipeResult[MyPipeResultData](...)
 ```
 

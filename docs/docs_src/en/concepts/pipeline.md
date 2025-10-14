@@ -205,14 +205,15 @@ Atomic processing units that implement specific business logic:
 - Accesses injected services via `self.<service_name>`
 
 **Example Implementation:**
+
 ```python
 class FetchTicketsPipe(Pipe):
     def __init__(self, ticket_system: TicketSystemService, config: PipeConfig, logger_factory: LoggerFactory):
         super().__init__(config, logger_factory)
         self.ticket_system = ticket_system
-    
+
     async def _process(self, context: PipeContext) -> FetchTicketsResult:
-        criteria = self.config.params.search_criteria
+        criteria = self.config._config.search_criteria
         tickets = await self.ticket_system.find_tickets(criteria)
         return FetchTicketsResult(fetched_tickets=tickets)
 ```

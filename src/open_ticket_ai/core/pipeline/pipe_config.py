@@ -28,20 +28,19 @@ class PipeResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
     success: bool
     message: str = ""
-    data: BaseModel = Field(default_factory=EmptyModel)
+    data: dict = {}
 
     def __and__(self, other: Self) -> PipeResult:
-        merged_data_dict: dict[str, Any] = {**self.data.model_dump(), **other.data.model_dump()}
-        merged_data = CompositePipeResultData.model_validate(merged_data_dict)
+        merged_data_dict: dict[str, Any] = {**self.data, **other.data}
         merged_msg = ";\n ".join([m for m in [self.message, other.message] if m])
         return PipeResult(
             success=self.success and other.success,
             message=merged_msg,
-            data=merged_data,
+            data=merged_data_dict,
         )
 
     @classmethod
     def union(cls, results: Iterable[PipeResult]) -> PipeResult:
         if not results:
-            return PipeResult(success=True, data=CompositePipeResultData())
+            return PipeResult(success=True)
         return reduce(lambda a, b: a & b, results)

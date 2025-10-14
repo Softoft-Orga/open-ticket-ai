@@ -33,7 +33,7 @@ class CompositePipe(Pipe):
     async def _process_steps(self, context: PipeContext) -> list[PipeResult]:
         results: list[PipeResult] = []
         for step_config_raw in self.config.steps or []:
-            context = context.model_copy(update={"parent": context})
+            context = context.model_copy(update={"parent": context.params})
             step_pipe = self._build_pipe_from_step_config(step_config_raw, context)
             context = await step_pipe.process(context)
             if step_config_raw.id in context.pipe_results:

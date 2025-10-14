@@ -35,4 +35,4 @@ class AddNotePipe(Pipe):
     async def _process(self) -> PipeResult:
         ticket_id_str = str(self._config.params.ticket_id)
         await self._ticket_system.add_note(ticket_id_str, self._config.params.note)
-        return PipeResult(success=True, failed=False, data=EmptyModel())
+        return PipeResult(success=True, data={})

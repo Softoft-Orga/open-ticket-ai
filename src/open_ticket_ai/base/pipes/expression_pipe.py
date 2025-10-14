@@ -34,5 +34,5 @@ class ExpressionPipe(Pipe):
 
     async def _process(self) -> PipeResult:
         return PipeResult(
-            success=True, failed=False, data=ExpressionPipeResultData(value=self.config.params.expression)
+            success=True, data=ExpressionPipeResultData(value=self.config.params.expression)
         )

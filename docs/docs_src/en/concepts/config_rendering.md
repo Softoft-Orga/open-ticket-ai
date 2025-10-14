@@ -510,13 +510,14 @@ The current pattern where Pipe params are validated at runtime (dict → Pydanti
 If you have custom pipes using older patterns, update them as follows:
 
 **Old Pattern (if you had params_class validation in subclass):**
+
 ```python
 class OldPipe(Pipe[OldParams]):
     def __init__(self, pipe_config, logger_factory, *args, **kwargs):
         super().__init__(pipe_config, logger_factory)
         # Manual validation (don't do this anymore)
-        if isinstance(self.pipe_config.params, dict):
-            self.params = OldParams.model_validate(self.pipe_config.params)
+        if isinstance(self.pipe_config._config, dict):
+            self.params = OldParams.model_validate(self.pipe_config._config)
 ```
 
 **New Pattern (current):**
@@ -548,10 +549,10 @@ The Pipe base class handles both cases:
 
 ```python
 # In Pipe.__init__ (pipe.py:27-30)
-if isinstance(pipe_params.params, dict):
-    self.params: ParamsT = self.params_class.model_validate(pipe_params.params)
+if isinstance(pipe_params._config, dict):
+    self._config: ParamsT = self.params_class.model_validate(pipe_params._config)
 else:
-    self.params: ParamsT = pipe_params.params
+    self._config: ParamsT = pipe_params._config
 ```
 
 **Params arrive as dict when:**

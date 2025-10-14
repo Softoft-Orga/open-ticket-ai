@@ -64,7 +64,7 @@ class TestOTOBOZnunyTicketSystemService:
             yield mock_convert
 
     def test_initialization(self, service, config):
-        assert service.params == config
+        assert service._config == config
         assert service._client is None
         assert service.logger is not None
 
@@ -87,10 +87,10 @@ class TestOTOBOZnunyTicketSystemService:
 
             assert result == mock_client
             assert service._client == mock_client
-            MockClientClass.assert_called_once_with(config=service.params.to_client_config())
+            MockClientClass.assert_called_once_with(config=service._config.to_client_config())
             mock_client.login.assert_called_once()
             login_arg = mock_client.login.call_args.args[0]
-            assert login_arg.user_login == service.params.username
+            assert login_arg.user_login == service._config.username
 
     def test_initialize(self, service, mock_client):
         with patch.object(service, "_recreate_client") as mock_recreate:

@@ -9,7 +9,7 @@ from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 class PipeRunner:
     def __init__(
-        self, definition: RunnerDefinition, pipe_factory: RenderableFactory, logger_factory: LoggerFactory
+            self, definition: RunnerDefinition, pipe_factory: RenderableFactory, logger_factory: LoggerFactory
     ) -> None:
         self.definition = definition
         self.pipe_factory = pipe_factory
@@ -20,25 +20,23 @@ class PipeRunner:
 
     async def execute(self) -> None:
         self._logger.info(f"Executing pipe '{self.definition.pipe_id}'")
-        try:
-            pipe = self.pipe_factory.create_pipe(
-                config_raw=self.definition.run,
-                scope=PipeContext(params=self.definition.run.model_dump()),
-            )
-            if pipe is None:
-                self._logger.error(f"Failed to create pipe '{self.definition.pipe_id}'")
-                return
-            if not isinstance(pipe, Pipe):
-                self._logger.error(f"Created object is not a Pipe instance: {type(pipe)}")
-                return
+        context = PipeContext(params=self.definition.run.params)
+        pipe = self.pipe_factory.create_pipe(
+            config_raw=self.definition.run,
+            scope=context,
+        )
+        if pipe is None:
+            self._logger.error(f"Failed to create pipe '{self.definition.pipe_id}'")
+            return
+        if not isinstance(pipe, Pipe):
+            self._logger.error(f"Created object is not a Pipe instance: {type(pipe)}")
+            return
 
-            context_result = await pipe.process(PipeContext())
-            pipe_result = context_result.pipe_results.get(self.definition.pipe_id)
+        context_result = await pipe.process(context)
+        pipe_result = context_result.pipe_results.get(self.definition.pipe_id)
 
-            if pipe_result and pipe_result.success:
-                self._logger.info(f"Pipe '{self.definition.pipe_id}' completed successfully")
-            else:
-                failure_message = pipe_result.message if pipe_result else "No result available"
-                self._logger.warning(f"Pipe '{self.definition.pipe_id}' completed with failure: {failure_message}")
-        except Exception:
-            self._logger.exception(f"Pipe '{self.definition.pipe_id}' execution failed with exception")
+        if pipe_result and pipe_result.success:
+            self._logger.info(f"Pipe '{self.definition.pipe_id}' completed successfully")
+        else:
+            failure_message = pipe_result.message if pipe_result else "No result available"
+            self._logger.warning(f"Pipe '{self.definition.pipe_id}' completed with failure: {failure_message}")

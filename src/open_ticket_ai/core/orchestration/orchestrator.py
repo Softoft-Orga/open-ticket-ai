@@ -86,6 +86,6 @@ class Orchestrator:
 
         try:
             await asyncio.Future()  # Run forever
-        except (KeyboardInterrupt, SystemExit) as e:
+        except Exception as e:
             self._logger.info(f"{e.__class__.__name__} received; shutting down orchestrator")
             self.stop()

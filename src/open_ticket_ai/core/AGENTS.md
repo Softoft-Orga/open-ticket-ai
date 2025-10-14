@@ -72,11 +72,12 @@ Pipeline orchestration in `pipeline/` controls execution flow:
 The `Pipe` base class supports runtime parameter validation:
 
 **Key Implementation (pipe.py:27-30):**
+
 ```python
-if isinstance(pipe_params.params, dict):
-    self.params: ParamsT = self.params_class.model_validate(pipe_params.params)
+if isinstance(pipe_params._config, dict):
+    self._config: ParamsT = self.params_class.model_validate(pipe_params._config)
 else:
-    self.params: ParamsT = pipe_params.params
+    self._config: ParamsT = pipe_params._config
 ```
 
 **Flow:**

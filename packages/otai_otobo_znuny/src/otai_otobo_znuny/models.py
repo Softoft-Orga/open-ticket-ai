@@ -46,7 +46,7 @@ def otobo_ticket_to_unified_ticket(ticket: Ticket) -> UnifiedTicket:
 
 
 class RenderedOTOBOZnunyTSServiceParams(BaseModel):
-    password: SecretStr
+    password: str
     base_url: str
     username: str = "open_ticket_ai"
     webservice_name: str = "OpenTicketAI"

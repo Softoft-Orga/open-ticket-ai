@@ -25,10 +25,6 @@ class Pipe(Renderable, ABC):
     def _have_dependent_pipes_been_run(self, context: PipeContext) -> bool:
         return all(context.has_succeeded(dependency_id) for dependency_id in self._config.depends_on)
 
-    async def _process_and_save(self, context: PipeContext) -> PipeContext:
-        pipe_result = await self._process()
-        return context.with_pipe_result(self._config.id, pipe_result)
-
     async def process(self, context: PipeContext) -> PipeContext:
         self._logger.info(f"Processing pipe '{self._config.id}'")
         if self._config.should_run and self._have_dependent_pipes_been_run(context):
@@ -37,6 +33,10 @@ class Pipe(Renderable, ABC):
             return await self._process_and_save(context)
         self._logger.info(f"Skipping pipe '{self._config.id}'.")
         return context
+
+    async def _process_and_save(self, context: PipeContext) -> PipeContext:
+        pipe_result = await self._process()
+        return context.with_pipe_result(self._config.id, pipe_result)
 
     @abstractmethod
     async def _process(self) -> PipeResult:
