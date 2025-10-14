@@ -17,36 +17,19 @@ class ConfigLoader:
         self.app_config = app_config
         self._logger = logger_factory.get_logger(self.__class__.__name__)
 
-    def load_config(self, config_path: str | os.PathLike[str] | None = None) -> RawOpenTicketAIConfig:
-        config_path_resolved: str | os.PathLike[str]
-        if config_path is None and os.getenv(self.app_config.config_env_var) is not None:
-            config_path_str = os.getenv(self.app_config.config_env_var)
-            if config_path_str is None:
-                raise ValueError("Config path from environment variable is None")
-            config_path_resolved = config_path_str
-        elif config_path is None and os.getenv(self.app_config.config_env_var) is None:
-            config_path_resolved = self.app_config.get_default_config_path()
-            if not Path(config_path_resolved).exists():
-                raise FileNotFoundError(
-                    f"Config file not found at {config_path_resolved}."
-                    f"To fix this error:"
-                    f"Create a confi file at {config_path_resolved}"
-                    f"or provide a valid config path "
-                    f"or set the {self.app_config.config_env_var} environment variable."
-                )
-        elif config_path is not None:
-            config_path_resolved = config_path
-        else:
-            raise ValueError("Config path is None and no environment variable set")
+    def load_config(self, config_path: os.PathLike | None = None) -> RawOpenTicketAIConfig:
+        if config_path is None:
+            env_path = os.getenv(self.app_config.config_env_var)
+            config_path = env_path if env_path else self.app_config.get_default_config_path()
 
-        if not os.path.exists(config_path_resolved):
+        if not Path(config_path).exists():
             raise FileNotFoundError(
-                f"Config file not found at {config_path_resolved}"
-                f"you need to create a config file at this path"
-                f"or change the environment variable {self.app_config.config_env_var}"
+                f"Config file not found at {config_path}. "
+                f"Create a config file at this path, provide a valid path, "
+                f"or set the {self.app_config.config_env_var} environment variable."
             )
 
-        with open(config_path_resolved) as file:
+        with open(config_path) as file:
             yaml_content = yaml.safe_load(file)
             if yaml_content is None or self.app_config.config_yaml_root_key not in yaml_content:
                 raise ValueError(f"Config file must contain '{self.app_config.config_yaml_root_key}' root key")

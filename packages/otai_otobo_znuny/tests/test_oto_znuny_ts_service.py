@@ -8,7 +8,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
 )
 from otobo_znuny.mappers import _to_id_name
-from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import RenderedOTOBOZnunyTicketsystemServiceConfig
+from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import RenderedOTOBOZnunyTSServiceParams
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.oto_znuny_ts_service import (
     OTOBOZnunyTicketSystemService,
 )
@@ -33,7 +33,7 @@ class TestOTOBOZnunyTicketSystemService:
 
     @pytest.fixture
     def config(self, config_dict):
-        return RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(config_dict)
+        return RenderedOTOBOZnunyTSServiceParams.model_validate(config_dict)
 
     @pytest.fixture
     def service(self, config):

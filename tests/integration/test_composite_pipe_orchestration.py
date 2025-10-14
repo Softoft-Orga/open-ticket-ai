@@ -21,9 +21,9 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import Fet
 from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import UpdateTicketPipe
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
-from open_ticket_ai.core.config.config_models import LoggingDictConfig
-from open_ticket_ai.core.config.renderable import RenderableConfig
-from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.config.logging_config import LoggingDictConfig
+from open_ticket_ai.core.renderable.renderable import RenderableConfig
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
@@ -115,14 +115,14 @@ def renderable_factory(
 async def test_composite_pipe_executes_child_pipes_in_order(renderable_factory: RenderableFactory) -> None:
     steps = [create_jinja_step("step1", "value1"), create_jinja_step("step2", "value2")]
     composite_config = create_composite("composite", steps)
-    context = PipeContext(pipes={}, params={})
+    context = PipeContext(pipe_results={}, params={})
 
     result_ctx = await renderable_factory.create_pipe(composite_config, context).process(context)
 
-    assert result_ctx.pipes["composite"].success
-    assert not result_ctx.pipes["composite"].failed
-    assert result_ctx.pipes["step1"].success and result_ctx.pipes["step1"].data.value == "value1"
-    assert result_ctx.pipes["step2"].success and result_ctx.pipes["step2"].data.value == "value2"
+    assert result_ctx.pipe_results["composite"].success
+    assert not result_ctx.pipe_results["composite"].failed
+    assert result_ctx.pipe_results["step1"].success and result_ctx.pipe_results["step1"].data.value == "value1"
+    assert result_ctx.pipe_results["step2"].success and result_ctx.pipe_results["step2"].data.value == "value2"
 
 
 @pytest.mark.asyncio
@@ -132,8 +132,8 @@ async def test_composite_pipe_with_dependencies(renderable_factory: RenderableFa
 
     result_ctx = await renderable_factory.create_pipe(composite_config, PipeContext()).process(PipeContext())
 
-    assert "step1" in result_ctx.pipes and "step2" in result_ctx.pipes
-    assert result_ctx.pipes["step2"].success
+    assert "step1" in result_ctx.pipe_results and "step2" in result_ctx.pipe_results
+    assert result_ctx.pipe_results["step2"].success
 
 
 @pytest.mark.asyncio
@@ -147,9 +147,9 @@ async def test_composite_pipe_conditional_execution(renderable_factory: Renderab
 
     result_ctx = await renderable_factory.create_pipe(composite_config, PipeContext()).process(PipeContext())
 
-    assert result_ctx.pipes["step1"].success
-    assert "step2" not in result_ctx.pipes
-    assert result_ctx.pipes["step3"].success
+    assert result_ctx.pipe_results["step1"].success
+    assert "step2" not in result_ctx.pipe_results
+    assert result_ctx.pipe_results["step3"].success
 
 
 @pytest.mark.asyncio
@@ -159,7 +159,7 @@ async def test_composite_pipe_result_aggregation(renderable_factory: RenderableF
 
     result_ctx = await renderable_factory.create_pipe(composite_config, PipeContext()).process(PipeContext())
 
-    composite_result = result_ctx.pipes["composite"]
+    composite_result = result_ctx.pipe_results["composite"]
     assert composite_result.success and not composite_result.failed
     assert hasattr(composite_result.data, "value")
 
@@ -186,14 +186,14 @@ async def test_composite_pipe_error_propagation(logger_factory: LoggerFactory) -
         def __init__(self) -> None:
             super().__init__(JinjaRenderer(JinjaRendererConfig(), logger_factory), AppConfig(), [], logger_factory)
 
-        def create_pipe(self, pipe_config_raw: PipeConfig, scope: PipeContext):
-            return update_pipe if pipe_config_raw.id == "step1" else None
+        def create_pipe(self, config_raw: PipeConfig, scope: PipeContext):
+            return update_pipe if config_raw.id == "step1" else None
 
     composite_pipe = CompositePipe(create_composite("composite", [update_pipe_config]), SimpleFactory(), logger_factory)
     result_ctx = await composite_pipe.process(PipeContext())
 
-    assert not result_ctx.pipes["step1"].success and result_ctx.pipes["step1"].failed
-    assert result_ctx.pipes["composite"].failed
+    assert not result_ctx.pipe_results["step1"].success and result_ctx.pipe_results["step1"].failed
+    assert result_ctx.pipe_results["composite"].failed
 
 
 @pytest.mark.asyncio
@@ -256,22 +256,22 @@ async def test_realistic_multi_step_pipeline(logger_factory: LoggerFactory) -> N
         def __init__(self) -> None:
             super().__init__(JinjaRenderer(JinjaRendererConfig(), logger_factory), AppConfig(), [], logger_factory)
 
-        def create_pipe(self, pipe_config_raw: PipeConfig, scope: PipeContext):
-            return pipes.get(pipe_config_raw.id)
+        def create_pipe(self, config_raw: PipeConfig, scope: PipeContext):
+            return pipes.get(config_raw.id)
 
     composite = CompositePipe(create_composite("workflow", configs), SimpleFactory(), logger_factory)
     result_ctx = await composite.process(PipeContext())
 
     assert (
-        result_ctx.pipes["fetch_tickets"].success and len(result_ctx.pipes["fetch_tickets"].data.fetched_tickets) == 2
+            result_ctx.pipe_results["fetch_tickets"].success and len(result_ctx.pipe_results["fetch_tickets"].data.fetched_tickets) == 2
     )
-    assert result_ctx.pipes["update_ticket"].success and result_ctx.pipes["update_ticket"].data.ticket_updated
-    assert result_ctx.pipes["add_note"].success and result_ctx.pipes["add_note"].data.note_added
+    assert result_ctx.pipe_results["update_ticket"].success and result_ctx.pipe_results["update_ticket"].data.ticket_updated
+    assert result_ctx.pipe_results["add_note"].success and result_ctx.pipe_results["add_note"].data.note_added
 
     ticket = await mock_system.get_ticket("TICKET-1")
     assert ticket.priority.id == "priority-5" and ticket.priority.name == "High"
     assert len(ticket.notes) == 1 and ticket.notes[0].body == "Priority was updated to High"
-    assert result_ctx.pipes["workflow"].success
+    assert result_ctx.pipe_results["workflow"].success
 
 
 @pytest.mark.asyncio
@@ -281,12 +281,12 @@ async def test_composite_pipe_context_propagation(renderable_factory: Renderable
         create_jinja_step("step2", "step2_output", depends_on=["step1"]),
     ]
     composite_config = create_composite("composite", steps)
-    initial_context = PipeContext(pipes={}, params={"initial_param": "test_value"})
+    initial_context = PipeContext(pipe_results={}, params={"initial_param": "test_value"})
 
     result_ctx = await renderable_factory.create_pipe(composite_config, initial_context).process(initial_context)
 
     assert result_ctx.params["initial_param"] == "test_value"
-    assert "step1" in result_ctx.pipes and "step2" in result_ctx.pipes
+    assert "step1" in result_ctx.pipe_results and "step2" in result_ctx.pipe_results
 
 
 @pytest.mark.asyncio
@@ -298,7 +298,7 @@ async def test_nested_composite_pipes(renderable_factory: RenderableFactory) -> 
 
     result_ctx = await renderable_factory.create_pipe(outer_composite, PipeContext()).process(PipeContext())
 
-    assert result_ctx.pipes["inner_composite"].success
-    assert "inner_step1" in result_ctx.pipes and "inner_step2" in result_ctx.pipes
-    assert result_ctx.pipes["outer_step"].success
-    assert result_ctx.pipes["outer_composite"].success
+    assert result_ctx.pipe_results["inner_composite"].success
+    assert "inner_step1" in result_ctx.pipe_results and "inner_step2" in result_ctx.pipe_results
+    assert result_ctx.pipe_results["outer_step"].success
+    assert result_ctx.pipe_results["outer_composite"].success

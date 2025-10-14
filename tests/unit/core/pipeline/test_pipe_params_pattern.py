@@ -145,8 +145,8 @@ async def test_pipe_execution_with_dict_params(logger_factory: LoggerFactory) ->
     context = PipeContext()
     result_context = await pipe.process(context)
 
-    assert "test_pipe" in result_context.pipes
-    pipe_result = result_context.pipes["test_pipe"]
+    assert "test_pipe" in result_context.pipe_results
+    pipe_result = result_context.pipe_results["test_pipe"]
     assert pipe_result.success is True
     assert pipe_result.data.processed_count == 75
 

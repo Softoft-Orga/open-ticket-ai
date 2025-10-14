@@ -6,7 +6,7 @@ on:
   push:
     tags:
       - 'hf-local-v*'
-      - 'open-ticket-ai-hf-local-v*'
+      - 'otai-hf-local-v*'
   workflow_dispatch:
 jobs:
   publish:

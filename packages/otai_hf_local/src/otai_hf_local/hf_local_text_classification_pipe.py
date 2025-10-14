@@ -24,7 +24,7 @@ class HFLocalTextClassificationPipeResultData(BaseModel):
 
 
 class HFLocalTextClassificationPipeConfig(PipeConfig):
-    pass
+    params: HFLocalTextClassificationParams
 
 
 class HFLocalTextClassificationPipe(Pipe):
@@ -32,19 +32,18 @@ class HFLocalTextClassificationPipe(Pipe):
 
     def __init__(
         self,
-        pipe_config: HFLocalTextClassificationPipeConfig,
+        config: HFLocalTextClassificationPipeConfig,
         logger_factory: LoggerFactory | None = None,
         *args: Any,
         **kwargs: Any,
     ) -> None:
         if logger_factory is None:
             raise ValueError("logger_factory is required")
-        super().__init__(pipe_config, logger_factory=logger_factory)
-        # Validate params at runtime
-        self.validated_params = HFLocalTextClassificationParams.model_validate(self.params)
-        self.model = self.validated_params.model
-        self.token = self.validated_params.token
-        self.prompt = self.validated_params.prompt
+        super().__init__(config, logger_factory=logger_factory)
+        self._config = HFLocalTextClassificationPipeConfig.model_validate(config.model_dump())
+        self.model = self._config.params.model
+        self.token = self._config.params.token
+        self.prompt = self._config.params.prompt
         self._pipeline = None
 
     @staticmethod
@@ -68,5 +67,5 @@ class HFLocalTextClassificationPipe(Pipe):
         self._logger.info(f"Prediction: label {label} with score {score}")
 
         return PipeResult(
-            success=True, failed=False, data=HFLocalTextClassificationPipeResultData(label=label, confidence=score)
+            success=True, data=HFLocalTextClassificationPipeResultData(label=label, confidence=score)
         )

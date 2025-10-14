@@ -10,9 +10,9 @@ from open_ticket_ai.core.template_rendering import JinjaRendererConfig, Template
 def test_jinja_renderer_backward_compatibility_default_params(logger_factory: LoggerFactory):
     config = JinjaRendererConfig()
     renderer = JinjaRenderer(config=config, logger_factory=logger_factory)
-    assert renderer.config.env_config.prefix == "OTAI_"
-    assert renderer.config.autoescape is False
-    assert renderer.config.trim_blocks is True
+    assert renderer._config.env_config.prefix == "OTAI_"
+    assert renderer._config.autoescape is False
+    assert renderer._config.trim_blocks is True
 
 
 def test_jinja_renderer_with_config_object(logger_factory: LoggerFactory):
@@ -26,8 +26,8 @@ def test_jinja_renderer_with_config_object(logger_factory: LoggerFactory):
     )
     renderer = JinjaRenderer(config=config, logger_factory=logger_factory)
 
-    assert renderer.config.env_config.prefix == "TEST_"
-    assert renderer.config.autoescape is True
+    assert renderer._config.env_config.prefix == "TEST_"
+    assert renderer._config.autoescape is True
 
 
 def test_jinja_renderer_filters_env_vars_by_prefix(logger_factory: LoggerFactory):

@@ -33,8 +33,8 @@ open_ticket_ai:
     renderer = injector.get(TemplateRenderer)  # type: ignore[type-abstract]
 
     assert isinstance(renderer, JinjaRenderer)
-    assert renderer.config.env_config.prefix == "OTAI_"
-    assert renderer.config.autoescape is False
+    assert renderer._config.env_config.prefix == "OTAI_"
+    assert renderer._config.autoescape is False
 
 
 def test_template_renderer_with_custom_params(tmp_path: Path) -> None:
@@ -63,11 +63,11 @@ open_ticket_ai:
     renderer = injector.get(TemplateRenderer)  # type: ignore[type-abstract]
 
     assert isinstance(renderer, JinjaRenderer)
-    assert renderer.config.env_config.prefix == "CUSTOM_"
-    assert renderer.config.env_config.allowlist == {"CUSTOM_VAR1", "CUSTOM_VAR2"}
-    assert renderer.config.autoescape is True
-    assert renderer.config.trim_blocks is False
-    assert renderer.config.lstrip_blocks is False
+    assert renderer._config.env_config.prefix == "CUSTOM_"
+    assert renderer._config.env_config.allowlist == {"CUSTOM_VAR1", "CUSTOM_VAR2"}
+    assert renderer._config.autoescape is True
+    assert renderer._config.trim_blocks is False
+    assert renderer._config.lstrip_blocks is False
 
 
 def test_template_renderer_not_found_raises_error(tmp_path: Path) -> None:

@@ -70,16 +70,18 @@ def at_path(value: Any, path: str | list[str] | tuple[str, ...] | None) -> str:
 
 @pass_context
 def has_failed(ctx: Any, pipe_id: str) -> bool:
-    pipes = ctx.get("pipes", {})
+    pipes = ctx.get("pipe_results", {})
     pipe = pipes.get(pipe_id)
     if pipe is None:
         return False
-    return bool(pipe.failed or pipe.get("failed"))
+    if isinstance(pipe, PipeResult):
+        return not pipe.success
+    return not pipe.get("success", True)
 
 
 @pass_context
-def pipe_result(ctx: Any, pipe_id: str, data_key: str = "value") -> Any:
-    pipes = ctx.get("pipes", {})
+def get_pipe_result(ctx: Any, pipe_id: str, data_key: str = "value") -> Any:
+    pipes = ctx.get("pipe_results", {})
     pipe = pipes.get(pipe_id)
     if pipe is None:
         return None
@@ -90,15 +92,5 @@ def pipe_result(ctx: Any, pipe_id: str, data_key: str = "value") -> Any:
     return pipe_data.get(data_key)
 
 
-def build_filtered_env(jinja_renderer_config: JinjaRendererConfig) -> dict[str, str]:
-    env_config = jinja_renderer_config.env_config
-
-    def _pref(k: str) -> bool:
-        return True if not env_config.prefix else k.startswith(env_config.prefix)
-
-    out = {k: v for k, v in dict(os.environ).items() if _pref(k)}
-    if env_config.allowlist is not None:
-        out = {k: v for k, v in out.items() if k in env_config.allowlist}
-    if env_config.denylist is not None:
-        out = {k: v for k, v in out.items() if k not in env_config.denylist}
-    return out
+def build_filtered_env() -> dict[str, str]:
+    return os.environ.copy()

@@ -40,7 +40,7 @@ async def test_add_note_pipe_adds_note_to_ticket(
     assert ticket.notes[0].body == "This is a new note"
 
     # Verify pipe result
-    pipe_result = result_context.pipes["test_add_note"]
+    pipe_result = result_context.pipe_results["test_add_note"]
     assert pipe_result.success is True
     assert pipe_result.failed is False
 
@@ -94,7 +94,7 @@ async def test_add_note_pipe_handles_failure(
     result_context = await pipe.process(empty_pipeline_context)
 
     # Pipe should return failed result (add_note returns False for nonexistent ticket)
-    pipe_result = result_context.pipes["test_add_note"]
+    pipe_result = result_context.pipe_results["test_add_note"]
     assert pipe_result.success is False
     assert pipe_result.failed is True
 
@@ -123,4 +123,4 @@ async def test_add_note_pipe_skips_when_disabled(
     # When disabled, the pipe should not execute and return original context
     assert result_context is empty_pipeline_context
     # Verify no note was added by checking the pipe result is not in the context
-    assert "test_add_note" not in result_context.pipes
+    assert "test_add_note" not in result_context.pipe_results

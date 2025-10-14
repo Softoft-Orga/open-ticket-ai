@@ -37,10 +37,10 @@ class TemplateRenderer(ABC):
             return s
 
     @abstractmethod
-    def render(self, template_str: str, scope: dict[str, Any], fail_silently: bool = False) -> Any:
+    def render(self, template_str: str, scope: dict[str, Any]) -> Any:
         pass
 
-    def render_recursive(self, obj: Any, scope: BaseModel | dict[str, Any], fail_silently: bool = False) -> Any:
+    def render_recursive(self, obj: Any, scope: BaseModel | dict[str, Any]) -> Any:
         self._logger.info(f"Rendering {obj}")
         self._logger.info(f"Scope: {scope}")
         scope_dict = self._to_dict(scope)
@@ -48,9 +48,9 @@ class TemplateRenderer(ABC):
         if isinstance(obj, BaseModel):
             obj = self._to_dict(obj)
         if isinstance(obj, str):
-            return self.render(obj, scope_dict, fail_silently)
+            return self.render(obj, scope_dict)
         if isinstance(obj, list):
-            return [self.render_recursive(item, scope_dict, fail_silently) for item in obj]
+            return [self.render_recursive(item, scope_dict) for item in obj]
         if isinstance(obj, dict):
-            return {k: self.render_recursive(v, scope_dict, fail_silently) for k, v in obj.items()}
+            return {k: self.render_recursive(v, scope_dict) for k, v in obj.items()}
         return obj

@@ -35,7 +35,7 @@ async def test_fetch_tickets_finds_tickets_by_queue(
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify pipe result
-    pipe_result = result_context.pipes["test_fetch"]
+    pipe_result = result_context.pipe_results["test_fetch"]
     assert pipe_result.success is True
     assert pipe_result.failed is False
 
@@ -67,7 +67,7 @@ async def test_fetch_tickets_with_pagination(
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify pagination worked
-    pipe_result = result_context.pipes["test_fetch"]
+    pipe_result = result_context.pipe_results["test_fetch"]
     found_tickets = pipe_result.data.fetched_tickets
     assert len(found_tickets) == 2  # Limited to 2
 
@@ -93,7 +93,7 @@ async def test_fetch_tickets_returns_empty_when_no_matches(
     result_context = await pipe.process(empty_pipeline_context)
 
     # Verify empty result
-    pipe_result = result_context.pipes["test_fetch"]
+    pipe_result = result_context.pipe_results["test_fetch"]
     assert pipe_result.success is True
     found_tickets = pipe_result.data.fetched_tickets
     assert len(found_tickets) == 0

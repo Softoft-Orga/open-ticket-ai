@@ -1,5 +1,5 @@
 [project]
-name = "otai-hf-local"
+name = "otai_hf_local"
 version = "1.0.1"
 description = "Hugging Face local text classification plugin for Open Ticket AI"
 readme = "README.md"

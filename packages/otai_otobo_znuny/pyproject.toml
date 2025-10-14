@@ -1,5 +1,5 @@
 [project]
-name = "otai-otobo-znuny"
+name = "otai_otobo_znuny"
 version = "1.0.1"
 description = "OTOBO/Znuny ticket system plugin for Open Ticket AI"
 readme = "README.md"

@@ -19,7 +19,7 @@ from otobo_znuny.domain_models.ticket_models import (  # type: ignore[import-unt
 )
 from otobo_znuny.mappers import _to_id_name  # type: ignore[import-untyped]
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
-    RenderedOTOBOZnunyTicketsystemServiceConfig,
+    RenderedOTOBOZnunyTSServiceParams,
     otobo_ticket_to_unified_ticket,
     unified_entity_to_id_name,
 )
@@ -29,18 +29,15 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
     def __init__(
         self,
-        params: RenderedOTOBOZnunyTicketsystemServiceConfig,
+        params: RenderedOTOBOZnunyTSServiceParams,
         logger_factory: LoggerFactory | None = None,
         *args: Any,
         **kwargs: Any,
     ) -> None:
         super().__init__(params, *args, **kwargs)
-        self.params = RenderedOTOBOZnunyTicketsystemServiceConfig.model_validate(params.model_dump())
+        self.params = RenderedOTOBOZnunyTSServiceParams.model_validate(params.model_dump())
         self._client: OTOBOZnunyClient | None = None
-        if logger_factory is not None:
-            self.logger = logger_factory.get_logger(self.__class__.__name__)
-        else:
-            self.logger = StdlibLogger(logging.getLogger(self.__class__.__name__))
+        self.logger = logger_factory.get_logger(self.__class__.__name__)
         self.initialize()
 
     @property

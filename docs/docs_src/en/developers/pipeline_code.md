@@ -259,6 +259,7 @@ import pytest
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 
+
 @pytest.mark.asyncio
 async def test_my_pipe_processes_correctly(logger_factory):
     # Create params as dict (simulates YAML rendering)
@@ -267,24 +268,24 @@ async def test_my_pipe_processes_correctly(logger_factory):
         "threshold": 0.7,
         "max_items": 10
     }
-    
+
     # Create pipe config
     config = PipeConfig[MyPipeParams](
         id="test_pipe",
         params=params
     )
-    
+
     # Instantiate pipe
     pipe = MyPipe(pipe_config=config, logger_factory=logger_factory)
-    
+
     # Execute
     context = PipeContext()
     result_context = await pipe.process(context)
-    
+
     # Assert
-    assert "test_pipe" in result_context.pipes
-    assert result_context.pipes["test_pipe"].success
-    assert result_context.pipes["test_pipe"].data.count > 0
+    assert "test_pipe" in result_context.pipe_results
+    assert result_context.pipe_results["test_pipe"].success
+    assert result_context.pipe_results["test_pipe"].data.count > 0
 ```
 
 ## Common Patterns

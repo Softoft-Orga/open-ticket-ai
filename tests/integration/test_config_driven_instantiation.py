@@ -12,7 +12,7 @@ from pathlib import Path
 from injector import Injector
 
 from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig
-from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig

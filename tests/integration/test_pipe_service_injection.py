@@ -21,8 +21,7 @@ from open_ticket_ai.base.pipes.ticket_system_pipes import (
 )
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
-from open_ticket_ai.core.config.renderable import RenderableConfig
-from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
@@ -77,7 +76,7 @@ async def test_add_note_pipe_with_injected_service(
     context = PipeContext()
     result_context = await pipe.process(context)
 
-    assert result_context.pipes["add_note"].success is True
+    assert result_context.pipe_results["add_note"].success is True
     ticket = await mocked_ticket_system.get_ticket("TICKET-1")
     assert ticket is not None
     assert ticket.notes is not None
@@ -129,8 +128,8 @@ async def test_fetch_tickets_pipe_with_injected_service(
     context = PipeContext()
     result_context = await pipe.process(context)
 
-    assert result_context.pipes["fetch_tickets"].success is True
-    fetched_tickets = result_context.pipes["fetch_tickets"].data.fetched_tickets
+    assert result_context.pipe_results["fetch_tickets"].success is True
+    fetched_tickets = result_context.pipe_results["fetch_tickets"].data.fetched_tickets
     assert len(fetched_tickets) == 2
     ticket_ids = [t.get("id") if isinstance(t, dict) else t.id for t in fetched_tickets]
     assert "TICKET-1" in ticket_ids
@@ -168,11 +167,11 @@ async def test_multiple_pipes_share_same_service_instance(
 
     context = PipeContext()
     context = await fetch_pipe.process(context)
-    assert context.pipes["fetch_tickets"].success is True
-    assert len(context.pipes["fetch_tickets"].data.fetched_tickets) == 2
+    assert context.pipe_results["fetch_tickets"].success is True
+    assert len(context.pipe_results["fetch_tickets"].data.fetched_tickets) == 2
 
     context = await add_note_pipe.process(context)
-    assert context.pipes["add_note"].success is True
+    assert context.pipe_results["add_note"].success is True
 
     ticket = await mocked_ticket_system.get_ticket("TICKET-1")
     assert ticket is not None
@@ -189,7 +188,7 @@ def test_pipe_service_injection_with_renderable_factory(
     available for injection into pipes via the injects configuration.
     """
 
-    from open_ticket_ai.core.config.renderable import RenderableConfig
+    from open_ticket_ai.core.renderable.renderable import RenderableConfig
 
     ticket_system_config: RenderableConfig = RenderableConfig(
         id="mock_ticket_system",

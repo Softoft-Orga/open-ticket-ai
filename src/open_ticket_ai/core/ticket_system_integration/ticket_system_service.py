@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from ..config.renderable import Renderable
+from open_ticket_ai.core.renderable.renderable import Renderable
 from .unified_models import (
     TicketSearchCriteria,
     UnifiedNote,

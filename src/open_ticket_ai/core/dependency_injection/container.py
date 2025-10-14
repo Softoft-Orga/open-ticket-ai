@@ -7,11 +7,11 @@ from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_fac
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
-    LoggingDictConfig,
     RawOpenTicketAIConfig,
 )
-from open_ticket_ai.core.config.renderable import RenderableConfig
-from open_ticket_ai.core.config.renderable_factory import RenderableFactory, _locate
+from open_ticket_ai.core.config.logging_config import LoggingDictConfig
+from open_ticket_ai.core.renderable.renderable import RenderableConfig
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory, _locate
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig

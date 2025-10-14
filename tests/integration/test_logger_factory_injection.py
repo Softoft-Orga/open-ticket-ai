@@ -8,8 +8,8 @@ from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_fac
 from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams, ExpressionPipeConfig
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
-from open_ticket_ai.core.config.config_models import LoggingDictConfig
-from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.config.logging_config import LoggingDictConfig
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import AppLogger, LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
@@ -39,7 +39,7 @@ def test_renderable_factory_injects_logger_factory_into_pipes(logger_factory: Lo
         use="open_ticket_ai.base.pipes.expression_pipe:ExpressionPipe",
         params=ExpressionParams(expression="Hello"),
     )
-    context = PipeContext(pipes={}, params={}, parent=None)
+    context = PipeContext(pipe_results={}, params={}, parent=None)
 
     pipe = factory.create_pipe(pipe_config, context)
 
@@ -67,7 +67,7 @@ def test_logger_factory_creates_logger_with_class_name(logger_factory: LoggerFac
         use="open_ticket_ai.base.pipes.expression_pipe:ExpressionPipe",
         params=ExpressionParams(expression="test"),
     )
-    context = PipeContext(pipes={}, params={}, parent=None)
+    context = PipeContext(pipe_results={}, params={}, parent=None)
 
     pipe = factory.create_pipe(pipe_config, context)
 
@@ -95,11 +95,11 @@ async def test_pipe_can_use_injected_logger():
         use="open_ticket_ai.base.pipes.expression_pipe:ExpressionPipe",
         params=ExpressionParams(expression="Hello World"),
     )
-    context = PipeContext(pipes={}, params={}, parent=None)
+    context = PipeContext(pipe_results={}, params={}, parent=None)
 
     pipe = factory.create_pipe(pipe_config, context)
 
     result_context = await pipe.process(context)
 
-    assert "test_jinja_pipe" in result_context.pipes
-    assert result_context.pipes["test_jinja_pipe"].success is True
+    assert "test_jinja_pipe" in result_context.pipe_results
+    assert result_context.pipe_results["test_jinja_pipe"].success is True

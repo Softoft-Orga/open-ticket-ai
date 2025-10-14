@@ -7,7 +7,7 @@ from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     at_path,
     build_filtered_env,
     has_failed,
-    pipe_result,
+    get_pipe_result,
 )
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
@@ -18,25 +18,15 @@ class JinjaRenderer(TemplateRenderer):
     @inject
     def __init__(self, config: JinjaRendererConfig, logger_factory: LoggerFactory):
         super().__init__(logger_factory)
-        self.config = config
-        self.jinja_env = SandboxedEnvironment(
-            autoescape=config.autoescape, trim_blocks=config.trim_blocks, lstrip_blocks=config.lstrip_blocks
-        )
+        self._config = JinjaRendererConfig.model_validate(config.model_dump())
+        self.jinja_env = SandboxedEnvironment(trim_blocks=True, lstrip_blocks=True)
 
-    def render(self, template_str: str, scope: dict[str, Any], fail_silently: bool = False) -> Any:
+    def render(self, template_str: str, scope: dict[str, Any]) -> Any:
         self.jinja_env.globals.update(scope)
         self.jinja_env.globals["at_path"] = at_path
-        self.jinja_env.globals["env"] = build_filtered_env(self.config)
+        self.jinja_env.globals["env"] = build_filtered_env()
         self.jinja_env.globals["has_failed"] = has_failed
-        self.jinja_env.globals["pipe_result"] = pipe_result
-        try:
-            template = self.jinja_env.from_string(template_str)
-            rendered = template.render(self._to_dict(scope))
-            return self._parse_rendered_value(rendered)
-        except Exception as e:
-            self._logger.warning("Failed to render template '%s'", template_str)
-            self._logger.warning("context: %s", scope)
-            self._logger.exception("Template rendering failed")
-            if fail_silently:
-                return template_str
-            raise RuntimeError(e) from e
+        self.jinja_env.globals["get_pipe_result"] = get_pipe_result
+        template = self.jinja_env.from_string(template_str)
+        rendered = template.render(self._to_dict(scope))
+        return self._parse_rendered_value(rendered)

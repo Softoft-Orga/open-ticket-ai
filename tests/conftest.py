@@ -37,6 +37,6 @@ open_ticket_ai:
 def logger_factory():
     """Create a logger factory for testing."""
     from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
-    from open_ticket_ai.core.config.config_models import LoggingDictConfig
+    from open_ticket_ai.core.config.logging_config import LoggingDictConfig
 
     return create_logger_factory(LoggingDictConfig())

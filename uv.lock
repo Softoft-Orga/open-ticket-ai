@@ -647,7 +647,7 @@ wheels = [
 
 [[package]]
 name = "open-ticket-ai"
-version = "1.0.1"
+version = "1.0.14"
 source = { editable = "." }
 dependencies = [
     { name = "apscheduler" },

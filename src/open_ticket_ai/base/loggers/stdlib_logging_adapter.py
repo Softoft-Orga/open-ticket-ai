@@ -4,7 +4,7 @@ import logging
 from logging.config import dictConfig
 from typing import Any
 
-from open_ticket_ai.core.config.config_models import LoggingDictConfig
+from open_ticket_ai.core.config.logging_config import LoggingDictConfig
 from open_ticket_ai.core.logging_iface import AppLogger, LoggerFactory
 
 

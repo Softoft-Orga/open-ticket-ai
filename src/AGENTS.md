@@ -81,12 +81,12 @@ class MyPipe(Pipe[MyParams]):
     
     def __init__(
         self,
-        pipe_config: PipeConfig[MyParams],
+        config: PipeConfig[MyParams],
         logger_factory: LoggerFactory,
         *args: Any,
         **kwargs: Any,
     ) -> None:
-        super().__init__(pipe_config, logger_factory)
+        super().__init__(config, logger_factory)
         # self.params is now validated MyParams instance
 ```
 

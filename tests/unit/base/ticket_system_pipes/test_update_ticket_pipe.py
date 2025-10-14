@@ -39,7 +39,7 @@ async def test_update_ticket_updates_subject(
     assert ticket.body == "This is the first test ticket"  # Other fields unchanged
 
     # Verify pipe result
-    pipe_result = result_context.pipes["test_update"]
+    pipe_result = result_context.pipe_results["test_update"]
     assert pipe_result.success is True
     assert pipe_result.failed is False
 
@@ -95,6 +95,6 @@ async def test_update_ticket_handles_nonexistent_ticket(
     result_context = await pipe.process(empty_pipeline_context)
 
     # Pipe should return failed result
-    pipe_result = result_context.pipes["test_update"]
+    pipe_result = result_context.pipe_results["test_update"]
     assert pipe_result.failed is True
     assert pipe_result.success is False

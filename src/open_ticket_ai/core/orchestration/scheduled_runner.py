@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import RunnerDefinition
 from open_ticket_ai.core.pipeline.pipe import Pipe
@@ -22,7 +22,7 @@ class PipeRunner:
         self._logger.info(f"Executing pipe '{self.definition.pipe_id}'")
         try:
             pipe = self.pipe_factory.create_pipe(
-                pipe_config_raw=self.definition.run,
+                config_raw=self.definition.run,
                 scope=PipeContext(params=self.definition.run.model_dump()),
             )
             if pipe is None:
@@ -33,7 +33,7 @@ class PipeRunner:
                 return
 
             context_result = await pipe.process(PipeContext())
-            pipe_result = context_result.pipes.get(self.definition.pipe_id)
+            pipe_result = context_result.pipe_results.get(self.definition.pipe_id)
 
             if pipe_result and pipe_result.success:
                 self._logger.info(f"Pipe '{self.definition.pipe_id}' completed successfully")

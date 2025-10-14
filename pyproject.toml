@@ -1,6 +1,6 @@
 [project]
-name = "open-ticket-ai"
-version = "1.0.1"
+name = "open_ticket_ai"
+version = "1.0.14"
 description = "AI-powered ticket processing and automation system"
 readme = "docs/raw_en_docs/README.md"
 requires-python = ">=3.13"

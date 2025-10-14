@@ -5,7 +5,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict
 
-from ..config.renderable import Renderable
+from open_ticket_ai.core.renderable.renderable import Renderable
 from ..logging_iface import LoggerFactory
 from .pipe_config import PipeConfig, PipeResult
 from .pipe_context import PipeContext
@@ -16,30 +16,27 @@ class ParamsModel(BaseModel):
 
 
 class Pipe(Renderable, ABC):
-    def __init__(self, pipe_config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self.pipe_config = pipe_config
+        self._config = PipeConfig.model_validate(config.model_dump())
         self._logger = logger_factory.get_logger(self.__class__.__name__)
-        # Child classes should validate params in their __init__ using Pydantic models
-        self.params: dict[str, Any] = pipe_config.params
 
-    def _save_pipe_result(self, context: PipeContext, pipe_result: PipeResult) -> PipeContext:
-        if self.pipe_config.id is not None:
-            context.pipes[self.pipe_config.id] = pipe_result
+    def _have_dependent_pipes_been_run(self, context: PipeContext) -> bool:
+        return all(context.has_succeeded(dependency_id) for dependency_id in self._config.depends_on)
+
+    async def _process_and_save(self, context: PipeContext) -> PipeContext:
+        pipe_result = await self._process()
+        return context.with_pipe_result(self._config.id, pipe_result)
+
+    async def process(self, context: PipeContext) -> PipeContext:
+        self._logger.info(f"Processing pipe '{self._config.id}'")
+        if self._config.should_run and self._have_dependent_pipes_been_run(context):
+            self._logger.info(f"Pipe '{self._config.id}' is running.")
+
+            return await self._process_and_save(context)
+        self._logger.info(f"Skipping pipe '{self._config.id}'.")
         return context
 
-    def have_dependent_pipes_been_run(self, context: PipeContext) -> bool:
-        return all(context.has_succeeded(dependency_id) for dependency_id in self.pipe_config.depends_on)
-
-    async def __process_and_save(self, context: PipeContext) -> PipeContext:
-        new_context = context.model_copy()
-        try:
-            pipe_result = await self._process()
-        except Exception as e:
-            self._logger.error(f"Error in pipe {self.pipe_config.id}: {str(e)}", exc_info=True)
-            pipe_result = PipeResult(success=False, failed=True, message=str(e), data=ParamsModel())
-        updated_context = self._save_pipe_result(new_context, pipe_result)
-        return updated_context
 
     @abstractmethod
     async def _process(self) -> PipeResult:

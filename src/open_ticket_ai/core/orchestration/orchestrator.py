@@ -4,11 +4,11 @@ import asyncio
 
 from injector import inject, singleton
 
-from open_ticket_ai.core.config.renderable_factory import RenderableFactory
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import (
     OrchestratorConfig,
-    TriggerDefinition,
+    TriggerConfig,
 )
 from open_ticket_ai.core.orchestration.scheduled_runner import PipeRunner
 from open_ticket_ai.core.orchestration.trigger import Trigger
@@ -30,7 +30,7 @@ class Orchestrator:
         self._trigger_registry: dict[str, Trigger] = {}
         self._runners: dict[str, PipeRunner] = {}
 
-    def _instantiate_trigger(self, trigger_def: TriggerDefinition) -> Trigger:
+    def _instantiate_trigger(self, trigger_def: TriggerConfig) -> Trigger:
         """Instantiate trigger using RenderableFactory for consistency with pipe instantiation."""
         scope = PipeContext()
         trigger: Trigger = self._pipe_factory.create_trigger(trigger_def, scope)  # type: ignore[assignment]

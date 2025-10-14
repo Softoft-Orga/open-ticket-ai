@@ -34,7 +34,7 @@ class DummyParentPipe(CompositePipe):
             success=True,
             failed=False,
             data=CompositePipeResultData(
-                child_names=list(context.pipes.keys()),
+                child_names=list(context.pipe_results.keys()),
                 context_id=id(context),
             ),
         )
@@ -86,7 +86,7 @@ def resolve_step_imports(monkeypatch: pytest.MonkeyPatch, logger_factory: Logger
 @pytest.mark.asyncio
 async def test_process_skips_pipe_when_condition_is_false(logger_factory: LoggerFactory) -> None:
     context = PipeContext(
-        pipes={"existing": PipeResult(success=True, failed=False, data=CompositePipeResultData(value=1))}
+        pipe_results={"existing": PipeResult(success=True, failed=False, data=CompositePipeResultData(value=1))}
     )
     skip_config: PipeConfig = PipeConfig(id="skip", use="SkipPipe", **{"if": False})
     skip_pipe = SkipPipe(skip_config, logger_factory)
@@ -94,5 +94,5 @@ async def test_process_skips_pipe_when_condition_is_false(logger_factory: Logger
     result_context = await skip_pipe.process(context)
 
     assert result_context is context
-    assert "skip" not in context.pipes
+    assert "skip" not in context.pipe_results
     assert SkipPipe.executed is False

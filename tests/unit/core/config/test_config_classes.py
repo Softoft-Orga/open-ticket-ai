@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from open_ticket_ai.core.config.renderable import RenderableConfig
+from open_ticket_ai.core.renderable.renderable import RenderableConfig
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 
 

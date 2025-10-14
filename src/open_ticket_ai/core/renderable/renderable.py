@@ -11,7 +11,7 @@ class Renderable:
         pass
 
 
-class EmptyParams(BaseModel):
+class EmptyModel(BaseModel):
     model_config = ConfigDict(extra="allow", frozen=True)
 
     def __getitem__(self, key: str) -> Any:
@@ -34,20 +34,6 @@ class RenderableConfig(BaseModel):
     injects: dict[str, str] = Field(default_factory=dict)
     params: dict[str, Any] = Field(default_factory=dict)
 
-    @model_validator(mode="before")
-    @classmethod
-    def handle_dict_params(cls, values: Any) -> Any:
-        if not isinstance(values, dict):
-            return values
-
-        # Ensure params is always a dict
-        if "params" in values:
-            if isinstance(values["params"], BaseModel):
-                values["params"] = values["params"].model_dump()
-            elif not isinstance(values["params"], dict):
-                values["params"] = {}
-
-        return values
 
     @model_validator(mode="after")
     def set_id_from_uid(self) -> Self:

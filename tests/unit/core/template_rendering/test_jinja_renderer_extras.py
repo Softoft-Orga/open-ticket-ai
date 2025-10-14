@@ -7,7 +7,7 @@ from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     at_path,
     build_filtered_env,
     has_failed,
-    pipe_result,
+    get_pipe_result,
 )
 from open_ticket_ai.core.pipeline.pipe_config import CompositePipeResultData, PipeResult
 from open_ticket_ai.core.template_rendering.renderer_config import (
@@ -66,7 +66,7 @@ class TestPipeResult:
     def test_pipe_result_when_pipe_not_in_context(self):
         ctx = MagicMock()
         ctx.get.return_value = {}
-        result = pipe_result(ctx, "nonexistent_pipe")
+        result = get_pipe_result(ctx, "nonexistent_pipe")
         assert result is None
 
     def test_pipe_result_with_default_key(self):
@@ -77,7 +77,7 @@ class TestPipeResult:
         )
         ctx = MagicMock()
         ctx.get.return_value = {"test_pipe": pipe_res}
-        result = pipe_result(ctx, "test_pipe")
+        result = get_pipe_result(ctx, "test_pipe")
         assert result == "test_result"
 
     def test_pipe_result_with_custom_key(self):
@@ -88,7 +88,7 @@ class TestPipeResult:
         )
         ctx = MagicMock()
         ctx.get.return_value = {"test_pipe": pipe_res}
-        result = pipe_result(ctx, "test_pipe", "custom_key")
+        result = get_pipe_result(ctx, "test_pipe", "custom_key")
         assert result == "custom_value"
 
     def test_pipe_result_with_missing_key(self):
@@ -99,7 +99,7 @@ class TestPipeResult:
         )
         ctx = MagicMock()
         ctx.get.return_value = {"test_pipe": pipe_res}
-        result = pipe_result(ctx, "test_pipe", "nonexistent")
+        result = get_pipe_result(ctx, "test_pipe", "nonexistent")
         assert result is None
 
 
