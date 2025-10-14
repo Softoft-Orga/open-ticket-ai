@@ -16,11 +16,11 @@ class ParamsModel(BaseModel):
 
 
 class Pipe(Renderable, ABC):
-    def __init__(self, pipe_params: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
-        self.pipe_config = pipe_params
+    def __init__(self, pipe_config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
+        self.pipe_config = pipe_config
         self._logger = logger_factory.get_logger(self.__class__.__name__)
         # Child classes should validate params in their __init__ using Pydantic models
-        self.params: dict[str, Any] = pipe_params.params
+        self.params: dict[str, Any] = pipe_config.params
 
     def _save_pipe_result(self, context: PipeContext, pipe_result: PipeResult[Any]) -> PipeContext:
         if self.pipe_config.id is not None:

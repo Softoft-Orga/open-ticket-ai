@@ -34,7 +34,7 @@ jobs:
 
       - name: Build package
         working-directory: ${{ inputs.package-path }}
-        run: uv build
+        run: uv build --package ${{ inputs.package-name }}
 
       - name: Publish to PyPI
         working-directory: ${{ inputs.package-path }}
