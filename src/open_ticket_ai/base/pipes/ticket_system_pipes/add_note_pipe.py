@@ -37,21 +37,17 @@ class AddNotePipe(Pipe):
         self.validated_params = AddNoteParams.model_validate(self.params)
         self.ticket_system = ticket_system
 
-    async def _process(self) -> PipeResult[AddNotePipeResultData]:
+    async def _process(self) -> PipeResult:
         try:
             ticket_id_str = str(self.validated_params.ticket_id)
             success = await self.ticket_system.add_note(ticket_id_str, self.validated_params.note)
             if not success:
-                return PipeResult[AddNotePipeResultData](
+                return PipeResult(
                     success=False,
                     failed=True,
                     message="Failed to add note to ticket",
                     data=AddNotePipeResultData(note_added=False),
                 )
-            return PipeResult[AddNotePipeResultData](
-                success=True, failed=False, data=AddNotePipeResultData(note_added=True)
-            )
+            return PipeResult(success=True, failed=False, data=AddNotePipeResultData(note_added=True))
         except Exception as e:
-            return PipeResult[AddNotePipeResultData](
-                success=False, failed=True, message=str(e), data=AddNotePipeResultData(note_added=False)
-            )
+            return PipeResult(success=False, failed=True, message=str(e), data=AddNotePipeResultData(note_added=False))

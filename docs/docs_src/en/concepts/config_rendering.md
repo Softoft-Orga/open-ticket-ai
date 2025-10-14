@@ -302,16 +302,54 @@ Configuration validation occurs at two stages:
 - Template-rendered values match expected types
 - Rendered values satisfy constraints
 - Computed values are valid
-- Happens in `render_base_model()` after template evaluation
+- Happens in Pipe `__init__` after template evaluation
 
-Example:
+**Example - Pipe Parameter Validation:**
 
 ```yaml
+# YAML config (user writes)
 params:
-  timeout: "{{ env('TIMEOUT', '30') }}"  # Rendered to "30" (string)
+  timeout: "{{ env('TIMEOUT', '30') }}"
+  model: "{{ params.global_model }}"
 ```
 
-After rendering, Pydantic validates that "30" can be coerced to an integer if the field type is `int`.
+**Validation Flow:**
+1. YAML parsed as dict: `{"timeout": "{{ env('TIMEOUT', '30') }}", "model": "{{ params.global_model }}"}`
+2. Templates rendered: `{"timeout": "30", "model": "gpt-4"}`
+3. Passed to Pipe constructor as dict
+4. Pipe converts: `self.params = self.params_class.model_validate(dict)`
+5. Pydantic validates and coerces types (e.g., "30" → int(30))
+
+**Pipe Implementation Pattern:**
+
+The `Pipe` base class automatically handles this validation:
+
+```python
+class MyParams(BaseModel):
+    timeout: int
+    model: str
+
+class MyPipe(Pipe[MyParams]):
+    params_class = MyParams  # Required
+    
+    def __init__(
+        self,
+        pipe_config: PipeConfig[MyParams],
+        logger_factory: LoggerFactory,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(pipe_config, logger_factory)
+        # self.params is now validated MyParams instance
+        # pipe_config.params was a dict from YAML rendering
+```
+
+**Key Points:**
+- Params arrive as `dict[str, Any]` from template rendering
+- Base `Pipe.__init__` uses `params_class.model_validate()` for conversion
+- Validation errors show which field and why it failed
+- Type coercion happens (string "30" → int 30)
+- This enables Jinja2 templates to work with YAML configs
 
 ### Dependency Resolution
 
@@ -440,3 +478,90 @@ note: "Classification failed, using default routing"
 - Use environment variables for sensitive data with proper prefix filtering
 - The sandboxed Jinja2 environment prevents code injection
 - Be cautious with user-provided template input
+
+## Pipe Params Pattern: Rationale and Migration
+
+### Why dict[str, Any] with Runtime Validation?
+
+The current pattern where Pipe params are validated at runtime (dict → Pydantic model) was chosen for several key reasons:
+
+**1. Jinja2 Template Rendering Compatibility:**
+- YAML configs are rendered as untyped dicts by Jinja2
+- Templates can't know the final type until after rendering
+- Example: `"{{ env('PORT') }}"` is a string until rendered to `"8080"`, then validated as `int`
+
+**2. YAML Flexibility:**
+- Users write simple, readable YAML without type annotations
+- No need for special YAML tags or complex syntax
+- Templates work naturally with scalar values
+
+**3. Separation of Concerns:**
+- Template rendering (dynamic values) happens first
+- Type validation (correctness) happens second
+- Clear error messages when validation fails
+
+**4. Copilot and AI Compatibility:**
+- Simple, consistent pattern for code generation
+- Clear where validation happens (Pipe.__init__)
+- Easy to explain: "params arrive as dict, get validated to model"
+
+### Migration from Old Pattern (if applicable)
+
+If you have custom pipes using older patterns, update them as follows:
+
+**Old Pattern (if you had params_class validation in subclass):**
+```python
+class OldPipe(Pipe[OldParams]):
+    def __init__(self, pipe_config, logger_factory, *args, **kwargs):
+        super().__init__(pipe_config, logger_factory)
+        # Manual validation (don't do this anymore)
+        if isinstance(self.pipe_config.params, dict):
+            self.params = OldParams.model_validate(self.pipe_config.params)
+```
+
+**New Pattern (current):**
+```python
+class NewPipe(Pipe[NewParams]):
+    params_class = NewParams  # Just add this class attribute
+    
+    def __init__(self, pipe_config, logger_factory, *args, **kwargs):
+        super().__init__(pipe_config, logger_factory)
+        # self.params is automatically validated by parent __init__
+        # No manual validation needed!
+```
+
+**Migration Steps:**
+1. Add `params_class = YourParams` as a class attribute
+2. Remove any manual `model_validate()` calls in `__init__`
+3. Let parent `Pipe.__init__` handle validation
+4. Access validated params via `self.params`
+
+**Benefits of New Pattern:**
+- Less boilerplate code
+- Consistent validation across all pipes
+- Better error messages from centralized validation
+- Easier to maintain and test
+
+### When Params Are Dict vs. Model
+
+The Pipe base class handles both cases:
+
+```python
+# In Pipe.__init__ (pipe.py:27-30)
+if isinstance(pipe_params.params, dict):
+    self.params: ParamsT = self.params_class.model_validate(pipe_params.params)
+else:
+    self.params: ParamsT = pipe_params.params
+```
+
+**Params arrive as dict when:**
+- Loaded from YAML config (most common)
+- After Jinja2 template rendering
+- Created programmatically with dict
+
+**Params arrive as model when:**
+- Created in tests with typed model directly
+- Passed from Python code using Pydantic model
+- Nested pipe configs already validated
+
+Both cases work seamlessly - you just access `self.params` and it's always the validated model type.

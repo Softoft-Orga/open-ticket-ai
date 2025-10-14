@@ -24,18 +24,18 @@ class CompositePipeResultData(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-class PipeResult[DataT: BaseModel](BaseModel):
+class PipeResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
     success: bool
     failed: bool
     message: str = ""
-    data: DataT
+    data: BaseModel
 
-    def __and__(self, other: Self) -> PipeResult[CompositePipeResultData]:
+    def __and__(self, other: Self) -> PipeResult:
         merged_data_dict: dict[str, Any] = {**self.data.model_dump(), **other.data.model_dump()}
         merged_data = CompositePipeResultData.model_validate(merged_data_dict)
         merged_msg = ";\n ".join([m for m in [self.message, other.message] if m])
-        return PipeResult[CompositePipeResultData](
+        return PipeResult(
             success=self.success and other.success,
             failed=self.failed and other.failed,
             message=merged_msg,
@@ -43,7 +43,7 @@ class PipeResult[DataT: BaseModel](BaseModel):
         )
 
     @classmethod
-    def union(cls, results: Iterable[PipeResult[DataT]]) -> PipeResult[CompositePipeResultData]:
+    def union(cls, results: Iterable[PipeResult]) -> PipeResult:
         if not results:
-            return PipeResult[CompositePipeResultData](success=True, failed=False, data=CompositePipeResultData())
-        return reduce(lambda a, b: a & b, results)  # type: ignore[arg-type]
+            return PipeResult(success=True, failed=False, data=CompositePipeResultData())
+        return reduce(lambda a, b: a & b, results)

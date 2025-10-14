@@ -20,13 +20,13 @@ class DummyChildPipe(Pipe):
         self.__class__.processed_contexts.append(context)
         return await super().process(context)
 
-    async def _process(self) -> PipeResult[CompositePipeResultData]:
+    async def _process(self) -> PipeResult:
         self.__class__.process_count += 1
         return PipeResult(success=True, failed=False, data=CompositePipeResultData(value=self.pipe_config.id))
 
 
 class DummyParentPipe(CompositePipe):
-    async def _process(self) -> PipeResult[CompositePipeResultData]:
+    async def _process(self) -> PipeResult:
         context = self._context
         if context is None:
             return PipeResult(success=False, failed=True, data=CompositePipeResultData(message="No context"))
@@ -43,7 +43,7 @@ class DummyParentPipe(CompositePipe):
 class SkipPipe(Pipe):
     executed: bool = False
 
-    async def _process(self) -> PipeResult[CompositePipeResultData]:
+    async def _process(self) -> PipeResult:
         self.__class__.executed = True
         return PipeResult(success=True, failed=False, data=CompositePipeResultData(value="should not run"))
 

@@ -39,21 +39,19 @@ class UpdateTicketPipe(Pipe):
         self.validated_params = UpdateTicketParams.model_validate(self.params)
         self.ticket_system = ticket_system
 
-    async def _process(self) -> PipeResult[UpdateTicketPipeResultData]:
+    async def _process(self) -> PipeResult:
         try:
             ticket_id_str = str(self.validated_params.ticket_id)
             success = await self.ticket_system.update_ticket(ticket_id_str, self.validated_params.updated_ticket)
             if not success:
-                return PipeResult[UpdateTicketPipeResultData](
+                return PipeResult(
                     success=False,
                     failed=True,
                     message="Failed to update ticket",
                     data=UpdateTicketPipeResultData(ticket_updated=False),
                 )
-            return PipeResult[UpdateTicketPipeResultData](
-                success=True, failed=False, data=UpdateTicketPipeResultData(ticket_updated=True)
-            )
+            return PipeResult(success=True, failed=False, data=UpdateTicketPipeResultData(ticket_updated=True))
         except Exception as e:
-            return PipeResult[UpdateTicketPipeResultData](
+            return PipeResult(
                 success=False, failed=True, message=str(e), data=UpdateTicketPipeResultData(ticket_updated=False)
             )
