@@ -41,23 +41,10 @@ class RenderableFactory:
         self._app_config = app_config
         self._logger_factory = logger_factory
 
-    def create_pipe(self, config_raw: PipeConfig, scope: PipeContext) -> Pipe:
-        self._logger.debug(f"Creating pipe with config id: {config_raw.id}")
-        self._logger.info(f"Creating pipe '{config_raw.id}'")
-        rendered_instance = self.__render(config_raw, scope)
-        if not isinstance(rendered_instance, Pipe):
-            raise TypeError(f"Registerable with id '{config_raw.id}' is not a Pipe")
-        return rendered_instance
-
-    def create_trigger(self, trigger_config_raw: RenderableConfig, scope: PipeContext) -> Renderable:
-        self._logger.debug(f"Creating trigger with config id: {trigger_config_raw.id}")
-        self._logger.info(f"Creating trigger '{trigger_config_raw.id}'")
-        return self.__render(trigger_config_raw, scope)
-
     def __create_service_instance(self, registerable_config_raw: RenderableConfig, scope: PipeContext) -> Renderable:
-        return self.__render(registerable_config_raw, scope)
+        return self.render(registerable_config_raw, scope)
 
-    def __render(self, registerable_config_raw: RenderableConfig, scope: PipeContext):
+    def render(self, registerable_config_raw: RenderableConfig, scope: PipeContext):
         rendered_params = self._template_renderer.render_recursive(registerable_config_raw.params, scope)
         registerable_config_raw.params = rendered_params
         return self.__create_renderable_instance(registerable_config_raw, scope)
@@ -67,14 +54,13 @@ class RenderableFactory:
         if not issubclass(cls, Renderable):
             raise TypeError(f"Class '{rendered_config.use}' is not a {Renderable.__class__.__name__}")
 
-        kwargs: dict[str, Any] = {
+        return cls(**{
             "factory": self,
             "app_config": self._app_config,
             "logger_factory": self._logger_factory,
             "config": rendered_config,
-        }
-        kwargs.update(self.__resolve_injects(rendered_config.injects, scope))
-        return cls(**kwargs)
+            **self.__resolve_injects(rendered_config.injects, scope),
+        })
 
     def __resolve_injects(self, injects: dict[str, str], scope: PipeContext) -> dict[str, Renderable]:
         return {param: self.__resolve_by_id(ref, scope) for param, ref in injects.items()}
@@ -90,4 +76,4 @@ class RenderableFactory:
         )
         if matching_config is None:
             raise KeyError(service_id)
-        return self.__create_service_instance(matching_config, scope)
+        return self.render(matching_config, scope)

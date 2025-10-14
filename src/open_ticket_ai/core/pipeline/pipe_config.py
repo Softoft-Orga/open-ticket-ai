@@ -20,10 +20,6 @@ class PipeConfig(RenderableConfig):
         return self.if_
 
 
-class CompositePipeResultData(BaseModel):
-    model_config = ConfigDict(extra="allow")
-
-
 class PipeResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
     success: bool

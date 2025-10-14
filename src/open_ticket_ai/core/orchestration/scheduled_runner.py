@@ -21,7 +21,7 @@ class PipeRunner:
     async def execute(self) -> None:
         self._logger.info(f"Executing pipe '{self.definition.pipe_id}'")
         context = PipeContext(params=self.definition.run.params)
-        pipe = self.pipe_factory.create_pipe(
+        pipe = self.pipe_factory.render(
             config_raw=self.definition.run,
             scope=context,
         )

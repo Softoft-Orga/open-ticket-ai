@@ -28,12 +28,10 @@ class HFLocalTextClassificationPipe(Pipe):
     def __init__(
         self,
         config: HFLocalTextClassificationPipeConfig,
-        logger_factory: LoggerFactory | None = None,
+        logger_factory: LoggerFactory,
         *args: Any,
         **kwargs: Any,
     ) -> None:
-        if logger_factory is None:
-            raise ValueError("logger_factory is required")
         super().__init__(config, logger_factory=logger_factory)
         self._config = HFLocalTextClassificationPipeConfig.model_validate(config.model_dump())
         self.model = self._config.params.model
@@ -44,7 +42,7 @@ class HFLocalTextClassificationPipe(Pipe):
     @staticmethod
     @cache
     def _load_pipeline(model_name: str, token: str | None) -> Any:
-        tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)  # type: ignore[no-untyped-call]
+        tokenizer = AutoTokenizer.from_pretrained(model_name, token=token)
         model = AutoModelForSequenceClassification.from_pretrained(model_name, token=token)
         return pipeline("text-classification", model=model, tokenizer=tokenizer)
 

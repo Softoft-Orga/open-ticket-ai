@@ -33,7 +33,7 @@ class Orchestrator:
     def _instantiate_trigger(self, trigger_def: TriggerConfig) -> Trigger:
         """Instantiate trigger using RenderableFactory for consistency with pipe instantiation."""
         scope = PipeContext()
-        trigger: Trigger = self._pipe_factory.create_trigger(trigger_def, scope)  # type: ignore[assignment]
+        trigger: Trigger = self._pipe_factory.render(trigger_def, scope)  # type: ignore[assignment]
         return trigger
 
     def start(self) -> None:

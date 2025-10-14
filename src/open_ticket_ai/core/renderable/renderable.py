@@ -11,21 +11,6 @@ class Renderable:
         pass
 
 
-class EmptyModel(BaseModel):
-    model_config = ConfigDict(extra="allow", frozen=True)
-
-    def __getitem__(self, key: str) -> Any:
-        return getattr(self, key)
-
-    def __eq__(self, other: Any) -> bool:
-        if isinstance(other, dict):
-            return self.model_dump() == other
-        return super().__eq__(other)
-
-    def __hash__(self) -> int:
-        return hash(tuple(sorted(self.model_dump().items())))
-
-
 class RenderableConfig(BaseModel):
     model_config = ConfigDict(extra="allow", arbitrary_types_allowed=True)
     uid: str = Field(default_factory=lambda: uuid.uuid4().hex)

@@ -22,6 +22,9 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/tests/e2e/otobo_demo/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/otai_hf_local/src/otai_hf_local.egg-info" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/otai_otobo_znuny/src/otai_otobo_znuny.egg-info" />
+      <excludeFolder url="file://$MODULE_DIR$/src/open_ticket_ai.egg-info" />
     </content>
     <orderEntry type="jdk" jdkName="uv (open-ticket-ai)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

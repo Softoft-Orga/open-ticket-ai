@@ -28,7 +28,7 @@ class CompositePipe(Pipe):
     def _build_pipe_from_step_config(self, step_config: PipeConfig, context: PipeContext) -> Pipe:
         if self._factory is None:
             raise ValueError("RenderableFactory is required but not provided to CompositePipe")
-        return self._factory.create_pipe(step_config, context)
+        return self._factory.render(step_config, context)
 
     async def _process_steps(self, context: PipeContext) -> list[PipeResult]:
         results: list[PipeResult] = []
