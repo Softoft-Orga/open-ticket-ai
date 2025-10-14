@@ -5,8 +5,6 @@ from typing import Any
 
 
 class AppLogger(abc.ABC):
-    @abc.abstractmethod
-    def bind(self, **kwargs: Any) -> AppLogger: ...
 
     @abc.abstractmethod
     def debug(self, message: str, **kwargs: Any) -> None: ...

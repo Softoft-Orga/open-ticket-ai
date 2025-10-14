@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import logging
 
+from _pytest.logging import LogCaptureFixture
+
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLogger, StdlibLoggerFactory
 
 
-def test_stdlib_logger_basic_logging(caplog) -> None:
+def test_stdlib_logger_basic_logging(caplog: LogCaptureFixture) -> None:
     logger_obj = logging.getLogger("test")
     logger = StdlibLogger(logger_obj)
     with caplog.at_level(logging.INFO):
@@ -14,14 +16,6 @@ def test_stdlib_logger_basic_logging(caplog) -> None:
     assert "Info message" in caplog.text
     assert "Error message" in caplog.text
 
-
-def test_stdlib_logger_bind_context(caplog) -> None:
-    logger_obj = logging.getLogger("test_bind")
-    logger = StdlibLogger(logger_obj)
-    bound_logger = logger.bind(user_id="123")
-    with caplog.at_level(logging.INFO):
-        bound_logger.info("Message with context")
-    assert "user_id=123" in caplog.text
 
 
 def test_stdlib_logger_factory_creates_logger() -> None:

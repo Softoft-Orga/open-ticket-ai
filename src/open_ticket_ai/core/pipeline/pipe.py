@@ -4,16 +4,15 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from open_ticket_ai.core.renderable.renderable import Renderable
-
-from ..logging_iface import LoggerFactory
-from .pipe_config import PipeConfig, PipeResult
 from .pipe_context import PipeContext
+from .pipe_models import PipeConfig, PipeResult
+from ..logging_iface import LoggerFactory
 
 
 class Pipe(Renderable, ABC):
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, *args, **kwargs)
-        self._config = PipeConfig.model_validate(config.model_dump())
+        self._config: PipeConfig = PipeConfig.model_validate(config.model_dump())
         self._logger = logger_factory.create(self.__class__.__name__)
 
     async def process(self, context: PipeContext) -> PipeResult:

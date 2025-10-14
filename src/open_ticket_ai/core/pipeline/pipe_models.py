@@ -6,7 +6,7 @@ from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.core.renderable.renderable import RenderableConfig
+from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 
 
 class PipeConfig(RenderableConfig):

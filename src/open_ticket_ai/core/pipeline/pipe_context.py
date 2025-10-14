@@ -4,12 +4,12 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_models import PipeResult
 
 
 class PipeContext(BaseModel):
     model_config = ConfigDict(frozen=True)
-    pipe_results: dict[str, dict] = Field(default_factory=dict)
+    pipe_results: dict[str, dict[str, Any]] = Field(default_factory=dict)
     params: dict[str, Any] = Field(default_factory=dict)
     parent: PipeContext | None = Field(default=None)
 

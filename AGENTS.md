@@ -29,7 +29,7 @@ open-ticket-ai/
 - Cross-package **integration,e2e** tests live in **root** `tests/`.
 - Keep sample inputs/golden files under a sibling `data/` directory next to the tests that use them.
 - Each package is an editable member of the uv workspace. Do not add ad‑hoc `PYTHONPATH` hacks.
-- Python version: **3.13** only. Use modern typing (PEP 695). No inline code comments.
+- Python version: **3.13** only. Use modern typing (PEP 695). No code comments.
 
 ## Tests Layout (required)
 
@@ -60,21 +60,9 @@ tests/
 ### Fixture guidelines
 - Check existing fixtures before creating new ones: `uv run -m pytest --fixtures`
 - Follow naming conventions: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
-- Document fixtures with clear docstrings
-- See [FIXTURES.md](./docs/FIXTURES.md) for complete fixture reference
-- See [FIXTURE_TEMPLATES.md](./docs/FIXTURE_TEMPLATES.md) for common patterns
 
 ## Pytest configuration (root `pyproject.toml`)
 
-```toml
-[tool.pytest.ini_options]
-python_files = "test_*.py"
-testpaths = [
-  "tests",
-  "packages/*/tests"
-]
-addopts = ["-q"]
-```
 ## How to run
 
 - From repo root:
@@ -88,7 +76,6 @@ addopts = ["-q"]
 - Lint: `uv run ruff check .` (no warnings allowed)
 - Types: `uv run mypy .` (no ignores added without justification in PR)
 - Tests: `uv run -m pytest`
-- Test structure: `uv run python scripts/validate_test_structure.py`
 - No test files under `src/**` will be accepted. PRs that create them must be changed.
 
 ## Architectural expectations (short)
@@ -102,12 +89,6 @@ addopts = ["-q"]
 
 All documentation lives in `/docs` directory:
 
-- **Primary source:** `docs/vitepress_docs/docs_src/en/` - VitePress English documentation
-- **Architecture diagrams:** `docs/diagrams/` - PlantUML and Mermaid diagrams
-- **API reference:** `docs/man_structured/pipes/` - YAML sidecar files for pipe documentation
-- **Legacy docs:** `docs/raw_en_docs/` - Being phased out, do not use for new content
-
-See [docs/AGENTS.md](./docs/AGENTS.md) for detailed documentation guidelines.
 
 ---
 
@@ -120,4 +101,3 @@ See [docs/AGENTS.md](./docs/AGENTS.md) for detailed documentation guidelines.
 - [ ] `uv run ruff check .` clean
 - [ ] `uv run mypy .` clean
 - [ ] `uv run -m pytest` green
-- [ ] `uv run python scripts/validate_test_structure.py` passes

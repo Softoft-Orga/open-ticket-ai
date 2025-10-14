@@ -3,7 +3,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from open_ticket_ai.core.orchestration.orchestrator_config import TriggerConfig
+from open_ticket_ai.core.orchestration.orchestrator_models import TriggerConfig
 from open_ticket_ai.core.orchestration.trigger import Trigger
 
 
@@ -15,11 +15,12 @@ class IntervalTriggerParams(BaseModel):
     days: int = 0
 
 
-class IntervalTriggerConfig(TriggerConfig):
-    params: IntervalTriggerParams = IntervalTriggerParams(seconds=10)
-
 
 class IntervalTrigger(Trigger):
+    @staticmethod
+    def get_params_model() -> type[BaseModel]:
+        return IntervalTriggerParams
+
     def __init__(self, config: TriggerConfig, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, *args, **kwargs)
         validated_params = IntervalTriggerParams.model_validate(config.model_dump())

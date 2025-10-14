@@ -1,11 +1,11 @@
-from open_ticket_ai.core.template_rendering.renderer_config import (
+from open_ticket_ai.core.template_rendering.renderer_models import (
     JinjaRendererConfig,
     TemplateRendererConfig,
 )
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 __all__ = [
-    "TemplateRenderer",
     "JinjaRendererConfig",
+    "TemplateRenderer",
     "TemplateRendererConfig",
 ]

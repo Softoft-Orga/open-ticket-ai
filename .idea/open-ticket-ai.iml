@@ -42,6 +42,7 @@
   <component name="PyDocumentationSettings">
     <option name="format" value="GOOGLE" />
     <option name="myDocStringFormat" value="Google" />
+    <option name="analyzeDoctest" value="false" />
     <option name="renderExternalDocumentation" value="true" />
   </component>
   <component name="TestRunnerService">

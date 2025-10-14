@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_models import PipeResult
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
 
@@ -11,12 +11,10 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import TicketS
 class FetchTicketsParams(BaseModel):
     ticket_search_criteria: TicketSearchCriteria | None = None
 
-
 class FetchTicketsPipe(Pipe):
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return FetchTicketsParams
-
     def __init__(
         self,
         ticket_system: TicketSystemService,

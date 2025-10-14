@@ -37,13 +37,3 @@ class ConfigLoader:
             raw_otai_config = RawOpenTicketAIConfig.model_validate(config_dict)
         self._logger.info(f"Loaded config from {config_path}")
         return raw_otai_config
-
-
-def load_config(
-    config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None
-) -> RawOpenTicketAIConfig:
-    if app_config is None:
-        app_config = AppConfig()
-
-    loader = ConfigLoader(app_config)
-    return loader.load_config(config_path)

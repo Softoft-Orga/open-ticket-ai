@@ -5,9 +5,9 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import Fet
 from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import UpdateTicketPipe
 
 __all__ = [
+    "AddNotePipe",
     "CompositePipe",
     "ExpressionPipe",
-    "AddNotePipe",
     "FetchTicketsPipe",
     "UpdateTicketPipe",
 ]

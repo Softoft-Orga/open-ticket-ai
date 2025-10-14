@@ -53,7 +53,7 @@ class LoggingDictConfig(BaseModel):
     disable_existing_loggers: bool | None = None
     incremental: bool | None = None
     root: RootConfig | None = None
-    loggers: dict[str, LoggerConfig] = Field(default_factory=lambda: {})
-    handlers: dict[str, HandlerConfig] = Field(default_factory=lambda: {})
-    formatters: dict[str, FormatterConfig] = Field(default_factory=lambda: {})
-    filters: dict[str, FilterConfig] = Field(default_factory=lambda: {})
+    loggers: dict[str, LoggerConfig] = Field(default_factory=dict)
+    handlers: dict[str, HandlerConfig] = Field(default_factory=dict)
+    formatters: dict[str, FormatterConfig] = Field(default_factory=dict)
+    filters: dict[str, FilterConfig] = Field(default_factory=dict)

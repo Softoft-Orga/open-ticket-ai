@@ -107,31 +107,32 @@ class MyPipeResultData(BaseModel):
 ```python
 from typing import Any
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
+from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.logging_iface import LoggerFactory
+
 
 class MyPipe(Pipe[MyPipeParams]):
     params_class = MyPipeParams  # Required class attribute
-    
+
     def __init__(
-        self,
-        pipe_config: PipeConfig[MyPipeParams],
-        logger_factory: LoggerFactory,
-        # Add injected services here
-        *args: Any,
-        **kwargs: Any,
+            self,
+            pipe_config: PipeConfig[MyPipeParams],
+            logger_factory: LoggerFactory,
+            # Add injected services here
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory)
         # self.params is now a validated MyPipeParams instance
-        
+
     async def _process(self) -> PipeResult[MyPipeResultData]:
         # Access validated parameters
         input_val = self.params.input_field
         threshold = self.params.threshold
-        
+
         # Your processing logic here
         items = self._do_processing(input_val, threshold)
-        
+
         # Return result
         return PipeResult[MyPipeResultData](
             success=True,
@@ -141,7 +142,7 @@ class MyPipe(Pipe[MyPipeParams]):
                 count=len(items)
             )
         )
-    
+
     def _do_processing(self, input_val: str, threshold: float) -> list[str]:
         # Implementation details
         return []
@@ -257,7 +258,7 @@ async def _process(self) -> PipeResult[MyPipeResultData]:
 ```python
 import pytest
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
-from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
+from open_ticket_ai.core.pipeline.pipe_models import PipeConfig
 
 
 @pytest.mark.asyncio

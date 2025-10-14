@@ -1,0 +1,124 @@
+# .github/ISSUE_TEMPLATE/unit_test_task.yml
+name: "Unit Tests: <module/feature>"
+description: Minimal, behavior-focused pytest tests (no internals, no spam)
+title: "tests: <module/feature>"
+labels: [ "tests", "unit" ]
+assignees: [ ]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Goal: small, deterministic pytest tests for PUBLIC behavior only. Keep it minimal and maintainable.
+
+  - type: input
+    id: target
+    attributes:
+      label: Target module / symbol
+      description: e.g. open_ticket_ai.core.foo:normalize_name
+      placeholder: package.module[:symbol]
+    validations:
+      required: true
+
+  - type: textarea
+    id: behaviors
+    attributes:
+      label: Behaviors to cover
+      description: Inputs → outputs, invariants, and exactly 1 negative/error case
+      placeholder: |
+        - normalize mixed case and whitespace
+        - preserve underscores
+        - raise ValueError on invalid input
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Concrete pass/fail checks
+      placeholder: |
+        - Single test file for this target
+        - ≤5 tests total, each ≤20 lines
+        - Parametrized where applicable
+        - No network/real FS; tmp_path for files
+        - External effects isolated; deterministic results
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Hard constraints
+      options:
+        - label: Public API only (no private attrs, no internals)
+          required: true
+        - label: Use @pytest.mark.parametrize to compress cases
+          required: true
+        - label: For dependencies prefer Fakes/DI over mocks
+          required: true
+        - label: Use pytest monkeypatch for env/globals; avoid unittest.mock unless unavoidable
+          required: true
+        - label: If unittest.mock is used, restrict via spec_set/autospec and avoid interaction over-assertion
+          required: true
+        - label: Block external I/O (no network); use tmp_path/pyfakefs for files
+          required: true
+        - label: Deterministic tests (fixed seeds/time; use freezegun/time-machine if needed)
+          required: true
+        - label: ≤5 tests per file, ≤20 lines per test
+          required: true
+
+  - type: textarea
+    id: fixtures
+    attributes:
+      label: Shared setup / fixtures
+      description: Reusable setup to place in tests/conftest.py (if any)
+
+  - type: textarea
+    id: parametrization
+    attributes:
+      label: Parametrized cases
+      description: 3–6 representative examples
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - unit-only
+        - unit + tiny integration slice (single golden path)
+    validations:
+      required: true
+
+  - type: textarea
+    id: external_deps
+    attributes:
+      label: External dependencies to isolate
+      description:
+        HTTP, time, filesystem, subprocess, logging, etc. (suggest tools: respx/responses, freezegun/time-machine, pyfakefs, pytest-subprocess, caplog)
+
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Test artifacts (if any)
+      description: Files under tmp_path and what to assert (existence, schema, flags)
+
+  - type: checkboxes
+    id: done
+    attributes:
+      label: Done when
+      options:
+        - label: Tests pass locally with `uv run pytest -q`
+          required: true
+        - label: Ruff passes locally with `uv run ruff check . --fix`
+          required: true
+        - label: Mypy passes locally with `uv run mypy .`
+          required: true
+        - label: No implementation-coupled assertions
+          required: true
+        - label: Duplicates consolidated via parametrization
+          required: true
+        - label: Shared setup extracted to fixtures (if reused)
+          required: true
+        - label: No forbidden I/O; external calls isolated
+          required: true

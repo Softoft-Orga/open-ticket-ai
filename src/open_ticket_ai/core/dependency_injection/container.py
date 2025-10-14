@@ -13,9 +13,9 @@ from open_ticket_ai.core.config.config_models import (
 )
 from open_ticket_ai.core.config.logging_config import LoggingDictConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
-from open_ticket_ai.core.renderable.renderable import RenderableConfig
+from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
 from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
+from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
@@ -45,7 +45,7 @@ class AppModule(Module):
         if not service_config:
             raise ValueError(f"Template renderer service with id '{service_id}' not found")
 
-        cls: type = typing.cast(type, locate(service_config.use))
+        cls: type = typing.cast("type", locate(service_config.use))
         config_obj = JinjaRendererConfig.model_validate(service_config.params)
         return cls(config_obj, logger_factory=logger_factory)  # type: ignore[abstract]
 

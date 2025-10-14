@@ -5,7 +5,7 @@ import asyncio
 from injector import inject, singleton
 
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.orchestration.orchestrator_config import (
+from open_ticket_ai.core.orchestration.orchestrator_models import (
     OrchestratorConfig,
     TriggerConfig,
 )

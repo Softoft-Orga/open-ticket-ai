@@ -11,10 +11,7 @@ from open_ticket_ai.core.logging_iface import AppLogger, LoggerFactory
 class StdlibLogger(AppLogger):
     def __init__(self, logger: logging.Logger, context: dict[str, Any] | None = None):
         self._logger = logger
-        self._context = context or {}
 
-    def bind(self, **kwargs: Any) -> AppLogger:
-        return StdlibLogger(self._logger, {**self._context, **kwargs})
 
     def debug(self, message: str, *args: Any, **kwargs: Any) -> None:
         self._logger.debug(message, *args, **kwargs)

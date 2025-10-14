@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
+from open_ticket_ai.core.pipeline.pipe_models import PipeResult
 
 
 class ExpressionParams(BaseModel):

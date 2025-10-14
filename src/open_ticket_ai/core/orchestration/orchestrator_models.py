@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
-from open_ticket_ai.core.renderable.renderable import RenderableConfig
+from open_ticket_ai.core.pipeline.pipe_models import PipeConfig
+from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 
 
 class TriggerConfig(RenderableConfig):

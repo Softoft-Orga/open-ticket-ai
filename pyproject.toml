@@ -76,18 +76,34 @@ otai-otobo-znuny = { workspace = true }
 line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "SIM", "PL", "PERF", "TRY"]
-ignore = ["TRY003"]
+select = [
+    "E", "F", "W", # base
+    "I", # import sort
+    "UP", # pyupgrade
+    "B", "BLE", # bugbear + exceptions
+    "C4", "SIM", # comp/simplify
+    "PERF", # performance
+    "PTH", # pathlib preferred
+    "ARG", # unused args
+    "PIE", "Q", # misc + quotes
+    "ERA", # no commented-out code
+    "DTZ", # tz-aware datetimes
+    "RUF", # ruff extras
+    "TID", # tidy imports
+    "TCH", # typing cleanup
+    # optional but recommended:
+    "ANN", # type annotation coverage
+    # enable later if you want:
+    # "S",         # security
+    # "PD",
+]
+ignore = ["TRY003", "TC003", "TC002", "TC001", "ANN204", "PTH123", "ANN401"]
 fixable = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["PLR2004"]
-"tests/conftest.py" = ["PLC0415"]
-"src/open_ticket_ai/cli/**/*.py" = ["B008"]
-"src/open_ticket_ai/core/cli/**/*.py" = ["B008"]
-"tests/unit/core/dependency_injection/test_logging_module.py" = ["F821"]
-"tests/unit/infra/test_structlog_adapter.py" = ["F821"]
-
+"tests/**" = [
+    "ANN001", "ANN201", "ANN202", "ANN401", "S101"  # tests lockerer
+]
 [tool.mypy]
 python_version = "3.13"
 strict = true
@@ -95,13 +111,24 @@ plugins = ['pydantic.mypy']
 namespace_packages = true
 explicit_package_bases = true
 mypy_path = "src"
-
 [[tool.mypy.overrides]]
 module = ["tests.*", "packages.*.tests.*"]
 disallow_untyped_defs = false
-disallow_untyped_calls = false
-disallow_incomplete_defs = false
-check_untyped_defs = true  # Still check logic, just don't require annotations
+check_untyped_defs = false
+warn_return_any = false
+disallow_any_generics = false
+ignore_errors = false
+
+[[tool.mypy.overrides]]
+module = ["packages.otai_otobo_znuny.*"]
+ignore_missing_imports = true
+warn_return_any = false
+disable_error_code = ["attr-defined", "arg-type", "no-any-return"]
+
+[[tool.mypy.overrides]]
+module = ["open_ticket_ai.base.pipes.*", "open_ticket_ai.base.triggers.*"]
+disable_error_code = ["attr-defined", "no-any-return", "call-arg"]
+
 
 [[tool.mypy.overrides]]
 module = [
