@@ -15,7 +15,6 @@ class IntervalTriggerParams(BaseModel):
     days: int = 0
 
 
-
 class IntervalTrigger(Trigger):
     @staticmethod
     def get_params_model() -> type[BaseModel]:
