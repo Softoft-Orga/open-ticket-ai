@@ -3,7 +3,6 @@ name: "Unit Tests: <module/feature>"
 description: Minimal, behavior-focused pytest tests (no internals, no spam)
 title: "tests: <module/feature>"
 labels: [ "tests", "unit" ]
-assignees: [ ]
 
 body:
   - type: markdown
@@ -55,17 +54,19 @@ body:
           required: true
         - label: Use @pytest.mark.parametrize to compress cases
           required: true
-        - label: For dependencies prefer Fakes/DI over mocks
+        - label: Prefer Fakes/DI over mocks for dependencies
           required: true
         - label: Use pytest monkeypatch for env/globals; avoid unittest.mock unless unavoidable
           required: true
-        - label: If unittest.mock is used, restrict via spec_set/autospec and avoid interaction over-assertion
+        - label: If unittest.mock is used, set spec_set/autospec and avoid interaction over-assertion
           required: true
         - label: Block external I/O (no network); use tmp_path/pyfakefs for files
           required: true
         - label: Deterministic tests (fixed seeds/time; use freezegun/time-machine if needed)
           required: true
         - label: ≤5 tests per file, ≤20 lines per test
+          required: true
+        - label: Do not assert exact error messages; assert exception type (and stable code) only
           required: true
 
   - type: textarea
@@ -89,13 +90,6 @@ body:
         - unit + tiny integration slice (single golden path)
     validations:
       required: true
-
-  - type: textarea
-    id: external_deps
-    attributes:
-      label: External dependencies to isolate
-      description:
-        HTTP, time, filesystem, subprocess, logging, etc. (suggest tools: respx/responses, freezegun/time-machine, pyfakefs, pytest-subprocess, caplog)
 
   - type: textarea
     id: artifacts
