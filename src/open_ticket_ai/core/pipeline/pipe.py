@@ -16,9 +16,7 @@ class ParamsModel(BaseModel):
 
 
 class Pipe(Renderable, ABC):
-    def __init__(
-        self, pipe_params: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any
-    ) -> None:
+    def __init__(self, pipe_params: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         self.pipe_config = pipe_params
         self._logger = logger_factory.get_logger(self.__class__.__name__)
         # Child classes should validate params in their __init__ using Pydantic models

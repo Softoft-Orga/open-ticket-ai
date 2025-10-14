@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 import pytest
 
 from open_ticket_ai.core.config.renderable import RenderableConfig

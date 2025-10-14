@@ -1,5 +1,4 @@
 import warnings
-from typing import Any
 
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 

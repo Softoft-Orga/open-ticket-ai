@@ -29,7 +29,7 @@ def _locate(use: str) -> type:
 def render_params(params: dict[str, Any], scope: PipeContext, renderer: TemplateRenderer) -> dict[str, Any]:
     if isinstance(params, dict):
         return renderer.render_recursive(params, scope)
-    
+
     # If it's a BaseModel, convert to dict first
     try:
         params_dict = params.model_dump() if isinstance(params, BaseModel) else params
@@ -76,16 +76,12 @@ class RenderableFactory:
         trigger_config_raw.params = rendered_params
         return self.__create_renderable_instance(trigger_config_raw, scope)
 
-    def __create_service_instance(
-        self, registerable_config_raw: RenderableConfig, scope: PipeContext
-    ) -> Renderable:
+    def __create_service_instance(self, registerable_config_raw: RenderableConfig, scope: PipeContext) -> Renderable:
         rendered_params = render_params(registerable_config_raw.params, scope, self._template_renderer)
         registerable_config_raw.params = rendered_params
         return self.__create_renderable_instance(registerable_config_raw, scope)
 
-    def __create_renderable_instance(
-        self, registerable_config: RenderableConfig, scope: PipeContext
-    ) -> Renderable:
+    def __create_renderable_instance(self, registerable_config: RenderableConfig, scope: PipeContext) -> Renderable:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):
             raise TypeError(f"Class '{registerable_config.use}' is not a {Renderable.__class__.__name__}")
