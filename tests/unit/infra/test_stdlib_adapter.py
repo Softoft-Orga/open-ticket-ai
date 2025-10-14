@@ -2,11 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from open_ticket_ai.base.loggers.stdlib_logging_adapter import (
-    StdlibLogger,
-    StdlibLoggerFactory,
-    create_logger_factory,
-)
+from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLogger, StdlibLoggerFactory
 
 
 def test_stdlib_logger_basic_logging(caplog) -> None:

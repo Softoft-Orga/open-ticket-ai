@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.cli import otobo_znuny
 from typer.testing import CliRunner
