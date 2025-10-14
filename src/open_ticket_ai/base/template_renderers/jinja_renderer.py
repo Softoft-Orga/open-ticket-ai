@@ -2,7 +2,6 @@ from typing import Any
 
 from injector import inject
 from jinja2.nativetypes import NativeEnvironment
-from jinja2.sandbox import SandboxedEnvironment
 
 from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     at_path,

@@ -8,7 +8,7 @@ from otobo_znuny.domain_models.basic_auth_model import BasicAuth
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket  # type: ignore[import-untyped]
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel
 
 
 def _to_unified_entity(id_name: IdName | None) -> UnifiedEntity | None:

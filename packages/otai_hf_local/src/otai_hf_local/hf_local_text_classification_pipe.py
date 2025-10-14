@@ -17,6 +17,7 @@ class HFLocalTextClassificationParams(BaseModel):
     token: str | None = None
     prompt: str
 
+
 class HFLocalTextClassificationPipeConfig(PipeConfig):
     params: HFLocalTextClassificationParams
 
@@ -60,4 +61,4 @@ class HFLocalTextClassificationPipe(Pipe):
 
         self._logger.info(f"Prediction: label {label} with score {score}")
 
-        return PipeResult(success=True, data={"label":label, "confidence":score})
+        return PipeResult(success=True, data={"label": label, "confidence": score})

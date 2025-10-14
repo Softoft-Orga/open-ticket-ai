@@ -23,12 +23,12 @@ class FetchTicketsPipeConfig(PipeConfig):
 
 class FetchTicketsPipe(Pipe):
     def __init__(
-            self,
-            ticket_system: TicketSystemService,
-            config: FetchTicketsPipeConfig,
-            logger_factory: LoggerFactory | None = None,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        ticket_system: TicketSystemService,
+        config: FetchTicketsPipeConfig,
+        logger_factory: LoggerFactory | None = None,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         if logger_factory is None:
             raise ValueError("logger_factory is required")

@@ -33,6 +33,4 @@ class ExpressionPipe(Pipe):
         self.config = ExpressionPipeConfig.model_validate(config.model_dump())
 
     async def _process(self) -> PipeResult:
-        return PipeResult(
-            success=True, data=ExpressionPipeResultData(value=self.config.params.expression)
-        )
+        return PipeResult(success=True, data=ExpressionPipeResultData(value=self.config.params.expression))

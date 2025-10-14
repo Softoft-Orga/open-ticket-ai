@@ -1,4 +1,3 @@
-
 from injector import inject
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig

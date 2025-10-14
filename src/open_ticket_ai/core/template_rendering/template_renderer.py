@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 from open_ticket_ai.core.logging_iface import LoggerFactory
 
+
 def pretty_print(obj: Any) -> str:
     if isinstance(obj, BaseModel):
         data = obj.model_dump()
@@ -48,7 +49,7 @@ class TemplateRenderer(ABC):
 
         try:
             return json.loads(stripped)
-        except Exception as e:
+        except Exception:
             try:
                 return ast.literal_eval(stripped)
             except Exception as e:

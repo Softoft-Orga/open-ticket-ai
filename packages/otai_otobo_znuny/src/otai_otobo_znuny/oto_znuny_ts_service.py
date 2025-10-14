@@ -1,15 +1,6 @@
 from typing import Any
 
 from injector import inject
-from otobo_znuny.clients.otobo_client import OTOBOZnunyClient  # type: ignore[import-untyped]
-from otobo_znuny.domain_models.ticket_models import (  # type: ignore[import-untyped]
-    Article,
-    Ticket,
-    TicketSearch,
-    TicketUpdate,
-)
-from otobo_znuny.mappers import _to_id_name  # type: ignore[import-untyped]
-
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
@@ -17,20 +8,28 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
     UnifiedTicket,
 )
+from otobo_znuny.clients.otobo_client import OTOBOZnunyClient  # type: ignore[import-untyped]
+from otobo_znuny.domain_models.ticket_models import (  # type: ignore[import-untyped]
+    Article,
+    Ticket,
+    TicketSearch,
+    TicketUpdate,
+)
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
+    OTOBOZnunyTSConfig,
     otobo_ticket_to_unified_ticket,
-    unified_entity_to_id_name, OTOBOZnunyTSConfig,
+    unified_entity_to_id_name,
 )
 
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
     def __init__(
-            self,
-            config: OTOBOZnunyTSConfig,
-            logger_factory: LoggerFactory | None = None,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        config: OTOBOZnunyTSConfig,
+        logger_factory: LoggerFactory | None = None,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(config, *args, **kwargs)
         self._config = OTOBOZnunyTSConfig.model_validate(config.model_dump())
@@ -55,8 +54,9 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         self._recreate_client()
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
-        search = TicketSearch(queues=[unified_entity_to_id_name(criteria.queue)] if criteria.queue else None,
-                              limit=criteria.limit)
+        search = TicketSearch(
+            queues=[unified_entity_to_id_name(criteria.queue)] if criteria.queue else None, limit=criteria.limit
+        )
         self.logger.debug(f"OTOBO search criteria: {search}")
         tickets: list[Ticket] = await self.client.search_and_get(search)
         self.logger.info(f"OTOBO search returned {len(tickets)} tickets")
