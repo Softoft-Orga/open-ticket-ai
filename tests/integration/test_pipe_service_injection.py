@@ -21,9 +21,9 @@ from open_ticket_ai.base.pipes.ticket_system_pipes import (
 )
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,

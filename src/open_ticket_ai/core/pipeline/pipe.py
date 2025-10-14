@@ -6,6 +6,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict
 
 from open_ticket_ai.core.renderable.renderable import Renderable
+
 from ..logging_iface import LoggerFactory
 from .pipe_config import PipeConfig, PipeResult
 from .pipe_context import PipeContext
@@ -36,7 +37,6 @@ class Pipe(Renderable, ABC):
             return await self._process_and_save(context)
         self._logger.info(f"Skipping pipe '{self._config.id}'.")
         return context
-
 
     @abstractmethod
     async def _process(self) -> PipeResult:

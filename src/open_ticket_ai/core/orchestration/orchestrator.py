@@ -4,7 +4,6 @@ import asyncio
 
 from injector import inject, singleton
 
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import (
     OrchestratorConfig,
@@ -13,6 +12,7 @@ from open_ticket_ai.core.orchestration.orchestrator_config import (
 from open_ticket_ai.core.orchestration.scheduled_runner import PipeRunner
 from open_ticket_ai.core.orchestration.trigger import Trigger
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 
 @singleton

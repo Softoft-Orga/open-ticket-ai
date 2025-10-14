@@ -7,11 +7,11 @@ from typing import Any
 from injector import inject, singleton
 
 from open_ticket_ai.core import AppConfig
-from open_ticket_ai.core.renderable.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.renderable.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
@@ -81,9 +81,12 @@ class RenderableFactory:
 
     def __resolve_by_id(self, service_id: str, scope: PipeContext) -> Any:
         matching_config = next(
-            (config for config in self._registerable_configs
-             if RenderableConfig.model_validate(config).id == service_id),
-            None
+            (
+                config
+                for config in self._registerable_configs
+                if RenderableConfig.model_validate(config).id == service_id
+            ),
+            None,
         )
         if matching_config is None:
             raise KeyError(service_id)

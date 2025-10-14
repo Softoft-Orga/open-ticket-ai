@@ -22,11 +22,11 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import Upd
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.logging_config import LoggingDictConfig
-from open_ticket_ai.core.renderable.renderable import RenderableConfig
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.renderable.renderable import RenderableConfig
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -263,9 +263,13 @@ async def test_realistic_multi_step_pipeline(logger_factory: LoggerFactory) -> N
     result_ctx = await composite.process(PipeContext())
 
     assert (
-            result_ctx.pipe_results["fetch_tickets"].success and len(result_ctx.pipe_results["fetch_tickets"].data.fetched_tickets) == 2
+        result_ctx.pipe_results["fetch_tickets"].success
+        and len(result_ctx.pipe_results["fetch_tickets"].data.fetched_tickets) == 2
     )
-    assert result_ctx.pipe_results["update_ticket"].success and result_ctx.pipe_results["update_ticket"].data.ticket_updated
+    assert (
+        result_ctx.pipe_results["update_ticket"].success
+        and result_ctx.pipe_results["update_ticket"].data.ticket_updated
+    )
     assert result_ctx.pipe_results["add_note"].success and result_ctx.pipe_results["add_note"].data.note_added
 
     ticket = await mock_system.get_ticket("TICKET-1")

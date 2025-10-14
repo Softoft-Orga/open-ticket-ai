@@ -6,8 +6,8 @@ from jinja2.sandbox import SandboxedEnvironment
 from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     at_path,
     build_filtered_env,
-    has_failed,
     get_pipe_result,
+    has_failed,
 )
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.template_rendering.renderer_config import JinjaRendererConfig

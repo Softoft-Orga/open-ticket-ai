@@ -12,10 +12,10 @@ from pathlib import Path
 from injector import Injector
 
 from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader, RawOpenTicketAIConfig
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 
 def test_config_loading_and_service_registration(tmp_path: Path, logger_factory: LoggerFactory) -> None:

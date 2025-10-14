@@ -34,7 +34,6 @@ class RenderableConfig(BaseModel):
     injects: dict[str, str] = Field(default_factory=dict)
     params: dict[str, Any] = Field(default_factory=dict)
 
-
     @model_validator(mode="after")
     def set_id_from_uid(self) -> Self:
         if self.id is None:

@@ -17,6 +17,6 @@ class PipeContext(BaseModel):
         pipe_result = self.pipe_results.get(pipe_id)
         return pipe_result is not None and pipe_result.success
 
-    def with_pipe_result(self, pipe_id: str, pipe_result: PipeResult) -> "PipeContext":
+    def with_pipe_result(self, pipe_id: str, pipe_result: PipeResult) -> PipeContext:
         new_pipes = {**self.pipes, pipe_id: pipe_result}
         return self.model_copy(update={"pipes": new_pipes})
