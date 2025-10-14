@@ -42,7 +42,6 @@ class Orchestrator:
             self._runners[job_id] = runner
 
             for _trigger_index, trigger_def in enumerate(definition.on):
-
                 if trigger_id in self._trigger_registry:
                     trigger = self._trigger_registry[trigger_id]
                 else:

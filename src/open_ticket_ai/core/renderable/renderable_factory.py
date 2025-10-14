@@ -12,15 +12,16 @@ from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.renderable.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
+
 @singleton
 class RenderableFactory:
     @inject
     def __init__(
-            self,
-            template_renderer: TemplateRenderer,
-            app_config: AppConfig,
-            registerable_configs: list[RenderableConfig],
-            logger_factory: LoggerFactory,
+        self,
+        template_renderer: TemplateRenderer,
+        app_config: AppConfig,
+        registerable_configs: list[RenderableConfig],
+        logger_factory: LoggerFactory,
     ):
         self._logger = logger_factory.get_logger(self.__class__.__name__)
         self._template_renderer = template_renderer
@@ -41,13 +42,15 @@ class RenderableFactory:
         if not issubclass(cls, Renderable):
             raise TypeError(f"Class '{rendered_config.use}' is not a {Renderable.__class__.__name__}")
 
-        return cls(**{
-            "factory": self,
-            "app_config": self._app_config,
-            "logger_factory": self._logger_factory,
-            "config": rendered_config,
-            **self.__resolve_injects(rendered_config.injects, scope),
-        })
+        return cls(
+            **{
+                "factory": self,
+                "app_config": self._app_config,
+                "logger_factory": self._logger_factory,
+                "config": rendered_config,
+                **self.__resolve_injects(rendered_config.injects, scope),
+            }
+        )
 
     def __resolve_injects(self, injects: dict[str, str], scope: PipeContext) -> dict[str, Renderable]:
         return {param: self.__resolve_by_id(ref, scope) for param, ref in injects.items()}
