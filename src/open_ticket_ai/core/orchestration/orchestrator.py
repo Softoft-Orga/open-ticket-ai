@@ -17,8 +17,6 @@ from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 @singleton
 class Orchestrator:
-    """Manages pipeline execution using Observer Pattern for triggers."""
-
     @inject
     def __init__(
         self, pipe_factory: RenderableFactory, orchestrator_config: OrchestratorConfig, logger_factory: LoggerFactory
@@ -31,13 +29,11 @@ class Orchestrator:
         self._runners: dict[str, PipeRunner] = {}
 
     def _instantiate_trigger(self, trigger_def: TriggerConfig) -> Trigger:
-        """Instantiate trigger using RenderableFactory for consistency with pipe instantiation."""
         scope = PipeContext()
         trigger: Trigger = self._pipe_factory.render(trigger_def, scope)  # type: ignore[assignment]
         return trigger
 
     def start(self) -> None:
-        """Start the orchestrator and all runners."""
         self._logger.info(f"Starting orchestrator with {len(self._config.runners)} runner(s)")
 
         for index, definition in enumerate(self._config.runners):
@@ -46,13 +42,6 @@ class Orchestrator:
             self._runners[job_id] = runner
 
             for _trigger_index, trigger_def in enumerate(definition.on):
-                # Ensure trigger has a valid ID (never None)
-                trigger_id = trigger_def.id
-                if trigger_id is None:
-                    raise ValueError(
-                        f"Trigger in runner '{definition.pipe_id}' has no ID. "
-                        f"All triggers must have a unique 'id' field."
-                    )
 
                 if trigger_id in self._trigger_registry:
                     trigger = self._trigger_registry[trigger_id]
@@ -65,14 +54,12 @@ class Orchestrator:
                     f"Attached pipe '{definition.pipe_id}' to trigger '{trigger_def.id}' ({trigger_def.use})"
                 )
 
-        # Start all triggers
         for trigger in self._trigger_registry.values():
             trigger.start()
 
         self._logger.info("Orchestrator started successfully")
 
     def stop(self) -> None:
-        """Stop the orchestrator and all triggers."""
         self._logger.info("Stopping orchestrator")
         for trigger in self._trigger_registry.values():
             trigger.stop()
@@ -81,7 +68,6 @@ class Orchestrator:
         self._logger.info("Orchestrator stopped successfully")
 
     async def run(self) -> None:
-        """Start the orchestrator and keep it running. Blocks until shutdown."""
         self.start()
 
         try:

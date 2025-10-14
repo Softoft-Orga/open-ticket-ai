@@ -12,26 +12,15 @@ from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.renderable.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
-
-def _locate(use: str) -> type:
-    if ":" in use:
-        m, c = use.split(":", 1)
-        use = f"{m}.{c}"
-    use_class = locate(use)
-    if use_class is None:
-        raise ValueError(f"Cannot locate class '{use}'")
-    return typing.cast(type, locate(use))
-
-
 @singleton
 class RenderableFactory:
     @inject
     def __init__(
-        self,
-        template_renderer: TemplateRenderer,
-        app_config: AppConfig,
-        registerable_configs: list[RenderableConfig],
-        logger_factory: LoggerFactory,
+            self,
+            template_renderer: TemplateRenderer,
+            app_config: AppConfig,
+            registerable_configs: list[RenderableConfig],
+            logger_factory: LoggerFactory,
     ):
         self._logger = logger_factory.get_logger(self.__class__.__name__)
         self._template_renderer = template_renderer
@@ -39,28 +28,26 @@ class RenderableFactory:
         self._app_config = app_config
         self._logger_factory = logger_factory
 
-    def __create_service_instance(self, registerable_config_raw: RenderableConfig, scope: PipeContext) -> Renderable:
-        return self.render(registerable_config_raw, scope)
-
     def render(self, registerable_config_raw: RenderableConfig, scope: PipeContext):
         rendered_params = self._template_renderer.render_recursive(registerable_config_raw.params, scope)
         registerable_config_raw.params = rendered_params
         return self.__create_renderable_instance(registerable_config_raw, scope)
 
+    def __create_service_instance(self, registerable_config_raw: RenderableConfig, scope: PipeContext) -> Renderable:
+        return self.render(registerable_config_raw, scope)
+
     def __create_renderable_instance(self, rendered_config: RenderableConfig, scope: PipeContext) -> Renderable:
-        cls: type = _locate(rendered_config.use)
+        cls: type = typing.cast(type, locate(rendered_config.use))
         if not issubclass(cls, Renderable):
             raise TypeError(f"Class '{rendered_config.use}' is not a {Renderable.__class__.__name__}")
 
-        return cls(
-            **{
-                "factory": self,
-                "app_config": self._app_config,
-                "logger_factory": self._logger_factory,
-                "config": rendered_config,
-                **self.__resolve_injects(rendered_config.injects, scope),
-            }
-        )
+        return cls(**{
+            "factory": self,
+            "app_config": self._app_config,
+            "logger_factory": self._logger_factory,
+            "config": rendered_config,
+            **self.__resolve_injects(rendered_config.injects, scope),
+        })
 
     def __resolve_injects(self, injects: dict[str, str], scope: PipeContext) -> dict[str, Renderable]:
         return {param: self.__resolve_by_id(ref, scope) for param, ref in injects.items()}

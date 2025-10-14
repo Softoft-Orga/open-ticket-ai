@@ -28,5 +28,4 @@ class JinjaRenderer(TemplateRenderer):
         self.jinja_env.globals["has_failed"] = has_failed
         self.jinja_env.globals["get_pipe_result"] = get_pipe_result
         template = self.jinja_env.from_string(template_str)
-        rendered = template.render(self._to_dict(scope))
-        return self._parse_rendered_value(rendered)
+        return template.render(self._to_dict(scope))

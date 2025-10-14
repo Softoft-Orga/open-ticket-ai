@@ -23,12 +23,10 @@ class UpdateTicketPipe(Pipe):
         self,
         ticket_system: TicketSystemService,
         config: UpdateTicketPipeConfig,
-        logger_factory: LoggerFactory | None = None,
+        logger_factory: LoggerFactory,
         *args: Any,
         **kwargs: Any,
     ) -> None:
-        if logger_factory is None:
-            raise ValueError("logger_factory is required")
         super().__init__(config, logger_factory=logger_factory)
         self._config = UpdateTicketPipeConfig.model_validate(config.model_dump())
         self._ticket_system = ticket_system

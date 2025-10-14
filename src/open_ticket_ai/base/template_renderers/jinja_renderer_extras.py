@@ -69,26 +69,16 @@ def at_path(value: Any, path: str | list[str] | tuple[str, ...] | None) -> str:
 
 @pass_context
 def has_failed(ctx: Any, pipe_id: str) -> bool:
-    pipes = ctx.get("pipe_results", {})
-    pipe = pipes.get(pipe_id)
-    if pipe is None:
-        return False
-    if isinstance(pipe, PipeResult):
-        return not pipe.success
-    return not pipe.get("success", True)
+    pipe = ctx.get("pipe_results", {}).get(pipe_id)
+    return pipe is None or not pipe.get("success", True)
 
 
 @pass_context
 def get_pipe_result(ctx: Any, pipe_id: str, data_key: str = "value") -> Any:
-    pipes = ctx.get("pipe_results", {})
-    pipe = pipes.get(pipe_id)
+    pipe = ctx.get("pipe_results", {}).get(pipe_id)
     if pipe is None:
         return None
-    pipe_data = pipe.data if isinstance(pipe, PipeResult) else pipe.get("data")
-    if isinstance(pipe_data, BaseModel):
-        pipe_data_dict = pipe_data.model_dump()
-        return pipe_data_dict.get(data_key)
-    return pipe_data.get(data_key)
+    return pipe.get("data").get(data_key)
 
 
 def build_filtered_env() -> dict[str, str]:

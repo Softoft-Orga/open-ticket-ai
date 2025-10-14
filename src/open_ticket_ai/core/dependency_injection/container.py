@@ -20,12 +20,6 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 
 class AppModule(Module):
     def __init__(self, config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None) -> None:
-        """Initialize AppModule with optional config path.
-
-        Args:
-            config_path: Path to config.yml. If None, uses OPEN_TICKET_AI_CONFIG
-                        environment variable or falls back to default location.
-        """
         self.config_path = config_path
         self.app_config = app_config or AppConfig()
 
