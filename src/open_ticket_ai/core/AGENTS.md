@@ -67,6 +67,38 @@ Pipeline orchestration in `pipeline/` controls execution flow:
 - Handle errors at the orchestrator level
 - Log execution metrics for monitoring
 
+### Pipe Parameter Pattern
+
+The `Pipe` base class supports runtime parameter validation:
+
+**Key Implementation (pipe.py:27-30):**
+```python
+if isinstance(pipe_params.params, dict):
+    self.params: ParamsT = self.params_class.model_validate(pipe_params.params)
+else:
+    self.params: ParamsT = pipe_params.params
+```
+
+**Flow:**
+1. YAML config loaded as dict structure
+2. Jinja2 templates rendered in dict form
+3. Rendered dict passed to Pipe constructor
+4. `model_validate()` converts dict → typed Pydantic model
+5. Validated params available as `self.params`
+
+**Benefits:**
+- Template rendering happens before type validation
+- YAML remains simple and flexible
+- Full type safety after rendering
+- Clear validation error messages
+- Compatible with Copilot code generation
+
+**When implementing pipes:**
+- Always define `params_class` class attribute
+- Let parent `__init__` handle param conversion
+- Access validated params via `self.params`
+- Don't manually validate in subclass `__init__`
+
 ## Plugin Module
 
 Plugin loading in `plugins/` enables extensibility:
