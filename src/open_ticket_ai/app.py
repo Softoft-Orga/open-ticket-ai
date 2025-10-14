@@ -1,7 +1,4 @@
-import tomllib
-from pathlib import Path
 
-import pyfiglet
 from injector import inject
 
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
