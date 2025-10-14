@@ -48,10 +48,6 @@ class AddNotePipe(Pipe):
                     message="Failed to add note to ticket",
                     data=AddNotePipeResultData(note_added=False),
                 )
-            return PipeResult(
-                success=True, failed=False, data=AddNotePipeResultData(note_added=True)
-            )
+            return PipeResult(success=True, failed=False, data=AddNotePipeResultData(note_added=True))
         except Exception as e:
-            return PipeResult(
-                success=False, failed=True, message=str(e), data=AddNotePipeResultData(note_added=False)
-            )
+            return PipeResult(success=False, failed=True, message=str(e), data=AddNotePipeResultData(note_added=False))

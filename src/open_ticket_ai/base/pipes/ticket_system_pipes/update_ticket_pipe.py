@@ -50,9 +50,7 @@ class UpdateTicketPipe(Pipe):
                     message="Failed to update ticket",
                     data=UpdateTicketPipeResultData(ticket_updated=False),
                 )
-            return PipeResult(
-                success=True, failed=False, data=UpdateTicketPipeResultData(ticket_updated=True)
-            )
+            return PipeResult(success=True, failed=False, data=UpdateTicketPipeResultData(ticket_updated=True))
         except Exception as e:
             return PipeResult(
                 success=False, failed=True, message=str(e), data=UpdateTicketPipeResultData(ticket_updated=False)
