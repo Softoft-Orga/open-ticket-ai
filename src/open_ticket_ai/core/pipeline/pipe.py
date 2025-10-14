@@ -31,6 +31,23 @@ class Pipe(Renderable, ABC):
     def have_dependent_pipes_been_run(self, context: PipeContext) -> bool:
         return all(context.has_succeeded(dependency_id) for dependency_id in self.pipe_config.depends_on)
 
+    async def process(self, context: PipeContext) -> PipeContext:
+        """Process the pipe with the given context.
+        
+        This method checks if the pipe should be skipped (based on if_ condition),
+        validates dependencies, and executes the pipe's _process method.
+        """
+        # Check if pipe should be skipped based on if_ condition
+        if self.pipe_config.if_ is False:
+            return context
+        
+        # Check if dependencies have been satisfied
+        if not self.have_dependent_pipes_been_run(context):
+            self._logger.warning(f"Pipe {self.pipe_config.id} skipped: dependencies not satisfied")
+            return context
+        
+        return await self.__process_and_save(context)
+
     async def __process_and_save(self, context: PipeContext) -> PipeContext:
         new_context = context.model_copy()
         try:

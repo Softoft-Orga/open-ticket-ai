@@ -65,7 +65,7 @@ class LoggingDictConfig(BaseModel):
 class InfrastructureConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
     logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
-    default_template_renderer: str
+    default_template_renderer: str = "open_ticket_ai.base.template_renderers.jinja_renderer:JinjaRenderer"
 
 
 class RawOpenTicketAIConfig(BaseModel):
