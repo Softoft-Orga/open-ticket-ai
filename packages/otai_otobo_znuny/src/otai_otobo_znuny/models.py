@@ -6,7 +6,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 )
 from otobo_znuny.domain_models.basic_auth_model import BasicAuth
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig
-from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket  # type: ignore[import-untyped]
+from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
 from pydantic import BaseModel
 
@@ -69,7 +69,3 @@ class RenderedOTOBOZnunyTSServiceParams(BaseModel):
             webservice_name=self.webservice_name,
             operation_url_map=self.operation_url_map,
         )
-
-
-class OTOBOZnunyTSConfig(RenderableConfig):
-    params: RenderedOTOBOZnunyTSServiceParams

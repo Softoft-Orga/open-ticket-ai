@@ -15,7 +15,7 @@ class ConfigLoader:
     @injector.inject
     def __init__(self, app_config: AppConfig, logger_factory: LoggerFactory):
         self.app_config = app_config
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
+        self._logger = logger_factory.create(self.__class__.__name__)
 
     def load_config(self, config_path: os.PathLike | None = None) -> RawOpenTicketAIConfig:
         if config_path is None:

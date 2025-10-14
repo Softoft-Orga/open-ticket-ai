@@ -11,7 +11,7 @@ def prettify(obj: Any) -> str:
 
 class TemplateRenderer(ABC):
     def __init__(self, logger_factory: LoggerFactory) -> None:
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
+        self._logger = logger_factory.create(self.__class__.__name__)
 
     @abstractmethod
     def render(self, template_str: str, scope: dict[str, Any]) -> Any:

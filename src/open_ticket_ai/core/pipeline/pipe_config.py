@@ -22,9 +22,10 @@ class PipeConfig(RenderableConfig):
 
 class PipeResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    success: bool
+    success: bool = True
+    was_skipped: bool = False
     message: str = ""
-    data: dict = {}
+    data: dict[str, Any] = {}
 
     def __and__(self, other: Self) -> PipeResult:
         merged_data_dict: dict[str, Any] = {**self.data, **other.data}
@@ -38,5 +39,17 @@ class PipeResult(BaseModel):
     @classmethod
     def union(cls, results: Iterable[PipeResult]) -> PipeResult:
         if not results:
-            return PipeResult(success=True)
+            return PipeResult()
         return reduce(lambda a, b: a & b, results)
+
+    @classmethod
+    def empty(cls) -> PipeResult:
+        return PipeResult()
+
+    @classmethod
+    def failure(cls, message: str) -> PipeResult:
+        return PipeResult(success=False, message=message)
+
+    @classmethod
+    def skipped(cls, message: str="") -> PipeResult:
+        return PipeResult(was_skipped=True, message=message)

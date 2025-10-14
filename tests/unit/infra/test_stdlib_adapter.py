@@ -26,5 +26,5 @@ def test_stdlib_logger_bind_context(caplog) -> None:
 
 def test_stdlib_logger_factory_creates_logger() -> None:
     factory = StdlibLoggerFactory()
-    logger = factory.get_logger("test_factory")
+    logger = factory.create("test_factory")
     assert isinstance(logger, StdlibLogger)

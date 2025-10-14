@@ -33,7 +33,7 @@ class StdlibLogger(AppLogger):
 
 
 class StdlibLoggerFactory(LoggerFactory):
-    def get_logger(self, name: str, **context: Any) -> AppLogger:
+    def create(self, name: str, **context: Any) -> AppLogger:
         logger = logging.getLogger(name)
         return StdlibLogger(logger, context)
 

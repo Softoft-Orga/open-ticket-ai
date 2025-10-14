@@ -11,7 +11,7 @@ class OpenTicketAIApp:
         self.config = config
         self.orchestrator = orchestrator
 
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
+        self._logger = logger_factory.create(self.__class__.__name__)
 
     async def run(self) -> None:
         self._logger.info("🚀 Starting Open Ticket AI orchestration...")

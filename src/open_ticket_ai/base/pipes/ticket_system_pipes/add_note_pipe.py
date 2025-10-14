@@ -14,24 +14,22 @@ class AddNoteParams(BaseModel):
     note: UnifiedNote
 
 
-class AddNotePipeConfig(PipeConfig):
-    params: AddNoteParams
-
 
 class AddNotePipe(Pipe):
+    @staticmethod
+    def get_params_model() -> type[BaseModel]:
+        return AddNoteParams
+
     def __init__(
         self,
         ticket_system: TicketSystemService,
-        config: AddNotePipeConfig,
-        logger_factory: LoggerFactory,
         *args: Any,
         **kwargs: Any,
     ) -> None:
-        super().__init__(config, logger_factory=logger_factory)
-        self._config = AddNotePipeConfig.model_validate(config.model_dump())
+        super().__init__(*args, **kwargs)
         self._ticket_system = ticket_system
 
     async def _process(self) -> PipeResult:
-        ticket_id_str = str(self._config.params.ticket_id)
+        ticket_id_str = str(self._params.ticket_id)
         await self._ticket_system.add_note(ticket_id_str, self._config.params.note)
         return PipeResult(success=True, data={})

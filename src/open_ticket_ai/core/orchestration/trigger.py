@@ -17,7 +17,7 @@ class Trigger(Renderable, ABC):
         self.trigger_def = config
         self._observers: list[PipeRunnerObserver] = []
         self._running = False
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
+        self._logger = logger_factory.create(self.__class__.__name__)
 
     def attach(self, observer: PipeRunnerObserver) -> None:
         if observer not in self._observers:

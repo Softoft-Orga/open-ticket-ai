@@ -26,5 +26,5 @@ class AppLogger(abc.ABC):
 
 class LoggerFactory(abc.ABC):
     @abc.abstractmethod
-    def get_logger(self, name: str, **context: Any) -> AppLogger:
+    def create(self, name: str, **context: Any) -> AppLogger:
         pass

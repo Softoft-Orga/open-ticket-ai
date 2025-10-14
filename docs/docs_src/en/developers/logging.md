@@ -36,7 +36,7 @@ create_logger_factory(level="INFO")
 
 # Create factory and logger
 factory = StdlibLoggerFactory()
-logger = factory.get_logger("my_module")
+logger = factory.create("my_module")
 
 # Use logger
 logger.info("Application started")

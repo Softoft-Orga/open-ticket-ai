@@ -1,15 +1,15 @@
 from functools import cache
 from typing import Any
 
-from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from pydantic import BaseModel
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
     pipeline,
 )
+
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_config import PipeResult
 
 
 class HFLocalTextClassificationParams(BaseModel):
@@ -18,25 +18,22 @@ class HFLocalTextClassificationParams(BaseModel):
     prompt: str
 
 
-class HFLocalTextClassificationPipeConfig(PipeConfig):
-    params: HFLocalTextClassificationParams
-
-
 class HFLocalTextClassificationPipe(Pipe):
     _pipeline: Any
 
+    @staticmethod
+    def get_params_model() -> type[BaseModel]:
+        return HFLocalTextClassificationParams
+
     def __init__(
-        self,
-        config: HFLocalTextClassificationPipeConfig,
-        logger_factory: LoggerFactory,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
-        super().__init__(config, logger_factory=logger_factory)
-        self._config = HFLocalTextClassificationPipeConfig.model_validate(config.model_dump())
-        self.model = self._config.params.model
-        self.token = self._config.params.token
-        self.prompt = self._config.params.prompt
+        super().__init__(*args, **kwargs)
+        self.model = self._params.model
+        self.token = self._params.token
+        self.prompt = self._params.prompt
         self._pipeline = None
 
     @staticmethod

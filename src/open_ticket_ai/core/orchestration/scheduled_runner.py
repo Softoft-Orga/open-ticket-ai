@@ -13,7 +13,7 @@ class PipeRunner:
     ) -> None:
         self.definition = definition
         self.pipe_factory = pipe_factory
-        self._logger = logger_factory.get_logger(f"{self.__class__.__name__}.{definition.pipe_id}")
+        self._logger = logger_factory.create(f"{self.__class__.__name__}.{definition.pipe_id}")
 
     async def on_trigger_fired(self) -> None:
         await self.execute()

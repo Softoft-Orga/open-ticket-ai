@@ -23,41 +23,26 @@ class Orchestrator:
     ) -> None:
         self._pipe_factory = pipe_factory
         self._config = orchestrator_config
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
+        self._logger = logger_factory.create(self.__class__.__name__)
         self._logger_factory = logger_factory
         self._trigger_registry: dict[str, Trigger] = {}
         self._runners: dict[str, PipeRunner] = {}
 
     def _instantiate_trigger(self, trigger_def: TriggerConfig) -> Trigger:
         scope = PipeContext()
-        trigger: Trigger = self._pipe_factory.render(trigger_def, scope)  # type: ignore[assignment]
-        return trigger
+        return self._pipe_factory.render(trigger_def, scope)
 
     def start(self) -> None:
-        self._logger.info(f"Starting orchestrator with {len(self._config.runners)} runner(s)")
-
         for index, definition in enumerate(self._config.runners):
             runner = PipeRunner(definition, self._pipe_factory, self._logger_factory)
             job_id = f"{definition.pipe_id}_{index}"
             self._runners[job_id] = runner
-
-            for _trigger_index, trigger_def in enumerate(definition.on):
-
-                if trigger_id in self._trigger_registry:
-                    trigger = self._trigger_registry[trigger_id]
-                else:
-                    trigger = self._instantiate_trigger(trigger_def)
-                    self._trigger_registry[trigger_id] = trigger
-
+            for trigger_def in definition.on:
+                trigger = self._trigger_registry.get(trigger_def.id) or self._instantiate_trigger(trigger_def)
+                self._trigger_registry[trigger_def.id] = trigger
                 trigger.attach(runner)
-                self._logger.info(
-                    f"Attached pipe '{definition.pipe_id}' to trigger '{trigger_def.id}' ({trigger_def.use})"
-                )
-
         for trigger in self._trigger_registry.values():
             trigger.start()
-
-        self._logger.info("Orchestrator started successfully")
 
     def stop(self) -> None:
         self._logger.info("Stopping orchestrator")
@@ -69,7 +54,6 @@ class Orchestrator:
 
     async def run(self) -> None:
         self.start()
-
         try:
             await asyncio.Future()  # Run forever
         except Exception as e:

@@ -6,8 +6,6 @@ from typing import Any
 from jinja2 import pass_context
 from pydantic import BaseModel
 
-from open_ticket_ai.core.pipeline.pipe_config import PipeResult
-
 
 def _coerce_path_to_list(path: str | list[str] | tuple[str, ...] | None) -> list[str]:
     if path is None:

@@ -12,6 +12,7 @@ from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.renderable.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
+
 @singleton
 class RenderableFactory:
     @inject
@@ -22,7 +23,7 @@ class RenderableFactory:
             registerable_configs: list[RenderableConfig],
             logger_factory: LoggerFactory,
     ):
-        self._logger = logger_factory.get_logger(self.__class__.__name__)
+        self._logger = logger_factory.create(self.__class__.__name__)
         self._template_renderer = template_renderer
         self._registerable_configs = registerable_configs
         self._app_config = app_config
