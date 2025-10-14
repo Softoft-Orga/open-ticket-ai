@@ -79,7 +79,7 @@ async def test_pipe_runner_executes_pipe_on_trigger(logger_factory: LoggerFactor
         pass
 
     class TestPipe(Pipe):
-        async def _process(self) -> PipeResult[EmptyData]:
+        async def _process(self) -> PipeResult:
             nonlocal pipe_executed
             pipe_executed = True
             return PipeResult(success=True, failed=False, data=EmptyData())

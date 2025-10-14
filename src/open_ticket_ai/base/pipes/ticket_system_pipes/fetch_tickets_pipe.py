@@ -38,7 +38,7 @@ class FetchTicketsPipe(Pipe):
         self.validated_params = FetchTicketsParams.model_validate(self.params)
         self.ticket_system = ticket_system
 
-    async def _process(self) -> PipeResult[FetchTicketsPipeResultData]:
+    async def _process(self) -> PipeResult:
         try:
             search_criteria = self.validated_params.ticket_search_criteria
             if search_criteria is None:
@@ -46,12 +46,12 @@ class FetchTicketsPipe(Pipe):
             tickets = await self.ticket_system.find_tickets(search_criteria) or []
             # Convert UnifiedTicket objects to dicts
             tickets_dict = [ticket.model_dump() if hasattr(ticket, "model_dump") else ticket for ticket in tickets]
-            return PipeResult[FetchTicketsPipeResultData](
+            return PipeResult(
                 success=True,
                 failed=False,
                 data=FetchTicketsPipeResultData(fetched_tickets=tickets_dict),
             )
         except Exception as e:
-            return PipeResult[FetchTicketsPipeResultData](
+            return PipeResult(
                 success=False, failed=True, message=str(e), data=FetchTicketsPipeResultData(fetched_tickets=[])
             )
