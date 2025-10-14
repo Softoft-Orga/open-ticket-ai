@@ -28,7 +28,7 @@ async def test_fetch_tickets_finds_tickets_by_queue(
                 queue=UnifiedEntity(id="1", name="Support"),
                 limit=10,
             )
-        ),
+        ).model_dump(),
     )
 
     pipe = FetchTicketsPipe(mocked_ticket_system, config, logger_factory)
@@ -60,7 +60,7 @@ async def test_fetch_tickets_with_pagination(
                 limit=2,
                 offset=1,
             )
-        ),
+        ).model_dump(),
     )
 
     pipe = FetchTicketsPipe(mocked_ticket_system, config, logger_factory)
@@ -86,7 +86,7 @@ async def test_fetch_tickets_returns_empty_when_no_matches(
             ticket_search_criteria=TicketSearchCriteria(
                 queue=UnifiedEntity(id="999", name="Nonexistent"),
             )
-        ),
+        ).model_dump(),
     )
 
     pipe = FetchTicketsPipe(mocked_ticket_system, config, logger_factory)

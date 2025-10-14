@@ -26,7 +26,7 @@ async def test_add_note_pipe_adds_note_to_ticket(
         params=AddNoteParams(
             ticket_id="TICKET-1",
             note=UnifiedNote(body="This is a new note"),
-        ),
+        ).model_dump(),
     )
 
     pipe = AddNotePipe(mocked_ticket_system, config, logger_factory)
@@ -59,7 +59,7 @@ async def test_add_note_pipe_with_note_object(
         params=AddNoteParams(
             ticket_id="TICKET-2",
             note=note,
-        ),
+        ).model_dump(),
     )
 
     pipe = AddNotePipe(mocked_ticket_system, config, logger_factory)
@@ -87,7 +87,7 @@ async def test_add_note_pipe_handles_failure(
         params=AddNoteParams(
             ticket_id="NONEXISTENT-TICKET",
             note=UnifiedNote(body="Test note"),
-        ),
+        ).model_dump(),
     )
 
     pipe = AddNotePipe(empty_mocked_ticket_system, config, logger_factory)
@@ -113,7 +113,7 @@ async def test_add_note_pipe_skips_when_disabled(
         params=AddNoteParams(
             ticket_id="TICKET-1",
             note=UnifiedNote(body="Test note"),
-        ),
+        ).model_dump(),
     )
 
     pipe = AddNotePipe(mocked_ticket_system, config, logger_factory)

@@ -12,7 +12,7 @@ class Renderable:
 
 
 class EmptyParams(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="allow", frozen=True)
 
     def __getitem__(self, key: str) -> Any:
         return getattr(self, key)
@@ -22,14 +22,17 @@ class EmptyParams(BaseModel):
             return self.model_dump() == other
         return super().__eq__(other)
 
+    def __hash__(self) -> int:
+        return hash(tuple(sorted(self.model_dump().items())))
 
-class RenderableConfig[ParamsT: BaseModel](BaseModel):
+
+class RenderableConfig(BaseModel):
     model_config = ConfigDict(extra="allow", arbitrary_types_allowed=True)
     uid: str = Field(default_factory=lambda: uuid.uuid4().hex)
     id: str | None = None
     use: str = Field(default="open_ticket_ai.base.CompositePipe")
     injects: dict[str, str] = Field(default_factory=dict)
-    params: ParamsT | dict[str, Any] = Field(default_factory=EmptyParams)  # type: ignore[assignment]
+    params: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="before")
     @classmethod
@@ -37,9 +40,12 @@ class RenderableConfig[ParamsT: BaseModel](BaseModel):
         if not isinstance(values, dict):
             return values
 
-        # Convert dict params to EmptyParams immediately
-        if "params" in values and isinstance(values["params"], dict):
-            values["params"] = EmptyParams(**values["params"])
+        # Ensure params is always a dict
+        if "params" in values:
+            if isinstance(values["params"], BaseModel):
+                values["params"] = values["params"].model_dump()
+            elif not isinstance(values["params"], dict):
+                values["params"] = {}
 
         return values
 

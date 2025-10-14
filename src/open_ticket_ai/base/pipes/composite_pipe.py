@@ -13,16 +13,14 @@ class CompositeParams(BaseModel):
     pass
 
 
-class CompositePipeConfig(PipeConfig[CompositeParams]):
-    steps: list[PipeConfig[Any]]
+class CompositePipeConfig(PipeConfig):
+    steps: list[PipeConfig]
 
 
-class CompositePipe(Pipe[CompositeParams]):
+class CompositePipe(Pipe):
     """
     Composite pipe that runs multiple steps. Returns PipeResult from _process, Context from process.
     """
-
-    params_class = CompositeParams
 
     def __init__(
         self,
@@ -32,12 +30,16 @@ class CompositePipe(Pipe[CompositeParams]):
         *args: Any,
         **kwargs: Any,
     ) -> None:
+        if logger_factory is None:
+            raise ValueError("logger_factory is required")
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.pipe_config = CompositePipeConfig.model_validate(pipe_config.model_dump())
+        # Validate params at runtime
+        self.validated_params = CompositeParams.model_validate(self.params)
         self._factory = factory
         self._context: PipeContext | None = None
 
-    def _build_pipe_from_step_config(self, step_config: PipeConfig[Any], context: PipeContext) -> Pipe[Any]:
+    def _build_pipe_from_step_config(self, step_config: PipeConfig, context: PipeContext) -> Pipe:
         """
         Build a child pipe from step config.
         Returns Pipe.

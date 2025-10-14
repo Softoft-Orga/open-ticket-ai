@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from open_ticket_ai.core.config.renderable import RenderableConfig
 
 
-class PipeConfig[ParamsT: BaseModel](RenderableConfig[ParamsT]):
+class PipeConfig(RenderableConfig):
     model_config = ConfigDict(populate_by_name=True)
     if_: str | bool = Field(default="True", alias="if")
     depends_on: str | list[str] = []

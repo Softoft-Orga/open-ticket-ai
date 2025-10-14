@@ -100,8 +100,8 @@ def renderable_factory(
     template_renderer: JinjaRenderer,
     app_config: AppConfig,
 ) -> RenderableFactory:
-    ticket_system_config = RenderableConfig[Empty](
-        id="mock_ticket_system", use="tests.unit.mocked_ticket_system:MockedTicketSystem", params=Empty()
+    ticket_system_config = RenderableConfig(
+        id="mock_ticket_system", use="tests.unit.mocked_ticket_system:MockedTicketSystem", params={}
     )
     return RenderableFactory(
         template_renderer=template_renderer,

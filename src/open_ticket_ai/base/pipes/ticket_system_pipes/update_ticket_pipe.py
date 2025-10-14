@@ -18,13 +18,11 @@ class UpdateTicketPipeResultData(BaseModel):
     ticket_updated: bool
 
 
-class UpdateTicketPipeConfig(PipeConfig[UpdateTicketParams]):
+class UpdateTicketPipeConfig(PipeConfig):
     pass
 
 
-class UpdateTicketPipe(Pipe[UpdateTicketParams]):
-    params_class = UpdateTicketParams
-
+class UpdateTicketPipe(Pipe):
     def __init__(
         self,
         ticket_system: TicketSystemService,
@@ -33,14 +31,18 @@ class UpdateTicketPipe(Pipe[UpdateTicketParams]):
         *args: Any,
         **kwargs: Any,
     ) -> None:
+        if logger_factory is None:
+            raise ValueError("logger_factory is required")
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.pipe_config = UpdateTicketPipeConfig.model_validate(pipe_config.model_dump())
+        # Validate params at runtime
+        self.validated_params = UpdateTicketParams.model_validate(self.params)
         self.ticket_system = ticket_system
 
     async def _process(self) -> PipeResult[UpdateTicketPipeResultData]:
         try:
-            ticket_id_str = str(self.params.ticket_id)
-            success = await self.ticket_system.update_ticket(ticket_id_str, self.params.updated_ticket)
+            ticket_id_str = str(self.validated_params.ticket_id)
+            success = await self.ticket_system.update_ticket(ticket_id_str, self.validated_params.updated_ticket)
             if not success:
                 return PipeResult[UpdateTicketPipeResultData](
                     success=False,

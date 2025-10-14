@@ -15,13 +15,11 @@ class ExpressionPipeResultData(BaseModel):
     value: Any
 
 
-class ExpressionPipeConfig(PipeConfig[ExpressionParams]):
+class ExpressionPipeConfig(PipeConfig):
     pass
 
 
-class ExpressionPipe(Pipe[ExpressionParams]):
-    params_class = ExpressionParams
-
+class ExpressionPipe(Pipe):
     def __init__(
         self,
         pipe_config: ExpressionPipeConfig,
@@ -29,9 +27,13 @@ class ExpressionPipe(Pipe[ExpressionParams]):
         *args: Any,
         **kwargs: Any,
     ) -> None:
+        if logger_factory is None:
+            raise ValueError("logger_factory is required")
         super().__init__(pipe_config, logger_factory=logger_factory)
         self.pipe_config = ExpressionPipeConfig.model_validate(pipe_config.model_dump())
-        self.expression = self.params.expression
+        # Validate params at runtime
+        self.validated_params = ExpressionParams.model_validate(self.params)
+        self.expression = self.validated_params.expression
 
     async def _process(self) -> PipeResult[ExpressionPipeResultData]:
         return PipeResult[ExpressionPipeResultData](

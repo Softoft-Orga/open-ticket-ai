@@ -189,12 +189,12 @@ def test_pipe_service_injection_with_renderable_factory(
     available for injection into pipes via the injects configuration.
     """
 
-    from open_ticket_ai.core.config.renderable import EmptyParams
+    from open_ticket_ai.core.config.renderable import RenderableConfig
 
-    ticket_system_config: RenderableConfig[EmptyParams] = RenderableConfig(
+    ticket_system_config: RenderableConfig = RenderableConfig(
         id="mock_ticket_system",
         use="tests.unit.mocked_ticket_system:MockedTicketSystem",
-        params=EmptyParams(),
+        params={},
     )
 
     factory = RenderableFactory(

@@ -5,11 +5,12 @@ from pydoc import locate
 from typing import Any
 
 from injector import inject, singleton
+from pydantic import BaseModel
 
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.renderable import Renderable, RenderableConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipeline.pipe import ParamsModel, Pipe
+from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
@@ -25,12 +26,13 @@ def _locate(use: str) -> type:
     return typing.cast(type, locate(use))
 
 
-def render_params(params: ParamsModel, scope: PipeContext, renderer: TemplateRenderer) -> dict[str, Any]:
+def render_params(params: dict[str, Any], scope: PipeContext, renderer: TemplateRenderer) -> dict[str, Any]:
     if isinstance(params, dict):
-        return params
-
+        return renderer.render_recursive(params, scope)
+    
+    # If it's a BaseModel, convert to dict first
     try:
-        params_dict = params.model_dump()
+        params_dict = params.model_dump() if isinstance(params, BaseModel) else params
     except Exception:
         params_dict = {}
         if hasattr(params, "__dict__"):
@@ -48,7 +50,7 @@ class RenderableFactory:
         self,
         template_renderer: TemplateRenderer,
         app_config: AppConfig,
-        registerable_configs: list[RenderableConfig[ParamsModel]],
+        registerable_configs: list[RenderableConfig],
         logger_factory: LoggerFactory,
     ):
         self._logger = logger_factory.get_logger(self.__class__.__name__)
@@ -57,7 +59,7 @@ class RenderableFactory:
         self._app_config = app_config
         self._logger_factory = logger_factory
 
-    def create_pipe(self, pipe_config_raw: PipeConfig[ParamsModel], scope: PipeContext) -> Pipe[Any]:
+    def create_pipe(self, pipe_config_raw: PipeConfig, scope: PipeContext) -> Pipe:
         self._logger.debug(f"Creating pipe with config id: {pipe_config_raw.id}")
         self._logger.info(f"Creating pipe '{pipe_config_raw.id}'")
         rendered_params = render_params(pipe_config_raw.params, scope, self._template_renderer)
@@ -67,7 +69,7 @@ class RenderableFactory:
             raise TypeError(f"Registerable with id '{pipe_config_raw.id}' is not a Pipe")
         return registerable
 
-    def create_trigger(self, trigger_config_raw: RenderableConfig[ParamsModel], scope: PipeContext) -> Renderable:
+    def create_trigger(self, trigger_config_raw: RenderableConfig, scope: PipeContext) -> Renderable:
         self._logger.debug(f"Creating trigger with config id: {trigger_config_raw.id}")
         self._logger.info(f"Creating trigger '{trigger_config_raw.id}'")
         rendered_params = render_params(trigger_config_raw.params, scope, self._template_renderer)
@@ -75,14 +77,14 @@ class RenderableFactory:
         return self.__create_renderable_instance(trigger_config_raw, scope)
 
     def __create_service_instance(
-        self, registerable_config_raw: RenderableConfig[ParamsModel], scope: PipeContext
+        self, registerable_config_raw: RenderableConfig, scope: PipeContext
     ) -> Renderable:
         rendered_params = render_params(registerable_config_raw.params, scope, self._template_renderer)
         registerable_config_raw.params = rendered_params
         return self.__create_renderable_instance(registerable_config_raw, scope)
 
     def __create_renderable_instance(
-        self, registerable_config: RenderableConfig[ParamsModel], scope: PipeContext
+        self, registerable_config: RenderableConfig, scope: PipeContext
     ) -> Renderable:
         cls: type = _locate(registerable_config.use)
         if not issubclass(cls, Renderable):
@@ -106,7 +108,7 @@ class RenderableFactory:
 
     def __resolve_by_id(self, service_id: str, scope: PipeContext) -> Any:
         for definition_config_raw in self._registerable_configs:
-            definition_config: RenderableConfig[Any] = RenderableConfig.model_validate(definition_config_raw)
+            definition_config: RenderableConfig = RenderableConfig.model_validate(definition_config_raw)
             if definition_config.id != service_id:
                 continue
             return self.__create_service_instance(definition_config_raw, scope)

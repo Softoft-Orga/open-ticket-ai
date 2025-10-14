@@ -4,7 +4,7 @@ import pytest
 from pydantic import BaseModel
 
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
-from open_ticket_ai.core.config.renderable_factory import render_base_model
+from open_ticket_ai.core.config.renderable_factory import render_params
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
@@ -42,71 +42,72 @@ def context() -> PipeContext:
     )
 
 
-def test_render_base_model_renders_params(renderer: JinjaRenderer, context: PipeContext) -> None:
-    config = PipeConfig[SimpleParams](
+def test_render_params_renders_params(renderer: JinjaRenderer, context: PipeContext) -> None:
+    params = {
+        "model": "{{ params.global_model }}",
+        "confidence": "{{ params.threshold }}",
+    }
+    config = PipeConfig(
         id="test",
-        params=SimpleParams.model_construct(
-            model="{{ params.global_model }}",
-            confidence="{{ params.threshold }}",  # type: ignore[arg-type]
-        ),
+        params=params,
     )
 
-    rendered = render_base_model(config.params, context, renderer)
+    rendered = render_params(config.params, context, renderer)
 
-    assert isinstance(rendered, SimpleParams)
-    assert rendered.model == "my-global-model"
-    assert rendered.confidence == 0.7
+    assert isinstance(rendered, dict)
+    assert rendered["model"] == "my-global-model"
+    assert rendered["confidence"] == 0.7
 
 
-def test_render_base_model_does_not_render_control_fields(renderer: JinjaRenderer, context: PipeContext) -> None:
-    config = PipeConfig[SimpleParams](
+def test_render_params_does_not_render_control_fields(renderer: JinjaRenderer, context: PipeContext) -> None:
+    config = PipeConfig(
         id="test",
         use="SomePipe",
-        params=SimpleParams.model_construct(model="{{ params.global_model }}"),
+        params={"model": "{{ params.global_model }}"},
     )
 
-    rendered = render_base_model(config.params, context, renderer)
+    rendered = render_params(config.params, context, renderer)
 
-    assert isinstance(rendered, SimpleParams)
-    assert rendered.model == "my-global-model"
+    assert isinstance(rendered, dict)
+    assert rendered["model"] == "my-global-model"
 
 
-def test_render_base_model_with_nested_params(renderer: JinjaRenderer, context: PipeContext) -> None:
-    config = PipeConfig[NestedParams](
+def test_render_params_with_nested_params(renderer: JinjaRenderer, context: PipeContext) -> None:
+    config = PipeConfig(
         id="test",
-        params=NestedParams.model_construct(
-            outer=NestedOuter.model_construct(
-                inner="{{ params.global_model }}",
-                static="value",
-            ),
-        ),
+        params={
+            "outer": {
+                "inner": "{{ params.global_model }}",
+                "static": "value",
+            }
+        },
     )
 
-    rendered = render_base_model(config.params, context, renderer)
+    rendered = render_params(config.params, context, renderer)
 
-    assert isinstance(rendered, NestedParams)
-    assert rendered.outer.inner == "my-global-model"
-    assert rendered.outer.static == "value"
-
-
-def test_render_base_model_empty_params(renderer: JinjaRenderer, context: PipeContext) -> None:
-    config: PipeConfig[SimpleParams] = PipeConfig(id="test")
-
-    rendered = render_base_model(config.params, context, renderer)
-
-    assert isinstance(rendered, BaseModel)
-    assert rendered.model_dump() == {}
+    assert isinstance(rendered, dict)
+    assert rendered["outer"]["inner"] == "my-global-model"
+    assert rendered["outer"]["static"] == "value"
 
 
-def test_render_base_model_with_params_template(renderer: JinjaRenderer, context: PipeContext) -> None:
+def test_render_params_empty_params(renderer: JinjaRenderer, context: PipeContext) -> None:
+    config: PipeConfig = PipeConfig(id="test")
+
+    rendered = render_params(config.params, context, renderer)
+
+    assert isinstance(rendered, dict)
+    assert rendered == {}
+
+
+def test_render_params_with_params_template(renderer: JinjaRenderer, context: PipeContext) -> None:
     with warnings.catch_warnings(record=True):
         warnings.simplefilter("always")
-        config = PipeConfig[ModelParams](
+        config = PipeConfig(
             id="test",
-            params=ModelParams.model_construct(model="{{ params.global_model }}"),
+            params={"model": "{{ params.global_model }}"},
         )
 
-    rendered = render_base_model(config.params, context, renderer)
+    rendered = render_params(config.params, context, renderer)
 
-    assert isinstance(rendered, ModelParams)
-    assert rendered.model == "my-global-model"
+    assert isinstance(rendered, dict)
+    assert rendered["model"] == "my-global-model"
