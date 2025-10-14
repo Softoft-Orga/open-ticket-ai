@@ -4,9 +4,9 @@ from typing import Any
 from unittest.mock import MagicMock
 
 from open_ticket_ai.base.triggers.interval_trigger import IntervalTrigger
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import TriggerConfig
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 
 def test_trigger_instantiation_via_factory() -> None:

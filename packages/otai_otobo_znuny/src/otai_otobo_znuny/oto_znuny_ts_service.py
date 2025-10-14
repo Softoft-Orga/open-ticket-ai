@@ -1,8 +1,6 @@
-import logging
 from typing import Any
 
 from injector import inject
-from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLogger
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (

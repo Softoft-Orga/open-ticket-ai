@@ -2,9 +2,9 @@ import asyncio
 from abc import ABC, abstractmethod
 from typing import Any, Protocol
 
-from open_ticket_ai.core.renderable.renderable import Renderable
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import TriggerConfig
+from open_ticket_ai.core.renderable.renderable import Renderable
 
 
 class PipeRunnerObserver(Protocol):

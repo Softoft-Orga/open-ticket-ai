@@ -3,8 +3,8 @@ from __future__ import annotations
 from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.core.config.logging_config import LoggingDictConfig
-from open_ticket_ai.core.renderable.renderable import RenderableConfig
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
+from open_ticket_ai.core.renderable.renderable import RenderableConfig
 
 
 class InfrastructureConfig(BaseModel):

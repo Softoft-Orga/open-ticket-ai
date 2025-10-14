@@ -70,5 +70,6 @@ class RenderedOTOBOZnunyTSServiceParams(BaseModel):
             operation_url_map=self.operation_url_map,
         )
 
+
 class OTOBOZnunyTSConfig(RenderableConfig):
     params: RenderedOTOBOZnunyTSServiceParams

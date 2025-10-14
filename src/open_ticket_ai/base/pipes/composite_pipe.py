@@ -1,10 +1,10 @@
 from typing import Any
 
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 
 class CompositePipeConfig(PipeConfig):
@@ -13,12 +13,12 @@ class CompositePipeConfig(PipeConfig):
 
 class CompositePipe(Pipe):
     def __init__(
-            self,
-            config: CompositePipeConfig,
-            factory: RenderableFactory | None = None,
-            logger_factory: LoggerFactory | None = None,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        config: CompositePipeConfig,
+        factory: RenderableFactory | None = None,
+        logger_factory: LoggerFactory | None = None,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(config, logger_factory=logger_factory)
         self._logger = logger_factory.get_logger(self.__class__.__name__)

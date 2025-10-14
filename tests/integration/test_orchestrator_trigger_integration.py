@@ -13,7 +13,6 @@ import pytest
 from pydantic import BaseModel
 
 from open_ticket_ai.base.triggers.interval_trigger import IntervalTrigger, IntervalTriggerParams
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 from open_ticket_ai.core.orchestration.orchestrator_config import (
@@ -25,6 +24,7 @@ from open_ticket_ai.core.orchestration.scheduled_runner import PipeRunner
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_config import PipeConfig, PipeResult
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 
 def create_trigger_def(trigger_id: str, **params: int) -> TriggerConfig:

@@ -10,10 +10,10 @@ from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
 from open_ticket_ai.core.config.logging_config import LoggingDictConfig
-from open_ticket_ai.core.renderable.renderable import RenderableConfig
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory, _locate
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_config import OrchestratorConfig
+from open_ticket_ai.core.renderable.renderable import RenderableConfig
+from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory, _locate
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
