@@ -17,6 +17,7 @@ class ParamsModel(BaseModel):
 
 class Pipe(Renderable, ABC):
     def __init__(self, pipe_config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
         self.pipe_config = pipe_config
         self._logger = logger_factory.get_logger(self.__class__.__name__)
         # Child classes should validate params in their __init__ using Pydantic models
@@ -29,14 +30,6 @@ class Pipe(Renderable, ABC):
 
     def have_dependent_pipes_been_run(self, context: PipeContext) -> bool:
         return all(context.has_succeeded(dependency_id) for dependency_id in self.pipe_config.depends_on)
-
-    async def process(self, context: PipeContext) -> PipeContext:
-        self._logger.info(f"Processing pipe '{self.pipe_config.id}'")
-        if self.pipe_config.should_run and self.have_dependent_pipes_been_run(context):
-            self._logger.info(f"Pipe '{self.pipe_config.id}' is running.")
-            return await self.__process_and_save(context)
-        self._logger.info(f"Skipping pipe '{self.pipe_config.id}'.")
-        return context
 
     async def __process_and_save(self, context: PipeContext) -> PipeContext:
         new_context = context.model_copy()

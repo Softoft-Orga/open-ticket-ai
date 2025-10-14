@@ -32,25 +32,25 @@ class ExamplePipeResultData(pydantic.BaseModel):
     processed_count: int
 
 
-class ExamplePipe(Pipe[ExamplePipeParams]):
+class ExamplePipe(Pipe):
     """Example pipe following the documented pattern."""
 
     params_class = ExamplePipeParams
 
     def __init__(
         self,
-        pipe_config: PipeConfig[ExamplePipeParams],
+        pipe_config: PipeConfig,
         logger_factory: LoggerFactory,
         *args: Any,
         **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory)
 
-    async def _process(self) -> PipeResult[ExamplePipeResultData]:
-        return PipeResult[ExamplePipeResultData](
+    async def _process(self) -> PipeResult:
+        return PipeResult(
             success=True,
             failed=False,
-            data=ExamplePipeResultData(processed_count=self.params.max_items),
+            data=ExamplePipeResultData(processed_count=self.params["max_items"]),
         )
 
 
