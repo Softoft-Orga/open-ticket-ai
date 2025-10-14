@@ -11,10 +11,12 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import TicketS
 class FetchTicketsParams(BaseModel):
     ticket_search_criteria: TicketSearchCriteria | None = None
 
+
 class FetchTicketsPipe(Pipe):
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return FetchTicketsParams
+
     def __init__(
         self,
         ticket_system: TicketSystemService,

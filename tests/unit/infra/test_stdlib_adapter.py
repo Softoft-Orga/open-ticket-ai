@@ -17,7 +17,6 @@ def test_stdlib_logger_basic_logging(caplog: LogCaptureFixture) -> None:
     assert "Error message" in caplog.text
 
 
-
 def test_stdlib_logger_factory_creates_logger() -> None:
     factory = StdlibLoggerFactory()
     logger = factory.create("test_factory")

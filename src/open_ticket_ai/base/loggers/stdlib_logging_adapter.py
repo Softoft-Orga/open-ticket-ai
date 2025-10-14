@@ -12,7 +12,6 @@ class StdlibLogger(AppLogger):
     def __init__(self, logger: logging.Logger, context: dict[str, Any] | None = None):
         self._logger = logger
 
-
     def debug(self, message: str, *args: Any, **kwargs: Any) -> None:
         self._logger.debug(message, *args, **kwargs)
 
