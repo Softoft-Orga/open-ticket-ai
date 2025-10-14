@@ -1,7 +1,7 @@
 # .github/ISSUE_TEMPLATE/unit_test_task.yml
-name: "Unit Tests: <module/feature>"
+name: "Unit Tests: <module>"
 description: Minimal, behavior-focused pytest tests (no internals, no spam)
-title: "tests: <module/feature>"
+title: "tests: <module>"
 labels: [ "tests", "unit" ]
 
 body:
@@ -13,11 +13,9 @@ body:
   - type: input
     id: target
     attributes:
-      label: Target module / symbol
-      description: e.g. open_ticket_ai.core.foo:normalize_name
-      placeholder: package.module[:symbol]
-    validations:
-      required: true
+      label: Target module
+      description: e.g. open_ticket_ai.core.foo
+      placeholder: package.module
 
   - type: textarea
     id: behaviors
@@ -28,8 +26,6 @@ body:
         - normalize mixed case and whitespace
         - preserve underscores
         - raise ValueError on invalid input
-    validations:
-      required: true
 
   - type: textarea
     id: acceptance
@@ -42,8 +38,6 @@ body:
         - Parametrized where applicable
         - No network/real FS; tmp_path for files
         - External effects isolated; deterministic results
-    validations:
-      required: true
 
   - type: checkboxes
     id: constraints
@@ -51,23 +45,14 @@ body:
       label: Hard constraints
       options:
         - label: Public API only (no private attrs, no internals)
-          required: true
         - label: Use @pytest.mark.parametrize to compress cases
-          required: true
         - label: Prefer Fakes/DI over mocks for dependencies
-          required: true
         - label: Use pytest monkeypatch for env/globals; avoid unittest.mock unless unavoidable
-          required: true
         - label: If unittest.mock is used, set spec_set/autospec and avoid interaction over-assertion
-          required: true
         - label: Block external I/O (no network); use tmp_path/pyfakefs for files
-          required: true
         - label: Deterministic tests (fixed seeds/time; use freezegun/time-machine if needed)
-          required: true
         - label: ≤5 tests per file, ≤20 lines per test
-          required: true
         - label: Do not assert exact error messages; assert exception type (and stable code) only
-          required: true
 
   - type: textarea
     id: fixtures
@@ -81,15 +66,6 @@ body:
       label: Parametrized cases
       description: 3–6 representative examples
 
-  - type: dropdown
-    id: scope
-    attributes:
-      label: Scope
-      options:
-        - unit-only
-        - unit + tiny integration slice (single golden path)
-    validations:
-      required: true
 
   - type: textarea
     id: artifacts
@@ -103,16 +79,9 @@ body:
       label: Done when
       options:
         - label: Tests pass locally with `uv run pytest -q`
-          required: true
         - label: Ruff passes locally with `uv run ruff check . --fix`
-          required: true
         - label: Mypy passes locally with `uv run mypy .`
-          required: true
         - label: No implementation-coupled assertions
-          required: true
         - label: Duplicates consolidated via parametrization
-          required: true
         - label: Shared setup extracted to fixtures (if reused)
-          required: true
         - label: No forbidden I/O; external calls isolated
-          required: true
