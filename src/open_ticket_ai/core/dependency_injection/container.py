@@ -68,10 +68,13 @@ class AppModule(Module):
         
         # Validate that the located class is actually a TemplateRenderer
         if not issubclass(cls, TemplateRenderer):
-            raise TypeError(f"Service '{service_config.id}' with class '{service_config.use}' is not a TemplateRenderer subclass")
+            raise TypeError(
+                f"Service '{service_config.id}' with class '{service_config.use}' "
+                "is not a TemplateRenderer subclass"
+            )
         
         config_obj = JinjaRendererConfig.model_validate(service_config.params)
-        return cls(config_obj, logger_factory=logger_factory)  # type: ignore[abstract]
+        return cls(config_obj, logger_factory)  # type: ignore[call-arg, arg-type]
 
     @provider
     @singleton

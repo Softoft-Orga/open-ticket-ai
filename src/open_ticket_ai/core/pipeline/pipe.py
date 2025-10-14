@@ -29,12 +29,13 @@ class Pipe(Renderable, ABC):
         self._logger = logger_factory.get_logger(self.__class__.__name__)
         
         # Validate params if params_class is specified
+        # params can be either a dict or a validated ParamsModel
         if self.params_class is not None and isinstance(pipe_config.params, dict):
             # Convert dict to validated Pydantic model
-            self.params: Any = self.params_class.model_validate(pipe_config.params)
+            self.params: dict[str, Any] | ParamsModel = self.params_class.model_validate(pipe_config.params)
         else:
             # Keep params as-is (could be dict or already a Pydantic model)
-            self.params: dict[str, Any] = pipe_config.params
+            self.params = pipe_config.params
 
     def _save_pipe_result(self, context: PipeContext, pipe_result: PipeResult) -> PipeContext:
         if self.pipe_config.id is not None:

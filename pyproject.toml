@@ -81,11 +81,12 @@ ignore = ["TRY003"]
 fixable = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["PLR2004"]
+"tests/**/*.py" = ["PLR2004", "PLC0415"]
 "src/open_ticket_ai/cli/**/*.py" = ["B008"]
 "src/open_ticket_ai/core/cli/**/*.py" = ["B008"]
 "tests/unit/core/dependency_injection/test_logging_module.py" = ["F821"]
 "tests/unit/infra/test_structlog_adapter.py" = ["F821"]
+"src/open_ticket_ai/core/dependency_injection/container.py" = ["PLC0415"]
 
 [tool.mypy]
 python_version = "3.13"
