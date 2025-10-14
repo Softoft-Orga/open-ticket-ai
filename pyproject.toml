@@ -82,6 +82,7 @@ fixable = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["PLR2004"]
+"tests/conftest.py" = ["PLC0415"]
 "src/open_ticket_ai/cli/**/*.py" = ["B008"]
 "src/open_ticket_ai/core/cli/**/*.py" = ["B008"]
 "tests/unit/core/dependency_injection/test_logging_module.py" = ["F821"]
