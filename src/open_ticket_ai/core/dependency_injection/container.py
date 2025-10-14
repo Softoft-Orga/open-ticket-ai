@@ -45,11 +45,31 @@ class AppModule(Module):
         self, config: RawOpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         service_id = config.infrastructure.default_template_renderer
-        service_config = next((s for s in config.services if s.id == service_id), None)
+        
+        # If no default_template_renderer is specified, try to find a JinjaRenderer service
+        if not service_id:
+            service_config = next(
+                (s for s in config.services 
+                 if s.use and "JinjaRenderer" in s.use), 
+                None
+            )
+        else:
+            service_config = next((s for s in config.services if s.id == service_id), None)
+        
         if not service_config:
-            raise ValueError(f"Template renderer service with id '{service_id}' not found")
+            if service_id:
+                raise ValueError(f"Template renderer service with id '{service_id}' not found")
+            else:
+                # No service found and no default specified - use default JinjaRenderer
+                from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
+                return JinjaRenderer(JinjaRendererConfig(), logger_factory=logger_factory)
 
         cls = _locate(service_config.use)
+        
+        # Validate that the located class is actually a TemplateRenderer
+        if not issubclass(cls, TemplateRenderer):
+            raise TypeError(f"Service '{service_config.id}' with class '{service_config.use}' is not a TemplateRenderer subclass")
+        
         config_obj = JinjaRendererConfig.model_validate(service_config.params)
         return cls(config_obj, logger_factory=logger_factory)  # type: ignore[abstract]
 

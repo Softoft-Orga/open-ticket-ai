@@ -13,15 +13,28 @@ from .pipe_context import PipeContext
 
 class ParamsModel(BaseModel):
     model_config = ConfigDict(extra="allow")
+    
+    def __getitem__(self, key: str) -> Any:
+        """Allow dict-style access to params for backward compatibility."""
+        return getattr(self, key)
 
 
 class Pipe(Renderable, ABC):
+    # Optional: Child classes can set this to enable automatic params validation
+    params_class: type[ParamsModel] | None = None
+    
     def __init__(self, pipe_config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.pipe_config = pipe_config
         self._logger = logger_factory.get_logger(self.__class__.__name__)
-        # Child classes should validate params in their __init__ using Pydantic models
-        self.params: dict[str, Any] = pipe_config.params
+        
+        # Validate params if params_class is specified
+        if self.params_class is not None and isinstance(pipe_config.params, dict):
+            # Convert dict to validated Pydantic model
+            self.params: Any = self.params_class.model_validate(pipe_config.params)
+        else:
+            # Keep params as-is (could be dict or already a Pydantic model)
+            self.params: dict[str, Any] = pipe_config.params
 
     def _save_pipe_result(self, context: PipeContext, pipe_result: PipeResult) -> PipeContext:
         if self.pipe_config.id is not None:
