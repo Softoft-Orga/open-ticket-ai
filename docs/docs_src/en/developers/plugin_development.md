@@ -77,7 +77,7 @@ from open_ticket_ai.pipeline import BasePipe
 class MyPipe(BasePipe):
     def execute(self, context):
         # Pipe logic
-        return PipeResult.success()
+        return PipeResult.succeeded()
 
 
 # In setup function
@@ -130,7 +130,7 @@ def test_my_pipe():
     pipe = MyPipe()
     context = PipelineContext()
     result = pipe.execute(context)
-    assert result.success
+    assert result.succeeded
 ```
 
 ### Integration Tests
@@ -153,7 +153,7 @@ def test_pipeline_with_plugin():
     config = load_config("test_config.yml")
     pipeline = create_pipeline(config)
     result = pipeline.run()
-    assert result.success
+    assert result.succeeded
 ```
 
 ## Best Practices

@@ -1,6 +1,12 @@
 from typing import Any
 
 from injector import inject
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
+from open_ticket_ai.core.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedNote,
+    UnifiedTicket,
+)
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import (
     Article,
@@ -8,19 +14,12 @@ from otobo_znuny.domain_models.ticket_models import (
     TicketSearch,
     TicketUpdate,
 )
-from pydantic import BaseModel
-
-from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
-from open_ticket_ai.core.ticket_system_integration.unified_models import (
-    TicketSearchCriteria,
-    UnifiedNote,
-    UnifiedTicket,
-)
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
     RenderedOTOBOZnunyTSServiceParams,
     otobo_ticket_to_unified_ticket,
     unified_entity_to_id_name,
 )
+from pydantic import BaseModel
 
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
@@ -30,9 +29,9 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
     @inject
     def __init__(
-            self,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._client: OTOBOZnunyClient | None = None

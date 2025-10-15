@@ -16,13 +16,10 @@ class RunnerDefinition(BaseModel):
     run: PipeConfig
     model_config = ConfigDict(populate_by_name=True)
 
-    @property
-    def pipe_id(self) -> str:
+    def get_id(self) -> str:
         if self.id is not None:
             return self.id
-        if self.run.id is not None:
-            return self.run.id
-        return ""
+        return f"runner.{self.run.id}"
 
 
 class OrchestratorConfig(BaseModel):

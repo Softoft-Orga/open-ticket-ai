@@ -28,22 +28,19 @@ classifiers = [
 
 dependencies = [
     "pydantic~=2.12.0",
-    "pyyaml>=6.0",
+    "pyyaml~=6.0.0",
     "injector~=0.22.0",
-    "pyfiglet>=1.0.2",
-    "apscheduler>=3.11.0",
-    "jinja2>=3.1.6",
-    "transformers~=4.57.0",
-    "python-dotenv>=1.1.1",
-    "typer>=0.19.2",
-    "rich>=14.2.0",
-    "httpx>=0.27.0",
-    "structlog>=24.4.0",
-    "mdxlate>=1.1.2",
-    "util>=0.0.1",
-    "openai>=2.3.0",
-    "scripts>=3.0",
-    "otobo-znuny>=1.4.0",
+    "pyfiglet~=1.0.2",
+    "apscheduler~=3.11.0",
+    "jinja2~=3.1.6",
+    "transformers~=4.57.1",
+    "python-dotenv~=1.1.1",
+    "typer~=0.19.2",
+    "rich~=14.2.0",
+    "httpx~=0.27.0",
+    "mdxlate~=1.1.2",
+    "openai~=2.3.0",
+    "otobo-znuny~=1.4.0",
 ]
 
 [project.urls]
@@ -91,11 +88,9 @@ select = [
     "RUF", # ruff extras
     "TID", # tidy imports
     "TCH", # typing cleanup
-    # optional but recommended:
     "ANN", # type annotation coverage
-    # enable later if you want:
-    # "S",         # security
-    # "PD",
+    "S", # security
+    "PD",
 ]
 ignore = ["TRY003", "TC003", "TC002", "TC001", "ANN204", "PTH123", "ANN401"]
 fixable = ["ALL"]
@@ -156,15 +151,18 @@ source = [
     "packages/otai_otobo_znuny/src",
 ]
 omit = [
-    "*models*",
+    "*model.py",
+    "*models.py",
+    "tests/*",
+    "__init__.py",
 ]
 
 [dependency-groups]
 dev = [
-    "mypy>=1.18.1",
-    "pytest>=8.4.2",
-    "pytest-asyncio>=0.24.0",
-    "pytest-cov>=6.0.0",
-    "ruff>=0.13.0",
-    "types-PyYAML>=6.0",
+    "mypy~=1.18.1",
+    "pytest~=8.4.2",
+    "pytest-asyncio~=0.24.0",
+    "pytest-cov~=6.0.0",
+    "ruff~=0.13.0",
+    "types-PyYAML~=6.0.0",
 ]
