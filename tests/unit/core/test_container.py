@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
-from open_ticket_ai.core.config.logging_config import LoggingDictConfig
+from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.container import AppModule
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
@@ -11,34 +10,6 @@ from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 pytestmark = [pytest.mark.unit]
-
-
-@pytest.fixture
-def valid_raw_config() -> RawOpenTicketAIConfig:
-    return RawOpenTicketAIConfig(
-        infrastructure=InfrastructureConfig(
-            logging=LoggingDictConfig(), default_template_renderer="jinja_renderer"
-        ),
-        services=[
-            RenderableConfig(
-                id="jinja_renderer",
-                use="open_ticket_ai.base.template_renderers.jinja_renderer.JinjaRenderer",
-                params={"type": "jinja"},
-            )
-        ],
-        orchestrator=OrchestratorConfig(),
-    )
-
-
-@pytest.fixture
-def invalid_raw_config() -> RawOpenTicketAIConfig:
-    return RawOpenTicketAIConfig(
-        infrastructure=InfrastructureConfig(
-            logging=LoggingDictConfig(), default_template_renderer="nonexistent_renderer"
-        ),
-        services=[],
-        orchestrator=OrchestratorConfig(),
-    )
 
 
 def test_create_renderer_from_service_success(valid_raw_config: RawOpenTicketAIConfig) -> None:
