@@ -1,7 +1,9 @@
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from open_ticket_ai.core.logging_iface import AppLogger, LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
@@ -13,6 +15,34 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 pytestmark = [pytest.mark.unit]
+
+
+class FakeLogger(AppLogger):
+    def debug(self, message: str, **kwargs: Any) -> None:
+        pass
+
+    def info(self, message: str, **kwargs: Any) -> None:
+        pass
+
+    def warning(self, message: str, **kwargs: Any) -> None:
+        pass
+
+    def error(self, message: str, **kwargs: Any) -> None:
+        pass
+
+    def exception(self, message: str, **kwargs: Any) -> None:
+        pass
+
+
+class FakeLoggerFactory(LoggerFactory):
+    def create(self, name: str, **context: Any) -> AppLogger:
+        del name, context
+        return FakeLogger()
+
+
+@pytest.fixture
+def mock_logger_factory() -> LoggerFactory:
+    return FakeLoggerFactory()
 
 
 @pytest.fixture

@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from open_ticket_ai.core.logging_iface import AppLogger, LoggerFactory
+from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator import Orchestrator
 from open_ticket_ai.core.orchestration.orchestrator_models import (
     OrchestratorConfig,
@@ -16,29 +16,6 @@ from open_ticket_ai.core.pipeline.pipe_models import PipeConfig
 from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 pytestmark = [pytest.mark.unit]
-
-
-class FakeLogger(AppLogger):
-    def debug(self, message: str, **kwargs: Any) -> None:
-        pass
-
-    def info(self, message: str, **kwargs: Any) -> None:
-        pass
-
-    def warning(self, message: str, **kwargs: Any) -> None:
-        pass
-
-    def error(self, message: str, **kwargs: Any) -> None:
-        pass
-
-    def exception(self, message: str, **kwargs: Any) -> None:
-        pass
-
-
-class FakeLoggerFactory(LoggerFactory):
-    def create(self, name: str, **context: Any) -> AppLogger:
-        del name, context
-        return FakeLogger()
 
 
 class MockTrigger(Trigger):
@@ -72,11 +49,6 @@ class MockTrigger(Trigger):
         from pydantic import BaseModel
 
         return BaseModel
-
-
-@pytest.fixture
-def mock_logger_factory() -> LoggerFactory:
-    return FakeLoggerFactory()
 
 
 @pytest.fixture
