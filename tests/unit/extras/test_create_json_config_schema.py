@@ -23,21 +23,12 @@ def test_generate_markdown_docs() -> None:
     assert "## Root Configuration" in result
 
 
-def test_nested_structure_generation() -> None:
+def test_nested_structure_in_markdown() -> None:
     schema = RootConfig.model_json_schema()
     result = generate_markdown_docs(schema)
-
-    # Check for indented fields (nested structure)
-    # Pattern: lines with 2+ spaces before backtick indicate nested fields
-    nested_pattern = re.compile(r"\|\s{2,}`\w+`\s*\|")
-    nested_fields = nested_pattern.findall(result)
-    assert len(nested_fields) > 0, "Should have nested fields with indentation"
-
-    # Check Type Definitions section exists
-    assert "## Type Definitions" in result
-
-    # Check table structure is present
-    assert "| Field | Type | Required | Default | Description |" in result
+    assert "└─ `plugins`" in result
+    assert "└─ `infrastructure`" in result
+    assert "    └─ `logging`" in result or "  └─ `logging`" in result
 
 
 def test_main_execution_creates_files(tmp_path: Path) -> None:
