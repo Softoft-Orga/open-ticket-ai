@@ -11,24 +11,23 @@ class RootConfig(BaseModel):
     open_ticket_ai: RawOpenTicketAIConfig
 
 
-def get_type_description(type_info: dict[str, Any]) -> str:
+def _get_type_str(type_info: dict[str, Any], defs: dict[str, Any]) -> str:
     if "type" in type_info:
-        type_val = type_info["type"]
-        if isinstance(type_val, list):
-            return " or ".join(str(t) for t in type_val)
-        return str(type_val)
-
+        t = type_info["type"]
+        if isinstance(t, list):
+            return " or ".join(str(x) for x in t)
+        if t == "array" and "items" in type_info:
+            items = type_info["items"]
+            if "$ref" in items:
+                name = items["$ref"].split("/")[-1]
+                return f"array of [{name}](#{name.lower()})"
+            return f"array of {_get_type_str(items, defs)}"
+        return str(t)
     if "anyOf" in type_info:
-        types = [get_type_description(t) for t in type_info["anyOf"]]
-        return " or ".join(types)
-
-    if "allOf" in type_info:
-        return "object"
-
+        return " or ".join(_get_type_str(t, defs) for t in type_info["anyOf"])
     if "$ref" in type_info:
-        ref_name = type_info["$ref"].split("/")[-1]
-        return f"[{ref_name}](#{ref_name.lower()})"
-
+        name = type_info["$ref"].split("/")[-1]
+        return f"[{name}](#{name.lower()})"
     return "any"
 
 
@@ -132,10 +131,15 @@ def generate_model_docs(name: str, schema: dict[str, Any], defs: dict[str, Any],
 
 
 def generate_markdown_docs(schema: dict[str, Any]) -> str:
+    defs = schema.get("$defs", {})
+    props = schema.get("properties", {})
+    req = schema.get("required", [])
+
     lines = [
         "# Configuration Schema Reference\n",
         "_Auto-generated from Pydantic models_\n",
         "---\n",
+        "## Root Configuration\n",
     ]
 
     defs = schema.get("$defs", {})

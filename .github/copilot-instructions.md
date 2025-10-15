@@ -24,6 +24,7 @@ open-ticket-ai/
 ```
 
 ### Absolute rules
+
 - **Never** place tests under any `src/` path. Forbidden: `src/**/tests`, `src/**/test_*.py`.
 - Unit tests live **with their package** under `packages/<name>/tests/`.
 - Cross-package **integration/e2e** tests live in **root** `tests/`.
@@ -34,6 +35,7 @@ open-ticket-ai/
 ## Tests Layout (required)
 
 For **each** package:
+
 ```
 packages/<name>/
 └── tests/
@@ -42,7 +44,9 @@ packages/<name>/
     ├── data/            # fixtures/goldens
     └── conftest.py      # package-specific fixtures
 ```
+
 At the repo root:
+
 ```
 tests/
 ├── integration/         # spans multiple packages
@@ -52,11 +56,13 @@ tests/
 ```
 
 ### Naming rules
+
 - Test files: `test_*.py` only.
 - Keep fixtures in `conftest.py` or `tests/**/fixtures_*.py` (no global helper modules under `src/`).
 - **NO** `__init__.py` files in test directories. Test directories are not Python packages.
 
 ### Fixture guidelines
+
 - Check existing fixtures before creating new ones: `uv run -m pytest --fixtures`
 - Follow naming conventions: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
 - Document fixtures with clear docstrings
@@ -74,12 +80,13 @@ testpaths = [
 ]
 addopts = ["-q"]
 ```
+
 ## How to run
 
 - From repo root:
-  - `uv sync`
-  - `uv run -m pytest` (all tests)
-  - `uv run -m pytest packages/<name>/tests` (single package)
+    - `uv sync`
+    - `uv run -m pytest` (all tests)
+    - `uv run -m pytest packages/<name>/tests` (single package)
 - uv workspaces install members in editable mode; imports resolve without extra config.
 
 ## CI / Quality gates
@@ -100,6 +107,7 @@ addopts = ["-q"]
 ---
 
 **Checklist for contributors (must pass):**
+
 - [ ] New unit tests added under `packages/<name>/tests`
 - [ ] No files under any `src/**/tests`
 - [ ] Root-level integration/e2e tests only in `tests/`

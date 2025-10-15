@@ -1,25 +1,19 @@
 from pathlib import Path
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class AppConfig(BaseModel):
-    config_env_var: str = Field(
-        default="OPEN_TICKET_AI_CONFIG",
-        description="Environment variable name for configuration file path",
+class AppConfig(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="OTAI_")
+    config_file_path: Path = Field(
+        default=Path.cwd() / "config.yml",
     )
     config_yaml_root_key: str = Field(
         default="open_ticket_ai",
         description="Root key in YAML configuration file",
     )
-    default_config_filename: str = Field(
-        default="config.yml",
-        description="Default configuration filename",
+    templates_dir: Path = Field(
+        default_factory=lambda: Path.cwd() / "data" / "templates",
+        description="Directory containing configuration templates",
     )
-
-    def get_default_config_path(self) -> Path:
-        return Path.cwd() / self.default_config_filename
-
-    def get_templates_dir(self) -> Path:
-        package_root = Path(__file__).parent.parent.parent.parent.parent
-        return package_root / "docs" / "raw_en_docs" / "config_examples"

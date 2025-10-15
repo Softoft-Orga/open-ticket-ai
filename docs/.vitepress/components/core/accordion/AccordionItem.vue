@@ -1,22 +1,22 @@
 <template>
-    <Disclosure :default-open="defaultOpen" as="div" class="py-3">
-        <template #default="{ open }">
-            <DisclosureButton class="flex w-full justify-between font-semibold text-left">
-                <span class="font-bold text-lg">{{ title }}</span>
-                <span>{{ open ? '–' : '+' }}</span>
-            </DisclosureButton>
-            <DisclosurePanel class="pt-2 text-vp-text-2">
-                <slot/>
-            </DisclosurePanel>
-        </template>
-    </Disclosure>
+  <Disclosure :default-open="defaultOpen" as="div" class="py-3">
+    <template #default="{ open }">
+      <DisclosureButton class="flex w-full justify-between font-semibold text-left">
+        <span class="font-bold text-lg">{{ title }}</span>
+        <span>{{ open ? '–' : '+' }}</span>
+      </DisclosureButton>
+      <DisclosurePanel class="pt-2 text-vp-text-2">
+        <slot/>
+      </DisclosurePanel>
+    </template>
+  </Disclosure>
 </template>
 
 <script lang="ts" setup>
 import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
 
 defineProps<{
-    title: string
-    defaultOpen?: boolean
+  title: string
+  defaultOpen?: boolean
 }>()
 </script>

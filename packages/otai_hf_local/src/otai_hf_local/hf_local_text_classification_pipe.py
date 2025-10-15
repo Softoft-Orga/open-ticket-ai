@@ -55,4 +55,4 @@ class HFLocalTextClassificationPipe(Pipe):
 
         self._logger.info(f"Prediction: label {label} with score {score}")
 
-        return PipeResult(success=True, data={"label": label, "confidence": score})
+        return PipeResult(succeeded=True, data={"label": label, "confidence": score})

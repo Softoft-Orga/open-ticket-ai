@@ -1,40 +1,28 @@
-import asyncio
 from abc import ABC, abstractmethod
-from typing import Any, Protocol
+from typing import Any, final
 
-from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.orchestration.orchestrator_models import TriggerConfig
+from open_ticket_ai.core.orchestration.trigger_observer import TriggerObserver
 from open_ticket_ai.core.renderable.renderable import Renderable
 
 
-class PipeRunnerObserver(Protocol):
-    async def on_trigger_fired(self) -> None: ...
-
-
-class Trigger(Renderable, ABC):
-    def __init__(self, config: TriggerConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
+class Trigger[ParamsT: BaseModel](Renderable[BaseModel], ABC):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self.trigger_def = config
-        self._observers: list[PipeRunnerObserver] = []
-        self._running = False
-        self._logger = logger_factory.create(self.__class__.__name__)
+        self._observer: TriggerObserver | None = None
 
-    def attach(self, observer: PipeRunnerObserver) -> None:
-        if observer not in self._observers:
-            self._observers.append(observer)
+    @final
+    def attach(self, observer: TriggerObserver) -> None:
+        self._observer = observer
 
-    def detach(self, observer: PipeRunnerObserver) -> None:
-        if observer in self._observers:
-            self._observers.remove(observer)
+    @final
+    def detach(self) -> None:
+        self._observer = None
 
-    def notify(self) -> None:
-        for obs in self._observers:
-            asyncio.create_task(obs.on_trigger_fired())
+    @final
+    async def run(self):
+        if self._should_trigger():
+            await self._observer.on_trigger_fired()
 
     @abstractmethod
-    def start(self) -> None:
-        pass
-
-    @abstractmethod
-    def stop(self) -> None:
+    def _should_trigger(self) -> bool:
         pass

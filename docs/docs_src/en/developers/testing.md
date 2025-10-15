@@ -11,6 +11,7 @@ Guide to testing Open Ticket AI configurations, pipelines, and custom components
 Write tests that focus on **core functionality and contracts**, not implementation details:
 
 ### DO ✅
+
 - Test main input/output behavior
 - Test error handling and edge cases that matter
 - Test public interfaces and contracts
@@ -18,6 +19,7 @@ Write tests that focus on **core functionality and contracts**, not implementati
 - Keep tests simple and maintainable
 
 ### DON'T ❌
+
 - Don't test trivial getters/setters
 - Don't assert every field value in complex objects
 - Don't duplicate test logic across multiple files
@@ -30,16 +32,17 @@ Write tests that focus on **core functionality and contracts**, not implementati
 # ❌ Bad: Testing trivial field values
 def test_config_fields():
     config = MyConfig(id="test", timeout=30, priority=5, workers=10)
-    assert config.id == "test"
+    assert config._id == "test"
     assert config.timeout == 30
     assert config.priority == 5
     assert config.workers == 10
+
 
 # ✅ Good: Testing behavior
 def test_config_applies_defaults():
     config = MyConfig(id="test")
     # Only assert the key behavior
-    assert config.id == "test"
+    assert config._id == "test"
     assert config.timeout > 0  # Has a valid default
 ```
 
@@ -66,6 +69,7 @@ def test_path_processing():
 ## Testing Overview
 
 Open Ticket AI supports multiple testing levels:
+
 - **Unit Tests**: Individual components
 - **Integration Tests**: Component interactions
 - **Contract Tests**: Interface compliance
@@ -81,17 +85,18 @@ Test individual pipe logic:
 from open_ticket_ai.pipeline import PipelineContext, PipeResult
 from my_plugin.pipes import MyPipe
 
+
 def test_my_pipe():
     # Arrange
     pipe = MyPipe()
     context = PipelineContext()
     context.set("input_data", test_data)
-    
+
     # Act
     result = pipe.execute(context)
-    
+
     # Assert
-    assert result.success
+    assert result.succeeded
     assert context.get("output_data") == expected_output
 ```
 
@@ -115,17 +120,18 @@ Mock external dependencies:
 ```python
 from unittest.mock import Mock, patch
 
+
 def test_pipe_with_mock():
     # Mock external service
     mock_service = Mock()
     mock_service.classify.return_value = {"queue": "billing"}
-    
+
     pipe = ClassifyPipe(classifier=mock_service)
     context = PipelineContext()
-    
+
     result = pipe.execute(context)
-    
-    assert result.success
+
+    assert result.succeeded
     mock_service.classify.assert_called_once()
 ```
 
@@ -140,16 +146,16 @@ def test_pipeline_flow():
     # Setup
     fetch_pipe = FetchTicketsPipe(adapter=test_adapter)
     classify_pipe = ClassifyPipe(classifier=test_classifier)
-    
+
     context = PipelineContext()
-    
+
     # Execute chain
     fetch_result = fetch_pipe.execute(context)
-    assert fetch_result.success
-    
+    assert fetch_result.succeeded
+
     classify_result = classify_pipe.execute(context)
-    assert classify_result.success
-    
+    assert classify_result.succeeded
+
     # Verify data flow
     assert context.has("tickets")
     assert context.has("classifications")
@@ -162,21 +168,22 @@ Test against actual APIs (test environment):
 ```python
 import pytest
 
+
 @pytest.mark.integration
 def test_otobo_integration():
     adapter = OtoboAdapter(
         base_url=TEST_OTOBO_URL,
         api_token=TEST_API_TOKEN
     )
-    
+
     # Fetch tickets
     tickets = adapter.fetch_tickets({"limit": 1})
     assert len(tickets) >= 0
-    
+
     # Test update (if tickets exist)
     if tickets:
         success = adapter.update_ticket(
-            tickets[0].id,
+            tickets[0]._id,
             {"PriorityID": 2}
         )
         assert success
@@ -235,13 +242,13 @@ Test entire pipeline execution:
 def test_full_pipeline():
     # Load configuration
     config = load_config("test_config.yml")
-    
+
     # Create and run pipeline
     pipeline = create_pipeline(config)
     result = pipeline.run()
-    
+
     # Verify success
-    assert result.success
+    assert result.succeeded
     assert result.tickets_processed > 0
 ```
 
@@ -257,14 +264,14 @@ Test various configurations:
 ])
 def test_config_examples(config_file):
     config_path = f"docs/raw_en_docs/config_examples/{config_file}"
-    
+
     # Validate configuration
     config = load_config(config_path)
     assert validate_config(config)
-    
+
     # Test in dry-run mode
     result = run_pipeline(config, dry_run=True)
-    assert result.success
+    assert result.succeeded
 ```
 
 ## Running Test Suite
@@ -354,6 +361,7 @@ Create reusable fixtures:
 ```python
 import pytest
 
+
 @pytest.fixture
 def sample_ticket():
     return Ticket(
@@ -363,11 +371,13 @@ def sample_ticket():
         state="Open"
     )
 
+
 @pytest.fixture
 def pipeline_context():
     context = PipelineContext()
     context.set("test_mode", True)
     return context
+
 
 @pytest.fixture
 def mock_classifier():
@@ -378,6 +388,7 @@ def mock_classifier():
     }
     return classifier
 
+
 # Use fixtures in tests
 def test_with_fixtures(sample_ticket, pipeline_context, mock_classifier):
     # Test logic here
@@ -387,6 +398,7 @@ def test_with_fixtures(sample_ticket, pipeline_context, mock_classifier):
 ## Testing Best Practices
 
 ### Do:
+
 - Write tests for new features
 - Test error conditions
 - Use descriptive test names
@@ -396,6 +408,7 @@ def test_with_fixtures(sample_ticket, pipeline_context, mock_classifier):
 - Test edge cases
 
 ### Don't:
+
 - Skip tests
 - Write flaky tests
 - Depend on test order
@@ -532,27 +545,30 @@ open-ticket-ai/
 ### Critical Rules
 
 **NEVER** place tests under `src/`:
+
 - ❌ `src/**/tests/`
 - ❌ `src/**/test_*.py`
 - ✅ `tests/` or `packages/*/tests/`
 
 **Test file naming**:
+
 - ✅ `test_*.py`
 - ❌ `*_test.py`
 
 **Test directories**:
+
 - ❌ Do NOT add `__init__.py` to test directories
 - ✅ Test directories are NOT Python packages
 
 ### Where to Place Tests
 
-| Test Type | Location | Purpose |
-|-----------|----------|---------|
-| **Package Unit** | `packages/<name>/tests/unit/` | Fast, isolated tests for package code |
-| **Package Integration** | `packages/<name>/tests/integration/` | Tests touching I/O or package boundaries |
-| **Root Unit** | `tests/unit/` | Tests for root package (`src/open_ticket_ai/`) |
-| **Cross-Package Integration** | `tests/integration/` | Tests spanning multiple packages |
-| **End-to-End** | `tests/e2e/` | Complete workflow tests |
+| Test Type                     | Location                             | Purpose                                        |
+|-------------------------------|--------------------------------------|------------------------------------------------|
+| **Package Unit**              | `packages/<name>/tests/unit/`        | Fast, isolated tests for package code          |
+| **Package Integration**       | `packages/<name>/tests/integration/` | Tests touching I/O or package boundaries       |
+| **Root Unit**                 | `tests/unit/`                        | Tests for root package (`src/open_ticket_ai/`) |
+| **Cross-Package Integration** | `tests/integration/`                 | Tests spanning multiple packages               |
+| **End-to-End**                | `tests/e2e/`                         | Complete workflow tests                        |
 
 ### Test Data Management
 
@@ -594,6 +610,7 @@ packages/*/tests/conftest.py   # Package-level
 ```
 
 **Fixture Resolution Order:**
+
 1. Test file itself
 2. Nearest conftest.py (same directory)
 3. Parent conftest.py files (up the tree)
@@ -634,7 +651,7 @@ def app_injector(tmp_config: Path) -> Injector:
     """
     from injector import Injector
     from open_ticket_ai.core import AppModule
-    
+
     return Injector([AppModule(tmp_config)])
 
 
@@ -642,7 +659,7 @@ def app_injector(tmp_config: Path) -> Injector:
 def test_config(tmp_config: Path) -> RawOpenTicketAIConfig:
     """Load test configuration for validation."""
     from open_ticket_ai.core import load_config
-    
+
     return load_config(tmp_config)
 ```
 
@@ -674,7 +691,7 @@ def mocked_ticket_system() -> MockedTicketSystem:
     Includes pre-populated tickets for testing ticket operations.
     """
     system = MockedTicketSystem()
-    
+
     system.add_test_ticket(
         id="TICKET-1",
         subject="Test ticket 1",
@@ -682,7 +699,7 @@ def mocked_ticket_system() -> MockedTicketSystem:
         queue=UnifiedEntity(id="1", name="Support"),
         priority=UnifiedEntity(id="3", name="Medium"),
     )
-    
+
     return system
 ```
 
@@ -712,13 +729,13 @@ def sample_classification_config():
 
 Follow these naming patterns for consistency:
 
-| Pattern | Purpose | Example |
-|---------|---------|---------|
-| `mock_*` | Mock objects | `mock_ticket_system_service` |
-| `sample_*` | Sample data | `sample_ticket`, `sample_classification_config` |
-| `tmp_*` | Temporary resources | `tmp_config`, `tmp_path` |
-| `empty_*` | Empty/minimal instances | `empty_pipeline_context` |
-| `*_factory` | Factory functions | `pipe_config_factory` |
+| Pattern     | Purpose                 | Example                                         |
+|-------------|-------------------------|-------------------------------------------------|
+| `mock_*`    | Mock objects            | `mock_ticket_system_service`                    |
+| `sample_*`  | Sample data             | `sample_ticket`, `sample_classification_config` |
+| `tmp_*`     | Temporary resources     | `tmp_config`, `tmp_path`                        |
+| `empty_*`   | Empty/minimal instances | `empty_pipeline_context`                        |
+| `*_factory` | Factory functions       | `pipe_config_factory`                           |
 
 ### Fixture Scope
 
@@ -748,6 +765,7 @@ Use factory fixtures when tests need customized instances:
 @pytest.fixture
 def pipe_config_factory():
     """Factory for creating pipe configurations with custom values."""
+
     def factory(**kwargs) -> dict:
         defaults = {
             "id": "test_pipe",
@@ -757,7 +775,7 @@ def pipe_config_factory():
         }
         defaults.update(kwargs)
         return defaults
-    
+
     return factory
 
 
@@ -795,6 +813,7 @@ def temp_directory(tmp_path):
 ### Avoiding Fixture Duplication
 
 **Before adding a new fixture:**
+
 1. Check existing conftest files
 2. Search for similar fixtures: `grep -r "def fixture_name" tests/`
 3. Consider if an existing fixture can be reused
@@ -809,6 +828,7 @@ def temp_directory(tmp_path):
 def mock_ticket_system_config():
     return {"ticket_system_id": "test"}
 
+
 # tests/unit/conftest.py
 @pytest.fixture
 def mock_ticket_system_pipe_config():
@@ -820,6 +840,7 @@ def mock_ticket_system_pipe_config():
 @pytest.fixture
 def ticket_system_pipe_config():
     """Base configuration for ticket system pipes."""
+
     def factory(**overrides):
         config = {
             "id": "test_ticket_pipe",
@@ -829,6 +850,7 @@ def ticket_system_pipe_config():
         }
         config.update(overrides)
         return config
+
     return factory
 ```
 
@@ -847,6 +869,7 @@ uv run -m pytest tests/unit/ --fixtures -v | grep mock_ticket
 ### Common Fixture Patterns
 
 **Configuration Fixtures:**
+
 ```python
 @pytest.fixture
 def minimal_config(tmp_path):
@@ -858,6 +881,7 @@ def minimal_config(tmp_path):
 ```
 
 **Mock Service Fixtures:**
+
 ```python
 @pytest.fixture
 def mock_classifier():
@@ -871,6 +895,7 @@ def mock_classifier():
 ```
 
 **Parameterized Fixtures:**
+
 ```python
 @pytest.fixture(params=["sqlite", "postgresql", "mysql"])
 def database_type(request):

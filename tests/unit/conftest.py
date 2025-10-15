@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )

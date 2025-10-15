@@ -9,7 +9,7 @@ from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     get_pipe_result,
     has_failed,
 )
-from open_ticket_ai.core.logging_iface import LoggerFactory
+from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.template_rendering.renderer_models import JinjaRendererConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
@@ -21,7 +21,7 @@ class JinjaRenderer(TemplateRenderer):
         self._config = JinjaRendererConfig.model_validate(config.model_dump())
         self.jinja_env = NativeEnvironment(trim_blocks=True, lstrip_blocks=True)
 
-    def render(self, template_str: str, context: dict[str, Any]) -> Any:
+    def _render(self, template_str: str, context: dict[str, Any]) -> Any:
         self.jinja_env.globals.update(context)
         self.jinja_env.globals["at_path"] = at_path
         self.jinja_env.globals["env"] = build_filtered_env()

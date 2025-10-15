@@ -81,6 +81,7 @@ else:
 ```
 
 **Flow:**
+
 1. YAML config loaded as dict structure
 2. Jinja2 templates rendered in dict form
 3. Rendered dict passed to Pipe constructor
@@ -88,6 +89,7 @@ else:
 5. Validated params available as `self.params`
 
 **Benefits:**
+
 - Template rendering happens before type validation
 - YAML remains simple and flexible
 - Full type safety after rendering
@@ -95,6 +97,7 @@ else:
 - Compatible with Copilot code generation
 
 **When implementing pipes:**
+
 - Always define `params_class` class attribute
 - Let parent `__init__` handle param conversion
 - Access validated params via `self.params`
