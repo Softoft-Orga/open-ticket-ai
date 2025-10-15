@@ -655,7 +655,6 @@ dependencies = [
     { name = "injector" },
     { name = "jinja2" },
     { name = "mdxlate" },
-    { name = "mypy" },
     { name = "openai" },
     { name = "otobo-znuny" },
     { name = "pydantic" },
@@ -687,7 +686,6 @@ requires-dist = [
     { name = "injector", specifier = "~=0.22.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "mdxlate", specifier = ">=1.1.2" },
-    { name = "mypy", specifier = ">=1.18.1" },
     { name = "openai", specifier = ">=2.3.0" },
     { name = "otobo-znuny", specifier = ">=1.4.0" },
     { name = "pydantic", specifier = "~=2.12.0" },
@@ -733,7 +731,7 @@ wheels = [
 
 [[package]]
 name = "otai-hf-local"
-version = "1.0.2"
+version = "1.0.17"
 source = { editable = "packages/otai_hf_local" }
 dependencies = [
     { name = "open-ticket-ai" },
@@ -763,7 +761,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "otai-otobo-znuny"
-version = "1.0.2"
+version = "1.0.17"
 source = { editable = "packages/otai_otobo_znuny" }
 dependencies = [
     { name = "injector" },
