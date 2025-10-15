@@ -12,7 +12,7 @@ from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.logging.logging_models import LoggingDictConfig
+from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
 from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
@@ -27,8 +27,7 @@ class AppModule(Module):
 
     def configure(self, binder: Binder) -> None:
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
-        # Create a temporary logger factory for config loading
-        temp_logger_factory = create_logger_factory(LoggingDictConfig())
+        temp_logger_factory = create_logger_factory(LoggingConfig())
         config_loader = ConfigLoader(self.app_config, temp_logger_factory)
         config = config_loader.load_config(self.config_path)
         print(config.infrastructure.logging.model_dump_json(indent=4, by_alias=True, exclude_none=True))
@@ -38,7 +37,7 @@ class AppModule(Module):
 
     @provider
     def create_renderer_from_service(
-        self, config: RawOpenTicketAIConfig, logger_factory: LoggerFactory
+            self, config: RawOpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         service_id = config.infrastructure.default_template_renderer
         service_config = next((s for s in config.services if s.id == service_id), None)

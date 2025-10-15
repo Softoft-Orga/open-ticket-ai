@@ -3,12 +3,11 @@ from __future__ import annotations
 from abc import ABC
 from typing import Any, final
 
+from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.renderable.renderable import Renderable
-
-from ..base_model import StrictBaseModel
-from .pipe_context_model import PipeContext
-from .pipe_models import PipeConfig, PipeResult
 
 
 class Pipe[ParamsT: StrictBaseModel](Renderable[ParamsT], ABC):

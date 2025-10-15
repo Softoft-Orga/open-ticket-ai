@@ -9,10 +9,7 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import (
 from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
     UpdateTicketParams,
     UpdateTicketPipe,
-    UpdateTicketPipeConfig,
 )
-
-UpdateTicketPipeConfig.model_rebuild()
 
 __all__ = [
     "AddNoteParams",
@@ -21,5 +18,4 @@ __all__ = [
     "FetchTicketsPipe",
     "UpdateTicketParams",
     "UpdateTicketPipe",
-    "UpdateTicketPipeConfig",
 ]

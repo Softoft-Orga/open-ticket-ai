@@ -8,8 +8,7 @@ from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLogger, Std
 
 
 def test_stdlib_logger_basic_logging(caplog: LogCaptureFixture) -> None:
-    logger_obj = logging.getLogger("test")
-    logger = StdlibLogger(logger_obj)
+    logger = StdlibLogger()
     with caplog.at_level(logging.INFO):
         logger.info("Info message")
         logger.error("Error message")

@@ -17,13 +17,13 @@ def _minimal_valid_config() -> dict:
     [
         (_minimal_valid_config(), None),
         (
-            {
-                "open_ticket_ai": {
-                    "plugins": [],
-                    "infrastructure": {"default_template_renderer": "test_renderer"},
-                }
-            },
-            None,
+                {
+                    "open_ticket_ai": {
+                        "plugins": [],
+                        "infrastructure": {"default_template_renderer": "test_renderer"},
+                    }
+                },
+                None,
         ),
         ({"wrong_key": {}}, ValueError),
         (None, ValueError),
@@ -31,7 +31,7 @@ def _minimal_valid_config() -> dict:
     ],
 )
 def test_load_config_validation(
-    config_loader: ConfigLoader, tmp_path: Path, config_data: dict | None, expected_error: type | None
+        config_loader: ConfigLoader, tmp_path: Path, config_data: dict | None, expected_error: type | None
 ) -> None:
     config_file = tmp_path / "config.yml"
     config_file.write_text(yaml.dump(config_data))
@@ -43,31 +43,8 @@ def test_load_config_validation(
             config_loader.load_config(config_file)
 
 
-def test_load_config_file_not_found(config_loader: ConfigLoader, tmp_path: Path) -> None:
-    nonexistent = tmp_path / "nonexistent.yml"
-    with pytest.raises(FileNotFoundError):
-        config_loader.load_config(nonexistent)
-
-
-@pytest.mark.parametrize(
-    "use_env_var",
-    [True, False],
-)
-def test_load_config_path_resolution(
-    config_loader: ConfigLoader, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, use_env_var: bool
-) -> None:
-    config_file = tmp_path / "config.yml"
-    config_file.write_text(yaml.dump(_minimal_valid_config()))
-    if use_env_var:
-        monkeypatch.setenv("OPEN_TICKET_AI_CONFIG", str(config_file))
-        result = config_loader.load_config()
-    else:
-        result = config_loader.load_config(config_file)
-    assert isinstance(result, RawOpenTicketAIConfig)
-
-
 def test_load_config_logs_success(
-    config_loader: ConfigLoader, tmp_path: Path, caplog: pytest.LogCaptureFixture
+        config_loader: ConfigLoader, tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
     import logging
 

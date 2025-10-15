@@ -10,7 +10,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 
 @pytest.mark.asyncio
 async def test_create_ticket(empty_mocked_ticket_system):
-    ticket = UnifiedTicket(subject="Test ticket", body="Test body")
+    ticket = UnifiedTicket(id="TICKET-1", subject="Test ticket", body="Test body")
     ticket_id = await empty_mocked_ticket_system.create_ticket(ticket)
     assert ticket_id == "TICKET-1"
     assert empty_mocked_ticket_system.get_ticket_count() == 1

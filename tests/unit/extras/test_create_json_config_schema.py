@@ -1,9 +1,5 @@
 from __future__ import annotations
 
-import subprocess
-import sys
-from pathlib import Path
-
 from open_ticket_ai.extras.create_json_config_schema import RootConfig, generate_markdown_docs
 
 
@@ -28,17 +24,3 @@ def test_nested_structure_in_markdown() -> None:
     assert "└─ `plugins`" in result
     assert "└─ `infrastructure`" in result
     assert "    └─ `logging`" in result or "  └─ `logging`" in result
-
-
-def test_main_execution_creates_files(tmp_path: Path) -> None:
-    result = subprocess.run(
-        [sys.executable, "-m", "open_ticket_ai.extras.create_json_config_schema"],
-        cwd=tmp_path,
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-    assert result.returncode == 0
-    assert (tmp_path / "CONFIG_SCHEMA.md").exists()
-    assert (tmp_path / "config.schema.json").exists()

@@ -1,11 +1,13 @@
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from open_ticket_ai.core.config.logging_config import LoggingDictConfig
-from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
+from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
+from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
+from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
@@ -17,6 +19,16 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 pytestmark = [pytest.mark.unit]
+
+
+@pytest.fixture
+def logging_config() -> LoggingConfig:
+    return LoggingConfig(level="DEBUG")
+
+
+@pytest.fixture
+def logger_factory(logging_config) -> LoggerFactory:
+    return create_logger_factory(logging_config)
 
 
 @pytest.fixture
@@ -35,16 +47,14 @@ def mock_ticket_system_service() -> MagicMock:
 
 
 @pytest.fixture
-def empty_mocked_ticket_system() -> MockedTicketSystem:
-    """Empty MockedTicketSystem for custom test scenarios."""
-    return MockedTicketSystem({})
+def empty_mocked_ticket_system(logger_factory) -> MockedTicketSystem:
+    return MockedTicketSystem(config=RenderableConfig(id="mocked-ticket-system"), logger_factory=logger_factory)
 
 
 @pytest.fixture(scope="function")
-def mocked_ticket_system() -> MockedTicketSystem:
-    system = MockedTicketSystem({})
+def mocked_ticket_system(logger_factory) -> MockedTicketSystem:
+    system = MockedTicketSystem(config=RenderableConfig(id="mocked-ticket-system"), logger_factory=logger_factory)
 
-    # Add sample tickets
     system.add_test_ticket(
         id="TICKET-1",
         subject="Test ticket 1",
@@ -80,7 +90,7 @@ def mocked_ticket_system() -> MockedTicketSystem:
 @pytest.fixture
 def valid_raw_config() -> RawOpenTicketAIConfig:
     return RawOpenTicketAIConfig(
-        infrastructure=InfrastructureConfig(logging=LoggingDictConfig(), default_template_renderer="jinja_renderer"),
+        infrastructure=InfrastructureConfig(logging=LoggingConfig(), default_template_renderer="jinja_renderer"),
         services=[
             RenderableConfig(
                 id="jinja_renderer",
@@ -96,7 +106,7 @@ def valid_raw_config() -> RawOpenTicketAIConfig:
 def invalid_raw_config() -> RawOpenTicketAIConfig:
     return RawOpenTicketAIConfig(
         infrastructure=InfrastructureConfig(
-            logging=LoggingDictConfig(), default_template_renderer="nonexistent_renderer"
+            logging=LoggingConfig(), default_template_renderer="nonexistent_renderer"
         ),
         services=[],
         orchestrator=OrchestratorConfig(),

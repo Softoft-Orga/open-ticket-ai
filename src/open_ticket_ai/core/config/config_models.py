@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.core.logging.logging_models import LoggingDictConfig
+from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 
 
 class InfrastructureConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
-    logging: LoggingDictConfig = Field(default_factory=LoggingDictConfig)
+    logging: LoggingConfig = Field(default_factory=LoggingConfig)
     default_template_renderer: str
 
 
