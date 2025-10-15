@@ -52,6 +52,21 @@ def format_default(default: Any) -> str:
     return f"`{default}`"
 
 
+def _expand_nested_ref(
+    ref: str, defs: dict[str, Any], indent: int, max_depth: int
+) -> list[str]:
+    ref_schema = resolve_ref(ref, defs)
+    if not ref_schema or "properties" not in ref_schema:
+        return []
+
+    nested_props = ref_schema.get("properties", {})
+    nested_required = ref_schema.get("required", [])
+    if not nested_props:
+        return []
+
+    return generate_nested_properties(nested_props, nested_required, defs, indent, max_depth)
+
+
 def generate_property_table(
     properties: dict[str, Any],
     required: list[str],
@@ -69,43 +84,23 @@ def generate_property_table(
 
     for prop_name, prop_info in properties.items():
         is_required = "✓" if prop_name in required else ""
-
         type_desc = get_type_description(prop_info, defs)
-
-        default = prop_info.get("default", "")
-        if default:
-            default = format_default(default)
-
+        default = format_default(prop_info.get("default", "")) if prop_info.get("default", "") else ""
         description = prop_info.get("description", "").replace("\n", " ")
-
         indent_prefix = "  " * indent
         field_name = f"{indent_prefix}`{prop_name}`"
 
         lines.append(f"| {field_name} | {type_desc} | {is_required} | {default} | {description} |")
 
-        if indent < max_depth:
-            if "$ref" in prop_info:
-                ref_schema = resolve_ref(prop_info["$ref"], defs)
-                if ref_schema and "properties" in ref_schema:
-                    nested_props = ref_schema.get("properties", {})
-                    nested_required = ref_schema.get("required", [])
-                    if nested_props:
-                        nested_lines = generate_nested_properties(
-                            nested_props, nested_required, defs, indent + 1, max_depth
-                        )
-                        lines.extend(nested_lines)
-            elif prop_info.get("type") == "array" and "items" in prop_info:
-                items = prop_info["items"]
-                if "$ref" in items:
-                    ref_schema = resolve_ref(items["$ref"], defs)
-                    if ref_schema and "properties" in ref_schema:
-                        nested_props = ref_schema.get("properties", {})
-                        nested_required = ref_schema.get("required", [])
-                        if nested_props:
-                            nested_lines = generate_nested_properties(
-                                nested_props, nested_required, defs, indent + 1, max_depth
-                            )
-                            lines.extend(nested_lines)
+        if indent >= max_depth:
+            continue
+
+        if "$ref" in prop_info:
+            nested_lines = _expand_nested_ref(prop_info["$ref"], defs, indent + 1, max_depth)
+            lines.extend(nested_lines)
+        elif prop_info.get("type") == "array" and "$ref" in prop_info.get("items", {}):
+            nested_lines = _expand_nested_ref(prop_info["items"]["$ref"], defs, indent + 1, max_depth)
+            lines.extend(nested_lines)
 
     return "\n".join(lines) + "\n"
 
@@ -121,43 +116,23 @@ def generate_nested_properties(
 
     for prop_name, prop_info in properties.items():
         is_required = "✓" if prop_name in required else ""
-
         type_desc = get_type_description(prop_info, defs)
-
-        default = prop_info.get("default", "")
-        if default:
-            default = format_default(default)
-
+        default = format_default(prop_info.get("default", "")) if prop_info.get("default", "") else ""
         description = prop_info.get("description", "").replace("\n", " ")
-
         indent_prefix = "  " * indent
         field_name = f"{indent_prefix}`{prop_name}`"
 
         lines.append(f"| {field_name} | {type_desc} | {is_required} | {default} | {description} |")
 
-        if indent < max_depth:
-            if "$ref" in prop_info:
-                ref_schema = resolve_ref(prop_info["$ref"], defs)
-                if ref_schema and "properties" in ref_schema:
-                    nested_props = ref_schema.get("properties", {})
-                    nested_required = ref_schema.get("required", [])
-                    if nested_props:
-                        nested_lines = generate_nested_properties(
-                            nested_props, nested_required, defs, indent + 1, max_depth
-                        )
-                        lines.extend(nested_lines)
-            elif prop_info.get("type") == "array" and "items" in prop_info:
-                items = prop_info["items"]
-                if "$ref" in items:
-                    ref_schema = resolve_ref(items["$ref"], defs)
-                    if ref_schema and "properties" in ref_schema:
-                        nested_props = ref_schema.get("properties", {})
-                        nested_required = ref_schema.get("required", [])
-                        if nested_props:
-                            nested_lines = generate_nested_properties(
-                                nested_props, nested_required, defs, indent + 1, max_depth
-                            )
-                            lines.extend(nested_lines)
+        if indent >= max_depth:
+            continue
+
+        if "$ref" in prop_info:
+            nested_lines = _expand_nested_ref(prop_info["$ref"], defs, indent + 1, max_depth)
+            lines.extend(nested_lines)
+        elif prop_info.get("type") == "array" and "$ref" in prop_info.get("items", {}):
+            nested_lines = _expand_nested_ref(prop_info["items"]["$ref"], defs, indent + 1, max_depth)
+            lines.extend(nested_lines)
 
     return lines
 
