@@ -1,7 +1,7 @@
 name: Pipe or Plugin Request
 description: Request a new pipe, plugin, or extension to the pipeline system
 title: "[Pipe/Plugin] "
-labels: ["enhancement", "pipe-request", "needs-triage"]
+labels: [ "enhancement", "pipe-request", "needs-triage" ]
 body:
   - type: markdown
     attributes:

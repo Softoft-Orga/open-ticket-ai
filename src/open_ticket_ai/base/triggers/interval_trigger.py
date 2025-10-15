@@ -1,4 +1,4 @@
-import asyncio
+import time
 from typing import Any
 
 from pydantic import BaseModel
@@ -15,35 +15,25 @@ class IntervalTriggerParams(BaseModel):
     days: int = 0
 
 
-class IntervalTrigger(Trigger):
+class IntervalTrigger(Trigger[IntervalTriggerParams]):
+    def _should_trigger(self) -> bool:
+        self.current_nanos = time.time_ns()
+        if self.current_nanos - self.last_time_fired >= self.nano_seconds_interval:
+            self.last_time_fired = self.current_nanos
+            return True
+        return False
+
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return IntervalTriggerParams
 
     def __init__(self, config: TriggerConfig, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, *args, **kwargs)
-        validated_params = IntervalTriggerParams.model_validate(config.model_dump())
-        self.seconds_interval: float = (
-            validated_params.days * 86400
-            + validated_params.hours * 3600
-            + validated_params.minutes * 60
-            + validated_params.seconds
-            + validated_params.milliseconds / 1000
+        self.last_time_fired = time.time_ns()
+        self.nano_seconds_interval: float = (
+            self._params.days * 86400 * 1e9
+            + self._params.hours * 3600 * 1e9
+            + self._params.minutes * 60 * 1e9
+            + self._params.seconds * 1e9
+            + self._params.milliseconds * 1e6
         )
-        self._task: asyncio.Task[None] | None = None
-
-    def start(self) -> None:
-        if not self._running:
-            self._running = True
-            self._task = asyncio.create_task(self._run())
-
-    def stop(self) -> None:
-        self._running = False
-        if self._task:
-            self._task.cancel()
-            self._task = None
-
-    async def _run(self) -> None:
-        while self._running:
-            await asyncio.sleep(self.seconds_interval)
-            self.notify()

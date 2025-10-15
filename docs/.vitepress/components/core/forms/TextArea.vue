@@ -11,21 +11,21 @@
 
 <script lang="ts" setup>
 const props = withDefaults(defineProps<{
-    modelValue?: string
-    placeholder?: string
-    disabled?: boolean
+  modelValue?: string
+  placeholder?: string
+  disabled?: boolean
 }>(), {
-    modelValue: '',
-    placeholder: '',
-    disabled: false,
+  modelValue: '',
+  placeholder: '',
+  disabled: false,
 })
 
 const emit = defineEmits<{
-    (e: 'update:modelValue', value: string): void
+  (e: 'update:modelValue', value: string): void
 }>()
 
 function onInput(event: Event) {
-    const value = (event.target as HTMLTextAreaElement).value
-    emit('update:modelValue', value)
+  const value = (event.target as HTMLTextAreaElement).value
+  emit('update:modelValue', value)
 }
 </script>

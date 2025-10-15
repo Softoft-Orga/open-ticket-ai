@@ -9,6 +9,7 @@ The HuggingFace Local plugin enables local ML model inference using models from 
 ## Overview
 
 This plugin provides:
+
 - Local model inference
 - Support for various model types
 - Model caching
@@ -17,6 +18,7 @@ This plugin provides:
 ## Model Loading and Caching
 
 Models are:
+
 1. Downloaded from HuggingFace Hub
 2. Cached locally for reuse
 3. Loaded into memory on first use
@@ -25,17 +27,20 @@ Models are:
 ## Supported Model Types
 
 ### Text Classification
+
 - Queue classification
 - Priority classification
 - Sentiment analysis
 - Multi-label classification
 
 ### Text Generation
+
 - Ticket summarization
 - Response generation
 - Text completion
 
 ### Named Entity Recognition
+
 - Extract entities from tickets
 - Custom entity types
 
@@ -79,16 +84,19 @@ plugins:
 ## Performance Considerations
 
 ### Memory Usage
+
 - Models consume significant RAM
 - Consider model size vs. accuracy trade-offs
 - Use quantization for large models
 
 ### Inference Speed
+
 - First inference is slower (model loading)
 - Subsequent inferences are faster (cached)
 - Batch processing improves throughput
 
 ### GPU vs CPU
+
 - GPU significantly faster for large models
 - CPU sufficient for smaller models
 - Consider deployment environment
@@ -96,9 +104,11 @@ plugins:
 ## Configuration Reference
 
 ### Required Settings
+
 - `model_name`: HuggingFace model identifier or local path
 
 ### Optional Settings
+
 - `device`: "cpu" or "cuda" (default: "cpu")
 - `cache_dir`: Model cache directory (default: "~/.cache/huggingface")
 - `batch_size`: Batch size for inference (default: 1)
@@ -107,16 +117,19 @@ plugins:
 ## Troubleshooting
 
 ### Model Download Issues
+
 - Check internet connectivity
 - Verify HuggingFace Hub access
 - Check disk space for cache
 
 ### Out of Memory
+
 - Reduce batch size
 - Use smaller model
 - Enable CPU offloading
 
 ### Slow Inference
+
 - Enable GPU if available
 - Increase batch size
 - Use distilled model variants

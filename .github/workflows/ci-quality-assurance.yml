@@ -1,116 +1,189 @@
 name: CI Quality Assurance
 on:
-    push:
-        branches:
-            - dev
-            - main
-    pull_request:
-        types: [ opened, synchronize, reopened ]
+  push:
+    branches: [ dev, main ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
 jobs:
-    ci:
-        name: CI Quality Assurance
-        permissions:
-            contents: write
-            pull-requests: write
-        runs-on: ubuntu-latest
-        steps:
-            -   uses: actions/checkout@v4
-                with:
-                    fetch-depth: 0
-                    token: ${{ secrets.GITHUB_TOKEN }}
+  ci:
+    name: CI Quality Assurance
+    permissions:
+      contents: write
+      pull-requests: write
+      security-events: write   # needed for SARIF uploads
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-            -   name: Set up uv
-                uses: astral-sh/setup-uv@v6
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
 
-            -   name: Set up Python
-                uses: actions/setup-python@v6
-                with:
-                    python-version: 3.13
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
 
-            -   name: Install dependencies
-                run: uv sync --locked --all-extras
+      - name: Install dependencies
+        run: uv sync --locked --all-extras
 
-            -   name: Lint and auto-fix with ruff
-                run: |
-                    uv run ruff format .
-                    uv run ruff check . --fix
-                continue-on-error: true
+      - id: ruff_fix
+        name: Lint and auto-fix with ruff
+        run: |
+          uv run ruff format .
+          uv run ruff check . --fix
+        continue-on-error: true
 
-            -   name: Auto-commit ruff fixes
-                if: github.event_name == 'push'
-                run: |
-                    git config user.name "github-actions[bot]"
-                    git config user.email "github-actions[bot]@users.noreply.github.com"
-                    git add .
-                    git diff --staged --quiet || git commit -m "style: apply ruff auto-fixes [skip ci]"
-                    git push || echo "No changes to push"
+      - id: autocmt
+        name: Auto-commit ruff fixes
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --staged --quiet || git commit -m "style: apply ruff auto-fixes [skip ci]"
+          git push || echo "No changes to push"
 
-            -   name: Check ruff compliance
-                run: |
-                    uv run ruff format --check .
-                    uv run ruff check .
-                continue-on-error: true
+      - id: ruff_check
+        name: Check ruff compliance
+        run: |
+          uv run ruff format --check .
+          uv run ruff check .
+        continue-on-error: true
 
+      - id: mypy
+        name: Type check with mypy
+        run: |
+          uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src
+        continue-on-error: true
 
-            -   name: Type check with mypy
-                run: |
-                    uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src
-                continue-on-error: true
+      - id: tests
+        name: Run all tests
+        run: uv run pytest -v
+        continue-on-error: true
 
-            -   name: Run all tests
-                run: |
-                    uv run pytest -v
-                continue-on-error: true
+      - id: validate
+        name: Validate test structure
+        run: uv run python scripts/validate_test_structure.py
+        continue-on-error: true
 
-            -   name: Validate test structure
-                run: |
-                    uv run python scripts/validate_test_structure.py
-                continue-on-error: true
+      - id: coverage
+        name: Generate pytest coverage report
+        run: |
+          uv run pytest --cov=src \
+                        --cov=packages/otai_hf_local/src \
+                        --cov=packages/otai_otobo_znuny/src \
+                        --cov-report=xml:coverage.xml \
+                        --cov-report=term
+        continue-on-error: true
 
-            -   name: Generate pytest coverage report
-                run: |
-                    uv run pytest --cov=src --cov=packages/otai_hf_local/src --cov=packages/otai_otobo_znuny/src --cov-report=xml:coverage.xml --cov-report=term
-                continue-on-error: true
+      - id: ruff_sarif
+        name: Generate ruff lint report (SARIF)
+        run: uv run ruff check . --output-format=sarif > ruff-report.sarif
+        continue-on-error: true
 
-            -   name: Generate ruff lint report (SARIF)
-                run: |
-                    uv run ruff check . --output-format=sarif > ruff-report.sarif || true
-                continue-on-error: true
+      - id: mypy_report
+        name: Generate mypy type checking report
+        run: uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src --no-error-summary > mypy-report.txt 2>&1
+        continue-on-error: true
 
-            -   name: Generate mypy type checking report
-                run: |
-                    uv run mypy src packages/otai_hf_local/src packages/otai_otobo_znuny/src --no-error-summary > mypy-report.txt 2>&1 || true
-                continue-on-error: true
+      # --- Trivy security checks (continue, but tracked by Quality Gate) ---
+      - id: trivy_fs
+        name: Trivy filesystem vulnerability scan
+        uses: aquasecurity/trivy-action@0.20.0
+        continue-on-error: true
+        with:
+          scan-type: fs
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          format: sarif
+          output: trivy-fs-results.sarif
 
-            -   name: SonarCloud Scan
-                uses: SonarSource/sonarqube-scan-action@v6
-                env:
-                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Trivy filesystem scan (SARIF)
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-fs-results.sarif
+          category: trivy-filesystem
 
-            -   name: Upload coverage report as artifact
-                uses: actions/upload-artifact@v4
-                if: always()
-                with:
-                    name: coverage-report
-                    path: coverage.xml
-                    retention-days: 30
-                    overwrite: true
+      - id: trivy_cfg
+        name: Trivy configuration scan
+        uses: aquasecurity/trivy-action@0.20.0
+        continue-on-error: true
+        with:
+          scan-type: config
+          severity: CRITICAL,HIGH
+          format: sarif
+          output: trivy-config-results.sarif
 
-            -   name: Upload ruff report as artifact
-                uses: actions/upload-artifact@v4
-                if: always()
-                with:
-                    name: ruff-report
-                    path: ruff-report.sarif
-                    retention-days: 30
-                    overwrite: true
+      - name: Upload Trivy config scan (SARIF)
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-config-results.sarif
+          category: trivy-config
+      # --- end Trivy ---
 
-            -   name: Upload mypy report as artifact
-                uses: actions/upload-artifact@v4
-                if: always()
-                with:
-                    name: mypy-report
-                    path: mypy-report.txt
-                    retention-days: 30
-                    overwrite: true
+      - id: sonar
+        name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        continue-on-error: true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload coverage report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 30
+          overwrite: true
+
+      - name: Upload ruff report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ruff-report
+          path: ruff-report.sarif
+          retention-days: 30
+          overwrite: true
+
+      - name: Upload mypy report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mypy-report
+          path: mypy-report.txt
+          retention-days: 30
+          overwrite: true
+
+      - name: Quality Gate (fail job if any step failed)
+        if: always()
+        env:
+          RUFF_FIX: ${{ steps.ruff_fix.outcome }}
+          RUFF_CHECK: ${{ steps.ruff_check.outcome }}
+          MYPY: ${{ steps.mypy.outcome }}
+          TESTS: ${{ steps.tests.outcome }}
+          VALIDATE: ${{ steps.validate.outcome }}
+          COVERAGE: ${{ steps.coverage.outcome }}
+          RUFF_SARIF: ${{ steps.ruff_sarif.outcome }}
+          MYPY_REPORT: ${{ steps.mypy_report.outcome }}
+          TRIVY_FS: ${{ steps.trivy_fs.outcome }}
+          TRIVY_CFG: ${{ steps.trivy_cfg.outcome }}
+          SONAR: ${{ steps.sonar.outcome }}
+        run: |
+          failed=0
+          for x in "$RUFF_FIX" "$RUFF_CHECK" "$MYPY" "$TESTS" "$VALIDATE" "$COVERAGE" "$RUFF_SARIF" "$MYPY_REPORT" "$TRIVY_FS" "$TRIVY_CFG" "$SONAR"; do
+            [ "$x" = "failure" ] && failed=1
+          done
+          if [ $failed -ne 0 ]; then
+            echo "One or more quality/security steps failed (see logs)."
+            exit 1
+          else
+            echo "All quality/security steps passed."
+          fi

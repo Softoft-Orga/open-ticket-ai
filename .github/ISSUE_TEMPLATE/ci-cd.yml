@@ -1,7 +1,7 @@
 name: CI/CD Issue
 description: Propose changes to CI/CD workflows, build processes, deployments, or automation
 title: "[CI/CD] "
-labels: ["ci-cd", "needs-triage"]
+labels: [ "ci-cd", "needs-triage" ]
 body:
   - type: markdown
     attributes:

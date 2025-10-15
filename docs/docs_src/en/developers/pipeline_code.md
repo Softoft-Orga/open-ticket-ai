@@ -13,68 +13,62 @@ This guide explains how to implement custom pipes using the current parameter va
   "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
   "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","lineColor":"#718096"},
 }}%%
-
 flowchart TB
 
 %% ===================== PIPE ENTRY =====================
-subgraph ENTRY["📥 Pipe.process(context)"]
-  direction TB
-  Start([pipe.process]):::start
-  CheckShould{"should_run?<br/>(if_ condition)"}:::dec
-  CheckDeps{"Dependencies met?<br/>(depends_on)"}:::dec
-  Skip["⏭️ Skip → return context"]:::skip
-  
-  Start --> CheckShould
-  CheckShould -- ✓ --> CheckDeps
-  CheckShould -- ✗ --> Skip
-  CheckDeps -- ✗ --> Skip
-end
+    subgraph ENTRY["📥 Pipe.process(context)"]
+        direction TB
+        Start([pipe.process]):::start
+        CheckShould{"should_run?<br/>(if_ condition)"}:::dec
+        CheckDeps{"Dependencies met?<br/>(depends_on)"}:::dec
+        Skip["⏭️ Skip → return context"]:::skip
+        Start --> CheckShould
+        CheckShould -- ✓ --> CheckDeps
+        CheckShould -- ✗ --> Skip
+        CheckDeps -- ✗ --> Skip
+    end
 
 %% ===================== EXECUTION =====================
-subgraph EXEC["⚙️ Execution"]
-  direction TB
-  ProcessAndSave["__process_and_save()"]:::proc
-  TryCatch["try-catch wrapper"]:::proc
-  RunProcess["await _process()"]:::proc
-  CreateResult["Create PipeResult"]:::proc
-  
-  ProcessAndSave --> TryCatch --> RunProcess --> CreateResult
-end
+    subgraph EXEC["⚙️ Execution"]
+        direction TB
+        ProcessAndSave["__process_and_save()"]:::proc
+        TryCatch["try-catch wrapper"]:::proc
+        RunProcess["await _process()"]:::proc
+        CreateResult["Create PipeResult"]:::proc
+        ProcessAndSave --> TryCatch --> RunProcess --> CreateResult
+    end
 
 %% ===================== ERROR HANDLING =====================
-subgraph ERROR["❌ Error Handling"]
-  direction TB
-  CatchEx["Catch Exception"]:::error
-  LogError["Logger.error + traceback"]:::log
-  CreateFailed["Create failed PipeResult"]:::error
-  
-  CatchEx --> LogError --> CreateFailed
-end
+    subgraph ERROR["❌ Error Handling"]
+        direction TB
+        CatchEx["Catch Exception"]:::error
+        LogError["Logger.error + traceback"]:::log
+        CreateFailed["Create failed PipeResult"]:::error
+        CatchEx --> LogError --> CreateFailed
+    end
 
 %% ===================== PERSISTENCE =====================
-subgraph PERSIST["💾 Persistence"]
-  direction TB
-  SaveResult["context.pipes[pipe_id] = result"]:::ctx
-  LogResult["Logger.info/warning"]:::log
-  Return["Return updated context"]:::ctx
-  
-  SaveResult --> LogResult --> Return
-end
+    subgraph PERSIST["💾 Persistence"]
+        direction TB
+        SaveResult["context.pipes[pipe_id] = result"]:::ctx
+        LogResult["Logger.info/warning"]:::log
+        Return["Return updated context"]:::ctx
+        SaveResult --> LogResult --> Return
+    end
 
 %% ===================== CONNECTIONS =====================
-CheckDeps -- ✓ --> ProcessAndSave
-TryCatch --> CatchEx
-CreateResult --> SaveResult
-CreateFailed --> SaveResult
-
+    CheckDeps -- ✓ --> ProcessAndSave
+    TryCatch --> CatchEx
+    CreateResult --> SaveResult
+    CreateFailed --> SaveResult
 %% ===================== STYLES =====================
-classDef start fill:#2d6a4f,stroke:#1b4332,stroke-width:3px,color:#fff,font-weight:bold
-classDef dec fill:#d97706,stroke:#b45309,stroke-width:2px,color:#fff,font-weight:bold
-classDef skip fill:#374151,stroke:#1f2937,stroke-width:2px,color:#9ca3af
-classDef proc fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
-classDef error fill:#dc2626,stroke:#991b1b,stroke-width:2px,color:#fff
-classDef log fill:#0891b2,stroke:#0e7490,stroke-width:2px,color:#fff
-classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
+    classDef start fill: #2d6a4f, stroke: #1b4332, stroke-width: 3px, color: #fff, font-weight: bold
+    classDef dec fill: #d97706, stroke: #b45309, stroke-width: 2px, color: #fff, font-weight: bold
+    classDef skip fill: #374151, stroke: #1f2937, stroke-width: 2px, color: #9ca3af
+    classDef proc fill: #2b2d42, stroke: #14213d, stroke-width: 2px, color: #e0e0e0
+    classDef error fill: #dc2626, stroke: #991b1b, stroke-width: 2px, color: #fff
+    classDef log fill: #0891b2, stroke: #0e7490, stroke-width: 2px, color: #fff
+    classDef ctx fill: #165b33, stroke: #0d3b24, stroke-width: 2px, color: #e0e0e0
 ```
 
 ## Implementing a Custom Pipe
@@ -108,7 +102,7 @@ class MyPipeResultData(BaseModel):
 from typing import Any
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
-from open_ticket_ai.core.logging_iface import LoggerFactory
+from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 
 
 class MyPipe(Pipe[MyPipeParams]):
@@ -163,6 +157,7 @@ else:
 ```
 
 **Flow:**
+
 1. YAML config loaded and templates rendered → produces `dict[str, Any]`
 2. Dict passed to Pipe constructor as `pipe_config.params`
 3. Base class checks if params is a dict
@@ -184,6 +179,7 @@ Users write YAML with templates:
 ```
 
 **What happens:**
+
 1. Templates rendered: `input_field` gets value from previous pipe, `threshold` from env
 2. Results in dict: `{"input_field": "some_value", "threshold": "0.5", "max_items": 50}`
 3. Passed to `MyPipe.__init__`
@@ -197,20 +193,21 @@ Add service dependencies in the `__init__` signature:
 ```python
 from open_ticket_ai.core.ticket_system_integration import TicketSystemService
 
+
 class FetchTicketsPipe(Pipe[FetchTicketsParams]):
     params_class = FetchTicketsParams
-    
+
     def __init__(
-        self,
-        ticket_system: TicketSystemService,  # Injected automatically
-        pipe_config: PipeConfig[FetchTicketsParams],
-        logger_factory: LoggerFactory,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            ticket_system: TicketSystemService,  # Injected automatically
+            pipe_config: PipeConfig[FetchTicketsParams],
+            logger_factory: LoggerFactory,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory)
         self.ticket_system = ticket_system
-    
+
     async def _process(self) -> PipeResult[FetchTicketsPipeResultData]:
         # Use injected service
         tickets = await self.ticket_system.find_tickets(...)
@@ -257,7 +254,7 @@ async def _process(self) -> PipeResult[MyPipeResultData]:
 
 ```python
 import pytest
-from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipeline.pipe_models import PipeConfig
 
 
@@ -285,7 +282,7 @@ async def test_my_pipe_processes_correctly(logger_factory):
 
     # Assert
     assert "test_pipe" in result_context.pipe_results
-    assert result_context.pipe_results["test_pipe"].success
+    assert result_context.pipe_results["test_pipe"].succeeded
     assert result_context.pipe_results["test_pipe"].data.count > 0
 ```
 
@@ -331,6 +328,7 @@ Use the `depends_on` field:
 ## Best Practices
 
 **DO:**
+
 - ✅ Always define `params_class` as a class attribute
 - ✅ Let parent `__init__` handle parameter validation
 - ✅ Use descriptive parameter names
@@ -340,6 +338,7 @@ Use the `depends_on` field:
 - ✅ Keep `_process()` focused and testable
 
 **DON'T:**
+
 - ❌ Don't manually call `model_validate()` in your `__init__`
 - ❌ Don't bypass the params_class mechanism
 - ❌ Don't put heavy logic in `__init__`

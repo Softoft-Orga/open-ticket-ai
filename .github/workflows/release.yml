@@ -1,0 +1,129 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write  # Required for OIDC PyPI publishing
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v4
+
+      # Get version from tag or pyproject.toml
+      - name: Get version
+        id: get_version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Publishing version: $VERSION"
+
+      # Set all package versions to match core
+      - name: Set unified version
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          
+          echo "Setting all packages to version: $VERSION"
+          
+          # Set core version (in case tag trigger with different version)
+          uv version "$VERSION"
+          
+          # Set plugin versions to match core
+          uv version --package otai_hf_local "$VERSION"
+          uv version --package otai_otobo_znuny "$VERSION"
+          
+          echo "✓ All packages set to version $VERSION"
+
+      # Build all packages
+      - name: Build core package
+        run: uv build
+
+      - name: Build hf_local plugin
+        run: uv build --package otai_hf_local
+
+      - name: Build otobo_znuny plugin
+        run: uv build --package otai_otobo_znuny
+
+      # Publish to PyPI using OIDC (Trusted Publishing)
+      - name: Publish core to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+      - name: Publish hf_local to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/otai_hf_local/dist/
+
+      - name: Publish otobo_znuny to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/otai_otobo_znuny/dist/
+
+  docker:
+    needs: [publish]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        variant:
+          - name: core
+            packages: open-ticket-ai
+          - name: hf_local
+            packages: open-ticket-ai otai-hf-local
+          - name: otobo_znuny
+            packages: open-ticket-ai otai-otobo-znuny
+          - name: all
+            packages: open-ticket-ai otai-hf-local otai-otobo-znuny
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}},suffix=-${{ matrix.variant.name }},value=v${{ needs.publish.outputs.version }}
+            type=raw,value=${{ matrix.variant.name }}-latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ needs.publish.outputs.version }}
+            PACKAGES=${{ matrix.variant.packages }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

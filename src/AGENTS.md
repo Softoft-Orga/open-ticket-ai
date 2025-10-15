@@ -46,10 +46,16 @@ Use pydantic models for complex data structures rather than TypedDict or plain d
 - Use `pathlib.Path` for all file system operations
 - Prefer context managers for resource handling
 
+## Lgging
+
+Never directly use the logging libary! Instead get the loggingfactory by gettin it injected throug the constructor of
+your class.
+
 ## Error Handling
 
 - Raise specific exception types with actionable messages
 - Don't catch broad exceptions
+
 ## Documentation
 
 - All documentation lives in `/docs` directory, not in code comments

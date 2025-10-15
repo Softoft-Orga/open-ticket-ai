@@ -1,9 +1,10 @@
 from pathlib import Path
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class AppConfig(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
     config_env_var: str = Field(
         default="OPEN_TICKET_AI_CONFIG",
         description="Environment variable name for configuration file path",

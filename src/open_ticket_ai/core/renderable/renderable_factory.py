@@ -7,8 +7,8 @@ from typing import Any
 from injector import inject, singleton
 
 from open_ticket_ai.core import AppConfig
-from open_ticket_ai.core.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipeline.pipe_context import PipeContext
+from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
 from open_ticket_ai.core.renderable.renderable import Renderable
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
@@ -31,12 +31,9 @@ class RenderableFactory:
         self._logger_factory = logger_factory
 
     def render(self, registerable_config_raw: RenderableConfig, scope: PipeContext):
-        rendered_params = self._template_renderer.render_recursive(registerable_config_raw.params, scope.model_dump())
+        rendered_params = self._template_renderer.render(registerable_config_raw.params, scope.model_dump())
         registerable_config_raw.params = rendered_params
         return self.__create_renderable_instance(registerable_config_raw, scope)
-
-    def __create_service_instance(self, registerable_config_raw: RenderableConfig, scope: PipeContext) -> Renderable:
-        return self.render(registerable_config_raw, scope)
 
     def __create_renderable_instance(self, rendered_config: RenderableConfig, scope: PipeContext) -> Renderable:
         cls: type = typing.cast("type", locate(rendered_config.use))

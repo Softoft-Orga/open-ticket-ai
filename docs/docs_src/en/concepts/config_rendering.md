@@ -6,7 +6,9 @@ aside: false
 
 # Configuration and Template Rendering
 
-The configuration and template rendering system is the foundation of Open Ticket AI's dynamic behavior. It transforms static YAML files into live, context-aware application objects through a multi-stage process involving validation, template rendering, and dependency injection.
+The configuration and template rendering system is the foundation of Open Ticket AI's dynamic behavior. It transforms
+static YAML files into live, context-aware application objects through a multi-stage process involving validation,
+template rendering, and dependency injection.
 
 ## Overview
 
@@ -17,7 +19,8 @@ Configuration flows through several stages from file to runtime:
 3. **Configuration Rendering**: Templates in config are evaluated against runtime context
 4. **Object Instantiation**: Rendered configurations become application objects
 
-This process enables dynamic, context-aware pipelines that adapt to runtime conditions while maintaining type safety and validation.
+This process enables dynamic, context-aware pipelines that adapt to runtime conditions while maintaining type safety and
+validation.
 
 ## Configuration Lifecycle
 
@@ -182,19 +185,19 @@ class PipeContext(BaseModel):
 **What each field provides:**
 
 - **`pipes`**: Contains results from all previously executed pipes in the pipeline, keyed by pipe ID
-  - Accumulated as each pipe completes
-  - In CompositePipe: merged results from all child steps
-  - Access via `pipe_result('pipe_id')` in templates
+    - Accumulated as each pipe completes
+    - In CompositePipe: merged results from all child steps
+    - Access via `pipe_result('pipe_id')` in templates
 
 - **`params`**: Current pipe's parameters
-  - Set when the pipe is created
-  - Accessible via `params.*` in templates
-  - For nested pipes, inherits from parent via the context chain
+    - Set when the pipe is created
+    - Accessible via `params.*` in templates
+    - For nested pipes, inherits from parent via the context chain
 
 - **`parent`**: Reference to parent context (if this pipe is inside a CompositePipe)
-  - Allows access to parent scope variables
-  - Creates hierarchical context chain
-  - Can traverse multiple levels (`parent.parent...`)
+    - Allows access to parent scope variables
+    - Creates hierarchical context chain
+    - Can traverse multiple levels (`parent.parent...`)
 
 ### Environment Variable Substitution
 
@@ -210,15 +213,18 @@ services:
 ```
 
 **Environment variable filtering:**
+
 - By default, only environment variables with the `OTAI_` prefix are accessible
 - Configurable via `template_renderer_config.env_config.prefix`
 - Prevents accidental exposure of system environment variables
 
 ### Jinja2 Template Evaluation
 
-All string values in service and pipe configurations are treated as Jinja2 templates and evaluated against the current scope:
+All string values in service and pipe configurations are treated as Jinja2 templates and evaluated against the current
+scope:
 
 **Available in templates:**
+
 - `{{ params.field_name }}`: Access current pipe parameters
 - `{{ pipe_result('pipe_id').data.field }}`: Access previous pipe results
 - `{{ parent.params.field }}`: Access parent context parameters
@@ -228,6 +234,7 @@ All string values in service and pipe configurations are treated as Jinja2 templ
 - `{{ value | filter }}`: Jinja2 filters
 
 **Template rendering is recursive:**
+
 - Strings are rendered as Jinja2 templates
 - Lists have each item rendered
 - Dictionaries have each value rendered
@@ -236,6 +243,7 @@ All string values in service and pipe configurations are treated as Jinja2 templ
 ### Context Flow in Pipelines
 
 **Simple Pipeline (no nesting):**
+
 ```yaml
 pipes:
   - id: fetch_tickets
@@ -251,6 +259,7 @@ pipes:
 ```
 
 **Nested Pipeline (CompositePipe):**
+
 ```yaml
 - id: workflow
   use: CompositePipe
@@ -266,6 +275,7 @@ pipes:
 
 **CompositePipe Result Merging:**
 When a CompositePipe completes:
+
 1. All child pipe results are collected
 2. Results are merged into a single `PipeResult`
 3. The merged result is stored in the parent context's `pipes` dict
@@ -273,7 +283,8 @@ When a CompositePipe completes:
 
 ### Bootstrap Exception: Template Renderer Config
 
-**Critical Rule:** The template renderer configuration itself is **NEVER** rendered. It is used raw to bootstrap the rendering system.
+**Critical Rule:** The template renderer configuration itself is **NEVER** rendered. It is used raw to bootstrap the
+rendering system.
 
 This prevents circular dependencies and ensures the renderer can be initialized before any template processing occurs.
 
@@ -293,12 +304,14 @@ All other configurations (services, orchestrator, pipes) are rendered using this
 Configuration validation occurs at two stages:
 
 **1. Initial Validation (YAML → RawOpenTicketAIConfig):**
+
 - YAML structure is correct
 - Required fields are present
 - Types match expected structure
 - Happens in `ConfigLoader.load_config()`
 
 **2. Post-Rendering Validation (Rendered dict → Typed Config):**
+
 - Template-rendered values match expected types
 - Rendered values satisfy constraints
 - Computed values are valid
@@ -314,6 +327,7 @@ params:
 ```
 
 **Validation Flow:**
+
 1. YAML parsed as dict: `{"timeout": "{{ env('TIMEOUT', '30') }}", "model": "{{ params.global_model }}"}`
 2. Templates rendered: `{"timeout": "30", "model": "gpt-4"}`
 3. Passed to Pipe constructor as dict
@@ -345,6 +359,7 @@ class MyPipe(Pipe[MyParams]):
 ```
 
 **Key Points:**
+
 - Params arrive as `dict[str, Any]` from template rendering
 - Base `Pipe.__init__` uses `params_class.model_validate()` for conversion
 - Validation errors show which field and why it failed
@@ -369,6 +384,7 @@ services:
 ```
 
 The `RenderableFactory` resolves these dependencies by:
+
 1. Looking up the service by ID in the registry
 2. Instantiating it if not already created
 3. Passing it to the dependent service's constructor
@@ -379,6 +395,7 @@ The `RenderableFactory` resolves these dependencies by:
 
 **`env(var_name, default=None)`**
 Access environment variables (filtered by prefix):
+
 ```yaml
 api_key: "{{ env('OTAI_API_KEY') }}"
 endpoint: "{{ env('OTAI_ENDPOINT', 'https://default.com') }}"
@@ -386,6 +403,7 @@ endpoint: "{{ env('OTAI_ENDPOINT', 'https://default.com') }}"
 
 **`pipe_result(pipe_id, key=None)`**
 Access results from previously executed pipes:
+
 ```yaml
 # Get entire result
 tickets: "{{ pipe_result('fetch_tickets').data.fetched_tickets }}"
@@ -396,6 +414,7 @@ count: "{{ pipe_result('fetch_tickets', 'data.count') }}"
 
 **`has_succeeded(pipe_id)`**
 Check if a pipe executed successfully:
+
 ```yaml
 if: "{{ has_succeeded('classify') }}"
 queue: "{{ pipe_result('classify').data.queue if has_succeeded('classify') else 'default' }}"
@@ -403,6 +422,7 @@ queue: "{{ pipe_result('classify').data.queue if has_succeeded('classify') else 
 
 **`has_failed(pipe_id)`**
 Check if a pipe failed:
+
 ```yaml
 if: "{{ has_failed('classify') }}"
 note: "Classification failed, using default routing"
@@ -456,24 +476,28 @@ note: "Classification failed, using default routing"
 ## Best Practices
 
 **Configuration Organization:**
+
 - Keep template logic simple and readable
 - Use environment variables for secrets and environment-specific values
 - Validate configurations early in development
 - Document expected context variables
 
 **Template Usage:**
+
 - Prefer simple variable substitution over complex logic
 - Use `has_succeeded()` before accessing pipe results
 - Provide defaults with `env()` function
 - Test templates with various input scenarios
 
 **Scope Management:**
+
 - Understand the PipeContext structure (`pipes`, `params`, `parent`)
 - Use `parent` chain to access parent scope in nested pipes
 - Remember that `pipes` accumulates all previous results
 - Access own parameters via `params.*`
 
 **Security:**
+
 - Never hardcode secrets in YAML files
 - Use environment variables for sensitive data with proper prefix filtering
 - The sandboxed Jinja2 environment prevents code injection
@@ -483,24 +507,29 @@ note: "Classification failed, using default routing"
 
 ### Why dict[str, Any] with Runtime Validation?
 
-The current pattern where Pipe params are validated at runtime (dict → Pydantic model) was chosen for several key reasons:
+The current pattern where Pipe params are validated at runtime (dict → Pydantic model) was chosen for several key
+reasons:
 
 **1. Jinja2 Template Rendering Compatibility:**
+
 - YAML configs are rendered as untyped dicts by Jinja2
 - Templates can't know the final type until after rendering
 - Example: `"{{ env('PORT') }}"` is a string until rendered to `"8080"`, then validated as `int`
 
 **2. YAML Flexibility:**
+
 - Users write simple, readable YAML without type annotations
 - No need for special YAML tags or complex syntax
 - Templates work naturally with scalar values
 
 **3. Separation of Concerns:**
+
 - Template rendering (dynamic values) happens first
 - Type validation (correctness) happens second
 - Clear error messages when validation fails
 
 **4. Copilot and AI Compatibility:**
+
 - Simple, consistent pattern for code generation
 - Clear where validation happens (Pipe.__init__)
 - Easy to explain: "params arrive as dict, get validated to model"
@@ -521,6 +550,7 @@ class OldPipe(Pipe[OldParams]):
 ```
 
 **New Pattern (current):**
+
 ```python
 class NewPipe(Pipe[NewParams]):
     params_class = NewParams  # Just add this class attribute
@@ -532,12 +562,14 @@ class NewPipe(Pipe[NewParams]):
 ```
 
 **Migration Steps:**
+
 1. Add `params_class = YourParams` as a class attribute
 2. Remove any manual `model_validate()` calls in `__init__`
 3. Let parent `Pipe.__init__` handle validation
 4. Access validated params via `self.params`
 
 **Benefits of New Pattern:**
+
 - Less boilerplate code
 - Consistent validation across all pipes
 - Better error messages from centralized validation
@@ -556,11 +588,13 @@ else:
 ```
 
 **Params arrive as dict when:**
+
 - Loaded from YAML config (most common)
 - After Jinja2 template rendering
 - Created programmatically with dict
 
 **Params arrive as model when:**
+
 - Created in tests with typed model directly
 - Passed from Python code using Pydantic model
 - Nested pipe configs already validated

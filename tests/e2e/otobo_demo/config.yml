@@ -13,7 +13,7 @@ open_ticket_ai:
           formatter: std
       root:
         level: DEBUG
-        handlers: [console]
+        handlers: [ console ]
     default_template_renderer: "jinja_default"
 
   services:
