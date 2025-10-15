@@ -1,35 +1,18 @@
-from typing import Any
-
-from pydantic import BaseModel
-
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
-from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
+from open_ticket_ai.base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
+from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.pipeline.pipe_models import PipeResult
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
 
 
-class UpdateTicketParams(BaseModel):
+class UpdateTicketParams(StrictBaseModel):
     ticket_id: str
     updated_ticket: UnifiedTicket
 
 
-class UpdateTicketPipeConfig(PipeConfig):
-    params: UpdateTicketParams
-
-
-class UpdateTicketPipe(Pipe):
+class UpdateTicketPipe(TicketSystemPipe[UpdateTicketParams]):
     @staticmethod
-    def get_params_model() -> type[BaseModel]:
+    def get_params_model() -> type[StrictBaseModel]:
         return UpdateTicketParams
-
-    def __init__(
-            self,
-            ticket_system: TicketSystemService,
-            *args: Any,
-            **kwargs: Any,
-    ) -> None:
-        super().__init__(*args, **kwargs)
-        self._ticket_system = ticket_system
 
     async def _process(self) -> PipeResult:
         success = await self._ticket_system.update_ticket(
@@ -37,6 +20,6 @@ class UpdateTicketPipe(Pipe):
             updates=self._params.updated_ticket,
         )
         return PipeResult(
-            success=success,
+            succeeded=success,
             message="Updated Ticket" if success else "Failed to update ticket",
         )

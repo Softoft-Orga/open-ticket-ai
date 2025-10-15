@@ -32,16 +32,17 @@ Write tests that focus on **core functionality and contracts**, not implementati
 # ❌ Bad: Testing trivial field values
 def test_config_fields():
     config = MyConfig(id="test", timeout=30, priority=5, workers=10)
-    assert config.id == "test"
+    assert config._id == "test"
     assert config.timeout == 30
     assert config.priority == 5
     assert config.workers == 10
+
 
 # ✅ Good: Testing behavior
 def test_config_applies_defaults():
     config = MyConfig(id="test")
     # Only assert the key behavior
-    assert config.id == "test"
+    assert config._id == "test"
     assert config.timeout > 0  # Has a valid default
 ```
 
@@ -95,7 +96,7 @@ def test_my_pipe():
     result = pipe.execute(context)
 
     # Assert
-    assert result.success
+    assert result.succeeded
     assert context.get("output_data") == expected_output
 ```
 
@@ -130,7 +131,7 @@ def test_pipe_with_mock():
 
     result = pipe.execute(context)
 
-    assert result.success
+    assert result.succeeded
     mock_service.classify.assert_called_once()
 ```
 
@@ -150,10 +151,10 @@ def test_pipeline_flow():
 
     # Execute chain
     fetch_result = fetch_pipe.execute(context)
-    assert fetch_result.success
+    assert fetch_result.succeeded
 
     classify_result = classify_pipe.execute(context)
-    assert classify_result.success
+    assert classify_result.succeeded
 
     # Verify data flow
     assert context.has("tickets")
@@ -167,21 +168,22 @@ Test against actual APIs (test environment):
 ```python
 import pytest
 
+
 @pytest.mark.integration
 def test_otobo_integration():
     adapter = OtoboAdapter(
         base_url=TEST_OTOBO_URL,
         api_token=TEST_API_TOKEN
     )
-    
+
     # Fetch tickets
     tickets = adapter.fetch_tickets({"limit": 1})
     assert len(tickets) >= 0
-    
+
     # Test update (if tickets exist)
     if tickets:
         success = adapter.update_ticket(
-            tickets[0].id,
+            tickets[0]._id,
             {"PriorityID": 2}
         )
         assert success
@@ -246,7 +248,7 @@ def test_full_pipeline():
     result = pipeline.run()
 
     # Verify success
-    assert result.success
+    assert result.succeeded
     assert result.tickets_processed > 0
 ```
 
@@ -269,7 +271,7 @@ def test_config_examples(config_file):
 
     # Test in dry-run mode
     result = run_pipeline(config, dry_run=True)
-    assert result.success
+    assert result.succeeded
 ```
 
 ## Running Test Suite
@@ -359,6 +361,7 @@ Create reusable fixtures:
 ```python
 import pytest
 
+
 @pytest.fixture
 def sample_ticket():
     return Ticket(
@@ -368,11 +371,13 @@ def sample_ticket():
         state="Open"
     )
 
+
 @pytest.fixture
 def pipeline_context():
     context = PipelineContext()
     context.set("test_mode", True)
     return context
+
 
 @pytest.fixture
 def mock_classifier():
@@ -382,6 +387,7 @@ def mock_classifier():
         "confidence": 0.85
     }
     return classifier
+
 
 # Use fixtures in tests
 def test_with_fixtures(sample_ticket, pipeline_context, mock_classifier):
@@ -759,6 +765,7 @@ Use factory fixtures when tests need customized instances:
 @pytest.fixture
 def pipe_config_factory():
     """Factory for creating pipe configurations with custom values."""
+
     def factory(**kwargs) -> dict:
         defaults = {
             "id": "test_pipe",
@@ -768,7 +775,7 @@ def pipe_config_factory():
         }
         defaults.update(kwargs)
         return defaults
-    
+
     return factory
 
 
@@ -821,6 +828,7 @@ def temp_directory(tmp_path):
 def mock_ticket_system_config():
     return {"ticket_system_id": "test"}
 
+
 # tests/unit/conftest.py
 @pytest.fixture
 def mock_ticket_system_pipe_config():
@@ -832,6 +840,7 @@ def mock_ticket_system_pipe_config():
 @pytest.fixture
 def ticket_system_pipe_config():
     """Base configuration for ticket system pipes."""
+
     def factory(**overrides):
         config = {
             "id": "test_ticket_pipe",
@@ -841,6 +850,7 @@ def ticket_system_pipe_config():
         }
         config.update(overrides)
         return config
+
     return factory
 ```
 
