@@ -682,6 +682,10 @@ requires-dist = [
     { name = "apscheduler", specifier = "~=3.11.0" },
     { name = "httpx", specifier = "~=0.27.0" },
     { name = "injector", specifier = "~=0.22.0" },
+    { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "mdxlate", specifier = ">=1.1.2" },
+    { name = "openai", specifier = ">=2.3.0" },
+    { name = "otobo-znuny", specifier = ">=1.4.0" },
     { name = "jinja2", specifier = "~=3.1.6" },
     { name = "mdxlate", specifier = "~=1.1.2" },
     { name = "openai", specifier = "~=2.3.0" },
@@ -726,7 +730,7 @@ wheels = [
 
 [[package]]
 name = "otai-hf-local"
-version = "1.0.2"
+version = "1.0.17"
 source = { editable = "packages/otai_hf_local" }
 dependencies = [
     { name = "open-ticket-ai" },
@@ -756,7 +760,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "otai-otobo-znuny"
-version = "1.0.2"
+version = "1.0.17"
 source = { editable = "packages/otai_otobo_znuny" }
 dependencies = [
     { name = "injector" },
