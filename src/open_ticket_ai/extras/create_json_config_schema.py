@@ -76,10 +76,12 @@ def generate_markdown_docs(schema: dict[str, Any]) -> str:
     ]
 
     if props:
-        lines.extend([
-            "| Field | Type | Required | Default | Description |",
-            "|-------|------|----------|---------|-------------|",
-        ])
+        lines.extend(
+            [
+                "| Field | Type | Required | Default | Description |",
+                "|-------|------|----------|---------|-------------|",
+            ]
+        )
         lines.extend(_expand_props(props, req, defs, 0, 3))
 
     if defs:
@@ -90,10 +92,12 @@ def generate_markdown_docs(schema: dict[str, Any]) -> str:
                 lines.append(f"{def_schema['description']}\n")
             def_props = def_schema.get("properties", {})
             if def_props:
-                lines.extend([
-                    "| Field | Type | Required | Default | Description |",
-                    "|-------|------|----------|---------|-------------|",
-                ])
+                lines.extend(
+                    [
+                        "| Field | Type | Required | Default | Description |",
+                        "|-------|------|----------|---------|-------------|",
+                    ]
+                )
                 lines.extend(_expand_props(def_props, def_schema.get("required", []), defs, 0, 0))
             lines.append("")
 
