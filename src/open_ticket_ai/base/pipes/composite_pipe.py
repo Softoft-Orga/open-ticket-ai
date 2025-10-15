@@ -1,15 +1,16 @@
 from typing import Any, final
 
-from open_ticket_ai.core.base_model import StrictBaseModel
+from pydantic import BaseModel
+
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 
-class CompositePipe[ParamsT: StrictBaseModel](Pipe[ParamsT]):
+class CompositePipe[ParamsT: BaseModel](Pipe[ParamsT]):
     @staticmethod
-    def get_params_model() -> type[Any]:
+    def get_params_model() -> type[BaseModel]:
         return PipeConfig
 
     def __init__(self, factory: RenderableFactory, *args: Any, **kwargs: Any) -> None:

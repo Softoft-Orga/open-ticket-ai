@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import logging
-from logging.config import dictConfig
+import sys
 from typing import Any
 
 from open_ticket_ai.core.logging.logging_iface import AppLogger, LoggerFactory
-from open_ticket_ai.core.logging.logging_models import LoggingDictConfig
+from open_ticket_ai.core.logging.logging_models import LoggingConfig
 
 
 class StdlibLogger(AppLogger):
@@ -33,6 +33,25 @@ class StdlibLoggerFactory(LoggerFactory):
         return StdlibLogger(name)
 
 
-def create_logger_factory(logging_config: LoggingDictConfig) -> LoggerFactory:
-    dictConfig(logging_config.model_dump(by_alias=True, exclude_none=True))
+def create_logger_factory(logging_config: LoggingConfig) -> LoggerFactory:
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging_config.level)
+    root_logger.handlers.clear()
+
+    formatter = logging.Formatter(
+        fmt=logging_config.log_format,
+        datefmt=logging_config.date_format,
+    )
+
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging_config.level)
+    console_handler.setFormatter(formatter)
+    root_logger.addHandler(console_handler)
+
+    if logging_config.log_to_file and logging_config.log_file_path:
+        file_handler = logging.FileHandler(logging_config.log_file_path)
+        file_handler.setLevel(logging_config.level)
+        file_handler.setFormatter(formatter)
+        root_logger.addHandler(file_handler)
+
     return StdlibLoggerFactory()

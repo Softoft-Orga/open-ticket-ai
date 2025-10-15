@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.logging.logging_iface import AppLogger, LoggerFactory
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 
 
-class Renderable[ParamsT: StrictBaseModel](ABC):
+class Renderable[ParamsT: BaseModel](ABC):
     def __init__(self, config: RenderableConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         self._config: RenderableConfig = config
         self._params: ParamsT = self.get_params_model().model_validate(config.params)
@@ -14,5 +13,5 @@ class Renderable[ParamsT: StrictBaseModel](ABC):
 
     @staticmethod
     @abstractmethod
-    def get_params_model() -> type[StrictBaseModel]:
+    def get_params_model() -> type[BaseModel]:
         pass
