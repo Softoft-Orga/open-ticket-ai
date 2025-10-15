@@ -200,9 +200,7 @@ def generate_markdown_docs(schema: dict[str, Any]) -> str:
     if defs:
         lines.append("## Type Definitions\n")
         for def_name, def_schema in sorted(defs.items()):
-            lines.append(
-                generate_model_docs(def_name, def_schema, defs, level=3, expand_nested=False)
-            )
+            lines.append(generate_model_docs(def_name, def_schema, defs, level=3, expand_nested=False))
 
     return "\n".join(lines)
 
