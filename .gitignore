@@ -221,3 +221,7 @@ my_config.yml
 
 # Generated documentation assets
 docs/public/assets/sidecars.json
+
+# Generated schema files (created by create_json_config_schema.py)
+CONFIG_SCHEMA.md
+config.schema.json

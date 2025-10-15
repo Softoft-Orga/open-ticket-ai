@@ -7,7 +7,7 @@ from injector import singleton
 
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_models import RawOpenTicketAIConfig
-from open_ticket_ai.core.logging_iface import LoggerFactory
+from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 
 
 @singleton

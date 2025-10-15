@@ -24,8 +24,10 @@ open-ticket-ai/
 ```
 
 ### Absolute rules
+
 - **Never** place tests under any `src/` path. Forbidden: `src/**/tests`, `src/**/test_*.py`.
-- Unit tests of plugins live **with their package** under `packages/<name>/tests/` Unit Tests of the core in /tests/unit/.
+- Unit tests of plugins live **with their package** under `packages/<name>/tests/` Unit Tests of the core in
+  /tests/unit/.
 - Cross-package **integration,e2e** tests live in **root** `tests/`.
 - Keep sample inputs/golden files under a sibling `data/` directory next to the tests that use them.
 - Each package is an editable member of the uv workspace. Do not add ad‑hoc `PYTHONPATH` hacks.
@@ -34,6 +36,7 @@ open-ticket-ai/
 ## Tests Layout (required)
 
 For **each** package:
+
 ```
 packages/<name>/
 └── tests/
@@ -42,7 +45,9 @@ packages/<name>/
     ├── data/            # fixtures/goldens
     └── conftest.py      # package-specific fixtures
 ```
+
 At the repo root:
+
 ```
 tests/
     unit/
@@ -53,11 +58,13 @@ tests/
 ```
 
 ### Naming rules
+
 - Test files: `test_*.py` only.
 - Keep fixtures in `conftest.py` or `tests/**/fixtures_*.py` (no global helper modules under `src/`).
 - **NO** `__init__.py` files in test directories. Test directories are not Python packages.
 
 ### Fixture guidelines
+
 - Check existing fixtures before creating new ones: `uv run -m pytest --fixtures`
 - Follow naming conventions: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
 
@@ -66,9 +73,9 @@ tests/
 ## How to run
 
 - From repo root:
-  - `uv sync`
-  - `uv run -m pytest` (all tests)
-  - `uv run -m pytest packages/<name>/tests` (single package)
+    - `uv sync`
+    - `uv run -m pytest` (all tests)
+    - `uv run -m pytest packages/<name>/tests` (single package)
 - uv workspaces install members in editable mode; imports resolve without extra config.
 
 ## CI / Quality gates
@@ -77,6 +84,10 @@ tests/
 - Types: `uv run mypy .` (no ignores added without justification in PR)
 - Tests: `uv run -m pytest`
 - No test files under `src/**` will be accepted. PRs that create them must be changed.
+
+### Copilot PR Automation
+
+The `.github/workflows/copilot-pr-retry.yml` workflow automatically handles PRs created by `github-copilot[bot]`. When checks fail, it labels the PR with `retry-needed` and `copilot-pr`, comments with failure details, and closes the PR to enable retry. This only affects Copilot bot PRs.
 
 ## Architectural expectations (short)
 
@@ -93,6 +104,7 @@ All documentation lives in `/docs` directory:
 ---
 
 **Checklist for contributors (must pass):**
+
 - [ ] New unit tests added under `packages/<name>/tests` or `tests/unit/`
 - [ ] No files under any `src/**/tests`
 - [ ] Root-level integration/e2e tests only in `tests/`

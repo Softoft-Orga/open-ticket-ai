@@ -9,17 +9,18 @@ description: Open Ticket AI versioning policy using semantic versioning for prod
 
 ## Overview
 
-Open Ticket AI follows semantic versioning for the product and maintains separate documentation sites for each major version.
+Open Ticket AI follows semantic versioning for the product and maintains separate documentation sites for each major
+version.
 
 ## Semantic Versioning
 
 We use **SemVer** format: `MAJOR.MINOR.PATCH`
 
-| Version Type | Format | When to Use | Example |
-|-------------|---------|-------------|---------|
-| **MAJOR** | `1.0.0` → `2.0.0` | Breaking changes, requires migration | API changes, removed features |
-| **MINOR** | `1.0.0` → `1.1.0` | New backward-compatible features | New pipes, new config options |
-| **PATCH** | `1.0.0` → `1.0.1` | Bug fixes and security patches | Bug fixes, security updates |
+| Version Type | Format            | When to Use                          | Example                       |
+|--------------|-------------------|--------------------------------------|-------------------------------|
+| **MAJOR**    | `1.0.0` → `2.0.0` | Breaking changes, requires migration | API changes, removed features |
+| **MINOR**    | `1.0.0` → `1.1.0` | New backward-compatible features     | New pipes, new config options |
+| **PATCH**    | `1.0.0` → `1.0.1` | Bug fixes and security patches       | Bug fixes, security updates   |
 
 ### Pre-Release Versions
 
@@ -29,11 +30,11 @@ We use **SemVer** format: `MAJOR.MINOR.PATCH`
 
 ### Support Policy
 
-| Version | Support Level | Duration |
-|---------|---------------|----------|
-| **Current Major (vN)** | Full support | Until next major |
+| Version                   | Support Level                | Duration                 |
+|---------------------------|------------------------------|--------------------------|
+| **Current Major (vN)**    | Full support                 | Until next major         |
 | **Previous Major (vN-1)** | Security/critical fixes only | 6 months after new major |
-| **Older** | End of Life (EOL) | No support |
+| **Older**                 | End of Life (EOL)            | No support               |
 
 ### Deprecation Policy
 
@@ -43,6 +44,7 @@ We use **SemVer** format: `MAJOR.MINOR.PATCH`
 4. **Migration**: Each deprecation includes migration guide link
 
 **Example Timeline:**
+
 ```
 v1.2.0: Feature X deprecated
 v1.3.0: Feature X still available (with warnings)
@@ -92,12 +94,12 @@ gitGraph
 
 ### URL Structure
 
-| Branch | URL | Purpose |
-|--------|-----|---------|
-| `latest` | [open-ticket-ai.com](https://open-ticket-ai.com) | Current stable docs |
-| `next` | [next.open-ticket-ai.com](https://next.open-ticket-ai.com) | Pre-release docs |
-| `v1` | [v1.open-ticket-ai.com](https://v1.open-ticket-ai.com) | Version 1.x docs |
-| `v2` | [v2.open-ticket-ai.com](https://v2.open-ticket-ai.com) | Version 2.x docs |
+| Branch   | URL                                                        | Purpose             |
+|----------|------------------------------------------------------------|---------------------|
+| `latest` | [open-ticket-ai.com](https://open-ticket-ai.com)           | Current stable docs |
+| `next`   | [next.open-ticket-ai.com](https://next.open-ticket-ai.com) | Pre-release docs    |
+| `v1`     | [v1.open-ticket-ai.com](https://v1.open-ticket-ai.com)     | Version 1.x docs    |
+| `v2`     | [v2.open-ticket-ai.com](https://v2.open-ticket-ai.com)     | Version 2.x docs    |
 
 ### SEO & Indexing
 
@@ -109,12 +111,14 @@ gitGraph
 ### Version Switcher
 
 **Features:**
+
 - Dropdown in navbar showing all available versions
 - Preserves current page path when switching versions
 - Stores user preference in `localStorage`
 - Optional auto-redirect based on stored preference
 
 **Example:**
+
 ```
 User on: v1.open-ticket-ai.com/guides/installation.md
 Switches to: v2
@@ -123,11 +127,11 @@ Navigates to: v2.open-ticket-ai.com/guides/installation.md
 
 ### Content Strategy
 
-| Change Type | Where Documented | Example |
-|------------|------------------|---------|
-| **Major changes** | Only on that major's docs site | New CLI command syntax |
-| **Minor updates** | Latest docs with version badges | New config option |
-| **Patches** | Inline fixes, no new site | Fix code example typo |
+| Change Type       | Where Documented                | Example                |
+|-------------------|---------------------------------|------------------------|
+| **Major changes** | Only on that major's docs site  | New CLI command syntax |
+| **Minor updates** | Latest docs with version badges | New config option      |
+| **Patches**       | Inline fixes, no new site       | Fix code example typo  |
 
 ### Version Badges
 
@@ -140,6 +144,7 @@ Use inline badges to indicate feature availability:
 ```
 
 **Renders as:**
+
 - **Added in 1.2** - New feature introduced
 - **Changed in 1.3** - Behavior modified
 - **Deprecated in 1.4** - Will be removed in next major
@@ -192,6 +197,7 @@ Each docs site has `/changelog/` page with version-specific changes:
 ### Example 1: Minor Release (1.0.0 → 1.1.0)
 
 **Git Actions:**
+
 ```bash
 git checkout next
 git tag v1.1.0
@@ -201,17 +207,20 @@ git push origin latest v1.1.0
 ```
 
 **Documentation:**
+
 - Docs stay on `latest` branch
 - Add version badges: "Added in 1.1"
 - No new docs site needed
 
 **User Impact:**
+
 - Backward compatible
 - Users can upgrade without changes
 
 ### Example 2: Major Release (1.4.0 → 2.0.0)
 
 **Git Actions:**
+
 ```bash
 # Create maintenance branch for v1
 git checkout latest
@@ -227,12 +236,14 @@ git push origin latest v2.0.0
 ```
 
 **Documentation:**
+
 - Create `v2` branch from `latest`
 - Deploy new sites: `v2.open-ticket-ai.com` and update `open-ticket-ai.com`
 - `v1.open-ticket-ai.com` remains for old users
 - Add migration guide from v1 to v2
 
 **User Impact:**
+
 - Breaking changes require migration
 - v1 gets security fixes for 6 months
 - Users can stay on v1 temporarily
@@ -240,6 +251,7 @@ git push origin latest v2.0.0
 ### Example 3: Patch Release (1.1.0 → 1.1.1)
 
 **Git Actions:**
+
 ```bash
 git checkout latest
 # Fix applied directly or cherry-picked
@@ -248,11 +260,13 @@ git push origin latest v1.1.1
 ```
 
 **Documentation:**
+
 - No changes to docs structure
 - Fix inline if needed (typos, broken links)
 - No version badges needed
 
 **User Impact:**
+
 - Safe to upgrade immediately
 - No breaking changes
 
@@ -283,6 +297,7 @@ git push origin latest v1.1.1
 ```
 
 **Branch Subdomain Mapping:**
+
 - Enable "Branch deploys" in Netlify
 - Configure branch subdomains for each version
 - Set environment variables per branch context
@@ -311,7 +326,8 @@ A: No. Patches update the same docs site (e.g., both 1.1.0 and 1.1.1 use `v1` do
 A: Pre-releases are documented at [next.open-ticket-ai.com](https://next.open-ticket-ai.com)
 
 **Q: How long are old major versions supported?**  
-A: Old versions remain accessible indefinitely for reading, but only receive security fixes for 6 months after a new major release.
+A: Old versions remain accessible indefinitely for reading, but only receive security fixes for 6 months after a new
+major release.
 
 **Q: When can deprecated features be removed?**  
 A: Only in the next major version. They must remain available throughout the current major version.

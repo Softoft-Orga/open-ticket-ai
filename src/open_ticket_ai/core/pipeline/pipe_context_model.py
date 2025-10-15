@@ -13,6 +13,12 @@ class PipeContext(BaseModel):
     params: dict[str, Any] = Field(default_factory=dict)
     parent: PipeContext | None = Field(default=None)
 
+    def has_succeeded(self, pipe_id: str) -> bool:
+        if pipe_id not in self.pipe_results:
+            return False
+        pipe_result = PipeResult.model_validate(self.pipe_results[pipe_id])
+        return pipe_result.succeeded and not pipe_result.was_skipped
+
     def with_pipe_result(self, pipe_id: str, pipe_result: PipeResult) -> PipeContext:
         new_pipes = {**self.pipe_results, pipe_id: pipe_result}
         return self.model_copy(update={"pipe_results": new_pipes})
