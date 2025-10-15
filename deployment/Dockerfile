@@ -1,25 +1,18 @@
-FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
-
-# Set the working directory
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 WORKDIR /app
 
-# Copy only the files needed to install dependencies
-COPY ../pyproject.toml ./
+ARG PACKAGES
+ARG VERSION
+RUN test -n "$PACKAGES" && test -n "$VERSION"
 
-# Create a virtual environment and install dependencies into it
-# We allow caching here to speed up rebuilds
-RUN uv sync
-RUN uv add otai-hf-local
-RUN uv add otai-otobo-znuny
+# Minimal project so uv add has a place to write
+RUN printf '[project]\nname="runtime"\nversion="0.0.0"\nrequires-python=">=3.13"\n' > pyproject.toml
 
-ENV PYTHONPATH="/app"
+# Add all packages at the same version, this both updates pyproject + installs
+RUN for p in $PACKAGES; do uv add "$p==$VERSION"; done
 
+# Optional: ensure environment fully synced (usually not needed, uv add already syncs)
+# RUN uv sync --frozen
 
-# Set the PATH to use the virtual environment's python and pip
-ENV PATH="/app/.venv/bin:$PATH"
-
-# Copy the application source code
-COPY ../src ./open_ticket_ai
-
-# Command to run your application
-CMD ["uv", "run", "./src/open_ticket_ai/main.py"]
+CMD ["uv","run","python","-m","open_ticket_ai"]

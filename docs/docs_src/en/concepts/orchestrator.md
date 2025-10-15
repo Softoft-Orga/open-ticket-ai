@@ -6,20 +6,24 @@ aside: false
 
 # Orchestrator System
 
-The orchestrator coordinates pipeline execution by managing triggers and runners. It implements the Observer pattern, where triggers notify runners when conditions are met, and runners execute pipelines in response.
+The orchestrator coordinates pipeline execution by managing triggers and runners. It implements the Observer pattern,
+where triggers notify runners when conditions are met, and runners execute pipelines in response.
 
 ## Core Components
 
 The orchestrator system consists of three main components that work together:
 
 **Orchestrator**  
-The central coordinator that manages the lifecycle of triggers and runners. It initializes the system, attaches runners to triggers, and handles startup and shutdown.
+The central coordinator that manages the lifecycle of triggers and runners. It initializes the system, attaches runners
+to triggers, and handles startup and shutdown.
 
 **Trigger**  
-An event source that monitors for conditions (like time intervals or external events). When a condition is met, it notifies all attached runners. Multiple runners can observe the same trigger.
+An event source that monitors for conditions (like time intervals or external events). When a condition is met, it
+notifies all attached runners. Multiple runners can observe the same trigger.
 
 **PipeRunner**  
-An execution unit that runs a pipeline when notified by a trigger. Each runner is configured with a specific pipeline to execute and can be attached to one or more triggers.
+An execution unit that runs a pipeline when notified by a trigger. Each runner is configured with a specific pipeline to
+execute and can be attached to one or more triggers.
 
 ## Component Relationships
 
@@ -65,6 +69,7 @@ direction TD
 ```
 
 **How they work together:**
+
 1. The **Orchestrator** creates triggers and runners based on configuration
 2. Each **PipeRunner** is attached as an observer to one or more **Triggers**
 3. When a **Trigger** fires, it notifies all attached **PipeRunners**
@@ -93,11 +98,13 @@ orchestrator:
 ### Configuration Elements
 
 **Runner Definition** - Defines what pipeline to run and when:
+
 - `id`: Optional unique identifier for the runner
 - `on`: List of triggers that will execute this pipeline (optional)
 - `run`: The pipeline configuration to execute (required)
 
 **Trigger Definition** - Specifies when to execute:
+
 - `id`: Unique identifier for trigger reuse
 - `use`: Fully qualified class path to trigger implementation
 - `params`: Trigger-specific parameters (e.g., interval duration)
@@ -191,12 +198,14 @@ The orchestrator provides these execution characteristics:
 ## Best Practices
 
 **Trigger Design**
+
 - Use appropriate intervals based on data freshness requirements
 - Avoid overly frequent execution that wastes resources
 - Consider pipeline execution time when setting intervals
 - Reuse triggers with the same schedule to reduce overhead
 
 **Runner Organization**
+
 - Use descriptive IDs for easier debugging
 - Group related operations in a single pipeline
 - Separate fast checks from slow batch operations

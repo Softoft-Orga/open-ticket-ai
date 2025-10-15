@@ -1,0 +1,118 @@
+name: Release
+
+on:
+  workflow_dispatch: { }
+  issue_comment:
+    types: [ created ]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  chatops:
+    if: ${{ github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/publish-all') }}
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.ok.outputs.proceed }}
+    steps:
+      - id: ok
+        run: echo "proceed=true" >> "$GITHUB_OUTPUT"
+
+  publish:
+    needs: [ chatops ]
+    if: ${{ needs.chatops.result == 'success' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    outputs:
+      core_ver: ${{ steps.vers.outputs.core_ver }}
+      hf_ver: ${{ steps.vers.outputs.hf_ver }}
+      zn_ver: ${{ steps.vers.outputs.zn_ver }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v4
+      - name: Run publish_all.sh
+        env:
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          export UV_PYPI_TOKEN="$PYPI_API_TOKEN"
+          bash scripts/publish_all.sh
+          git add -A
+          git commit -m "chore: bump and publish core+plugins [skip ci]" || true
+          git push || true
+      - id: vers
+        run: |
+          python - << 'PY'
+          import tomllib, pathlib, sys
+          def ver(p): return tomllib.loads(pathlib.Path(p).read_text(encoding='utf-8'))['project']['version']
+          core_ver = ver('pyproject.toml')
+          hf_ver = ver('packages/otai_hf_local/pyproject.toml')
+          zn_ver = ver('packages/otai_otobo_znuny/pyproject.toml')
+          print(f"core_ver={core_ver}")
+          print(f"hf_ver={hf_ver}")
+          print(f"zn_ver={zn_ver}")
+          (pathlib.Path(os.environ["GITHUB_OUTPUT"]).write_text(
+              f"core_ver={core_ver}\n" f"hf_ver={hf_ver}\n" f"zn_ver={zn_ver}\n"
+          ))
+          PY
+      - name: Enforce p1=c1
+        run: |
+          get_major() { echo "$1" | cut -d. -f1; }
+          c="${{ steps.vers.outputs.core_ver }}"
+          h="${{ steps.vers.outputs.hf_ver }}"
+          z="${{ steps.vers.outputs.zn_ver }}"
+          [ "$(get_major "$h")" = "$(get_major "$c")" ] || { echo "hf_local major != core major"; exit 1; }
+          [ "$(get_major "$z")" = "$(get_major "$c")" ] || { echo "otobo_znuny major != core major"; exit 1; }
+
+  docker:
+    needs: [ publish ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flavor: [ core, core-hf, core-zn, core-hf-zn ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compute tags and args
+        id: meta
+        run: |
+          CORE="${{ needs.publish.outputs.core_ver }}"
+          HF="${{ needs.publish.outputs.hf_ver }}"
+          ZN="${{ needs.publish.outputs.zn_ver }}"
+          REPO="ghcr.io/${{ github.repository }}"
+          case "${{ matrix.flavor }}" in
+            core)
+              IMG="$REPO:core-$CORE"
+              ARGS="--build-arg INCLUDE_HF=no --build-arg INCLUDE_ZN=no --build-arg HF_VER=$HF --build-arg ZN_VER=$ZN"
+              ;;
+            core-hf)
+              IMG="$REPO:core-hf-$CORE-$HF"
+              ARGS="--build-arg INCLUDE_HF=yes --build-arg INCLUDE_ZN=no --build-arg HF_VER=$HF --build-arg ZN_VER=$ZN"
+              ;;
+            core-zn)
+              IMG="$REPO:core-zn-$CORE-$ZN"
+              ARGS="--build-arg INCLUDE_HF=no --build-arg INCLUDE_ZN=yes --build-arg HF_VER=$HF --build-arg ZN_VER=$ZN"
+              ;;
+            core-hf-zn)
+              IMG="$REPO:core-hf-zn-$CORE-$HF-$ZN"
+              ARGS="--build-arg INCLUDE_HF=yes --build-arg INCLUDE_ZN=yes --build-arg HF_VER=$HF --build-arg ZN_VER=$ZN"
+              ;;
+          esac
+          echo "img=$IMG" >> "$GITHUB_OUTPUT"
+          echo "args=$ARGS" >> "$GITHUB_OUTPUT"
+      - name: Build and push
+        run: |
+          docker buildx build . \
+            --push \
+            -f Dockerfile \
+            -t "${{ steps.meta.outputs.img }}" \
+            ${{ steps.meta.outputs.args }}

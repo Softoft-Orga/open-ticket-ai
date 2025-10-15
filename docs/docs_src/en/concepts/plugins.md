@@ -4,7 +4,8 @@ description: Learn how Open Ticket AI's plugin system enables modular extensibil
 
 # Plugin System
 
-The plugin system enables extending Open Ticket AI through standalone Python packages that provide custom services, pipes, and configuration schemas.
+The plugin system enables extending Open Ticket AI through standalone Python packages that provide custom services,
+pipes, and configuration schemas.
 
 ## What is a Plugin?
 
@@ -22,7 +23,6 @@ A **plugin** is a Python package that extends capabilities by providing:
 # Install plugin via pip/uv
 uv pip install otai-otobo-znuny
 ```
-
 
 ### Usage in Configuration
 
@@ -59,16 +59,19 @@ Core validates compatibility at load time and fails gracefully if versions misma
 ## Benefits
 
 **For Users:**
+
 - Install only needed functionality
 - Mix plugins from different sources
 - Upgrade plugins independently
 
 **For Developers:**
+
 - Extend without core access
 - Distribute as standard packages
 - Test in isolation
 
 **For the Project:**
+
 - Smaller core codebase
 - Community ecosystem
 - Faster innovation
@@ -76,15 +79,19 @@ Core validates compatibility at load time and fails gracefully if versions misma
 ## Available Plugins
 
 ### OTOBO/Znuny Plugin
+
 ```bash
 uv add otai-otobo-znuny
 ```
+
 Provides ticket system integration for OTOBO, Znuny, and OTRS.
 
 ### HuggingFace Local Plugin
+
 ```bash
 uv add otai-hf-local
 ```
+
 Enables local ML model inference with HuggingFace models.
 
 ## Creating a Plugin
@@ -92,6 +99,7 @@ Enables local ML model inference with HuggingFace models.
 See [Plugin Development Guide](../developers/plugin_development.md) for complete instructions.
 
 **Basic Structure:**
+
 ```
 my-plugin/
 ├── pyproject.toml          # Entry points defined here

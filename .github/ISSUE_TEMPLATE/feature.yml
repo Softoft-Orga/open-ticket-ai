@@ -1,7 +1,7 @@
 name: Feature Request (General)
 description: Suggest a new feature or enhancement for Open Ticket AI (not a specific pipe/plugin)
 title: "[Feature] "
-labels: ["enhancement", "needs-triage"]
+labels: [ "enhancement", "needs-triage" ]
 body:
   - type: markdown
     attributes:

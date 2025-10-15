@@ -9,6 +9,7 @@ The OTOBO/Znuny plugin provides integration with OTOBO, Znuny, and OTRS ticket s
 ## Overview
 
 This plugin implements:
+
 - Ticket system adapter for OTOBO/Znuny/OTRS
 - Ticket fetching and updating
 - Username/password authentication
@@ -17,6 +18,7 @@ This plugin implements:
 ## Ticket System Adapter Implementation
 
 The plugin provides a complete `TicketSystemAdapter` implementation that:
+
 - Connects to OTOBO/Znuny REST API
 - Fetches tickets based on queue criteria
 - Updates ticket properties
@@ -56,11 +58,13 @@ pipes:
 ```
 
 **Search Criteria Fields:**
+
 - `queue`: (Optional) UnifiedEntity with `id` and/or `name` to filter by queue
 - `limit`: (Optional) Maximum number of tickets to fetch (default: 10)
 - `offset`: (Optional) Number of tickets to skip for pagination (default: 0)
 
 **Example - Fetch by Queue Name:**
+
 ```yaml
 pipes:
   - pipe_name: fetch_tickets
@@ -71,6 +75,7 @@ pipes:
 ```
 
 **Example - Fetch All (No Queue Filter):**
+
 ```yaml
 pipes:
   - pipe_name: fetch_tickets
@@ -80,6 +85,7 @@ pipes:
 ```
 
 **Example - Pagination:**
+
 ```yaml
 pipes:
   - pipe_name: fetch_tickets_page_1
@@ -119,22 +125,26 @@ pipes:
 ## Known Limitations
 
 ### Search Functionality
+
 - **Only queue-based search is supported**
 - No support for StateType, TicketNumber, or other advanced filters
 - Cannot search by priority, state, or custom fields
 - Use queue filtering and post-process results if needed
 
 ### Authentication
+
 - **No API token support** - only username/password authentication
 - Session management handled automatically by the plugin
 - Credentials must have appropriate permissions
 
 ### API Rate Limits
+
 - Respect API rate limits
 - Implement backoff strategies
 - Use pagination for large result sets
 
 ### Version Compatibility
+
 - OTOBO 10.0+
 - Znuny 6.0+
 - OTRS 6.0+ (limited support)
@@ -142,11 +152,13 @@ pipes:
 ## Configuration Reference
 
 ### Required Settings
+
 - `base_url`: OTOBO/Znuny instance URL
 - `username`: Username for authentication
 - `password`: Password for authentication
 
 ### Optional Settings
+
 - `verify_ssl`: SSL certificate verification (default: true)
 - `timeout`: Request timeout in seconds (default: 30)
 - `max_retries`: Maximum retry attempts (default: 3)
@@ -155,24 +167,28 @@ pipes:
 ## Troubleshooting
 
 ### Connection Issues
+
 - Verify base URL is correct and accessible
 - Check network connectivity
 - Verify SSL certificates (or temporarily disable with `verify_ssl: false` for testing)
 - Check firewall rules allow outbound connections
 
 ### Authentication Failures
+
 - Verify username and password are correct
 - Check user account is active and not locked
 - Verify user has appropriate permissions
 - Ensure credentials are properly set in environment variables
 
 ### No Tickets Returned
+
 - Verify queue name or ID is correct
 - Check user has permission to access the specified queue
 - Try fetching without queue filter to verify connection works
 - Verify tickets exist in the specified queue
 
 ### Update Failures
+
 - Verify ticket exists and user has write permissions
 - Check that QueueID and PriorityID values are valid
 - Validate field values match OTOBO/Znuny requirements
@@ -183,6 +199,7 @@ pipes:
 Since only queue-based search is supported, you can work around limitations by:
 
 **1. Fetch and Filter in Pipeline:**
+
 ```yaml
 pipes:
   - pipe_name: fetch_all_tickets
@@ -195,6 +212,7 @@ pipes:
 ```
 
 **2. Fetch Multiple Queues:**
+
 ```yaml
 pipes:
   - pipe_name: fetch_support_queue
@@ -211,6 +229,7 @@ pipes:
 ```
 
 **3. Use Pagination for Large Datasets:**
+
 ```yaml
 pipes:
   - pipe_name: fetch_page_1

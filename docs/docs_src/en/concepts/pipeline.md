@@ -6,7 +6,8 @@ aside: false
 
 # Pipe System
 
-Pipes are the fundamental processing units in Open Ticket AI. Each pipe performs a specific task, receives context from previous pipes, executes its logic, and passes updated context forward.
+Pipes are the fundamental processing units in Open Ticket AI. Each pipe performs a specific task, receives context from
+previous pipes, executes its logic, and passes updated context forward.
 
 ## Basic Pipeline Flow
 
@@ -31,6 +32,7 @@ flowchart TD
 ```
 
 Each pipe:
+
 1. Receives the `PipeContext` (containing results from previous pipes)
 2. Executes its specific task
 3. Creates a `PipeResult` with output data
@@ -40,6 +42,7 @@ Each pipe:
 ## What is a Pipe?
 
 A **pipe** is a self-contained processing unit that:
+
 - Implements specific business logic (fetch data, classify, update, etc.)
 - Receives input via `PipeContext`
 - Produces output as `PipeResult`
@@ -173,10 +176,10 @@ classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
 2. **Dependency Check**: Verify all `depends_on` pipes succeeded
 3. **Skip Path**: If checks fail → return original context unchanged
 4. **Execute Path**: If checks pass:
-   - Wrap execution in try-catch
-   - Call `_process()` (implemented by pipe subclass)
-   - Create `PipeResult` from return value
-   - On exception: create failed `PipeResult` with error message
+    - Wrap execution in try-catch
+    - Call `_process()` (implemented by pipe subclass)
+    - Create `PipeResult` from return value
+    - On exception: create failed `PipeResult` with error message
 5. **Persistence**: Save result to `context.pipes[pipe_id]`
 6. **Return**: Return updated context to next pipe
 
@@ -199,6 +202,7 @@ Atomic processing units that implement specific business logic:
 ```
 
 **Characteristics:**
+
 - Implements `_process()` method
 - Returns single `PipeResult`
 - No child pipes
@@ -255,6 +259,7 @@ Orchestrators that contain and execute child pipes:
 ```
 
 **Characteristics:**
+
 - Contains `steps` list of child pipe configs
 - Uses `RenderableFactory` to build child pipes
 - Executes children sequentially
@@ -322,16 +327,16 @@ classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
 
 1. **Initialization**: Prepare to iterate through `steps` list
 2. **For Each Step**:
-   - **Merge**: Combine parent params with step params (step overrides)
-   - **Render**: Apply Jinja2 template rendering to step config
-   - **Build**: Use factory to create child pipe instance
-   - **Execute**: Call `child.process(context)` → updates context
-   - **Collect**: Child result stored in `context.pipes[child_id]`
-   - **Loop**: Continue to next step
+    - **Merge**: Combine parent params with step params (step overrides)
+    - **Render**: Apply Jinja2 template rendering to step config
+    - **Build**: Use factory to create child pipe instance
+    - **Execute**: Call `child.process(context)` → updates context
+    - **Collect**: Child result stored in `context.pipes[child_id]`
+    - **Loop**: Continue to next step
 3. **Finalization**:
-   - **Union**: Merge all child results using `PipeResult.union()`
-   - **Save**: Store composite result in context
-   - **Return**: Return final updated context
+    - **Union**: Merge all child results using `PipeResult.union()`
+    - **Save**: Store composite result in context
+    - **Return**: Return final updated context
 
 ## Dependency Management
 
@@ -404,11 +409,11 @@ The `if_` field enables runtime conditional logic:
 - `if_` value rendered as Jinja2 template
 - Result converted to Python truthy/falsy
 - Can reference:
-  - `params.*` - current pipe or parent params
-  - `pipe_result(pipe_id)` - results from previous pipes
-  - `env('VAR')` - environment variables
-  - `has_succeeded(pipe_id)` - check if pipe succeeded
-  - `has_failed(pipe_id)` - check if pipe failed
+    - `params.*` - current pipe or parent params
+    - `pipe_result(pipe_id)` - results from previous pipes
+    - `env('VAR')` - environment variables
+    - `has_succeeded(pipe_id)` - check if pipe succeeded
+    - `has_failed(pipe_id)` - check if pipe failed
 - Defaults to `True` if omitted
 
 **Conditional Examples:**
@@ -449,19 +454,19 @@ class PipeContext(BaseModel):
 **Field Details:**
 
 - **`pipes`**: Contains results from all previously executed pipes, keyed by pipe ID
-  - Accumulated as each pipe completes
-  - In CompositePipe: merged results from all child steps
-  - Access via `pipe_result('pipe_id')` in templates
+    - Accumulated as each pipe completes
+    - In CompositePipe: merged results from all child steps
+    - Access via `pipe_result('pipe_id')` in templates
 
 - **`params`**: Current pipe's parameters
-  - Set when the pipe is created
-  - Accessible via `params.*` in templates
-  - For nested pipes, can reference parent via `parent.params`
+    - Set when the pipe is created
+    - Accessible via `params.*` in templates
+    - For nested pipes, can reference parent via `parent.params`
 
 - **`parent`**: Reference to parent context (if inside a CompositePipe)
-  - Allows access to parent scope variables
-  - Creates hierarchical context chain
-  - Can traverse multiple levels (`parent.parent...`)
+    - Allows access to parent scope variables
+    - Creates hierarchical context chain
+    - Can traverse multiple levels (`parent.parent...`)
 
 **Accessing Context in Templates:**
 
@@ -496,6 +501,7 @@ class PipeResult[T]():
 ## Best Practices
 
 ### Pipe Design
+
 - Keep pipes focused on single responsibility
 - Make pipes reusable across different workflows
 - Use descriptive pipe IDs
@@ -503,18 +509,21 @@ class PipeResult[T]():
 - Handle errors gracefully
 
 ### Configuration
+
 - Use template variables for dynamic values
 - Leverage `depends_on` for clear execution order
 - Use `if_` conditions to skip unnecessary work
 - Group related pipes in CompositePipe
 
 ### Performance
+
 - Avoid blocking operations in `_process()`
 - Use async/await for I/O operations
 - Keep pipe execution time reasonable
 - Consider batching for large datasets
 
 ### Testing
+
 - Test pipes independently with mock services
 - Test dependency chains
 - Test conditional execution paths
@@ -523,16 +532,19 @@ class PipeResult[T]():
 ## Key Implementation Files
 
 ### Core Pipeline
+
 - **`src/open_ticket_ai/core/pipeline/pipe.py`** - Base `Pipe` class
 - **`src/open_ticket_ai/core/pipeline/pipe_config.py`** - `PipeConfig`, `PipeResult` models
 - **`src/open_ticket_ai/core/pipeline/pipe_context.py`** - `PipeContext` model
 
 ### Base Pipes
+
 - **`src/open_ticket_ai/base/pipes/composite_pipe.py`** - `CompositePipe` implementation
 - **`src/open_ticket_ai/base/pipes/jinja_expression_pipe.py`** - Expression evaluation
 - **`src/open_ticket_ai/base/pipes/ticket_system_pipes/`** - Ticket operations
 
 ### Configuration
+
 - **`src/open_ticket_ai/core/config/renderable_factory.py`** - Pipe instantiation
 - **`src/open_ticket_ai/core/config/renderable.py`** - `Renderable` interface
 
@@ -549,12 +561,14 @@ class PipeResult[T]():
 Pipes are the building blocks of Open Ticket AI workflows:
 
 **Core Concepts:**
+
 - Self-contained processing units
 - Context-driven data flow
 - Sequential execution with dependencies
 - Conditional and composable
 
 **Key Features:**
+
 - Dependency management (`depends_on`)
 - Conditional execution (`if_`)
 - Nested composition (CompositePipe)
@@ -562,6 +576,7 @@ Pipes are the building blocks of Open Ticket AI workflows:
 - Template-driven configuration
 
 **Design Principles:**
+
 - Single responsibility
 - Reusability across workflows
 - Type-safe results

@@ -163,6 +163,7 @@ else:
 ```
 
 **Flow:**
+
 1. YAML config loaded and templates rendered → produces `dict[str, Any]`
 2. Dict passed to Pipe constructor as `pipe_config.params`
 3. Base class checks if params is a dict
@@ -184,6 +185,7 @@ Users write YAML with templates:
 ```
 
 **What happens:**
+
 1. Templates rendered: `input_field` gets value from previous pipe, `threshold` from env
 2. Results in dict: `{"input_field": "some_value", "threshold": "0.5", "max_items": 50}`
 3. Passed to `MyPipe.__init__`
@@ -331,6 +333,7 @@ Use the `depends_on` field:
 ## Best Practices
 
 **DO:**
+
 - ✅ Always define `params_class` as a class attribute
 - ✅ Let parent `__init__` handle parameter validation
 - ✅ Use descriptive parameter names
@@ -340,6 +343,7 @@ Use the `depends_on` field:
 - ✅ Keep `_process()` focused and testable
 
 **DON'T:**
+
 - ❌ Don't manually call `model_validate()` in your `__init__`
 - ❌ Don't bypass the params_class mechanism
 - ❌ Don't put heavy logic in `__init__`

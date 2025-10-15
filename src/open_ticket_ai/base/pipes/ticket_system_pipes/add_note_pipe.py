@@ -19,10 +19,10 @@ class AddNotePipe(Pipe):
         return AddNoteParams
 
     def __init__(
-        self,
-        ticket_system: TicketSystemService,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            ticket_system: TicketSystemService,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._ticket_system = ticket_system

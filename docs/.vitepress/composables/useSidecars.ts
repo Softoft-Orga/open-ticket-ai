@@ -1,5 +1,5 @@
-import { reactive, readonly, toRefs } from 'vue'
-import type { PipeSidecar } from '../components/pipe/pipeSidecar.types'
+import {reactive, readonly, toRefs} from 'vue'
+import type {PipeSidecar} from '../components/pipe/pipeSidecar.types'
 
 export type SidecarType = 'pipe' | 'service' | 'trigger'
 

@@ -9,6 +9,7 @@ Open Ticket AI uses Jinja2 for dynamic template rendering in configuration files
 ## Jinja2 Template System
 
 Jinja2 provides:
+
 - Variable substitution
 - Conditional logic
 - Loops and filters
@@ -29,6 +30,7 @@ pipes:
 Open Ticket AI provides custom Jinja2 extensions:
 
 ### Context Access
+
 Access pipeline context directly in templates:
 
 ```jinja2
@@ -37,6 +39,7 @@ Access pipeline context directly in templates:
 ```
 
 ### Filters
+
 Custom filters for common operations:
 
 ```jinja2
@@ -46,6 +49,7 @@ Custom filters for common operations:
 ```
 
 ### Functions
+
 Helper functions available in templates:
 
 ```jinja2
@@ -57,6 +61,7 @@ Helper functions available in templates:
 ## Template Context and Variables
 
 The template context includes:
+
 - Pipeline execution context
 - Environment variables
 - Configuration values
@@ -65,6 +70,7 @@ The template context includes:
 ## Examples
 
 ### Conditional Note
+
 ```yaml
 note_text: >
   {% if context.priority == 'high' %}
@@ -75,6 +81,7 @@ note_text: >
 ```
 
 ### Dynamic Queue Assignment
+
 ```yaml
 queue: >
   {% if 'billing' in context.ticket.subject.lower() %}
@@ -87,6 +94,7 @@ queue: >
 ```
 
 ### Loop Through Results
+
 ```yaml
 summary: >
   Processed {{ context.tickets | length }} tickets:

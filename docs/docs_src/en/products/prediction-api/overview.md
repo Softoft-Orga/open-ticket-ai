@@ -2,6 +2,7 @@
 description: Free German API to predict Queue and Priority for support tickets. Easy
   integration with OTOBO, Znuny, and Zammad. No authentication required.
 ---
+
 # 🇩🇪 German Ticket Classification API (Free)
 
 Predict **Queue** and **Priority** for **German-language** support tickets with a single HTTP call.
@@ -96,52 +97,52 @@ print(r.json())
 ## 🎯 Queues
 
 The API may return any of the following **queue labels**:
-    <AccordionItem title="Full Queue List" open>
-        <ul>
-            <li>Arts &amp; Entertainment/Movies</li>
-            <li>Arts &amp; Entertainment/Music</li>
-            <li>Autos &amp; Vehicles/Maintenance</li>
-            <li>Autos &amp; Vehicles/Sales</li>
-            <li>Beauty &amp; Fitness/Cosmetics</li>
-            <li>Beauty &amp; Fitness/Fitness Training</li>
-            <li>Books &amp; Literature/Fiction</li>
-            <li>Books &amp; Literature/Non-Fiction</li>
-            <li>Business &amp; Industrial/Manufacturing</li>
-            <li>Finance/Investments</li>
-            <li>Finance/Personal Finance</li>
-            <li>Food &amp; Drink/Groceries</li>
-            <li>Food &amp; Drink/Restaurants</li>
-            <li>Games</li>
-            <li>Health/Medical Services</li>
-            <li>Health/Mental Health</li>
-            <li>Hobbies &amp; Leisure/Collectibles</li>
-            <li>Hobbies &amp; Leisure/Crafts</li>
-            <li>Home &amp; Garden/Home Improvement</li>
-            <li>Home &amp; Garden/Landscaping</li>
-            <li>IT &amp; Technology/Hardware Support</li>
-            <li>IT &amp; Technology/Network Infrastructure</li>
-            <li>IT &amp; Technology/Security Operations</li>
-            <li>IT &amp; Technology/Software Development</li>
-            <li>Jobs &amp; Education/Online Courses</li>
-            <li>Jobs &amp; Education/Recruitment</li>
-            <li>Law &amp; Government/Government Services</li>
-            <li>Law &amp; Government/Legal Advice</li>
-            <li>News</li>
-            <li>Online Communities/Forums</li>
-            <li>Online Communities/Social Networks</li>
-            <li>People &amp; Society/Culture &amp; Society</li>
-            <li>Pets &amp; Animals/Pet Services</li>
-            <li>Pets &amp; Animals/Veterinary Care</li>
-            <li>Real Estate</li>
-            <li>Science/Environmental Science</li>
-            <li>Science/Research</li>
-            <li>Shopping/E-commerce</li>
-            <li>Shopping/Retail Stores</li>
-            <li>Sports</li>
-            <li>Travel &amp; Transportation/Air Travel</li>
-            <li>Travel &amp; Transportation/Land Travel</li>
-        </ul>
-    </AccordionItem>
+<AccordionItem title="Full Queue List" open>
+<ul>
+<li>Arts &amp; Entertainment/Movies</li>
+<li>Arts &amp; Entertainment/Music</li>
+<li>Autos &amp; Vehicles/Maintenance</li>
+<li>Autos &amp; Vehicles/Sales</li>
+<li>Beauty &amp; Fitness/Cosmetics</li>
+<li>Beauty &amp; Fitness/Fitness Training</li>
+<li>Books &amp; Literature/Fiction</li>
+<li>Books &amp; Literature/Non-Fiction</li>
+<li>Business &amp; Industrial/Manufacturing</li>
+<li>Finance/Investments</li>
+<li>Finance/Personal Finance</li>
+<li>Food &amp; Drink/Groceries</li>
+<li>Food &amp; Drink/Restaurants</li>
+<li>Games</li>
+<li>Health/Medical Services</li>
+<li>Health/Mental Health</li>
+<li>Hobbies &amp; Leisure/Collectibles</li>
+<li>Hobbies &amp; Leisure/Crafts</li>
+<li>Home &amp; Garden/Home Improvement</li>
+<li>Home &amp; Garden/Landscaping</li>
+<li>IT &amp; Technology/Hardware Support</li>
+<li>IT &amp; Technology/Network Infrastructure</li>
+<li>IT &amp; Technology/Security Operations</li>
+<li>IT &amp; Technology/Software Development</li>
+<li>Jobs &amp; Education/Online Courses</li>
+<li>Jobs &amp; Education/Recruitment</li>
+<li>Law &amp; Government/Government Services</li>
+<li>Law &amp; Government/Legal Advice</li>
+<li>News</li>
+<li>Online Communities/Forums</li>
+<li>Online Communities/Social Networks</li>
+<li>People &amp; Society/Culture &amp; Society</li>
+<li>Pets &amp; Animals/Pet Services</li>
+<li>Pets &amp; Animals/Veterinary Care</li>
+<li>Real Estate</li>
+<li>Science/Environmental Science</li>
+<li>Science/Research</li>
+<li>Shopping/E-commerce</li>
+<li>Shopping/Retail Stores</li>
+<li>Sports</li>
+<li>Travel &amp; Transportation/Air Travel</li>
+<li>Travel &amp; Transportation/Land Travel</li>
+</ul>
+</AccordionItem>
 
 ---
 

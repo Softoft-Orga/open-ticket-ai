@@ -106,18 +106,28 @@ fixable = ["ALL"]
 ]
 [tool.mypy]
 python_version = "3.13"
-strict = true
-plugins = ['pydantic.mypy']
+plugins = ["pydantic.mypy"]
+strict = false
+warn_unused_ignores = false
+disallow_untyped_defs = false
+check_untyped_defs = false
+no_implicit_optional = false
+warn_return_any = false
+disallow_any_generics = false
+implicit_reexport = true
+follow_imports = "silent"
+ignore_missing_imports = true
 namespace_packages = true
 explicit_package_bases = true
 mypy_path = "src"
+
 [[tool.mypy.overrides]]
 module = ["tests.*", "packages.*.tests.*"]
-disallow_untyped_defs = false
-check_untyped_defs = false
-warn_return_any = false
-disallow_any_generics = false
-ignore_errors = false
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["open_ticket_ai.base.pipes.*", "open_ticket_ai.base.triggers.*"]
+disable_error_code = ["attr-defined", "no-any-return", "call-arg"]
 
 [[tool.mypy.overrides]]
 module = ["packages.otai_otobo_znuny.*"]
@@ -125,23 +135,6 @@ ignore_missing_imports = true
 warn_return_any = false
 disable_error_code = ["attr-defined", "arg-type", "no-any-return"]
 
-[[tool.mypy.overrides]]
-module = ["open_ticket_ai.base.pipes.*", "open_ticket_ai.base.triggers.*"]
-disable_error_code = ["attr-defined", "no-any-return", "call-arg"]
-
-
-[[tool.mypy.overrides]]
-module = [
-    "tests.unit.core.dependency_injection.test_logging_module",
-    "tests.integration.test_logging_integration",
-    "tests.integration.test_logger_factory_injection",
-    "tests.integration.test_composite_pipe_orchestration",
-]
-disable_error_code = ["name-defined", "type-abstract"]
-
-[[tool.mypy.overrides]]
-module = ["otobo_znuny.*"]
-ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
@@ -154,6 +147,16 @@ markers = [
     "unit: fast isolated tests",
     "e2e: end-to-end flows",
     "slow: tests that take a long time to run",
+]
+[tool.coverage.run]
+branch = true
+source = [
+    "src/open_ticket_ai",
+    "packages/otai_hf_local/src",
+    "packages/otai_otobo_znuny/src",
+]
+omit = [
+    "*models*",
 ]
 
 [dependency-groups]

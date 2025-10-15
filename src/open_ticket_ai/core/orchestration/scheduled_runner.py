@@ -9,7 +9,7 @@ from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 
 class PipeRunner:
     def __init__(
-        self, definition: RunnerDefinition, pipe_factory: RenderableFactory, logger_factory: LoggerFactory
+            self, definition: RunnerDefinition, pipe_factory: RenderableFactory, logger_factory: LoggerFactory
     ) -> None:
         self.definition = definition
         self.pipe_factory = pipe_factory

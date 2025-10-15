@@ -1,7 +1,7 @@
 name: Configuration Issue
 description: Report problems with YAML config, Jinja2 templates, or dependency injection
 title: "[Config] "
-labels: ["configuration", "needs-triage"]
+labels: [ "configuration", "needs-triage" ]
 body:
   - type: markdown
     attributes:

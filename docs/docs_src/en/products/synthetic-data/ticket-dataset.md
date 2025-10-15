@@ -2,6 +2,7 @@
 description: Train queue, priority & type models with our synthetic multilingual customer
   support tickets. Includes rich fields & multiple versions. Available on Kaggle.
 ---
+
 # Multilingual Customer Support Tickets (Synthetic)
 
 A **fully synthetic** dataset for training and evaluating help-desk models such as **queue**, **priority**, and **type**

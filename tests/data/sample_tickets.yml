@@ -4,7 +4,7 @@ sample_tickets:
     body: "Dies ist ein Testticket für Unit-Tests"
     queue: "Support"
     priority: "Medium"
-  
+
   - id: "TICKET-002"
     subject: "Test Ticket 2"
     body: "Ein weiteres Testticket"

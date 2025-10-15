@@ -12,10 +12,10 @@ class CompositePipe(Pipe):
         return PipeConfig
 
     def __init__(
-        self,
-        factory: RenderableFactory,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            factory: RenderableFactory,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._factory = factory

@@ -4,21 +4,25 @@ description: Core services documentation for Open Ticket AI covering ticket syst
 
 # Core Services
 
-Services encapsulate business logic and provide reusable functionality to pipes. They are managed by the dependency injection container.
+Services encapsulate business logic and provide reusable functionality to pipes. They are managed by the dependency
+injection container.
 
 ## Core Service Types
 
 ### Ticket Services
+
 - **TicketSystemAdapter**: Interface to ticket systems
 - **TicketFetcher**: Retrieves tickets
 - **TicketUpdater**: Updates ticket properties
 
 ### Classification Services
+
 - **ClassificationService**: ML-based classification
 - **QueueClassifier**: Queue assignment logic
 - **PriorityClassifier**: Priority assignment logic
 
 ### Utility Services
+
 - **TemplateRenderer**: Jinja2 template rendering (can be configured in `defs` for customization)
 - **ConfigurationService**: Access to configuration
 - **LoggerFactory**: Centralized logging with pluggable backends (stdlib/structlog)
@@ -26,6 +30,7 @@ Services encapsulate business logic and provide reusable functionality to pipes.
 ## Service Lifecycle Management
 
 Services are typically singletons:
+
 - Created once at application startup
 - Shared across all pipes
 - Destroyed at application shutdown
@@ -40,6 +45,7 @@ Services are typically singletons:
 ## Service Best Practices
 
 ### Do:
+
 - Keep services focused on single responsibility
 - Use interfaces for service contracts
 - Make services stateless when possible
@@ -47,6 +53,7 @@ Services are typically singletons:
 - Write unit tests for services
 
 ### Don't:
+
 - Store execution state in service instances
 - Access configuration directly (inject ConfigurationService)
 - Create circular dependencies
@@ -54,7 +61,8 @@ Services are typically singletons:
 
 ## Testing Services
 
-Services should be unit tested independently from the pipes that use them. Create test instances of services and verify their behavior with test data.
+Services should be unit tested independently from the pipes that use them. Create test instances of services and verify
+their behavior with test data.
 
 ## Related Documentation
 

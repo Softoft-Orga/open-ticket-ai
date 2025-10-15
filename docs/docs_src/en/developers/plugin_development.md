@@ -55,11 +55,13 @@ def setup(registry):
 ### Required Functions
 
 Every plugin must provide:
+
 - `setup(registry)`: Register plugin components
 
 ### Optional Functions
 
 Plugins may provide:
+
 - `configure(config)`: Plugin-specific configuration
 - `validate()`: Validate plugin installation
 - `cleanup()`: Cleanup on shutdown
@@ -71,10 +73,12 @@ Plugins may provide:
 ```python
 from open_ticket_ai.pipeline import BasePipe
 
+
 class MyPipe(BasePipe):
     def execute(self, context):
         # Pipe logic
         return PipeResult.success()
+
 
 # In setup function
 registry.register_pipe("my_pipe", MyPipe)
@@ -85,9 +89,11 @@ registry.register_pipe("my_pipe", MyPipe)
 ```python
 from injector import singleton
 
+
 class MyService:
     def do_work(self):
         pass
+
 
 # In setup function
 registry.register_service(MyService, MyServiceImpl, scope=singleton)
@@ -153,6 +159,7 @@ def test_pipeline_with_plugin():
 ## Best Practices
 
 ### Do:
+
 - Follow naming conventions
 - Document configuration options
 - Provide examples
@@ -161,6 +168,7 @@ def test_pipeline_with_plugin():
 - Declare API dependencies
 
 ### Don't:
+
 - Modify core system behavior
 - Create circular dependencies
 - Store state in pipes
