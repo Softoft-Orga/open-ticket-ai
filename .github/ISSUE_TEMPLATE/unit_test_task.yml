@@ -1,5 +1,5 @@
 # .github/ISSUE_TEMPLATE/unit_test_task.yml
-name: "Unit Tests: <module>"
+name: "Unit Tests"
 description: Minimal, behavior-focused pytest tests (no internals, no spam)
 title: "tests: <module>"
 labels: [ "tests", "unit" ]

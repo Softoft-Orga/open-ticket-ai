@@ -40,3 +40,9 @@ class PipeRunner:
         else:
             failure_message = pipe_result.message if pipe_result else "No result available"
             self._logger.warning(f"Pipe '{self.definition.pipe_id}' completed with failure: {failure_message}")
+
+
+"""
+
+
+"""

@@ -1,22 +1,5 @@
 {
   "$defs": {
-    "ConcurrencySettings": {
-      "properties": {
-        "max_workers": {
-          "default": 1,
-          "minimum": 1,
-          "title": "Max Workers",
-          "type": "integer"
-        },
-        "when_exhausted": {
-          "default": "wait",
-          "title": "When Exhausted",
-          "type": "string"
-        }
-      },
-      "title": "ConcurrencySettings",
-      "type": "object"
-    },
     "FilterConfig": {
       "additionalProperties": true,
       "properties": {
@@ -211,11 +194,14 @@
         "logging": {
           "$ref": "#/$defs/LoggingDictConfig"
         },
-        "template_renderer_config": {
-          "$ref": "#/$defs/TemplateRendererConfig",
-          "description": "(Deprecated) in future versions will be set through the services section"
+        "default_template_renderer": {
+          "title": "Default Template Renderer",
+          "type": "string"
         }
       },
+      "required": [
+        "default_template_renderer"
+      ],
       "title": "InfrastructureConfig",
       "type": "object"
     },
@@ -367,19 +353,6 @@
     "OrchestratorConfig": {
       "additionalProperties": true,
       "properties": {
-        "defaults": {
-          "anyOf": [
-            {
-              "additionalProperties": true,
-              "type": "object"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Defaults"
-        },
         "runners": {
           "items": {
             "$ref": "#/$defs/RunnerDefinition"
@@ -399,16 +372,8 @@
           "type": "string"
         },
         "id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Id"
+          "title": "Id",
+          "type": "string"
         },
         "use": {
           "default": "open_ticket_ai.base.CompositePipe",
@@ -423,7 +388,9 @@
           "type": "object"
         },
         "params": {
-          "title": "Params"
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
         },
         "if": {
           "anyOf": [
@@ -466,10 +433,14 @@
           "title": "Steps"
         }
       },
+      "required": [
+        "id"
+      ],
       "title": "PipeConfig",
       "type": "object"
     },
     "RawOpenTicketAIConfig": {
+      "additionalProperties": true,
       "properties": {
         "plugins": {
           "items": {
@@ -503,16 +474,8 @@
           "type": "string"
         },
         "id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Id"
+          "title": "Id",
+          "type": "string"
         },
         "use": {
           "default": "open_ticket_ai.base.CompositePipe",
@@ -527,43 +490,15 @@
           "type": "object"
         },
         "params": {
-          "title": "Params"
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
         }
       },
+      "required": [
+        "id"
+      ],
       "title": "RenderableConfig",
-      "type": "object"
-    },
-    "RetrySettings": {
-      "properties": {
-        "attempts": {
-          "default": 3,
-          "minimum": 1,
-          "title": "Attempts",
-          "type": "integer"
-        },
-        "delay": {
-          "default": "5s",
-          "title": "Delay",
-          "type": "string"
-        },
-        "backoff_factor": {
-          "default": 2.0,
-          "minimum": 1.0,
-          "title": "Backoff Factor",
-          "type": "number"
-        },
-        "max_delay": {
-          "default": "30s",
-          "title": "Max Delay",
-          "type": "string"
-        },
-        "jitter": {
-          "default": true,
-          "title": "Jitter",
-          "type": "boolean"
-        }
-      },
-      "title": "RetrySettings",
       "type": "object"
     },
     "RootConfig": {
@@ -639,147 +574,23 @@
         },
         "on": {
           "items": {
-            "$ref": "#/$defs/TriggerDefinition"
+            "$ref": "#/$defs/TriggerConfig"
           },
           "title": "On",
           "type": "array"
         },
         "run": {
           "$ref": "#/$defs/PipeConfig"
-        },
-        "params": {
-          "$ref": "#/$defs/RunnerParams"
         }
       },
       "required": [
+        "on",
         "run"
       ],
       "title": "RunnerDefinition",
       "type": "object"
     },
-    "RunnerParams": {
-      "properties": {
-        "concurrency": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ConcurrencySettings"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "retry": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/RetrySettings"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "timeout": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Timeout"
-        },
-        "retry_scope": {
-          "default": "pipeline",
-          "title": "Retry Scope",
-          "type": "string"
-        },
-        "priority": {
-          "default": 10,
-          "title": "Priority",
-          "type": "integer"
-        }
-      },
-      "title": "RunnerParams",
-      "type": "object"
-    },
-    "TemplateRendererConfig": {
-      "additionalProperties": true,
-      "properties": {
-        "type": {
-          "description": "Type of template renderer",
-          "title": "Type",
-          "type": "string"
-        },
-        "env_config": {
-          "$ref": "#/$defs/TemplateRendererEnvConfig",
-          "description": "Environment variable configuration"
-        }
-      },
-      "required": [
-        "type"
-      ],
-      "title": "TemplateRendererConfig",
-      "type": "object"
-    },
-    "TemplateRendererEnvConfig": {
-      "properties": {
-        "prefix": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": "OTAI_",
-          "description": "Primary environment variable prefix",
-          "title": "Prefix"
-        },
-        "allowlist": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array",
-              "uniqueItems": true
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Allowed environment variable names",
-          "title": "Allowlist"
-        },
-        "denylist": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array",
-              "uniqueItems": true
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Denied environment variable names",
-          "title": "Denylist"
-        }
-      },
-      "title": "TemplateRendererEnvConfig",
-      "type": "object"
-    },
-    "TriggerDefinition": {
+    "TriggerConfig": {
       "additionalProperties": true,
       "properties": {
         "uid": {
@@ -787,16 +598,8 @@
           "type": "string"
         },
         "id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Id"
+          "title": "Id",
+          "type": "string"
         },
         "use": {
           "default": "open_ticket_ai.base.CompositePipe",
@@ -811,10 +614,15 @@
           "type": "object"
         },
         "params": {
-          "title": "Params"
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
         }
       },
-      "title": "TriggerDefinition",
+      "required": [
+        "id"
+      ],
+      "title": "TriggerConfig",
       "type": "object"
     }
   },

@@ -11,7 +11,7 @@ from open_ticket_ai.core.config.config_loader import ConfigLoader
 from open_ticket_ai.core.config.config_models import (
     RawOpenTicketAIConfig,
 )
-from open_ticket_ai.core.config.logging_config import LoggingDictConfig
+from open_ticket_ai.core.config.logging_config_models import LoggingDictConfig
 from open_ticket_ai.core.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
 from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
@@ -37,7 +37,7 @@ class AppModule(Module):
         binder.bind(RenderableFactory, scope=singleton)
 
     @provider
-    def _create_renderer_from_service(
+    def create_renderer_from_service(
         self, config: RawOpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         service_id = config.infrastructure.default_template_renderer

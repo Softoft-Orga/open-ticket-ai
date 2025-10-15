@@ -12,7 +12,6 @@ class RootConfig(BaseModel):
 
 
 def get_type_description(type_info: dict[str, Any]) -> str:
-    """Convert JSON Schema type info to human-readable string."""
     if "type" in type_info:
         type_val = type_info["type"]
         if isinstance(type_val, list):
@@ -34,7 +33,6 @@ def get_type_description(type_info: dict[str, Any]) -> str:
 
 
 def format_default(default: Any) -> str:
-    """Format default value for display."""
     if isinstance(default, str):
         return f'`"{default}"`'
     if isinstance(default, (list, dict)):
@@ -42,8 +40,7 @@ def format_default(default: Any) -> str:
     return f"`{default}`"
 
 
-def generate_property_table(properties: dict[str, Any], required: list[str], defs: dict[str, Any]) -> str:
-    """Generate a Markdown table for properties."""
+def generate_property_table(properties: dict[str, Any], required: list[str]) -> str:
     if not properties:
         return "_No properties defined._\n"
 
@@ -55,15 +52,12 @@ def generate_property_table(properties: dict[str, Any], required: list[str], def
     for prop_name, prop_info in properties.items():
         is_required = "✓" if prop_name in required else ""
 
-        # Get type
         type_desc = get_type_description(prop_info)
 
-        # Get default
         default = prop_info.get("default", "")
         if default:
             default = format_default(default)
 
-        # Get description
         description = prop_info.get("description", "").replace("\n", " ")
 
         lines.append(f"| `{prop_name}` | {type_desc} | {is_required} | {default} | {description} |")
@@ -71,8 +65,7 @@ def generate_property_table(properties: dict[str, Any], required: list[str], def
     return "\n".join(lines) + "\n"
 
 
-def generate_model_docs(name: str, schema: dict[str, Any], defs: dict[str, Any], level: int = 2) -> str:
-    """Generate documentation for a single model."""
+def generate_model_docs(name: str, schema: dict[str, Any], level: int = 2) -> str:
     heading = "#" * level
     lines = [f"{heading} {name}\n"]
 
@@ -82,13 +75,12 @@ def generate_model_docs(name: str, schema: dict[str, Any], defs: dict[str, Any],
     properties = schema.get("properties", {})
     required = schema.get("required", [])
 
-    lines.append(generate_property_table(properties, required, defs))
+    lines.append(generate_property_table(properties, required))
 
     return "\n".join(lines) + "\n"
 
 
 def generate_markdown_docs(schema: dict[str, Any]) -> str:
-    """Generate complete Markdown documentation from JSON Schema."""
     lines = [
         "# Configuration Schema Reference\n",
         "_Auto-generated from Pydantic models_\n",
@@ -97,20 +89,17 @@ def generate_markdown_docs(schema: dict[str, Any]) -> str:
 
     defs = schema.get("$defs", {})
 
-    # Generate root config
-    lines.append(generate_model_docs("Root Configuration", schema, defs, level=2))
+    lines.append(generate_model_docs("Root Configuration", schema))
 
-    # Generate definitions
     if defs:
         lines.append("## Type Definitions\n")
         for def_name, def_schema in sorted(defs.items()):
-            lines.append(generate_model_docs(def_name, def_schema, defs, level=3))
+            lines.append(generate_model_docs(def_name, def_schema, level=3))
 
     return "\n".join(lines)
 
 
 if __name__ == "__main__":
-    """Generates JSON schema for RootConfig and writes it to config.schema.json."""
     schema: dict[str, Any] = RootConfig.model_json_schema()
     generate_markdown_docs(schema)
     with open(Path.cwd() / "CONFIG_SCHEMA.md", "w", encoding="utf-8") as f:

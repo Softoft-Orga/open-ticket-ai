@@ -12,13 +12,6 @@ _Auto-generated from Pydantic models_
 
 ## Type Definitions
 
-### ConcurrencySettings
-
-| Field            | Type    | Required | Default  | Description |
-|------------------|---------|----------|----------|-------------|
-| `max_workers`    | integer |          | `1`      |             |
-| `when_exhausted` | string  |          | `"wait"` |             |
-
 ### FilterConfig
 
 | Field   | Type           | Required | Default | Description |
@@ -49,10 +42,10 @@ _Auto-generated from Pydantic models_
 
 ### InfrastructureConfig
 
-| Field                      | Type                                              | Required | Default | Description                                                              |
-|----------------------------|---------------------------------------------------|----------|---------|--------------------------------------------------------------------------|
-| `logging`                  | [LoggingDictConfig](#loggingdictconfig)           |          |         |                                                                          |
-| `template_renderer_config` | [TemplateRendererConfig](#templaterendererconfig) |          |         | (Deprecated) in future versions will be set through the services section |
+| Field                       | Type                                    | Required | Default | Description |
+|-----------------------------|-----------------------------------------|----------|---------|-------------|
+| `logging`                   | [LoggingDictConfig](#loggingdictconfig) |          |         |             |
+| `default_template_renderer` | string                                  | ✓        |         |             |
 
 ### LoggerConfig
 
@@ -78,20 +71,19 @@ _Auto-generated from Pydantic models_
 
 ### OrchestratorConfig
 
-| Field      | Type           | Required | Default | Description |
-|------------|----------------|----------|---------|-------------|
-| `defaults` | object or null |          | None    |             |
-| `runners`  | array          |          |         |             |
+| Field     | Type  | Required | Default | Description |
+|-----------|-------|----------|---------|-------------|
+| `runners` | array |          |         |             |
 
 ### PipeConfig
 
 | Field        | Type              | Required | Default                               | Description |
 |--------------|-------------------|----------|---------------------------------------|-------------|
 | `uid`        | string            |          |                                       |             |
-| `id`         | string or null    |          | None                                  |             |
+| `id`         | string            | ✓        |                                       |             |
 | `use`        | string            |          | `"open_ticket_ai.base.CompositePipe"` |             |
 | `injects`    | object            |          |                                       |             |
-| `params`     | any               |          |                                       |             |
+| `params`     | object            |          |                                       |             |
 | `if`         | string or boolean |          | `"True"`                              |             |
 | `depends_on` | string or array   |          | []                                    |             |
 | `steps`      | array or null     |          | None                                  |             |
@@ -107,23 +99,13 @@ _Auto-generated from Pydantic models_
 
 ### RenderableConfig
 
-| Field     | Type           | Required | Default                               | Description |
-|-----------|----------------|----------|---------------------------------------|-------------|
-| `uid`     | string         |          |                                       |             |
-| `id`      | string or null |          | None                                  |             |
-| `use`     | string         |          | `"open_ticket_ai.base.CompositePipe"` |             |
-| `injects` | object         |          |                                       |             |
-| `params`  | any            |          |                                       |             |
-
-### RetrySettings
-
-| Field            | Type    | Required | Default | Description |
-|------------------|---------|----------|---------|-------------|
-| `attempts`       | integer |          | `3`     |             |
-| `delay`          | string  |          | `"5s"`  |             |
-| `backoff_factor` | number  |          | `2.0`   |             |
-| `max_delay`      | string  |          | `"30s"` |             |
-| `jitter`         | boolean |          | `True`  |             |
+| Field     | Type   | Required | Default                               | Description |
+|-----------|--------|----------|---------------------------------------|-------------|
+| `uid`     | string |          |                                       |             |
+| `id`      | string | ✓        |                                       |             |
+| `use`     | string |          | `"open_ticket_ai.base.CompositePipe"` |             |
+| `injects` | object |          |                                       |             |
+| `params`  | object |          |                                       |             |
 
 ### RootConfig
 
@@ -135,45 +117,19 @@ _Auto-generated from Pydantic models_
 
 ### RunnerDefinition
 
-| Field    | Type                          | Required | Default | Description |
-|----------|-------------------------------|----------|---------|-------------|
-| `id`     | string or null                |          | None    |             |
-| `on`     | array                         |          |         |             |
-| `run`    | [PipeConfig](#pipeconfig)     | ✓        |         |             |
-| `params` | [RunnerParams](#runnerparams) |          |         |             |
+| Field | Type                      | Required | Default | Description |
+|-------|---------------------------|----------|---------|-------------|
+| `id`  | string or null            |          | None    |             |
+| `on`  | array                     | ✓        |         |             |
+| `run` | [PipeConfig](#pipeconfig) | ✓        |         |             |
 
-### RunnerParams
+### TriggerConfig
 
-| Field         | Type                                                | Required | Default      | Description |
-|---------------|-----------------------------------------------------|----------|--------------|-------------|
-| `concurrency` | [ConcurrencySettings](#concurrencysettings) or null |          | None         |             |
-| `retry`       | [RetrySettings](#retrysettings) or null             |          | None         |             |
-| `timeout`     | string or null                                      |          | None         |             |
-| `retry_scope` | string                                              |          | `"pipeline"` |             |
-| `priority`    | integer                                             |          | `10`         |             |
-
-### TemplateRendererConfig
-
-| Field        | Type                                                    | Required | Default | Description                        |
-|--------------|---------------------------------------------------------|----------|---------|------------------------------------|
-| `type`       | string                                                  | ✓        |         | Type of template renderer          |
-| `env_config` | [TemplateRendererEnvConfig](#templaterendererenvconfig) |          |         | Environment variable configuration |
-
-### TemplateRendererEnvConfig
-
-| Field       | Type           | Required | Default   | Description                         |
-|-------------|----------------|----------|-----------|-------------------------------------|
-| `prefix`    | string or null |          | `"OTAI_"` | Primary environment variable prefix |
-| `allowlist` | array or null  |          | None      | Allowed environment variable names  |
-| `denylist`  | array or null  |          | None      | Denied environment variable names   |
-
-### TriggerDefinition
-
-| Field     | Type           | Required | Default                               | Description |
-|-----------|----------------|----------|---------------------------------------|-------------|
-| `uid`     | string         |          |                                       |             |
-| `id`      | string or null |          | None                                  |             |
-| `use`     | string         |          | `"open_ticket_ai.base.CompositePipe"` |             |
-| `injects` | object         |          |                                       |             |
-| `params`  | any            |          |                                       |             |
+| Field     | Type   | Required | Default                               | Description |
+|-----------|--------|----------|---------------------------------------|-------------|
+| `uid`     | string |          |                                       |             |
+| `id`      | string | ✓        |                                       |             |
+| `use`     | string |          | `"open_ticket_ai.base.CompositePipe"` |             |
+| `injects` | object |          |                                       |             |
+| `params`  | object |          |                                       |             |
 
