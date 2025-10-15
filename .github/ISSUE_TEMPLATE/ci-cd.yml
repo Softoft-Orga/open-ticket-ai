@@ -6,79 +6,31 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## CI/CD Issue
-        Propose changes to continuous integration, deployment, build processes, or automation workflows.
-        
-        **Use this template for:** GitHub Actions workflows, build scripts, deployment pipelines, automation changes, environment configuration, and testing infrastructure.
+        ## CI/CD Issue - Implementation Guide
 
-  - type: dropdown
-    id: cicd-change-type
-    attributes:
-      label: Type of CI/CD Change
-      description: What type of CI/CD change are you proposing?
-      options:
-        - GitHub Actions Workflow
-        - Build Process/Scripts
-        - Deployment Pipeline
-        - Test Automation
-        - Environment Configuration
-        - Release Automation
-        - Quality Assurance (QA) Workflow
-        - Security Scanning
-        - Dependency Management
-        - Performance Testing
-        - Other
-    validations:
-      required: true
 
-  - type: textarea
-    id: affected-files
-    attributes:
-      label: Affected Files/Workflows
-      description: List the workflows, scripts, or configuration files that will be affected
-      placeholder: |
-        - .github/workflows/ci.yml
-        - .github/workflows/release.yml
-        - scripts/build.sh
-    validations:
-      required: true
 
   - type: textarea
     id: description
     attributes:
       label: Description of Change
-      description: Describe the CI/CD change you're proposing
-      placeholder: "Add automated security scanning to the CI workflow using CodeQL..."
-    validations:
-      required: true
 
   - type: textarea
-    id: motivation
+    id: impact-assessment
     attributes:
-      label: Motivation and Context
-      description: Why is this change needed? What problem does it solve?
-      placeholder: "Currently, we don't have automated security scanning, which means vulnerabilities could be introduced..."
-    validations:
-      required: true
+      label: Impact Assessment
+      description: Build time impact, breaking changes, rollback plan?
+      placeholder: |
+        Impact: +2-3 minutes to CI builds
+        Breaking: None - additive change only
+        Rollback: Revert commit and re-run workflows
+        Testing: Test in fork first with sample PRs
 
   - type: textarea
     id: additional-context
     attributes:
-      label: Additional Context (Optional)
-      description: Any other information such as risk level, impact assessment, testing plan, rollback plan, or config examples
+      label: Additional Context
+      description: Config examples, references, dependencies
       placeholder: |
-        Risk Level: Medium
-        
-        Impact: May increase build time by 2-3 minutes
-        
-        Testing: Will test in a fork with sample PRs
-        
-        Rollback: Revert the commit and re-run workflows
-        
-        Config example:
-        ```yaml
-        name: Security Scan
-        on:
-          push:
-            branches: [main, dev]
-        ```
+        Reference: https://github.com/github/codeql-action
+        Example workflow step: ...

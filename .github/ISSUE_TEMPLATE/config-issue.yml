@@ -6,68 +6,71 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Configuration Issue
-        Report issues related to YAML configuration, template rendering, or DI setup.
+        ## Configuration Issue - Fix Implementation Guide
+        
+        **How to fix:**
+        - Identify the root cause in config parsing, Jinja2 rendering, or DI setup
+        - Fix the issue in the appropriate module (ConfigLoader, JinjaRenderer, RenderableFactory, etc.)
+        - Add proper error messages and validation
+        - Update Pydantic models if schema changes needed
+        - Add type annotations and proper error handling
+        
+        **Testing requirements:**
+        - Add unit test in `tests/unit/core/config/` reproducing the issue
+        - Test should fail before fix, pass after fix
+        - Add test cases for edge cases and error conditions
+        - Test with real YAML config snippets in `tests/data/`
+        
+        **Quality gates (must pass):**
+        - `uv run ruff check .` - no warnings
+        - `uv run mypy .` - no errors
+        - `uv run -m pytest` - all tests pass including new ones
+        - Original reported config should now work or give clear error message
+        
+        **Issue is DONE when:**
+        - Root cause identified and fixed
+        - Tests added covering the issue
+        - All quality gates pass
+        - Configuration now works as expected or fails with clear error
 
   - type: textarea
     id: issue-description
     attributes:
       label: Issue Description
-      description: Describe the configuration problem
-      placeholder: "When I try to use a Jinja2 template in the 'if' field..."
-    validations:
-      required: true
+      description: What configuration problem needs to be fixed?
+      placeholder: "Jinja2 template in 'if' field fails with UndefinedError when referencing parent.params..."
 
   - type: textarea
     id: config-snippet
     attributes:
       label: Configuration Snippet
-      description: Share the relevant part of your config.yml (redact sensitive data)
+      description: Config that triggers the issue (redact secrets)
       render: yaml
       placeholder: |
-        open_ticket_ai:
-          defs:
-            - id: my_service
-              use: "open_ticket_ai.SomeClass"
-              param: value
-          orchestrator:
-            schedules:
-              - run_every_milli_seconds: 60000
-                pipe:
-                  id: my_pipe
-                  use: "open_ticket_ai.base:CompositePipe"
-                  steps:
-                    - id: step1
-                      use: "..."
-    validations:
-      required: true
+        steps:
+          - id: my_step
+            if: "{{ parent.params.some_value }}"
+            use: "open_ticket_ai.base:SomePipe"
 
   - type: textarea
-    id: expected-behavior
+    id: fix-approach
     attributes:
-      label: Expected Behavior
-      description: What should happen with this configuration?
-      placeholder: "The template should render the ticket ID..."
-    validations:
-      required: true
-
-  - type: textarea
-    id: actual-behavior
-    attributes:
-      label: Actual Behavior
-      description: What actually happens?
-      placeholder: "Instead, I get a TemplateRenderError..."
-    validations:
-      required: true
+      label: Fix Approach
+      description: How should this be fixed? Which code to change?
+      placeholder: |
+        Fix in src/open_ticket_ai/core/renderable/renderable_factory.py:
+        - Ensure parent context is properly passed to child steps
+        - Update render_recursive to include parent in scope
+        
+        Add test in tests/unit/core/renderable/test_renderable_factory.py:
+        - Test parent.params access in child step conditions
 
   - type: textarea
     id: additional-context
     attributes:
-      label: Additional Context (Optional)
-      description: Any other information such as error messages, version, workarounds
+      label: Additional Context
+      description: Error messages, stack traces, version info
       placeholder: |
-        Error message:
-        ERROR: TemplateRenderError in pipe 'my_pipe'
-        jinja2.exceptions.UndefinedError: 'ticket' is undefined
-        
-        Version: Open Ticket AI 1.0.0rc1
+        Error: jinja2.exceptions.UndefinedError: 'parent' is undefined
+        Version: 1.0.0rc1
+        Stack trace: ...

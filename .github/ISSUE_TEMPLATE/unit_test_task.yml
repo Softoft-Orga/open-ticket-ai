@@ -8,80 +8,115 @@ body:
   - type: markdown
     attributes:
       value: |
-        Goal: small, deterministic pytest tests for PUBLIC behavior only. Keep it minimal and maintainable.
+        ## Unit Test Task - Implementation Guide
+        
+        **How to write tests:**
+        - Create test file in appropriate location (NOT under src/)
+        - Package tests: `packages/<name>/tests/unit/test_*.py`
+        - Root tests: `tests/unit/**/test_*.py`
+        - Use pytest with proper fixtures and parametrize
+        - Test PUBLIC API only - no private methods/attributes
+        - Keep tests minimal: ≤5 tests per file, ≤20 lines per test
+        
+        **Test structure:**
+        - Use descriptive test function names: `test_<behavior>_<condition>`
+        - Use `@pytest.mark.parametrize` to compress similar cases
+        - Use existing fixtures from conftest.py (check: `uv run -m pytest --fixtures`)
+        - Prefer Fakes/DI over mocks; use pytest monkeypatch for env/globals
+        - If using unittest.mock, set spec_set/autospec
+        
+        **Fixtures - IMPORTANT:**
+        - **ALWAYS check existing fixtures first:** Run `uv run -m pytest --fixtures` before creating new ones
+        - **Place fixtures in conftest.py** (package or root level) if they might be reused
+        - **Only place fixtures in test file** if they are definitely specific to that one test file only
+        - Check `tests/conftest.py` for workspace-level fixtures
+        - Check `packages/<name>/tests/conftest.py` for package-level fixtures
+        - Reuse existing fixtures like `tmp_path`, `monkeypatch`, `sample_*`, `mock_*`, `empty_*`
+        - Name new fixtures following conventions: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
+        
+        **What to test:**
+        - Input → output behavior with different valid inputs
+        - Invariants and business rules
+        - Exactly ONE negative/error case per file
+        - Edge cases (empty input, boundary values) IF Appropriate and Relevant; DO NOT ADD in trivial cases
+        - Use real data structures (dicts, lists) over mocks where possible
+        
+        **What NOT to test:**
+        - Private implementation details (methods starting with _)
+        - Exact error messages, instead test that some value is included or that it raises the correct exception type
+        - Exact values that are likely to change; test ranges or properties instead; Do not check if specvific constants as some exact valueM
+        - The test should still pass, if some detail of the software changess
+        
+        **Test isolation:**
+        - No network I/O - mock or fake external calls
+        - No real filesystem - use tmp_path fixture
+        - Deterministic results - use fixed seeds/time (freezegun/time-machine)
+        - Each test should be independent
+        
+        **Quality gates (must pass):**
+        - `uv run -m pytest` - all tests pass
+        - `uv run ruff check .` - no warnings
+        - `uv run mypy .` - no errors
+        - `uv run python scripts/validate_test_structure.py` - no tests under src/
+        
+        **Issue is DONE when:**
+        - Tests written and placed in correct location
+        - All tests pass
+        - All quality gates pass
+        - Tests are minimal and focused on behavior
+        - Existing fixtures checked and reused where possible
+        - New fixtures placed in conftest.py unless test-specific
 
   - type: input
     id: target
     attributes:
       label: Target module
-      description: e.g. open_ticket_ai.core.foo
+      description: Module to test (e.g., open_ticket_ai.core.config.config_loader)
       placeholder: package.module
 
   - type: textarea
     id: behaviors
     attributes:
-      label: Behaviors to cover
-      description: Inputs → outputs, invariants, and exactly 1 negative/error case
+      label: Behaviors to Test
+      description: What behaviors need test coverage? Include 1 error case
       placeholder: |
-        - normalize mixed case and whitespace
-        - preserve underscores
-        - raise ValueError on invalid input
+        - Load valid YAML config and return AppConfig
+        - Handle missing config file (FileNotFoundError)
+        - Validate config schema with Pydantic
+        - Merge environment variables into config
 
   - type: textarea
-    id: acceptance
+    id: implementation-plan
     attributes:
-      label: Acceptance criteria
-      description: Concrete pass/fail checks
+      label: Implementation Plan
+      description: Test file location, fixtures needed, parametrized cases?
       placeholder: |
-        - Single test file for this target
-        - ≤5 tests total, each ≤20 lines
-        - Parametrized where applicable
-        - No network/real FS; tmp_path for files
-        - External effects isolated; deterministic results
-
-  - type: checkboxes
-    id: constraints
-    attributes:
-      label: Hard constraints
-      options:
-        - label: Public API only (no private attrs, no internals)
-        - label: Use @pytest.mark.parametrize to compress cases
-        - label: Prefer Fakes/DI over mocks for dependencies
-        - label: Use pytest monkeypatch for env/globals; avoid unittest.mock unless unavoidable
-        - label: If unittest.mock is used, set spec_set/autospec and avoid interaction over-assertion
-        - label: Block external I/O (no network); use tmp_path/pyfakefs for files
-        - label: Deterministic tests (fixed seeds/time; use freezegun/time-machine if needed)
-        - label: ≤5 tests per file, ≤20 lines per test
-        - label: Do not assert exact error messages; assert exception type (and stable code) only
+        File: tests/unit/core/config/test_config_loader.py
+        
+        Fixtures to check first (run: uv run -m pytest --fixtures):
+        - tmp_path (built-in) - use this for test config files
+        - Check if sample_config_dict already exists in conftest.py
+        
+        New fixtures (if needed):
+        - sample_config_dict → add to tests/conftest.py (reusable)
+        - invalid_config_dict → add to test file (test-specific)
+        
+        Tests:
+        - test_load_valid_config (parametrize 3 valid config variations)
+        - test_load_missing_file (expect FileNotFoundError)
+        - test_validate_config_schema (invalid config → ValidationError)
+        
+        Each test ≤20 lines
 
   - type: textarea
-    id: fixtures
+    id: additional-context
     attributes:
-      label: Shared setup / fixtures
-      description: Reusable setup to place in tests/conftest.py (if any)
-
-  - type: textarea
-    id: parametrization
-    attributes:
-      label: Parametrized cases
-      description: 3–6 representative examples
-
-
-  - type: textarea
-    id: artifacts
-    attributes:
-      label: Test artifacts (if any)
-      description: Files under tmp_path and what to assert (existence, schema, flags)
-
-  - type: checkboxes
-    id: done
-    attributes:
-      label: Done when
-      options:
-        - label: Tests pass locally with `uv run pytest -q`
-        - label: Ruff passes locally with `uv run ruff check . --fix`
-        - label: Mypy passes locally with `uv run mypy .`
-        - label: No implementation-coupled assertions
-        - label: Duplicates consolidated via parametrization
-        - label: Shared setup extracted to fixtures (if reused)
-        - label: No forbidden I/O; external calls isolated
+      label: Additional Context
+      description: Special considerations, dependencies to mock, test data needed
+      placeholder: |
+        Mock: Environment variables with monkeypatch (built-in fixture)
+        Test data: Create sample YAML in tmp_path
+        Edge case: Empty config file should use defaults
+        
+        Before creating fixtures, check existing ones:
+        uv run -m pytest --fixtures | grep config
