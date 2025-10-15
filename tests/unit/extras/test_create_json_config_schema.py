@@ -22,6 +22,20 @@ def test_generate_markdown_docs() -> None:
     assert "## Root Configuration" in result
 
 
+def test_nested_structure_generation() -> None:
+    schema = RootConfig.model_json_schema()
+    result = generate_markdown_docs(schema)
+
+    assert "`open_ticket_ai`" in result
+    assert "  `plugins`" in result
+    assert "  `infrastructure`" in result
+    assert "    `logging`" in result
+    assert "    `default_template_renderer`" in result
+
+    assert "## Type Definitions" in result
+    assert "### RawOpenTicketAIConfig" in result
+
+
 def test_main_execution_creates_files(tmp_path: Path) -> None:
     result = subprocess.run(
         [sys.executable, "-m", "open_ticket_ai.extras.create_json_config_schema"],

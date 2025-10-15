@@ -11,15 +11,27 @@ class RootConfig(BaseModel):
     open_ticket_ai: RawOpenTicketAIConfig
 
 
-def get_type_description(type_info: dict[str, Any]) -> str:
+def resolve_ref(ref: str, defs: dict[str, Any]) -> dict[str, Any] | None:
+    ref_name = ref.split("/")[-1]
+    return defs.get(ref_name)
+
+
+def get_type_description(type_info: dict[str, Any], defs: dict[str, Any]) -> str:
     if "type" in type_info:
         type_val = type_info["type"]
         if isinstance(type_val, list):
             return " or ".join(str(t) for t in type_val)
+        if type_val == "array":
+            items = type_info.get("items", {})
+            if "$ref" in items:
+                ref_name = items["$ref"].split("/")[-1]
+                return f"array of [{ref_name}](#{ref_name.lower()})"
+            item_type = get_type_description(items, defs)
+            return f"array of {item_type}"
         return str(type_val)
 
     if "anyOf" in type_info:
-        types = [get_type_description(t) for t in type_info["anyOf"]]
+        types = [get_type_description(t, defs) for t in type_info["anyOf"]]
         return " or ".join(types)
 
     if "allOf" in type_info:
@@ -40,7 +52,13 @@ def format_default(default: Any) -> str:
     return f"`{default}`"
 
 
-def generate_property_table(properties: dict[str, Any], required: list[str]) -> str:
+def generate_property_table(
+    properties: dict[str, Any],
+    required: list[str],
+    defs: dict[str, Any],
+    indent: int = 0,
+    max_depth: int = 3,
+) -> str:
     if not properties:
         return "_No properties defined._\n"
 
@@ -52,7 +70,7 @@ def generate_property_table(properties: dict[str, Any], required: list[str]) -> 
     for prop_name, prop_info in properties.items():
         is_required = "✓" if prop_name in required else ""
 
-        type_desc = get_type_description(prop_info)
+        type_desc = get_type_description(prop_info, defs)
 
         default = prop_info.get("default", "")
         if default:
@@ -60,12 +78,97 @@ def generate_property_table(properties: dict[str, Any], required: list[str]) -> 
 
         description = prop_info.get("description", "").replace("\n", " ")
 
-        lines.append(f"| `{prop_name}` | {type_desc} | {is_required} | {default} | {description} |")
+        indent_prefix = "  " * indent
+        field_name = f"{indent_prefix}`{prop_name}`"
+
+        lines.append(f"| {field_name} | {type_desc} | {is_required} | {default} | {description} |")
+
+        if indent < max_depth:
+            if "$ref" in prop_info:
+                ref_schema = resolve_ref(prop_info["$ref"], defs)
+                if ref_schema and "properties" in ref_schema:
+                    nested_props = ref_schema.get("properties", {})
+                    nested_required = ref_schema.get("required", [])
+                    if nested_props:
+                        nested_lines = generate_nested_properties(
+                            nested_props, nested_required, defs, indent + 1, max_depth
+                        )
+                        lines.extend(nested_lines)
+            elif prop_info.get("type") == "array" and "items" in prop_info:
+                items = prop_info["items"]
+                if "$ref" in items:
+                    ref_schema = resolve_ref(items["$ref"], defs)
+                    if ref_schema and "properties" in ref_schema:
+                        nested_props = ref_schema.get("properties", {})
+                        nested_required = ref_schema.get("required", [])
+                        if nested_props:
+                            nested_lines = generate_nested_properties(
+                                nested_props, nested_required, defs, indent + 1, max_depth
+                            )
+                            lines.extend(nested_lines)
 
     return "\n".join(lines) + "\n"
 
 
-def generate_model_docs(name: str, schema: dict[str, Any], level: int = 2) -> str:
+def generate_nested_properties(
+    properties: dict[str, Any],
+    required: list[str],
+    defs: dict[str, Any],
+    indent: int,
+    max_depth: int,
+) -> list[str]:
+    lines = []
+
+    for prop_name, prop_info in properties.items():
+        is_required = "✓" if prop_name in required else ""
+
+        type_desc = get_type_description(prop_info, defs)
+
+        default = prop_info.get("default", "")
+        if default:
+            default = format_default(default)
+
+        description = prop_info.get("description", "").replace("\n", " ")
+
+        indent_prefix = "  " * indent
+        field_name = f"{indent_prefix}`{prop_name}`"
+
+        lines.append(f"| {field_name} | {type_desc} | {is_required} | {default} | {description} |")
+
+        if indent < max_depth:
+            if "$ref" in prop_info:
+                ref_schema = resolve_ref(prop_info["$ref"], defs)
+                if ref_schema and "properties" in ref_schema:
+                    nested_props = ref_schema.get("properties", {})
+                    nested_required = ref_schema.get("required", [])
+                    if nested_props:
+                        nested_lines = generate_nested_properties(
+                            nested_props, nested_required, defs, indent + 1, max_depth
+                        )
+                        lines.extend(nested_lines)
+            elif prop_info.get("type") == "array" and "items" in prop_info:
+                items = prop_info["items"]
+                if "$ref" in items:
+                    ref_schema = resolve_ref(items["$ref"], defs)
+                    if ref_schema and "properties" in ref_schema:
+                        nested_props = ref_schema.get("properties", {})
+                        nested_required = ref_schema.get("required", [])
+                        if nested_props:
+                            nested_lines = generate_nested_properties(
+                                nested_props, nested_required, defs, indent + 1, max_depth
+                            )
+                            lines.extend(nested_lines)
+
+    return lines
+
+
+def generate_model_docs(
+    name: str,
+    schema: dict[str, Any],
+    defs: dict[str, Any],
+    level: int = 2,
+    expand_nested: bool = True,
+) -> str:
     heading = "#" * level
     lines = [f"{heading} {name}\n"]
 
@@ -75,7 +178,10 @@ def generate_model_docs(name: str, schema: dict[str, Any], level: int = 2) -> st
     properties = schema.get("properties", {})
     required = schema.get("required", [])
 
-    lines.append(generate_property_table(properties, required))
+    if expand_nested:
+        lines.append(generate_property_table(properties, required, defs))
+    else:
+        lines.append(generate_property_table(properties, required, defs, max_depth=0))
 
     return "\n".join(lines) + "\n"
 
@@ -89,12 +195,14 @@ def generate_markdown_docs(schema: dict[str, Any]) -> str:
 
     defs = schema.get("$defs", {})
 
-    lines.append(generate_model_docs("Root Configuration", schema))
+    lines.append(generate_model_docs("Root Configuration", schema, defs, expand_nested=True))
 
     if defs:
         lines.append("## Type Definitions\n")
         for def_name, def_schema in sorted(defs.items()):
-            lines.append(generate_model_docs(def_name, def_schema, level=3))
+            lines.append(
+                generate_model_docs(def_name, def_schema, defs, level=3, expand_nested=False)
+            )
 
     return "\n".join(lines)
 
