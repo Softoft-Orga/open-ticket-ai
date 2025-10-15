@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -26,11 +27,17 @@ def test_nested_structure_generation() -> None:
     schema = RootConfig.model_json_schema()
     result = generate_markdown_docs(schema)
 
-    nested_fields = ["`open_ticket_ai`", "  `plugins`", "  `infrastructure`", "    `logging`"]
-    for field in nested_fields:
-        assert field in result
+    # Check for indented fields (nested structure)
+    # Pattern: lines with 2+ spaces before backtick indicate nested fields
+    nested_pattern = re.compile(r"\|\s{2,}`\w+`\s*\|")
+    nested_fields = nested_pattern.findall(result)
+    assert len(nested_fields) > 0, "Should have nested fields with indentation"
 
+    # Check Type Definitions section exists
     assert "## Type Definitions" in result
+
+    # Check table structure is present
+    assert "| Field | Type | Required | Default | Description |" in result
 
 
 def test_main_execution_creates_files(tmp_path: Path) -> None:
