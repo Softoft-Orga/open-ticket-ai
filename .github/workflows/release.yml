@@ -1,118 +1,146 @@
 name: Release
 
 on:
-  workflow_dispatch: { }
-  issue_comment:
-    types: [ created ]
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'
 
 permissions:
   contents: write
   packages: write
+  id-token: write  # Required for OIDC PyPI publishing
 
 jobs:
-  chatops:
-    if: ${{ github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/publish-all') }}
-    runs-on: ubuntu-latest
-    outputs:
-      proceed: ${{ steps.ok.outputs.proceed }}
-    steps:
-      - id: ok
-        run: echo "proceed=true" >> "$GITHUB_OUTPUT"
-
   publish:
-    needs: [ chatops ]
-    if: ${{ needs.chatops.result == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/open-ticket-ai
     outputs:
-      core_ver: ${{ steps.vers.outputs.core_ver }}
-      hf_ver: ${{ steps.vers.outputs.hf_ver }}
-      zn_ver: ${{ steps.vers.outputs.zn_ver }}
+      version: ${{ steps.get_version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - uses: astral-sh/setup-uv@v4
-      - name: Run publish_all.sh
-        env:
-          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+
+      # Get version from tag or pyproject.toml
+      - name: Get version
+        id: get_version
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          export UV_PYPI_TOKEN="$PYPI_API_TOKEN"
-          bash scripts/publish_all.sh
-          git add -A
-          git commit -m "chore: bump and publish core+plugins [skip ci]" || true
-          git push || true
-      - id: vers
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Publishing version: $VERSION"
+
+      # Verify all packages have the same version
+      - name: Verify unified version
         run: |
-          python - << 'PY'
-          import tomllib, pathlib, sys
-          def ver(p): return tomllib.loads(pathlib.Path(p).read_text(encoding='utf-8'))['project']['version']
-          core_ver = ver('pyproject.toml')
-          hf_ver = ver('packages/otai_hf_local/pyproject.toml')
-          zn_ver = ver('packages/otai_otobo_znuny/pyproject.toml')
-          print(f"core_ver={core_ver}")
-          print(f"hf_ver={hf_ver}")
-          print(f"zn_ver={zn_ver}")
-          (pathlib.Path(os.environ["GITHUB_OUTPUT"]).write_text(
-              f"core_ver={core_ver}\n" f"hf_ver={hf_ver}\n" f"zn_ver={zn_ver}\n"
-          ))
-          PY
-      - name: Enforce p1=c1
-        run: |
-          get_major() { echo "$1" | cut -d. -f1; }
-          c="${{ steps.vers.outputs.core_ver }}"
-          h="${{ steps.vers.outputs.hf_ver }}"
-          z="${{ steps.vers.outputs.zn_ver }}"
-          [ "$(get_major "$h")" = "$(get_major "$c")" ] || { echo "hf_local major != core major"; exit 1; }
-          [ "$(get_major "$z")" = "$(get_major "$c")" ] || { echo "otobo_znuny major != core major"; exit 1; }
+          VERSION="${{ steps.get_version.outputs.version }}"
+          
+          get_version() {
+            python -c "import tomllib; print(tomllib.load(open('$1', 'rb'))['project']['version'])"
+          }
+          
+          CORE_VER=$(get_version "pyproject.toml")
+          HF_VER=$(get_version "packages/otai_hf_local/pyproject.toml")
+          ZN_VER=$(get_version "packages/otai_otobo_znuny/pyproject.toml")
+          
+          echo "Core version: $CORE_VER"
+          echo "HF Local version: $HF_VER"
+          echo "OTOBO/Znuny version: $ZN_VER"
+          
+          # All versions must match
+          if [[ "$CORE_VER" != "$HF_VER" ]] || [[ "$CORE_VER" != "$ZN_VER" ]]; then
+            echo "ERROR: All package versions must be identical!"
+            echo "Core: $CORE_VER, HF: $HF_VER, ZN: $ZN_VER"
+            exit 1
+          fi
+          
+          # If triggered by tag, version must match tag
+          if [[ "${{ github.ref }}" == refs/tags/v* ]] && [[ "$CORE_VER" != "$VERSION" ]]; then
+            echo "ERROR: Tag version ($VERSION) doesn't match package version ($CORE_VER)"
+            exit 1
+          fi
+
+      # Build all packages
+      - name: Build core package
+        run: uv build
+
+      - name: Build hf_local plugin
+        run: uv build --package otai_hf_local
+
+      - name: Build otobo_znuny plugin
+        run: uv build --package otai_otobo_znuny
+
+      # Publish to PyPI using OIDC (Trusted Publishing)
+      - name: Publish core to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+      - name: Publish hf_local to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/otai_hf_local/dist/
+
+      - name: Publish otobo_znuny to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/otai_otobo_znuny/dist/
 
   docker:
-    needs: [ publish ]
+    needs: [publish]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        flavor: [ core, core-hf, core-zn, core-hf-zn ]
+        variant:
+          - name: core
+            packages: open-ticket-ai
+          - name: hf_local
+            packages: open-ticket-ai otai-hf-local
+          - name: otobo_znuny
+            packages: open-ticket-ai otai-otobo-znuny
+          - name: all
+            packages: open-ticket-ai otai-hf-local otai-otobo-znuny
     steps:
       - uses: actions/checkout@v4
+
       - uses: docker/setup-qemu-action@v3
+
       - uses: docker/setup-buildx-action@v3
+
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Compute tags and args
+
+      - name: Build image metadata
         id: meta
-        run: |
-          CORE="${{ needs.publish.outputs.core_ver }}"
-          HF="${{ needs.publish.outputs.hf_ver }}"
-          ZN="${{ needs.publish.outputs.zn_ver }}"
-          REPO="ghcr.io/${{ github.repository }}"
-          case "${{ matrix.flavor }}" in
-            core)
-              IMG="$REPO:core-$CORE"
-              ARGS="--build-arg INCLUDE_HF=no --build-arg INCLUDE_ZN=no --build-arg HF_VER=$HF --build-arg ZN_VER=$ZN"
-              ;;
-            core-hf)
-              IMG="$REPO:core-hf-$CORE-$HF"
-              ARGS="--build-arg INCLUDE_HF=yes --build-arg INCLUDE_ZN=no --build-arg HF_VER=$HF --build-arg ZN_VER=$ZN"
-              ;;
-            core-zn)
-              IMG="$REPO:core-zn-$CORE-$ZN"
-              ARGS="--build-arg INCLUDE_HF=no --build-arg INCLUDE_ZN=yes --build-arg HF_VER=$HF --build-arg ZN_VER=$ZN"
-              ;;
-            core-hf-zn)
-              IMG="$REPO:core-hf-zn-$CORE-$HF-$ZN"
-              ARGS="--build-arg INCLUDE_HF=yes --build-arg INCLUDE_ZN=yes --build-arg HF_VER=$HF --build-arg ZN_VER=$ZN"
-              ;;
-          esac
-          echo "img=$IMG" >> "$GITHUB_OUTPUT"
-          echo "args=$ARGS" >> "$GITHUB_OUTPUT"
-      - name: Build and push
-        run: |
-          docker buildx build . \
-            --push \
-            -f Dockerfile \
-            -t "${{ steps.meta.outputs.img }}" \
-            ${{ steps.meta.outputs.args }}
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}},suffix=-${{ matrix.variant.name }},value=v${{ needs.publish.outputs.version }}
+            type=raw,value=${{ matrix.variant.name }}-latest
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ needs.publish.outputs.version }}
+            PACKAGES=${{ matrix.variant.packages }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
