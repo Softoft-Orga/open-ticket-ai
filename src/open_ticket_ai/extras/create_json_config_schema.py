@@ -40,16 +40,32 @@ def format_default(default: Any) -> str:
     return f"`{default}`"
 
 
-def generate_property_table(properties: dict[str, Any], required: list[str]) -> str:
+def resolve_ref(ref: str, defs: dict[str, Any]) -> dict[str, Any] | None:
+    if ref.startswith("#/$defs/"):
+        ref_name = ref.split("/")[-1]
+        return defs.get(ref_name)
+    return None
+
+
+def generate_property_table(
+    properties: dict[str, Any],
+    required: list[str],
+    defs: dict[str, Any],
+    indent_level: int = 0,
+    max_depth: int = 3,
+) -> str:
     if not properties:
         return "_No properties defined._\n"
 
-    lines = [
-        "| Field | Type | Required | Default | Description |",
-        "|-------|------|----------|---------|-------------|",
-    ]
+    lines = []
+    if indent_level == 0:
+        lines.extend([
+            "| Field | Type | Required | Default | Description |",
+            "|-------|------|----------|---------|-------------|",
+        ])
 
-    for prop_name, prop_info in properties.items():
+    prop_items = list(properties.items())
+    for _idx, (prop_name, prop_info) in enumerate(prop_items):
         is_required = "✓" if prop_name in required else ""
 
         type_desc = get_type_description(prop_info)
@@ -60,12 +76,45 @@ def generate_property_table(properties: dict[str, Any], required: list[str]) -> 
 
         description = prop_info.get("description", "").replace("\n", " ")
 
-        lines.append(f"| `{prop_name}` | {type_desc} | {is_required} | {default} | {description} |")
+        indent = "  " * indent_level
+        prefix = "└─ " if indent_level > 0 else ""
+        field_name = f"{indent}{prefix}`{prop_name}`"
+
+        lines.append(f"| {field_name} | {type_desc} | {is_required} | {default} | {description} |")
+
+        if indent_level < max_depth:
+            nested_schema = None
+            if "$ref" in prop_info:
+                nested_schema = resolve_ref(prop_info["$ref"], defs)
+            elif "items" in prop_info and isinstance(prop_info["items"], dict):
+                if "$ref" in prop_info["items"]:
+                    nested_schema = resolve_ref(prop_info["items"]["$ref"], defs)
+            elif "allOf" in prop_info and len(prop_info["allOf"]) > 0 and "$ref" in prop_info["allOf"][0]:
+                nested_schema = resolve_ref(prop_info["allOf"][0]["$ref"], defs)
+
+            if nested_schema and "properties" in nested_schema:
+                nested_properties = nested_schema.get("properties", {})
+                nested_required = nested_schema.get("required", [])
+                if nested_properties:
+                    nested_lines = generate_property_table(
+                        nested_properties,
+                        nested_required,
+                        defs,
+                        indent_level + 1,
+                        max_depth,
+                    )
+                    lines.extend([
+                        line
+                        for line in nested_lines.split("\n")
+                        if line and not line.startswith("|----") and not line.startswith("| Field")
+                    ])
 
     return "\n".join(lines) + "\n"
 
 
-def generate_model_docs(name: str, schema: dict[str, Any], level: int = 2) -> str:
+def generate_model_docs(
+    name: str, schema: dict[str, Any], defs: dict[str, Any], level: int = 2
+) -> str:
     heading = "#" * level
     lines = [f"{heading} {name}\n"]
 
@@ -75,7 +124,7 @@ def generate_model_docs(name: str, schema: dict[str, Any], level: int = 2) -> st
     properties = schema.get("properties", {})
     required = schema.get("required", [])
 
-    lines.append(generate_property_table(properties, required))
+    lines.append(generate_property_table(properties, required, defs))
 
     return "\n".join(lines) + "\n"
 
@@ -89,12 +138,12 @@ def generate_markdown_docs(schema: dict[str, Any]) -> str:
 
     defs = schema.get("$defs", {})
 
-    lines.append(generate_model_docs("Root Configuration", schema))
+    lines.append(generate_model_docs("Root Configuration", schema, defs))
 
     if defs:
         lines.append("## Type Definitions\n")
         for def_name, def_schema in sorted(defs.items()):
-            lines.append(generate_model_docs(def_name, def_schema, level=3))
+            lines.append(generate_model_docs(def_name, def_schema, defs, level=3))
 
     return "\n".join(lines)
 

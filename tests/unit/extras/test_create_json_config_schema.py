@@ -22,6 +22,14 @@ def test_generate_markdown_docs() -> None:
     assert "## Root Configuration" in result
 
 
+def test_nested_structure_in_markdown() -> None:
+    schema = RootConfig.model_json_schema()
+    result = generate_markdown_docs(schema)
+    assert "└─ `plugins`" in result
+    assert "└─ `infrastructure`" in result
+    assert "    └─ `logging`" in result or "  └─ `logging`" in result
+
+
 def test_main_execution_creates_files(tmp_path: Path) -> None:
     result = subprocess.run(
         [sys.executable, "-m", "open_ticket_ai.extras.create_json_config_schema"],
