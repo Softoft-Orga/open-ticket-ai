@@ -5,9 +5,10 @@ from typing import Any, final
 
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.renderable.renderable import Renderable
+
+from ..base_model import StrictBaseModel
 from .pipe_context_model import PipeContext
 from .pipe_models import PipeConfig, PipeResult
-from ..base_model import StrictBaseModel
 
 
 class Pipe[ParamsT: StrictBaseModel](Renderable[ParamsT], ABC):

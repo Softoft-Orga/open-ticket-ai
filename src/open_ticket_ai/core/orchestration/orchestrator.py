@@ -4,7 +4,8 @@ from injector import inject, singleton
 
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.orchestrator_models import (
-    OrchestratorConfig, RunnerDefinition,
+    OrchestratorConfig,
+    RunnerDefinition,
 )
 from open_ticket_ai.core.orchestration.pipe_runner import PipeRunner
 from open_ticket_ai.core.orchestration.trigger import Trigger
@@ -16,10 +17,10 @@ from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 class Orchestrator:
     @inject
     def __init__(
-            self,
-            renderable_factory: RenderableFactory,
-            orchestrator_config: OrchestratorConfig,
-            logger_factory: LoggerFactory
+        self,
+        renderable_factory: RenderableFactory,
+        orchestrator_config: OrchestratorConfig,
+        logger_factory: LoggerFactory,
     ) -> None:
         self._renderable_factory = renderable_factory
         self._config = orchestrator_config
@@ -30,8 +31,7 @@ class Orchestrator:
 
     def _create_pipe_runners(self):
         self._runners = {
-            runner_def.get_id(): self._create_pipe_runner(runner_def)
-            for runner_def in self._config.runners
+            runner_def.get_id(): self._create_pipe_runner(runner_def) for runner_def in self._config.runners
         }
 
     def _create_pipe_runner(self, runner_id_def: RunnerDefinition) -> PipeRunner | None:

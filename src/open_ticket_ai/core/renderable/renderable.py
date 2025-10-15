@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.logging.logging_iface import LoggerFactory, AppLogger
+from open_ticket_ai.core.logging.logging_iface import AppLogger, LoggerFactory
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 
 

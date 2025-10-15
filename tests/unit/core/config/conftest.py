@@ -1,8 +1,8 @@
 import pytest
+from open_ticket_ai.core.logging_iface import LoggerFactory
 
 from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_loader import ConfigLoader
-from open_ticket_ai.core.logging_iface import LoggerFactory
 
 
 @pytest.fixture
