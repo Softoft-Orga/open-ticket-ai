@@ -1,6 +1,8 @@
 from functools import cache
 from typing import Any
 
+from open_ticket_ai.core.pipeline.pipe import Pipe
+from open_ticket_ai.core.pipeline.pipe_models import PipeResult
 from pydantic import BaseModel
 from transformers import (
     AutoModelForSequenceClassification,
@@ -9,9 +11,6 @@ from transformers import (
     PreTrainedTokenizer,
     pipeline,
 )
-
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_models import PipeResult
 
 
 class HFLocalTextClassificationParams(BaseModel):
@@ -28,9 +27,9 @@ class HFLocalTextClassificationPipe(Pipe):
         return HFLocalTextClassificationParams
 
     def __init__(
-            self,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._params: HFLocalTextClassificationParams = self._params

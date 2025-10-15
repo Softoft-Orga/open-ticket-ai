@@ -76,4 +76,3 @@ def test_load_config_logs_success(
     with caplog.at_level(logging.INFO):
         config_loader.load_config(config_file)
     assert "Loaded config from" in caplog.text
-
