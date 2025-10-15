@@ -1,40 +1,29 @@
 #!/usr/bin/env python3
-"""Set version across all packages in the workspace."""
+"""Set version across all packages in the workspace using uv."""
 
+import subprocess
 import sys
-from pathlib import Path
 
 
 def set_version(version: str) -> None:
-    """Set the same version in all pyproject.toml files."""
-    import tomllib
-
-    root = Path(__file__).parent.parent
-    toml_files = [
-        root / "pyproject.toml",
-        root / "packages" / "otai_hf_local" / "pyproject.toml",
-        root / "packages" / "otai_otobo_znuny" / "pyproject.toml",
+    """Set the same version in all packages using uv version command."""
+    packages = [
+        ("Core", None),
+        ("HF Local", "otai_hf_local"),
+        ("OTOBO/Znuny", "otai_otobo_znuny"),
     ]
 
-    for toml_file in toml_files:
-        if not toml_file.exists():
-            print(f"Warning: {toml_file} not found")
-            continue
+    for name, package in packages:
+        cmd = ["uv", "version", version]
+        if package:
+            cmd.extend(["--package", package])
 
-        content = toml_file.read_text()
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"✗ Failed to set {name} version: {result.stderr}")
+            sys.exit(1)
 
-        with toml_file.open("rb") as f:
-            data = tomllib.load(f)
-
-        old_version = data["project"]["version"]
-
-        new_content = content.replace(
-            f'version = "{old_version}"',
-            f'version = "{version}"'
-        )
-
-        toml_file.write_text(new_content)
-        print(f"✓ {toml_file.relative_to(root)}: {old_version} → {version}")
+        print(f"✓ {name:20} → {version}")
 
 
 def main() -> None:

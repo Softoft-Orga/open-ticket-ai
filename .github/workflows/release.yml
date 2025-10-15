@@ -14,9 +14,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/open-ticket-ai
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
@@ -38,35 +35,21 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Publishing version: $VERSION"
 
-      # Verify all packages have the same version
-      - name: Verify unified version
+      # Set all package versions to match core
+      - name: Set unified version
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
           
-          get_version() {
-            python -c "import tomllib; print(tomllib.load(open('$1', 'rb'))['project']['version'])"
-          }
+          echo "Setting all packages to version: $VERSION"
           
-          CORE_VER=$(get_version "pyproject.toml")
-          HF_VER=$(get_version "packages/otai_hf_local/pyproject.toml")
-          ZN_VER=$(get_version "packages/otai_otobo_znuny/pyproject.toml")
+          # Set core version (in case tag trigger with different version)
+          uv version "$VERSION"
           
-          echo "Core version: $CORE_VER"
-          echo "HF Local version: $HF_VER"
-          echo "OTOBO/Znuny version: $ZN_VER"
+          # Set plugin versions to match core
+          uv version --package otai_hf_local "$VERSION"
+          uv version --package otai_otobo_znuny "$VERSION"
           
-          # All versions must match
-          if [[ "$CORE_VER" != "$HF_VER" ]] || [[ "$CORE_VER" != "$ZN_VER" ]]; then
-            echo "ERROR: All package versions must be identical!"
-            echo "Core: $CORE_VER, HF: $HF_VER, ZN: $ZN_VER"
-            exit 1
-          fi
-          
-          # If triggered by tag, version must match tag
-          if [[ "${{ github.ref }}" == refs/tags/v* ]] && [[ "$CORE_VER" != "$VERSION" ]]; then
-            echo "ERROR: Tag version ($VERSION) doesn't match package version ($CORE_VER)"
-            exit 1
-          fi
+          echo "✓ All packages set to version $VERSION"
 
       # Build all packages
       - name: Build core package
