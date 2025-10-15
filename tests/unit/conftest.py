@@ -1,11 +1,11 @@
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from open_ticket_ai.core.config.logging_config import LoggingDictConfig
+from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
-from open_ticket_ai.core.config.logging_config import LoggingDictConfig
 from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
-from open_ticket_ai.core.pipeline.pipe_context import PipeContext
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
@@ -80,9 +80,7 @@ def mocked_ticket_system() -> MockedTicketSystem:
 @pytest.fixture
 def valid_raw_config() -> RawOpenTicketAIConfig:
     return RawOpenTicketAIConfig(
-        infrastructure=InfrastructureConfig(
-            logging=LoggingDictConfig(), default_template_renderer="jinja_renderer"
-        ),
+        infrastructure=InfrastructureConfig(logging=LoggingDictConfig(), default_template_renderer="jinja_renderer"),
         services=[
             RenderableConfig(
                 id="jinja_renderer",
