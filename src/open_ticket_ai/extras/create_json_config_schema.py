@@ -59,10 +59,12 @@ def generate_property_table(
 
     lines = []
     if indent_level == 0:
-        lines.extend([
-            "| Field | Type | Required | Default | Description |",
-            "|-------|------|----------|---------|-------------|",
-        ])
+        lines.extend(
+            [
+                "| Field | Type | Required | Default | Description |",
+                "|-------|------|----------|---------|-------------|",
+            ]
+        )
 
     prop_items = list(properties.items())
     for _idx, (prop_name, prop_info) in enumerate(prop_items):
@@ -103,18 +105,18 @@ def generate_property_table(
                         indent_level + 1,
                         max_depth,
                     )
-                    lines.extend([
-                        line
-                        for line in nested_lines.split("\n")
-                        if line and not line.startswith("|----") and not line.startswith("| Field")
-                    ])
+                    lines.extend(
+                        [
+                            line
+                            for line in nested_lines.split("\n")
+                            if line and not line.startswith("|----") and not line.startswith("| Field")
+                        ]
+                    )
 
     return "\n".join(lines) + "\n"
 
 
-def generate_model_docs(
-    name: str, schema: dict[str, Any], defs: dict[str, Any], level: int = 2
-) -> str:
+def generate_model_docs(name: str, schema: dict[str, Any], defs: dict[str, Any], level: int = 2) -> str:
     heading = "#" * level
     lines = [f"{heading} {name}\n"]
 
