@@ -78,6 +78,10 @@ tests/
 - Tests: `uv run -m pytest`
 - No test files under `src/**` will be accepted. PRs that create them must be changed.
 
+### Copilot PR Automation
+
+The `.github/workflows/copilot-pr-retry.yml` workflow automatically handles PRs created by `github-copilot[bot]`. When checks fail, it labels the PR with `retry-needed` and `copilot-pr`, comments with failure details, and closes the PR to enable retry. This only affects Copilot bot PRs.
+
 ## Architectural expectations (short)
 
 - Prefer composition and DI (Injector) over inheritance.
