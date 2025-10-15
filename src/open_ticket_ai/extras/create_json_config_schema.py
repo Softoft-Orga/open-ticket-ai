@@ -33,7 +33,7 @@ def get_type_description(schema: dict[str, Any], defs: dict[str, Any]) -> str:
         return " or ".join(get_type_description(s, defs) for s in schema["anyOf"])
     if "oneOf" in schema:
         return " or ".join(get_type_description(s, defs) for s in schema["oneOf"])
-    if "allOf" in schema and schema["allOf"]:
+    if schema.get("allOf"):
         return " & ".join(get_type_description(s, defs) for s in schema["allOf"])
     t = schema.get("type")
     if isinstance(t, list):
@@ -50,11 +50,11 @@ def get_type_description(schema: dict[str, Any], defs: dict[str, Any]) -> str:
 
 
 def generate_property_table(
-        properties: dict[str, Any],
-        required: list[str],
-        defs: dict[str, Any],
-        indent_level: int = 0,
-        max_depth: int = 3,
+    properties: dict[str, Any],
+    required: list[str],
+    defs: dict[str, Any],
+    indent_level: int = 0,
+    max_depth: int = 3,
 ) -> str:
     if not properties:
         return "_No properties defined._\n"
