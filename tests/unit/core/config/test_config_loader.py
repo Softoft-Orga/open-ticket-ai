@@ -17,13 +17,13 @@ def _minimal_valid_config() -> dict:
     [
         (_minimal_valid_config(), None),
         (
-                {
-                    "open_ticket_ai": {
-                        "plugins": [],
-                        "infrastructure": {"default_template_renderer": "test_renderer"},
-                    }
-                },
-                None,
+            {
+                "open_ticket_ai": {
+                    "plugins": [],
+                    "infrastructure": {"default_template_renderer": "test_renderer"},
+                }
+            },
+            None,
         ),
         ({"wrong_key": {}}, ValueError),
         (None, ValueError),
@@ -31,7 +31,7 @@ def _minimal_valid_config() -> dict:
     ],
 )
 def test_load_config_validation(
-        config_loader: ConfigLoader, tmp_path: Path, config_data: dict | None, expected_error: type | None
+    config_loader: ConfigLoader, tmp_path: Path, config_data: dict | None, expected_error: type | None
 ) -> None:
     config_file = tmp_path / "config.yml"
     config_file.write_text(yaml.dump(config_data))
@@ -44,7 +44,7 @@ def test_load_config_validation(
 
 
 def test_load_config_logs_success(
-        config_loader: ConfigLoader, tmp_path: Path, caplog: pytest.LogCaptureFixture
+    config_loader: ConfigLoader, tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
     import logging
 

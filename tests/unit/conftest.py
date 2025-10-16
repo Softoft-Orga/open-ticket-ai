@@ -105,9 +105,7 @@ def valid_raw_config() -> RawOpenTicketAIConfig:
 @pytest.fixture
 def invalid_raw_config() -> RawOpenTicketAIConfig:
     return RawOpenTicketAIConfig(
-        infrastructure=InfrastructureConfig(
-            logging=LoggingConfig(), default_template_renderer="nonexistent_renderer"
-        ),
+        infrastructure=InfrastructureConfig(logging=LoggingConfig(), default_template_renderer="nonexistent_renderer"),
         services=[],
         orchestrator=OrchestratorConfig(),
     )
