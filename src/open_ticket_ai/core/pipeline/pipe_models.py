@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Iterable
 from functools import reduce
 from typing import Any, Self
 
@@ -11,14 +11,31 @@ from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 
 
 class PipeConfig(RenderableConfig):
-    model_config = ConfigDict(populate_by_name=True)
-    if_: str | bool = Field(default="True", alias="if")
+    model_config = ConfigDict(populate_by_name=True, frozen=True, extra="forbid")
+
+    if_: str | bool = Field(
+        default="True",
+        alias="if",
+        description=(
+            "Condition expression determining whether this pipe should execute; "
+            "can be a boolean or string expression evaluated at runtime."
+        )
+    )
     depends_on: list[str] = Field(
         default_factory=list,
         title="Dependencies",
-        description="List of dependencies, which must be executed before this step.",
+        description=(
+            "List of pipe IDs that must successfully complete before this pipe executes; "
+            "this pipe will be skipped if any dependency fails."
+        )
     )
-    steps: list[PipeConfig] | None = None
+    steps: list[PipeConfig] | None = Field(
+        default=None,
+        description=(
+            "Optional nested list of child pipe configurations for composite pipes "
+            "that execute multiple steps in sequence."
+        )
+    )
 
     @property
     def should_run(self) -> str | bool:
@@ -26,10 +43,25 @@ class PipeConfig(RenderableConfig):
 
 
 class PipeResult(StrictBaseModel):
-    succeeded: bool = True
-    was_skipped: bool = False
-    message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
+    succeeded: bool = Field(
+        default=True,
+        description="Indicates whether the pipe execution completed successfully without errors."
+    )
+    was_skipped: bool = Field(
+        default=False,
+        description="Indicates whether the pipe was skipped due to failed dependencies or conditional execution."
+    )
+    message: str = Field(
+        default="",
+        description="Human-readable message providing details about the execution result or any errors encountered."
+    )
+    data: dict[str, Any] = Field(
+        default_factory=dict,
+        description=(
+            "Dictionary containing output data produced by the pipe "
+            "for use by subsequent pipes or external consumers."
+        )
+    )
 
     def __and__(self, other: Self) -> PipeResult:
         return PipeResult(
@@ -43,7 +75,7 @@ class PipeResult(StrictBaseModel):
         return not self.succeeded and not self.was_skipped
 
     @classmethod
-    def union(cls, results: Sequence[PipeResult]) -> PipeResult:
+    def union(cls, results: Iterable[PipeResult]) -> PipeResult:
         return reduce(lambda a, b: a & b, results)
 
     @classmethod

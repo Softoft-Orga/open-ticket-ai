@@ -10,7 +10,9 @@ from open_ticket_ai.core.orchestration.trigger import Trigger
 
 
 class IntervalTriggerParams(StrictBaseModel):
-    interval: timedelta = Field(default_factory=timedelta, description="Interval in seconds")
+    interval: timedelta = Field(
+        description="Time interval between trigger executions specified as a timedelta object."
+    )
 
 
 class IntervalTrigger(Trigger[IntervalTriggerParams]):

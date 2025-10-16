@@ -2,16 +2,36 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict, Field
 
+from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.pipeline.pipe_models import PipeResult
 
 
-class PipeContext(BaseModel):
-    model_config = ConfigDict(frozen=True)
-    pipe_results: dict[str, dict[str, Any]] = Field(default_factory=dict)
-    params: dict[str, Any] = Field(default_factory=dict)
-    parent: PipeContext | None = Field(default=None)
+class PipeContext(OpenTicketAIBaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    pipe_results: dict[str, dict[str, Any]] = Field(
+        default_factory=dict,
+        description=(
+            "Dictionary mapping pipe IDs to their execution results "
+            "for accessing outputs from previously executed pipes."
+        )
+    )
+    params: dict[str, Any] = Field(
+        default_factory=dict,
+        description=(
+            "Dictionary of parameters available to all pipes in the execution context "
+            "for sharing configuration and data."
+        )
+    )
+    parent: PipeContext | None = Field(
+        default=None,
+        description=(
+            "Optional reference to the parent context for nested pipeline execution "
+            "allowing access to outer scope results."
+        )
+    )
 
     def has_succeeded(self, pipe_id: str) -> bool:
         if pipe_id not in self.pipe_results:
