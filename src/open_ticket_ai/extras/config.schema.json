@@ -1,198 +1,10 @@
 {
   "$defs": {
-    "FilterConfig": {
-      "additionalProperties": true,
-      "properties": {
-        "class": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Class"
-        },
-        "name": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Name"
-        },
-        "()": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "()"
-        }
-      },
-      "title": "FilterConfig",
-      "type": "object"
-    },
-    "FormatterConfig": {
-      "additionalProperties": true,
-      "properties": {
-        "class": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Class"
-        },
-        "format": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Format"
-        },
-        "datefmt": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Datefmt"
-        },
-        "style": {
-          "anyOf": [
-            {
-              "enum": [
-                "%",
-                "{",
-                "$"
-              ],
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Style"
-        },
-        "()": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "()"
-        }
-      },
-      "title": "FormatterConfig",
-      "type": "object"
-    },
-    "HandlerConfig": {
-      "additionalProperties": true,
-      "properties": {
-        "class": {
-          "title": "Class",
-          "type": "string"
-        },
-        "level": {
-          "anyOf": [
-            {
-              "enum": [
-                "NOTSET",
-                "DEBUG",
-                "INFO",
-                "WARNING",
-                "ERROR",
-                "CRITICAL"
-              ],
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Level"
-        },
-        "formatter": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Formatter"
-        },
-        "filters": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Filters"
-        },
-        "()": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "()"
-        }
-      },
-      "required": [
-        "class"
-      ],
-      "title": "HandlerConfig",
-      "type": "object"
-    },
     "InfrastructureConfig": {
       "additionalProperties": true,
       "properties": {
         "logging": {
-          "$ref": "#/$defs/LoggingDictConfig"
+          "$ref": "#/$defs/LoggingConfig"
         },
         "default_template_renderer": {
           "title": "Default Template Renderer",
@@ -205,20 +17,28 @@
       "title": "InfrastructureConfig",
       "type": "object"
     },
-    "LoggerConfig": {
-      "additionalProperties": true,
+    "LoggingConfig": {
       "properties": {
         "level": {
+          "default": "INFO",
+          "enum": [
+            "DEBUG",
+            "INFO",
+            "WARNING",
+            "ERROR",
+            "CRITICAL"
+          ],
+          "title": "Level",
+          "type": "string"
+        },
+        "log_to_file": {
+          "default": false,
+          "title": "Log To File",
+          "type": "boolean"
+        },
+        "log_file_path": {
           "anyOf": [
             {
-              "enum": [
-                "NOTSET",
-                "DEBUG",
-                "INFO",
-                "WARNING",
-                "ERROR",
-                "CRITICAL"
-              ],
               "type": "string"
             },
             {
@@ -226,128 +46,20 @@
             }
           ],
           "default": null,
-          "title": "Level"
+          "title": "Log File Path"
         },
-        "handlers": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Handlers"
+        "log_format": {
+          "default": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+          "title": "Log Format",
+          "type": "string"
         },
-        "propagate": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Propagate"
-        },
-        "filters": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Filters"
+        "date_format": {
+          "default": "%Y-%m-%d %H:%M:%S",
+          "title": "Date Format",
+          "type": "string"
         }
       },
-      "title": "LoggerConfig",
-      "type": "object"
-    },
-    "LoggingDictConfig": {
-      "additionalProperties": true,
-      "properties": {
-        "version": {
-          "const": 1,
-          "default": 1,
-          "title": "Version",
-          "type": "integer"
-        },
-        "disable_existing_loggers": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Disable Existing Loggers"
-        },
-        "incremental": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Incremental"
-        },
-        "root": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/RootConfig"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "loggers": {
-          "additionalProperties": {
-            "$ref": "#/$defs/LoggerConfig"
-          },
-          "title": "Loggers",
-          "type": "object"
-        },
-        "handlers": {
-          "additionalProperties": {
-            "$ref": "#/$defs/HandlerConfig"
-          },
-          "title": "Handlers",
-          "type": "object"
-        },
-        "formatters": {
-          "additionalProperties": {
-            "$ref": "#/$defs/FormatterConfig"
-          },
-          "title": "Formatters",
-          "type": "object"
-        },
-        "filters": {
-          "additionalProperties": {
-            "$ref": "#/$defs/FilterConfig"
-          },
-          "title": "Filters",
-          "type": "object"
-        }
-      },
-      "title": "LoggingDictConfig",
+      "title": "LoggingConfig",
       "type": "object"
     },
     "OrchestratorConfig": {
@@ -365,7 +77,7 @@
       "type": "object"
     },
     "PipeConfig": {
-      "additionalProperties": true,
+      "additionalProperties": false,
       "properties": {
         "uid": {
           "title": "Uid",
@@ -422,7 +134,9 @@
         "steps": {
           "anyOf": [
             {
-              "items": {},
+              "items": {
+                "$ref": "#/$defs/PipeConfig"
+              },
               "type": "array"
             },
             {
@@ -439,35 +153,8 @@
       "title": "PipeConfig",
       "type": "object"
     },
-    "RawOpenTicketAIConfig": {
-      "additionalProperties": true,
-      "properties": {
-        "plugins": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Plugins",
-          "type": "array"
-        },
-        "infrastructure": {
-          "$ref": "#/$defs/InfrastructureConfig"
-        },
-        "services": {
-          "items": {
-            "$ref": "#/$defs/RenderableConfig"
-          },
-          "title": "Services",
-          "type": "array"
-        },
-        "orchestrator": {
-          "$ref": "#/$defs/OrchestratorConfig"
-        }
-      },
-      "title": "RawOpenTicketAIConfig",
-      "type": "object"
-    },
     "RenderableConfig": {
-      "additionalProperties": true,
+      "additionalProperties": false,
       "properties": {
         "uid": {
           "title": "Uid",
@@ -499,63 +186,6 @@
         "id"
       ],
       "title": "RenderableConfig",
-      "type": "object"
-    },
-    "RootConfig": {
-      "additionalProperties": true,
-      "properties": {
-        "level": {
-          "anyOf": [
-            {
-              "enum": [
-                "NOTSET",
-                "DEBUG",
-                "INFO",
-                "WARNING",
-                "ERROR",
-                "CRITICAL"
-              ],
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Level"
-        },
-        "handlers": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Handlers"
-        },
-        "filters": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Filters"
-        }
-      },
-      "title": "RootConfig",
       "type": "object"
     },
     "RunnerDefinition": {
@@ -591,7 +221,7 @@
       "type": "object"
     },
     "TriggerConfig": {
-      "additionalProperties": true,
+      "additionalProperties": false,
       "properties": {
         "uid": {
           "title": "Uid",
@@ -626,14 +256,29 @@
       "type": "object"
     }
   },
+  "additionalProperties": true,
   "properties": {
-    "open_ticket_ai": {
-      "$ref": "#/$defs/RawOpenTicketAIConfig"
+    "plugins": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Plugins",
+      "type": "array"
+    },
+    "infrastructure": {
+      "$ref": "#/$defs/InfrastructureConfig"
+    },
+    "services": {
+      "items": {
+        "$ref": "#/$defs/RenderableConfig"
+      },
+      "title": "Services",
+      "type": "array"
+    },
+    "orchestrator": {
+      "$ref": "#/$defs/OrchestratorConfig"
     }
   },
-  "required": [
-    "open_ticket_ai"
-  ],
-  "title": "RootConfig",
+  "title": "RawOpenTicketAIConfig",
   "type": "object"
 }

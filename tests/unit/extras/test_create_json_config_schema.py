@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from open_ticket_ai.extras.create_json_config_schema import RootConfig, generate_markdown_docs
+from scripts.create_json_config_schema import RootConfig, generate_markdown_docs
 
 
 def test_root_config_generates_schema() -> None:
