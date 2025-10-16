@@ -10,7 +10,7 @@ from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 class InfrastructureConfig(BaseModel):
     logging: LoggingConfig = Field(
         default_factory=LoggingConfig,
-        description="Configuration for application logging including level, format, and output destination."
+        description="Configuration for application logging including level, format, and output destination.",
     )
     default_template_renderer: str = Field(
         description="Name of the default template renderer to use for rendering templates across the application."
@@ -20,17 +20,17 @@ class InfrastructureConfig(BaseModel):
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(
         default_factory=list,
-        description="List of plugin module paths to load and enable for extending application functionality."
+        description="List of plugin module paths to load and enable for extending application functionality.",
     )
     infrastructure: InfrastructureConfig = Field(
         default_factory=InfrastructureConfig,
-        description="Infrastructure-level configuration including logging and template rendering settings."
+        description="Infrastructure-level configuration including logging and template rendering settings.",
     )
     services: list[RenderableConfig] = Field(
         default_factory=list,
-        description="List of service configurations defining available ticket system integrations and other services."
+        description="List of service configurations defining available ticket system integrations and other services.",
     )
     orchestrator: OrchestratorConfig = Field(
         default_factory=OrchestratorConfig,
-        description="Orchestrator configuration defining runners, triggers, and pipeline execution workflow."
+        description="Orchestrator configuration defining runners, triggers, and pipeline execution workflow.",
     )

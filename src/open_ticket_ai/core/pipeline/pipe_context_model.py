@@ -16,21 +16,21 @@ class PipeContext(OpenTicketAIBaseModel):
         description=(
             "Dictionary mapping pipe IDs to their execution results "
             "for accessing outputs from previously executed pipes."
-        )
+        ),
     )
     params: dict[str, Any] = Field(
         default_factory=dict,
         description=(
             "Dictionary of parameters available to all pipes in the execution context "
             "for sharing configuration and data."
-        )
+        ),
     )
     parent: PipeContext | None = Field(
         default=None,
         description=(
             "Optional reference to the parent context for nested pipeline execution "
             "allowing access to outer scope results."
-        )
+        ),
     )
 
     def has_succeeded(self, pipe_id: str) -> bool:

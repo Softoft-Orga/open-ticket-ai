@@ -21,11 +21,11 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class RenderableFactory:
     @inject
     def __init__(
-            self,
-            template_renderer: TemplateRenderer,
-            app_config: AppConfig,
-            registerable_configs: list[RenderableConfig],
-            logger_factory: LoggerFactory,
+        self,
+        template_renderer: TemplateRenderer,
+        app_config: AppConfig,
+        registerable_configs: list[RenderableConfig],
+        logger_factory: LoggerFactory,
     ):
         self._logger = logger_factory.create(self.__class__.__name__)
         self._template_renderer = template_renderer

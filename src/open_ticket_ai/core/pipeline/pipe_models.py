@@ -19,7 +19,7 @@ class PipeConfig(RenderableConfig):
         description=(
             "Condition expression determining whether this pipe should execute; "
             "can be a boolean or string expression evaluated at runtime."
-        )
+        ),
     )
     depends_on: list[str] = Field(
         default_factory=list,
@@ -27,14 +27,14 @@ class PipeConfig(RenderableConfig):
         description=(
             "List of pipe IDs that must successfully complete before this pipe executes; "
             "this pipe will be skipped if any dependency fails."
-        )
+        ),
     )
     steps: list[PipeConfig] | None = Field(
         default=None,
         description=(
             "Optional nested list of child pipe configurations for composite pipes "
             "that execute multiple steps in sequence."
-        )
+        ),
     )
 
     @property
@@ -44,23 +44,21 @@ class PipeConfig(RenderableConfig):
 
 class PipeResult(StrictBaseModel):
     succeeded: bool = Field(
-        default=True,
-        description="Indicates whether the pipe execution completed successfully without errors."
+        default=True, description="Indicates whether the pipe execution completed successfully without errors."
     )
     was_skipped: bool = Field(
         default=False,
-        description="Indicates whether the pipe was skipped due to failed dependencies or conditional execution."
+        description="Indicates whether the pipe was skipped due to failed dependencies or conditional execution.",
     )
     message: str = Field(
         default="",
-        description="Human-readable message providing details about the execution result or any errors encountered."
+        description="Human-readable message providing details about the execution result or any errors encountered.",
     )
     data: dict[str, Any] = Field(
         default_factory=dict,
         description=(
-            "Dictionary containing output data produced by the pipe "
-            "for use by subsequent pipes or external consumers."
-        )
+            "Dictionary containing output data produced by the pipe for use by subsequent pipes or external consumers."
+        ),
     )
 
     def __and__(self, other: Self) -> PipeResult:

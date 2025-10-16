@@ -22,11 +22,9 @@ class HFLocalTextClassificationParams(OpenTicketAIBaseModel):
     )
     token: str | None = Field(
         default=None,
-        description="Optional HuggingFace API token for accessing private or gated models from the model hub."
+        description="Optional HuggingFace API token for accessing private or gated models from the model hub.",
     )
-    prompt: str = Field(
-        description="Input text to classify using the loaded model for prediction and analysis."
-    )
+    prompt: str = Field(description="Input text to classify using the loaded model for prediction and analysis.")
 
 
 class HFLocalTextClassificationPipe(Pipe):

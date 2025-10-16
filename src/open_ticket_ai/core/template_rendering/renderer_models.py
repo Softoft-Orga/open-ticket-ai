@@ -8,23 +8,15 @@ from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 class TemplateRendererConfig(OpenTicketAIBaseModel):
     model_config = ConfigDict(extra="allow", frozen=True)
 
-    type: str = Field(
-        description="Type identifier for the template renderer implementation to use."
-    )
+    type: str = Field(description="Type identifier for the template renderer implementation to use.")
 
 
 class JinjaRendererConfig(TemplateRendererConfig):
-    type: Literal["jinja"] = Field(
-        default="jinja",
-        description="Type identifier for Jinja2 template renderer."
-    )
+    type: Literal["jinja"] = Field(default="jinja", description="Type identifier for Jinja2 template renderer.")
 
 
 class MustacheRendererConfig(TemplateRendererConfig):
-    type: Literal["mustache"] = Field(
-        default="mustache",
-        description="Type identifier for Mustache template renderer."
-    )
+    type: Literal["mustache"] = Field(default="mustache", description="Type identifier for Mustache template renderer.")
 
 
 SpecificTemplateRendererConfig = Annotated[JinjaRendererConfig | MustacheRendererConfig, Field(discriminator="type")]

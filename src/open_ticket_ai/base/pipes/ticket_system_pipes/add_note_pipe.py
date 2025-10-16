@@ -9,8 +9,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import Unified
 class AddNoteParams(StrictBaseModel):
     ticket_id: str | int = Field(
         description=(
-            "Identifier of the ticket to which the note should be added, "
-            "accepting either string or integer format."
+            "Identifier of the ticket to which the note should be added, accepting either string or integer format."
         )
     )
     note: UnifiedNote = Field(

@@ -48,19 +48,13 @@ def otobo_ticket_to_unified_ticket(ticket: Ticket) -> UnifiedTicket:
 class RenderedOTOBOZnunyTSServiceParams(OpenTicketAIBaseModel):
     model_config = ConfigDict(frozen=False, extra="forbid")
 
-    password: str = Field(
-        description="Password for authenticating with the OTOBO/Znuny ticket system API."
-    )
-    base_url: str = Field(
-        description="Base URL of the OTOBO/Znuny instance for API endpoint construction."
-    )
+    password: str = Field(description="Password for authenticating with the OTOBO/Znuny ticket system API.")
+    base_url: str = Field(description="Base URL of the OTOBO/Znuny instance for API endpoint construction.")
     username: str = Field(
-        default="open_ticket_ai",
-        description="Username for authenticating with the OTOBO/Znuny ticket system API."
+        default="open_ticket_ai", description="Username for authenticating with the OTOBO/Znuny ticket system API."
     )
     webservice_name: str = Field(
-        default="OpenTicketAI",
-        description="Name of the OTOBO/Znuny web service endpoint to use for API operations."
+        default="OpenTicketAI", description="Name of the OTOBO/Znuny web service endpoint to use for API operations."
     )
     operation_urls: dict[str, str] = Field(
         default_factory=lambda: {
@@ -68,7 +62,7 @@ class RenderedOTOBOZnunyTSServiceParams(OpenTicketAIBaseModel):
             TicketOperation.GET.value: "ticket-get",
             TicketOperation.UPDATE.value: "ticket-update",
         },
-        description="Mapping of ticket operation names to their corresponding API endpoint paths."
+        description="Mapping of ticket operation names to their corresponding API endpoint paths.",
     )
 
     @property

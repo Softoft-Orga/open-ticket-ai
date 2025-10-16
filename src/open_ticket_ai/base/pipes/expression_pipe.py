@@ -8,8 +8,7 @@ from open_ticket_ai.core.pipeline.pipe_models import PipeResult
 class ExpressionParams(StrictBaseModel):
     expression: str = Field(
         description=(
-            "Expression string to be evaluated or processed by the expression pipe "
-            "for dynamic value computation."
+            "Expression string to be evaluated or processed by the expression pipe for dynamic value computation."
         )
     )
 

@@ -19,7 +19,7 @@ class RunnerDefinition(OpenTicketAIBaseModel):
         description=(
             "Optional unique identifier for this runner; "
             "if not provided, a default ID will be generated from the pipe configuration."
-        )
+        ),
     )
     on: list[TriggerConfig] = Field(
         description="List of trigger configurations that determine when this runner should execute its pipeline."
@@ -37,5 +37,5 @@ class RunnerDefinition(OpenTicketAIBaseModel):
 class OrchestratorConfig(OpenTicketAIBaseModel):
     runners: list[RunnerDefinition] = Field(
         default_factory=list,
-        description="List of runner definitions that specify the triggers and pipelines managed by the orchestrator."
+        description="List of runner definitions that specify the triggers and pipelines managed by the orchestrator.",
     )

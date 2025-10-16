@@ -7,13 +7,9 @@ from open_ticket_ai.core.base_model import OpenTicketAIBaseModel, StrictBaseMode
 class SampleModel(OpenTicketAIBaseModel):
     name: str = Field(description="Name of the item for identification purposes.")
     count: int = Field(default=0, description="Number of items in the collection.")
-    tags: list[str] = Field(
-        default_factory=list,
-        description="List of tags for categorizing and organizing items."
-    )
+    tags: list[str] = Field(default_factory=list, description="List of tags for categorizing and organizing items.")
     metadata: dict[str, str] = Field(
-        default_factory=dict,
-        description="Dictionary of key-value metadata for additional context."
+        default_factory=dict, description="Dictionary of key-value metadata for additional context."
     )
 
 
@@ -36,7 +32,7 @@ def test_openticketai_base_model_with_defaults():
 def test_openticketai_base_model_with_mutable_defaults():
     model1 = SampleModel(name="model1")
     model2 = SampleModel(name="model2")
-    
+
     assert model1.tags is not model2.tags
     assert model1.metadata is not model2.metadata
 
@@ -68,7 +64,7 @@ def test_strict_base_model_alias_exists():
 def test_openticketai_base_model_validation_error_on_missing_required():
     with pytest.raises(ValidationError) as exc_info:
         SampleModel(count=5)
-    
+
     errors = exc_info.value.errors()
     assert any(error["loc"] == ("name",) for error in errors)
 
