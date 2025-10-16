@@ -13,7 +13,11 @@ from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 class PipeConfig(RenderableConfig):
     model_config = ConfigDict(populate_by_name=True)
     if_: str | bool = Field(default="True", alias="if")
-    depends_on: str | list[str] = []
+    depends_on: list[str] = Field(
+        default_factory=list,
+        title="Dependencies",
+        description="List of dependencies, which must be executed before this step. This step will be skipped if any dependency fails. Can be a single string or a list of strings.",
+    )
     steps: list[PipeConfig] | None = None
 
     @property

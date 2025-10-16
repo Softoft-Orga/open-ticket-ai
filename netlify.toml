@@ -1,5 +1,5 @@
 [build]
-base = "docs/vitepress_docs"
+base = "docs"
 command = "npm run docs:build"
 publish = ".vitepress/dist"
 functions = "netlify/functions"

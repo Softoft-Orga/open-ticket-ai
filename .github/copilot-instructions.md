@@ -66,7 +66,6 @@ tests/
 - Check existing fixtures before creating new ones: `uv run -m pytest --fixtures`
 - Follow naming conventions: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
 - Document fixtures with clear docstrings
-- See [FIXTURES.md](./docs/FIXTURES.md) for complete fixture reference
 - See [FIXTURE_TEMPLATES.md](./docs/FIXTURE_TEMPLATES.md) for common patterns
 
 ## Pytest configuration (root `pyproject.toml`)
@@ -75,8 +74,8 @@ tests/
 [tool.pytest.ini_options]
 python_files = "test_*.py"
 testpaths = [
-  "tests",
-  "packages/*/tests"
+    "tests",
+    "packages/*/tests"
 ]
 addopts = ["-q"]
 ```
@@ -116,4 +115,3 @@ addopts = ["-q"]
 - [ ] `uv run ruff check .` clean
 - [ ] `uv run mypy .` clean
 - [ ] `uv run -m pytest` green
-- [ ] `uv run python scripts/validate_test_structure.py` passes
