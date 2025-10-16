@@ -4,7 +4,7 @@ from typing import Any
 from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_models import PipeResult
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -15,6 +15,8 @@ from transformers import (
 
 
 class HFLocalTextClassificationParams(OpenTicketAIBaseModel):
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
     model: str = Field(
         description="HuggingFace model identifier or local path to the pre-trained text classification model to use."
     )

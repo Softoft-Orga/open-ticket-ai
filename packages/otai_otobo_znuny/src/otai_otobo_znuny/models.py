@@ -8,7 +8,7 @@ from otobo_znuny.domain_models.basic_auth_model import BasicAuth
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 
 def _to_unified_entity(id_name: IdName | None) -> UnifiedEntity | None:
@@ -46,6 +46,8 @@ def otobo_ticket_to_unified_ticket(ticket: Ticket) -> UnifiedTicket:
 
 
 class RenderedOTOBOZnunyTSServiceParams(OpenTicketAIBaseModel):
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
     password: str = Field(
         description="Password for authenticating with the OTOBO/Znuny ticket system API."
     )

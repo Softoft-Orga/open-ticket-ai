@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 
 
 class UnifiedNote(OpenTicketAIBaseModel):
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
     id: str | None = Field(
         default=None,
         description="Unique identifier for the note if it exists in the ticket system."
@@ -21,6 +23,8 @@ class UnifiedNote(OpenTicketAIBaseModel):
 
 
 class UnifiedEntity(OpenTicketAIBaseModel):
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
     id: str | None = Field(
         default=None,
         description="Unique identifier for the entity in the ticket system if available."
@@ -32,6 +36,8 @@ class UnifiedEntity(OpenTicketAIBaseModel):
 
 
 class UnifiedTicketBase(OpenTicketAIBaseModel):
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
     id: str | None = Field(
         default=None,
         description="Unique identifier for the ticket in the ticket system if available."
@@ -62,6 +68,8 @@ class UnifiedTicket(UnifiedTicketBase):
 
 
 class TicketSearchCriteria(OpenTicketAIBaseModel):
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
     queue: UnifiedEntity | None = Field(
         default=None,
         description="Optional queue filter to limit search results to tickets in a specific queue."
