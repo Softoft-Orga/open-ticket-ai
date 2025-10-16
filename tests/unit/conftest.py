@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
-from open_ticket_ai.core import AppModule, AppConfig, ConfigLoader
+from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
