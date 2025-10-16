@@ -3,8 +3,7 @@ from __future__ import annotations
 import asyncio
 from typing import Any
 
-from pydantic import BaseModel
-
+from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
@@ -17,8 +16,8 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 
 class MockedTicketSystem(TicketSystemService):
     @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        class Params(BaseModel):
+    def get_params_model() -> type[OpenTicketAIBaseModel]:
+        class Params(OpenTicketAIBaseModel):
             pass
 
         return Params

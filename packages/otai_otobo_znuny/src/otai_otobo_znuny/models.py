@@ -1,3 +1,4 @@
+from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedEntity,
     UnifiedNote,
@@ -7,7 +8,7 @@ from otobo_znuny.domain_models.basic_auth_model import BasicAuth
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
-from pydantic import BaseModel
+from pydantic import ConfigDict, Field
 
 
 def _to_unified_entity(id_name: IdName | None) -> UnifiedEntity | None:
@@ -44,16 +45,25 @@ def otobo_ticket_to_unified_ticket(ticket: Ticket) -> UnifiedTicket:
     )
 
 
-class RenderedOTOBOZnunyTSServiceParams(BaseModel):
-    password: str
-    base_url: str
-    username: str = "open_ticket_ai"
-    webservice_name: str = "OpenTicketAI"
-    operation_urls: dict[str, str] = {
-        TicketOperation.SEARCH.value: "ticket-search",
-        TicketOperation.GET.value: "ticket-get",
-        TicketOperation.UPDATE.value: "ticket-update",
-    }
+class RenderedOTOBOZnunyTSServiceParams(OpenTicketAIBaseModel):
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
+    password: str = Field(description="Password for authenticating with the OTOBO/Znuny ticket system API.")
+    base_url: str = Field(description="Base URL of the OTOBO/Znuny instance for API endpoint construction.")
+    username: str = Field(
+        default="open_ticket_ai", description="Username for authenticating with the OTOBO/Znuny ticket system API."
+    )
+    webservice_name: str = Field(
+        default="OpenTicketAI", description="Name of the OTOBO/Znuny web service endpoint to use for API operations."
+    )
+    operation_urls: dict[str, str] = Field(
+        default_factory=lambda: {
+            TicketOperation.SEARCH.value: "ticket-search",
+            TicketOperation.GET.value: "ticket-get",
+            TicketOperation.UPDATE.value: "ticket-update",
+        },
+        description="Mapping of ticket operation names to their corresponding API endpoint paths.",
+    )
 
     @property
     def operation_url_map(self) -> dict[TicketOperation, str]:

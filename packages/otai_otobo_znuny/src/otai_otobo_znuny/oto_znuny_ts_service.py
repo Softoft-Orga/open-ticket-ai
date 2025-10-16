@@ -1,6 +1,7 @@
 from typing import Any
 
 from injector import inject
+from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -19,12 +20,11 @@ from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
     otobo_ticket_to_unified_ticket,
     unified_entity_to_id_name,
 )
-from pydantic import BaseModel
 
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @staticmethod
-    def get_params_model() -> type[BaseModel]:
+    def get_params_model() -> type[OpenTicketAIBaseModel]:
         return RenderedOTOBOZnunyTSServiceParams
 
     @inject

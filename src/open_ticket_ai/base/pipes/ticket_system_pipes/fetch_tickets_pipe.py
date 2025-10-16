@@ -1,3 +1,5 @@
+from pydantic import Field
+
 from open_ticket_ai.base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipeline.pipe_models import PipeResult
@@ -5,7 +7,9 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import TicketS
 
 
 class FetchTicketsParams(StrictBaseModel):
-    ticket_search_criteria: TicketSearchCriteria
+    ticket_search_criteria: TicketSearchCriteria = Field(
+        description="Search criteria including queue, limit, and offset for querying tickets from the ticket system."
+    )
 
 
 class FetchTicketsPipe(TicketSystemPipe[FetchTicketsParams]):
