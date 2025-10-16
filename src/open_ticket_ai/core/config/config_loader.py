@@ -15,11 +15,9 @@ class ConfigLoader:
         self._logger = logger_factory.create(self.__class__.__name__)
 
     def load_config(self) -> RawOpenTicketAIConfig:
-
         if not self.app_config.config_file_path.exists():
             raise FileNotFoundError(
-                f"Config file not found at {self.app_config.config_file_path}. "
-                f"Create a config file at this path"
+                f"Config file not found at {self.app_config.config_file_path}. Create a config file at this path"
             )
 
         with open(self.app_config.config_file_path) as file:

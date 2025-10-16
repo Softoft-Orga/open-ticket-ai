@@ -1,7 +1,7 @@
 import uuid
 from typing import Any, Self
 
-from pydantic import Field, model_validator, BaseModel
+from pydantic import BaseModel, Field, model_validator
 
 
 class RenderableConfig(BaseModel):
