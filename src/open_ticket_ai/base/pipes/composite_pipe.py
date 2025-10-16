@@ -1,6 +1,6 @@
 from typing import Any, final
 
-from openai import BaseModel
+from pydantic import BaseModel
 
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
