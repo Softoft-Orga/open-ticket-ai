@@ -13,9 +13,8 @@ from open_ticket_ai.core.renderable.renderable import Renderable
 
 class Pipe[ParamsT: BaseModel](Renderable[ParamsT], ABC):
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
-        super().__init__(config, *args, **kwargs)
+        super().__init__(config, logger_factory, *args, **kwargs)
         self._config: PipeConfig = PipeConfig.model_validate(config.model_dump())
-        self._logger = logger_factory.create(self.__class__.__name__)
 
     @final
     async def process(self, context: PipeContext) -> PipeResult:
