@@ -17,7 +17,7 @@ class UpdateTicketParams(StrictBaseModel):
 
 class UpdateTicketPipe(TicketSystemPipe[UpdateTicketParams]):
     @staticmethod
-    def get_params_model() -> type[StrictBaseModel]:
+    def get_params_model() -> type[UpdateTicketParams]:
         return UpdateTicketParams
 
     async def _process(self) -> PipeResult:

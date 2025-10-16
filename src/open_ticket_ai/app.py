@@ -22,6 +22,5 @@ class OpenTicketAIApp:
             await self.orchestrator.run()
         except KeyboardInterrupt:
             self._logger.info("\n⚠️  Shutdown requested...")
-            self.orchestrator.stop()
 
         self._logger.info("✅ Orchestration complete")

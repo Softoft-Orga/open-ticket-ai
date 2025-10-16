@@ -14,7 +14,7 @@ class FetchTicketsParams(StrictBaseModel):
 
 class FetchTicketsPipe(TicketSystemPipe[FetchTicketsParams]):
     @staticmethod
-    def get_params_model() -> type[StrictBaseModel]:
+    def get_params_model() -> type[FetchTicketsParams]:
         return FetchTicketsParams
 
     async def _process(self) -> PipeResult:

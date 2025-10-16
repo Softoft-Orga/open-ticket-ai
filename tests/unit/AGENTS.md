@@ -5,6 +5,52 @@
 * Single source of truth for test practices in `/tests`.
 * Principle: **test behavior/contracts, not implementation**.
 
+## ⚠️ FIXTURE LOCATION POLICY — READ FIRST ⚠️
+
+**Fixtures belong in central locations for reuse. Creating fixtures in test files is FORBIDDEN except in rare cases.**
+
+### Mandatory rules
+
+* **ALL** fixtures **MUST** live in one of these locations:
+    * `tests/fixtures/<domain>.py` (e.g., `fixtures/pipes.py`, `fixtures/io.py`, `fixtures/models.py`)
+    * `tests/conftest.py` (for workspace-wide fixtures)
+    * `packages/<name>/tests/conftest.py` (for package-specific fixtures)
+
+* **Test files (`test_*.py`) MAY NOT define `@pytest.fixture`** except:
+    * True one-off fixture used **only once** in that single test file **AND**
+    * Cannot reasonably be generalized **AND**
+    * Must be documented with a comment explaining why it cannot be centralized
+
+* **BEFORE creating ANY fixture:**
+    1. **Check existing fixtures**: `uv run -m pytest --fixtures`
+    2. **Search** `tests/fixtures/` directory
+    3. **Reuse or extend** existing fixtures
+    4. **Only then** consider creating a new centralized fixture
+
+### Inline mocks vs. fixtures
+
+* Inline mocks allowed **ONLY IF**:
+    * Single-use **AND**
+    * ≤5 lines **AND**
+    * Genuinely test-specific (e.g., `Mock(return_value=42)`)
+
+* Otherwise → create a shared Fake/Factory in `tests/fixtures/<domain>.py`
+
+### Naming conventions (strictly enforced)
+
+* `sample_*` — sample data/inputs
+* `fake_*` — Fake implementations (test doubles)
+* `mock_*` — Mock objects (thin wrappers)
+* `*_factory` — Factory functions/classes for building test objects
+* `tmp_*` — temporary resources (files, dirs)
+* `empty_*` — empty/minimal instances
+
+### Code review enforcement
+
+* **PRs with fixtures in test files will be REJECTED** unless exceptional justification is provided
+* **PRs with duplicate fixtures will be REJECTED** — must consolidate to `tests/fixtures/`
+* All new fixtures must be documented with clear docstrings
+
 ## What to test
 
 * Every **public** function/method gets tests.
@@ -68,6 +114,7 @@ tests/
 ## Quality checklist (must pass)
 
 * Public APIs covered; models/private not tested (unless custom logic).
+* **Fixtures centralized in `tests/fixtures/` or `conftest.py` — NOT in test files**
 * Fixtures over ad-hoc monkeypatch; parametrization used.
 * No excessive assertions; tests independent and well-named.
 * `uv run ruff check . --fix` passes
@@ -76,23 +123,35 @@ tests/
 
 ---
 
-## Fixture & Mock Location Policy
+## Workflow for creating/using fixtures
 
-* Reusable fixtures and mocks **must** live centrally:
+### Every time you need test data or mocks:
 
-    * `tests/fixtures/` (group by domain, e.g. `fixtures/pipes.py`, `fixtures/io.py`)
-    * Re-export in `tests/conftest.py` for global availability.
-* Test files **may not** define `@pytest.fixture` unless it’s a true one-off used only in that file.
-* Inline mocks allowed only if **single-use** and **≤5 lines**; otherwise create a shared Fake/Factory in
-  `tests/fixtures/` and import it.
-* Before adding anything new, **list existing fixtures** and reuse: `uv run -m pytest --fixtures`.
-* Naming: `sample_*` (data), `fake_*` (Fakes), `mock_*` (thin mocks), `*_factory` (builders).
-* PRs with duplicated fixtures/mocks in test files will be rejected; move them to `tests/fixtures/` and wire via
-  `conftest.py`.
+1. **STOP** — Do NOT create a fixture in your test file
+2. **CHECK** existing fixtures: `uv run -m pytest --fixtures`
+3. **SEARCH** `tests/fixtures/` directory for similar fixtures
+4. **REUSE** if one exists, or **EXTEND** it if close enough
+5. **CREATE centrally** if truly new:
 
-## Required workflow for new fixtures/mocks
+- Add to `tests/fixtures/<domain>.py` (choose appropriate domain)
+- Import and re-export in `tests/conftest.py` if workspace-wide
+- Or add to `packages/<name>/tests/conftest.py` if package-specific
 
-1. Search existing fixtures (`uv run -m pytest --fixtures`) and the `tests/fixtures/` folder.
-2. If reusable → add/update in `tests/fixtures/<area>.py`, import in `tests/conftest.py`.
-3. Reference the centralized fixture in tests; remove duplicates.
-4. Note additions in PR description under **“Shared fixtures updated”**.
+6. **DOCUMENT** with clear docstring explaining purpose and usage
+7. **IMPORT** and use in your test file
+
+### When you can define a fixture in a test file (RARE):
+
+- The fixture is **genuinely one-off** (used once, in one test, in one file)
+- It **cannot be generalized** (highly test-specific logic)
+- You **must document** with a comment: `# One-off fixture: <reason it cannot be centralized>`
+- Expect scrutiny in code review
+
+### Red flags (will fail review):
+
+❌ Multiple test files using similar fixtures  
+❌ Fixtures defined in `test_*.py` files without justification  
+❌ Copy-pasted fixture code across tests  
+❌ Fixtures that could be generalized but aren't  
+❌ No docstrings on centralized fixtures  
+❌ Not checking existing fixtures before creating new ones

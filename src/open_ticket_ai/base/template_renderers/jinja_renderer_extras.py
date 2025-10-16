@@ -14,14 +14,14 @@ def _nest_value_at_path(value: dict[str, Any] | Any, parts: list[str]) -> dict[s
     return _nest_value_at_path(value[parts[0]], parts[1:])
 
 
-def at_path(value: dict | BaseModel, path: str) -> str:
+def at_path(value: dict | BaseModel, path: str) -> dict[str, Any] | Any:
     if re.match(r"^[^.]+\..+$", path) is None:
         raise AttributeError("Path must match the format '*.*'")
     if isinstance(value, BaseModel):
         value = value.model_dump()
 
     parts = path.split(".")
-    return _nest_value_at_path(parts, value)
+    return _nest_value_at_path(value, parts)
 
 
 def _get_pipe(ctx: jinja2.runtime.Context, pipe_id: str) -> PipeResult:

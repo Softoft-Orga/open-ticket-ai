@@ -20,7 +20,7 @@ class AddNoteParams(StrictBaseModel):
 
 class AddNotePipe(TicketSystemPipe[AddNoteParams]):
     @staticmethod
-    def get_params_model() -> type[StrictBaseModel]:
+    def get_params_model() -> type[AddNoteParams]:
         return AddNoteParams
 
     async def _process(self) -> PipeResult:

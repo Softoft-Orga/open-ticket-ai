@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 
-from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 
 
-class InfrastructureConfig(OpenTicketAIBaseModel):
+class InfrastructureConfig(BaseModel):
     logging: LoggingConfig = Field(
         default_factory=LoggingConfig,
         description="Configuration for application logging including level, format, and output destination."
@@ -18,7 +17,7 @@ class InfrastructureConfig(OpenTicketAIBaseModel):
     )
 
 
-class RawOpenTicketAIConfig(OpenTicketAIBaseModel):
+class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(
         default_factory=list,
         description="List of plugin module paths to load and enable for extending application functionality."
