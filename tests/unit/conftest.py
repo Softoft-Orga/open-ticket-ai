@@ -1,8 +1,10 @@
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
+from open_ticket_ai.core import AppModule, AppConfig, ConfigLoader
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
@@ -19,6 +21,12 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 pytestmark = [pytest.mark.unit]
+
+
+@pytest.fixture
+def app_module():
+    some_path = Path(__file__)
+    return AppModule(some_path)
 
 
 @pytest.fixture
@@ -109,3 +117,12 @@ def invalid_raw_config() -> RawOpenTicketAIConfig:
         services=[],
         orchestrator=OrchestratorConfig(),
     )
+
+
+@pytest.fixture
+def config_loader_creator(logger_factory: LoggerFactory):
+    def _create(config_file_path: Path) -> ConfigLoader:
+        app_config = AppConfig(config_file_path=config_file_path)
+        return ConfigLoader(app_config, logger_factory)
+
+    return _create
