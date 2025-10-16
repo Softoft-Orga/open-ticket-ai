@@ -30,10 +30,10 @@ class RenderableFactory:
         self._app_config = app_config
         self._logger_factory = logger_factory
 
-    def render(self, registerable_config_raw: RenderableConfig, scope: PipeContext):
+    def render(self, registerable_config_raw: RenderableConfig, scope: PipeContext) -> Renderable:
         rendered_params = self._template_renderer.render(registerable_config_raw.params, scope.model_dump())
-        registerable_config_raw.params = rendered_params
-        return self.__create_renderable_instance(registerable_config_raw, scope)
+        rendered_config = registerable_config_raw.model_copy(update={"params": rendered_params})
+        return self.__create_renderable_instance(rendered_config, scope)
 
     def __create_renderable_instance(self, rendered_config: RenderableConfig, scope: PipeContext) -> Renderable:
         cls: type = typing.cast("type", locate(rendered_config.use))
