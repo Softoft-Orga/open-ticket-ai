@@ -6,12 +6,15 @@ import pytest
 from pydantic import BaseModel, ConfigDict
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
-from open_ticket_ai.core import AppModule, AppConfig, ConfigLoader
+from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
-from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
+from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig, TriggerConfig
+from open_ticket_ai.core.orchestration.trigger import Trigger
+from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.renderable.renderable import Renderable
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
@@ -25,6 +28,18 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 pytestmark = [pytest.mark.unit]
+
+
+class MutablePipeConfig(PipeConfig):
+    """A mutable version of PipeConfig for testing purposes."""
+
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
+
+class MutableTriggerConfig(TriggerConfig):
+    """A mutable version of TriggerConfig for testing purposes."""
+
+    model_config = ConfigDict(frozen=False, extra="forbid")
 
 
 class MutableRenderableConfig(RenderableConfig):
@@ -44,6 +59,30 @@ class SimpleRenderable(Renderable[SimpleParams]):
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return SimpleParams
+
+
+class SimplePipe(Pipe[SimpleParams]):
+    def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
+        super().__init__(config, logger_factory, *args, **kwargs)
+
+    @staticmethod
+    def get_params_model() -> type[BaseModel]:
+        return SimpleParams
+
+    async def _process(self, _: PipeContext) -> PipeResult:
+        return PipeResult.success(data={"value": self._params.value})
+
+
+class SimpleTrigger(Trigger[SimpleParams]):
+    def __init__(self, config: RenderableConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
+        super().__init__(config, logger_factory, *args, **kwargs)
+
+    @staticmethod
+    def get_params_model() -> type[BaseModel]:
+        return SimpleParams
+
+    def _should_trigger(self) -> bool:
+        return True
 
 
 @pytest.fixture

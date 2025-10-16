@@ -5,16 +5,20 @@ import pytest
 from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
 from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from tests.unit.conftest import MutableRenderableConfig, SimpleRenderable
+from tests.unit.conftest import MutablePipeConfig, MutableTriggerConfig, SimplePipe, SimpleTrigger
 
 
-def test_render_creates_renderable_instance(
-    mock_template_renderer: MagicMock,
-    mock_app_config: MagicMock,
-    logger_factory: MagicMock,
-    sample_renderable_config: MutableRenderableConfig,
-    sample_pipe_context: PipeContext,
+def test_render_pipe_creates_pipe_instance(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
+    config = MutablePipeConfig(
+        id="test_pipe",
+        use="tests.unit.conftest.SimplePipe",
+        params={"value": "test_value"},
+    )
     factory = RenderableFactory(
         template_renderer=mock_template_renderer,
         app_config=mock_app_config,
@@ -22,23 +26,21 @@ def test_render_creates_renderable_instance(
         logger_factory=logger_factory,
     )
 
-    result = factory.render(sample_renderable_config, sample_pipe_context)
+    result = factory.render_pipe(config, sample_pipe_context)
 
-    assert isinstance(result, SimpleRenderable)
-    mock_template_renderer.render.assert_called_once_with(
-        sample_renderable_config.params, sample_pipe_context.model_dump()
-    )
+    assert isinstance(result, SimplePipe)
+    mock_template_renderer.render.assert_called_once_with(config.params, sample_pipe_context.model_dump())
 
 
-def test_render_passes_correct_params_to_instance(
-    mock_template_renderer: MagicMock,
-    mock_app_config: MagicMock,
-    logger_factory: MagicMock,
-    sample_pipe_context: PipeContext,
+def test_render_pipe_passes_correct_params_to_instance(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
-    config = MutableRenderableConfig(
-        id="test_renderable",
-        use="tests.unit.conftest.SimpleRenderable",
+    config = MutablePipeConfig(
+        id="test_pipe",
+        use="tests.unit.conftest.SimplePipe",
         params={"value": "custom_value"},
     )
     factory = RenderableFactory(
@@ -48,22 +50,22 @@ def test_render_passes_correct_params_to_instance(
         logger_factory=logger_factory,
     )
 
-    result = factory.render(config, sample_pipe_context)
+    result = factory.render_pipe(config, sample_pipe_context)
 
     assert result._params.value == "custom_value"
 
 
-def test_render_applies_template_rendering_to_params(
-    mock_app_config: MagicMock,
-    logger_factory: MagicMock,
-    sample_pipe_context: PipeContext,
+def test_render_pipe_applies_template_rendering_to_params(
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     mock_renderer = MagicMock(spec=TemplateRenderer)
     mock_renderer.render.return_value = {"value": "rendered_value"}
 
-    config = MutableRenderableConfig(
-        id="test_renderable",
-        use="tests.unit.conftest.SimpleRenderable",
+    config = MutablePipeConfig(
+        id="test_pipe",
+        use="tests.unit.conftest.SimplePipe",
         params={"value": "{{ template }}"},
     )
     factory = RenderableFactory(
@@ -73,7 +75,7 @@ def test_render_applies_template_rendering_to_params(
         logger_factory=logger_factory,
     )
 
-    result = factory.render(config, sample_pipe_context)
+    result = factory.render_pipe(config, sample_pipe_context)
 
     assert result._params.value == "rendered_value"
     mock_renderer.render.assert_called_once_with({"value": "{{ template }}"}, sample_pipe_context.model_dump())
@@ -87,17 +89,17 @@ def test_render_applies_template_rendering_to_params(
         ({"value": ""}, {}, ""),
     ],
 )
-def test_render_with_various_params_and_contexts(
-    mock_template_renderer: MagicMock,
-    mock_app_config: MagicMock,
-    logger_factory: MagicMock,
-    params: dict,
-    context_params: dict,
-    expected_value: str,
+def test_render_pipe_with_various_params_and_contexts(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
+        params: dict,
+        context_params: dict,
+        expected_value: str,
 ) -> None:
-    config = MutableRenderableConfig(
-        id="test_renderable",
-        use="tests.unit.conftest.SimpleRenderable",
+    config = MutablePipeConfig(
+        id="test_pipe",
+        use="tests.unit.conftest.SimplePipe",
         params=params,
     )
     context = PipeContext(pipe_results={}, params=context_params)
@@ -108,43 +110,92 @@ def test_render_with_various_params_and_contexts(
         logger_factory=logger_factory,
     )
 
-    result = factory.render(config, context)
+    result = factory.render_pipe(config, context)
 
     assert result._params.value == expected_value
 
 
-def test_render_with_inject_dependencies(
-    mock_template_renderer: MagicMock,
-    mock_app_config: MagicMock,
-    logger_factory: MagicMock,
-    sample_registerable_configs: list[MutableRenderableConfig],
-    sample_pipe_context: PipeContext,
+def test_render_pipe_with_inject_dependencies(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
-    config = MutableRenderableConfig(
-        id="main_service",
-        use="tests.unit.conftest.SimpleRenderable",
+    service_config = MutablePipeConfig(
+        id="service1",
+        use="tests.unit.conftest.SimplePipe",
+        params={"value": "service1_value"},
+    )
+    config = MutablePipeConfig(
+        id="main_pipe",
+        use="tests.unit.conftest.SimplePipe",
         params={"value": "main"},
         injects={"dependency": "service1"},
     )
     factory = RenderableFactory(
         template_renderer=mock_template_renderer,
         app_config=mock_app_config,
-        registerable_configs=sample_registerable_configs,
+        registerable_configs=[service_config],
         logger_factory=logger_factory,
     )
 
-    result = factory.render(config, sample_pipe_context)
+    result = factory.render_pipe(config, sample_pipe_context)
 
-    assert isinstance(result, SimpleRenderable)
+    assert isinstance(result, SimplePipe)
 
 
-def test_render_raises_type_error_for_non_renderable_class(
-    mock_template_renderer: MagicMock,
-    mock_app_config: MagicMock,
-    logger_factory: MagicMock,
-    sample_pipe_context: PipeContext,
+def test_render_trigger_creates_trigger_instance(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
 ) -> None:
-    config = MutableRenderableConfig(
+    config = MutableTriggerConfig(
+        id="test_trigger",
+        use="tests.unit.conftest.SimpleTrigger",
+        params={"value": "test_value"},
+    )
+    factory = RenderableFactory(
+        template_renderer=mock_template_renderer,
+        app_config=mock_app_config,
+        registerable_configs=[],
+        logger_factory=logger_factory,
+    )
+
+    result = factory.render_trigger(config, {})
+
+    assert isinstance(result, SimpleTrigger)
+    mock_template_renderer.render.assert_called_once_with(config.params, {})
+
+
+def test_render_trigger_passes_correct_params_to_instance(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
+) -> None:
+    config = MutableTriggerConfig(
+        id="test_trigger",
+        use="tests.unit.conftest.SimpleTrigger",
+        params={"value": "custom_value"},
+    )
+    factory = RenderableFactory(
+        template_renderer=mock_template_renderer,
+        app_config=mock_app_config,
+        registerable_configs=[],
+        logger_factory=logger_factory,
+    )
+
+    result = factory.render_trigger(config, {})
+
+    assert result._params.value == "custom_value"
+
+
+def test_render_pipe_raises_type_error_for_non_pipe_class(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
+        sample_pipe_context: PipeContext,
+) -> None:
+    config = MutablePipeConfig(
         id="invalid_class",
         use="builtins.dict",
         params={},
@@ -157,16 +208,37 @@ def test_render_raises_type_error_for_non_renderable_class(
     )
 
     with pytest.raises(TypeError, match="is not a"):
-        factory.render(config, sample_pipe_context)
+        factory.render_pipe(config, sample_pipe_context)
 
 
-def test_render_raises_error_for_nonexistent_class(
-    mock_template_renderer: MagicMock,
-    mock_app_config: MagicMock,
-    logger_factory: MagicMock,
-    sample_pipe_context: PipeContext,
+def test_render_trigger_raises_type_error_for_non_trigger_class(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
 ) -> None:
-    config = MutableRenderableConfig(
+    config = MutableTriggerConfig(
+        id="invalid_class",
+        use="builtins.dict",
+        params={},
+    )
+    factory = RenderableFactory(
+        template_renderer=mock_template_renderer,
+        app_config=mock_app_config,
+        registerable_configs=[],
+        logger_factory=logger_factory,
+    )
+
+    with pytest.raises(TypeError, match="is not a"):
+        factory.render_trigger(config, {})
+
+
+def test_render_pipe_raises_error_for_nonexistent_class(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
+        sample_pipe_context: PipeContext,
+) -> None:
+    config = MutablePipeConfig(
         id="nonexistent",
         use="nonexistent.module.NonexistentClass",
         params={},
@@ -179,18 +251,39 @@ def test_render_raises_error_for_nonexistent_class(
     )
 
     with pytest.raises(TypeError):
-        factory.render(config, sample_pipe_context)
+        factory.render_pipe(config, sample_pipe_context)
 
 
-def test_render_raises_key_error_for_missing_inject_service(
-    mock_template_renderer: MagicMock,
-    mock_app_config: MagicMock,
-    logger_factory: MagicMock,
-    sample_pipe_context: PipeContext,
+def test_render_trigger_raises_error_for_nonexistent_class(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
 ) -> None:
-    config = MutableRenderableConfig(
-        id="service_with_missing_dep",
-        use="tests.unit.conftest.SimpleRenderable",
+    config = MutableTriggerConfig(
+        id="nonexistent",
+        use="nonexistent.module.NonexistentClass",
+        params={},
+    )
+    factory = RenderableFactory(
+        template_renderer=mock_template_renderer,
+        app_config=mock_app_config,
+        registerable_configs=[],
+        logger_factory=logger_factory,
+    )
+
+    with pytest.raises(TypeError):
+        factory.render_trigger(config, {})
+
+
+def test_render_pipe_raises_key_error_for_missing_inject_service(
+        mock_template_renderer: MagicMock,
+        mock_app_config: MagicMock,
+        logger_factory: MagicMock,
+        sample_pipe_context: PipeContext,
+) -> None:
+    config = MutablePipeConfig(
+        id="pipe_with_missing_dep",
+        use="tests.unit.conftest.SimplePipe",
         params={"value": "test"},
         injects={"dependency": "nonexistent_service"},
     )
@@ -202,4 +295,4 @@ def test_render_raises_key_error_for_missing_inject_service(
     )
 
     with pytest.raises(KeyError, match="nonexistent_service"):
-        factory.render(config, sample_pipe_context)
+        factory.render_pipe(config, sample_pipe_context)
