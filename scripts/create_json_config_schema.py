@@ -4,6 +4,8 @@ from typing import Any
 
 from tabulate import tabulate
 
+from open_ticket_ai.core import RawOpenTicketAIConfig
+
 
 def load_schema(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -107,7 +109,7 @@ def generate_markdown_single_table(schema: dict[str, Any]) -> str:
 
 
 def main() -> None:
-    schema = load_schema(Path("config.schema.json"))
+    schema = RawOpenTicketAIConfig.model_json_schema()
     md = generate_markdown_single_table(schema)
     Path("schema.md").write_text(md, encoding="utf-8")
 

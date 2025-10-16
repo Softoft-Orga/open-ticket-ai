@@ -23,5 +23,4 @@ class RunnerDefinition(BaseModel):
 
 
 class OrchestratorConfig(BaseModel):
-    model_config = ConfigDict(extra="allow")
     runners: list[RunnerDefinition] = Field(default_factory=list)
