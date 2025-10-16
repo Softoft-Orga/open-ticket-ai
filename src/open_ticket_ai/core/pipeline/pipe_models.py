@@ -91,5 +91,5 @@ class PipeResult(StrictBaseModel):
         return PipeResult(was_skipped=True, message=message)
 
     @classmethod
-    def success(cls, message: str = "", data: dict[str, Any] = None) -> PipeResult:
+    def success(cls, message: str = "", data: dict[str, Any] | None = None) -> PipeResult:
         return PipeResult(message=message, data=data or {})

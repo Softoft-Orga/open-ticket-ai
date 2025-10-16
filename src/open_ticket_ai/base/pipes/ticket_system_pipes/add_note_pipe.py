@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
 from open_ticket_ai.core.base_model import StrictBaseModel
@@ -20,7 +20,7 @@ class AddNoteParams(StrictBaseModel):
 
 class AddNotePipe(TicketSystemPipe[AddNoteParams]):
     @staticmethod
-    def get_params_model() -> type[BaseModel]:
+    def get_params_model() -> type[StrictBaseModel]:
         return AddNoteParams
 
     async def _process(self) -> PipeResult:

@@ -4,7 +4,7 @@ from typing import Any
 from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_models import PipeResult
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict, Field
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -33,7 +33,7 @@ class HFLocalTextClassificationPipe(Pipe):
     _pipeline: Any
 
     @staticmethod
-    def get_params_model() -> type[BaseModel]:
+    def get_params_model() -> type[OpenTicketAIBaseModel]:
         return HFLocalTextClassificationParams
 
     def __init__(
