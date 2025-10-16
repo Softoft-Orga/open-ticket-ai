@@ -9,10 +9,10 @@ from tests.unit.conftest import MutablePipeConfig, MutableTriggerConfig, SimpleP
 
 
 def test_render_pipe_creates_pipe_instance(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
-        sample_pipe_context: PipeContext,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
+    sample_pipe_context: PipeContext,
 ) -> None:
     config = MutablePipeConfig(
         id="test_pipe",
@@ -33,10 +33,10 @@ def test_render_pipe_creates_pipe_instance(
 
 
 def test_render_pipe_passes_correct_params_to_instance(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
-        sample_pipe_context: PipeContext,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
+    sample_pipe_context: PipeContext,
 ) -> None:
     config = MutablePipeConfig(
         id="test_pipe",
@@ -56,9 +56,9 @@ def test_render_pipe_passes_correct_params_to_instance(
 
 
 def test_render_pipe_applies_template_rendering_to_params(
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
-        sample_pipe_context: PipeContext,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
+    sample_pipe_context: PipeContext,
 ) -> None:
     mock_renderer = MagicMock(spec=TemplateRenderer)
     mock_renderer.render.return_value = {"value": "rendered_value"}
@@ -90,12 +90,12 @@ def test_render_pipe_applies_template_rendering_to_params(
     ],
 )
 def test_render_pipe_with_various_params_and_contexts(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
-        params: dict,
-        context_params: dict,
-        expected_value: str,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
+    params: dict,
+    context_params: dict,
+    expected_value: str,
 ) -> None:
     config = MutablePipeConfig(
         id="test_pipe",
@@ -116,10 +116,10 @@ def test_render_pipe_with_various_params_and_contexts(
 
 
 def test_render_pipe_with_inject_dependencies(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
-        sample_pipe_context: PipeContext,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
+    sample_pipe_context: PipeContext,
 ) -> None:
     service_config = MutablePipeConfig(
         id="service1",
@@ -145,9 +145,9 @@ def test_render_pipe_with_inject_dependencies(
 
 
 def test_render_trigger_creates_trigger_instance(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
 ) -> None:
     config = MutableTriggerConfig(
         id="test_trigger",
@@ -168,9 +168,9 @@ def test_render_trigger_creates_trigger_instance(
 
 
 def test_render_trigger_passes_correct_params_to_instance(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
 ) -> None:
     config = MutableTriggerConfig(
         id="test_trigger",
@@ -190,10 +190,10 @@ def test_render_trigger_passes_correct_params_to_instance(
 
 
 def test_render_pipe_raises_type_error_for_non_pipe_class(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
-        sample_pipe_context: PipeContext,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
+    sample_pipe_context: PipeContext,
 ) -> None:
     config = MutablePipeConfig(
         id="invalid_class",
@@ -212,9 +212,9 @@ def test_render_pipe_raises_type_error_for_non_pipe_class(
 
 
 def test_render_trigger_raises_type_error_for_non_trigger_class(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
 ) -> None:
     config = MutableTriggerConfig(
         id="invalid_class",
@@ -233,10 +233,10 @@ def test_render_trigger_raises_type_error_for_non_trigger_class(
 
 
 def test_render_pipe_raises_error_for_nonexistent_class(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
-        sample_pipe_context: PipeContext,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
+    sample_pipe_context: PipeContext,
 ) -> None:
     config = MutablePipeConfig(
         id="nonexistent",
@@ -255,9 +255,9 @@ def test_render_pipe_raises_error_for_nonexistent_class(
 
 
 def test_render_trigger_raises_error_for_nonexistent_class(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
 ) -> None:
     config = MutableTriggerConfig(
         id="nonexistent",
@@ -276,10 +276,10 @@ def test_render_trigger_raises_error_for_nonexistent_class(
 
 
 def test_render_pipe_raises_key_error_for_missing_inject_service(
-        mock_template_renderer: MagicMock,
-        mock_app_config: MagicMock,
-        logger_factory: MagicMock,
-        sample_pipe_context: PipeContext,
+    mock_template_renderer: MagicMock,
+    mock_app_config: MagicMock,
+    logger_factory: MagicMock,
+    sample_pipe_context: PipeContext,
 ) -> None:
     config = MutablePipeConfig(
         id="pipe_with_missing_dep",
