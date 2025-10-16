@@ -14,7 +14,6 @@ class IntervalTriggerParams(StrictBaseModel):
 
 
 class IntervalTrigger(Trigger[IntervalTriggerParams]):
-
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return IntervalTriggerParams

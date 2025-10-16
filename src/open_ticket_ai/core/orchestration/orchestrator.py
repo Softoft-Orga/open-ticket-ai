@@ -17,10 +17,10 @@ from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 class Orchestrator:
     @inject
     def __init__(
-            self,
-            renderable_factory: RenderableFactory,
-            orchestrator_config: OrchestratorConfig,
-            logger_factory: LoggerFactory,
+        self,
+        renderable_factory: RenderableFactory,
+        orchestrator_config: OrchestratorConfig,
+        logger_factory: LoggerFactory,
     ) -> None:
         self._renderable_factory = renderable_factory
         self._config = orchestrator_config
