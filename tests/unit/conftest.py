@@ -1,14 +1,19 @@
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from pydantic import BaseModel, ConfigDict
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
+from open_ticket_ai.core import AppConfig
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
 from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
+from open_ticket_ai.core.renderable.renderable import Renderable
 from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
+from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
@@ -19,6 +24,25 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 from tests.unit.mocked_ticket_system import MockedTicketSystem
 
 pytestmark = [pytest.mark.unit]
+
+
+class MutableRenderableConfig(RenderableConfig):
+    """A mutable version of RenderableConfig for testing purposes."""
+
+    model_config = ConfigDict(frozen=False, extra="forbid")
+
+
+class SimpleParams(BaseModel):
+    value: str = "default"
+
+
+class SimpleRenderable(Renderable[SimpleParams]):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+
+    @staticmethod
+    def get_params_model() -> type[BaseModel]:
+        return SimpleParams
 
 
 @pytest.fixture
@@ -109,3 +133,48 @@ def invalid_raw_config() -> RawOpenTicketAIConfig:
         services=[],
         orchestrator=OrchestratorConfig(),
     )
+
+
+@pytest.fixture
+def mock_template_renderer() -> MagicMock:
+    mock = MagicMock(spec=TemplateRenderer)
+    mock.render.side_effect = lambda obj, _: obj
+    return mock
+
+
+@pytest.fixture
+def mock_app_config() -> MagicMock:
+    return MagicMock(spec=AppConfig)
+
+
+@pytest.fixture
+def sample_renderable_config() -> MutableRenderableConfig:
+    return MutableRenderableConfig(
+        id="test_renderable",
+        use="tests.unit.conftest.SimpleRenderable",
+        params={"value": "test_value"},
+    )
+
+
+@pytest.fixture
+def sample_pipe_context() -> PipeContext:
+    return PipeContext(
+        pipe_results={},
+        params={"context_key": "context_value"},
+    )
+
+
+@pytest.fixture
+def sample_registerable_configs() -> list[MutableRenderableConfig]:
+    return [
+        MutableRenderableConfig(
+            id="service1",
+            use="tests.unit.conftest.SimpleRenderable",
+            params={"value": "service1_value"},
+        ),
+        MutableRenderableConfig(
+            id="service2",
+            use="tests.unit.conftest.SimpleRenderable",
+            params={"value": "service2_value"},
+        ),
+    ]
