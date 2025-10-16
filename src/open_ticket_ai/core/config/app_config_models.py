@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class AppConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="OTAI_")
-    config_file_path: Path = Field(
+    config_file_path: Path | None = Field(
         default=Path.cwd() / "config.yml",
     )
     config_yaml_root_key: str = Field(

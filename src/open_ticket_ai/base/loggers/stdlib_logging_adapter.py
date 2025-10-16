@@ -29,8 +29,8 @@ class StdlibLogger(AppLogger):
 
 
 class StdlibLoggerFactory(LoggerFactory):
-    def create(self, name: str, *args: Any, **kwargs: Any) -> AppLogger:
-        return StdlibLogger(name)
+    def create(self, *args: Any, **kwargs: Any) -> AppLogger:
+        return StdlibLogger(*args, **kwargs)
 
 
 def create_logger_factory(logging_config: LoggingConfig) -> LoggerFactory:

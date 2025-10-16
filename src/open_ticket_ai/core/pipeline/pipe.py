@@ -3,14 +3,15 @@ from __future__ import annotations
 from abc import ABC
 from typing import Any, final
 
-from open_ticket_ai.core.base_model import StrictBaseModel
+from pydantic import BaseModel
+
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.renderable.renderable import Renderable
 
 
-class Pipe[ParamsT: StrictBaseModel](Renderable[ParamsT], ABC):
+class Pipe[ParamsT: BaseModel](Renderable[ParamsT], ABC):
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, *args, **kwargs)
         self._config: PipeConfig = PipeConfig.model_validate(config.model_dump())
@@ -26,5 +27,5 @@ class Pipe[ParamsT: StrictBaseModel](Renderable[ParamsT], ABC):
     def _are_dependencies_fulfilled(self, context: PipeContext) -> bool:
         return all(context.has_succeeded(pipe_id) for pipe_id in self._config.depends_on)
 
-    async def _process(self, *args: Any, **kwargs: Any) -> PipeResult:
+    async def _process(self, *_: Any, **__: Any) -> PipeResult:
         return PipeResult.skipped()

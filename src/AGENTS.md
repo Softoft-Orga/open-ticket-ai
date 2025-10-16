@@ -46,7 +46,7 @@ Use pydantic models for complex data structures rather than TypedDict or plain d
 - Use `pathlib.Path` for all file system operations
 - Prefer context managers for resource handling
 
-## Lgging
+## Logging
 
 Never directly use the logging libary! Instead get the loggingfactory by gettin it injected throug the constructor of
 your class.

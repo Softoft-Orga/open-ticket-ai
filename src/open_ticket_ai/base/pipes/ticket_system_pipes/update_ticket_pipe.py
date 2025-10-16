@@ -1,3 +1,5 @@
+from pydantic import Field
+
 from open_ticket_ai.base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipeline.pipe_models import PipeResult
@@ -5,13 +7,15 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import Unified
 
 
 class UpdateTicketParams(StrictBaseModel):
-    ticket_id: str
-    updated_ticket: UnifiedTicket
+    ticket_id: str = Field(description="Unique identifier of the ticket to be updated in the ticket system.")
+    updated_ticket: UnifiedTicket = Field(
+        description="Updated ticket data containing the fields and values to apply to the existing ticket."
+    )
 
 
 class UpdateTicketPipe(TicketSystemPipe[UpdateTicketParams]):
     @staticmethod
-    def get_params_model() -> type[StrictBaseModel]:
+    def get_params_model() -> type[UpdateTicketParams]:
         return UpdateTicketParams
 
     async def _process(self) -> PipeResult:

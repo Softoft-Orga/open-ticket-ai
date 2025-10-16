@@ -1,6 +1,6 @@
-import os
 import typing
 from logging.config import dictConfig
+from pathlib import Path
 from pydoc import locate
 
 from injector import Binder, Module, multiprovider, provider, singleton
@@ -21,15 +21,14 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 
 
 class AppModule(Module):
-    def __init__(self, config_path: str | os.PathLike[str] | None = None, app_config: AppConfig | None = None) -> None:
-        self.config_path = config_path
-        self.app_config = app_config or AppConfig()
+    def __init__(self, config_path: Path | None = None, app_config: AppConfig | None = None) -> None:
+        self.app_config = app_config or AppConfig(config_file_path=config_path)
 
     def configure(self, binder: Binder) -> None:
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
         temp_logger_factory = create_logger_factory(LoggingConfig())
         config_loader = ConfigLoader(self.app_config, temp_logger_factory)
-        config = config_loader.load_config(self.config_path)
+        config = config_loader.load_config()
         print(config.infrastructure.logging.model_dump_json(indent=4, by_alias=True, exclude_none=True))
         dictConfig(config.infrastructure.logging.model_dump(by_alias=True, exclude_none=True))
         binder.bind(RawOpenTicketAIConfig, to=config, scope=singleton)
@@ -37,7 +36,7 @@ class AppModule(Module):
 
     @provider
     def create_renderer_from_service(
-        self, config: RawOpenTicketAIConfig, logger_factory: LoggerFactory
+            self, config: RawOpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         service_id = config.infrastructure.default_template_renderer
         service_config = next((s for s in config.services if s.id == service_id), None)

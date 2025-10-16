@@ -1,0 +1,91 @@
+@startuml Core Architecture Class Diagram
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 11
+skinparam packageFontSize 13
+skinparam linetype ortho
+
+title Open Ticket AI - Core Architecture Class Diagram
+
+package "Pipeline Core" {
+    abstract class Pipe {
+        +pipe_config: PipeConfig
+        +process(ctx: PipeContext): PipeContext
+        +have_dependent_pipes_been_run(ctx): bool
+        #{abstract} _process(): PipeResult
+    }
+
+    class PipeContext {
+        +pipes: dict[str, PipeResult]
+        +params: dict
+        +parent: PipeContext?
+        +has_succeeded(pipe_id: str): bool
+    }
+
+    class PipeResult {
+        +success: bool
+        +message: str
+        +data: dict
+    }
+}
+
+package "Configuration & DI" {
+    abstract class Renderable {
+        +__init__(params: BaseModel)
+    }
+
+    class RenderableFactory {
+        --
+        +create_renderable(config): Renderable
+    }
+}
+
+package "Orchestration" {
+    class Orchestrator {
+        -runners: list[PipeRunner]
+        +start()
+        +stop()
+        +run()
+    }
+
+    class PipeRunner {
+        --
+        +execute()
+        +on_trigger_fired()
+    }
+
+    abstract class Trigger {
+        -_observers: list[PipeRunnerObserver]
+        --
+        +attach(observer)
+        +detach(observer)
+        +notify()
+        #{abstract} start()
+        #{abstract} stop()
+    }
+}
+
+package "Ticket System Integration" {
+    abstract class TicketSystemService {
+        #{abstract} update_ticket(id, updates): bool
+        #{abstract} find_tickets(criteria): list[UnifiedTicket]
+        #{abstract} find_first_ticket(criteria): UnifiedTicket?
+        #{abstract} add_note(id, note): bool
+    }
+}
+
+' Core Pipeline Relationships
+Pipe --> PipeContext : processes
+PipeContext --> PipeResult : stores
+
+' Configuration & DI Relationships
+Pipe --|> Renderable
+TicketSystemService --|> Renderable
+RenderableFactory --> Pipe : creates
+
+' Orchestration Relationships
+Orchestrator --> PipeRunner : manages
+Orchestrator --> Trigger : manages
+Trigger --> PipeRunner : notifies
+
+@enduml

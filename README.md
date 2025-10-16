@@ -1,10 +1,14 @@
 # Open Ticket AI
 
-Open Ticket AI is an intelligent ticket classification and routing system that uses machine learning to automatically categorize and prioritize support tickets.
+Open Ticket AI is an intelligent ticket classification and routing system that uses machine learning to automatically
+categorize and prioritize support tickets.
 
 ## CI/CD Automation
 
-The repository includes automated workflows for handling Copilot-generated Pull Requests. When GitHub Copilot creates a PR that fails CI checks, the workflow automatically labels it with `retry-needed` and `copilot-pr`, posts a comment explaining the failures, and closes the PR to allow Copilot to retry with fixes. This automation only affects PRs created by `github-copilot[bot]` and has no impact on manually created PRs.
+The repository includes automated workflows for handling Copilot-generated Pull Requests. When GitHub Copilot creates a
+PR that fails CI checks, the workflow automatically labels it with `retry-needed` and `copilot-pr`, posts a comment
+explaining the failures, and closes the PR to allow Copilot to retry with fixes. This automation only affects PRs
+created by `github-copilot[bot]` and has no impact on manually created PRs.
 AI-powered ticket processing and automation system.
 
 ## Quick Start
@@ -43,16 +47,6 @@ uv run -m pytest
 
 ## Releasing
 
-### Update Version
-
-```bash
-# Set version across all packages
-python scripts/set_version.py 1.0.18
-git add .
-git commit -m "chore: bump version to 1.0.18"
-git push
-```
-
 ### Create Release
 
 ```bash
@@ -62,6 +56,7 @@ git push origin v1.0.18
 ```
 
 The workflow automatically:
+
 - Sets all package versions to match
 - Builds and publishes to PyPI via OIDC
 - Builds 4 Docker image variants (multi-platform)
@@ -69,6 +64,7 @@ The workflow automatically:
 ### PyPI Setup (one-time)
 
 Configure [Trusted Publishers](https://docs.pypi.org/trusted-publishers/) for each package:
+
 - Publisher: GitHub
 - Owner: `Softoft-Orga`
 - Repository: `open-ticket-ai`

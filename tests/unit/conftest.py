@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
@@ -5,7 +6,7 @@ import pytest
 from pydantic import BaseModel, ConfigDict
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
-from open_ticket_ai.core import AppConfig
+from open_ticket_ai.core import AppModule, AppConfig, ConfigLoader
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
@@ -43,6 +44,12 @@ class SimpleRenderable(Renderable[SimpleParams]):
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return SimpleParams
+
+
+@pytest.fixture
+def app_module():
+    some_path = Path(__file__)
+    return AppModule(some_path)
 
 
 @pytest.fixture
@@ -178,3 +185,12 @@ def sample_registerable_configs() -> list[MutableRenderableConfig]:
             params={"value": "service2_value"},
         ),
     ]
+
+
+@pytest.fixture
+def config_loader_creator(logger_factory: LoggerFactory):
+    def _create(config_file_path: Path) -> ConfigLoader:
+        app_config = AppConfig(config_file_path=config_file_path)
+        return ConfigLoader(app_config, logger_factory)
+
+    return _create

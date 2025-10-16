@@ -8,64 +8,79 @@ body:
   - type: markdown
     attributes:
       value: |
+        ## ⚠️ CRITICAL RULE: NO SOURCE CODE MODIFICATIONS ⚠️
+        
+        **This is a TEST-ONLY task. NEVER modify ANY source code (src/, packages/*/src/).**
+        
+        **If source code behavior is unclear or seems wrong:**
+        - ❌ **DO NOT** modify src/ 
+        - ❌ **DO NOT** fix bugs
+        - Option 1: **Know the intended behavior?** → Write tests for the CORRECT behavior (tests may fail, that's OK)
+        - Option 2: **Don't know what it should do?** → Write NO tests. Document shortly in 1 - 3 sentences why and close the issue.
+        
+        **Modify:** test files, `tests/fixtures/`, `tests/conftest.py`, `tests/data/`
+        IF Necessary write some short documentation in `docs/` or `README.md`
+        but only if its something that definitely needs to be documented and only write short text.
+        
+        **PRs that touch src/ will be REJECTED.**
+        
+        ---
+        
         ## Unit Test Task - Implementation Guide
         
         **How to write tests:**
         - Create test file in appropriate location (NOT under src/)
         - Package tests: `packages/<name>/tests/unit/test_*.py`
         - Root tests: `tests/unit/**/test_*.py`
-        - Use pytest with proper fixtures and parametrize
         - Test PUBLIC API only - no private methods/attributes
         - Keep tests minimal: ≤5 tests per file, ≤20 lines per test
         
         **Test structure:**
         - Use descriptive test function names: `test_<behavior>_<condition>`
         - Use `@pytest.mark.parametrize` to compress similar cases
-        - Use existing fixtures from conftest.py (check: `uv run -m pytest --fixtures`)
         - Prefer Fakes/DI over mocks; use pytest monkeypatch for env/globals
-        - If using unittest.mock, set spec_set/autospec
         
-        **Fixtures - IMPORTANT:**
-        - **ALWAYS check existing fixtures first:** Run `uv run -m pytest --fixtures` before creating new ones
-        - **Place fixtures in conftest.py** (package or root level) if they might be reused
-        - **Only place fixtures in test file** if they are definitely specific to that one test file only
-        - Check `tests/conftest.py` for workspace-level fixtures
-        - Check `packages/<name>/tests/conftest.py` for package-level fixtures
-        - Reuse existing fixtures like `tmp_path`, `monkeypatch`, `sample_*`, `mock_*`, `empty_*`
-        - Name new fixtures following conventions: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
+        **Fixtures - CRITICAL RULES:**
+        - **NEVER create fixtures in test files** - they belong in central locations
+        - **ALWAYS check existing fixtures FIRST:** `uv run -m pytest --fixtures`
+        - **SEARCH tests/fixtures/ directory** before creating anything new
+        - **Fixtures belong in:**
+          - `tests/fixtures/<domain>.py` for reusable fixtures (preferred)
+          - `tests/conftest.py` for workspace-wide fixtures
+          - `packages/<name>/tests/conftest.py` for package-specific fixtures
+        - **Reuse existing fixtures:** `tmp_path`, `monkeypatch`, `sample_*`, `mock_*`, `empty_*`
+        - **Name new fixtures:** `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
+        - **PRs with duplicate/non-centralized fixtures will be REJECTED**
         
         **What to test:**
         - Input → output behavior with different valid inputs
         - Invariants and business rules
         - Exactly ONE negative/error case per file
-        - Edge cases (empty input, boundary values) IF Appropriate and Relevant; DO NOT ADD in trivial cases
-        - Use real data structures (dicts, lists) over mocks where possible
+        - Edge cases IF relevant; DO NOT ADD trivial cases
+        - **Test the INTENDED behavior, even if src/ currently doesn't implement it correctly**
         
         **What NOT to test:**
         - Private implementation details (methods starting with _)
-        - Exact error messages, instead test that some value is included or that it raises the correct exception type
-        - Exact values that are likely to change; test ranges or properties instead; Do not check if specvific constants as some exact valueM
-        - The test should still pass, if some detail of the software changess
+        - Exact error messages
+        - Exact values that are likely to change
         
         **Test isolation:**
         - No network I/O - mock or fake external calls
         - No real filesystem - use tmp_path fixture
-        - Deterministic results - use fixed seeds/time (freezegun/time-machine)
+        - Deterministic results - use fixed seeds/time
         - Each test should be independent
         
         **Quality gates (must pass):**
-        - `uv run -m pytest` - all tests pass
         - `uv run ruff check .` - no warnings
         - `uv run mypy .` - no errors
-        - `uv run python scripts/validate_test_structure.py` - no tests under src/
+        - **No changes to any files in src/ or packages/*/src/**
         
         **Issue is DONE when:**
-        - Tests written and placed in correct location
-        - All tests pass
-        - All quality gates pass
-        - Tests are minimal and focused on behavior
+        - Tests written in correct location (tests/ only, NOT src/)
         - Existing fixtures checked and reused where possible
-        - New fixtures placed in conftest.py unless test-specific
+        - New fixtures placed in tests/fixtures/ or conftest.py (NOT in test files)
+        - **NO source code files were modified**
+        - OR: Documented why tests cannot be written and issue closed
 
   - type: input
     id: target
@@ -83,7 +98,8 @@ body:
         - Load valid YAML config and return AppConfig
         - Handle missing config file (FileNotFoundError)
         - Validate config schema with Pydantic
-        - Merge environment variables into config
+        
+        NOTE: If unclear what the code should do, write NO tests and document in a few sentences why.
 
   - type: textarea
     id: implementation-plan
@@ -93,20 +109,17 @@ body:
       placeholder: |
         File: tests/unit/core/config/test_config_loader.py
         
-        Fixtures to check first (run: uv run -m pytest --fixtures):
-        - tmp_path (built-in) - use this for test config files
-        - Check if sample_config_dict already exists in conftest.py
+        Check existing fixtures: uv run -m pytest --fixtures
+        Search: tests/fixtures/ directory
         
-        New fixtures (if needed):
-        - sample_config_dict → add to tests/conftest.py (reusable)
-        - invalid_config_dict → add to test file (test-specific)
+        Reuse or create centralized fixtures in tests/fixtures/<domain>.py
         
         Tests:
-        - test_load_valid_config (parametrize 3 valid config variations)
-        - test_load_missing_file (expect FileNotFoundError)
-        - test_validate_config_schema (invalid config → ValidationError)
+        - test_load_valid_config (parametrize valid variations)
+        - test_load_missing_file (FileNotFoundError)
         
-        Each test ≤20 lines
+        FILES TO MODIFY: test files, tests/fixtures/, tests/conftest.py ONLY
+        FILES FORBIDDEN: src/**, packages/*/src/**
 
   - type: textarea
     id: additional-context
@@ -114,9 +127,5 @@ body:
       label: Additional Context
       description: Special considerations, dependencies to mock, test data needed
       placeholder: |
-        Mock: Environment variables with monkeypatch (built-in fixture)
-        Test data: Create sample YAML in tmp_path
-        Edge case: Empty config file should use defaults
-        
-        Before creating fixtures, check existing ones:
-        uv run -m pytest --fixtures | grep config
+        Check existing fixtures before creating new ones:
+        uv run -m pytest --fixtures | grep <keyword>

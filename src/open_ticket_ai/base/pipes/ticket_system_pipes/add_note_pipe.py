@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import Field
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
 from open_ticket_ai.core.base_model import StrictBaseModel
@@ -7,13 +7,19 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import Unified
 
 
 class AddNoteParams(StrictBaseModel):
-    ticket_id: str | int
-    note: UnifiedNote
+    ticket_id: str | int = Field(
+        description=(
+            "Identifier of the ticket to which the note should be added, accepting either string or integer format."
+        )
+    )
+    note: UnifiedNote = Field(
+        description="Note content including subject and body to be added to the specified ticket."
+    )
 
 
 class AddNotePipe(TicketSystemPipe[AddNoteParams]):
     @staticmethod
-    def get_params_model() -> type[BaseModel]:
+    def get_params_model() -> type[AddNoteParams]:
         return AddNoteParams
 
     async def _process(self) -> PipeResult:
