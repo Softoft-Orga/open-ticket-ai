@@ -14,6 +14,6 @@ class InfrastructureConfig(BaseModel):
 
 class RawOpenTicketAIConfig(BaseModel):
     plugins: list[str] = Field(default_factory=list)
-    infrastructure: InfrastructureConfig = Field(default_factory=InfrastructureConfig)
     services: list[RenderableConfig] = Field(default_factory=list)
     orchestrator: OrchestratorConfig = Field(default_factory=OrchestratorConfig)
+    infrastructure: InfrastructureConfig = Field()

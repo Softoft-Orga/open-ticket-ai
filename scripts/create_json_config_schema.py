@@ -65,8 +65,13 @@ def desc_str(node: dict[str, Any]) -> str:
     return str(d).replace("\n", " ").strip()
 
 
-def flatten(node: dict[str, Any], defs: dict[str, Any], base: str = "", required: bool = False,
-            seen_nodes: set[int] | None = None) -> list[tuple[str, str, str, str, str]]:
+def flatten(
+        node: dict[str, Any],
+        defs: dict[str, Any],
+        base: str = "",
+        required: bool = False,
+        seen_nodes: set[int] | None = None,
+) -> list[tuple[str, str, str, str, str]]:
     seen_nodes = seen_nodes or set()
     n = unwrap_ref(node, defs)
     if id(n) in seen_nodes:

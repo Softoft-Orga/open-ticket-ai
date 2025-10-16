@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
 from functools import reduce
-from typing import Any, Self
+from typing import Any, Self, Sequence
 
 from pydantic import ConfigDict, Field
 
@@ -13,8 +12,11 @@ from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 class PipeConfig(RenderableConfig):
     model_config = ConfigDict(populate_by_name=True)
     if_: str | bool = Field(default="True", alias="if")
-    depends_on: list[str] = Field(default_factory=list, title="Dependencies",
-                                  description="List of dependencies, which must be executed before this step. This step will be skipped if any dependency fails. Can be a single string or a list of strings.")
+    depends_on: list[str] = Field(
+        default_factory=list,
+        title="Dependencies",
+        description="List of dependencies, which must be executed before this step.",
+    )
     steps: list[PipeConfig] | None = None
 
     @property
@@ -40,7 +42,7 @@ class PipeResult(StrictBaseModel):
         return not self.succeeded and not self.was_skipped
 
     @classmethod
-    def union(cls, results: Iterable[PipeResult]) -> PipeResult:
+    def union(cls, results: Sequence[PipeResult]) -> PipeResult:
         return reduce(lambda a, b: a & b, results)
 
     @classmethod
@@ -56,5 +58,5 @@ class PipeResult(StrictBaseModel):
         return PipeResult(was_skipped=True, message=message)
 
     @classmethod
-    def success(cls, message: str = "", data: dict[str, Any] = None) -> PipeResult:
+    def success(cls, message: str = "", data: dict[str, Any] | None = None) -> PipeResult:
         return PipeResult(message=message, data=data or {})

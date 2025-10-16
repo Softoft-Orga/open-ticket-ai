@@ -28,7 +28,7 @@ def load_sidecar(filepath: Path) -> dict[str, Any] | None:
         with open(filepath) as f:
             data: dict[str, Any] = yaml.safe_load(f)
             return data
-    except Exception as e:
+    except OSError as e:
         print(f"Warning: Could not load {filepath}: {e}", file=sys.stderr)
         return None
 

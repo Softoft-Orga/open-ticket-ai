@@ -1,12 +1,10 @@
 import uuid
 from typing import Any, Self
 
-from pydantic import Field, model_validator
-
-from open_ticket_ai.core.base_model import StrictBaseModel
+from pydantic import Field, model_validator, BaseModel
 
 
-class RenderableConfig(StrictBaseModel):
+class RenderableConfig(BaseModel):
     uid: str = Field(default_factory=lambda: uuid.uuid4().hex)
     id: str
     use: str = Field(default="open_ticket_ai.base.CompositePipe")

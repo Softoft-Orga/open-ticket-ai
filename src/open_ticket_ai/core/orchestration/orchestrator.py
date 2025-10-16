@@ -17,10 +17,10 @@ from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
 class Orchestrator:
     @inject
     def __init__(
-        self,
-        renderable_factory: RenderableFactory,
-        orchestrator_config: OrchestratorConfig,
-        logger_factory: LoggerFactory,
+            self,
+            renderable_factory: RenderableFactory,
+            orchestrator_config: OrchestratorConfig,
+            logger_factory: LoggerFactory,
     ) -> None:
         self._renderable_factory = renderable_factory
         self._config = orchestrator_config
@@ -28,26 +28,24 @@ class Orchestrator:
         self._logger_factory = logger_factory
         self._runners: dict[str, PipeRunner] = {}
         self._triggers: list[Trigger] = []
+        self._create_pipe_runners()
+        self._create_triggers()
 
-    def _create_pipe_runners(self):
+    async def run(self) -> None:
+        for trigger in self._triggers:
+            await trigger.run()
+
+    def _create_pipe_runners(self) -> None:
         self._runners = {
             runner_def.get_id(): self._create_pipe_runner(runner_def) for runner_def in self._config.runners
         }
 
-    def _create_pipe_runner(self, runner_id_def: RunnerDefinition) -> PipeRunner | None:
-        pipe = self._renderable_factory.render(runner_id_def.run, PipeContext())
-        return PipeRunner(runner_id_def.id, pipe, self._logger_factory)
+    def _create_pipe_runner(self, runner_id_def: RunnerDefinition) -> PipeRunner:
+        pipe = self._renderable_factory.render_pipe(runner_id_def.run, PipeContext())
+        return PipeRunner(runner_id_def.get_id(), pipe, self._logger_factory)
 
-    def _create_triggers(self):
+    def _create_triggers(self) -> None:
         for runner_def in self._config.runners:
             for trigger_def in runner_def.on:
-                trigger: Trigger = self._renderable_factory.render(trigger_def, PipeContext())
+                trigger: Trigger = self._renderable_factory.render_trigger(trigger_def, {})
                 trigger.attach(self._runners[runner_def.get_id()])
-
-    def init(self):
-        self._create_pipe_runners()
-        self._create_triggers()
-
-    async def run(self):
-        for trigger in self._triggers:
-            await trigger.run()
