@@ -1,10 +1,17 @@
+from pydantic import Field
+
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_models import PipeResult
 
 
 class ExpressionParams(StrictBaseModel):
-    expression: str
+    expression: str = Field(
+        description=(
+            "Expression string to be evaluated or processed by the expression pipe "
+            "for dynamic value computation."
+        )
+    )
 
 
 class ExpressionPipe(Pipe[ExpressionParams]):

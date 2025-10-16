@@ -1,13 +1,18 @@
 import time
+from datetime import timedelta
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import Field, RootModel
 
+from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.orchestration.orchestrator_models import TriggerConfig
 from open_ticket_ai.core.orchestration.trigger import Trigger
 
 
-class IntervalTriggerParams(RootModel[timedelta]): ...
+class IntervalTriggerParams(RootModel[timedelta]):
+    root: timedelta = Field(
+        description="Time interval between trigger executions specified as a timedelta object."
+    )
 
 
 class IntervalTrigger(Trigger[IntervalTriggerParams]):
@@ -19,7 +24,7 @@ class IntervalTrigger(Trigger[IntervalTriggerParams]):
         return False
 
     @staticmethod
-    def get_params_model() -> type[BaseModel]:
+    def get_params_model() -> type[OpenTicketAIBaseModel]:
         return IntervalTriggerParams
 
     def __init__(self, config: TriggerConfig, *args: Any, **kwargs: Any) -> None:

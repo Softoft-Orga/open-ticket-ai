@@ -1,9 +1,10 @@
 from functools import cache
 from typing import Any
 
+from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_models import PipeResult
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -13,10 +14,17 @@ from transformers import (
 )
 
 
-class HFLocalTextClassificationParams(BaseModel):
-    model: str
-    token: str | None = None
-    prompt: str
+class HFLocalTextClassificationParams(OpenTicketAIBaseModel):
+    model: str = Field(
+        description="HuggingFace model identifier or local path to the pre-trained text classification model to use."
+    )
+    token: str | None = Field(
+        default=None,
+        description="Optional HuggingFace API token for accessing private or gated models from the model hub."
+    )
+    prompt: str = Field(
+        description="Input text to classify using the loaded model for prediction and analysis."
+    )
 
 
 class HFLocalTextClassificationPipe(Pipe):

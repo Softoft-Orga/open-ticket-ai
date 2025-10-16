@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Any, final
 
+from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
 from open_ticket_ai.core.orchestration.trigger_observer import TriggerObserver
 from open_ticket_ai.core.renderable.renderable import Renderable
 
 
-class Trigger[ParamsT: BaseModel](Renderable[BaseModel], ABC):
+class Trigger[ParamsT: OpenTicketAIBaseModel](Renderable[OpenTicketAIBaseModel], ABC):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self._observer: TriggerObserver | None = None
