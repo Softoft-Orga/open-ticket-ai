@@ -1,11 +1,11 @@
 import pytest
-from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
 from pydantic import ValidationError
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
     UpdateTicketParams,
     UpdateTicketPipe,
 )
+from open_ticket_ai.base.ticket_system_integration.unified_models import UnifiedTicket
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
@@ -54,26 +54,26 @@ async def test_update_ticket_single_field(mocked_ticket_system, logger_factory, 
     ("ticket_id", "updates"),
     [
         (
-            "TICKET-1",
-            {
-                "subject": "Updated subject and priority",
-                "priority": {"id": "5", "name": "High"},
-            },
+                "TICKET-1",
+                {
+                    "subject": "Updated subject and priority",
+                    "priority": {"id": "5", "name": "High"},
+                },
         ),
         (
-            "TICKET-2",
-            {
-                "subject": "Updated subject and queue",
-                "queue": {"id": "1", "name": "Support"},
-            },
+                "TICKET-2",
+                {
+                    "subject": "Updated subject and queue",
+                    "queue": {"id": "1", "name": "Support"},
+                },
         ),
         (
-            "TICKET-3",
-            {
-                "subject": "All fields updated",
-                "queue": {"id": "2", "name": "Development"},
-                "priority": {"id": "3", "name": "Medium"},
-            },
+                "TICKET-3",
+                {
+                    "subject": "All fields updated",
+                    "queue": {"id": "2", "name": "Development"},
+                    "priority": {"id": "3", "name": "Medium"},
+                },
         ),
     ],
 )
