@@ -1,4 +1,5 @@
 import pytest
+from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 from pydantic import ValidationError
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.add_note_pipe import (
@@ -6,17 +7,12 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.add_note_pipe import (
     AddNotePipe,
 )
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
-from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 
 
 @pytest.mark.parametrize("ticket_id", ["TICKET-1", "TICKET-2", "TICKET-3"])
 @pytest.mark.asyncio
-async def test_add_note_pipe_adds_note_to_ticket(
-    mocked_ticket_system, logger_factory, ticket_id
-):
-    new_note = UnifiedNote(
-        subject=f"New note for {ticket_id}", body="Test note body"
-    )
+async def test_add_note_pipe_adds_note_to_ticket(mocked_ticket_system, logger_factory, ticket_id):
+    new_note = UnifiedNote(subject=f"New note for {ticket_id}", body="Test note body")
 
     config = PipeConfig(
         id=f"add_note_to_{ticket_id}",
@@ -53,6 +49,4 @@ def test_add_note_pipe_validation_subject_int():
 
 def test_add_note_pipe_validation_subject_dict():
     with pytest.raises(ValidationError):
-        AddNoteParams(
-            ticket_id="TICKET-1", note={"subject": {"key": "value"}, "body": "Test"}
-        )
+        AddNoteParams(ticket_id="TICKET-1", note={"subject": {"key": "value"}, "body": "Test"})
