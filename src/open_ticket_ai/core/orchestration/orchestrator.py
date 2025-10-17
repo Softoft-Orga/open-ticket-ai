@@ -17,10 +17,10 @@ from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 class Orchestrator:
     @inject
     def __init__(
-            self,
-            renderable_factory: PipeFactory,
-            orchestrator_config: OrchestratorConfig,
-            logger_factory: LoggerFactory,
+        self,
+        renderable_factory: PipeFactory,
+        orchestrator_config: OrchestratorConfig,
+        logger_factory: LoggerFactory,
     ) -> None:
         self._renderable_factory = renderable_factory
         self._config = orchestrator_config

@@ -63,8 +63,9 @@ class SimpleInjectable(Injectable[SimpleParams]):
 
 
 class SimplePipe(Pipe[SimpleParams]):
-    def __init__(self, config: PipeConfig, pipe_context: PipeContext, logger_factory: LoggerFactory, *args: Any,
-                 **kwargs: Any) -> None:
+    def __init__(
+        self, config: PipeConfig, pipe_context: PipeContext, logger_factory: LoggerFactory, *args: Any, **kwargs: Any
+    ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
 
     @staticmethod
@@ -242,10 +243,7 @@ def mock_injector() -> MagicMock:
     mock = MagicMock(spec=Injector)
     mock_builder = MagicMock(spec=AssistedBuilder)
     mock_builder.build.side_effect = lambda config, pipe_context, **kwargs: SimplePipe(
-        config=config,
-        pipe_context=pipe_context,
-        logger_factory=create_logger_factory(LoggingConfig()),
-        **kwargs
+        config=config, pipe_context=pipe_context, logger_factory=create_logger_factory(LoggingConfig()), **kwargs
     )
     mock.get.return_value = mock_builder
     return mock
