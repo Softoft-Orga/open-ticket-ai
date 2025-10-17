@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from pathlib import Path
 
 import pytest
@@ -68,8 +69,6 @@ def test_logger_respects_log_format(
 def test_logger_respects_date_format(
     date_format: str, expected_pattern: str, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    import re
-
     factory = create_logger_factory(
         LoggingConfig(
             date_format=date_format,
