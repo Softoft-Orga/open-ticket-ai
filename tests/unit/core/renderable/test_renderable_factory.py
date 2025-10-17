@@ -13,11 +13,11 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 
 
 def test_render_pipe_creates_pipe_instance(
-    mock_template_renderer: MagicMock,
-    mock_injector: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_injector: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     config = PipeConfig(
         id="test_pipe",
@@ -38,11 +38,11 @@ def test_render_pipe_creates_pipe_instance(
 
 
 def test_render_pipe_passes_correct_params_to_instance(
-    mock_template_renderer: MagicMock,
-    mock_injector: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_injector: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     config = PipeConfig(
         id="test_pipe",
@@ -62,10 +62,10 @@ def test_render_pipe_passes_correct_params_to_instance(
 
 
 def test_render_pipe_applies_template_rendering_to_params(
-    mock_injector: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_injector: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     mock_renderer = MagicMock(spec=TemplateRenderer)
     mock_renderer.render.return_value = {"value": "rendered_value"}
@@ -97,13 +97,13 @@ def test_render_pipe_applies_template_rendering_to_params(
     ],
 )
 def test_render_pipe_with_various_params_and_contexts(
-    mock_template_renderer: MagicMock,
-    mock_injector: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    params: dict,
-    context_params: dict,
-    expected_value: str,
+        mock_template_renderer: MagicMock,
+        mock_injector: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        params: dict,
+        context_params: dict,
+        expected_value: str,
 ) -> None:
     config = PipeConfig(
         id="test_pipe",
@@ -124,10 +124,10 @@ def test_render_pipe_with_various_params_and_contexts(
 
 
 def test_render_pipe_with_inject_dependencies(
-    mock_template_renderer: MagicMock,
-    mock_injector: MagicMock,
-    logger_factory: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_injector: MagicMock,
+        logger_factory: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     service_config = InjectableConfig(
         id="service1",
@@ -158,11 +158,11 @@ def test_render_pipe_with_inject_dependencies(
 
 
 def test_render_pipe_raises_type_error_for_non_pipe_class(
-    mock_template_renderer: MagicMock,
-    mock_injector: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_injector: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     config = PipeConfig(
         id="invalid_class",
@@ -181,11 +181,11 @@ def test_render_pipe_raises_type_error_for_non_pipe_class(
 
 
 def test_render_pipe_raises_error_for_nonexistent_class(
-    mock_template_renderer: MagicMock,
-    mock_injector: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_injector: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     config = PipeConfig(
         id="nonexistent",
@@ -204,11 +204,11 @@ def test_render_pipe_raises_error_for_nonexistent_class(
 
 
 def test_render_pipe_raises_value_error_for_missing_inject_service(
-    mock_template_renderer: MagicMock,
-    mock_injector: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_injector: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     config = PipeConfig(
         id="pipe_with_missing_dep",

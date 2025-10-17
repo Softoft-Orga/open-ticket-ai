@@ -16,7 +16,8 @@ class SimpleSequentialRunnerParams(BaseModel):
 
 class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
     def __init__(
-        self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any, **kwargs: Any
+            self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any,
+            **kwargs: Any
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._factory: PipeFactory = pipe_factory

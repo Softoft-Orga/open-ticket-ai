@@ -81,16 +81,24 @@ class PipeResult(StrictBaseModel):
 
     @classmethod
     def empty(cls) -> PipeResult:
-        return PipeResult.model_construct()
+        return PipeResult.model_validate(
+            {}
+        )
 
     @classmethod
     def failure(cls, message: str) -> PipeResult:
-        return PipeResult.model_construct(succeeded=False, message=message)
+        return PipeResult.model_validate(
+            {"succeeded": False, "message": message}
+        )
 
     @classmethod
     def skipped(cls, message: str = "") -> PipeResult:
-        return PipeResult.model_construct(was_skipped=True, message=message)
+        return PipeResult.model_validate(
+            {"succeeded": False, "was_skipped": True, "message": message}
+        )
 
     @classmethod
     def success(cls, message: str = "", data: dict[str, Any] | None = None) -> PipeResult:
-        return PipeResult.model_construct(message=message, data=data or {})
+        return PipeResult.model_validate(
+            {"message": message, "data": data or {}}
+        )
