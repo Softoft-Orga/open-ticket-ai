@@ -5,7 +5,6 @@ from jinja2.nativetypes import NativeEnvironment
 
 from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     at_path,
-    build_filtered_env,
     get_pipe_result,
     has_failed,
 )
@@ -24,7 +23,6 @@ class JinjaRenderer(TemplateRenderer):
     def _render(self, template_str: str, context: dict[str, Any]) -> Any:
         self.jinja_env.globals.update(context)
         self.jinja_env.globals["at_path"] = at_path
-        self.jinja_env.globals["env"] = build_filtered_env()
         self.jinja_env.globals["has_failed"] = has_failed
         self.jinja_env.globals["get_pipe_result"] = get_pipe_result
         template = self.jinja_env.from_string(template_str)

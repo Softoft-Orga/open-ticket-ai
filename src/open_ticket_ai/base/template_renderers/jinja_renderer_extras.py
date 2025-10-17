@@ -1,4 +1,3 @@
-import os
 import re
 from typing import Any
 
@@ -39,7 +38,3 @@ def has_failed(ctx: jinja2.runtime.Context, pipe_id: str) -> bool:
 @jinja2.pass_context
 def get_pipe_result(ctx: jinja2.runtime.Context, pipe_id: str, data_key: str = "value") -> Any:
     return _get_pipe(ctx, pipe_id).data.get(data_key)
-
-
-def build_filtered_env() -> dict[str, str]:
-    return os.environ.copy()
