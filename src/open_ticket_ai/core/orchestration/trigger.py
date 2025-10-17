@@ -3,11 +3,11 @@ from typing import Any, final
 
 from pydantic import BaseModel
 
+from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.orchestration.trigger_observer import TriggerObserver
-from open_ticket_ai.core.renderable.renderable import Renderable
 
 
-class Trigger[ParamsT: BaseModel](Renderable[ParamsT], ABC):
+class Trigger[ParamsT: BaseModel](Injectable[ParamsT], ABC):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self._observer: TriggerObserver | None = None

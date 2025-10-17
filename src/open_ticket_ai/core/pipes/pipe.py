@@ -5,13 +5,13 @@ from typing import Any, final
 
 from pydantic import BaseModel
 
+from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
-from open_ticket_ai.core.renderable.renderable import Renderable
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 
 
-class Pipe[ParamsT: BaseModel](Renderable[ParamsT], ABC):
+class Pipe[ParamsT: BaseModel](Injectable[ParamsT], ABC):
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._config: PipeConfig = PipeConfig.model_validate(config.model_dump())

@@ -2,10 +2,10 @@ from typing import Any, final
 
 from pydantic import BaseModel
 
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
+from open_ticket_ai.core.pipes.pipe import Pipe
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 
 
 class CompositePipe[ParamsT: BaseModel](Pipe[ParamsT]):
@@ -13,9 +13,9 @@ class CompositePipe[ParamsT: BaseModel](Pipe[ParamsT]):
     def get_params_model() -> type[PipeConfig]:
         return PipeConfig
 
-    def __init__(self, factory: RenderableFactory, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, factory: PipeFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self._factory: RenderableFactory = factory
+        self._factory: PipeFactory = factory
 
     @final
     async def _process_steps(self, context: PipeContext) -> list[PipeResult]:

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
-from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 
 
 class InfrastructureConfig(BaseModel):
@@ -13,6 +13,7 @@ class InfrastructureConfig(BaseModel):
         description="Configuration for application logging including level, format, and output destination.",
     )
     default_template_renderer: str = Field(
+        default="jinja2",
         description="Name of the default template renderer to use for rendering templates across the application."
     )
 
@@ -26,11 +27,19 @@ class RawOpenTicketAIConfig(BaseModel):
         default_factory=InfrastructureConfig,
         description="Infrastructure-level configuration including logging and template rendering settings.",
     )
-    services: list[RenderableConfig] = Field(
-        default_factory=list,
+    services: dict[str, InjectableConfigBase] = Field(
+        default_factory=dict,
         description="List of service configurations defining available ticket system integrations and other services.",
     )
     orchestrator: OrchestratorConfig = Field(
         default_factory=OrchestratorConfig,
-        description="Orchestrator configuration defining runners, triggers, and pipeline execution workflow.",
+        description="Orchestrator configuration defining runners, triggers, and pipes execution workflow.",
     )
+
+    def get_services_list(self) -> list[InjectableConfig]:
+        return [
+            InjectableConfig.model_validate(
+                {"id": _id, **service_base.model_dump()}
+            )
+            for _id, service_base in self.services.values()
+        ]

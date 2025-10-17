@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from pydantic import ConfigDict, Field
 
-from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
-from open_ticket_ai.core.pipeline.pipe_models import PipeConfig
-from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
+from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
-class TriggerConfig(RenderableConfig):
+class TriggerConfig(InjectableConfig):
     pass
 
 
-class RunnerDefinition(OpenTicketAIBaseModel):
+class RunnerDefinition(StrictBaseModel):
     model_config = ConfigDict(populate_by_name=True, frozen=True, extra="forbid")
 
     id: str | None = Field(
@@ -22,7 +22,7 @@ class RunnerDefinition(OpenTicketAIBaseModel):
         ),
     )
     on: list[TriggerConfig] = Field(
-        description="List of trigger configurations that determine when this runner should execute its pipeline."
+        description="List of trigger configurations that determine when this runner should execute its pipes."
     )
     run: PipeConfig = Field(
         description="Pipeline configuration defining the sequence of operations to execute when triggered."
@@ -34,7 +34,7 @@ class RunnerDefinition(OpenTicketAIBaseModel):
         return f"runner.{self.run.id}"
 
 
-class OrchestratorConfig(OpenTicketAIBaseModel):
+class OrchestratorConfig(StrictBaseModel):
     runners: list[RunnerDefinition] = Field(
         default_factory=list,
         description="List of runner definitions that specify the triggers and pipelines managed by the orchestrator.",

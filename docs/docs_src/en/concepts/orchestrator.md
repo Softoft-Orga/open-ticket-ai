@@ -1,5 +1,5 @@
 ---
-description: Learn how Open Ticket AI's orchestrator manages pipeline scheduling, triggers, and execution lifecycle from bootstrap to runtime.
+description: Learn how Open Ticket AI's orchestrator manages pipes scheduling, triggers, and execution lifecycle from bootstrap to runtime.
 pageClass: full-page
 aside: false
 ---
@@ -34,38 +34,37 @@ execute and can be attached to one or more triggers.
   "themeVariables": { "fontSize": "13px" }
 }}%%
 classDiagram
-direction TD
+    direction TD
 
-  class Orchestrator {
-    +start()
-    +stop()
-    +run()
-    -triggers
-    -runners
-  }
-  
-  class Trigger {
-    +attach(observer)
-    +detach(observer)
-    +notify()
-    +start()
-    +stop()
-    -observers
-  }
-  
-  class PipeRunner {
-    +execute()
-    +on_trigger_fired()
-    -definition
-  }
+    class Orchestrator {
+        +start()
+        +stop()
+        +run()
+        -triggers
+        -runners
+    }
 
-  Orchestrator "1" --> "*" Trigger : manages
-  Orchestrator "1" --> "*" PipeRunner : manages
-  Trigger "1" --> "*" PipeRunner : observes
-  
-  note for Orchestrator "Coordinates lifecycle\nof triggers and runners"
-  note for Trigger "Notifies runners when\nconditions are met"
-  note for PipeRunner "Executes pipeline\nin response to trigger"
+    class Trigger {
+        +attach(observer)
+        +detach(observer)
+        +notify()
+        +start()
+        +stop()
+        -observers
+    }
+
+    class PipeRunner {
+        +execute()
+        +on_trigger_fired()
+        -definition
+    }
+
+    Orchestrator "1" --> "*" Trigger: manages
+    Orchestrator "1" --> "*" PipeRunner: manages
+    Trigger "1" --> "*" PipeRunner: observes
+    note for Orchestrator "Coordinates lifecycle\nof triggers and runners"
+    note for Trigger "Notifies runners when\nconditions are met"
+    note for PipeRunner "Executes pipes\nin response to trigger"
 ```
 
 **How they work together:**
@@ -85,14 +84,14 @@ The orchestrator is configured through YAML with three main sections:
 orchestrator:
   runners:
     - id: "unique_id"           # Optional identifier
-      on:                       # Optional triggers (omit for one-time execution)
+      on: # Optional triggers (omit for one-time execution)
         - id: "trigger_id"
           use: "module:TriggerClass"
-          params: {}
-      run:                      # Required: pipeline to execute
+          params: { }
+      run: # Required: pipes to execute
         id: "pipeline_id"
         use: "module:PipeClass"
-        params: {}
+        params: { }
 ```
 
 ### Configuration Elements

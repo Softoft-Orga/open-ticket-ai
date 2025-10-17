@@ -9,18 +9,18 @@ from open_ticket_ai.core.orchestration.orchestrator_models import (
 )
 from open_ticket_ai.core.orchestration.pipe_runner import PipeRunner
 from open_ticket_ai.core.orchestration.trigger import Trigger
-from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
-from open_ticket_ai.core.renderable.renderable_factory import RenderableFactory
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 
 
 @singleton
 class Orchestrator:
     @inject
     def __init__(
-        self,
-        renderable_factory: RenderableFactory,
-        orchestrator_config: OrchestratorConfig,
-        logger_factory: LoggerFactory,
+            self,
+            renderable_factory: PipeFactory,
+            orchestrator_config: OrchestratorConfig,
+            logger_factory: LoggerFactory,
     ) -> None:
         self._renderable_factory = renderable_factory
         self._config = orchestrator_config

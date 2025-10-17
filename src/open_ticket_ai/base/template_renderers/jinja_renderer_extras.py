@@ -5,7 +5,7 @@ from typing import Any
 import jinja2
 from pydantic import BaseModel
 
-from open_ticket_ai.core.pipeline.pipe_models import PipeResult
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
 
 
 def _nest_value_at_path(value: dict[str, Any] | Any, parts: list[str]) -> dict[str, Any] | Any:

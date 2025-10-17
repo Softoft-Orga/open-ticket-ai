@@ -8,7 +8,7 @@ This page demonstrates the PipeSidecar component displaying pipe configuration i
 const addNotePipeSidecar = {
   _version: '1.0.x',
   _class: 'open_ticket_ai.base.ticket_system_pipes.AddNotePipe',
-  _extends: 'open_ticket_ai.core.pipeline.ConfigurablePipe',
+  _extends: 'open_ticket_ai.core.pipes.ConfigurablePipe',
   _title: 'Add Note',
   _summary: 'Appends a note/article to a ticket in the connected system.',
   _category: 'ticket-system',

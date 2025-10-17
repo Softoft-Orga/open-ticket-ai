@@ -198,18 +198,19 @@ Test that components implement required interfaces:
 ```python
 from open_ticket_ai.integration import TicketSystemAdapter
 
+
 def test_adapter_contract():
     adapter = MyCustomAdapter()
-    
+
     # Verify isinstance
     assert isinstance(adapter, TicketSystemAdapter)
-    
+
     # Verify methods exist
     assert hasattr(adapter, 'fetch_tickets')
     assert hasattr(adapter, 'update_ticket')
     assert hasattr(adapter, 'add_note')
     assert hasattr(adapter, 'search_tickets')
-    
+
     # Verify methods are callable
     assert callable(adapter.fetch_tickets)
     assert callable(adapter.update_ticket)
@@ -243,7 +244,7 @@ def test_full_pipeline():
     # Load configuration
     config = load_config("test_config.yml")
 
-    # Create and run pipeline
+    # Create and run pipes
     pipeline = create_pipeline(config)
     result = pipeline.run()
 
@@ -670,7 +671,7 @@ Fixtures specific to unit tests:
 ```python
 @pytest.fixture
 def empty_pipeline_context() -> Context:
-    """Empty pipeline context for testing."""
+    """Empty pipes context for testing."""
     return Context(pipes={}, config={})
 
 

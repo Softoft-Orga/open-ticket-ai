@@ -1,19 +1,17 @@
-from pathlib import Path
-
-from pydantic import Field
+from pydantic import Field, AliasChoices
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from open_ticket_ai.core import RawOpenTicketAIConfig
 
 
 class AppConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="OTAI_")
-    config_file_path: Path | None = Field(
-        default=Path.cwd() / "config.yml",
+    model_config = SettingsConfigDict(
+        env_prefix="OTAI_",
+        env_nested_delimiter="__",
+        env_file=".env",
+        yaml_file="config.yml",
     )
-    config_yaml_root_key: str = Field(
-        default="open_ticket_ai",
-        description="Root key in YAML configuration file",
-    )
-    templates_dir: Path = Field(
-        default_factory=lambda: Path.cwd() / "data" / "templates",
-        description="Directory containing configuration templates",
+
+    open_ticket_ai: RawOpenTicketAIConfig = Field(
+        validation_alias=AliasChoices("cfg", "open_ticket_ai")
     )

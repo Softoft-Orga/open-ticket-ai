@@ -1,6 +1,6 @@
 ---
 description: Generate multilingual synthetic customer-support ticket datasets with
-  our Python tool. Features a graph pipeline, AI assistants, rich fields & cost tracking.
+  our Python tool. Features a graph pipes, AI assistants, rich fields & cost tracking.
 ---
 
 # Synthetic Data Generation for Support Tickets
@@ -86,7 +86,7 @@ RUN = {
     "batch_size": 50,  # lower for cheap dev runs
     "languages": ["DE", "EN", "FR", "ES", "PT"],
     "timezone": "Europe/Berlin",
-    "pipeline": [
+    "pipes": [
         "topic_node",
         "email_draft_node",
         "tagging_node",

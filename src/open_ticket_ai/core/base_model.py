@@ -1,8 +1,5 @@
 from pydantic import BaseModel, ConfigDict
 
 
-class OpenTicketAIBaseModel(BaseModel):
+class StrictBaseModel(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
-
-
-StrictBaseModel = OpenTicketAIBaseModel

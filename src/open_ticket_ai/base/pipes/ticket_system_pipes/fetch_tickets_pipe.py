@@ -2,7 +2,7 @@ from pydantic import Field
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
 from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.pipeline.pipe_models import PipeResult
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
 
 

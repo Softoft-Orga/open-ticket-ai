@@ -4,12 +4,12 @@ from typing import Literal
 
 from pydantic import Field
 
-from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
+from open_ticket_ai.core.base_model import StrictBaseModel
 
 LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
-class LoggingConfig(OpenTicketAIBaseModel):
+class LoggingConfig(StrictBaseModel):
     level: LogLevel = Field(
         default="INFO",
         description=(

@@ -7,10 +7,10 @@ from typing import Any, Self
 from pydantic import ConfigDict, Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 
 
-class PipeConfig(RenderableConfig):
+class PipeConfig(InjectableConfig):
     model_config = ConfigDict(populate_by_name=True, frozen=True, extra="forbid")
 
     if_: str | bool = Field(
@@ -62,7 +62,7 @@ class PipeResult(StrictBaseModel):
     )
 
     def __and__(self, other: Self) -> PipeResult:
-        return PipeResult(
+        return PipeResult.model_construct(
             succeeded=self.succeeded and other.succeeded,
             was_skipped=self.was_skipped and other.was_skipped,
             message=(f"{self.message}; {other.message}".strip("; ")),
@@ -78,16 +78,16 @@ class PipeResult(StrictBaseModel):
 
     @classmethod
     def empty(cls) -> PipeResult:
-        return PipeResult()
+        return PipeResult.model_construct()
 
     @classmethod
     def failure(cls, message: str) -> PipeResult:
-        return PipeResult(succeeded=False, message=message)
+        return PipeResult.model_construct(succeeded=False, message=message)
 
     @classmethod
     def skipped(cls, message: str = "") -> PipeResult:
-        return PipeResult(was_skipped=True, message=message)
+        return PipeResult.model_construct(was_skipped=True, message=message)
 
     @classmethod
     def success(cls, message: str = "", data: dict[str, Any] | None = None) -> PipeResult:
-        return PipeResult(message=message, data=data or {})
+        return PipeResult.model_construct(message=message, data=data or {})

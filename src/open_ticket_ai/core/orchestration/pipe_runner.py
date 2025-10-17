@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.orchestration.trigger_observer import TriggerObserver
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe import Pipe
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 
 
 class PipeRunner(TriggerObserver):

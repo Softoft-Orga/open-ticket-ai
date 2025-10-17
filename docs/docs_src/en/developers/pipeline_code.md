@@ -80,6 +80,7 @@ Create a Pydantic model for your pipe's parameters:
 ```python
 from pydantic import BaseModel
 
+
 class MyPipeParams(BaseModel):
     input_field: str
     threshold: float = 0.5
@@ -100,8 +101,8 @@ class MyPipeResultData(BaseModel):
 
 ```python
 from typing import Any
-from open_ticket_ai.core.pipeline.pipe import Pipe
-from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
+from open_ticket_ai.core.pipes.pipe import Pipe
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 
 
@@ -149,7 +150,7 @@ class MyPipe(Pipe[MyPipeParams]):
 The parameter validation happens automatically in the `Pipe` base class:
 
 ```python
-# In Pipe.__init__ (src/open_ticket_ai/core/pipeline/pipe.py:27-30)
+# In Pipe.__init__ (src/open_ticket_ai/core/pipes/pipe.py:27-30)
 if isinstance(pipe_params._config, dict):
     self._config: ParamsT = self.params_class.model_validate(pipe_params._config)
 else:
@@ -254,8 +255,8 @@ async def _process(self) -> PipeResult[MyPipeResultData]:
 
 ```python
 import pytest
-from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipeline.pipe_models import PipeConfig
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
 @pytest.mark.asyncio
@@ -309,7 +310,7 @@ Use the `if` field in YAML config:
   use: "mypackage:MyPipe"
   if: "{{ pipe_result('classifier').data.category == 'urgent' }}"
   params:
-    # ...
+  # ...
 ```
 
 ### Dependent Pipes

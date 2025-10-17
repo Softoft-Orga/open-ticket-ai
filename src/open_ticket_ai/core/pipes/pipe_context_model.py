@@ -2,15 +2,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import ConfigDict, Field
+from pydantic import Field
 
-from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
-from open_ticket_ai.core.pipeline.pipe_models import PipeResult
+from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
 
 
-class PipeContext(OpenTicketAIBaseModel):
-    model_config = ConfigDict(frozen=True, extra="forbid")
-
+class PipeContext(StrictBaseModel):
     pipe_results: dict[str, dict[str, Any]] = Field(
         default_factory=dict,
         description=(
@@ -28,7 +26,7 @@ class PipeContext(OpenTicketAIBaseModel):
     parent: PipeContext | None = Field(
         default=None,
         description=(
-            "Optional reference to the parent context for nested pipeline execution "
+            "Optional reference to the parent context for nested pipes execution "
             "allowing access to outer scope results."
         ),
     )

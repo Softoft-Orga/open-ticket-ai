@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
-from open_ticket_ai.core.renderable.renderable import Renderable
-
+from open_ticket_ai.core.injectables.injectable import Injectable
 from .unified_models import (
     TicketSearchCriteria,
     UnifiedNote,
@@ -9,7 +8,7 @@ from .unified_models import (
 )
 
 
-class TicketSystemService(Renderable, ABC):
+class TicketSystemService(Injectable, ABC):
     @abstractmethod
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         pass

@@ -4,13 +4,13 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import AppLogger, LoggerFactory
-from open_ticket_ai.core.renderable.renderable_models import RenderableConfig
 
 
-class Renderable[ParamsT: BaseModel](ABC):
-    def __init__(self, config: RenderableConfig, logger_factory: LoggerFactory, *_: Any, **__: Any) -> None:
-        self._config: RenderableConfig = config
+class Injectable[ParamsT: BaseModel](ABC):
+    def __init__(self, config: InjectableConfig, logger_factory: LoggerFactory, *_: Any, **__: Any) -> None:
+        self._config: InjectableConfig = config
         self._params: ParamsT = typing.cast("ParamsT", self.get_params_model().model_validate(config.params))
         self._logger: AppLogger = logger_factory.create(config.id)
 
