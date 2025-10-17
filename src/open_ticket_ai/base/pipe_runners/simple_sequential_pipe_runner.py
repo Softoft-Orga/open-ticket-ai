@@ -6,7 +6,7 @@ from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
-from open_ticket_ai.core.pipes.pipe_models import PipeResult, PipeConfig
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 
 
 class SimpleSequentialRunnerParams(BaseModel):
@@ -15,8 +15,9 @@ class SimpleSequentialRunnerParams(BaseModel):
 
 
 class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
-    def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any,
-                 **kwargs: Any) -> None:
+    def __init__(
+        self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any, **kwargs: Any
+    ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._factory: PipeFactory = pipe_factory
 
@@ -34,4 +35,5 @@ class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
             run_pipe_result: PipeResult = await run_pipe.process(context)
             return run_pipe_result
         return PipeResult.skipped(
-            f"The On Pipe did not succeed: {on_pipe_result.message}, so the Run Pipe was not executed.")
+            f"The On Pipe did not succeed: {on_pipe_result.message}, so the Run Pipe was not executed."
+        )

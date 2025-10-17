@@ -51,7 +51,7 @@ class MockedTicketSystem(TicketSystemService):
             for ticket in self._tickets.values()
             if self._matches_criteria(ticket, criteria)
         ]
-        return results[criteria.offset: criteria.offset + criteria.limit]
+        return results[criteria.offset : criteria.offset + criteria.limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         for ticket in self._tickets.values():
@@ -71,9 +71,7 @@ class MockedTicketSystem(TicketSystemService):
             ticket.notes = []
 
         note_id = note.id or "note-" + str(len(ticket.notes) + 1)
-        note_copy = note.model_copy(
-            update={"id": note_id}
-        )
+        note_copy = note.model_copy(update={"id": note_id})
         ticket.notes.append(note_copy)
         return True
 

@@ -1,4 +1,4 @@
-from pydantic import Field, AliasChoices
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
@@ -13,6 +13,5 @@ class AppConfig(BaseSettings):
     )
 
     open_ticket_ai: OpenTicketAIConfig = Field(
-        default_factory=OpenTicketAIConfig,
-        validation_alias=AliasChoices("cfg", "open_ticket_ai")
+        default_factory=OpenTicketAIConfig, validation_alias=AliasChoices("cfg", "open_ticket_ai")
     )

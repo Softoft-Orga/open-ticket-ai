@@ -14,7 +14,6 @@ class SimpleSequentialOrchestratorParams(BaseModel):
 
 
 class SimpleSequentialOrchestrator(CompositePipe[SimpleSequentialOrchestratorParams]):
-
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return SimpleSequentialOrchestratorParams

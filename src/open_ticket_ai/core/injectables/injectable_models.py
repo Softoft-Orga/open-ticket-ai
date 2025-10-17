@@ -42,7 +42,7 @@ class InjectableConfig(InjectableConfigBase):
         default="",
         description=(
             "Human-readable identifier for this injectables used for referencing in configurations and dependencies."
-        )
+        ),
     )
 
     @model_validator(mode="after")
