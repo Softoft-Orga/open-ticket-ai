@@ -1,18 +1,21 @@
 from typing import Any, final
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
-from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 
 
-class CompositePipe[ParamsT: BaseModel = StrictBaseModel](Pipe[ParamsT]):
+class CompositePipeParams(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="allow")
+
+
+class CompositePipe[ParamsT: BaseModel = CompositePipeParams](Pipe[ParamsT]):
     @staticmethod
-    def get_params_model() -> type[StrictBaseModel]:
-        return StrictBaseModel
+    def get_params_model() -> type[CompositePipeParams]:
+        return CompositePipeParams
 
     def __init__(self, factory: PipeFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)

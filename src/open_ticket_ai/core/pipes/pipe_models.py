@@ -77,7 +77,7 @@ class PipeResult(StrictBaseModel):
 
     @classmethod
     def union(cls, results: Iterable[PipeResult]) -> PipeResult:
-        return reduce(lambda a, b: a & b, results)
+        return reduce(lambda a, b: a & b, results, PipeResult.empty())
 
     @classmethod
     def empty(cls) -> PipeResult:

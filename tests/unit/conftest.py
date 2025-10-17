@@ -176,7 +176,7 @@ def invalid_raw_config() -> OpenTicketAIConfig:
     return OpenTicketAIConfig(
         infrastructure=InfrastructureConfig(logging=LoggingConfig(), default_template_renderer="nonexistent_renderer"),
         services=[],
-        orchestrator=OrchestratorConfig(),
+        orchestrator=PipeConfig(),
     )
 
 
