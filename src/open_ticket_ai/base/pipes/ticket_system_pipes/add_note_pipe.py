@@ -24,5 +24,5 @@ class AddNotePipe(TicketSystemPipe[AddNoteParams]):
 
     async def _process(self) -> PipeResult:
         ticket_id_str = str(self._params.ticket_id)
-        await self._ticket_system.add_note(ticket_id_str, self._config.params.note)
+        await self._ticket_system.add_note(ticket_id_str, self._params.note)
         return PipeResult(succeeded=True, data={})
