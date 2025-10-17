@@ -2,11 +2,11 @@ import datetime
 from datetime import timedelta
 from typing import Any
 
-from open_ticket_ai.core.orchestration.orchestrator_models import TriggerConfig
-from open_ticket_ai.core.orchestration.trigger import Trigger
 from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.orchestration.orchestrator_models import TriggerConfig
+from open_ticket_ai.core.orchestration.trigger import Trigger
 
 
 class IntervalTriggerParams(StrictBaseModel):

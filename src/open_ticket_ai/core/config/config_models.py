@@ -14,7 +14,7 @@ class InfrastructureConfig(BaseModel):
     )
     default_template_renderer: str = Field(
         default="jinja2",
-        description="Name of the default template renderer to use for rendering templates across the application."
+        description="Name of the default template renderer to use for rendering templates across the application.",
     )
 
 
@@ -42,8 +42,6 @@ class OpenTicketAIConfig(BaseModel):
 
     def get_services_list(self) -> list[InjectableConfig]:
         return [
-            InjectableConfig.model_validate(
-                {"id": _id, **service_base.model_dump()}
-            )
+            InjectableConfig.model_validate({"id": _id, **service_base.model_dump()})
             for _id, service_base in self.services.items()
         ]
