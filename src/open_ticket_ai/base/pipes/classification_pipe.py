@@ -1,7 +1,9 @@
 from typing import Any
 
-from open_ticket_ai.base.ai_classification_services.classification_models import ClassificationRequest, \
-    ClassificationResult
+from open_ticket_ai.base.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
 from open_ticket_ai.base.ai_classification_services.classification_service import ClassificationService
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
@@ -18,12 +20,14 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
     def get_params_model() -> type[ClassificationPipeParams]:
         return ClassificationPipeParams
 
-    def __init__(self,
-                 config: PipeConfig,
-                 logger_factory: LoggerFactory,
-                 classification_service: ClassificationService,
-                 *args: Any,
-                 **kwargs: Any) -> None:
+    def __init__(
+        self,
+        config: PipeConfig,
+        logger_factory: LoggerFactory,
+        classification_service: ClassificationService,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._classification_service = classification_service
 

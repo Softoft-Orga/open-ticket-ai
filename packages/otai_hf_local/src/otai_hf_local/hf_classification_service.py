@@ -1,12 +1,19 @@
 from functools import lru_cache
 from typing import Any
 
-from transformers import PreTrainedTokenizer, AutoTokenizer, PreTrainedModel, AutoModelForSequenceClassification, \
-    pipeline, Pipeline
-
-from open_ticket_ai.base.ai_classification_services.classification_models import ClassificationRequest, \
-    ClassificationResult
+from open_ticket_ai.base.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
 from open_ticket_ai.base.ai_classification_services.classification_service import ClassificationService
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    Pipeline,
+    PreTrainedModel,
+    PreTrainedTokenizer,
+    pipeline,
+)
 
 
 @lru_cache(maxsize=16)

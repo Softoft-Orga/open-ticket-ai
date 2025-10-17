@@ -17,11 +17,11 @@ from open_ticket_ai.core.template_rendering import TemplateRenderer
 class PipeFactory:
     @inject
     def __init__(
-            self,
-            injector: Injector,
-            template_renderer: TemplateRenderer,
-            logger_factory: LoggerFactory,
-            otai_config: OpenTicketAIConfig,
+        self,
+        injector: Injector,
+        template_renderer: TemplateRenderer,
+        logger_factory: LoggerFactory,
+        otai_config: OpenTicketAIConfig,
     ):
         self._injector = injector
         self._template_renderer = template_renderer
