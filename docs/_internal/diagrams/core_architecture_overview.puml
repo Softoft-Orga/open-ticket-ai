@@ -9,10 +9,10 @@ title Open Ticket AI - Core Architecture Class Diagram
 
 package "Pipeline Core" {
     abstract class Pipe {
-        +pipe_config: PipeConfig
+        +config: PipeConfig
         +process(ctx: PipeContext): PipeContext
         +have_dependent_pipes_been_run(ctx): bool
-        #{abstract} _process(): PipeResult
+        #{abstract} _process(ctx: PipeContext): PipeResult
     }
 
     class PipeContext {
@@ -23,69 +23,86 @@ package "Pipeline Core" {
     }
 
     class PipeResult {
-        +success: bool
+        +succeeded: bool
         +message: str
         +data: dict
     }
 }
 
 package "Configuration & DI" {
-    abstract class Renderable {
-        +__init__(params: BaseModel)
+    abstract class Injectable {
+        +config: InjectableConfig
+        +__init__(config: InjectableConfig)
     }
 
-    class RenderableFactory {
-        --
-        +create_renderable(config): Renderable
+    class InjectableConfig {
+        +id: str
+        +use: str
+        +params: dict
+        +injects: dict[str, str]
+    }
+
+    class Params {
+        +{abstract} custom fields
+    }
+
+    class PipeFactory {
+        +create_pipe(config: PipeConfig): Pipe
+    }
+
+    class TemplateRenderer {
+        +render(obj, scope): Any
+        #{abstract} _render(template_str, scope): Any
     }
 }
 
 package "Orchestration" {
     class Orchestrator {
-        -runners: list[PipeRunner]
-        +start()
-        +stop()
-        +run()
+        +process(ctx: PipeContext): PipeContext
+        #{abstract} _process(ctx: PipeContext): PipeResult
     }
 
     class PipeRunner {
-        --
-        +execute()
-        +on_trigger_fired()
+        -trigger_pipe: Pipe
+        -execution_pipe: Pipe
+        +process(ctx: PipeContext): PipeContext
+        #{abstract} _process(ctx: PipeContext): PipeResult
     }
 
-    abstract class Trigger {
-        -_observers: list[PipeRunnerObserver]
-        --
-        +attach(observer)
-        +detach(observer)
-        +notify()
-        #{abstract} start()
-        #{abstract} stop()
+    class Trigger {
+        <<Pipe subclass>>
+        +process(ctx: PipeContext): PipeContext
+        #{abstract} _process(ctx: PipeContext): PipeResult
     }
 }
 
 package "Ticket System Integration" {
     abstract class TicketSystemService {
-        #{abstract} update_ticket(id, updates): bool
-        #{abstract} find_tickets(criteria): list[UnifiedTicket]
-        #{abstract} find_first_ticket(criteria): UnifiedTicket?
-        #{abstract} add_note(id, note): bool
+        +update_ticket(id, updates): bool
+        +find_tickets(criteria): list[UnifiedTicket]
+        +find_first_ticket(criteria): UnifiedTicket?
+        +add_note(id, note): bool
     }
 }
-
 ' Core Pipeline Relationships
 Pipe --> PipeContext : processes
 PipeContext --> PipeResult : stores
 
 ' Configuration & DI Relationships
-Pipe --|> Renderable
-TicketSystemService --|> Renderable
-RenderableFactory --> Pipe : creates
+Pipe -up-|> Injectable
+TicketSystemService -up-|> Injectable
+Trigger -up-|> Pipe : extends
+Orchestrator -up-|> Pipe : extends
+PipeRunner -up-|> Pipe : extends
+Injectable --> InjectableConfig : has
+InjectableConfig ..> Params : loosely has
+PipeFactory --> Pipe : creates
+PipeFactory ..> TemplateRenderer : uses
+TemplateRenderer --> Params : renders
 
 ' Orchestration Relationships
-Orchestrator --> PipeRunner : manages
-Orchestrator --> Trigger : manages
-Trigger --> PipeRunner : notifies
+Orchestrator --> PipeRunner : manages (as child pipes)
+PipeRunner --> Trigger : has
+
 
 @enduml

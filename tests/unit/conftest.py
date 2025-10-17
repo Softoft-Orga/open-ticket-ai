@@ -7,14 +7,13 @@ from injector import AssistedBuilder, Injector
 from pydantic import BaseModel, ConfigDict
 
 from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
-from open_ticket_ai.core import AppConfig, AppModule, ConfigLoader
-from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
+from open_ticket_ai.core.config.app_config import AppConfig
+from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
+from open_ticket_ai.core.dependency_injection.container import AppModule
 from open_ticket_ai.core.injectables.injectable import Injectable
-from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
-from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig, TriggerConfig
-from open_ticket_ai.core.orchestration.trigger import Trigger
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
@@ -37,7 +36,7 @@ class MutablePipeConfig(PipeConfig):
     model_config = ConfigDict(frozen=False, extra="forbid")
 
 
-class MutableTriggerConfig(TriggerConfig):
+class MutableTriggerConfig(PipeConfig):
     """A mutable version of TriggerConfig for testing purposes."""
 
     model_config = ConfigDict(frozen=False, extra="forbid")
@@ -63,7 +62,7 @@ class SimpleInjectable(Injectable[SimpleParams]):
 
 
 class SimplePipe(Pipe[SimpleParams]):
-    def __init__(self, config: PipeConfig, pipe_context: PipeContext, logger_factory: LoggerFactory, *args: Any,
+    def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any,
                  **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
 
@@ -75,8 +74,8 @@ class SimplePipe(Pipe[SimpleParams]):
         return PipeResult.success(data={"value": self._params.value})
 
 
-class SimpleTrigger(Trigger[SimpleParams]):
-    def __init__(self, config: InjectableConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
+class SimpleTrigger(Pipe[SimpleParams]):
+    def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
 
     @staticmethod
@@ -160,23 +159,23 @@ def mocked_ticket_system(logger_factory) -> MockedTicketSystem:
 
 
 @pytest.fixture
-def valid_raw_config() -> RawOpenTicketAIConfig:
-    return RawOpenTicketAIConfig(
+def valid_raw_config() -> OpenTicketAIConfig:
+    return OpenTicketAIConfig(
         infrastructure=InfrastructureConfig(logging=LoggingConfig(), default_template_renderer="jinja_renderer"),
-        services=[
-            InjectableConfig(
-                id="jinja_renderer",
+        services={
+            "jinja_renderer": InjectableConfigBase(
                 use="open_ticket_ai.base.template_renderers.jinja_renderer.JinjaRenderer",
                 params={"type": "jinja"},
             )
-        ],
-        orchestrator=OrchestratorConfig(),
+        },
+
+        orchestrator=PipeConfig(),
     )
 
 
 @pytest.fixture
-def invalid_raw_config() -> RawOpenTicketAIConfig:
-    return RawOpenTicketAIConfig(
+def invalid_raw_config() -> OpenTicketAIConfig:
+    return OpenTicketAIConfig(
         infrastructure=InfrastructureConfig(logging=LoggingConfig(), default_template_renderer="nonexistent_renderer"),
         services=[],
         orchestrator=OrchestratorConfig(),
@@ -229,15 +228,6 @@ def sample_registerable_configs() -> list[MutableRenderableConfig]:
 
 
 @pytest.fixture
-def config_loader_creator(logger_factory: LoggerFactory):
-    def _create(config_file_path: Path) -> ConfigLoader:
-        app_config = AppConfig(config_file_path=config_file_path)
-        return ConfigLoader(app_config, logger_factory)
-
-    return _create
-
-
-@pytest.fixture
 def mock_injector() -> MagicMock:
     mock = MagicMock(spec=Injector)
     mock_builder = MagicMock(spec=AssistedBuilder)
@@ -253,6 +243,6 @@ def mock_injector() -> MagicMock:
 
 @pytest.fixture
 def mock_otai_config() -> MagicMock:
-    mock = MagicMock(spec=RawOpenTicketAIConfig)
+    mock = MagicMock(spec=OpenTicketAIConfig)
     mock.get_services_list.return_value = []
     return mock

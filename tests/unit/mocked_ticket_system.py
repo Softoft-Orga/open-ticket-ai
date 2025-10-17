@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 from typing import Any
 
-from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
+from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
@@ -16,8 +16,8 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 
 class MockedTicketSystem(TicketSystemService):
     @staticmethod
-    def get_params_model() -> type[OpenTicketAIBaseModel]:
-        class Params(OpenTicketAIBaseModel):
+    def get_params_model() -> type[StrictBaseModel]:
+        class Params(StrictBaseModel):
             pass
 
         return Params
@@ -51,7 +51,7 @@ class MockedTicketSystem(TicketSystemService):
             for ticket in self._tickets.values()
             if self._matches_criteria(ticket, criteria)
         ]
-        return results[criteria.offset : criteria.offset + criteria.limit]
+        return results[criteria.offset: criteria.offset + criteria.limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         for ticket in self._tickets.values():
@@ -70,10 +70,10 @@ class MockedTicketSystem(TicketSystemService):
         if ticket.notes is None:
             ticket.notes = []
 
-        note_copy = note.model_copy(deep=True)
-        if note_copy.id is None:
-            note_copy.id = f"NOTE-{len(ticket.notes) + 1}"
-
+        note_id = note.id or "note-" + str(len(ticket.notes) + 1)
+        note_copy = note.model_copy(
+            update={"id": note_id}
+        )
         ticket.notes.append(note_copy)
         return True
 

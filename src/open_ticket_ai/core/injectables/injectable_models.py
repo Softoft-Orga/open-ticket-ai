@@ -39,6 +39,7 @@ class InjectableConfigBase(StrictBaseModel):
 
 class InjectableConfig(InjectableConfigBase):
     id: str = Field(
+        default="",
         description=(
             "Human-readable identifier for this injectables used for referencing in configurations and dependencies."
         )
@@ -46,6 +47,6 @@ class InjectableConfig(InjectableConfigBase):
 
     @model_validator(mode="after")
     def set_id_from_uid(self) -> Self:
-        if self.id is None:
-            self.id = self.uid
+        if self.id == "":
+            return self.model_copy(update={"id": self.uid})
         return self

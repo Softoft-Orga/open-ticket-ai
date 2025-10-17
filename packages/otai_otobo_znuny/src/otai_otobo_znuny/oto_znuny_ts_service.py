@@ -1,19 +1,19 @@
 from typing import Any
 
 from injector import inject
-from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
-from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
-from open_ticket_ai.core.ticket_system_integration.unified_models import (
-    TicketSearchCriteria,
-    UnifiedNote,
-    UnifiedTicket,
-)
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import (
     Article,
     Ticket,
     TicketSearch,
     TicketUpdate,
+)
+
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
+from open_ticket_ai.core.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedNote,
+    UnifiedTicket,
 )
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
     RenderedOTOBOZnunyTSServiceParams,
@@ -24,14 +24,14 @@ from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
     @staticmethod
-    def get_params_model() -> type[OpenTicketAIBaseModel]:
+    def get_params_model() -> type[RenderedOTOBOZnunyTSServiceParams]:
         return RenderedOTOBOZnunyTSServiceParams
 
     @inject
     def __init__(
-        self,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._client: OTOBOZnunyClient | None = None

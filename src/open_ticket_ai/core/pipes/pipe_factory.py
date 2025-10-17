@@ -4,7 +4,7 @@ from typing import Any
 
 from injector import singleton, inject, Injector, AssistedBuilder
 
-from open_ticket_ai.core import RawOpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe import Pipe
@@ -21,7 +21,7 @@ class PipeFactory:
             injector: Injector,
             template_renderer: TemplateRenderer,
             logger_factory: LoggerFactory,
-            otai_config: RawOpenTicketAIConfig
+            otai_config: OpenTicketAIConfig
     ):
         self._injector = injector
         self._template_renderer = template_renderer
@@ -52,8 +52,8 @@ class PipeFactory:
 
         pipe_class = locate(pipe_config.use)
 
-        if not isinstance(pipe_class, type):
-            raise TypeError("wrong type needs to be Pipe!")
+        if not isinstance(pipe_class, type) or not issubclass(pipe_class, Pipe):
+            raise TypeError(f"'{pipe_config.use}' is not a Pipe subclass!")
         pipe_class = typing.cast(type[Pipe], pipe_class)
         builder = self._injector.get(AssistedBuilder[pipe_class])
 

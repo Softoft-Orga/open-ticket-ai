@@ -2,15 +2,14 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from open_ticket_ai.core.config.config_models import InfrastructureConfig, RawOpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
-from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
+from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from tests.unit.conftest import SimplePipe
 
 
 def test_render_pipe_creates_pipe_instance(
@@ -34,7 +33,7 @@ def test_render_pipe_creates_pipe_instance(
 
     result = factory.render_pipe(config, sample_pipe_context)
 
-    assert isinstance(result, SimplePipe)
+    assert isinstance(result, Pipe)
     mock_template_renderer.render.assert_called_once_with(config.params, sample_pipe_context.model_dump())
 
 
@@ -135,10 +134,10 @@ def test_render_pipe_with_inject_dependencies(
         use="tests.unit.conftest.SimplePipe",
         params={"value": "service1_value"},
     )
-    otai_config = RawOpenTicketAIConfig(
+    otai_config = OpenTicketAIConfig(
         infrastructure=InfrastructureConfig(logging=LoggingConfig()),
         services={"service1": service_config},
-        orchestrator=OrchestratorConfig(),
+        orchestrator=PipeConfig(),
     )
     config = PipeConfig(
         id="main_pipe",
@@ -155,7 +154,7 @@ def test_render_pipe_with_inject_dependencies(
 
     result = factory.render_pipe(config, sample_pipe_context)
 
-    assert isinstance(result, SimplePipe)
+    assert isinstance(result, Pipe)
 
 
 def test_render_pipe_raises_type_error_for_non_pipe_class(
@@ -177,7 +176,7 @@ def test_render_pipe_raises_type_error_for_non_pipe_class(
         otai_config=mock_otai_config,
     )
 
-    with pytest.raises(TypeError, match="wrong type"):
+    with pytest.raises(TypeError, match=f".*{config.use}'.*Pipe.*"):
         factory.render_pipe(config, sample_pipe_context)
 
 

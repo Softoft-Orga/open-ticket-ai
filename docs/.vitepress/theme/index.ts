@@ -25,7 +25,6 @@ export default {
         app.component('OTAIPredictionDemo', defineAsyncComponent(() => import('../components/predictionDemo/OTAIPredictionDemo.vue')))
         app.component('ServicePackages', defineAsyncComponent(() => import('../components/product/ServicePackages.vue')))
         app.component('SupportPlans', defineAsyncComponent(() => import('../components/product/SupportPlans.vue')))
-        app.component('CodeDocumentation', defineAsyncComponent(() => import('../components/autoDocs/CodeDocumentation.vue')))
         app.component('AppTabs', defineAsyncComponent(() => import('../components/core/basic/Tabs.vue')))
         app.component('Table', defineAsyncComponent(() => import('../components/core/table/Table.vue')))
         app.component('Row', defineAsyncComponent(() => import('../components/core/table/Row.vue')))

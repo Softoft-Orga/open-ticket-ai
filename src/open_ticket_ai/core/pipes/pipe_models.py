@@ -69,6 +69,9 @@ class PipeResult(StrictBaseModel):
             data={**self.data, **other.data},
         )
 
+    def has_succeeded(self) -> bool:
+        return self.succeeded
+
     def has_failed(self) -> bool:
         return not self.succeeded and not self.was_skipped
 

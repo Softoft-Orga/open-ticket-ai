@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
-from open_ticket_ai.core.orchestration.orchestrator_models import OrchestratorConfig
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
 class InfrastructureConfig(BaseModel):
@@ -18,7 +18,11 @@ class InfrastructureConfig(BaseModel):
     )
 
 
-class RawOpenTicketAIConfig(BaseModel):
+class OpenTicketAIConfig(BaseModel):
+    api_version: str = Field(
+        default="1",
+        description="API version of the OpenTicketAI application for compatibility and feature management.",
+    )
     plugins: list[str] = Field(
         default_factory=list,
         description="List of plugin module paths to load and enable for extending application functionality.",
@@ -31,8 +35,8 @@ class RawOpenTicketAIConfig(BaseModel):
         default_factory=dict,
         description="List of service configurations defining available ticket system integrations and other services.",
     )
-    orchestrator: OrchestratorConfig = Field(
-        default_factory=OrchestratorConfig,
+    orchestrator: PipeConfig = Field(
+        default_factory=PipeConfig,
         description="Orchestrator configuration defining runners, triggers, and pipes execution workflow.",
     )
 
@@ -41,5 +45,5 @@ class RawOpenTicketAIConfig(BaseModel):
             InjectableConfig.model_validate(
                 {"id": _id, **service_base.model_dump()}
             )
-            for _id, service_base in self.services.values()
+            for _id, service_base in self.services.items()
         ]

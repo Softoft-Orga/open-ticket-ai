@@ -1,13 +1,11 @@
 from typing import Annotated, Literal
 
-from pydantic import ConfigDict, Field
+from pydantic import Field
 
-from open_ticket_ai.core.base_model import OpenTicketAIBaseModel
+from open_ticket_ai.core.base_model import StrictBaseModel
 
 
-class TemplateRendererConfig(OpenTicketAIBaseModel):
-    model_config = ConfigDict(extra="allow", frozen=True)
-
+class TemplateRendererConfig(StrictBaseModel):
     type: str = Field(description="Type identifier for the template renderer implementation to use.")
 
 

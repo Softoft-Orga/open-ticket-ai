@@ -1,10 +1,10 @@
 import pytest
 from pydantic import Field, ValidationError
 
-from open_ticket_ai.core.base_model import OpenTicketAIBaseModel, StrictBaseModel
+from open_ticket_ai.core.base_model import StrictBaseModel
 
 
-class SampleModel(OpenTicketAIBaseModel):
+class SampleModel(StrictBaseModel):
     name: str = Field(description="Name of the item for identification purposes.")
     count: int = Field(default=0, description="Number of items in the collection.")
     tags: list[str] = Field(default_factory=list, description="List of tags for categorizing and organizing items.")
@@ -55,10 +55,6 @@ def test_openticketai_base_model_field_descriptions():
     assert schema["properties"]["count"]["description"] == "Number of items in the collection."
     assert schema["properties"]["tags"]["description"] == "List of tags for categorizing and organizing items."
     assert schema["properties"]["metadata"]["description"] == "Dictionary of key-value metadata for additional context."
-
-
-def test_strict_base_model_alias_exists():
-    assert StrictBaseModel is OpenTicketAIBaseModel
 
 
 def test_openticketai_base_model_validation_error_on_missing_required():

@@ -18,7 +18,7 @@ class Pipe[ParamsT: BaseModel](Injectable[ParamsT], ABC):
 
     @final
     async def process(self, context: PipeContext) -> PipeResult:
-        if self._config.should_run and self._are_dependencies_fulfilled(context):
+        if self._should_run(context):
             return await self._process(context)
         return PipeResult.skipped()
 
@@ -28,3 +28,6 @@ class Pipe[ParamsT: BaseModel](Injectable[ParamsT], ABC):
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
         return PipeResult.skipped()
+
+    async def _should_run(self, context: PipeContext) -> bool:
+        return self._config.should_run and self._are_dependencies_fulfilled(context)
