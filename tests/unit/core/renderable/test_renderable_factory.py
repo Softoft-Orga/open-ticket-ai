@@ -1,11 +1,11 @@
 from unittest.mock import MagicMock
 
 import pytest
-from open_ticket_ai.core.pipes.pipe import Pipe
 
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
+from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
