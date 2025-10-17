@@ -47,9 +47,7 @@ def test_logger_respects_log_level(level: str, caplog: LogCaptureFixture) -> Non
         ("%(name)s: %(message)s", r"test_logger: Test message"),
     ],
 )
-def test_logger_respects_log_format(
-    log_format: str, expected_pattern: str, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_logger_respects_log_format(log_format: str, expected_pattern: str, capsys: pytest.CaptureFixture[str]) -> None:
     factory = create_logger_factory(LoggingConfig(log_format=log_format))
     logger = factory.create("test_logger")
 
