@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import Field, BaseModel
+from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe import Pipe

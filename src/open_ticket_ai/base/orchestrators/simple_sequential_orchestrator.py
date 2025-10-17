@@ -1,7 +1,7 @@
 import asyncio
 from datetime import timedelta
 
-from pydantic import Field, BaseModel
+from pydantic import BaseModel, Field
 
 from open_ticket_ai.base import CompositePipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
