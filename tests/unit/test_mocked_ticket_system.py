@@ -1,6 +1,6 @@
 import pytest
 
-from open_ticket_ai.core.ticket_system_integration.unified_models import (
+from open_ticket_ai.base.ticket_system_integration import (
     TicketSearchCriteria,
     UnifiedEntity,
     UnifiedNote,

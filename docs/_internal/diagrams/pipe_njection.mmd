@@ -1,0 +1,63 @@
+%%{init:{
+  "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"basis"},
+  "themeVariables":{"fontSize":"14px","primaryColor":"#3b82f6"}
+}}%%
+
+flowchart TB
+    subgraph CONFIG["📄 YAML Configuration"]
+        YAML["services:<br/>- id: otobo_znuny<br/>  use: OTOBOService<br/>  params: {...}<br/><br/>orchestrator:<br/>  runners:<br/>    - on: [trigger]<br/>      run:<br/>        id: workflow<br/>        steps:<br/>          - id: fetch<br/>            use: FetchTicketsPipe<br/>            injects:<br/>              ticket_system: otobo_znuny"]
+    end
+
+    subgraph BOOT["🔧 Bootstrap (AppModule)"]
+        direction TB
+        LoadConfig["ConfigLoader<br/>loads YAML"]
+        CreateRenderer["Create TemplateRenderer<br/>(NOT rendered)"]
+        BindServices["Bind to Injector:<br/>- TemplateRenderer<br/>- LoggerFactory<br/>- RenderableFactory<br/>- Service Registry"]
+
+        LoadConfig --> CreateRenderer
+        CreateRenderer --> BindServices
+    end
+
+    subgraph REGISTRY["📦 Service Registry"]
+        direction TB
+        ServiceCache["Service Cache<br/>(by service_id)<br/><br/>{'otobo_znuny': <OTOBOService>}"]
+        LookupById["get_service_by_id(id)<br/>→ instantiate if needed<br/>→ cache singleton<br/>→ return instance"]
+
+        ServiceCache -.-> LookupById
+    end
+
+    subgraph FACTORY["🏭 RenderableFactory"]
+        direction TB
+        FactoryAPI["render_pipe(config, context)"]
+        ResolveInjects["Resolve 'injects' dict:<br/>ticket_system: 'otobo_znuny'<br/>→ lookup service by ID"]
+        GetBuilder["Get AssistedBuilder<br/>for Pipe class"]
+        CallBuilder["builder.build(<br/>  config=config,<br/>  pipe_context=context,<br/>  ticket_system=service<br/>)"]
+
+        FactoryAPI --> ResolveInjects
+        ResolveInjects --> GetBuilder
+        GetBuilder --> CallBuilder
+    end
+
+    subgraph PIPE["🔧 Pipe Class"]
+        direction TB
+        Constructor["@inject<br/>def __init__(self,<br/>  template_renderer: TemplateRenderer,<br/>  logger_factory: LoggerFactory,<br/>  ticket_system: TicketSystemService,<br/>  @assisted config: PipeConfig,<br/>  @assisted pipe_context: PipeContext)"]
+        RenderParams["Render params with<br/>TemplateRenderer"]
+        ValidateParams["Validate with Pydantic<br/>self._params = ParamsModel.model_validate(...)"]
+
+        Constructor --> RenderParams
+        RenderParams --> ValidateParams
+    end
+
+    YAML ==> LoadConfig
+    BindServices ==> REGISTRY
+    BindServices ==> FACTORY
+
+    FactoryAPI --> LookupById
+    LookupById --> CallBuilder
+    CallBuilder ==> Constructor
+
+    style CONFIG fill:#1e3a5f,stroke:#0d1f3d,color:#e0e0e0
+    style BOOT fill:#5a189a,stroke:#3c096c,color:#e0e0e0
+    style REGISTRY fill:#2d6a4f,stroke:#1b4332,color:#e0e0e0
+    style FACTORY fill:#d97706,stroke:#b45309,color:#fff
+    style PIPE fill:#dc2626,stroke:#b91c1c,color:#fff

@@ -1,0 +1,55 @@
+@startuml
+package "Core Models" {
+  class ClassificationReq {
+    + text: str
+    + top_k: int
+  }
+
+  class ClassificationResult {
+    + label: str
+    + confidence: float
+  }
+}
+
+package "Backend Config" {
+  abstract class BackendConfig {
+    + backend: str
+  }
+
+  class HFLocalBackendConfig extends BackendConfig {
+    + backend: "hf_local"
+    + model: str
+    + token: str?
+  }
+
+  class ClassificationParams {
+    + prompt: str
+    + top_k: int
+    + backend: BackendConfig
+  }
+}
+
+package "Services" {
+  abstract class ClassificationService {
+    + classify(req: ClassificationReq): ClassificationResult
+    + aclassify(req: ClassificationReq): ClassificationResult
+  }
+
+  class HFClassificationService implements ClassificationService
+}
+
+
+package "Pipe" {
+  class ClassificationPipe extends Pipe {
+    - service: ClassificationService
+    + get_params_model(): type[ClassificationParams]
+    - process(): PipeResult
+  }
+}
+
+ClassificationParams *-- BackendConfig
+ClassificationPipe *-- ClassificationService
+ClassificationPipe ..> ClassificationParams : uses
+ClassificationServiceFactory ..> BackendConfig : create(cfg)
+ClassificationServiceFactory ..> ClassificationService : returns
+@enduml

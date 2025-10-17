@@ -383,7 +383,7 @@ def pipeline_context():
 @pytest.fixture
 def mock_classifier():
     classifier = Mock()
-    classifier.classify.return_value = {
+    classifier._classify.return_value = {
         "queue": "billing",
         "confidence": 0.85
     }
@@ -888,7 +888,7 @@ def minimal_config(tmp_path):
 def mock_classifier():
     """Mock classifier with deterministic responses."""
     mock = Mock()
-    mock.classify.return_value = {
+    mock._classify.return_value = {
         "label": "billing",
         "confidence": 0.85
     }

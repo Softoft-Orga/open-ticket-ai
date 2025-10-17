@@ -1,9 +1,9 @@
-from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.ticket_system_integration.unified_models import (
+from open_ticket_ai.base.ticket_system_integration import (
     UnifiedEntity,
     UnifiedNote,
     UnifiedTicket,
 )
+from open_ticket_ai.core.base_model import StrictBaseModel
 from otobo_znuny.domain_models.basic_auth_model import BasicAuth
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket

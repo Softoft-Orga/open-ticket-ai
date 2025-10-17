@@ -1,9 +1,9 @@
 from abc import ABC
 from typing import Any
 
+from open_ticket_ai.base.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe import Pipe
-from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 
 
 class TicketSystemPipe[ParamsT: StrictBaseModel](Pipe[ParamsT], ABC):

@@ -29,11 +29,12 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
     @inject
     def __init__(
         self,
+        client: OTOBOZnunyClient,
         *args: Any,
         **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
-        self._client: OTOBOZnunyClient | None = None
+        self._client: OTOBOZnunyClient | None = client
         self.initialize()
 
     @property

@@ -19,13 +19,15 @@ open_ticket_ai:
 
   services:
     jinja_default:
-      use: "open_ticket_ai.base.template_renderers.jinja_renderer:JinjaRenderer"
+      use: "open_ticket_ai.JinjaRenderer"
 
     otobo_znuny:
-      use: "otai_otobo_znuny.oto_znuny_ts_service:OTOBOZnunyTicketSystemService"
+      use: "otai_otobo_znuny.OTOBOZnunyTicketSystemService"
       params:
         base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
-        password: "{{ env.OTAI_OTOBO_ZNUNY_PASSWORD }}"
+
+    hf_local:
+      use: "otai_hf_local.HFLocalService"
 
   orchestrator:
     use: "open_ticket_ai.SimpleSequentialOrchestrator"

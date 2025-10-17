@@ -1,0 +1,111 @@
+classDiagram
+    %% ===================== PIPELINE CORE =====================
+    namespace PipelineCore {
+        class Pipe {
+            <<abstract>>
+            +config: PipeConfig
+            +process(ctx: PipeContext) PipeContext
+            +have_dependent_pipes_been_run(ctx) bool
+            #_process()* PipeResult
+        }
+
+        class PipeContext {
+            +pipes: dict~str, PipeResult~
+            +params: dict
+            +parent: PipeContext?
+            +has_succeeded(pipe_id: str) bool
+        }
+
+        class PipeResult {
+            +succeeded: bool
+            +message: str
+            +data: dict
+        }
+    }
+
+    %% ===================== CONFIGURATION & DI =====================
+    namespace ConfigurationDI {
+        class Injectable {
+            <<abstract>>
+            +config: InjectableConfig
+            +__init__(params: BaseModel)
+        }
+
+        class PipeFactory {
+            +create_pipe(config) Pipe
+            +render_pipe(config, context) Pipe
+            +create_trigger(config) Trigger
+        }
+
+        class TemplateRenderer {
+            <<abstract>>
+            +render(obj, scope) Any
+            #_render(template_str, scope)* Any
+        }
+    }
+
+    %% ===================== ORCHESTRATION =====================
+    namespace Orchestration {
+        class Orchestrator {
+            -runners: list~PipeRunner~
+            +run() void
+            -_create_pipe_runners() void
+        }
+
+        class PipeRunner {
+            -id: str
+            -trigger_pipe: Pipe
+            -execution_pipe: Pipe
+            +execute() void
+        }
+
+        class Trigger {
+            <<Pipe subclass>>
+            +process(ctx: PipeContext) PipeContext
+            #_process()* PipeResult
+        }
+    }
+
+    %% ===================== TICKET SYSTEM INTEGRATION =====================
+    namespace TicketSystem {
+        class TicketSystemService {
+            <<abstract>>
+            #update_ticket(id, updates)* bool
+            #find_tickets(criteria)* list~UnifiedTicket~
+            #find_first_ticket(criteria)* UnifiedTicket?
+            #add_note(id, note)* bool
+        }
+
+        class UnifiedTicket {
+            +id: str
+            +subject: str
+            +queue: UnifiedEntity
+            +priority: UnifiedEntity
+            +notes: list~UnifiedNote~
+        }
+    }
+
+    %% ===================== RELATIONSHIPS =====================
+
+    %% Pipeline Core
+    Pipe --> PipeContext : processes
+    PipeContext --> PipeResult : stores
+    Pipe ..> PipeResult : returns
+
+    %% Configuration & DI
+    Pipe --|> Injectable : implements
+    TicketSystemService --|> Injectable : implements
+    Trigger --|> Pipe : extends
+    PipeFactory --> Pipe : creates
+    PipeFactory --> Trigger : creates
+    PipeFactory ..> TemplateRenderer : uses
+
+    %% Orchestration
+    Orchestrator --> PipeRunner : manages
+    PipeRunner --> Trigger : has trigger_pipe
+    PipeRunner --> Pipe : has execution_pipe
+
+    %% Ticket System
+    TicketSystemService ..> UnifiedTicket : works with
+
+    %% ===================== NOTES =====================
