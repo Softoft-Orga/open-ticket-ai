@@ -46,14 +46,12 @@ async def test_add_note_pipe_adds_note_to_ticket(
         assert f"New note for {ticket_id}" in note_subjects
 
 
-@pytest.mark.asyncio
-async def test_add_note_pipe_validation_subject_int():
+def test_add_note_pipe_validation_subject_int():
     with pytest.raises(ValidationError):
         AddNoteParams(ticket_id="TICKET-1", note={"subject": 123, "body": "Test"})
 
 
-@pytest.mark.asyncio
-async def test_add_note_pipe_validation_subject_dict():
+def test_add_note_pipe_validation_subject_dict():
     with pytest.raises(ValidationError):
         AddNoteParams(
             ticket_id="TICKET-1", note={"subject": {"key": "value"}, "body": "Test"}
