@@ -84,7 +84,7 @@ async def test_pipe_runs_when_trigger_succeeds(logger_factory, mock_pipe_factory
     result = await runner.process(empty_context)
 
     # Verify the main pipe was called
-    assert mock_main_pipe.process.called, "Main pipe should have been called when trigger succeeds"
+    mock_main_pipe.process.assert_called_once()
     assert result.has_succeeded(), "Runner should succeed when both trigger and main pipe succeed"
 
     # Verify context.parent is set correctly
@@ -126,7 +126,7 @@ async def test_pipe_not_run_when_trigger_fails(logger_factory, mock_pipe_factory
     result = await runner.process(empty_context)
 
     # Verify the main pipe was NOT called
-    assert not mock_main_pipe.process.called, "Main pipe should NOT have been called when trigger fails"
+    mock_main_pipe.process.assert_not_called()
     assert result.was_skipped, "Runner should return skipped result when trigger fails"
 
 
