@@ -1,4 +1,5 @@
 import pytest
+from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
 from pydantic import ValidationError
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
@@ -7,7 +8,6 @@ from open_ticket_ai.base.pipes.ticket_system_pipes.update_ticket_pipe import (
 )
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
-from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
 
 pytestmark = [pytest.mark.unit]
 
