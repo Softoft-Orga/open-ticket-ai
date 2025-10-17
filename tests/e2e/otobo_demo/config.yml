@@ -28,8 +28,6 @@ open_ticket_ai:
 
     hf_local:
       use: "otai_hf_local.HFLocalService"
-      params:
-        model: "http://localhost:8080"
 
   orchestrator:
     use: "open_ticket_ai.SimpleSequentialOrchestrator"
