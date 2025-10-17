@@ -3,13 +3,13 @@ from __future__ import annotations
 from typing import Any
 
 import pytest
-
-from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipeline.pipe import Pipe
 from open_ticket_ai.core.pipeline.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipeline.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.renderable.renderable import Renderable
+
+from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 
 pytestmark = [pytest.mark.unit]
 
@@ -87,9 +87,7 @@ async def test_process_with_dependencies_fulfilled(
 ) -> None:
     context_with_results = empty_pipeline_context.with_pipe_result(
         "dependency_pipe_1", PipeResult.success()
-    ).with_pipe_result(
-        "dependency_pipe_2", PipeResult.success()
-    )
+    ).with_pipe_result("dependency_pipe_2", PipeResult.success())
 
     config = PipeConfig(
         id="test_pipe",
@@ -109,9 +107,7 @@ async def test_process_with_one_dependency_not_fulfilled(
     logger_factory: LoggerFactory,
     empty_pipeline_context: PipeContext,
 ) -> None:
-    context_with_partial_results = empty_pipeline_context.with_pipe_result(
-        "dependency_pipe_1", PipeResult.success()
-    )
+    context_with_partial_results = empty_pipeline_context.with_pipe_result("dependency_pipe_1", PipeResult.success())
 
     config = PipeConfig(
         id="test_pipe",
@@ -130,9 +126,7 @@ async def test_process_with_dependency_skipped(
     logger_factory: LoggerFactory,
     empty_pipeline_context: PipeContext,
 ) -> None:
-    context_with_skipped = empty_pipeline_context.with_pipe_result(
-        "dependency_pipe_1", PipeResult.skipped()
-    )
+    context_with_skipped = empty_pipeline_context.with_pipe_result("dependency_pipe_1", PipeResult.skipped())
 
     config = PipeConfig(
         id="test_pipe",
