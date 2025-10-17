@@ -36,7 +36,8 @@ def test_with_pipe_result_adds_new_result():
     new_context = context.with_pipe_result("pipe1", result)
 
     assert "pipe1" in new_context.pipe_results
-    assert new_context.pipe_results["pipe1"] == result
+    stored_result = PipeResult.model_validate(new_context.pipe_results["pipe1"])
+    assert stored_result == result
 
 
 def test_with_pipe_result_preserves_existing_results():
