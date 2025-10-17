@@ -102,7 +102,7 @@ fixable = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = [
-    "ANN001", "ANN201", "ANN202", "ANN401", "S101"  # tests lockerer
+    "ANN001", "ANN201", "ANN202", "ANN401", "S101", "ARG"  # tests lockerer
 ]
 [tool.mypy]
 python_version = "3.13"

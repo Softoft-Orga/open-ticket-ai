@@ -1,0 +1,9 @@
+open_ticket_ai:
+  api_version: "2"
+  plugins:
+    - "plugin1"
+    - "plugin2"
+  infrastructure:
+    logging:
+      level: "INFO"
+    default_template_renderer: "jinja_default"

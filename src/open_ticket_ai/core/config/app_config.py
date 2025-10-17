@@ -10,6 +10,8 @@ class AppConfig(BaseSettings):
         env_nested_delimiter="__",
         env_file=".env",
         yaml_file="config.yml",
+        populate_by_name=True,
+        extra="allow",
     )
 
     open_ticket_ai: OpenTicketAIConfig = Field(
