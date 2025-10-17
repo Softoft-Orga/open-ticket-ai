@@ -18,7 +18,7 @@ class UpdateTicketPipe(TicketSystemPipe[UpdateTicketParams]):
     def get_params_model() -> type[UpdateTicketParams]:
         return UpdateTicketParams
 
-    async def _process(self, *_: object, **__: object) -> PipeResult:
+    async def _process(self, _context: object) -> PipeResult:
         success = await self._ticket_system.update_ticket(
             ticket_id=self._params.ticket_id,
             updates=self._params.updated_ticket,

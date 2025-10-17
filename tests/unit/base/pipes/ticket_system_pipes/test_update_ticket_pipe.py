@@ -174,4 +174,4 @@ async def test_update_ticket_nonexistent_id(mocked_ticket_system, logger_factory
     result = await pipe.process(context)
 
     assert result.succeeded is False
-    assert "Failed" in result.message or "failed" in result.message
+    assert "failed" in result.message.lower()
