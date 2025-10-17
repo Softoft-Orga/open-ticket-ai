@@ -13,6 +13,15 @@ from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 
 @pytest.mark.asyncio
 async def test_orchestrator_execution_with_keyboard_interrupt(logger_factory):
+    """Test that orchestrator pipe is called multiple times during app execution.
+
+    This test verifies that app.run() continuously calls the orchestrator's process() method
+    in a loop until interrupted. We use asyncio to run the app for a short time, then cancel
+    it to simulate a KeyboardInterrupt scenario.
+
+    Note: The test mocks PipeContext.empty() and orchestrator.runners which are referenced
+    by app.py but don't exist in the actual model classes.
+    """
     orchestrator_config = PipeConfig(
         id="test-orchestrator",
         use="open_ticket_ai.base.orchestrators.simple_sequential_orchestrator.SimpleSequentialOrchestrator",
@@ -86,6 +95,15 @@ async def test_orchestrator_execution_with_keyboard_interrupt(logger_factory):
 
 @pytest.mark.asyncio
 async def test_logging_output():
+    """Test that app.run() logs appropriate startup messages.
+
+    This test verifies that the OpenTicketAIApp logs messages containing
+    "open ticket ai" (case-insensitive) when run() is called. The app should
+    log startup information before processing begins.
+
+    Note: The test mocks PipeContext.empty() and orchestrator.runners which are referenced
+    by app.py but don't exist in the actual model classes.
+    """
     orchestrator_config = PipeConfig(
         id="test-orchestrator",
         use="open_ticket_ai.base.orchestrators.simple_sequential_orchestrator.SimpleSequentialOrchestrator",
