@@ -18,10 +18,14 @@ class CompositePipe[ParamsT: BaseModel = StrictBaseModel](Pipe[ParamsT]):
         super().__init__(*args, **kwargs)
         self._factory: PipeFactory = factory
 
-    @final
     async def _process_steps(self, context: PipeContext) -> list[PipeResult]:
         context = context.model_copy(update={"parent": context.params})
-        return [await self._process_step(step_config, context) for step_config in self._config.steps or []]
+        results = []
+        for step_config in self._config.steps or []:
+            result = await self._process_step(step_config, context)
+            context = context.with_model(result)
+            results.append(result)
+        return results
 
     @final
     async def _process_step(self, step_config: PipeConfig, context: PipeContext) -> PipeResult:

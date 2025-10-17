@@ -1,8 +1,7 @@
 from typing import Any
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 
-from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
@@ -10,7 +9,7 @@ from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeResult, PipeConfig
 
 
-class SimpleSequentialRunnerParams(StrictBaseModel):
+class SimpleSequentialRunnerParams(BaseModel):
     on: PipeConfig = Field(..., description="trigger Pipe the run pipe only runs when this succeeds")
     run: PipeConfig = Field(..., description="Pipe to run when triggered")
 
@@ -22,10 +21,11 @@ class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
         self._factory: PipeFactory = pipe_factory
 
     @staticmethod
-    def get_params_model() -> type[StrictBaseModel]:
+    def get_params_model() -> type[BaseModel]:
         return SimpleSequentialRunnerParams
 
     async def _process(self, context: PipeContext) -> PipeResult:
+        context = context.model_copy(update={"parent": context.params})
         on_pipe = self._factory.render_pipe(self._params.on, context)
         run_pipe = self._factory.render_pipe(self._params.run, context)
 
