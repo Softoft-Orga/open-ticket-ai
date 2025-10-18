@@ -4,7 +4,7 @@ import logging
 
 from _pytest.logging import LogCaptureFixture
 
-from open_ticket_ai.base.loggers.stdlib_logging_adapter import StdlibLogger, StdlibLoggerFactory
+from open_ticket_ai.core.logging.stdlib_logging_adapter import StdlibLogger, StdlibLoggerFactory
 
 
 def test_stdlib_logger_basic_logging(caplog: LogCaptureFixture) -> None:

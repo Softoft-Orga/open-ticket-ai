@@ -6,7 +6,6 @@ import pytest
 from injector import AssistedBuilder, Injector
 from pydantic import BaseModel, ConfigDict
 
-from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.base.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
 )
@@ -18,6 +17,7 @@ from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
+from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult

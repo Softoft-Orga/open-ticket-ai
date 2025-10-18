@@ -1,20 +1,24 @@
-import typing
 from abc import ABC, abstractmethod
 from typing import Any
 
 from pydantic import BaseModel
 
+from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import AppLogger, LoggerFactory
 
 
-class Injectable[ParamsT: BaseModel](ABC):
+class Injectable[ParamsT: BaseModel = StrictBaseModel](ABC):
     def __init__(self, config: InjectableConfig, logger_factory: LoggerFactory, *_: Any, **__: Any) -> None:
         self._config: InjectableConfig = config
-        self._params: ParamsT = typing.cast("ParamsT", self.get_params_model().model_validate(config.params))
+        self._params: ParamsT = self.get_params_model().model_validate(config.params)
         self._logger: AppLogger = logger_factory.create(config.id)
 
     @staticmethod
     @abstractmethod
     def get_params_model() -> type[BaseModel]:
         pass
+
+    @classmethod
+    def get_registry_name(cls) -> str:
+        return cls.__name__

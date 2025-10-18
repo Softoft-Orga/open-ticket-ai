@@ -12,10 +12,6 @@ class InfrastructureConfig(BaseModel):
         default_factory=LoggingConfig,
         description="Configuration for application logging including level, format, and output destination.",
     )
-    default_template_renderer: str = Field(
-        default="jinja2",
-        description="Name of the default template renderer to use for rendering templates across the application.",
-    )
 
 
 class OpenTicketAIConfig(BaseModel):

@@ -3,7 +3,7 @@ name = "open_ticket_ai"
 version = "1.0.17"
 description = "AI-powered ticket processing and automation system"
 readme = "docs/raw_en_docs/README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
@@ -20,7 +20,7 @@ classifiers = [
     "Intended Audience :: System Administrators",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Office/Business",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -29,7 +29,6 @@ classifiers = [
 dependencies = [
     "pydantic~=2.12.0",
     "pyyaml~=6.0.0",
-    "injector~=0.22.0",
     "pyfiglet~=1.0.2",
     "apscheduler~=3.11.0",
     "jinja2~=3.1.6",
@@ -38,14 +37,12 @@ dependencies = [
     "typer~=0.19.2",
     "rich~=14.2.0",
     "httpx~=0.27.0",
-    "mdxlate~=1.1.2",
     "otobo-znuny~=1.4.0",
     "pydantic-settings>=2.11.0",
-    "pydantic-mermaid>=0.3.0",
-    "jsonschema2md>=1.7.0",
     "tabulate>=0.9.0",
     "types-tabulate>=0.9.0.20241207",
     "pytest-cov>=6.0.0",
+    "injector>=0.22.0",
 ]
 
 [project.urls]
@@ -55,6 +52,9 @@ Documentation = "https://open-ticket-ai.com"
 
 [project.scripts]
 open-ticket-ai = "open_ticket_ai.core.cli:main"
+
+[project.entry-points."open_ticket_ai.plugins"]
+base = "open_ticket_ai.base.plugin:plugin"
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -92,7 +92,6 @@ select = [
     "DTZ", # tz-aware datetimes
     "RUF", # ruff extras
     "TID", # tidy imports
-    "TCH", # typing cleanup
     "ANN", # type annotation coverage
     "S", # security
     "PD",
@@ -102,10 +101,10 @@ fixable = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = [
-    "ANN001", "ANN201", "ANN202", "ANN401", "S101"  # tests lockerer
+    "ANN001", "ANN201", "ANN202", "ANN401", "S101"
 ]
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 plugins = ["pydantic.mypy"]
 strict = false
 warn_unused_ignores = false

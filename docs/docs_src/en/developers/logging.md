@@ -30,7 +30,7 @@ The logging adapters can be configured and used directly without the dependency 
 logging system at application startup and create loggers as needed.
 
 ```python
-from open_ticket_ai.base.loggers.stdlib_logging_adapter import (
+from open_ticket_ai.core.logging.stdlib_logging_adapter import (
     StdlibLoggerFactory,
     create_logger_factory,
 )
@@ -91,7 +91,7 @@ The stdlib adapter wraps Python's built-in `logging` module.
 The stdlib logging can be configured with custom format strings and date formats.
 
 ```python
-from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
+from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_factory
 
 create_logger_factory(
     level="INFO",

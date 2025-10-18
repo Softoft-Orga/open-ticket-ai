@@ -3,7 +3,7 @@ name = "otai_otobo_znuny"
 version = "1.0.17"
 description = "OTOBO/Znuny ticket system plugin for Open Ticket AI"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },

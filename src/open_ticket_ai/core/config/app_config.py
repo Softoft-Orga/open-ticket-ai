@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -11,6 +13,9 @@ class AppConfig(BaseSettings):
         env_file=".env",
         yaml_file="config.yml",
     )
+
+    PLUGIN_NAME_PREFIX: ClassVar[str] = "otai-"
+    REGISTRY_IDENTIFIER_SEPERATOR: ClassVar[str] = ":"
 
     open_ticket_ai: OpenTicketAIConfig = Field(
         default_factory=OpenTicketAIConfig, validation_alias=AliasChoices("cfg", "open_ticket_ai")

@@ -15,7 +15,6 @@ open_ticket_ai:
       root:
         level: DEBUG
         handlers: [ console ]
-    default_template_renderer: "jinja_default"
 
   services:
     jinja_default:

@@ -3,12 +3,12 @@ from pydoc import locate
 
 from injector import Binder, Module, provider, singleton
 
-from open_ticket_ai.base.loggers.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,
 )
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering import JinjaRendererConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
@@ -25,7 +25,7 @@ class AppModule(Module):
 
     @provider
     def create_renderer_from_service(
-        self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
+            self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         service_id = config.infrastructure.default_template_renderer
         service_config = next((s for s in config.services if s.id == service_id), None)
