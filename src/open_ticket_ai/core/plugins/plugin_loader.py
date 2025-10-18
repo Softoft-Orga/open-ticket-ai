@@ -5,12 +5,12 @@ from injector import inject
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.plugins.plugin_base import Plugin, CreatePluginFn
+from open_ticket_ai.core.plugins.plugin_base import CreatePluginFn, Plugin
 
 
 class PluginLoadError(Exception):
     """Raised when a plugin fails to load."""
-    pass
+
 
 
 class PluginLoader:
@@ -21,7 +21,7 @@ class PluginLoader:
         self._app_config = app_config
 
     def load_plugins(self):
-        for ep in entry_points(group='open_ticket_ai.plugins'):
+        for ep in entry_points(group="open_ticket_ai.plugins"):
             create_plugin: CreatePluginFn = ep.load()
             plugin = create_plugin(self._app_config)
             if not isinstance(plugin, Plugin):
