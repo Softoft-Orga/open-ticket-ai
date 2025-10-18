@@ -1,7 +1,11 @@
 import pytest
 
-from open_ticket_ai.base.ticket_system_integration.unified_models import UnifiedTicket, UnifiedNote, \
-    TicketSearchCriteria, UnifiedEntity
+from open_ticket_ai.base.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedEntity,
+    UnifiedNote,
+    UnifiedTicket,
+)
 
 
 @pytest.mark.asyncio

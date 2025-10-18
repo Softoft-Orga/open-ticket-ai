@@ -2,11 +2,11 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from open_ticket_ai.core.pipes.pipe import Pipe
 from pydantic import BaseModel
 
 from open_ticket_ai.base.pipe_runners.simple_sequential_pipe_runner import SimpleSequentialRunner
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 
