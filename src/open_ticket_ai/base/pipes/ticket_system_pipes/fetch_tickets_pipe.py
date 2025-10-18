@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import Field
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
@@ -17,7 +19,7 @@ class FetchTicketsPipe(TicketSystemPipe[FetchTicketsParams]):
     def get_params_model() -> type[FetchTicketsParams]:
         return FetchTicketsParams
 
-    async def _process(self) -> PipeResult:
+    async def _process(self, *_: Any, **__: Any) -> PipeResult:
         search_criteria = self._params.ticket_search_criteria
         return PipeResult(
             succeeded=True,

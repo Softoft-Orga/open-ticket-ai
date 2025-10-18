@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import Field
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
@@ -22,7 +24,7 @@ class AddNotePipe(TicketSystemPipe[AddNoteParams]):
     def get_params_model() -> type[AddNoteParams]:
         return AddNoteParams
 
-    async def _process(self) -> PipeResult:
+    async def _process(self, *_: Any, **__: Any) -> PipeResult:
         ticket_id_str = str(self._params.ticket_id)
         await self._ticket_system.add_note(ticket_id_str, self._params.note)
         return PipeResult(succeeded=True, data={})

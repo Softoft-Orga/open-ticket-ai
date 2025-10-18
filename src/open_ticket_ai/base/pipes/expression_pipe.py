@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
@@ -18,5 +20,5 @@ class ExpressionPipe(Pipe[ExpressionParams]):
     def get_params_model() -> type[StrictBaseModel]:
         return ExpressionParams
 
-    async def _process(self) -> PipeResult:
+    async def _process(self, *_: Any, **__: Any) -> PipeResult:
         return PipeResult(succeeded=True, data={"value": self._params.expression})

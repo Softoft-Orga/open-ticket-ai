@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import Field
 
 from open_ticket_ai.base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
@@ -18,7 +20,7 @@ class UpdateTicketPipe(TicketSystemPipe[UpdateTicketParams]):
     def get_params_model() -> type[UpdateTicketParams]:
         return UpdateTicketParams
 
-    async def _process(self) -> PipeResult:
+    async def _process(self, *_: Any, **__: Any) -> PipeResult:
         success = await self._ticket_system.update_ticket(
             ticket_id=self._params.ticket_id,
             updates=self._params.updated_ticket,
