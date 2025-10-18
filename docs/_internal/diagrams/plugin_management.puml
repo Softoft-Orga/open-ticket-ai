@@ -1,0 +1,79 @@
+@startuml Open Ticket AI Plugin Architecture
+
+!define CORE_COLOR #E3F2FD
+!define PLUGIN_COLOR #FFF3E0
+!define REGISTRY_COLOR #F3E5F5
+!define DI_COLOR #E8F5E9
+
+package "Core" <<Rectangle>> CORE_COLOR {
+   class Pipe{
+    + {static} get_pipe_name(): str
+   }
+
+   class Service{
+    + {static} get_service_name(): str
+   }
+
+
+  abstract class PluginBase {
+    + on_load(registry): void
+  }
+
+  class ComponentRegistry {
+    +register_pipe(cls: type): void
+    +register_service(cls: type): void
+    +get_pipe_class(name: str): type
+    +get_service_class(name: str): type
+  }
+
+  class PluginLoader {
+    + load_plugins(registry, logger): void
+  }
+
+  class AppModule {
+    + component_registry: ComponentRegistry
+    + configure(binder): void
+  }
+
+  class PipeFactory {
+    + render_pipe(config, context): Pipe
+  }
+}
+
+package "Plugin: otai-example" <<Rectangle>> PLUGIN_COLOR {
+
+  class ExamplePlugin {
+    + package_name = "otai-example"
+    + plugin_prefix = "example"
+    +get_all_pipes(): list
+    +get_all_services(): list
+  }
+
+  class ExampleService {
+  }
+
+  class ExamplePipe {
+  }
+
+}
+' Relationships
+ExamplePlugin -up-|> PluginBase
+
+ExamplePlugin ..> ExampleService : provides
+ExamplePlugin ..> ExamplePipe : provides
+
+
+PluginLoader --> ComponentRegistry : registers to
+PluginLoader ..> PluginBase : discovers
+PluginLoader ..> ExamplePlugin : loads
+
+AppModule *-- ComponentRegistry
+AppModule ..> PluginLoader : uses
+AppModule --> PipeFactory : provides
+
+PipeFactory --> ComponentRegistry : resolves names
+
+ComponentRegistry ..> ExampleService : "example:example_service"
+ComponentRegistry ..> ExamplePipe : "example:example_pipe"
+
+@enduml
