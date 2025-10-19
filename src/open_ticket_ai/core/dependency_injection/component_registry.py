@@ -1,3 +1,4 @@
+from open_ticket_ai.core.config.errors import InjectableNotFoundError, RegistryError
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.pipes.pipe import Pipe
 
@@ -13,15 +14,11 @@ class ComponentRegistry:
         elif issubclass(register_class, Injectable):
             self._services[registry_identifier] = register_class
         else:
-            from open_ticket_ai.core.config.errors import RegistryError
-
             raise RegistryError("Registered class must be a subclass of Pipe or Injectable")
 
     def get_pipe(self, registry_identifier: str) -> type[Pipe] | None:
         pipe = self._pipes.get(registry_identifier)
         if pipe is None:
-            from open_ticket_ai.core.config.errors import InjectableNotFoundError
-
             raise InjectableNotFoundError(
                 registry_identifier,
                 self,
@@ -31,8 +28,6 @@ class ComponentRegistry:
     def get_injectable(self, registry_identifier: str) -> type[Injectable]:
         service = self._services.get(registry_identifier)
         if service is None:
-            from open_ticket_ai.core.config.errors import InjectableNotFoundError
-
             raise InjectableNotFoundError(
                 registry_identifier,
                 self,
