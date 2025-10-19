@@ -39,7 +39,7 @@ class JinjaRenderer(TemplateRenderer[StrictBaseModel]):
             template = self._jinja_env.from_string(template_str)
             result = template.render(context)
 
-            self._logger.debug(f"✅ Template rendered successfully")
+            self._logger.debug("✅ Template rendered successfully")
             return result
         except Exception as e:
             self._logger.error(f"❌ Template rendering failed: {e}", exc_info=True)

@@ -29,10 +29,12 @@ class AddNotePipe(TicketSystemPipe[AddNoteParams]):
 
         self._logger.info(f"📌 Adding note to ticket: {ticket_id_str}")
         self._logger.debug(
-            f"Note subject: {self._params.note.subject if hasattr(self._params.note, 'subject') else 'N/A'}")
+            f"Note subject: {self._params.note.subject if hasattr(self._params.note, 'subject') else 'N/A'}"
+        )
 
-        note_preview = str(self._params.note)[:100] + "..." if len(str(self._params.note)) > 100 else str(
-            self._params.note)
+        note_preview = (
+            str(self._params.note)[:100] + "..." if len(str(self._params.note)) > 100 else str(self._params.note)
+        )
         self._logger.debug(f"Note preview: {note_preview}")
 
         try:

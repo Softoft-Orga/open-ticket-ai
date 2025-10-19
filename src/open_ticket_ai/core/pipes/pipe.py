@@ -35,7 +35,7 @@ class Pipe[ParamsT: BaseModel](Injectable[ParamsT], ABC):
 
             except Exception as e:
                 self._logger.error(f"❌ Pipe {self._config.id} raised exception: {e}", exc_info=True)
-                return PipeResult.failure(f"Exception in pipe {self._config.id}: {str(e)}")
+                return PipeResult.failure(f"Exception in pipe {self._config.id}: {e!s}")
         else:
             self._logger.debug(f"⏭️  Skipping pipe: {self._config.id} (conditions not met)")
             return PipeResult.skipped()

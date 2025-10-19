@@ -27,7 +27,8 @@ class SimpleSequentialOrchestrator(CompositePipe[SimpleSequentialOrchestratorPar
 
     async def _process(self, context: PipeContext) -> PipeResult:
         self._logger.info(
-            f"🚀 Starting orchestrator loop with {self._params.orchestrator_sleep.total_seconds()}s sleep interval")
+            f"🚀 Starting orchestrator loop with {self._params.orchestrator_sleep.total_seconds()}s sleep interval"
+        )
 
         iteration = 0
         while True:
