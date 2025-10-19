@@ -1,6 +1,10 @@
-from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from open_ticket_ai.core.injectables.injectable import Injectable
+from typing import TYPE_CHECKING
+
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
+
+if TYPE_CHECKING:
+    from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
+    from open_ticket_ai.core.injectables.injectable import Injectable
 
 
 class WrongConfigError(Exception):
@@ -25,7 +29,7 @@ class NoServiceConfigurationFoundError(WrongConfigError):
 
 
 class InjectableNotFoundError(RegistryError):
-    def __init__(self, injectable_id: str, component_registry: ComponentRegistry):
+    def __init__(self, injectable_id: str, component_registry: "ComponentRegistry"):
         super().__init__(
             f"Injectable with id '{injectable_id}' not found in the ComponentRegistry. "
             f"Available injectables: {component_registry.get_available_injectables()}"
@@ -35,7 +39,7 @@ class InjectableNotFoundError(RegistryError):
 class MissingConfigurationForRequiredServiceError(WrongConfigError):
     """Raised when a required service configuration is missing."""
 
-    def __init__(self, required_service_class: type[Injectable]):
+    def __init__(self, required_service_class: type["Injectable"]):
         message = f"""
         Missing configuration for required service type: {required_service_class.__name__}.
         {required_service_class.__name__} is a required Service, which means there needs to be exactly one
@@ -47,7 +51,7 @@ class MissingConfigurationForRequiredServiceError(WrongConfigError):
 class MultipleConfigurationsForSingletonServiceError(WrongConfigError):
     """Raised when multiple configurations are found for a singleton service."""
 
-    def __init__(self, singleton_service_class: type[Injectable]):
+    def __init__(self, singleton_service_class: type["Injectable"]):
         message = f"""
         Multiple configurations found for singleton service type: {singleton_service_class.__name__}.
         {singleton_service_class.__name__} is a singleton Service, which means there needs to be at most one
