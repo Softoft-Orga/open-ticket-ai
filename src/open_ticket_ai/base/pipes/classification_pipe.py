@@ -33,7 +33,7 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
         super().__init__(config, logger_factory, *args, **kwargs)
         self._classification_service = classification_service
 
-    def _process(self, *_: Any, **__: Any) -> PipeResult:
+    async def _process(self, *_: Any, **__: Any) -> PipeResult:
         classification_result: ClassificationResult = self._classification_service.classify(
             ClassificationRequest(
                 text=self._params.text,
