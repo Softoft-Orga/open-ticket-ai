@@ -1,6 +1,4 @@
-from abc import ABC, abstractmethod
-
-import anyio
+from typing import Protocol
 
 from open_ticket_ai.base.ai_classification_services.classification_models import (
     ClassificationRequest,
@@ -8,9 +6,7 @@ from open_ticket_ai.base.ai_classification_services.classification_models import
 )
 
 
-class ClassificationService(ABC):
-    @abstractmethod
+class ClassificationService(Protocol):
     def classify(self, req: ClassificationRequest) -> ClassificationResult: ...
 
-    async def aclassify(self, req: ClassificationRequest) -> ClassificationResult:
-        return await anyio.to_thread.run_sync(self.classify, req)
+    async def aclassify(self, req: ClassificationRequest) -> ClassificationResult: ...

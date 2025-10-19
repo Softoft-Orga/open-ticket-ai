@@ -13,6 +13,8 @@ from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 
 class ClassificationPipeParams(StrictBaseModel):
     text: str
+    model_name: str
+    api_token: str | None = None
 
 
 class ClassificationPipe(Pipe[ClassificationPipeParams]):
@@ -21,12 +23,12 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
         return ClassificationPipeParams
 
     def __init__(
-        self,
-        config: PipeConfig,
-        logger_factory: LoggerFactory,
-        classification_service: ClassificationService,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            config: PipeConfig,
+            logger_factory: LoggerFactory,
+            classification_service: ClassificationService,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._classification_service = classification_service
@@ -35,6 +37,8 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
         classification_result: ClassificationResult = self._classification_service.classify(
             ClassificationRequest(
                 text=self._params.text,
+                model_name=self._params.model_name,
+                api_token=self._params.api_token,
             )
         )
 

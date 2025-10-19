@@ -1,11 +1,7 @@
 from functools import lru_cache
 from typing import Any
 
-from open_ticket_ai.base.ai_classification_services.classification_models import (
-    ClassificationRequest,
-    ClassificationResult,
-)
-from open_ticket_ai.base.ai_classification_services.classification_service import ClassificationService
+from pydantic import BaseModel
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -15,6 +11,13 @@ from transformers import (
     pipeline,
 )
 
+from open_ticket_ai.base.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
+from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.injectables.injectable import Injectable
+
 
 @lru_cache(maxsize=16)
 def _get_hf_pipeline(model: str, token: str | None):
@@ -23,7 +26,11 @@ def _get_hf_pipeline(model: str, token: str | None):
     return pipeline("text-classification", model=mdl, tokenizer=tok)
 
 
-class HFClassificationService(ClassificationService):
+class HFClassificationService(Injectable[StrictBaseModel]):
+    @staticmethod
+    def get_params_model() -> type[BaseModel]:
+        return StrictBaseModel
+
     def classify(self, req: ClassificationRequest) -> ClassificationResult:
         classify: Pipeline = _get_hf_pipeline(req.model_name, req.api_token)
         classifications: Any = classify(req.text, truncation=True)
