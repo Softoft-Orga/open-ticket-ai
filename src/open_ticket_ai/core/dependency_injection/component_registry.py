@@ -4,7 +4,7 @@ from open_ticket_ai.core.pipes.pipe import Pipe
 
 
 class ComponentRegistry:
-    def __init__(self):
+    def __init__(self) -> None:
         self._pipes: dict[str, type[Pipe]] = {}
         self._services: dict[str, type[Injectable]] = {}
 
