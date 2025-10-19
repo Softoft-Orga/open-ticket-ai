@@ -20,15 +20,14 @@ from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 
+type GetPipelineFunc = Callable[[str, str], Pipeline]
+
 
 @lru_cache(maxsize=16)
 def _get_hf_pipeline(model: str, token: str | None) -> Pipeline:
     tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(model, token=token)
     model: PreTrainedModel = AutoModelForSequenceClassification.from_pretrained(model, token=token)
     return pipeline("text-classification", model=model, tokenizer=tokenizer)
-
-
-type GetPipelineFunc = Callable[[str, str], Pipeline]
 
 
 class HFClassificationService(Injectable[StrictBaseModel]):
