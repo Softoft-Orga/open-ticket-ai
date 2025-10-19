@@ -111,16 +111,16 @@ class TestPipeProcess:
     ):
         result = await pipe_with_should_run_false.process(empty_pipeline_context)
 
-        assert pipe_with_should_run_false.process_called
-        assert result.succeeded
+        assert not pipe_with_should_run_false.process_called
+        assert result.was_skipped
 
     async def test_process_with_unfulfilled_dependencies(
         self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
     ):
         result = await pipe_with_dependencies.process(empty_pipeline_context)
 
-        assert pipe_with_dependencies.process_called
-        assert result.succeeded
+        assert not pipe_with_dependencies.process_called
+        assert result.was_skipped
 
 
 class TestPipeDependencies:
@@ -143,8 +143,8 @@ class TestPipeDependencies:
 
         result = await pipe_with_dependencies.process(context)
 
-        assert pipe_with_dependencies.process_called
-        assert result.succeeded
+        assert not pipe_with_dependencies.process_called
+        assert result.was_skipped
 
     async def test_dependencies_check_with_one_skipped(
         self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
@@ -154,8 +154,8 @@ class TestPipeDependencies:
 
         result = await pipe_with_dependencies.process(context)
 
-        assert pipe_with_dependencies.process_called
-        assert result.succeeded
+        assert not pipe_with_dependencies.process_called
+        assert result.was_skipped
 
     async def test_dependencies_check_with_missing_dependency(
         self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
@@ -164,8 +164,8 @@ class TestPipeDependencies:
 
         result = await pipe_with_dependencies.process(context)
 
-        assert pipe_with_dependencies.process_called
-        assert result.succeeded
+        assert not pipe_with_dependencies.process_called
+        assert result.was_skipped
 
 
 class TestPipeShouldRun:

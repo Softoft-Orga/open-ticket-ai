@@ -12,6 +12,7 @@ from open_ticket_ai.base.ticket_system_integration.ticket_system_service import 
 from open_ticket_ai.base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
+from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.dependency_injection.container import AppModule
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
@@ -238,3 +239,8 @@ def mock_otai_config() -> MagicMock:
     mock = MagicMock(spec=OpenTicketAIConfig)
     mock.get_services_list.return_value = []
     return mock
+
+
+@pytest.fixture
+def mock_component_registry() -> MagicMock:
+    return MagicMock(spec=ComponentRegistry)
