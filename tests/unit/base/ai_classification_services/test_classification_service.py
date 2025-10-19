@@ -44,5 +44,3 @@ async def test_classification_service_async_aclassify():
     assert isinstance(result, ClassificationResult)
     assert result.label == "async_test_label"
     assert result.confidence == 0.85
-
-
