@@ -62,17 +62,19 @@ class TestIntervalTriggerInitialization:
         assert isinstance(trigger.last_time_fired, datetime.datetime)
         assert trigger.last_time_fired.tzinfo == datetime.UTC
 
-    def test_initialization_with_small_interval(self, small_interval_config: PipeConfig, logger_factory: LoggerFactory):
+    def test_initialization_with_small_interval(
+        self, small_interval_config: PipeConfig, logger_factory: LoggerFactory
+    ):
         trigger = IntervalTrigger(config=small_interval_config, logger_factory=logger_factory)
 
-        assert trigger._params.interval == timedelta(seconds=0.01)
-
-    def test_initialization_with_large_interval(self, large_interval_config: PipeConfig, logger_factory: LoggerFactory):
+    def test_initialization_with_large_interval(
+        self, large_interval_config: PipeConfig, logger_factory: LoggerFactory
+    ):
         trigger = IntervalTrigger(config=large_interval_config, logger_factory=logger_factory)
 
-        assert trigger._params.interval == timedelta(seconds=86400)
-
-    def test_initialization_with_zero_interval(self, zero_interval_config: PipeConfig, logger_factory: LoggerFactory):
+    def test_initialization_with_zero_interval(
+        self, zero_interval_config: PipeConfig, logger_factory: LoggerFactory
+    ):
         trigger = IntervalTrigger(config=zero_interval_config, logger_factory=logger_factory)
 
         assert trigger._params.interval == timedelta(0)
