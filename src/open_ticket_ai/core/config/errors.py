@@ -6,10 +6,8 @@ class WrongConfigError(Exception):
     """Raised when the configuration provided is incorrect or invalid."""
 
 
-
 class RegistryError(Exception):
     """Raised when there is an error related to the component registry."""
-
 
 
 class NoServiceConfigurationFoundError(WrongConfigError):
