@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
+from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 
 if TYPE_CHECKING:
     from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-    from open_ticket_ai.core.injectables.injectable import Injectable
 
 
 class WrongConfigError(Exception):
