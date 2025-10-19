@@ -20,14 +20,14 @@ from transformers import (
     pipeline,
 )
 
-type GetPipelineFunc = Callable[[str, str], Pipeline]
-
-
 @lru_cache(maxsize=16)
 def _get_hf_pipeline(model: str, token: str | None) -> Pipeline:
     tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(model, token=token)
-    model: PreTrainedModel = AutoModelForSequenceClassification.from_pretrained(model, token=token)
-    return pipeline("text-classification", model=model, tokenizer=tokenizer)
+    loaded_model: PreTrainedModel = AutoModelForSequenceClassification.from_pretrained(model, token=token)
+    return pipeline("text-classification", model=loaded_model, tokenizer=tokenizer)
+
+
+type GetPipelineFunc = Callable[[str, str | None], Pipeline]
 
 
 class HFClassificationService(Injectable[StrictBaseModel]):
