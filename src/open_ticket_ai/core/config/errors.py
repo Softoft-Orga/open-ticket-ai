@@ -1,7 +1,9 @@
-from typing import Any
-
-from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
+from typing import Any
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from open_ticket_ai.core.injectables.injectable import Injectable
 
 
 class WrongConfigError(Exception):
