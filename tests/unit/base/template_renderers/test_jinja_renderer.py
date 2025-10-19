@@ -136,4 +136,4 @@ def test_render_with_trim_blocks(jinja_renderer: JinjaRenderer) -> None:
     template = "{% if True %}\nvalue\n{% endif %}"
     context: dict[str, str] = {}
     result = jinja_renderer.render(template, context)
-    assert "value" in result
+    assert result.strip() == "value"
