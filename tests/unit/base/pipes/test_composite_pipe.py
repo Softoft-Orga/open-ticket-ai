@@ -1,118 +1,107 @@
-from typing import Any, ClassVar
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from pydantic import BaseModel
 
 from open_ticket_ai.base.pipes.composite_pipe import CompositePipe
-from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipes.pipe import Pipe
-from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 
 
-class TrackingPipeParams(BaseModel):
-    value: str = "default"
-
-
-class TrackingPipe(Pipe[TrackingPipeParams]):
-    execution_order: ClassVar[list[str]] = []
-    context_snapshots: ClassVar[list[PipeContext]] = []
-
-    def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
-        super().__init__(config, logger_factory, *args, **kwargs)
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return TrackingPipeParams
-
-    async def _process(self, context: PipeContext) -> PipeResult:
-        TrackingPipe.execution_order.append(self._config.id)
-        TrackingPipe.context_snapshots.append(context)
-        return PipeResult.success(data={"value": self._params.value, "id": self._config.id})
-
-    @classmethod
-    def reset_tracking(cls) -> None:
-        cls.execution_order = []
-        cls.context_snapshots = []
-
-
 @pytest.fixture
-def step_configs() -> list[PipeConfig]:
-    return [
-        PipeConfig(
-            id=f"step{i}",
-            use="tests.unit.base.pipes.test_composite_pipe.TrackingPipe",
-            params={"value": f"value{i}"},
-        )
-        for i in range(1, 4)
-    ]
-
-
-@pytest.fixture
-def mock_pipe_factory(logger_factory: LoggerFactory) -> MagicMock:
+def mock_pipe_factory():
     factory = MagicMock(spec=PipeFactory)
-    factory.render_pipe.side_effect = lambda cfg, ctx: TrackingPipe(
-        config=cfg, logger_factory=logger_factory, pipe_context=ctx
-    )
+    factory.render_pipe = MagicMock()
     return factory
 
 
 @pytest.fixture
-def create_composite_pipe(mock_pipe_factory: PipeFactory, logger_factory: LoggerFactory):
-    def _create(steps: list[PipeConfig] | None) -> CompositePipe:
-        config = PipeConfig(
-            id="composite",
-            use="open_ticket_ai.base.pipes.composite_pipe.CompositePipe",
-            params={},
-            steps=steps,
-        )
-        return CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
-
-    return _create
+def simple_step_configs():
+    return [
+        PipeConfig(id="step1", use="tests.unit.conftest.SimplePipe", params={"value": "A"}),
+        PipeConfig(id="step2", use="tests.unit.conftest.SimplePipe", params={"value": "B"}),
+        PipeConfig(id="step3", use="tests.unit.conftest.SimplePipe", params={"value": "C"}),
+    ]
 
 
-@pytest.fixture(autouse=True)
-def reset_tracking():
-    TrackingPipe.reset_tracking()
-    yield
-    TrackingPipe.reset_tracking()
+async def test_composite_pipe_with_empty_steps(mock_pipe_factory, logger_factory, empty_pipeline_context):
+    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=[])
+    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
-
-async def test_empty_steps_returns_success(create_composite_pipe, empty_pipeline_context: PipeContext):
-    for steps in [[], None]:
-        result = await create_composite_pipe(steps).process(empty_pipeline_context)
-        assert result.succeeded and not result.was_skipped and result.data == {}
-
-
-async def test_single_step_execution_and_context_parent(
-    create_composite_pipe, step_configs, empty_pipeline_context: PipeContext
-):
-    result = await create_composite_pipe([step_configs[0]]).process(empty_pipeline_context)
+    result = await composite.process(empty_pipeline_context)
 
     assert result.succeeded
-    assert TrackingPipe.execution_order == ["step1"]
-    assert result.data == {"value": "value1", "id": "step1"}
-    assert len(TrackingPipe.context_snapshots) == 1
-    assert TrackingPipe.context_snapshots[0].parent is not None
+    assert result.data == {}
+    mock_pipe_factory.render_pipe.assert_not_called()
 
 
-async def test_multiple_steps_execute_sequentially(
-    create_composite_pipe, step_configs, empty_pipeline_context: PipeContext
-):
-    result = await create_composite_pipe(step_configs).process(empty_pipeline_context)
+async def test_composite_pipe_with_none_steps(mock_pipe_factory, logger_factory, empty_pipeline_context):
+    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=None)
+    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
+
+    result = await composite.process(empty_pipeline_context)
 
     assert result.succeeded
-    assert TrackingPipe.execution_order == ["step1", "step2", "step3"]
-    assert all(s.parent is not None for s in TrackingPipe.context_snapshots)
+    assert result.data == {}
+    mock_pipe_factory.render_pipe.assert_not_called()
 
 
-async def test_context_propagates_previous_results(
-    create_composite_pipe, step_configs, empty_pipeline_context: PipeContext
+async def test_composite_pipe_calls_single_step_with_correct_context(
+    mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
 ):
-    await create_composite_pipe(step_configs[:2]).process(empty_pipeline_context)
+    mock_step = MagicMock()
+    mock_step.process = AsyncMock(return_value=PipeResult.success(data={"value": "A"}))
+    mock_pipe_factory.render_pipe.return_value = mock_step
 
-    step1_context, step2_context = TrackingPipe.context_snapshots
-    assert step1_context.params == {}
-    assert step2_context.params == {"value": "value1", "id": "step1"}
+    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=[simple_step_configs[0]])
+    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
+
+    result = await composite.process(empty_pipeline_context)
+
+    assert result.succeeded
+    mock_pipe_factory.render_pipe.assert_called_once()
+    call_args = mock_pipe_factory.render_pipe.call_args
+    assert call_args[0][0] == simple_step_configs[0]
+    assert call_args[0][1].parent is not None
+
+
+async def test_composite_pipe_calls_multiple_steps_sequentially(
+    mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
+):
+    mock_steps = []
+    for i in range(3):
+        mock_step = MagicMock()
+        mock_step.process = AsyncMock(return_value=PipeResult.success(data={"value": chr(65 + i)}))
+        mock_steps.append(mock_step)
+
+    mock_pipe_factory.render_pipe.side_effect = mock_steps
+
+    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=simple_step_configs)
+    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
+
+    result = await composite.process(empty_pipeline_context)
+
+    assert result.succeeded
+    assert mock_pipe_factory.render_pipe.call_count == 3
+    for mock_step in mock_steps:
+        mock_step.process.assert_called_once()
+
+
+async def test_composite_pipe_returns_union_of_results(
+    mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
+):
+    mock_step1 = MagicMock()
+    mock_step1.process = AsyncMock(return_value=PipeResult.success(message="step1", data={"key1": "val1"}))
+    mock_step2 = MagicMock()
+    mock_step2.process = AsyncMock(return_value=PipeResult.success(message="step2", data={"key2": "val2"}))
+
+    mock_pipe_factory.render_pipe.side_effect = [mock_step1, mock_step2]
+
+    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=simple_step_configs[:2])
+    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
+
+    result = await composite.process(empty_pipeline_context)
+
+    assert result.succeeded
+    assert result.data == {"key1": "val1", "key2": "val2"}
+    assert "step1" in result.message
+    assert "step2" in result.message

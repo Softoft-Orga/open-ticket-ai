@@ -40,6 +40,3 @@ class PipeContext(StrictBaseModel):
     def with_pipe_result(self, pipe_id: str, pipe_result: PipeResult) -> PipeContext:
         new_pipes = {**self.pipe_results, pipe_id: pipe_result}
         return self.model_copy(update={"pipe_results": new_pipes})
-
-    def with_model(self, pipe_result: PipeResult) -> PipeContext:
-        return self.model_copy(update={"params": {**self.params, **pipe_result.data}})
