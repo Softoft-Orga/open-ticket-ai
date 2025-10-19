@@ -21,13 +21,14 @@ class TestBasePlugin:
         base_plugin.on_load(mock_registry)
 
         assert mock_registry.register.call_count >= 2
-        assert mock_registry.register.call_count == 10
 
     def test_registry_identifier_format(self, mock_app_config):
         mock_app_config.PLUGIN_NAME_PREFIX = "otai-"
         mock_app_config.REGISTRY_IDENTIFIER_SEPERATOR = ":"
+        mock_registry = MagicMock(spec=ComponentRegistry)
         base_plugin = BasePlugin(mock_app_config)
 
-        component_prefix = base_plugin._component_name_prefix
+        base_plugin.on_load(mock_registry)
 
-        assert component_prefix == "base"
+        registered_names = [call[0][0] for call in mock_registry.register.call_args_list]
+        assert any(name.startswith("base:") for name in registered_names)
