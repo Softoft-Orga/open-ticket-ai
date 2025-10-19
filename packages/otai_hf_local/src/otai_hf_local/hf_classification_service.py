@@ -1,15 +1,6 @@
+from collections.abc import Callable
 from functools import lru_cache
-from typing import Any, Callable
-
-from pydantic import BaseModel
-from transformers import (
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    Pipeline,
-    PreTrainedModel,
-    PreTrainedTokenizer,
-    pipeline,
-)
+from typing import Any
 
 from open_ticket_ai.base.ai_classification_services.classification_models import (
     ClassificationRequest,
@@ -19,6 +10,15 @@ from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from pydantic import BaseModel
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    Pipeline,
+    PreTrainedModel,
+    PreTrainedTokenizer,
+    pipeline,
+)
 
 type GetPipelineFunc = Callable[[str, str], Pipeline]
 
@@ -32,12 +32,12 @@ def _get_hf_pipeline(model: str, token: str | None) -> Pipeline:
 
 class HFClassificationService(Injectable[StrictBaseModel]):
     def __init__(
-            self,
-            config: InjectableConfig,
-            logger_factory: LoggerFactory,
-            get_pipeline: GetPipelineFunc = _get_hf_pipeline,
-            *args: Any,
-            **kwargs: Any
+        self,
+        config: InjectableConfig,
+        logger_factory: LoggerFactory,
+        get_pipeline: GetPipelineFunc = _get_hf_pipeline,
+        *args: Any,
+        **kwargs: Any,
     ):
         super().__init__(config, logger_factory, *args, **kwargs)
         self._get_pipeline = get_pipeline
