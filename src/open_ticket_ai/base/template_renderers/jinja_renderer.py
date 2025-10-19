@@ -24,11 +24,24 @@ class JinjaRenderer(TemplateRenderer[StrictBaseModel]):
     def __init__(self, config: InjectableConfig, logger_factory: LoggerFactory):
         super().__init__(config, logger_factory)
         self._jinja_env = NativeEnvironment(trim_blocks=True, lstrip_blocks=True)
+        self._logger.debug("🎨 JinjaRenderer initialized")
 
     def _render(self, template_str: str, context: dict[str, Any]) -> Any:
-        self._jinja_env.globals.update(context)
-        self._jinja_env.globals["at_path"] = at_path
-        self._jinja_env.globals["has_failed"] = has_failed
-        self._jinja_env.globals["get_pipe_result"] = get_pipe_result
-        template = self._jinja_env.from_string(template_str)
-        return template.render(context)
+        template_preview = template_str[:100] + "..." if len(template_str) > 100 else template_str
+        self._logger.debug(f"🎨 Rendering template: {template_preview}")
+        self._logger.debug(f"Context keys: {list(context.keys())}")
+
+        try:
+            self._jinja_env.globals.update(context)
+            self._jinja_env.globals["at_path"] = at_path
+            self._jinja_env.globals["has_failed"] = has_failed
+            self._jinja_env.globals["get_pipe_result"] = get_pipe_result
+            template = self._jinja_env.from_string(template_str)
+            result = template.render(context)
+
+            self._logger.debug(f"✅ Template rendered successfully")
+            return result
+        except Exception as e:
+            self._logger.error(f"❌ Template rendering failed: {e}", exc_info=True)
+            self._logger.error(f"Failed template: {template_str}")
+            raise

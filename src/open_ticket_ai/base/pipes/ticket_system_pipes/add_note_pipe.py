@@ -26,5 +26,19 @@ class AddNotePipe(TicketSystemPipe[AddNoteParams]):
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
         ticket_id_str = str(self._params.ticket_id)
-        await self._ticket_system.add_note(ticket_id_str, self._params.note)
-        return PipeResult(succeeded=True, data={})
+
+        self._logger.info(f"📌 Adding note to ticket: {ticket_id_str}")
+        self._logger.debug(
+            f"Note subject: {self._params.note.subject if hasattr(self._params.note, 'subject') else 'N/A'}")
+
+        note_preview = str(self._params.note)[:100] + "..." if len(str(self._params.note)) > 100 else str(
+            self._params.note)
+        self._logger.debug(f"Note preview: {note_preview}")
+
+        try:
+            await self._ticket_system.add_note(ticket_id_str, self._params.note)
+            self._logger.info(f"✅ Successfully added note to ticket {ticket_id_str}")
+            return PipeResult(succeeded=True, data={})
+        except Exception as e:
+            self._logger.error(f"❌ Failed to add note to ticket {ticket_id_str}: {e}", exc_info=True)
+            raise

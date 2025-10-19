@@ -1,5 +1,5 @@
 open_ticket_ai:
-  api_version: 1
+  api_version: "1"
   infrastructure:
     logging:
       level: "DEBUG"
@@ -23,163 +23,163 @@ open_ticket_ai:
   orchestrator:
     use: "base:SimpleSequentialOrchestrator"
     steps:
-      id: ticket-routing-runner
-      use: "base:SimpleSequentialRunner"
-      params:
-        "on":
-          - id: "every_10ms"
-            use: "base:IntervalTrigger"
+      - id: ticket-routing-runner
+        use: "base:SimpleSequentialRunner"
+        params:
+          "on":
+            - id: "every_10ms"
+              use: "base:IntervalTrigger"
+              params:
+                milliseconds: 10000
+          run:
+            id: ticket-routing
             params:
-              milliseconds: 10000
-        run:
-          id: ticket-routing
-          params:
-            ticket_search_criteria:
-              queue:
-                name: "OpenTicketAI::Incoming"
-              limit: 1
-            min_queue_confidence: 0.8
-            min_priority_confidence: 0.8
-            queue_model: "softoft/otai-queue-de-bert-v1"
-            priority_model: "softoft/otai-priority-de-bert-v1"
-            low_confidence_queue_name: "OpenTicketAI::Unclassified"
-            error_queue_name: "OpenTicketAI::Error"
-            low_confidence_priority_name: "medium"
-          steps:
-            # ===== FETCHING TICKET BY QUEUE =========
-            - id: ticket_fetcher
-              use: "base:FetchTicketsPipe"
-              injects: { ticket_system: "otobo_znuny" }
-              params:
-                ticket_search_criteria: "{{ parent['ticket_search_criteria'] }}"
+              ticket_search_criteria:
+                queue:
+                  name: "OpenTicketAI::Incoming"
+                limit: 1
+              min_queue_confidence: 0.8
+              min_priority_confidence: 0.8
+              queue_model: "softoft/otai-queue-de-bert-v1"
+              priority_model: "softoft/otai-priority-de-bert-v1"
+              low_confidence_queue_name: "OpenTicketAI::Unclassified"
+              error_queue_name: "OpenTicketAI::Error"
+              low_confidence_priority_name: "medium"
+            steps:
+              # ===== FETCHING TICKET BY QUEUE =========
+              - id: ticket_fetcher
+                use: "base:FetchTicketsPipe"
+                injects: { ticket_system: "otobo_znuny" }
+                params:
+                  ticket_search_criteria: "{{ parent['ticket_search_criteria'] }}"
 
-            # ===== QUEUE CLASSIFICATION =========
+              # ===== QUEUE CLASSIFICATION =========
 
-            - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
-              id: queue_classification
-              params:
-                ticket: "{{ pipe_result('ticket_fetcher') | first }}"
-                model: "{{ parent['queue_model'] }}"
-                min_conf: "{{ parent['min_queue_confidence'] }}"
-                low_conf_name: "{{ parent['low_confidence_queue_name'] }}"
-                ticket_field: "queue.name"
-                note_high: "{{ parent['success_full_high_confidence_note'] }}"
-                note_low: "{{ parent['success_full_low_confidence_note'] }}"
-                update_on_error: true
-                on_error_update_value: "{{ parent['error_queue_name'] }}"
-                error_note: "{{ parent['error_note'] }}"
-              steps:
-                - id: classify
-                  use: "base:ClassificationPipe"
-                  injects: { classification_service: "hf_local" }
-                  params:
-                    text: "{{ parent['ticket']['subject'] }} {{ parent['ticket']['body'] }}"
-                    model_name: "{{ parent['model'] }}"
-                  retry:
-                    on:
-                      - "TimeoutError"
-                      - "requests.exceptions.RequestException"
-                - id: select_final
-                  use: "base:ExpressionPipe"
-                  params:
-                    expression: "{{ pipe_result('classify','label') if pipe_result('classify','confidence') >= parent['min_conf'] else parent['low_conf_name'] }}"
-                - id: update_ticket
-                  use: "base:UpdateTicketPipe"
-                  injects: { ticket_system: "otobo_znuny" }
-                  params:
-                    ticket_id: "{{ parent['ticket']['id'] }}"
-                    updated_ticket: "{{ pipe_result('select_final','value') | at_path(parent['ticket_field']) }}"
-                - id: add_note
-                  use: "base:AddNotePipe"
-                  injects: { ticket_system: "otobo_znuny" }
-                  params:
-                    ticket_id: "{{ parent['ticket']['id'] }}"
-                    note: |
-                      {{
-                        parent['note_high'] if pipe_result('classify','confidence') >= parent['min_conf']
-                        else parent['note_low']
-                      }}
-                - if: "{{ has_failed('update_ticket') and parent['update_on_error'] }}"
-                  use: "base:UpdateTicketPipe"
-                  injects: { ticket_system: "otobo_znuny" }
-                  params:
-                    ticket_id: "{{ parent['ticket']['id'] }}"
-                    updated_ticket: "{{ parent['on_error_update_value'] | at_path(parent['ticket_field']) }}"
-                - if: "{{ has_failed('update_ticket') and parent['error_note'] }}"
-                  use: "base:AddNotePipe"
-                  injects: { ticket_system: "otobo_znuny" }
-                  params:
-                    ticket_id: "{{ parent['ticket']['id'] }}"
-                    note: "{{ parent['error_note'] }}"
+              - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
+                id: queue_classification
+                params:
+                  ticket: "{{ pipe_result('ticket_fetcher') | first }}"
+                  model: "{{ parent['queue_model'] }}"
+                  min_conf: "{{ parent['min_queue_confidence'] }}"
+                  low_conf_name: "{{ parent['low_confidence_queue_name'] }}"
+                  ticket_field: "queue.name"
+                  note_high: "{{ parent['success_full_high_confidence_note'] }}"
+                  note_low: "{{ parent['success_full_low_confidence_note'] }}"
+                  update_on_error: true
+                  on_error_update_value: "{{ parent['error_queue_name'] }}"
+                  error_note: "{{ parent['error_note'] }}"
+                steps:
+                  - id: classify
+                    use: "base:ClassificationPipe"
+                    injects: { classification_service: "hf_local" }
+                    params:
+                      text: "{{ parent['ticket']['subject'] }} {{ parent['ticket']['body'] }}"
+                      model_name: "{{ parent['model'] }}"
+                    retry:
+                      on:
+                        - "TimeoutError"
+                        - "requests.exceptions.RequestException"
+                  - id: select_final
+                    use: "base:ExpressionPipe"
+                    params:
+                      expression: "{{ pipe_result('classify','label') if pipe_result('classify','confidence') >= parent['min_conf'] else parent['low_conf_name'] }}"
+                  - id: update_ticket
+                    use: "base:UpdateTicketPipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    params:
+                      ticket_id: "{{ parent['ticket']['id'] }}"
+                      updated_ticket: "{{ pipe_result('select_final','value') | at_path(parent['ticket_field']) }}"
+                  - id: add_note
+                    use: "base:AddNotePipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    params:
+                      ticket_id: "{{ parent['ticket']['id'] }}"
+                      note: |
+                        {{
+                          parent['note_high'] if pipe_result('classify','confidence') >= parent['min_conf']
+                          else parent['note_low']
+                        }}
+                  - if: "{{ has_failed('update_ticket') and parent['update_on_error'] }}"
+                    use: "base:UpdateTicketPipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    params:
+                      ticket_id: "{{ parent['ticket']['id'] }}"
+                      updated_ticket: "{{ parent['on_error_update_value'] | at_path(parent['ticket_field']) }}"
+                  - if: "{{ has_failed('update_ticket') and parent['error_note'] }}"
+                    use: "base:AddNotePipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    params:
+                      ticket_id: "{{ parent['ticket']['id'] }}"
+                      note: "{{ parent['error_note'] }}"
 
-            # ===== PRIORITY CLASSIFICATION =========
+              # ===== PRIORITY CLASSIFICATION =========
 
-            - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
-              id: priority_classification
-              params:
-                depends_on: [ "ticket_fetcher" ]
-                ticket: "{{ pipe_result('ticket_fetcher') | first }}"
-                model: "{{ parent['priority_model'] }}"
-                min_conf: "{{ parent['min_priority_confidence'] }}"
-                low_conf_name: "{{ parent['low_confidence_priority_name'] }}"
-                ticket_field: "priority.name"
-                success_full_high_confidence_note:
-                  subject: "Automatische Priorisierung"
-                  body: |
-                    Das Ticket wurde automatisch der Priorität {{ pipe_result('select_final','value') }} zugeordnet;
-                    mit der Konfidenz {{ pipe_result('classify','confidence') }}
-                success_full_low_confidence_note:
-                  subject: "Automatische Priorisierung"
-                  body: |
-                    Das Ticket wurde automatisch der Priorität {{ pipe_result('select_final','value') }} zugeordnet;
-                    da die Konfidenz {{ pipe_result('classify','confidence') }} zu gering ist.
-                    Mindest Konfidenz {{ parent['min_priority_confidence'] }}
-                error_note:
-                  subject: "Automatische Priorisierung"
-                  body: |
-                    Das Ticket konnte nicht automatisch der Priorität zugeordnet werden;
-                    Da ein Fehler aufgetreten ist.
-                update_on_error: true
-                on_error_update_value: "{{ parent['error_queue_name'] }}"
-              steps:
-                - id: classify
-                  use: "base:ClassificationPipe"
-                  injects: { classification_service: "hf_local" }
-                  params:
-                    text: "{{ parent['ticket']['subject'] }} {{ parent['ticket']['body'] }}"
-                    model_name: "{{ parent['model'] }}"
-                    on:
-                      - "TimeoutError"
-                      - "requests.exceptions.RequestException"
-                - id: select_final
-                  use: "base:ExpressionPipe"
-                  params:
-                    expression: "{{ pipe_result('classify','label') if pipe_result('classify','confidence') >= parent['min_conf'] else parent['low_conf_name'] }}"
-                - id: update_ticket
-                  use: "base:UpdateTicketPipe"
-                  injects: { ticket_system: "otobo_znuny" }
-                  params:
-                    ticket_id: "{{ parent['ticket']['id'] }}"
-                    updated_ticket: "{{ pipe_result('select_final','value') | at_path(parent['ticket_field']) }}"
-                - id: add_note
-                  use: "base:AddNotePipe"
-                  injects: { ticket_system: "otobo_znuny" }
-                  params:
-                    ticket_id: "{{ parent['ticket']['id'] }}"
-                    note: |
-                      {{
-                        parent['note_high'] if pipe_result('classify','confidence') >= parent['min_conf']
-                        else parent['note_low']
-                      }}
-                - if: "{{ has_failed('update_ticket') and parent['update_on_error'] }}"
-                  use: "base:UpdateTicketPipe"
-                  injects: { ticket_system: "otobo_znuny" }
-                  params:
-                    ticket_id: "{{ parent['ticket']['id'] }}"
-                    updated_ticket: "{{ parent['on_error_update_value'] | at_path(parent['ticket_field']) }}"
-                - if: "{{ has_failed('update_ticket') and parent['error_note'] }}"
-                  use: "base:AddNotePipe"
-                  injects: { ticket_system: "otobo_znuny" }
-                  params:
-                    ticket_id: "{{ parent['ticket']['id'] }}"
-                    note: "{{ parent['error_note'] }}"
+              - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
+                id: priority_classification
+                params:
+                  depends_on: [ "ticket_fetcher" ]
+                  ticket: "{{ pipe_result('ticket_fetcher') | first }}"
+                  model: "{{ parent['priority_model'] }}"
+                  min_conf: "{{ parent['min_priority_confidence'] }}"
+                  low_conf_name: "{{ parent['low_confidence_priority_name'] }}"
+                  ticket_field: "priority.name"
+                  success_full_high_confidence_note:
+                    subject: "Automatische Priorisierung"
+                    body: |
+                      Das Ticket wurde automatisch der Priorität {{ pipe_result('select_final','value') }} zugeordnet;
+                      mit der Konfidenz {{ pipe_result('classify','confidence') }}
+                  success_full_low_confidence_note:
+                    subject: "Automatische Priorisierung"
+                    body: |
+                      Das Ticket wurde automatisch der Priorität {{ pipe_result('select_final','value') }} zugeordnet;
+                      da die Konfidenz {{ pipe_result('classify','confidence') }} zu gering ist.
+                      Mindest Konfidenz {{ parent['min_priority_confidence'] }}
+                  error_note:
+                    subject: "Automatische Priorisierung"
+                    body: |
+                      Das Ticket konnte nicht automatisch der Priorität zugeordnet werden;
+                      Da ein Fehler aufgetreten ist.
+                  update_on_error: true
+                  on_error_update_value: "{{ parent['error_queue_name'] }}"
+                steps:
+                  - id: classify
+                    use: "base:ClassificationPipe"
+                    injects: { classification_service: "hf_local" }
+                    params:
+                      text: "{{ parent['ticket']['subject'] }} {{ parent['ticket']['body'] }}"
+                      model_name: "{{ parent['model'] }}"
+                      on:
+                        - "TimeoutError"
+                        - "requests.exceptions.RequestException"
+                  - id: select_final
+                    use: "base:ExpressionPipe"
+                    params:
+                      expression: "{{ pipe_result('classify','label') if pipe_result('classify','confidence') >= parent['min_conf'] else parent['low_conf_name'] }}"
+                  - id: update_ticket
+                    use: "base:UpdateTicketPipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    params:
+                      ticket_id: "{{ parent['ticket']['id'] }}"
+                      updated_ticket: "{{ pipe_result('select_final','value') | at_path(parent['ticket_field']) }}"
+                  - id: add_note
+                    use: "base:AddNotePipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    params:
+                      ticket_id: "{{ parent['ticket']['id'] }}"
+                      note: |
+                        {{
+                          parent['note_high'] if pipe_result('classify','confidence') >= parent['min_conf']
+                          else parent['note_low']
+                        }}
+                  - if: "{{ has_failed('update_ticket') and parent['update_on_error'] }}"
+                    use: "base:UpdateTicketPipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    params:
+                      ticket_id: "{{ parent['ticket']['id'] }}"
+                      updated_ticket: "{{ parent['on_error_update_value'] | at_path(parent['ticket_field']) }}"
+                  - if: "{{ has_failed('update_ticket') and parent['error_note'] }}"
+                    use: "base:AddNotePipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    params:
+                      ticket_id: "{{ parent['ticket']['id'] }}"
+                      note: "{{ parent['error_note'] }}"

@@ -22,12 +22,34 @@ class CompositePipe[ParamsT: BaseModel = CompositePipeParams](Pipe[ParamsT]):
         self._factory: PipeFactory = factory
 
     async def _process_steps(self, context: PipeContext) -> list[PipeResult]:
+        step_count = len(self._config.steps or [])
+        self._logger.info(f"🔄 Processing {step_count} step(s) in composite pipe: {self._config.id}")
+
         context = context.model_copy(update={"parent": context.params})
         results = []
-        for step_config in self._config.steps or []:
+
+        for idx, step_config in enumerate(self._config.steps or [], 1):
+            self._logger.debug(f"Step {idx}/{step_count}: {step_config.id}")
+
             result = await self._process_step(step_config, context)
             context = context.with_pipe_result(step_config.id, result)
             results.append(result)
+
+            if result.succeeded:
+                self._logger.debug(f"Step {step_config.id} succeeded")
+            elif result.skipped:
+                self._logger.debug(f"Step {step_config.id} was skipped")
+            else:
+                self._logger.warning(f"Step {step_config.id} failed: {result.message}")
+
+        succeeded = sum(1 for r in results if r.succeeded)
+        failed = sum(1 for r in results if not r.succeeded and not r.skipped)
+        skipped = sum(1 for r in results if r.skipped)
+
+        self._logger.info(
+            f"📊 Composite pipe {self._config.id} completed: {succeeded} succeeded, {failed} failed, {skipped} skipped"
+        )
+
         return results
 
     @final

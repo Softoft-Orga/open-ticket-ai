@@ -27,3 +27,13 @@ class IntervalTrigger(Pipe[IntervalTriggerParams]):
             self.last_time_fired = datetime.datetime.now(tz=datetime.UTC)
             return PipeResult.success()
         return PipeResult.failure("Interval not reached yet.")
+
+
+class IntervalTriggerPipe(Pipe[IntervalTriggerParams]):
+    @staticmethod
+    def get_params_model() -> type[IntervalTriggerParams]:
+        return IntervalTriggerParams
+
+    async def _process(self, *_: Any, **__: Any) -> PipeResult:
+        self._logger.debug(f"⏰ Interval trigger activated (interval: {self._params.milliseconds}ms)")
+        return PipeResult.success()

@@ -43,6 +43,8 @@ dependencies = [
     "types-tabulate>=0.9.0.20241207",
     "pytest-cov>=6.0.0",
     "injector>=0.22.0",
+    "otai-hf-local",
+    "otai-otobo-znuny",
 ]
 
 [project.urls]
@@ -54,7 +56,7 @@ Documentation = "https://open-ticket-ai.com"
 open-ticket-ai = "open_ticket_ai.core.cli:main"
 
 [project.entry-points."open_ticket_ai.plugins"]
-base = "open_ticket_ai.base.plugin:plugin"
+base = "open_ticket_ai.base.plugin:create_base_plugin"
 
 [build-system]
 requires = ["setuptools>=61.0"]

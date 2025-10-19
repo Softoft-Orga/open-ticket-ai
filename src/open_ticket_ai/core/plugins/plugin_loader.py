@@ -18,11 +18,11 @@ class PluginLoadError(Exception):
 class PluginLoader:
     @inject
     def __init__(
-        self,
-        registry: ComponentRegistry,
-        logger_factory: LoggerFactory,
-        app_config: AppConfig,
-        entry_points_fn: GetEntryPointsFn = entry_points,
+            self,
+            registry: ComponentRegistry,
+            logger_factory: LoggerFactory,
+            app_config: AppConfig,
+            entry_points_fn: GetEntryPointsFn = entry_points,
     ):
         self._registry = registry
         self._logger = logger_factory.create(self.__class__.__name__)
@@ -31,6 +31,7 @@ class PluginLoader:
 
     def load_plugins(self):
         for ep in self._entry_points_fn(group=self._app_config.PLUGIN_ENTRY_POINT_GROUP):
+            self._logger.info(f"Loading plugin {ep}")
             create_plugin: CreatePluginFn = ep.load()
             plugin = create_plugin(self._app_config)
             if not isinstance(plugin, Plugin):

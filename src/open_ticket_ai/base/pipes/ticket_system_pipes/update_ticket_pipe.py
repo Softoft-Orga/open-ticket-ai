@@ -21,11 +21,24 @@ class UpdateTicketPipe(TicketSystemPipe[UpdateTicketParams]):
         return UpdateTicketParams
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
-        success = await self._ticket_system.update_ticket(
-            ticket_id=self._params.ticket_id,
-            updates=self._params.updated_ticket,
-        )
-        return PipeResult(
-            succeeded=success,
-            message="Updated Ticket" if success else "Failed to update ticket",
-        )
+        self._logger.info(f"📝 Updating ticket: {self._params.ticket_id}")
+        self._logger.debug(f"Update data: {self._params.updated_ticket.model_dump(exclude_none=True)}")
+
+        try:
+            success = await self._ticket_system.update_ticket(
+                ticket_id=self._params.ticket_id,
+                updates=self._params.updated_ticket,
+            )
+
+            if success:
+                self._logger.info(f"✅ Successfully updated ticket {self._params.ticket_id}")
+            else:
+                self._logger.warning(f"⚠️  Failed to update ticket {self._params.ticket_id}")
+
+            return PipeResult(
+                succeeded=success,
+                message="Updated Ticket" if success else "Failed to update ticket",
+            )
+        except Exception as e:
+            self._logger.error(f"❌ Error updating ticket {self._params.ticket_id}: {e}", exc_info=True)
+            raise

@@ -21,4 +21,9 @@ class ExpressionPipe(Pipe[ExpressionParams]):
         return ExpressionParams
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
+        self._logger.debug(f"📐 Expression pipe returning value")
+        expr_preview = self._params.expression[:100] + "..." if len(
+            self._params.expression) > 100 else self._params.expression
+        self._logger.debug(f"Expression: {expr_preview}")
+
         return PipeResult(succeeded=True, data={"value": self._params.expression})

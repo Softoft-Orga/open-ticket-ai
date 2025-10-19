@@ -19,12 +19,39 @@ class Pipe[ParamsT: BaseModel](Injectable[ParamsT], ABC):
     @final
     async def process(self, context: PipeContext) -> PipeResult:
         if await self._should_run(context):
-            return await self._process(context)
-        return PipeResult.skipped()
+            self._logger.info(f"▶️  Executing pipe: {self._config.id}")
+            self._logger.debug(f"Pipe type: {self.__class__.__name__}, Dependencies: {self._config.depends_on}")
+
+            try:
+                result = await self._process(context)
+
+                if result.succeeded:
+                    self._logger.info(f"✅ Pipe {self._config.id} completed successfully")
+                    self._logger.debug(f"Result data keys: {list(result.data.keys()) if result.data else 'None'}")
+                else:
+                    self._logger.warning(f"⚠️  Pipe {self._config.id} failed: {result.message}")
+
+                return result
+
+            except Exception as e:
+                self._logger.error(f"❌ Pipe {self._config.id} raised exception: {e}", exc_info=True)
+                return PipeResult.failure(f"Exception in pipe {self._config.id}: {str(e)}")
+        else:
+            self._logger.debug(f"⏭️  Skipping pipe: {self._config.id} (conditions not met)")
+            return PipeResult.skipped()
 
     @final
     def _are_dependencies_fulfilled(self, context: PipeContext) -> bool:
-        return all(context.has_succeeded(pipe_id) for pipe_id in self._config.depends_on)
+        if not self._config.depends_on:
+            return True
+
+        fulfilled = all(context.has_succeeded(pipe_id) for pipe_id in self._config.depends_on)
+
+        if not fulfilled:
+            missing = [pipe_id for pipe_id in self._config.depends_on if not context.has_succeeded(pipe_id)]
+            self._logger.debug(f"Dependencies not fulfilled for {self._config.id}. Missing: {missing}")
+
+        return fulfilled
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
         return PipeResult.skipped()

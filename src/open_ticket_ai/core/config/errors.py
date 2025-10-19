@@ -30,7 +30,7 @@ class InjectableNotFoundError(RegistryError):
     def __init__(self, injectable_id: str, component_registry: ComponentRegistry):
         super().__init__(
             f"Injectable with id '{injectable_id}' not found in the ComponentRegistry. "
-            f"Available injectables: {component_registry}"
+            f"Available injectables: {component_registry.get_available_injectables()}"
         )
 
 
