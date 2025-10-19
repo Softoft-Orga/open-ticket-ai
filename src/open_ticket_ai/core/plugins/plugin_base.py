@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from collections.abc import Callable
+from importlib.metadata import EntryPoints
 from typing import final
 
 from injector import inject
@@ -29,9 +30,9 @@ class Plugin(ABC):
     def _get_registry_name(self, injectable: type[Injectable]) -> str:
         """Get the name used to register this plugin's components."""
         return (
-            self._component_name_prefix
-            + self._app_config.REGISTRY_IDENTIFIER_SEPERATOR
-            + injectable.get_registry_name()
+                self._component_name_prefix
+                + self._app_config.REGISTRY_IDENTIFIER_SEPERATOR
+                + injectable.get_registry_name()
         )
 
     @abstractmethod
@@ -46,3 +47,4 @@ class Plugin(ABC):
 
 
 type CreatePluginFn = Callable[[AppConfig], Plugin]
+type GetEntryPointsFn = Callable[..., EntryPoints]

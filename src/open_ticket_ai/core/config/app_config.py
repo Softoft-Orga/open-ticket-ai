@@ -16,6 +16,7 @@ class AppConfig(BaseSettings):
 
     PLUGIN_NAME_PREFIX: ClassVar[str] = "otai-"
     REGISTRY_IDENTIFIER_SEPERATOR: ClassVar[str] = ":"
+    PLUGIN_ENTRY_POINT_GROUP: ClassVar[str] = "open_ticket_ai.plugins"
 
     open_ticket_ai: OpenTicketAIConfig = Field(
         default_factory=OpenTicketAIConfig, validation_alias=AliasChoices("cfg", "open_ticket_ai")

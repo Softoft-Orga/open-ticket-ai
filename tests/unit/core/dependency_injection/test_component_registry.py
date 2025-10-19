@@ -1,8 +1,6 @@
-from shutil import RegistryError
-
 import pytest
 
-from open_ticket_ai.core.config.errors import InjectableNotFoundError
+from open_ticket_ai.core.config.errors import InjectableNotFoundError, RegistryError
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from tests.unit.conftest import SimpleInjectable, SimplePipe
 
