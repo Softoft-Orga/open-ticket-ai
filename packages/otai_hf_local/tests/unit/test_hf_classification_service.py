@@ -1,7 +1,6 @@
 from unittest.mock import MagicMock
 
 import pytest
-
 from open_ticket_ai.base.ai_classification_services.classification_models import (
     ClassificationRequest,
     ClassificationResult,
