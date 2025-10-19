@@ -1,5 +1,6 @@
 import asyncio
 import contextlib
+from datetime import timedelta
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -59,7 +60,7 @@ async def test_continuous_execution_with_keyboard_interrupt(logger_factory, mock
     orchestrator_config = PipeConfig(
         id="orchestrator",
         use="open_ticket_ai.base.pipes.orchestrators.simple_sequential_orchestrator.SimpleSequentialOrchestrator",
-        params={"orchestrator_sleep": 0.001},
+        params={"orchestrator_sleep": timedelta(seconds=0.001)},
         steps=[
             PipeConfig(id="pipe1", use="test.pipe1", params={}),
             PipeConfig(id="pipe2", use="test.pipe2", params={}),
@@ -102,7 +103,7 @@ async def test_context_isolation(logger_factory, mock_pipe_factory, empty_contex
     orchestrator_config = PipeConfig(
         id="orchestrator",
         use="open_ticket_ai.base.pipes.orchestrators.simple_sequential_orchestrator.SimpleSequentialOrchestrator",
-        params={"orchestrator_sleep": 0.001},
+        params={"orchestrator_sleep": timedelta(seconds=0.001)},
         steps=[
             PipeConfig(id="pipe1", use="test.pipe1", params={}),
             PipeConfig(id="pipe2", use="test.pipe2", params={}),
