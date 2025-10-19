@@ -93,7 +93,7 @@ def test_classify_raises_error_when_no_result(logger_factory):
         api_token=None,
     )
     
-    with pytest.raises(ValueError, match="No classification result returned"):
+    with pytest.raises(ValueError, match="No classification result returned from HuggingFace pipeline"):
         service.classify(request, get_pipeline=mock_get_pipeline)
 
 
