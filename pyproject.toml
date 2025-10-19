@@ -144,6 +144,7 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 markers = [
     "unit: fast isolated tests",
+    "integration: integration of multiple components",
     "e2e: end-to-end flows",
     "slow: tests that take a long time to run",
 ]

@@ -38,7 +38,7 @@ Documentation = "https://open-ticket-ai.com/guide/available-plugins.html#hugging
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_hf_local/CHANGELOG.md"
 
 [project.entry-points."open_ticket_ai.plugins"]
-hf_local = "otai_hf_local"
+hf_local = "otai_hf_local.plugin:plugin"
 
 [build-system]
 requires = ["setuptools>=61.0"]

@@ -8,6 +8,8 @@ from open_ticket_ai.base.ai_classification_services.classification_models import
 )
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.injectables.injectable import Injectable
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
+from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from pydantic import BaseModel
 from transformers import (
     AutoModelForSequenceClassification,
@@ -17,7 +19,6 @@ from transformers import (
     PreTrainedTokenizer,
     pipeline,
 )
-
 
 @lru_cache(maxsize=16)
 def _get_hf_pipeline(model: str, token: str | None) -> Pipeline:
@@ -30,14 +31,23 @@ type GetPipelineFunc = Callable[[str, str | None], Pipeline]
 
 
 class HFClassificationService(Injectable[StrictBaseModel]):
+    def __init__(
+        self,
+        config: InjectableConfig,
+        logger_factory: LoggerFactory,
+        get_pipeline: GetPipelineFunc = _get_hf_pipeline,
+        *args: Any,
+        **kwargs: Any,
+    ):
+        super().__init__(config, logger_factory, *args, **kwargs)
+        self._get_pipeline = get_pipeline
+
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return StrictBaseModel
 
-    def classify(
-        self, req: ClassificationRequest, get_pipeline: GetPipelineFunc = _get_hf_pipeline
-    ) -> ClassificationResult:
-        classify: Pipeline = get_pipeline(req.model_name, req.api_token)
+    def classify(self, req: ClassificationRequest) -> ClassificationResult:
+        classify: Pipeline = self._get_pipeline(req.model_name, req.api_token)
         classifications: Any = classify(req.text, truncation=True)
         if not classifications:
             raise ValueError("No classification result returned from HuggingFace pipeline")
@@ -46,7 +56,5 @@ class HFClassificationService(Injectable[StrictBaseModel]):
         classification = classifications[0]
         return ClassificationResult(label=classification["label"], confidence=classification["score"])
 
-    async def aclassify(
-        self, req: ClassificationRequest, get_pipeline: GetPipelineFunc = _get_hf_pipeline
-    ) -> ClassificationResult:
-        return self.classify(req, get_pipeline)
+    async def aclassify(self, req: ClassificationRequest) -> ClassificationResult:
+        return self.classify(req)
