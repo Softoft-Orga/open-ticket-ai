@@ -176,10 +176,7 @@ class TestFindAllConfiguredServicesOfType:
         registry.register("jinja_renderer", JinjaRenderer)
 
         original_config = InjectableConfig(
-            id="renderer1",
-            use="jinja_renderer",
-            params={"custom_param": "value"},
-            injects={"dep": "dependency"}
+            id="renderer1", use="jinja_renderer", params={"custom_param": "value"}, injects={"dep": "dependency"}
         )
         configs = [original_config]
 
