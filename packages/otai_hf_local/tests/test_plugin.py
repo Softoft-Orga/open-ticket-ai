@@ -20,7 +20,7 @@ def test_plugin_registration_with_valid_config():
     call_args_list = mock_registry.register.call_args_list
     hf_local_registrations = [
         call for call in call_args_list
-        if call[0][0].startswith("hf-local:")
+        if call.args and len(call.args) > 0 and isinstance(call.args[0], str) and call.args[0].startswith("hf-local:")
     ]
     assert len(hf_local_registrations) >= 1
 
