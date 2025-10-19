@@ -11,10 +11,8 @@ class WrongConfigError(Exception):
     """Raised when the configuration provided is incorrect or invalid."""
 
 
-
 class RegistryError(Exception):
     """Raised when there is an error related to the component registry."""
-
 
 
 class NoServiceConfigurationFoundError(WrongConfigError):
@@ -29,10 +27,10 @@ class NoServiceConfigurationFoundError(WrongConfigError):
 
 
 class InjectableNotFoundError(RegistryError):
-    def __init__(self, injectable_id: str, component_registry: ComponentRegistry):
+    def __init__(self, injectable_id: str, component_registry: type):
         super().__init__(
             f"Injectable with id '{injectable_id}' not found in the ComponentRegistry. "
-            f"Available injectables: {component_registry.get_available_injectables()}"
+            f"Available injectables: {component_registry}"
         )
 
 
