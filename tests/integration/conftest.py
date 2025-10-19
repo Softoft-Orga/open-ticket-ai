@@ -4,7 +4,6 @@ import pytest
 from injector import Injector, Module, provider
 
 from open_ticket_ai.core.config.app_config import AppConfig
-from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.dependency_injection.container import AppModule
 from open_ticket_ai.core.plugins.plugin import GetEntryPointsFn
 
@@ -18,7 +17,7 @@ class TestModule(Module):
 
 
 @pytest.fixture
-def integration_container(temp_config_file):
+def integration_container(temp_config_file):  # noqa: ARG001
     app_config = AppConfig(_env_file=None)
     app_module = AppModule(app_config)
     container = Injector([app_module, TestModule()])
@@ -26,7 +25,7 @@ def integration_container(temp_config_file):
 
 
 @pytest.fixture
-def integration_component_registry(temp_config_file):
+def integration_component_registry(temp_config_file):  # noqa: ARG001
     app_config = AppConfig(_env_file=None)
     app_module = AppModule(app_config)
     return app_module.component_registry

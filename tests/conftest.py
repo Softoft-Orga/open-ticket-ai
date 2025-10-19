@@ -1,5 +1,4 @@
 import os
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -13,11 +12,11 @@ def temp_config_file(tmp_path):
     logging:
       level: "DEBUG"
       log_to_file: false
-  
+
   services:
     jinja_default:
       use: "base:JinjaRenderer"
-  
+
   orchestrator:
     use: "base:SimpleSequentialOrchestrator"
     steps:
@@ -26,10 +25,10 @@ def temp_config_file(tmp_path):
 """
     config_file = tmp_path / "config.yml"
     config_file.write_text(config_content)
-    
-    original_cwd = os.getcwd()
+
+    original_cwd = Path.cwd()
     os.chdir(tmp_path)
-    
+
     yield config_file
-    
+
     os.chdir(original_cwd)
