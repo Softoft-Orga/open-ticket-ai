@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import final, Callable
+from collections.abc import Callable
+from typing import final
 
 from injector import inject
 
@@ -15,19 +16,23 @@ class Plugin(ABC):
 
     @property
     def _plugin_name(self) -> str:
-        module = self.__class__.__module__.split('.')[0]
-        return module.replace('_', '-')
+        module = self.__class__.__module__.split(".")[0]
+        return module.replace("_", "-")
 
     @final
     @property
     def _component_name_prefix(self) -> str:
         """Get component name prefix for this plugin."""
-        return self._plugin_name.replace(self._app_config.PLUGIN_NAME_PREFIX, '')
+        return self._plugin_name.replace(self._app_config.PLUGIN_NAME_PREFIX, "")
 
     @final
     def _get_registry_name(self, injectable: type[Injectable]) -> str:
         """Get the name used to register this plugin's components."""
-        return self._component_name_prefix + self._app_config.REGISTRY_IDENTIFIER_SEPERATOR + injectable.get_registry_name()
+        return (
+            self._component_name_prefix
+            + self._app_config.REGISTRY_IDENTIFIER_SEPERATOR
+            + injectable.get_registry_name()
+        )
 
     @abstractmethod
     def _get_all_injectables(self) -> list[type[Injectable]]:

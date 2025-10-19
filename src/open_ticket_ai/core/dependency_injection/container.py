@@ -28,7 +28,7 @@ class AppModule(Module):
 
     @provider
     def create_renderer_from_service(
-            self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
+        self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         all_template_renderer_services = find_all_configured_services_of_type(
             config.get_services_list(),
