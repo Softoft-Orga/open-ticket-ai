@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
+
 from shutil import RegistryError
 
-from open_ticket_ai.core.config.errors import InjectableNotFoundError
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.pipes.pipe import Pipe
+
+if TYPE_CHECKING:
+    from open_ticket_ai.core.config.errors import InjectableNotFoundError
 
 
 class ComponentRegistry:
@@ -21,6 +25,8 @@ class ComponentRegistry:
     def get_pipe(self, registry_identifier: str) -> type[Pipe] | None:
         pipe = self._pipes.get(registry_identifier)
         if pipe is None:
+            from open_ticket_ai.core.config.errors import InjectableNotFoundError
+
             raise InjectableNotFoundError(
                 registry_identifier,
                 self,
@@ -30,6 +36,8 @@ class ComponentRegistry:
     def get_injectable(self, registry_identifier: str) -> type[Injectable]:
         service = self._services.get(registry_identifier)
         if service is None:
+            from open_ticket_ai.core.config.errors import InjectableNotFoundError
+
             raise InjectableNotFoundError(
                 registry_identifier,
                 self,
