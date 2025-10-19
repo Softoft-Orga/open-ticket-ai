@@ -86,9 +86,9 @@ async def test_update_ticket(service, mock_client, sample_otobo_ticket, has_note
         priority=UnifiedEntity(id="3", name="High"),
         notes=[UnifiedNote(subject="Note", body="Body")] if has_note else None,
     )
-    
+
     result = await service.update_ticket("123", updates)
-    
+
     assert result is True
     call_args = mock_client.update_ticket.call_args[0][0]
     assert call_args.id == 123
