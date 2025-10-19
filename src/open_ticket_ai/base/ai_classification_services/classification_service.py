@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from open_ticket_ai.base.ai_classification_services.classification_models import (
     ClassificationRequest,
@@ -6,6 +6,7 @@ from open_ticket_ai.base.ai_classification_services.classification_models import
 )
 
 
+@runtime_checkable
 class ClassificationService(Protocol):
     def classify(self, req: ClassificationRequest) -> ClassificationResult: ...
 
