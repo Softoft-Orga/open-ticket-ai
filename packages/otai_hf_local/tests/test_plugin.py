@@ -10,13 +10,13 @@ from otai_hf_local.plugin import plugin
 def test_plugin_registration_with_valid_config():
     app_config = AppConfig()
     mock_registry = MagicMock(spec=ComponentRegistry)
-    
+
     plugin_instance = plugin(app_config)
     plugin_instance.on_load(mock_registry)
-    
+
     assert mock_registry.register.called
     assert mock_registry.register.call_count >= 1
-    
+
     expected_prefix = f"hf-local{app_config.REGISTRY_IDENTIFIER_SEPERATOR}"
     call_args_list = mock_registry.register.call_args_list
     hf_local_registrations = [
