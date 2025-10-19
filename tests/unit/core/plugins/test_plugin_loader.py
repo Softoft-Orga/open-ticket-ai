@@ -7,9 +7,7 @@ from open_ticket_ai.core.plugins.plugin_loader import PluginLoader, PluginLoadEr
 
 
 class TestLoadPlugins:
-    def test_calls_on_load_for_each_plugin(
-        self, mock_component_registry, logger_factory, mock_app_config
-    ):
+    def test_calls_on_load_for_each_plugin(self, mock_component_registry, logger_factory, mock_app_config):
         mock_plugin = MagicMock(spec=Plugin)
         mock_plugin.on_load = MagicMock()
 
@@ -30,9 +28,7 @@ class TestLoadPlugins:
 
         mock_plugin.on_load.assert_called_once_with(mock_component_registry)
 
-    def test_raises_exception_for_invalid_plugin(
-        self, mock_component_registry, logger_factory, mock_app_config
-    ):
+    def test_raises_exception_for_invalid_plugin(self, mock_component_registry, logger_factory, mock_app_config):
         class NotAPlugin:
             pass
 
