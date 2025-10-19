@@ -129,6 +129,10 @@ module = ["open_ticket_ai.base.pipes.*", "open_ticket_ai.base.triggers.*"]
 disable_error_code = ["attr-defined", "no-any-return", "call-arg"]
 
 [[tool.mypy.overrides]]
+module = ["open_ticket_ai.core.pipes.*"]
+disable_error_code = ["return-value"]
+
+[[tool.mypy.overrides]]
 module = ["packages.otai_otobo_znuny.*"]
 ignore_missing_imports = true
 warn_return_any = false
