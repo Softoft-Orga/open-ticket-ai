@@ -9,6 +9,7 @@ from open_ticket_ai.core.plugins.plugin_base import CreatePluginFn, Plugin
 
 
 class BasePlugin(Plugin):
+    @property
     def _plugin_name(self) -> str:
         return "otai-base"
 
