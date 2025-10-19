@@ -1,9 +1,9 @@
 from unittest.mock import MagicMock
 
 import pytest
+from pydantic import BaseModel
 
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
-from open_ticket_ai.base.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.config.errors import InjectableNotFoundError
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.dependency_injection.service_registry_util import find_all_configured_services_of_type
@@ -13,29 +13,15 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 from tests.unit.conftest import SimpleInjectable
 
 
-class MockOTOBOZnunyTicketSystemService(TicketSystemService):
+class TestInjectableClass1(Injectable):
     @staticmethod
-    def get_params_model() -> type:
-        from pydantic import BaseModel
+    def get_params_model() -> type[BaseModel]:
         return BaseModel
 
-    async def update_ticket(self, ticket_id: str, updates):
-        pass
 
-    async def find_tickets(self, criteria):
-        pass
-
-    async def find_first_ticket(self, criteria):
-        pass
-
-    async def add_note(self, ticket_id: str, note):
-        pass
-
-
-class MockHFClassificationService(Injectable):
+class TestInjectableClass2(Injectable):
     @staticmethod
-    def get_params_model() -> type:
-        from pydantic import BaseModel
+    def get_params_model() -> type[BaseModel]:
         return BaseModel
 
 
@@ -43,13 +29,13 @@ class TestFindAllConfiguredServicesOfType:
     def test_find_matching_template_renderer_configs(self):
         registry = ComponentRegistry()
         registry.register("jinja_renderer", JinjaRenderer)
-        registry.register("otobo_service", MockOTOBOZnunyTicketSystemService)
-        registry.register("hf_service", MockHFClassificationService)
+        registry.register("test_injectable1", TestInjectableClass1)
+        registry.register("test_injectable2", TestInjectableClass2)
 
         configs = [
             InjectableConfig(id="renderer1", use="jinja_renderer"),
-            InjectableConfig(id="ticket_system1", use="otobo_service"),
-            InjectableConfig(id="ai_service1", use="hf_service"),
+            InjectableConfig(id="injectable1", use="test_injectable1"),
+            InjectableConfig(id="injectable2", use="test_injectable2"),
         ]
 
         result = find_all_configured_services_of_type(configs, registry, TemplateRenderer)
@@ -58,49 +44,31 @@ class TestFindAllConfiguredServicesOfType:
         assert result[0].id == "renderer1"
         assert result[0].use == "jinja_renderer"
 
-    def test_find_matching_ticket_system_configs(self):
-        registry = ComponentRegistry()
-        registry.register("jinja_renderer", JinjaRenderer)
-        registry.register("otobo_service", MockOTOBOZnunyTicketSystemService)
-        registry.register("hf_service", MockHFClassificationService)
-
-        configs = [
-            InjectableConfig(id="renderer1", use="jinja_renderer"),
-            InjectableConfig(id="ticket_system1", use="otobo_service"),
-            InjectableConfig(id="ai_service1", use="hf_service"),
-        ]
-
-        result = find_all_configured_services_of_type(configs, registry, TicketSystemService)
-
-        assert len(result) == 1
-        assert result[0].id == "ticket_system1"
-        assert result[0].use == "otobo_service"
-
     def test_find_all_injectable_configs(self):
         registry = ComponentRegistry()
         registry.register("jinja_renderer", JinjaRenderer)
-        registry.register("otobo_service", MockOTOBOZnunyTicketSystemService)
-        registry.register("hf_service", MockHFClassificationService)
+        registry.register("test_injectable1", TestInjectableClass1)
+        registry.register("test_injectable2", TestInjectableClass2)
 
         configs = [
             InjectableConfig(id="renderer1", use="jinja_renderer"),
-            InjectableConfig(id="ticket_system1", use="otobo_service"),
-            InjectableConfig(id="ai_service1", use="hf_service"),
+            InjectableConfig(id="injectable1", use="test_injectable1"),
+            InjectableConfig(id="injectable2", use="test_injectable2"),
         ]
 
         result = find_all_configured_services_of_type(configs, registry, Injectable)
 
         assert len(result) == 3
-        assert {c.id for c in result} == {"renderer1", "ticket_system1", "ai_service1"}
+        assert {c.id for c in result} == {"renderer1", "injectable1", "injectable2"}
 
     def test_empty_list_when_no_matching_configs(self):
         registry = ComponentRegistry()
-        registry.register("otobo_service", MockOTOBOZnunyTicketSystemService)
-        registry.register("hf_service", MockHFClassificationService)
+        registry.register("test_injectable1", TestInjectableClass1)
+        registry.register("test_injectable2", TestInjectableClass2)
 
         configs = [
-            InjectableConfig(id="ticket_system1", use="otobo_service"),
-            InjectableConfig(id="ai_service1", use="hf_service"),
+            InjectableConfig(id="injectable1", use="test_injectable1"),
+            InjectableConfig(id="injectable2", use="test_injectable2"),
         ]
 
         result = find_all_configured_services_of_type(configs, registry, TemplateRenderer)
@@ -140,7 +108,7 @@ class TestFindAllConfiguredServicesOfType:
             (
                 [
                     InjectableConfig(id="renderer1", use="jinja_renderer"),
-                    InjectableConfig(id="ticket1", use="otobo_service"),
+                    InjectableConfig(id="injectable1", use="test_injectable1"),
                 ],
                 TemplateRenderer,
                 {"renderer1"},
@@ -148,27 +116,27 @@ class TestFindAllConfiguredServicesOfType:
             (
                 [
                     InjectableConfig(id="renderer1", use="jinja_renderer"),
-                    InjectableConfig(id="ticket1", use="otobo_service"),
+                    InjectableConfig(id="injectable1", use="test_injectable1"),
                 ],
-                TicketSystemService,
-                {"ticket1"},
+                TestInjectableClass1,
+                {"injectable1"},
             ),
             (
                 [
                     InjectableConfig(id="renderer1", use="jinja_renderer"),
-                    InjectableConfig(id="ticket1", use="otobo_service"),
-                    InjectableConfig(id="hf1", use="hf_service"),
+                    InjectableConfig(id="injectable1", use="test_injectable1"),
+                    InjectableConfig(id="injectable2", use="test_injectable2"),
                 ],
                 Injectable,
-                {"renderer1", "ticket1", "hf1"},
+                {"renderer1", "injectable1", "injectable2"},
             ),
         ],
     )
     def test_parametrized_filtering_by_type(self, configs, filter_class, expected_ids):
         registry = ComponentRegistry()
         registry.register("jinja_renderer", JinjaRenderer)
-        registry.register("otobo_service", MockOTOBOZnunyTicketSystemService)
-        registry.register("hf_service", MockHFClassificationService)
+        registry.register("test_injectable1", TestInjectableClass1)
+        registry.register("test_injectable2", TestInjectableClass2)
 
         result = find_all_configured_services_of_type(configs, registry, filter_class)
 
@@ -188,11 +156,11 @@ class TestFindAllConfiguredServicesOfType:
 
     def test_uses_component_registry_for_type_resolution(self):
         mock_registry = MagicMock(spec=ComponentRegistry)
-        mock_registry.get_injectable.side_effect = [JinjaRenderer, MockHFClassificationService]
+        mock_registry.get_injectable.side_effect = [JinjaRenderer, TestInjectableClass1]
 
         configs = [
             InjectableConfig(id="renderer1", use="jinja_renderer"),
-            InjectableConfig(id="hf1", use="hf_service"),
+            InjectableConfig(id="injectable1", use="test_injectable1"),
         ]
 
         result = find_all_configured_services_of_type(configs, mock_registry, TemplateRenderer)
@@ -201,7 +169,7 @@ class TestFindAllConfiguredServicesOfType:
         assert result[0].id == "renderer1"
         assert mock_registry.get_injectable.call_count == 2
         mock_registry.get_injectable.assert_any_call("jinja_renderer")
-        mock_registry.get_injectable.assert_any_call("hf_service")
+        mock_registry.get_injectable.assert_any_call("test_injectable1")
 
     def test_config_identity_preserved_in_result(self):
         registry = ComponentRegistry()
