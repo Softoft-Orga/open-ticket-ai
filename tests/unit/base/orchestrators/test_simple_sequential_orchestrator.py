@@ -53,9 +53,7 @@ async def test_continuous_execution_with_keyboard_interrupt(logger_factory, mock
     spy_pipe1 = SpyPipe(config=PipeConfig(id="pipe1", use="test.pipe1", params={}), logger_factory=logger_factory)
     spy_pipe2 = SpyPipe(config=PipeConfig(id="pipe2", use="test.pipe2", params={}), logger_factory=logger_factory)
 
-    mock_pipe_factory.render_pipe.side_effect = lambda config, _: (
-        spy_pipe1 if config.id == "pipe1" else spy_pipe2
-    )
+    mock_pipe_factory.render_pipe.side_effect = lambda config, _: (spy_pipe1 if config.id == "pipe1" else spy_pipe2)
 
     orchestrator_config = PipeConfig(
         id="orchestrator",
@@ -96,9 +94,7 @@ async def test_context_isolation(logger_factory, mock_pipe_factory, empty_contex
     spy_pipe1 = SpyPipe(config=PipeConfig(id="pipe1", use="test.pipe1", params={}), logger_factory=logger_factory)
     spy_pipe2 = SpyPipe(config=PipeConfig(id="pipe2", use="test.pipe2", params={}), logger_factory=logger_factory)
 
-    mock_pipe_factory.render_pipe.side_effect = lambda config, _: (
-        spy_pipe1 if config.id == "pipe1" else spy_pipe2
-    )
+    mock_pipe_factory.render_pipe.side_effect = lambda config, _: (spy_pipe1 if config.id == "pipe1" else spy_pipe2)
 
     orchestrator_config = PipeConfig(
         id="orchestrator",
