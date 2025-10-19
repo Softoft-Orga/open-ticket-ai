@@ -22,11 +22,11 @@ from transformers import (
 @lru_cache(maxsize=16)
 def _get_hf_pipeline(model: str, token: str | None) -> Pipeline:
     tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(model, token=token)
-    model: PreTrainedModel = AutoModelForSequenceClassification.from_pretrained(model, token=token)
-    return pipeline("text-classification", model=model, tokenizer=tokenizer)
+    loaded_model: PreTrainedModel = AutoModelForSequenceClassification.from_pretrained(model, token=token)
+    return pipeline("text-classification", model=loaded_model, tokenizer=tokenizer)
 
 
-type GetPipelineFunc = Callable[[str, str], Pipeline]
+type GetPipelineFunc = Callable[[str, str | None], Pipeline]
 
 
 class HFClassificationService(Injectable[StrictBaseModel]):
@@ -45,3 +45,8 @@ class HFClassificationService(Injectable[StrictBaseModel]):
             raise TypeError("HuggingFace pipeline returned a non-list result")
         classification = classifications[0]
         return ClassificationResult(label=classification["label"], confidence=classification["score"])
+
+    async def aclassify(
+        self, req: ClassificationRequest, get_pipeline: GetPipelineFunc = _get_hf_pipeline
+    ) -> ClassificationResult:
+        return self.classify(req, get_pipeline)

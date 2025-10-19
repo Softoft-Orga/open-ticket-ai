@@ -1,6 +1,6 @@
-from .hf_local_text_classification_pipe import HFLocalTextClassificationPipe
+from .hf_classification_service import HFClassificationService
 
-__all__ = ["HFLocalTextClassificationPipe"]
+__all__ = ["HFClassificationService"]
 
 
 def get_metadata() -> dict[str, str]:
@@ -13,8 +13,8 @@ def get_metadata() -> dict[str, str]:
 
 
 def register_pipes() -> list[type]:
-    return [HFLocalTextClassificationPipe]
+    return []
 
 
 def register_services() -> list[type]:
-    return []
+    return [HFClassificationService]
