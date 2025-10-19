@@ -18,7 +18,7 @@ class Pipe[ParamsT: BaseModel](Injectable[ParamsT], ABC):
 
     @final
     async def process(self, context: PipeContext) -> PipeResult:
-        if self._should_run(context):
+        if await self._should_run(context):
             return await self._process(context)
         return PipeResult.skipped()
 

@@ -49,6 +49,7 @@ class PipeFactory:
         return pipe_class(
             config=rendered_config,
             pipe_context=pipe_context,
+            logger_factory=self._logger_factory,
             **injected_services,
         )
 

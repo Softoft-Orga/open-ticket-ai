@@ -22,7 +22,7 @@ class IntervalTrigger(Pipe[IntervalTriggerParams]):
         super().__init__(*args, **kwargs)
         self.last_time_fired: datetime.datetime = datetime.datetime.now(tz=datetime.UTC)
 
-    def _process(self, *_: Any, **__: Any) -> PipeResult:
+    async def _process(self, *_: Any, **__: Any) -> PipeResult:
         if datetime.datetime.now(tz=datetime.UTC) - self.last_time_fired >= self._params.interval:
             self.last_time_fired = datetime.datetime.now(tz=datetime.UTC)
             return PipeResult.success()

@@ -4,6 +4,7 @@ description: Minimal, behavior-focused pytest tests (no internals, no spam)
 title: "tests: <module>"
 labels: [ "tests", "unit" ]
 
+
 body:
   - type: markdown
     attributes:
@@ -13,74 +14,107 @@ body:
         **This is a TEST-ONLY task. NEVER modify ANY source code (src/, packages/*/src/).**
         
         **If source code behavior is unclear or seems wrong:**
-        - ❌ **DO NOT** modify src/ 
-        - ❌ **DO NOT** fix bugs
-        - Option 1: **Know the intended behavior?** → Write tests for the CORRECT behavior (tests may fail, that's OK)
-        - Option 2: **Don't know what it should do?** → Write NO tests. Document shortly in 1 - 3 sentences why and close the issue.
+        - ❌ DO NOT modify src/
+        - ❌ DO NOT fix bugs
+        - Option 1: Know the intended behavior? → Write tests for the CORRECT behavior (tests may fail, that's OK)
+        - Option 2: Don't know what it should do? → Write NO tests. Document shortly in 1–3 sentences why and close the issue.
         
         **Modify:** test files, `tests/fixtures/`, `tests/conftest.py`, `tests/data/`
-        IF Necessary write some short documentation in `docs/` or `README.md`
-        but only if its something that definitely needs to be documented and only write short text.
+        If necessary write short docs in `docs/` or `README.md` only if essential.
         
         **PRs that touch src/ will be REJECTED.**
         
         ---
         
-        ## Unit Test Task - Implementation Guide
+        ## Unit Test Task – Implementation Guide
         
         **How to write tests:**
         - Create test file in appropriate location (NOT under src/)
         - Package tests: `packages/<name>/tests/unit/test_*.py`
         - Root tests: `tests/unit/**/test_*.py`
-        - Test PUBLIC API only - no private methods/attributes
+        - Test PUBLIC API only – no private methods/attributes
         - Keep tests minimal: ≤5 tests per file, ≤20 lines per test
         
-        **Test structure:**
-        - Use descriptive test function names: `test_<behavior>_<condition>`
-        - Use `@pytest.mark.parametrize` to compress similar cases
-        - Prefer Fakes/DI over mocks; use pytest monkeypatch for env/globals
+        ### Assertion Style (flexible, not exact)
+        Do NOT assert exact strings or overly rigid structures. Tests must tolerate harmless formatting changes.
         
-        **Fixtures - CRITICAL RULES:**
-        - **NEVER create fixtures in test files** - they belong in central locations
-        - **ALWAYS check existing fixtures FIRST:** `uv run -m pytest --fixtures`
-        - **SEARCH tests/fixtures/ directory** before creating anything new
-        - **Fixtures belong in:**
-          - `tests/fixtures/<domain>.py` for reusable fixtures (preferred)
-          - `tests/conftest.py` for workspace-wide fixtures
-          - `packages/<name>/tests/conftest.py` for package-specific fixtures
-        - **Reuse existing fixtures:** `tmp_path`, `monkeypatch`, `sample_*`, `mock_*`, `empty_*`
-        - **Name new fixtures:** `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
-        - **PRs with duplicate/non-centralized fixtures will be REJECTED**
+        **Strings**
+        - Prefer containment or regex, not equality:
+          ```py
+          assert "failure" in message.lower()
+          # or
+          import re
+          assert re.search(r"\bfailure\b", message, re.I)
+          ```
+        - Normalize before asserting:
+          ```py
+          def norm(s: str) -> str: return " ".join((s or "").split()).casefold()
+          assert "operation failed" in norm(message)
+          ```
+        - Exceptions:
+          ```py
+          import pytest, re
+          with pytest.raises(ValueError) as e:
+              fn()
+          assert re.search(r"\binvalid\b", str(e.value), re.I)
+          ```
         
-        **What to test:**
-        - Input → output behavior with different valid inputs
+        **Numbers**
+        - Use tolerances:
+          ```py
+          from pytest import approx
+          assert duration == approx(0.25, rel=1e-2, abs=1e-3)
+          ```
+        
+        **Collections / Dicts**
+        - Subset / order-insensitive checks:
+          ```py
+          assert expected_keys <= data.keys()
+          assert {"status": "ok"}.items() <= data.items()
+          assert set(items) == set(expected)  # if order irrelevant
+          ```
+        
+        **Snapshots (optional)**
+        - If used, strip dynamic fields (timestamps, IDs) and whitespace first.
+        
+        **Fixtures – CRITICAL RULES**
+        - Never create fixtures in test files
+        - Check existing fixtures first: `uv run -m pytest --fixtures`
+        - Put reusable fixtures in `tests/fixtures/<domain>.py`
+        - Workspace-wide in `tests/conftest.py`, package-specific in `packages/<name>/tests/conftest.py`
+        - Reuse: `tmp_path`, `monkeypatch`, existing `sample_*`, `mock_*`
+        - Naming: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
+        
+        **What to test**
+        - Input → output behavior with representative inputs
         - Invariants and business rules
         - Exactly ONE negative/error case per file
-        - Edge cases IF relevant; DO NOT ADD trivial cases
-        - **Test the INTENDED behavior, even if src/ currently doesn't implement it correctly**
+        - Edge cases only if relevant
+        - Test intended behavior even if src/ is wrong
         
-        **What NOT to test:**
-        - Private implementation details (methods starting with _)
+        **What NOT to test**
+        - Private implementation details (`_`-prefixed)
         - Exact error messages
-        - Exact values that are likely to change
+        - Exact formatting/whitespace/punctuation
+        - Rigid ordering when contract doesn’t require it
         
-        **Test isolation:**
-        - No network I/O - mock or fake external calls
-        - No real filesystem - use tmp_path fixture
-        - Deterministic results - use fixed seeds/time
-        - Each test should be independent
+        **Test isolation**
+        - No network I/O – mock/fake external calls
+        - No real FS (use `tmp_path`)
+        - Deterministic (fixed seeds/time)
+        - Tests independent
         
-        **Quality gates (must pass):**
-        - `uv run ruff check .` - no warnings
-        - `uv run mypy .` - no errors
-        - **No changes to any files in src/ or packages/*/src/**
+        **Quality gates (must pass)**
+        - `uv run ruff check .` – no warnings
+        - `uv run mypy .` – no errors
+        - No changes under `src/**` or `packages/*/src/**`
         
-        **Issue is DONE when:**
-        - Tests written in correct location (tests/ only, NOT src/)
-        - Existing fixtures checked and reused where possible
-        - New fixtures placed in tests/fixtures/ or conftest.py (NOT in test files)
-        - **NO source code files were modified**
-        - OR: Documented why tests cannot be written and issue closed
+        **Issue is DONE when**
+        - Tests live under `tests/**` (not src/)
+        - Fixtures reused or centralized
+        - Flexible assertions used (no brittle equals)
+        - No source files modified
+        - Or: explained in 1–3 sentences why tests can’t be written and closed
 
   - type: input
     id: target
