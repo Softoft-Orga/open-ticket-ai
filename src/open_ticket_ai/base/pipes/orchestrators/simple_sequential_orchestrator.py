@@ -19,25 +19,10 @@ class SimpleSequentialOrchestrator(CompositePipe[SimpleSequentialOrchestratorPar
         return SimpleSequentialOrchestratorParams
 
     async def _process_steps(self, context: PipeContext):
-        self._logger.debug(f"🔁 Orchestrator cycle starting with {len(self._config.steps or [])} runner(s)")
         context = context.model_copy(update={"parent": context.params})
-
-        for step_config in self._config.steps or []:
-            await self._process_step(step_config, context)
+        [await self._process_step(step_config, context, render_pipe=False) for step_config in self._config.steps or []]
 
     async def _process(self, context: PipeContext) -> PipeResult:
-        self._logger.info(
-            f"🚀 Starting orchestrator loop with {self._params.orchestrator_sleep.total_seconds()}s sleep interval")
-
-        iteration = 0
         while True:
-            iteration += 1
-            self._logger.debug(f"━━━ Orchestration iteration #{iteration} ━━━")
-
-            try:
-                await self._process_steps(context)
-            except Exception as e:
-                self._logger.error(f"❌ Error in orchestration iteration #{iteration}: {e}", exc_info=True)
-
-            self._logger.debug(f"💤 Sleeping for {self._params.orchestrator_sleep.total_seconds()}s")
+            await self._process_steps(context)
             await asyncio.sleep(self._params.orchestrator_sleep.total_seconds())

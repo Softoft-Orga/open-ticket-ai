@@ -14,7 +14,7 @@ class InjectableConfigBase(StrictBaseModel):
         ),
     )
     use: str = Field(
-        default="open_ticket_ai.base.CompositePipe",
+        default="base:CompositePipe",
         description=(
             "Fully qualified class path of the injectables implementation to instantiate for this configuration."
         ),

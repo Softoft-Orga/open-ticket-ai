@@ -2,7 +2,7 @@ open_ticket_ai:
   api_version: "1"
   infrastructure:
     logging:
-      level: "DEBUG"
+      level: "INFO"
       log_to_file: false
       log_file_path: null
       log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -13,26 +13,30 @@ open_ticket_ai:
       use: "base:JinjaRenderer"
 
     otobo_znuny:
-      use: "otobo_znuny:OTOBOZnunyTicketSystemService"
+      use: "otobo-znuny:OTOBOZnunyTicketSystemService"
       params:
         base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
 
     hf_local:
-      use: "hf_local:HFLocalService"
+      use: "hf-local:HFClassificationService"
 
   orchestrator:
     use: "base:SimpleSequentialOrchestrator"
+    params:
+      orchestrator_sleep: "PT1S"
+
     steps:
       - id: ticket-routing-runner
         use: "base:SimpleSequentialRunner"
         params:
           "on":
-            - id: "every_10ms"
-              use: "base:IntervalTrigger"
-              params:
-                milliseconds: 10000
+            id: "every_10ms"
+            use: "base:IntervalTrigger"
+            params:
+              interval: "PT1S"
           run:
-            id: ticket-routing
+            id: "ticket-routing"
+            use: "base:CompositePipe"
             params:
               ticket_search_criteria:
                 queue:
@@ -47,7 +51,7 @@ open_ticket_ai:
               low_confidence_priority_name: "medium"
             steps:
               # ===== FETCHING TICKET BY QUEUE =========
-              - id: ticket_fetcher
+              - id: "ticket_fetcher"
                 use: "base:FetchTicketsPipe"
                 injects: { ticket_system: "otobo_znuny" }
                 params:
@@ -55,10 +59,11 @@ open_ticket_ai:
 
               # ===== QUEUE CLASSIFICATION =========
 
-              - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
+              - if: "{{ (get_pipe_result('ticket_fetcher', 'fetched_tickets') | length) > 0 }}"
                 id: queue_classification
+                use: "base:CompositePipe"
                 params:
-                  ticket: "{{ pipe_result('ticket_fetcher') | first }}"
+                  ticket: "{{ get_pipe_result('ticket_fetcher', 'fetched_tickets') | first }}"
                   model: "{{ parent['queue_model'] }}"
                   min_conf: "{{ parent['min_queue_confidence'] }}"
                   low_conf_name: "{{ parent['low_confidence_queue_name'] }}"
@@ -75,10 +80,6 @@ open_ticket_ai:
                     params:
                       text: "{{ parent['ticket']['subject'] }} {{ parent['ticket']['body'] }}"
                       model_name: "{{ parent['model'] }}"
-                    retry:
-                      on:
-                        - "TimeoutError"
-                        - "requests.exceptions.RequestException"
                   - id: select_final
                     use: "base:ExpressionPipe"
                     params:
@@ -116,6 +117,7 @@ open_ticket_ai:
 
               - if: "{{ (pipe_result('ticket_fetcher') | length) > 0 }}"
                 id: priority_classification
+                use: "base:CompositePipe"
                 params:
                   depends_on: [ "ticket_fetcher" ]
                   ticket: "{{ pipe_result('ticket_fetcher') | first }}"
@@ -148,9 +150,6 @@ open_ticket_ai:
                     params:
                       text: "{{ parent['ticket']['subject'] }} {{ parent['ticket']['body'] }}"
                       model_name: "{{ parent['model'] }}"
-                      on:
-                        - "TimeoutError"
-                        - "requests.exceptions.RequestException"
                   - id: select_final
                     use: "base:ExpressionPipe"
                     params:

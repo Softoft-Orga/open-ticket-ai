@@ -21,28 +21,9 @@ class FetchTicketsPipe(TicketSystemPipe[FetchTicketsParams]):
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
         search_criteria = self._params.ticket_search_criteria
-
-        self._logger.info(
-            f"🔍 Fetching tickets with criteria: queue={search_criteria.queue}, limit={search_criteria.limit}"
+        return PipeResult(
+            succeeded=True,
+            data={
+                "fetched_tickets": (await self._ticket_system.find_tickets(search_criteria)),
+            },
         )
-        self._logger.debug(f"Full search criteria: {search_criteria.model_dump()}")
-
-        try:
-            tickets = await self._ticket_system.find_tickets(search_criteria)
-
-            self._logger.info(f"📥 Retrieved {len(tickets)} ticket(s)")
-
-            if tickets:
-                self._logger.debug(f"Ticket IDs: {[t.id for t in tickets]}")
-            else:
-                self._logger.debug("No tickets found matching criteria")
-
-            return PipeResult(
-                succeeded=True,
-                data={
-                    "fetched_tickets": tickets,
-                },
-            )
-        except Exception as e:
-            self._logger.error(f"❌ Failed to fetch tickets: {e}", exc_info=True)
-            raise
