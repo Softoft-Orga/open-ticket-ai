@@ -35,7 +35,7 @@ async def test_classification_service_async_aclassify():
     request = ClassificationRequest(
         text="This is an async test ticket",
         model_name="test_model",
-        api_token="test_token",  # noqa: S106
+        api_token="fake-token-for-testing",  # noqa: S106
     )
 
     result = await service.aclassify(request)
