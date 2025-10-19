@@ -1,20 +1,19 @@
-from typing import TYPE_CHECKING
-
 from shutil import RegistryError
+from typing import TYPE_CHECKING
 
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.pipes.pipe import Pipe
 
 if TYPE_CHECKING:
-    from open_ticket_ai.core.config.errors import InjectableNotFoundError
+    pass
 
 
 class ComponentRegistry:
-    def __init__(self):
+    def __init__(self) -> None:
         self._pipes: dict[str, type[Pipe]] = {}
         self._services: dict[str, type[Injectable]] = {}
 
-    def register(self, registry_identifier: str, register_class: type[Injectable]):
+    def register(self, registry_identifier: str, register_class: type[Injectable]) -> None:
         if issubclass(register_class, Pipe):
             self._pipes[registry_identifier] = register_class
         elif issubclass(register_class, Injectable):
@@ -45,11 +44,11 @@ class ComponentRegistry:
         return service
 
     def find_by_type(self, cls: type[Injectable]) -> dict[str, type[Injectable]]:
-        result = {}
-        for registry_id, registered_cls in {**self._pipes, **self._services}.items():
-            if issubclass(registered_cls, cls):
-                result[registry_id] = registered_cls
-        return result
+        return {
+            registry_id: registered_cls
+            for registry_id, registered_cls in {**self._pipes, **self._services}.items()
+            if issubclass(registered_cls, cls)
+        }
 
     def get_available_injectables(self) -> list[str]:
         return list(self._services.keys()) + list(self._pipes.keys())
