@@ -38,7 +38,7 @@ Documentation = "https://open-ticket-ai.com/en/guide/available-plugins.html"
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_otobo_znuny/CHANGELOG.md"
 
 [project.entry-points."open_ticket_ai.plugins"]
-otobo_znuny = "otai_otobo_znuny"
+otobo_znuny = "otai_otobo_znuny.plugin:create_otobo_znuny_plugin"
 
 [build-system]
 requires = ["setuptools>=61.0"]

@@ -5,7 +5,7 @@ import pytest
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.errors import RegistryError
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from open_ticket_ai.core.plugins.plugin_base import Plugin
+from open_ticket_ai.core.plugins.plugin import Plugin
 from tests.unit.conftest import SimpleInjectable
 
 
@@ -47,7 +47,7 @@ class TestOnLoad:
         assert mock_component_registry.register.call_count == 2
 
     def test_on_load_with_empty_injectables_does_not_call_register(
-        self, app_config_for_plugin, mock_component_registry
+            self, app_config_for_plugin, mock_component_registry
     ):
         plugin = ConcretePlugin(app_config_for_plugin, [])
 

@@ -1,13 +1,13 @@
 from unittest.mock import MagicMock
 
-from open_ticket_ai.base.plugin import BasePlugin, plugin
+from open_ticket_ai.base.plugin import BasePlugin, create_base_plugin
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from open_ticket_ai.core.plugins.plugin_base import Plugin
+from open_ticket_ai.core.plugins.plugin import Plugin
 
 
 class TestBasePlugin:
     def test_plugin_function_returns_plugin_instance(self, mock_app_config):
-        result = plugin(mock_app_config)
+        result = create_base_plugin(mock_app_config)
 
         assert isinstance(result, Plugin)
         assert isinstance(result, BasePlugin)

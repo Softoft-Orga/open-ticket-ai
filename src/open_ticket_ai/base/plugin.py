@@ -5,7 +5,7 @@ from open_ticket_ai.base.pipes.orchestrators.simple_sequential_orchestrator impo
 from open_ticket_ai.base.pipes.pipe_runners.simple_sequential_runner import SimpleSequentialRunner
 from open_ticket_ai.base.template_renderers.jinja_renderer import JinjaRenderer
 from open_ticket_ai.core.injectables.injectable import Injectable
-from open_ticket_ai.core.plugins.plugin_base import CreatePluginFn, Plugin
+from open_ticket_ai.core.plugins.plugin import CreatePluginFn, Plugin
 
 
 class BasePlugin(Plugin):
@@ -28,4 +28,4 @@ class BasePlugin(Plugin):
         ]
 
 
-plugin: CreatePluginFn = BasePlugin
+create_base_plugin: CreatePluginFn = BasePlugin

@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from open_ticket_ai.core.plugins.plugin_base import Plugin
+from open_ticket_ai.core.plugins.plugin import Plugin
 from open_ticket_ai.core.plugins.plugin_loader import PluginLoader, PluginLoadError
 
 

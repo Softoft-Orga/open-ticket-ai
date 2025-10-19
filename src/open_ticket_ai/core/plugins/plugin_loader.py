@@ -5,7 +5,7 @@ from injector import inject
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.plugins.plugin_base import CreatePluginFn, GetEntryPointsFn, Plugin
+from open_ticket_ai.core.plugins.plugin import CreatePluginFn, GetEntryPointsFn, Plugin
 
 
 class PluginLoadError(Exception):
@@ -18,11 +18,11 @@ class PluginLoadError(Exception):
 class PluginLoader:
     @inject
     def __init__(
-        self,
-        registry: ComponentRegistry,
-        logger_factory: LoggerFactory,
-        app_config: AppConfig,
-        entry_points_fn: GetEntryPointsFn = entry_points,
+            self,
+            registry: ComponentRegistry,
+            logger_factory: LoggerFactory,
+            app_config: AppConfig,
+            entry_points_fn: GetEntryPointsFn = entry_points,
     ):
         self._registry = registry
         self._logger = logger_factory.create(self.__class__.__name__)
