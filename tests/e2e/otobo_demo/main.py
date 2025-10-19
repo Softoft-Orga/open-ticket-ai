@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 
 from open_ticket_ai.main import run
 
-CONFIG_PATH = Path(__file__).parent / "config.yml"
+CONFIG_DIR = Path(__file__).parent
 
 if __name__ == "__main__":
     load_dotenv(override=True)
-    os.environ["OPEN_TICKET_AI_CONFIG"] = str(CONFIG_PATH)
+    os.chdir(CONFIG_DIR)
 
-    asyncio.run(run(str(CONFIG_PATH)))
+    asyncio.run(run())
