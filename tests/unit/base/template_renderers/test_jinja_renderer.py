@@ -70,24 +70,18 @@ def test_render_nested_dict(jinja_renderer: JinjaRenderer) -> None:
 
 
 def test_custom_function_at_path_in_globals(jinja_renderer: JinjaRenderer) -> None:
-    template = "{{ value }}"
-    context = {"value": "test"}
-    jinja_renderer.render(template, context)
-    assert "at_path" in jinja_renderer._jinja_env.globals
+    result = jinja_renderer.render("{{ at_path is defined }}", {})
+    assert result is True
 
 
 def test_custom_function_has_failed_in_globals(jinja_renderer: JinjaRenderer) -> None:
-    template = "{{ value }}"
-    context = {"value": "test"}
-    jinja_renderer.render(template, context)
-    assert "has_failed" in jinja_renderer._jinja_env.globals
+    result = jinja_renderer.render("{{ has_failed is defined }}", {})
+    assert result is True
 
 
 def test_custom_function_get_pipe_result_in_globals(jinja_renderer: JinjaRenderer) -> None:
-    template = "{{ value }}"
-    context = {"value": "test"}
-    jinja_renderer.render(template, context)
-    assert "get_pipe_result" in jinja_renderer._jinja_env.globals
+    result = jinja_renderer.render("{{ get_pipe_result is defined }}", {})
+    assert result is True
 
 
 def test_render_missing_variable_returns_empty_string(jinja_renderer: JinjaRenderer) -> None:
