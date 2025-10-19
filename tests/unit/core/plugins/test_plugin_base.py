@@ -33,10 +33,10 @@ class TestOnLoad:
 
         plugin.on_load(mock_component_registry)
 
-        assert mock_component_registry.register.call_count == 1
-        call_args = mock_component_registry.register.call_args
-        assert call_args[0][1] == SimpleInjectable
-        assert "SimpleInjectable" in call_args[0][0]
+        mock_component_registry.register.assert_called_once()
+        registry_name, injectable_class = mock_component_registry.register.call_args[0]
+        assert injectable_class == SimpleInjectable
+        assert "SimpleInjectable" in registry_name
 
     def test_on_load_with_multiple_injectables(self, app_config_for_plugin, mock_component_registry):
         injectables = [SimpleInjectable, SimpleInjectable]
