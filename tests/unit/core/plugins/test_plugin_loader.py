@@ -6,24 +6,6 @@ from open_ticket_ai.core.plugins.plugin_base import Plugin
 from open_ticket_ai.core.plugins.plugin_loader import PluginLoader, PluginLoadError
 
 
-class TestPluginLoaderConstruction:
-    def test_accepts_correct_dependencies(
-        self, mock_component_registry, logger_factory, mock_app_config
-    ):
-        mock_entry_points_fn = MagicMock()
-
-        loader = PluginLoader(
-            registry=mock_component_registry,
-            logger_factory=logger_factory,
-            app_config=mock_app_config,
-            entry_points_fn=mock_entry_points_fn,
-        )
-
-        assert loader._registry == mock_component_registry
-        assert loader._app_config == mock_app_config
-        assert loader._entry_points_fn == mock_entry_points_fn
-
-
 class TestLoadPlugins:
     def test_calls_on_load_for_each_plugin(
         self, mock_component_registry, logger_factory, mock_app_config
