@@ -1,11 +1,5 @@
-from shutil import RegistryError
-from typing import TYPE_CHECKING
-
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.pipes.pipe import Pipe
-
-if TYPE_CHECKING:
-    pass
 
 
 class ComponentRegistry:
@@ -19,6 +13,8 @@ class ComponentRegistry:
         elif issubclass(register_class, Injectable):
             self._services[registry_identifier] = register_class
         else:
+            from open_ticket_ai.core.config.errors import RegistryError
+
             raise RegistryError("Registered class must be a subclass of Pipe or Injectable")
 
     def get_pipe(self, registry_identifier: str) -> type[Pipe] | None:
