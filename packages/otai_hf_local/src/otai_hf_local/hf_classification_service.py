@@ -1,12 +1,6 @@
 from functools import lru_cache
-from typing import Any
+from typing import Any, Callable
 
-from open_ticket_ai.base.ai_classification_services.classification_models import (
-    ClassificationRequest,
-    ClassificationResult,
-)
-from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.injectables.injectable import Injectable
 from pydantic import BaseModel
 from transformers import (
     AutoModelForSequenceClassification,
@@ -17,12 +11,22 @@ from transformers import (
     pipeline,
 )
 
+from open_ticket_ai.base.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
+from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.injectables.injectable import Injectable
+
 
 @lru_cache(maxsize=16)
-def _get_hf_pipeline(model: str, token: str | None):
-    tok: PreTrainedTokenizer = AutoTokenizer.from_pretrained(model, token=token)
-    mdl: PreTrainedModel = AutoModelForSequenceClassification.from_pretrained(model, token=token)
-    return pipeline("text-classification", model=mdl, tokenizer=tok)
+def _get_hf_pipeline(model: str, token: str | None) -> Pipeline:
+    tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(model, token=token)
+    model: PreTrainedModel = AutoModelForSequenceClassification.from_pretrained(model, token=token)
+    return pipeline("text-classification", model=model, tokenizer=tokenizer)
+
+
+type GetPipelineFunc = Callable[[str, str], Pipeline]
 
 
 class HFClassificationService(Injectable[StrictBaseModel]):
@@ -30,8 +34,9 @@ class HFClassificationService(Injectable[StrictBaseModel]):
     def get_params_model() -> type[BaseModel]:
         return StrictBaseModel
 
-    def classify(self, req: ClassificationRequest) -> ClassificationResult:
-        classify: Pipeline = _get_hf_pipeline(req.model_name, req.api_token)
+    def classify(self, req: ClassificationRequest,
+                 get_pipeline: GetPipelineFunc = _get_hf_pipeline) -> ClassificationResult:
+        classify: Pipeline = get_pipeline(req.model_name, req.api_token)
         classifications: Any = classify(req.text, truncation=True)
         if not classifications:
             raise ValueError("No classification result returned from HuggingFace pipeline")
