@@ -3,10 +3,9 @@ from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 
 
-def find_all_configured_services_of_type(services_configs: list[InjectableConfig],
-                                         component_registry: ComponentRegistry,
-                                         subclass_of: type[Injectable]
-                                         ) -> list[InjectableConfig]:
+def find_all_configured_services_of_type(
+    services_configs: list[InjectableConfig], component_registry: ComponentRegistry, subclass_of: type[Injectable]
+) -> list[InjectableConfig]:
     found_services: list[InjectableConfig] = []
     for service_config in services_configs:
         registry_identifier = service_config.use

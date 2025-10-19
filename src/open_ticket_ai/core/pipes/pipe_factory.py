@@ -18,11 +18,11 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class PipeFactory:
     @inject
     def __init__(
-            self,
-            template_renderer: TemplateRenderer,
-            logger_factory: LoggerFactory,
-            otai_config: OpenTicketAIConfig,
-            component_registry: ComponentRegistry,
+        self,
+        template_renderer: TemplateRenderer,
+        logger_factory: LoggerFactory,
+        otai_config: OpenTicketAIConfig,
+        component_registry: ComponentRegistry,
     ):
         self._template_renderer = template_renderer
         self._logger_factory = logger_factory
@@ -61,8 +61,7 @@ class PipeFactory:
         They should be injected. Use AssistedBuilder for services as well?
         """
         config = next(
-            (service_config for service_config in self._service_configs if service_config.id == service_id),
-            None
+            (service_config for service_config in self._service_configs if service_config.id == service_id), None
         )
         if config is None:
             raise NoServiceConfigurationFoundError(service_id, self._service_configs)

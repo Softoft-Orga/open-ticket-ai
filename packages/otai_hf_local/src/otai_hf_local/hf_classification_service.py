@@ -1,6 +1,12 @@
 from functools import lru_cache
 from typing import Any
 
+from open_ticket_ai.base.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
+from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.injectables.injectable import Injectable
 from pydantic import BaseModel
 from transformers import (
     AutoModelForSequenceClassification,
@@ -10,13 +16,6 @@ from transformers import (
     PreTrainedTokenizer,
     pipeline,
 )
-
-from open_ticket_ai.base.ai_classification_services.classification_models import (
-    ClassificationRequest,
-    ClassificationResult,
-)
-from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.injectables.injectable import Injectable
 
 
 @lru_cache(maxsize=16)
