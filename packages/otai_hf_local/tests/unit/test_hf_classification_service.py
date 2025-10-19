@@ -13,20 +13,20 @@ from otai_hf_local.hf_classification_service import HFClassificationService
 def test_classify_returns_correct_result(logger_factory):
     config = InjectableConfig(id="test-hf-service")
     service = HFClassificationService(config, logger_factory)
-    
+
     mock_pipeline = MagicMock()
     mock_pipeline.return_value = [{"label": "test-label", "score": 0.99}]
-    
+
     mock_get_pipeline = MagicMock(return_value=mock_pipeline)
-    
+
     request = ClassificationRequest(
         text="This is a test text",
         model_name="test-model",
         api_token="test-token",
     )
-    
+
     result = service.classify(request, get_pipeline=mock_get_pipeline)
-    
+
     assert isinstance(result, ClassificationResult)
     assert result.label == "test-label"
     assert result.confidence == 0.99  # noqa: PLR2004
@@ -38,20 +38,20 @@ def test_classify_returns_correct_result(logger_factory):
 async def test_aclassify_returns_correct_result(logger_factory):
     config = InjectableConfig(id="test-hf-service")
     service = HFClassificationService(config, logger_factory)
-    
+
     mock_pipeline = MagicMock()
     mock_pipeline.return_value = [{"label": "async-label", "score": 0.95}]
-    
+
     mock_get_pipeline = MagicMock(return_value=mock_pipeline)
-    
+
     request = ClassificationRequest(
         text="This is an async test",
         model_name="async-model",
         api_token=None,
     )
-    
+
     result = await service.aclassify(request, get_pipeline=mock_get_pipeline)
-    
+
     assert isinstance(result, ClassificationResult)
     assert result.label == "async-label"
     assert result.confidence == 0.95  # noqa: PLR2004
@@ -62,18 +62,18 @@ async def test_aclassify_returns_correct_result(logger_factory):
 def test_classify_raises_error_when_pipeline_fails(logger_factory):
     config = InjectableConfig(id="test-hf-service")
     service = HFClassificationService(config, logger_factory)
-    
+
     mock_pipeline = MagicMock()
     mock_pipeline.side_effect = ValueError("Pipeline error")
-    
+
     mock_get_pipeline = MagicMock(return_value=mock_pipeline)
-    
+
     request = ClassificationRequest(
         text="This will fail",
         model_name="error-model",
         api_token=None,
     )
-    
+
     with pytest.raises(ValueError, match="Pipeline error"):
         service.classify(request, get_pipeline=mock_get_pipeline)
 
@@ -81,18 +81,18 @@ def test_classify_raises_error_when_pipeline_fails(logger_factory):
 def test_classify_raises_error_when_no_result(logger_factory):
     config = InjectableConfig(id="test-hf-service")
     service = HFClassificationService(config, logger_factory)
-    
+
     mock_pipeline = MagicMock()
     mock_pipeline.return_value = []
-    
+
     mock_get_pipeline = MagicMock(return_value=mock_pipeline)
-    
+
     request = ClassificationRequest(
         text="This returns empty",
         model_name="empty-model",
         api_token=None,
     )
-    
+
     with pytest.raises(ValueError, match="No classification result returned from HuggingFace pipeline"):
         service.classify(request, get_pipeline=mock_get_pipeline)
 
@@ -100,17 +100,17 @@ def test_classify_raises_error_when_no_result(logger_factory):
 def test_classify_raises_error_when_non_list_result(logger_factory):
     config = InjectableConfig(id="test-hf-service")
     service = HFClassificationService(config, logger_factory)
-    
+
     mock_pipeline = MagicMock()
     mock_pipeline.return_value = {"label": "bad", "score": 0.5}
-    
+
     mock_get_pipeline = MagicMock(return_value=mock_pipeline)
-    
+
     request = ClassificationRequest(
         text="This returns non-list",
         model_name="bad-model",
         api_token=None,
     )
-    
+
     with pytest.raises(TypeError, match="HuggingFace pipeline returned a non-list result"):
         service.classify(request, get_pipeline=mock_get_pipeline)

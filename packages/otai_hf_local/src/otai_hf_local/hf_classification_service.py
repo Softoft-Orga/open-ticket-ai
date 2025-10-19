@@ -20,6 +20,7 @@ from transformers import (
     pipeline,
 )
 
+
 @lru_cache(maxsize=16)
 def _get_hf_pipeline(model: str, token: str | None) -> Pipeline:
     tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(model, token=token)
