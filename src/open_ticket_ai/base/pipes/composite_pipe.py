@@ -26,7 +26,7 @@ class CompositePipe[ParamsT: BaseModel = CompositePipeParams](Pipe[ParamsT]):
         results = []
         for step_config in self._config.steps or []:
             result = await self._process_step(step_config, context)
-            context = context.with_model(result)
+            context = context.with_pipe_result(step_config.id, result)
             results.append(result)
         return results
 
