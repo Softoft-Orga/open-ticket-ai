@@ -13,13 +13,13 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 from tests.unit.conftest import SimpleInjectable
 
 
-class TestInjectableClass1(Injectable):
+class RegistryTestInjectable1(Injectable):
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return BaseModel
 
 
-class TestInjectableClass2(Injectable):
+class RegistryTestInjectable2(Injectable):
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return BaseModel
@@ -29,8 +29,8 @@ class TestFindAllConfiguredServicesOfType:
     def test_find_matching_template_renderer_configs(self):
         registry = ComponentRegistry()
         registry.register("jinja_renderer", JinjaRenderer)
-        registry.register("test_injectable1", TestInjectableClass1)
-        registry.register("test_injectable2", TestInjectableClass2)
+        registry.register("test_injectable1", RegistryTestInjectable1)
+        registry.register("test_injectable2", RegistryTestInjectable2)
 
         configs = [
             InjectableConfig(id="renderer1", use="jinja_renderer"),
@@ -47,8 +47,8 @@ class TestFindAllConfiguredServicesOfType:
     def test_find_all_injectable_configs(self):
         registry = ComponentRegistry()
         registry.register("jinja_renderer", JinjaRenderer)
-        registry.register("test_injectable1", TestInjectableClass1)
-        registry.register("test_injectable2", TestInjectableClass2)
+        registry.register("test_injectable1", RegistryTestInjectable1)
+        registry.register("test_injectable2", RegistryTestInjectable2)
 
         configs = [
             InjectableConfig(id="renderer1", use="jinja_renderer"),
@@ -63,8 +63,8 @@ class TestFindAllConfiguredServicesOfType:
 
     def test_empty_list_when_no_matching_configs(self):
         registry = ComponentRegistry()
-        registry.register("test_injectable1", TestInjectableClass1)
-        registry.register("test_injectable2", TestInjectableClass2)
+        registry.register("test_injectable1", RegistryTestInjectable1)
+        registry.register("test_injectable2", RegistryTestInjectable2)
 
         configs = [
             InjectableConfig(id="injectable1", use="test_injectable1"),
@@ -118,7 +118,7 @@ class TestFindAllConfiguredServicesOfType:
                     InjectableConfig(id="renderer1", use="jinja_renderer"),
                     InjectableConfig(id="injectable1", use="test_injectable1"),
                 ],
-                TestInjectableClass1,
+                RegistryTestInjectable1,
                 {"injectable1"},
             ),
             (
@@ -135,8 +135,8 @@ class TestFindAllConfiguredServicesOfType:
     def test_parametrized_filtering_by_type(self, configs, filter_class, expected_ids):
         registry = ComponentRegistry()
         registry.register("jinja_renderer", JinjaRenderer)
-        registry.register("test_injectable1", TestInjectableClass1)
-        registry.register("test_injectable2", TestInjectableClass2)
+        registry.register("test_injectable1", RegistryTestInjectable1)
+        registry.register("test_injectable2", RegistryTestInjectable2)
 
         result = find_all_configured_services_of_type(configs, registry, filter_class)
 
@@ -156,7 +156,7 @@ class TestFindAllConfiguredServicesOfType:
 
     def test_uses_component_registry_for_type_resolution(self):
         mock_registry = MagicMock(spec=ComponentRegistry)
-        mock_registry.get_injectable.side_effect = [JinjaRenderer, TestInjectableClass1]
+        mock_registry.get_injectable.side_effect = [JinjaRenderer, RegistryTestInjectable1]
 
         configs = [
             InjectableConfig(id="renderer1", use="jinja_renderer"),
