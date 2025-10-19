@@ -4,12 +4,12 @@ from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 
 class WrongConfigError(Exception):
     """Raised when the configuration provided is incorrect or invalid."""
-    pass
+
 
 
 class RegistryError(Exception):
     """Raised when there is an error related to the component registry."""
-    pass
+
 
 
 class NoServiceConfigurationFoundError(WrongConfigError):

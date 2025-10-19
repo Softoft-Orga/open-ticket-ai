@@ -12,7 +12,6 @@ class PluginLoadError(Exception):
     """Raised when a plugin fails to load."""
 
 
-
 class PluginLoader:
     @inject
     def __init__(self, registry: ComponentRegistry, logger_factory: LoggerFactory, app_config: AppConfig):

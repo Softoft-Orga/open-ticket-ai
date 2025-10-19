@@ -6,8 +6,10 @@ from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import (
     OpenTicketAIConfig,
 )
-from open_ticket_ai.core.config.errors import MultipleConfigurationsForSingletonServiceError, \
-    MissingConfigurationForRequiredServiceError
+from open_ticket_ai.core.config.errors import (
+    MissingConfigurationForRequiredServiceError,
+    MultipleConfigurationsForSingletonServiceError,
+)
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.dependency_injection.service_registry_util import find_all_configured_services_of_type
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
@@ -42,8 +44,9 @@ class AppModule(Module):
         if len(all_template_renderer_services) == 0:
             raise MissingConfigurationForRequiredServiceError(TemplateRenderer)
         service_config = all_template_renderer_services[0]
-        cls: type[TemplateRenderer] = typing.cast(type[TemplateRenderer],
-                                                  self.component_registry.get_injectable(service_config.use))
+        cls: type[TemplateRenderer] = typing.cast(
+            type[TemplateRenderer], self.component_registry.get_injectable(service_config.use)
+        )
         return cls(service_config, logger_factory=logger_factory)  # type: ignore[abstract]
 
     @provider
