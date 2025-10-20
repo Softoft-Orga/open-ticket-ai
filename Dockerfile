@@ -3,5 +3,5 @@ WORKDIR /app
 
 RUN uv pip install --system open-ticket-ai otai-hf-local otai-otobo-znuny
 
-CMD ["uv","run", "open_ticket_ai.main"]
+CMD ["python", "-m", "open_ticket_ai.main"]
 
