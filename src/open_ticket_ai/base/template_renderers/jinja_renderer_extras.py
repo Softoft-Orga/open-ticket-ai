@@ -8,6 +8,10 @@ from pydantic import BaseModel
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
 
 
+class FailMarker:
+    pass
+
+
 def _nest_value_at_path(value: dict[str, Any] | Any, parts: list[str]) -> dict[str, Any] | Any:
     if len(parts) == 0:
         return value
@@ -44,3 +48,7 @@ def get_pipe_result(ctx: jinja2.runtime.Context, pipe_id: str, data_key: str = "
         raise KeyError(
             f"Data key '{data_key}' not found in pipe '{pipe_id}' result; ctx data: {_get_pipe(ctx, pipe_id).data}")
     return result
+
+
+def fail() -> FailMarker:
+    return FailMarker()

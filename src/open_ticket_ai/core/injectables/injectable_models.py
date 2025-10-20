@@ -1,18 +1,11 @@
-import uuid
-from typing import Any, Self
+from typing import Any
 
-from pydantic import Field, model_validator
+from pydantic import Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 
 
 class InjectableConfigBase(StrictBaseModel):
-    uid: str = Field(
-        default_factory=lambda: uuid.uuid4().hex,
-        description=(
-            "Universally unique identifier for this injectables instance generated automatically if not provided."
-        ),
-    )
     use: str = Field(
         default="base:CompositePipe",
         description=(
@@ -30,11 +23,15 @@ class InjectableConfigBase(StrictBaseModel):
         description="Dictionary of configuration parameters passed to the injectables instance during initialization.",
     )
 
-    def __eq__(self, other: Any) -> bool:
-        return isinstance(other, InjectableConfig) and self.uid == other.uid
-
     def __hash__(self) -> int:
-        return hash(self.uid)
+        """Hash based on content (excluding uid for semantic equality)."""
+        return hash(self.model_dump_json())
+
+    def __eq__(self, other: Any) -> bool:
+        """Semantic equality - configs with same content are equal."""
+        if not isinstance(other, InjectableConfigBase):
+            return False
+        return hash(self) == hash(other)
 
 
 class InjectableConfig(InjectableConfigBase):
@@ -44,9 +41,3 @@ class InjectableConfig(InjectableConfigBase):
             "Human-readable identifier for this injectables used for referencing in configurations and dependencies."
         ),
     )
-
-    @model_validator(mode="after")
-    def set_id_from_uid(self) -> Self:
-        if self.id == "":
-            return self.model_copy(update={"id": self.uid})
-        return self

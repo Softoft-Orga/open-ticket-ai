@@ -14,6 +14,8 @@ class IntervalTriggerParams(StrictBaseModel):
 
 
 class IntervalTrigger(Pipe[IntervalTriggerParams]):
+    cacheable = True
+
     @staticmethod
     def get_params_model() -> type[BaseModel]:
         return IntervalTriggerParams

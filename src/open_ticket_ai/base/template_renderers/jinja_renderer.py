@@ -8,6 +8,7 @@ from open_ticket_ai.base.template_renderers.jinja_renderer_extras import (
     at_path,
     get_pipe_result,
     has_failed,
+    fail
 )
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
@@ -30,5 +31,6 @@ class JinjaRenderer(TemplateRenderer[StrictBaseModel]):
         self._jinja_env.globals["at_path"] = at_path
         self._jinja_env.globals["has_failed"] = has_failed
         self._jinja_env.globals["get_pipe_result"] = get_pipe_result
+        self._jinja_env.globals["fail"] = fail
         template = self._jinja_env.from_string(template_str)
         return template.render(context)

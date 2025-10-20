@@ -20,6 +20,7 @@ class PipeConfig(InjectableConfig):
             "Condition expression determining whether this pipe should execute; "
             "can be a boolean or string expression evaluated at runtime."
         ),
+        deprecated=True
     )
     depends_on: list[str] = Field(
         default_factory=list,
@@ -28,6 +29,7 @@ class PipeConfig(InjectableConfig):
             "List of pipe IDs that must successfully complete before this pipe executes; "
             "this pipe will be skipped if any dependency fails."
         ),
+        deprecated=True
     )
     steps: list[PipeConfig] | None = Field(
         default=None,

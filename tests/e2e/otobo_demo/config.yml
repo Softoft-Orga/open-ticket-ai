@@ -38,18 +38,6 @@ open_ticket_ai:
           run:
             id: "ticket-routing"
             use: "base:CompositePipe"
-            params:
-              ticket_search_criteria:
-                queue:
-                  name: "OpenTicketAI::Incoming"
-                limit: 1
-              min_queue_confidence: 0.8
-              min_priority_confidence: 0.8
-              queue_model: "softoft/otai-queue-de-bert-v1"
-              priority_model: "softoft/otai-priority-de-bert-v1"
-              low_confidence_queue_name: "OpenTicketAI::Unclassified"
-              error_queue_name: "OpenTicketAI::Error"
-              low_confidence_priority_name: "medium"
             steps:
               # ===== FETCHING TICKET BY QUEUE =========
               - id: "ticket_fetcher"
@@ -61,13 +49,16 @@ open_ticket_ai:
                       name: "OpenTicketAI::Incoming"
                     limit: 1
 
-
+              - id: fail_no_tickets
+                use: "base:ExpressionPipe"
+                params:
+                  expression: >
+                    {{ fail() if (get_pipe_result('ticket_fetcher', 'fetched_tickets') | length) == 0 else 'Tickets found' }}
 
 
               # ===== QUEUE CLASSIFICATION =========
 
-              - if: "{{ (get_pipe_result('ticket_fetcher', 'fetched_tickets') | length) > 0 }}"
-                id: queue_classify
+              - id: queue_classify
                 use: "base:ClassificationPipe"
                 injects: { classification_service: "hf_local" }
                 params:
