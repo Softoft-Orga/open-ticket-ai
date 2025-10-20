@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*'
 
 permissions:
   contents: write
@@ -78,7 +78,7 @@ jobs:
           packages-dir: packages/otai_otobo_znuny/dist/
 
   docker:
-    needs: [publish]
+    needs: [ publish ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
