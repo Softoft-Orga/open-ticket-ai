@@ -53,7 +53,6 @@ def pipe_with_dependencies(logger_factory: LoggerFactory) -> ConcretePipeForTest
         id="dependent_pipe",
         use="tests.unit.core.pipes.test_pipe.ConcretePipeForTesting",
         params={},
-        depends_on=["pipe1", "pipe2"],
     )
     return ConcretePipeForTesting(config=config, logger_factory=logger_factory)
 
@@ -74,7 +73,7 @@ class TestPipeInitialization:
         assert pipe._params.count == 42
 
     def test_pipe_initialization_with_default_params(
-        self, minimal_pipe_config: PipeConfig, logger_factory: LoggerFactory
+            self, minimal_pipe_config: PipeConfig, logger_factory: LoggerFactory
     ):
         pipe = ConcretePipeForTesting(config=minimal_pipe_config, logger_factory=logger_factory)
 
@@ -96,7 +95,7 @@ class TestPipeInitialization:
 
 class TestPipeProcess:
     async def test_process_calls_process_when_should_run_true(
-        self, test_pipe: ConcretePipeForTesting, empty_pipeline_context: PipeContext
+            self, test_pipe: ConcretePipeForTesting, empty_pipeline_context: PipeContext
     ):
         result = await test_pipe.process(empty_pipeline_context)
 
@@ -107,64 +106,11 @@ class TestPipeProcess:
         assert result.data == {"result": "test_value"}
 
     async def test_process_with_if_false_condition(
-        self, pipe_with_should_run_false: ConcretePipeForTesting, empty_pipeline_context: PipeContext
+            self, pipe_with_should_run_false: ConcretePipeForTesting, empty_pipeline_context: PipeContext
     ):
         result = await pipe_with_should_run_false.process(empty_pipeline_context)
 
         assert not pipe_with_should_run_false.process_called
-        assert result.was_skipped
-
-    async def test_process_with_unfulfilled_dependencies(
-        self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        result = await pipe_with_dependencies.process(empty_pipeline_context)
-
-        assert not pipe_with_dependencies.process_called
-        assert result.was_skipped
-
-
-class TestPipeDependencies:
-    async def test_dependencies_fulfilled_when_all_succeeded(
-        self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        context = empty_pipeline_context.with_pipe_result("pipe1", PipeResult.success())
-        context = context.with_pipe_result("pipe2", PipeResult.success())
-
-        result = await pipe_with_dependencies.process(context)
-
-        assert pipe_with_dependencies.process_called
-        assert result.succeeded
-
-    async def test_dependencies_check_with_one_failed(
-        self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        context = empty_pipeline_context.with_pipe_result("pipe1", PipeResult.success())
-        context = context.with_pipe_result("pipe2", PipeResult.failure("failed"))
-
-        result = await pipe_with_dependencies.process(context)
-
-        assert not pipe_with_dependencies.process_called
-        assert result.was_skipped
-
-    async def test_dependencies_check_with_one_skipped(
-        self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        context = empty_pipeline_context.with_pipe_result("pipe1", PipeResult.success())
-        context = context.with_pipe_result("pipe2", PipeResult.skipped())
-
-        result = await pipe_with_dependencies.process(context)
-
-        assert not pipe_with_dependencies.process_called
-        assert result.was_skipped
-
-    async def test_dependencies_check_with_missing_dependency(
-        self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        context = empty_pipeline_context.with_pipe_result("pipe1", PipeResult.success())
-
-        result = await pipe_with_dependencies.process(context)
-
-        assert not pipe_with_dependencies.process_called
         assert result.was_skipped
 
 
@@ -196,49 +142,11 @@ class TestPipeShouldRun:
         should_run = await pipe._should_run(PipeContext(pipe_results={}, params={}))
         assert should_run
 
-    def test_are_dependencies_fulfilled_returns_true_when_all_succeeded(
-        self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        context = empty_pipeline_context.with_pipe_result("pipe1", PipeResult.success())
-        context = context.with_pipe_result("pipe2", PipeResult.success())
-
-        fulfilled = pipe_with_dependencies._are_dependencies_fulfilled(context)
-        assert fulfilled
-
-    def test_are_dependencies_fulfilled_returns_false_when_one_failed(
-        self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        context = empty_pipeline_context.with_pipe_result("pipe1", PipeResult.success())
-        context = context.with_pipe_result("pipe2", PipeResult.failure("failed"))
-
-        fulfilled = pipe_with_dependencies._are_dependencies_fulfilled(context)
-        assert not fulfilled
-
-    def test_are_dependencies_fulfilled_returns_false_when_one_skipped(
-        self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        context = empty_pipeline_context.with_pipe_result("pipe1", PipeResult.success())
-        context = context.with_pipe_result("pipe2", PipeResult.skipped())
-
-        fulfilled = pipe_with_dependencies._are_dependencies_fulfilled(context)
-        assert not fulfilled
-
-    def test_are_dependencies_fulfilled_returns_false_when_missing(
-        self, pipe_with_dependencies: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        context = empty_pipeline_context.with_pipe_result("pipe1", PipeResult.success())
-
-        fulfilled = pipe_with_dependencies._are_dependencies_fulfilled(context)
-        assert not fulfilled
-
 
 class TestPipeConfig:
     def test_pipe_stores_config(self, test_pipe: ConcretePipeForTesting):
         assert test_pipe._config is not None
         assert test_pipe._config.id == "test_pipe"
-
-    def test_pipe_config_with_dependencies(self, pipe_with_dependencies: ConcretePipeForTesting):
-        assert pipe_with_dependencies._config.depends_on == ["pipe1", "pipe2"]
 
     def test_pipe_config_should_run_property(self, logger_factory: LoggerFactory):
         config = PipeConfig(

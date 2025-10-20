@@ -16,7 +16,8 @@ class SimpleSequentialRunnerParams(BaseModel):
 
 class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
     def __init__(
-        self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any, **kwargs: Any
+            self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any,
+            **kwargs: Any
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._factory: PipeFactory = pipe_factory
@@ -27,15 +28,15 @@ class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
 
     async def _process(self, context: PipeContext) -> PipeResult:
         context = context.model_copy(update={"parent": context.params})
-        self._logger.info("RUNNNG SIMPLE SEQUENTIAL RUNNER")
-        self._logger.info(f"WITH PARAMS {self._params.model_dump()}")
+        self._logger.debug("RUNNNG SIMPLE SEQUENTIAL RUNNER")
+        self._logger.debug(f"WITH PARAMS {self._params.model_dump()}")
         on_pipe = self._factory.create_pipe(self._params.on, context)
-        self._logger.info(f"ON PIPE {on_pipe}")
+        self._logger.debug(f"ON PIPE {on_pipe}")
         run_pipe = self._factory.create_pipe(self._params.run, context)
-        self._logger.info(f"RUN PIPE {run_pipe}")
+        self._logger.debug(f"RUN PIPE {run_pipe}")
 
         on_pipe_result: PipeResult = await on_pipe.process(context)
-        self._logger.info(f"ON PIPE RESULT {on_pipe_result}")
+        self._logger.debug(f"ON PIPE RESULT {on_pipe_result}")
         if on_pipe_result.has_succeeded():
             run_pipe_result: PipeResult = await run_pipe.process(context)
             return run_pipe_result

@@ -31,7 +31,7 @@ class ComponentRegistry:
                 registry_identifier,
                 self,
             )
-        logger.info(f"Retrieved pipe: {registry_identifier}")
+        logger.debug(f"Retrieved pipe: {registry_identifier}")
         return pipe
 
     def get_injectable(self, registry_identifier: str) -> type[Injectable]:
@@ -42,7 +42,7 @@ class ComponentRegistry:
                 registry_identifier,
                 self,
             )
-        logger.info(f"Retrieved injectable: {registry_identifier}")
+        logger.debug(f"Retrieved injectable: {registry_identifier}")
         return service
 
     def find_by_type(self, cls: type[Injectable]) -> dict[str, type[Injectable]]:

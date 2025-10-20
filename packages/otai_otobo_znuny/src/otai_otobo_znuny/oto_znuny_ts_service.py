@@ -1,12 +1,6 @@
 from typing import Any
 
 from injector import inject
-from open_ticket_ai.base.ticket_system_integration.ticket_system_service import TicketSystemService
-from open_ticket_ai.base.ticket_system_integration.unified_models import (
-    TicketSearchCriteria,
-    UnifiedNote,
-    UnifiedTicket,
-)
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import (
     Article,
@@ -15,6 +9,12 @@ from otobo_znuny.domain_models.ticket_models import (
     TicketUpdate,
 )
 
+from open_ticket_ai.base.ticket_system_integration.ticket_system_service import TicketSystemService
+from open_ticket_ai.base.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedNote,
+    UnifiedTicket,
+)
 from .models import (
     RenderedOTOBOZnunyTSServiceParams,
     otobo_ticket_to_unified_ticket,
@@ -29,14 +29,14 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
     @inject
     def __init__(
-        self,
-        client: OTOBOZnunyClient | None = None,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            client: OTOBOZnunyClient | None = None,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._client: OTOBOZnunyClient | None = client
-        self._logger.info("🎫 OTOBOZnunyTicketSystemService initializing")
+        self._logger.debug("🎫 OTOBOZnunyTicketSystemService initializing")
         self.initialize()
 
     @property
@@ -47,7 +47,7 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         return self._client
 
     def _recreate_client(self) -> OTOBOZnunyClient:
-        self._logger.info("🔄 Recreating OTOBO client")
+        self._logger.debug("🔄 Recreating OTOBO client")
         self._logger.debug(f"Base URL: {self._params.to_client_config().base_url}")
 
         self._client = OTOBOZnunyClient(config=self._params.to_client_config())
@@ -56,37 +56,31 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         self._logger.debug(f"Authentication: user={auth_info.get('username', 'N/A')}")
 
         self._client.login(self._params.get_basic_auth())
-        self._logger.info("✅ OTOBO client recreated and logged in")
+        self._logger.debug("✅ OTOBO client recreated and logged in")
 
         return self._client
 
     def initialize(self) -> None:
-        self._logger.info("⚙️  Initializing OTOBO/Znuny ticket system service")
+        self._logger.debug("⚙️  Initializing OTOBO/Znuny ticket system service")
         self._recreate_client()
-        self._logger.info("✅ OTOBO/Znuny ticket system service initialized")
+        self._logger.debug("✅ OTOBO/Znuny ticket system service initialized")
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
-        self._logger.info(f"🔍 Searching tickets with criteria: queue={criteria.queue}, limit={criteria.limit}")
+        self._logger.debug(f"🔍 Searching tickets with criteria: queue={criteria.queue}, limit={criteria.limit}")
 
         search = TicketSearch(
             queues=[unified_entity_to_id_name(criteria.queue)] if criteria.queue else None,
             limit=criteria.limit,
         )
         self._logger.debug(f"OTOBO search object: {search.model_dump()}")
+        tickets: list[Ticket] = await self.client.search_and_get(search)
+        self._logger.debug(f"📥 OTOBO search returned {len(tickets)} ticket(s)")
 
-        try:
-            tickets: list[Ticket] = await self.client.search_and_get(search)
-            self._logger.info(f"📥 OTOBO search returned {len(tickets)} ticket(s)")
+        if tickets:
+            self._logger.debug(f"Ticket IDs: {[t.id for t in tickets]}")
 
-            if tickets:
-                self._logger.debug(f"Ticket IDs: {[t.id for t in tickets]}")
-
-            unified = [otobo_ticket_to_unified_ticket(t) for t in tickets]
-            return unified
-
-        except Exception as e:
-            self._logger.error(f"❌ Failed to search tickets: {e}", exc_info=True)
-            raise
+        unified = [otobo_ticket_to_unified_ticket(t) for t in tickets]
+        return unified
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         self._logger.debug("🔍 Finding first ticket matching criteria")

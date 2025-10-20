@@ -9,7 +9,6 @@ from open_ticket_ai.core.pipes.pipe_models import PipeResult
 
 
 class SimpleSequentialOrchestratorParams(BaseModel):
-    always_rerun: bool = Field(default=True, description="Whether to retry failed steps")
     orchestrator_sleep: timedelta = Field(default=timedelta(seconds=0.01), description="Sleep time in minutes")
 
 

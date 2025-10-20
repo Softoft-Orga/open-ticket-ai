@@ -107,7 +107,7 @@ async def test_context_isolation(logger_factory, mock_pipe_factory, empty_contex
     )
 
     orchestrator = SimpleSequentialOrchestrator(
-        config=orchestrator_config, logger_factory=logger_factory, factory=mock_pipe_factory
+        config=orchestrator_config, logger_factory=logger_factory, pipe_factory=mock_pipe_factory
     )
 
     async def run_orchestrator():

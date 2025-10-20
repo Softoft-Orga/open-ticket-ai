@@ -22,15 +22,6 @@ class PipeConfig(InjectableConfig):
         ),
         deprecated=True
     )
-    depends_on: list[str] = Field(
-        default_factory=list,
-        title="Dependencies",
-        description=(
-            "List of pipe IDs that must successfully complete before this pipe executes; "
-            "this pipe will be skipped if any dependency fails."
-        ),
-        deprecated=True
-    )
     steps: list[PipeConfig] | None = Field(
         default=None,
         description=(

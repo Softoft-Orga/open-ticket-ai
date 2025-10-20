@@ -9,7 +9,7 @@ from pydantic import ValidationError
 from open_ticket_ai.base.pipes.interval_trigger_pipe import IntervalTrigger, IntervalTriggerParams
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
 @pytest.fixture
@@ -36,7 +36,7 @@ class TestIntervalTriggerInitialization:
         ],
     )
     def test_initialization_with_valid_intervals(
-        self, interval: float, expected: timedelta, logger_factory: LoggerFactory
+            self, interval: float, expected: timedelta, logger_factory: LoggerFactory
     ):
         config = create_trigger_config(interval)
         trigger = IntervalTrigger(config=config, logger_factory=logger_factory)
@@ -113,22 +113,3 @@ class TestIntervalTriggerBehavior:
         await asyncio.sleep(0.002)
         result = await trigger.process(empty_context)
         assert result.succeeded
-
-    async def test_respects_if_condition(self, logger_factory: LoggerFactory, empty_context: PipeContext):
-        config = create_trigger_config(0.001, if_=False)
-        trigger = IntervalTrigger(config=config, logger_factory=logger_factory)
-
-        result = await trigger.process(empty_context)
-        assert result.was_skipped
-
-    async def test_respects_dependencies(self, logger_factory: LoggerFactory, empty_context: PipeContext):
-        config = create_trigger_config(0.1, depends_on=["dep1"])
-        trigger = IntervalTrigger(config=config, logger_factory=logger_factory)
-
-        result = await trigger.process(empty_context)
-        assert result.was_skipped
-
-        context = empty_context.with_pipe_result("dep1", PipeResult.success())
-        result = await trigger.process(context)
-        assert not result.succeeded
-        assert result.message == "Interval not reached yet."

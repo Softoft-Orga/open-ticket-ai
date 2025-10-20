@@ -3,7 +3,7 @@ from collections.abc import Callable
 from functools import lru_cache
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
@@ -48,7 +48,14 @@ def _get_hf_pipeline(model: str, token: str | None) -> Pipeline:
 type GetPipelineFunc = Callable[[str, str | None], Pipeline]
 
 
-class HFClassificationService(Injectable[StrictBaseModel]):
+class HFClassificationServiceParams(StrictBaseModel):
+    api_token: str | None = Field(
+        default=None,
+        description="Optional HuggingFace API token for accessing private models or increased rate limits.",
+    )
+
+
+class HFClassificationService(Injectable[HFClassificationServiceParams]):
     def __init__(
             self,
             config: InjectableConfig,
@@ -63,17 +70,20 @@ class HFClassificationService(Injectable[StrictBaseModel]):
 
     @staticmethod
     def get_params_model() -> type[BaseModel]:
-        return StrictBaseModel
+        return HFClassificationServiceParams
 
-    def classify(self, req: ClassificationRequest) -> ClassificationResult:
-        self._logger.info(f"🤖 Running HuggingFace classification with model: {req.model_name}")
-        text_preview = req.text[:100] + "..." if len(req.text) > 100 else req.text
+    def classify(self, classification_request: ClassificationRequest) -> ClassificationResult:
+        classification_request = classification_request.model_copy(
+            update={"api_token": classification_request.api_token or self._params.api_token})
+        self._logger.info(f"🤖 Running HuggingFace classification with model: {classification_request.model_name}")
+        text_preview = classification_request.text[:100] + "..." if len(
+            classification_request.text) > 100 else classification_request.text
         self._logger.debug(f"Text preview: {text_preview}")
 
-        classify: Pipeline = self._get_pipeline(req.model_name, req.api_token)
+        classify: Pipeline = self._get_pipeline(classification_request.model_name, classification_request.api_token)
         self._logger.debug("Pipeline obtained, running classification...")
 
-        classifications: Any = classify(req.text, truncation=True)
+        classifications: Any = classify(classification_request.text, truncation=True)
 
         if not classifications:
             self._logger.error("❌ No classification result returned from HuggingFace pipeline")

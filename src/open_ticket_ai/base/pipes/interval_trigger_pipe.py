@@ -26,8 +26,8 @@ class IntervalTrigger(Pipe[IntervalTriggerParams]):
         self._logger.info("IntervalTrigger initialized, first trigger will occur after interval elapses.")
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
-        self._logger.info("IntervalTrigger process started.")
-        self._logger.info(f" params: {self._params.model_dump()} last time fired: {self.last_time_fired.isoformat()}")
+        self._logger.debug("IntervalTrigger process started.")
+        self._logger.debug(f" params: {self._params.model_dump()} last time fired: {self.last_time_fired.isoformat()}")
         if datetime.datetime.now(tz=datetime.UTC) - self.last_time_fired >= self._params.interval:
             self.last_time_fired = datetime.datetime.now(tz=datetime.UTC)
             return PipeResult.success()

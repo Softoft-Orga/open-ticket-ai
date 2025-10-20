@@ -52,7 +52,6 @@ class PipeFactory:
             use=pipe_config.use,
             params=rendered_params,
             injects=pipe_config.injects,
-            depends_on=pipe_config.depends_on,
         )
 
         pipe_class = self._component_registry.get_pipe(pipe_config.use)
