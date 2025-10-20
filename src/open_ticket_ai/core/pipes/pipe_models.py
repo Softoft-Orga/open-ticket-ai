@@ -20,7 +20,7 @@ class PipeConfig(InjectableConfig):
             "Condition expression determining whether this pipe should execute; "
             "can be a boolean or string expression evaluated at runtime."
         ),
-        deprecated=True
+        deprecated=True,
     )
     steps: list[PipeConfig] | None = Field(
         default=None,
