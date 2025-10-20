@@ -3,6 +3,14 @@ from collections.abc import Callable
 from functools import lru_cache
 from typing import Any
 
+from open_ticket_ai.base.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
+from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.injectables.injectable import Injectable
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
+from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from pydantic import BaseModel, Field
 from transformers import (
     AutoModelForSequenceClassification,
@@ -12,15 +20,6 @@ from transformers import (
     PreTrainedTokenizer,
     pipeline,
 )
-
-from open_ticket_ai.base.ai_classification_services.classification_models import (
-    ClassificationRequest,
-    ClassificationResult,
-)
-from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.injectables.injectable import Injectable
-from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
-from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 
 hf_logger = logging.getLogger(__name__)
 
@@ -57,12 +56,12 @@ class HFClassificationServiceParams(StrictBaseModel):
 
 class HFClassificationService(Injectable[HFClassificationServiceParams]):
     def __init__(
-            self,
-            config: InjectableConfig,
-            logger_factory: LoggerFactory,
-            get_pipeline: GetPipelineFunc = _get_hf_pipeline,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        config: InjectableConfig,
+        logger_factory: LoggerFactory,
+        get_pipeline: GetPipelineFunc = _get_hf_pipeline,
+        *args: Any,
+        **kwargs: Any,
     ):
         super().__init__(config, logger_factory, *args, **kwargs)
         self._get_pipeline = get_pipeline
@@ -74,10 +73,14 @@ class HFClassificationService(Injectable[HFClassificationServiceParams]):
 
     def classify(self, classification_request: ClassificationRequest) -> ClassificationResult:
         classification_request = classification_request.model_copy(
-            update={"api_token": classification_request.api_token or self._params.api_token})
+            update={"api_token": classification_request.api_token or self._params.api_token}
+        )
         self._logger.info(f"🤖 Running HuggingFace classification with model: {classification_request.model_name}")
-        text_preview = classification_request.text[:100] + "..." if len(
-            classification_request.text) > 100 else classification_request.text
+        text_preview = (
+            classification_request.text[:100] + "..."
+            if len(classification_request.text) > 100
+            else classification_request.text
+        )
         self._logger.debug(f"Text preview: {text_preview}")
 
         classify: Pipeline = self._get_pipeline(classification_request.model_name, classification_request.api_token)
