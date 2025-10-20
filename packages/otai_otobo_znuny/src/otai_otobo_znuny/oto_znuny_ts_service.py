@@ -1,12 +1,6 @@
 from typing import Any
 
 from injector import inject
-from open_ticket_ai.base.ticket_system_integration.ticket_system_service import TicketSystemService
-from open_ticket_ai.base.ticket_system_integration.unified_models import (
-    TicketSearchCriteria,
-    UnifiedNote,
-    UnifiedTicket,
-)
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import (
     Article,
@@ -15,6 +9,12 @@ from otobo_znuny.domain_models.ticket_models import (
     TicketUpdate,
 )
 
+from open_ticket_ai.base.ticket_system_integration.ticket_system_service import TicketSystemService
+from open_ticket_ai.base.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedNote,
+    UnifiedTicket,
+)
 from .models import (
     RenderedOTOBOZnunyTSServiceParams,
     otobo_ticket_to_unified_ticket,
@@ -29,10 +29,10 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
     @inject
     def __init__(
-        self,
-        client: OTOBOZnunyClient,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            client: OTOBOZnunyClient | None = None,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._client: OTOBOZnunyClient | None = client
@@ -48,14 +48,14 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
     def _recreate_client(self) -> OTOBOZnunyClient:
         self._logger.info("🔄 Recreating OTOBO client")
-        self._logger.debug(f"Base URL: {self._config.params.to_client_config().base_url}")
+        self._logger.debug(f"Base URL: {self._params.to_client_config().base_url}")
 
-        self._client = OTOBOZnunyClient(config=self._config.params.to_client_config())
+        self._client = OTOBOZnunyClient(config=self._params.to_client_config())
 
-        auth_info = self._config.params.get_basic_auth().model_dump(with_secrets=True)
+        auth_info = self._params.get_basic_auth().model_dump(with_secrets=True)
         self._logger.debug(f"Authentication: user={auth_info.get('username', 'N/A')}")
 
-        self._client.login(self._config.params.get_basic_auth())
+        self._client.login(self._params.get_basic_auth())
         self._logger.info("✅ OTOBO client recreated and logged in")
 
         return self._client

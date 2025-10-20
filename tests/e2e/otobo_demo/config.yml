@@ -16,6 +16,7 @@ open_ticket_ai:
       use: "otobo-znuny:OTOBOZnunyTicketSystemService"
       params:
         base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
+        password: "NA8ABaxp3EnrPnUef8ZDLkg5"
 
     hf_local:
       use: "hf-local:HFClassificationService"
@@ -55,7 +56,10 @@ open_ticket_ai:
                 use: "base:FetchTicketsPipe"
                 injects: { ticket_system: "otobo_znuny" }
                 params:
-                  ticket_search_criteria: "{{ parent['ticket_search_criteria'] }}"
+                  ticket_search_criteria:
+                    queue:
+                      name: "OpenTicketAI::Incoming"
+                    limit: 1
 
               # ===== QUEUE CLASSIFICATION =========
 
@@ -64,9 +68,9 @@ open_ticket_ai:
                 use: "base:CompositePipe"
                 params:
                   ticket: "{{ get_pipe_result('ticket_fetcher', 'fetched_tickets') | first }}"
-                  model: "{{ parent['queue_model'] }}"
-                  min_conf: "{{ parent['min_queue_confidence'] }}"
-                  low_conf_name: "{{ parent['low_confidence_queue_name'] }}"
+                  model: "softoft/otai-queue-de-bert-v1"
+                  min_conf: 0.8
+                  low_conf_name: "OpenTicketAI::Unclassified"
                   ticket_field: "queue.name"
                   note_high: "{{ parent['success_full_high_confidence_note'] }}"
                   note_low: "{{ parent['success_full_low_confidence_note'] }}"

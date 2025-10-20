@@ -17,7 +17,6 @@ class TemplateRenderer[ParamsT: BaseModel](Injectable, ABC):
             return [self.render(item, scope) for item in obj]
         if isinstance(obj, dict):
             return {k: self.render(v, scope) for k, v in obj.items()}
-        self._logger.error(f"Unsupported type {type(obj)}")
         return obj
 
     @abstractmethod

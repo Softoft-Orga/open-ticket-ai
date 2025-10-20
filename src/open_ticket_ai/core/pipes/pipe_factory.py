@@ -18,19 +18,28 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class PipeFactory:
     @inject
     def __init__(
-        self,
-        template_renderer: TemplateRenderer,
-        logger_factory: LoggerFactory,
-        otai_config: OpenTicketAIConfig,
-        component_registry: ComponentRegistry,
+            self,
+            template_renderer: TemplateRenderer,
+            logger_factory: LoggerFactory,
+            otai_config: OpenTicketAIConfig,
+            component_registry: ComponentRegistry,
     ):
         self._template_renderer = template_renderer
         self._logger_factory = logger_factory
+        self._logger = logger_factory.create(self.__class__.__name__)  # ADD THIS
         self._service_configs: list[InjectableConfig] = otai_config.get_services_list()
         self._component_registry = component_registry
+        # ADD THIS: Cache for stateful pipes like triggers
+        self._pipe_cache: dict[str, Pipe] = {}
 
     def create_pipe(self, pipe_config: PipeConfig, pipe_context: PipeContext, render_pipe: bool = True) -> Pipe:
         """Create pipe with AssistedBuilder (factory renders config)."""
+
+        # ADD THIS: Check cache for stateful pipes (triggers, etc.)
+        cache_key = self._get_cache_key(pipe_config)
+        if cache_key in self._pipe_cache:
+            self._logger.debug(f"♻️  Reusing cached pipe: {pipe_config.id}")
+            return self._pipe_cache[cache_key]
 
         injected_services = self._resolve_service_injects(pipe_config.injects)
 
@@ -51,13 +60,40 @@ class PipeFactory:
 
         pipe_class = self._component_registry.get_pipe(pipe_config.use)
 
-        return pipe_class(
+        pipe = pipe_class(
             config=rendered_config,
             pipe_context=pipe_context,
             logger_factory=self._logger_factory,
             pipe_factory=self,
             **injected_services,
         )
+
+        # ADD THIS: Cache stateful pipes (triggers)
+        if self._should_cache_pipe(pipe_class):
+            self._pipe_cache[cache_key] = pipe
+            self._logger.debug(f"💾 Cached stateful pipe: {pipe_config.id}")
+
+        return pipe
+
+    # ADD THIS METHOD
+    def _get_cache_key(self, pipe_config: PipeConfig) -> str:
+        """Generate a unique cache key for a pipe config.
+
+        Uses pipe ID + class name to ensure unique caching per instance.
+        This allows multiple triggers with different IDs to be cached separately.
+        """
+        return f"{pipe_config.id}:{pipe_config.use}"
+
+    # ADD THIS METHOD
+    def _should_cache_pipe(self, pipe_class: type[Pipe]) -> bool:
+        """Determine if a pipe should be cached based on its class name.
+
+        Currently caches:
+        - Triggers (any pipe with "Trigger" in the name)
+
+        Extend this logic as needed for other stateful pipes.
+        """
+        return "Trigger" in pipe_class.__name__
 
     def _resolve_service_injects(self, injects: dict[str, str]) -> dict[str, Any]:
         return {param_name: self._get_service_by_id(service_id) for param_name, service_id in injects.items()}
