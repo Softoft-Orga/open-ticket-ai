@@ -118,13 +118,13 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         article = None
         if updates.notes and len(updates.notes) > 0:
             self._logger.debug(f"Adding article/note: {updates.notes[-1].subject}")
-            article = Article(subject=updates.notes[-1].subject, body=updates.notes[-1].body)
+            article = Article(subject=updates.notes[-1].subject, body=updates.notes[-1].body, content_type="text/plain")
 
         ticket = TicketUpdate(
             id=int(ticket_id),
             title=updates.subject,
-            queue=unified_entity_to_id_name(updates.queue),
-            priority=unified_entity_to_id_name(updates.priority),
+            queue=unified_entity_to_id_name(updates.queue) if updates.queue else None,
+            priority=unified_entity_to_id_name(updates.priority) if updates.priority else None,
             article=article,
         )
 

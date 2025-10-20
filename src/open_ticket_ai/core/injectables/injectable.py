@@ -11,8 +11,9 @@ from open_ticket_ai.core.logging.logging_iface import AppLogger, LoggerFactory
 class Injectable[ParamsT: BaseModel = StrictBaseModel](ABC):
     def __init__(self, config: InjectableConfig, logger_factory: LoggerFactory, *_: Any, **__: Any) -> None:
         self._config: InjectableConfig = config
-        self._params: ParamsT = self.get_params_model().model_validate(config.params)
         self._logger: AppLogger = logger_factory.create(config.id)
+        self._logger.debug(f"Initializing injectable: {self.__class__.__name__} with config: {config.model_dump()}")
+        self._params: ParamsT = self.get_params_model().model_validate(config.params)
 
     @staticmethod
     @abstractmethod

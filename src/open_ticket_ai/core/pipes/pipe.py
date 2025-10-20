@@ -14,6 +14,7 @@ from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 class Pipe[ParamsT: BaseModel](Injectable[ParamsT], ABC):
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
+        self._logger.debug(f"Initializing pipe: {self.__class__.__name__} with config: {config.model_dump()}")
         self._config: PipeConfig = PipeConfig.model_validate(config.model_dump())
 
     @final

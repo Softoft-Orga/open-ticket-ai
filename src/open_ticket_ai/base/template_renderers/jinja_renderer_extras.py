@@ -1,3 +1,4 @@
+import logging
 import re
 from typing import Any
 
@@ -37,4 +38,9 @@ def has_failed(ctx: jinja2.runtime.Context, pipe_id: str) -> bool:
 
 @jinja2.pass_context
 def get_pipe_result(ctx: jinja2.runtime.Context, pipe_id: str, data_key: str = "value") -> Any:
-    return _get_pipe(ctx, pipe_id).data.get(data_key)
+    result = _get_pipe(ctx, pipe_id).data.get(data_key)
+    logging.info(f"Pipe result {pipe_id} has {data_key}: {result}")
+    if result is None:
+        raise KeyError(
+            f"Data key '{data_key}' not found in pipe '{pipe_id}' result; ctx data: {_get_pipe(ctx, pipe_id).data}")
+    return result

@@ -23,7 +23,7 @@ class PipeContext(StrictBaseModel):
             "for sharing configuration and data."
         ),
     )
-    parent: PipeContext | None = Field(
+    parent: dict[str, Any] | None = Field(
         default=None,
         description=(
             "Optional reference to the parent context for nested pipes execution "
@@ -38,7 +38,7 @@ class PipeContext(StrictBaseModel):
         return pipe_result.succeeded and not pipe_result.was_skipped
 
     def with_pipe_result(self, pipe_id: str, pipe_result: PipeResult) -> PipeContext:
-        new_pipes = {**self.pipe_results, pipe_id: pipe_result}
+        new_pipes = {**self.pipe_results, pipe_id: pipe_result.model_dump()}
         return self.model_copy(update={"pipe_results": new_pipes})
 
     @staticmethod
