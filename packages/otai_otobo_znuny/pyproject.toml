@@ -1,6 +1,6 @@
 [project]
 name = "otai_otobo_znuny"
-version = "1.0.17"
+version = "1.1.2"
 description = "OTOBO/Znuny ticket system plugin for Open Ticket AI"
 readme = "README.md"
 requires-python = ">=3.14"
