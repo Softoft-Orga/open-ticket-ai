@@ -28,10 +28,7 @@ class CompositePipe[ParamsT: BaseModel = CompositePipeParams](Pipe[ParamsT]):
             result: PipeResult = await self._process_step(step_config, context)
             context = context.with_pipe_result(step_config.id, result)
             if result.has_failed():
-                self._logger.warning(
-                    f"Step '{step_config.id}' failed. "
-                    "Skipping remaining steps in composite pipe."
-                )
+                self._logger.warning(f"Step '{step_config.id}' failed. Skipping remaining steps in composite pipe.")
                 break
             results.append(result)
         return results
