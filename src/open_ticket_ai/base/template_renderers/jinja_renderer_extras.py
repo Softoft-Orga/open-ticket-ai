@@ -46,7 +46,8 @@ def get_pipe_result(ctx: jinja2.runtime.Context, pipe_id: str, data_key: str = "
     logging.info(f"Pipe result {pipe_id} has {data_key}: {result}")
     if result is None:
         raise KeyError(
-            f"Data key '{data_key}' not found in pipe '{pipe_id}' result; ctx data: {_get_pipe(ctx, pipe_id).data}")
+            f"Data key '{data_key}' not found in pipe '{pipe_id}' result; ctx data: {_get_pipe(ctx, pipe_id).data}"
+        )
     return result
 
 
