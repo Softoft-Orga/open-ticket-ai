@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 from typing import Any
 
@@ -36,6 +37,16 @@ def _get_pipe(ctx: jinja2.runtime.Context, pipe_id: str) -> PipeResult:
 
 
 @jinja2.pass_context
+def get_parent_param(ctx: jinja2.runtime.Context, param_key: str) -> bool:
+    parent_params = ctx.get("parent_params", {})
+    if parent_params is None:
+        raise KeyError("No parent pipe params found in context")
+    if param_key not in parent_params:
+        raise KeyError(f"Parent param '{param_key}' not found in context")
+    return parent_params[param_key]
+
+
+@jinja2.pass_context
 def has_failed(ctx: jinja2.runtime.Context, pipe_id: str) -> bool:
     return _get_pipe(ctx, pipe_id).has_failed()
 
@@ -49,6 +60,13 @@ def get_pipe_result(ctx: jinja2.runtime.Context, pipe_id: str, data_key: str = "
             f"Data key '{data_key}' not found in pipe '{pipe_id}' result; ctx data: {_get_pipe(ctx, pipe_id).data}"
         )
     return result
+
+
+def get_env(env_name: str) -> str:
+    value = os.getenv(env_name)
+    if value is None:
+        raise KeyError(f"Environment variable '{env_name}' not found")
+    return value
 
 
 def fail() -> FailMarker:
