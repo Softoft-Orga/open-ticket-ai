@@ -37,9 +37,7 @@ class CompositePipe[ParamsT: BaseModel = CompositePipeParams](Pipe[ParamsT]):
         return results
 
     @final
-    async def _process_step(
-            self, step_config: PipeConfig, context: PipeContext
-    ) -> PipeResult:
+    async def _process_step(self, step_config: PipeConfig, context: PipeContext) -> PipeResult:
         step_pipe = self._factory.create_pipe(step_config, context)
         return await step_pipe.process(context)
 
