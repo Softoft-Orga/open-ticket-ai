@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -16,24 +16,20 @@ class EmptyParams(BaseModel):
 
 
 class AlwaysSucceedingTrigger(Pipe[EmptyParams]):
+    ParamsModel: ClassVar[type[BaseModel]] = EmptyParams
+
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return EmptyParams
 
     async def _process(self, _: PipeContext) -> PipeResult:
         return PipeResult.success(message="Trigger succeeded")
 
 
 class AlwaysFailingTrigger(Pipe[EmptyParams]):
+    ParamsModel: ClassVar[type[BaseModel]] = EmptyParams
+
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return EmptyParams
 
     async def _process(self, _: PipeContext) -> PipeResult:
         return PipeResult.failure(message="Trigger failed")
@@ -68,7 +64,7 @@ async def test_pipe_runs_when_trigger_succeeds(logger_factory, mock_pipe_factory
     mock_main_pipe.process = AsyncMock(return_value=PipeResult.success(message="Main pipe executed"))
 
     # Configure the mock factory to return our pipes
-    mock_pipe_factory.render_pipe.side_effect = lambda config, _: (
+    mock_pipe_factory.create_pipe.side_effect = lambda config, *args, **kwargs: (
         trigger if config.id == "trigger" else mock_main_pipe
     )
 
@@ -110,7 +106,7 @@ async def test_pipe_not_run_when_trigger_fails(logger_factory, mock_pipe_factory
     mock_main_pipe.process = AsyncMock(return_value=PipeResult.success(message="Main pipe executed"))
 
     # Configure the mock factory to return our pipes
-    mock_pipe_factory.render_pipe.side_effect = lambda config, _: (
+    mock_pipe_factory.create_pipe.side_effect = lambda config, *args, **kwargs: (
         trigger if config.id == "trigger" else mock_main_pipe
     )
 
@@ -153,7 +149,7 @@ async def test_context_parent_is_sequential_runner_params(logger_factory, mock_p
     mock_main_pipe.process = AsyncMock(side_effect=capture_context)
 
     # Configure the mock factory to return our pipes
-    mock_pipe_factory.render_pipe.side_effect = lambda config, _: (
+    mock_pipe_factory.create_pipe.side_effect = lambda config, *args, **kwargs: (
         trigger if config.id == "trigger" else mock_main_pipe
     )
 

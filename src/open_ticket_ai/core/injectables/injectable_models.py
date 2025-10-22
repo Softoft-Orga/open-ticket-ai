@@ -24,11 +24,9 @@ class InjectableConfigBase(StrictBaseModel):
     )
 
     def __hash__(self) -> int:
-        """Hash based on content (excluding uid for semantic equality)."""
         return hash(self.model_dump_json())
 
     def __eq__(self, other: Any) -> bool:
-        """Semantic equality - configs with same content are equal."""
         if not isinstance(other, InjectableConfigBase):
             return False
         return hash(self) == hash(other)

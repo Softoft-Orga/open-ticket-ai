@@ -1,5 +1,6 @@
 import asyncio
 from datetime import timedelta
+from typing import ClassVar
 
 from pydantic import BaseModel, Field
 
@@ -13,9 +14,7 @@ class SimpleSequentialOrchestratorParams(BaseModel):
 
 
 class SimpleSequentialOrchestrator(CompositePipe[SimpleSequentialOrchestratorParams]):
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return SimpleSequentialOrchestratorParams
+    ParamsModel: ClassVar[type[BaseModel]] = SimpleSequentialOrchestratorParams
 
     async def _process_steps(self, context: PipeContext):
         context = context.model_copy(update={"parent": context.params})

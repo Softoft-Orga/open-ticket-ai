@@ -16,7 +16,6 @@ open_ticket_ai:
       use: "otobo-znuny:OTOBOZnunyTicketSystemService"
       params:
         base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
-        password: "NA8ABaxp3EnrPnUef8ZDLkg5"
 
     hf_local:
       use: "hf-local:HFClassificationService"

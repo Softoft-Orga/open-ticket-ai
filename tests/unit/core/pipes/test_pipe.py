@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 import pytest
 from pydantic import BaseModel
@@ -15,13 +15,11 @@ class ConcretePipeParams(BaseModel):
 
 
 class ConcretePipeForTesting(Pipe[ConcretePipeParams]):
+    ParamsModel: ClassVar[type[BaseModel]] = ConcretePipeParams
+
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self.process_called = False
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return ConcretePipeParams
 
     async def _process(self, _: PipeContext) -> PipeResult:
         self.process_called = True
@@ -60,7 +58,7 @@ def pipe_with_dependencies(logger_factory: LoggerFactory) -> ConcretePipeForTest
 @pytest.fixture
 def pipe_with_should_run_false(logger_factory: LoggerFactory) -> ConcretePipeForTesting:
     config = PipeConfig(
-        id="disabled_pipe", use="tests.unit.core.pipes.test_pipe.ConcretePipeForTesting", params={}, if_=False
+        id="disabled_pipe", use="tests.unit.core.pipes.test_pipe.ConcretePipeForTesting", params={}
     )
     return ConcretePipeForTesting(config=config, logger_factory=logger_factory)
 
@@ -73,7 +71,7 @@ class TestPipeInitialization:
         assert pipe._params.count == 42
 
     def test_pipe_initialization_with_default_params(
-        self, minimal_pipe_config: PipeConfig, logger_factory: LoggerFactory
+            self, minimal_pipe_config: PipeConfig, logger_factory: LoggerFactory
     ):
         pipe = ConcretePipeForTesting(config=minimal_pipe_config, logger_factory=logger_factory)
 
@@ -95,7 +93,7 @@ class TestPipeInitialization:
 
 class TestPipeProcess:
     async def test_process_calls_process_when_should_run_true(
-        self, test_pipe: ConcretePipeForTesting, empty_pipeline_context: PipeContext
+            self, test_pipe: ConcretePipeForTesting, empty_pipeline_context: PipeContext
     ):
         result = await test_pipe.process(empty_pipeline_context)
 
@@ -104,54 +102,3 @@ class TestPipeProcess:
         assert not result.was_skipped
         assert result.message == "processed"
         assert result.data == {"result": "test_value"}
-
-    async def test_process_with_if_false_condition(
-        self, pipe_with_should_run_false: ConcretePipeForTesting, empty_pipeline_context: PipeContext
-    ):
-        result = await pipe_with_should_run_false.process(empty_pipeline_context)
-
-        assert not pipe_with_should_run_false.process_called
-        assert result.was_skipped
-
-
-class TestPipeShouldRun:
-    async def test_should_run_checks_if_condition(self, logger_factory: LoggerFactory):
-        config_with_if_true = PipeConfig(
-            id="test_pipe", use="tests.unit.core.pipes.test_pipe.ConcretePipeForTesting", params={}, if_=True
-        )
-        pipe = ConcretePipeForTesting(config=config_with_if_true, logger_factory=logger_factory)
-
-        should_run = await pipe._should_run(PipeContext(pipe_results={}, params={}))
-        assert should_run
-
-    async def test_should_run_false_when_if_false(self, logger_factory: LoggerFactory):
-        config_with_if_false = PipeConfig(
-            id="test_pipe", use="tests.unit.core.pipes.test_pipe.ConcretePipeForTesting", params={}, if_=False
-        )
-        pipe = ConcretePipeForTesting(config=config_with_if_false, logger_factory=logger_factory)
-
-        should_run = await pipe._should_run(PipeContext(pipe_results={}, params={}))
-        assert not should_run
-
-    async def test_should_run_with_string_condition(self, logger_factory: LoggerFactory):
-        config_with_string_if = PipeConfig(
-            id="test_pipe", use="tests.unit.core.pipes.test_pipe.ConcretePipeForTesting", params={}, if_="true"
-        )
-        pipe = ConcretePipeForTesting(config=config_with_string_if, logger_factory=logger_factory)
-
-        should_run = await pipe._should_run(PipeContext(pipe_results={}, params={}))
-        assert should_run
-
-
-class TestPipeConfig:
-    def test_pipe_stores_config(self, test_pipe: ConcretePipeForTesting):
-        assert test_pipe._config is not None
-        assert test_pipe._config.id == "test_pipe"
-
-    def test_pipe_config_should_run_property(self, logger_factory: LoggerFactory):
-        config = PipeConfig(
-            id="test_pipe", use="tests.unit.core.pipes.test_pipe.ConcretePipeForTesting", params={}, if_=False
-        )
-        pipe = ConcretePipeForTesting(config=config, logger_factory=logger_factory)
-
-        assert pipe._config.should_run is False

@@ -45,6 +45,7 @@ dependencies = [
     "injector>=0.22.0",
     "otai-hf-local",
     "otai-otobo-znuny",
+    "huggingface-hub[hf-xet]>=0.35.3",
 ]
 
 [project.urls]

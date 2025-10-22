@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from pydantic import Field
 
@@ -16,9 +16,7 @@ class UpdateTicketParams(StrictBaseModel):
 
 
 class UpdateTicketPipe(TicketSystemPipe[UpdateTicketParams]):
-    @staticmethod
-    def get_params_model() -> type[UpdateTicketParams]:
-        return UpdateTicketParams
+    ParamsModel: ClassVar[type[UpdateTicketParams]] = UpdateTicketParams
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
         self._logger.info(f"📝 Updating ticket: {self._params.ticket_id}")

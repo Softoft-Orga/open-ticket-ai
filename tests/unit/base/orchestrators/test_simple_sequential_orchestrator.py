@@ -1,7 +1,7 @@
 import asyncio
 import contextlib
 from datetime import timedelta
-from typing import Any
+from typing import Any, ClassVar
 from unittest.mock import MagicMock
 
 import pytest
@@ -19,14 +19,12 @@ class EmptyParams(BaseModel):
 
 
 class SpyPipe(Pipe[EmptyParams]):
+    ParamsModel: ClassVar[type[BaseModel]] = EmptyParams
+
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self.call_count = 0
         self.captured_contexts = []
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return EmptyParams
 
     async def _process(self, context: PipeContext) -> PipeResult:
         self.call_count += 1
@@ -47,13 +45,15 @@ def empty_context():
     return PipeContext(pipe_results={}, params={})
 
 
-@pytest.mark.asyncio
-async def test_continuous_execution_with_keyboard_interrupt(logger_factory, mock_pipe_factory, empty_context):
-    """Test continuous execution loop with KeyboardInterrupt."""
+@pytest.fixture
+def orchestrator_setup(logger_factory, mock_pipe_factory):
+    """Create configured orchestrator with spy pipes for testing."""
     spy_pipe1 = SpyPipe(config=PipeConfig(id="pipe1", use="test.pipe1", params={}), logger_factory=logger_factory)
     spy_pipe2 = SpyPipe(config=PipeConfig(id="pipe2", use="test.pipe2", params={}), logger_factory=logger_factory)
 
-    mock_pipe_factory.render_pipe.side_effect = lambda config, _: (spy_pipe1 if config.id == "pipe1" else spy_pipe2)
+    mock_pipe_factory.create_pipe.side_effect = lambda config, *args, **kwargs: (
+        spy_pipe1 if config.id == "pipe1" else spy_pipe2
+    )
 
     orchestrator_config = PipeConfig(
         id="orchestrator",
@@ -66,8 +66,16 @@ async def test_continuous_execution_with_keyboard_interrupt(logger_factory, mock
     )
 
     orchestrator = SimpleSequentialOrchestrator(
-        config=orchestrator_config, logger_factory=logger_factory, factory=mock_pipe_factory
+        config=orchestrator_config, logger_factory=logger_factory, pipe_factory=mock_pipe_factory
     )
+
+    return orchestrator, spy_pipe1, spy_pipe2
+
+
+@pytest.mark.asyncio
+async def test_continuous_execution_with_keyboard_interrupt(orchestrator_setup, empty_context):
+    """Test continuous execution loop with KeyboardInterrupt."""
+    orchestrator, spy_pipe1, spy_pipe2 = orchestrator_setup
 
     async def run_orchestrator():
         with contextlib.suppress(asyncio.CancelledError):
@@ -89,26 +97,9 @@ async def test_continuous_execution_with_keyboard_interrupt(logger_factory, mock
 
 
 @pytest.mark.asyncio
-async def test_context_isolation(logger_factory, mock_pipe_factory, empty_context):
+async def test_context_isolation(orchestrator_setup, empty_context):
     """Test context isolation between pipes."""
-    spy_pipe1 = SpyPipe(config=PipeConfig(id="pipe1", use="test.pipe1", params={}), logger_factory=logger_factory)
-    spy_pipe2 = SpyPipe(config=PipeConfig(id="pipe2", use="test.pipe2", params={}), logger_factory=logger_factory)
-
-    mock_pipe_factory.render_pipe.side_effect = lambda config, _: (spy_pipe1 if config.id == "pipe1" else spy_pipe2)
-
-    orchestrator_config = PipeConfig(
-        id="orchestrator",
-        use="open_ticket_ai.base.pipes.orchestrators.simple_sequential_orchestrator.SimpleSequentialOrchestrator",
-        params={"orchestrator_sleep": timedelta(seconds=0.001)},
-        steps=[
-            PipeConfig(id="pipe1", use="test.pipe1", params={}),
-            PipeConfig(id="pipe2", use="test.pipe2", params={}),
-        ],
-    )
-
-    orchestrator = SimpleSequentialOrchestrator(
-        config=orchestrator_config, logger_factory=logger_factory, pipe_factory=mock_pipe_factory
-    )
+    orchestrator, spy_pipe1, spy_pipe2 = orchestrator_setup
 
     async def run_orchestrator():
         with contextlib.suppress(asyncio.CancelledError):
@@ -125,9 +116,9 @@ async def test_context_isolation(logger_factory, mock_pipe_factory, empty_contex
     assert len(spy_pipe2.captured_contexts) > 0, "Pipe 2 should have captured contexts"
 
     for context in spy_pipe1.captured_contexts:
-        assert context.parent is not None, "Context parent should be set"
+        assert context.parent_params is not None, "Context parent should be set"
         assert context.pipe_results == {}, "Context pipe_results should be empty (isolated)"
 
     for context in spy_pipe2.captured_contexts:
-        assert context.parent is not None, "Context parent should be set"
+        assert context.parent_params is not None, "Context parent should be set"
         assert context.pipe_results == {}, "Context pipe_results should be empty (isolated)"

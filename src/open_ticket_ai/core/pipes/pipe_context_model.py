@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
@@ -23,7 +23,7 @@ class PipeContext(StrictBaseModel):
             "for sharing configuration and data."
         ),
     )
-    parent: dict[str, Any] | None = Field(
+    parent_params: dict[str, Any] | None = Field(
         default=None,
         description=(
             "Optional reference to the parent context for nested pipes execution "
@@ -40,6 +40,13 @@ class PipeContext(StrictBaseModel):
     def with_pipe_result(self, pipe_id: str, pipe_result: PipeResult) -> PipeContext:
         new_pipes = {**self.pipe_results, pipe_id: pipe_result.model_dump()}
         return self.model_copy(update={"pipe_results": new_pipes})
+
+    def with_parent(self, parent_params: BaseModel) -> PipeContext:
+        return self.model_copy(update={"parent_params": parent_params.model_dump()})
+
+    @property
+    def parent(self) -> dict[str, Any] | None:
+        return self.parent_params
 
     @staticmethod
     def empty() -> PipeContext:

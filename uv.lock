@@ -236,6 +236,11 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/31/a0/651f93d154cb72323358bf2bbae3e642bdb5d2f1bfc874d096f7cb159fa0/huggingface_hub-0.35.3-py3-none-any.whl", hash = "sha256:0e3a01829c19d86d03793e4577816fe3bdfc1602ac62c7fb220d593d351224ba", size = 564262, upload-time = "2025-09-29T14:29:55.813Z" },
 ]
 
+[package.optional-dependencies]
+hf-xet = [
+    { name = "hf-xet" },
+]
+
 [[package]]
 name = "idna"
 version = "3.10"
@@ -520,6 +525,7 @@ source = { editable = "." }
 dependencies = [
     { name = "apscheduler" },
     { name = "httpx" },
+    { name = "huggingface-hub", extra = ["hf-xet"] },
     { name = "injector" },
     { name = "jinja2" },
     { name = "otai-hf-local" },
@@ -552,6 +558,7 @@ dev = [
 requires-dist = [
     { name = "apscheduler", specifier = "~=3.11.0" },
     { name = "httpx", specifier = "~=0.27.0" },
+    { name = "huggingface-hub", extras = ["hf-xet"], specifier = ">=0.35.3" },
     { name = "injector", specifier = ">=0.22.0" },
     { name = "jinja2", specifier = "~=3.1.6" },
     { name = "otai-hf-local", editable = "packages/otai_hf_local" },

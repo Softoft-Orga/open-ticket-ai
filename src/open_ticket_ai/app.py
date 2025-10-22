@@ -10,11 +10,11 @@ from open_ticket_ai.core.plugins.plugin_loader import PluginLoader
 class OpenTicketAIApp:
     @inject
     def __init__(
-        self,
-        config: OpenTicketAIConfig,
-        pipe_factory: PipeFactory,
-        logger_factory: LoggerFactory,
-        plugin_loader: PluginLoader,
+            self,
+            config: OpenTicketAIConfig,
+            pipe_factory: PipeFactory,
+            logger_factory: LoggerFactory,
+            plugin_loader: PluginLoader,
     ):
         self._logger = logger_factory.create(self.__class__.__name__)
         self._config = config

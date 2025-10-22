@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any
+from typing import Any, ClassVar
 
 from open_ticket_ai.base.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
@@ -15,12 +15,7 @@ from open_ticket_ai.core.base_model import StrictBaseModel
 
 
 class MockedTicketSystem(TicketSystemService):
-    @staticmethod
-    def get_params_model() -> type[StrictBaseModel]:
-        class Params(StrictBaseModel):
-            pass
-
-        return Params
+    ParamsModel: ClassVar[type[StrictBaseModel]] = StrictBaseModel
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
@@ -51,7 +46,7 @@ class MockedTicketSystem(TicketSystemService):
             for ticket in self._tickets.values()
             if self._matches_criteria(ticket, criteria)
         ]
-        return results[criteria.offset : criteria.offset + criteria.limit]
+        return results[criteria.offset: criteria.offset + criteria.limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         for ticket in self._tickets.values():

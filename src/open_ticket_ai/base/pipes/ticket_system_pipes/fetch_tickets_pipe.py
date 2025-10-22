@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from pydantic import Field
 
@@ -15,9 +15,7 @@ class FetchTicketsParams(StrictBaseModel):
 
 
 class FetchTicketsPipe(TicketSystemPipe[FetchTicketsParams]):
-    @staticmethod
-    def get_params_model() -> type[FetchTicketsParams]:
-        return FetchTicketsParams
+    ParamsModel: ClassVar[type[FetchTicketsParams]] = FetchTicketsParams
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
         search_criteria = self._params.ticket_search_criteria

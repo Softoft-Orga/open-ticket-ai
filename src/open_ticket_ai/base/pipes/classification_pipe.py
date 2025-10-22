@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from open_ticket_ai.base.ai_classification_services.classification_models import (
     ClassificationRequest,
@@ -18,17 +18,15 @@ class ClassificationPipeParams(StrictBaseModel):
 
 
 class ClassificationPipe(Pipe[ClassificationPipeParams]):
-    @staticmethod
-    def get_params_model() -> type[ClassificationPipeParams]:
-        return ClassificationPipeParams
+    ParamsModel: ClassVar[type[ClassificationPipeParams]] = ClassificationPipeParams
 
     def __init__(
-        self,
-        config: PipeConfig,
-        logger_factory: LoggerFactory,
-        classification_service: ClassificationService,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            config: PipeConfig,
+            logger_factory: LoggerFactory,
+            classification_service: ClassificationService,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._classification_service = classification_service

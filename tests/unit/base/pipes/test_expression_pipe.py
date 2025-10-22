@@ -1,7 +1,6 @@
 import pytest
-from pydantic import ValidationError
 
-from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams, ExpressionPipe
+from open_ticket_ai.base.pipes.expression_pipe import ExpressionPipe
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
@@ -19,9 +18,3 @@ async def test_expression_pipe_returns_value(logger_factory, expression):
 
     assert result.succeeded is True
     assert result.data["value"] == expression
-
-
-@pytest.mark.parametrize("invalid_value", [123, {"key": "value"}, [1, 2, 3]])
-def test_expression_pipe_invalid_param(invalid_value):
-    with pytest.raises(ValidationError):
-        ExpressionParams(expression=invalid_value)

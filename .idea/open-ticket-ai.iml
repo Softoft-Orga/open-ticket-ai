@@ -33,6 +33,7 @@
       <excludeFolder url="file://$MODULE_DIR$/tests/e2e/otobo_demo/dist" />
       <excludeFolder url="file://$MODULE_DIR$/tests/e2e/otobo_demo/otobo_demo.egg-info" />
     </content>
+    <content url="file://$MODULE_DIR$/docs/_internal/diagrams" />
     <orderEntry type="jdk" jdkName="uv (open-ticket-ai)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

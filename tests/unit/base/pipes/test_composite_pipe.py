@@ -10,7 +10,7 @@ from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 @pytest.fixture
 def mock_pipe_factory():
     factory = MagicMock(spec=PipeFactory)
-    factory.render_pipe = MagicMock()
+    factory.create_pipe = MagicMock()
     return factory
 
 
@@ -25,47 +25,47 @@ def simple_step_configs():
 
 async def test_composite_pipe_with_empty_steps(mock_pipe_factory, logger_factory, empty_pipeline_context):
     config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=[])
-    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
+    composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)
 
     assert result.succeeded
     assert result.data == {}
-    mock_pipe_factory.render_pipe.assert_not_called()
+    mock_pipe_factory.create_pipe.assert_not_called()
 
 
 async def test_composite_pipe_with_none_steps(mock_pipe_factory, logger_factory, empty_pipeline_context):
     config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=None)
-    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
+    composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)
 
     assert result.succeeded
     assert result.data == {}
-    mock_pipe_factory.render_pipe.assert_not_called()
+    mock_pipe_factory.create_pipe.assert_not_called()
 
 
 async def test_composite_pipe_calls_single_step_with_correct_context(
-    mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
+        mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
 ):
     mock_step = MagicMock()
     mock_step.process = AsyncMock(return_value=PipeResult.success(data={"value": "A"}))
-    mock_pipe_factory.render_pipe.return_value = mock_step
+    mock_pipe_factory.create_pipe.return_value = mock_step
 
     config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=[simple_step_configs[0]])
-    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
+    composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)
 
     assert result.succeeded
-    mock_pipe_factory.render_pipe.assert_called_once()
-    call_args = mock_pipe_factory.render_pipe.call_args
+    mock_pipe_factory.create_pipe.assert_called_once()
+    call_args = mock_pipe_factory.create_pipe.call_args
     assert call_args[0][0] == simple_step_configs[0]
-    assert call_args[0][1].parent is not None
+    assert call_args[0][1].parent_params is not None
 
 
 async def test_composite_pipe_calls_multiple_steps_sequentially(
-    mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
+        mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
 ):
     mock_steps = []
     for i in range(3):
@@ -73,31 +73,31 @@ async def test_composite_pipe_calls_multiple_steps_sequentially(
         mock_step.process = AsyncMock(return_value=PipeResult.success(data={"value": chr(65 + i)}))
         mock_steps.append(mock_step)
 
-    mock_pipe_factory.render_pipe.side_effect = mock_steps
+    mock_pipe_factory.create_pipe.side_effect = mock_steps
 
     config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=simple_step_configs)
-    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
+    composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)
 
     assert result.succeeded
-    assert mock_pipe_factory.render_pipe.call_count == 3
+    assert mock_pipe_factory.create_pipe.call_count == 3
     for mock_step in mock_steps:
         mock_step.process.assert_called_once()
 
 
 async def test_composite_pipe_returns_union_of_results(
-    mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
+        mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
 ):
     mock_step1 = MagicMock()
     mock_step1.process = AsyncMock(return_value=PipeResult.success(message="step1", data={"key1": "val1"}))
     mock_step2 = MagicMock()
     mock_step2.process = AsyncMock(return_value=PipeResult.success(message="step2", data={"key2": "val2"}))
 
-    mock_pipe_factory.render_pipe.side_effect = [mock_step1, mock_step2]
+    mock_pipe_factory.create_pipe.side_effect = [mock_step1, mock_step2]
 
     config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=simple_step_configs[:2])
-    composite = CompositePipe(factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
+    composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)
 

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from pydantic import Field
 
@@ -20,9 +20,7 @@ class AddNoteParams(StrictBaseModel):
 
 
 class AddNotePipe(TicketSystemPipe[AddNoteParams]):
-    @staticmethod
-    def get_params_model() -> type[AddNoteParams]:
-        return AddNoteParams
+    ParamsModel: ClassVar[type[AddNoteParams]] = AddNoteParams
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
         ticket_id_str = str(self._params.ticket_id)

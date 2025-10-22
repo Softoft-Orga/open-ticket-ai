@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from pydantic import Field
 
@@ -17,9 +17,7 @@ class ExpressionParams(StrictBaseModel):
 
 
 class ExpressionPipe(Pipe[ExpressionParams]):
-    @staticmethod
-    def get_params_model() -> type[StrictBaseModel]:
-        return ExpressionParams
+    ParamsModel: ClassVar[type[StrictBaseModel]] = ExpressionParams
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
         self._logger.debug("📐 Expression pipe returning value")

@@ -14,15 +14,11 @@ from tests.unit.conftest import SimpleInjectable
 
 
 class RegistryTestInjectable1(Injectable):
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return BaseModel
+    ParamsModel: type[BaseModel]
 
 
 class RegistryTestInjectable2(Injectable):
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return BaseModel
+    ParamsModel: type[BaseModel]
 
 
 class TestFindAllConfiguredServicesOfType:
@@ -106,29 +102,29 @@ class TestFindAllConfiguredServicesOfType:
         "configs,filter_class,expected_ids",
         [
             (
-                [
-                    InjectableConfig(id="renderer1", use="jinja_renderer"),
-                    InjectableConfig(id="injectable1", use="test_injectable1"),
-                ],
-                TemplateRenderer,
-                {"renderer1"},
+                    [
+                        InjectableConfig(id="renderer1", use="jinja_renderer"),
+                        InjectableConfig(id="injectable1", use="test_injectable1"),
+                    ],
+                    TemplateRenderer,
+                    {"renderer1"},
             ),
             (
-                [
-                    InjectableConfig(id="renderer1", use="jinja_renderer"),
-                    InjectableConfig(id="injectable1", use="test_injectable1"),
-                ],
-                RegistryTestInjectable1,
-                {"injectable1"},
+                    [
+                        InjectableConfig(id="renderer1", use="jinja_renderer"),
+                        InjectableConfig(id="injectable1", use="test_injectable1"),
+                    ],
+                    RegistryTestInjectable1,
+                    {"injectable1"},
             ),
             (
-                [
-                    InjectableConfig(id="renderer1", use="jinja_renderer"),
-                    InjectableConfig(id="injectable1", use="test_injectable1"),
-                    InjectableConfig(id="injectable2", use="test_injectable2"),
-                ],
-                Injectable,
-                {"renderer1", "injectable1", "injectable2"},
+                    [
+                        InjectableConfig(id="renderer1", use="jinja_renderer"),
+                        InjectableConfig(id="injectable1", use="test_injectable1"),
+                        InjectableConfig(id="injectable2", use="test_injectable2"),
+                    ],
+                    Injectable,
+                    {"renderer1", "injectable1", "injectable2"},
             ),
         ],
     )

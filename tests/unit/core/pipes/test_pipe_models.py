@@ -1,4 +1,4 @@
-from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
 
 
 def test_and_combines_two_success_results() -> None:
@@ -46,15 +46,3 @@ def test_failure_returns_failed_result() -> None:
 
     assert result.succeeded is False
     assert result.message == "Failure message"
-
-
-def test_should_run_with_true() -> None:
-    config = PipeConfig(id="test", use="test.module.Class", if_=True)
-
-    assert config.should_run is True
-
-
-def test_should_run_with_false() -> None:
-    config = PipeConfig(id="test", use="test.module.Class", if_=False)
-
-    assert config.should_run is False

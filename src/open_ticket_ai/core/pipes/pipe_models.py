@@ -13,27 +13,6 @@ from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 class PipeConfig(InjectableConfig):
     model_config = ConfigDict(populate_by_name=True, frozen=True, extra="forbid")
 
-    if_: str | bool = Field(
-        default="True",
-        alias="if",
-        description=(
-            "Condition expression determining whether this pipe should execute; "
-            "can be a boolean or string expression evaluated at runtime."
-        ),
-        deprecated=True,
-    )
-    steps: list[PipeConfig] | None = Field(
-        default=None,
-        description=(
-            "Optional nested list of child pipe configurations for composite pipes "
-            "that execute multiple steps in sequence."
-        ),
-    )
-
-    @property
-    def should_run(self) -> str | bool:
-        return self.if_
-
 
 class PipeResult(StrictBaseModel):
     succeeded: bool = Field(

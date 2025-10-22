@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from pydantic import BaseModel, Field
 
@@ -15,15 +15,14 @@ class SimpleSequentialRunnerParams(BaseModel):
 
 
 class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
+    ParamsModel: ClassVar[type[BaseModel]] = SimpleSequentialRunnerParams
+
     def __init__(
-        self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any, **kwargs: Any
+            self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any,
+            **kwargs: Any
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._factory: PipeFactory = pipe_factory
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return SimpleSequentialRunnerParams
 
     async def _process(self, context: PipeContext) -> PipeResult:
         context = context.model_copy(update={"parent": context.params})

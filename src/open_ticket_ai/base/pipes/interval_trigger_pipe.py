@@ -1,6 +1,6 @@
 import datetime
 from datetime import timedelta
-from typing import Any
+from typing import Any, ClassVar
 
 from pydantic import BaseModel, Field
 
@@ -15,10 +15,7 @@ class IntervalTriggerParams(StrictBaseModel):
 
 class IntervalTrigger(Pipe[IntervalTriggerParams]):
     cacheable = True
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return IntervalTriggerParams
+    ParamsModel: ClassVar[type[BaseModel]] = IntervalTriggerParams
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)

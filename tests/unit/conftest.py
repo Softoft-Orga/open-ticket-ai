@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -51,33 +51,24 @@ class SimpleParams(BaseModel):
 
 
 class SimpleInjectable(Injectable[SimpleParams]):
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return SimpleParams
+    ParamsModel: ClassVar[type[BaseModel]] = SimpleParams
 
 
 class SimplePipe(Pipe[SimpleParams]):
+    ParamsModel: ClassVar[type[BaseModel]] = SimpleParams
+
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return SimpleParams
 
     async def _process(self, _: PipeContext) -> PipeResult:
         return PipeResult.success(data={"value": self._params.value})
 
 
 class SimpleTrigger(Pipe[SimpleParams]):
+    ParamsModel: ClassVar[type[BaseModel]] = SimpleParams
+
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return SimpleParams
 
     def _should_trigger(self) -> bool:
         return True

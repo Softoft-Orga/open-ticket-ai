@@ -23,7 +23,7 @@ class ComponentRegistry:
         else:
             raise RegistryError("Registered class must be a subclass of Pipe or Injectable")
 
-    def get_pipe(self, registry_identifier: str) -> type[Pipe] | None:
+    def get_pipe(self, registry_identifier: str) -> type[Pipe]:
         pipe = self._pipes.get(registry_identifier)
         if pipe is None:
             logger.warning(f"Pipe not found: {registry_identifier}")

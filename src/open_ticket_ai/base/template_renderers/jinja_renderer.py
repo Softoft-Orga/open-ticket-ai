@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from injector import inject
 from jinja2.nativetypes import NativeEnvironment
@@ -12,9 +12,7 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 
 
 class JinjaRenderer(TemplateRenderer[StrictBaseModel]):
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return StrictBaseModel
+    ParamsModel: ClassVar[type[BaseModel]] = StrictBaseModel
 
     @inject
     def __init__(self, config: InjectableConfig, logger_factory: LoggerFactory):

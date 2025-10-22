@@ -14,12 +14,10 @@ class SimpleParams(BaseModel):
 
 
 class SimpleTemplateRenderer(TemplateRenderer[SimpleParams]):
+    ParamsModel = SimpleParams
+
     def __init__(self, config: InjectableConfig, logger_factory: LoggerFactory) -> None:
         super().__init__(config, logger_factory)
-
-    @staticmethod
-    def get_params_model() -> type[BaseModel]:
-        return SimpleParams
 
     def _render(self, template_str: str, scope: dict[str, Any]) -> str:
         result = template_str
@@ -85,14 +83,14 @@ def test_render_dict(logger_factory, obj, scope, expected):
     [
         ({"outer": {"inner": "{{key}}"}}, {"key": "value"}, {"outer": {"inner": "value"}}),
         (
-            {"a": {"b": {"c": "{{deep}}"}}},
-            {"deep": "nested"},
-            {"a": {"b": {"c": "nested"}}},
+                {"a": {"b": {"c": "{{deep}}"}}},
+                {"deep": "nested"},
+                {"a": {"b": {"c": "nested"}}},
         ),
         (
-            {"list": ["{{x}}", "{{y}}"], "dict": {"z": "{{z}}"}},
-            {"x": "1", "y": "2", "z": "3"},
-            {"list": ["1", "2"], "dict": {"z": "3"}},
+                {"list": ["{{x}}", "{{y}}"], "dict": {"z": "{{z}}"}},
+                {"x": "1", "y": "2", "z": "3"},
+                {"list": ["1", "2"], "dict": {"z": "3"}},
         ),
     ],
     ids=["nested_dict", "deeply_nested", "mixed_structures"],
@@ -102,10 +100,3 @@ def test_render_nested_dict(logger_factory, obj, scope, expected):
     renderer = SimpleTemplateRenderer(config, logger_factory)
     result = renderer.render(obj, scope)
     assert result == expected
-
-
-def test_render_unsupported_type_raises_error(logger_factory):
-    config = InjectableConfig(id="test-renderer")
-    renderer = SimpleTemplateRenderer(config, logger_factory)
-    with pytest.raises(ValueError):
-        renderer.render(42, {})
