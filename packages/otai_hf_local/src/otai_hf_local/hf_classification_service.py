@@ -6,16 +6,6 @@ from typing import Any, ClassVar
 
 import transformers
 from huggingface_hub import HfApi, login
-from pydantic import BaseModel, Field
-from transformers import (
-    AutoTokenizer,
-    AutoModelForSequenceClassification,
-    pipeline,
-)
-from transformers import (
-    Pipeline,
-)
-
 from open_ticket_ai.base.ai_classification_services.classification_models import (
     ClassificationRequest,
     ClassificationResult,
@@ -24,6 +14,13 @@ from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from pydantic import BaseModel, Field
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    Pipeline,
+    pipeline,
+)
 
 hf_logger = logging.getLogger("hf_local_detailed")
 hf_logger.setLevel(logging.DEBUG)
@@ -41,7 +38,7 @@ def _get_hf_pipeline(model: str, token: str | None):
     hf_logger.info(f"Model name: {model}")
     hf_logger.info(f"Transformers version: {transformers.__version__}")
     hf_logger.info(f"Env CWD: {os.getcwd()}")
-    hf_logger.info(f"Env variables snapshot:")
+    hf_logger.info("Env variables snapshot:")
 
     for key in [
         "HF_TOKEN",
@@ -117,12 +114,12 @@ class HFClassificationService(Injectable[HFClassificationServiceParams]):
     ParamsModel: ClassVar[type[BaseModel]] = HFClassificationServiceParams
 
     def __init__(
-            self,
-            config: InjectableConfig,
-            logger_factory: LoggerFactory,
-            get_pipeline: GetPipelineFunc = _get_hf_pipeline,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        config: InjectableConfig,
+        logger_factory: LoggerFactory,
+        get_pipeline: GetPipelineFunc = _get_hf_pipeline,
+        *args: Any,
+        **kwargs: Any,
     ):
         super().__init__(config, logger_factory, *args, **kwargs)
         self._get_pipeline = get_pipeline

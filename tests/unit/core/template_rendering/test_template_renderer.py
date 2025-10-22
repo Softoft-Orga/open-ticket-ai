@@ -83,14 +83,14 @@ def test_render_dict(logger_factory, obj, scope, expected):
     [
         ({"outer": {"inner": "{{key}}"}}, {"key": "value"}, {"outer": {"inner": "value"}}),
         (
-                {"a": {"b": {"c": "{{deep}}"}}},
-                {"deep": "nested"},
-                {"a": {"b": {"c": "nested"}}},
+            {"a": {"b": {"c": "{{deep}}"}}},
+            {"deep": "nested"},
+            {"a": {"b": {"c": "nested"}}},
         ),
         (
-                {"list": ["{{x}}", "{{y}}"], "dict": {"z": "{{z}}"}},
-                {"x": "1", "y": "2", "z": "3"},
-                {"list": ["1", "2"], "dict": {"z": "3"}},
+            {"list": ["{{x}}", "{{y}}"], "dict": {"z": "{{z}}"}},
+            {"x": "1", "y": "2", "z": "3"},
+            {"list": ["1", "2"], "dict": {"z": "3"}},
         ),
     ],
     ids=["nested_dict", "deeply_nested", "mixed_structures"],

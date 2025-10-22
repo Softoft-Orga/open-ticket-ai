@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import Field, BaseModel
+from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe_models import PipeResult

@@ -57,9 +57,7 @@ def pipe_with_dependencies(logger_factory: LoggerFactory) -> ConcretePipeForTest
 
 @pytest.fixture
 def pipe_with_should_run_false(logger_factory: LoggerFactory) -> ConcretePipeForTesting:
-    config = PipeConfig(
-        id="disabled_pipe", use="tests.unit.core.pipes.test_pipe.ConcretePipeForTesting", params={}
-    )
+    config = PipeConfig(id="disabled_pipe", use="tests.unit.core.pipes.test_pipe.ConcretePipeForTesting", params={})
     return ConcretePipeForTesting(config=config, logger_factory=logger_factory)
 
 
@@ -71,7 +69,7 @@ class TestPipeInitialization:
         assert pipe._params.count == 42
 
     def test_pipe_initialization_with_default_params(
-            self, minimal_pipe_config: PipeConfig, logger_factory: LoggerFactory
+        self, minimal_pipe_config: PipeConfig, logger_factory: LoggerFactory
     ):
         pipe = ConcretePipeForTesting(config=minimal_pipe_config, logger_factory=logger_factory)
 
@@ -93,7 +91,7 @@ class TestPipeInitialization:
 
 class TestPipeProcess:
     async def test_process_calls_process_when_should_run_true(
-            self, test_pipe: ConcretePipeForTesting, empty_pipeline_context: PipeContext
+        self, test_pipe: ConcretePipeForTesting, empty_pipeline_context: PipeContext
     ):
         result = await test_pipe.process(empty_pipeline_context)
 
