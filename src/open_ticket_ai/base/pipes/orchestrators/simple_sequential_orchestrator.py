@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from open_ticket_ai.base import CompositePipe
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes.pipe_models import PipeResult, PipeConfig
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import NoRenderField
 
 

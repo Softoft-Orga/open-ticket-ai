@@ -52,9 +52,11 @@ async def test_composite_pipe_calls_single_step_with_correct_context(
     mock_step.process = AsyncMock(return_value=PipeResult.success(data={"value": "A"}))
     mock_pipe_factory.create_pipe.return_value = mock_step
 
-    config = PipeConfig(id="composite", use="CompositePipe", params={
-        "steps": [simple_step_configs[0]]
-    }, )
+    config = PipeConfig(
+        id="composite",
+        use="CompositePipe",
+        params={"steps": [simple_step_configs[0]]},
+    )
     composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)

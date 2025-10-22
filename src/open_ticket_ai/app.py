@@ -25,7 +25,7 @@ class OpenTicketAIApp:
     async def run(self) -> None:
         self._logger.info("🚀 Starting Open Ticket AI orchestration...")
         self._logger.info(f"📦 Loaded {len(self._config.services)} services")
-        self._logger.info(f"🔧 Orchestrator has {len(self._config.orchestrator.params["steps"])} runners\n")
+        self._logger.info(f"🔧 Orchestrator has {len(self._config.orchestrator.params['steps'])} runners\n")
 
         try:
             await self._orchestrator.process(PipeContext.empty())

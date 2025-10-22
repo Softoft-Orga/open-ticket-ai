@@ -27,10 +27,8 @@ def test_registry_contains_expected_components(integration_container):
 
     assert len(available_injectables) > 0, "Registry should contain components"
 
-    assert any("JinjaRenderer" in name for name in available_injectables), \
-        "Registry should contain JinjaRenderer"
-    assert any("FetchTicketsPipe" in name for name in available_injectables), \
-        "Registry should contain FetchTicketsPipe"
+    assert any("JinjaRenderer" in name for name in available_injectables), "Registry should contain JinjaRenderer"
+    assert any("FetchTicketsPipe" in name for name in available_injectables), "Registry should contain FetchTicketsPipe"
 
 
 @pytest.mark.integration
@@ -67,11 +65,11 @@ def test_registry_identifier_format(integration_container):
     assert len(base_components) > 0, "Registry should use 'plugin:Component' format"
 
     expected_format_components = [
-        name for name in available_injectables
-        if ":" in name and not name.startswith("open_ticket_ai.")
+        name for name in available_injectables if ":" in name and not name.startswith("open_ticket_ai.")
     ]
-    assert len(expected_format_components) > 0, \
+    assert len(expected_format_components) > 0, (
         "Registry identifiers should use 'base:ComponentName' format, not full class paths"
+    )
 
 
 @pytest.mark.integration
@@ -107,9 +105,8 @@ def test_base_plugin_loaded_with_correct_identifiers(integration_container):
 
     available_injectables = registry.get_available_injectables()
 
-    assert "base:JinjaRenderer" in available_injectables, \
-        "Registry should contain 'base:JinjaRenderer'"
-    assert "base:FetchTicketsPipe" in available_injectables, \
-        "Registry should contain 'base:FetchTicketsPipe'"
-    assert "base:SimpleSequentialOrchestrator" in available_injectables, \
+    assert "base:JinjaRenderer" in available_injectables, "Registry should contain 'base:JinjaRenderer'"
+    assert "base:FetchTicketsPipe" in available_injectables, "Registry should contain 'base:FetchTicketsPipe'"
+    assert "base:SimpleSequentialOrchestrator" in available_injectables, (
         "Registry should contain 'base:SimpleSequentialOrchestrator'"
+    )
