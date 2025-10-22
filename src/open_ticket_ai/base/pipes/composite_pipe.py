@@ -1,17 +1,18 @@
 from typing import Any, ClassVar, final
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel
 
+from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
+from open_ticket_ai.core.template_rendering.template_renderer import NoRenderField
 
 
-class CompositePipeParams(BaseModel):
-    model_config = ConfigDict(frozen=True, extra="allow")
-    steps: list[PipeConfig] = Field(
-        default=list,
+class CompositePipeParams(StrictBaseModel):
+    steps: list[PipeConfig] = NoRenderField(
+        default_factory=list,
         description="List of pipe configurations representing the steps in the composite pipe.",
     )
 
@@ -37,9 +38,9 @@ class CompositePipe[ParamsT: BaseModel = CompositePipeParams](Pipe[ParamsT]):
 
     @final
     async def _process_step(
-            self, step_config: PipeConfig, context: PipeContext, render_pipe: bool = True
+            self, step_config: PipeConfig, context: PipeContext
     ) -> PipeResult:
-        step_pipe = self._factory.create_pipe(step_config, context, render_pipe)
+        step_pipe = self._factory.create_pipe(step_config, context)
         return await step_pipe.process(context)
 
     async def _process(self, context: PipeContext) -> PipeResult:

@@ -6,6 +6,7 @@ from pydantic import Field, BaseModel
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
+from open_ticket_ai.core.util.hashes import freeze
 
 
 class PipeContext(StrictBaseModel):
@@ -30,6 +31,17 @@ class PipeContext(StrictBaseModel):
             "allowing access to outer scope results."
         ),
     )
+
+    def _key(self) -> tuple[Any, ...]:
+        return freeze(self.pipe_results), freeze(self.params), freeze(self.parent_params)
+
+    def __hash__(self) -> int:
+        return hash(self._key())
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, PipeContext):
+            return False
+        return hash(self) == hash(other)
 
     def has_succeeded(self, pipe_id: str) -> bool:
         if pipe_id not in self.pipe_results:

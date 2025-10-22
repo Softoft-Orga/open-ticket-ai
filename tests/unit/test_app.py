@@ -25,13 +25,15 @@ async def test_orchestrator_execution_with_keyboard_interrupt(logger_factory):
     orchestrator_config = PipeConfig(
         id="test-orchestrator",
         use="open_ticket_ai.base.orchestrators.simple_sequential_orchestrator.SimpleSequentialOrchestrator",
-        params={"orchestrator_sleep": 0.1},
-        steps=[
-            PipeConfig(
-                id="test-runner",
-                use="tests.unit.conftest.SimplePipe",
-            ),
-        ],
+        params={
+            "orchestrator_sleep": 0.1,
+            "steps": [
+                PipeConfig(
+                    id="test-runner",
+                    use="tests.unit.conftest.SimplePipe",
+                ),
+            ],
+        },
     )
 
     orchestrator_config_mock = MagicMock(spec=orchestrator_config)

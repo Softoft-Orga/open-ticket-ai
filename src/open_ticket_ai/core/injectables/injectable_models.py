@@ -3,6 +3,7 @@ from typing import Any
 from pydantic import Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.util.hashes import freeze
 
 
 class InjectableConfigBase(StrictBaseModel):
@@ -23,8 +24,11 @@ class InjectableConfigBase(StrictBaseModel):
         description="Dictionary of configuration parameters passed to the injectables instance during initialization.",
     )
 
+    def _key(self) -> tuple[Any, ...]:
+        return self.use, freeze(self.injects), freeze(self.params)
+
     def __hash__(self) -> int:
-        return hash(self.model_dump_json())
+        return hash(self._key())
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, InjectableConfigBase):

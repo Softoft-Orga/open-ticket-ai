@@ -24,7 +24,7 @@ def simple_step_configs():
 
 
 async def test_composite_pipe_with_empty_steps(mock_pipe_factory, logger_factory, empty_pipeline_context):
-    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=[])
+    config = PipeConfig(id="composite", use="CompositePipe", params={})
     composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)
@@ -35,7 +35,7 @@ async def test_composite_pipe_with_empty_steps(mock_pipe_factory, logger_factory
 
 
 async def test_composite_pipe_with_none_steps(mock_pipe_factory, logger_factory, empty_pipeline_context):
-    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=None)
+    config = PipeConfig(id="composite", use="CompositePipe", params={})
     composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)
@@ -52,7 +52,9 @@ async def test_composite_pipe_calls_single_step_with_correct_context(
     mock_step.process = AsyncMock(return_value=PipeResult.success(data={"value": "A"}))
     mock_pipe_factory.create_pipe.return_value = mock_step
 
-    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=[simple_step_configs[0]])
+    config = PipeConfig(id="composite", use="CompositePipe", params={
+        "steps": [simple_step_configs[0]]
+    }, )
     composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)
@@ -75,7 +77,7 @@ async def test_composite_pipe_calls_multiple_steps_sequentially(
 
     mock_pipe_factory.create_pipe.side_effect = mock_steps
 
-    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=simple_step_configs)
+    config = PipeConfig(id="composite", use="CompositePipe", params={"steps": simple_step_configs})
     composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)
@@ -96,7 +98,7 @@ async def test_composite_pipe_returns_union_of_results(
 
     mock_pipe_factory.create_pipe.side_effect = [mock_step1, mock_step2]
 
-    config = PipeConfig(id="composite", use="CompositePipe", params={}, steps=simple_step_configs[:2])
+    config = PipeConfig(id="composite", use="CompositePipe", params={"steps": simple_step_configs[:2]})
     composite = CompositePipe(pipe_factory=mock_pipe_factory, config=config, logger_factory=logger_factory)
 
     result = await composite.process(empty_pipeline_context)

@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from injector import AssistedBuilder, Injector
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from open_ticket_ai.base.ticket_system_integration.ticket_system_service import (
     TicketSystemService,
@@ -47,7 +47,7 @@ class MutableRenderableConfig(InjectableConfig):
 
 
 class SimpleParams(BaseModel):
-    value: str = "default"
+    value: str = Field(default="default_value")
 
 
 class SimpleInjectable(Injectable[SimpleParams]):
@@ -163,7 +163,7 @@ def valid_raw_config() -> OpenTicketAIConfig:
 @pytest.fixture
 def invalid_raw_config() -> OpenTicketAIConfig:
     return OpenTicketAIConfig(
-        infrastructure=InfrastructureConfig(logging=LoggingConfig(), default_template_renderer="nonexistent_renderer"),
+        infrastructure=InfrastructureConfig(logging=LoggingConfig()),
         services=[],
         orchestrator=PipeConfig(),
     )

@@ -11,7 +11,7 @@ from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
-class JinjaRenderer(TemplateRenderer[StrictBaseModel]):
+class JinjaRenderer(TemplateRenderer):
     ParamsModel: ClassVar[type[BaseModel]] = StrictBaseModel
 
     @inject

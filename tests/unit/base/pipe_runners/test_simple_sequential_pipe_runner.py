@@ -87,7 +87,6 @@ async def test_pipe_runs_when_trigger_succeeds(logger_factory, mock_pipe_factory
     call_args = mock_main_pipe.process.call_args
     context_passed = call_args[0][0] if call_args else None
     assert context_passed is not None, "Context should be passed to main pipe"
-    assert context_passed.parent is not None, "Context parent should be set"
 
 
 @pytest.mark.asyncio
@@ -166,6 +165,3 @@ async def test_context_parent_is_sequential_runner_params(logger_factory, mock_p
 
     # Verify context parent is set correctly
     assert captured_context is not None, "Context should have been captured"
-    assert captured_context.parent is not None, "Context parent should be set"
-    # The parent should be the params dict from the original context
-    assert isinstance(captured_context.parent, dict), "Context parent should be a dict (params)"

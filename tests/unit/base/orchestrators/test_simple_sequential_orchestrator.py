@@ -58,11 +58,13 @@ def orchestrator_setup(logger_factory, mock_pipe_factory):
     orchestrator_config = PipeConfig(
         id="orchestrator",
         use="open_ticket_ai.base.pipes.orchestrators.simple_sequential_orchestrator.SimpleSequentialOrchestrator",
-        params={"orchestrator_sleep": timedelta(seconds=0.001)},
-        steps=[
-            PipeConfig(id="pipe1", use="test.pipe1", params={}),
-            PipeConfig(id="pipe2", use="test.pipe2", params={}),
-        ],
+        params={
+            "orchestrator_sleep": timedelta(seconds=0.001),
+            "steps": [
+                PipeConfig(id="pipe1", use="test.pipe1", params={}),
+                PipeConfig(id="pipe2", use="test.pipe2", params={}),
+            ],
+        },
     )
 
     orchestrator = SimpleSequentialOrchestrator(
