@@ -36,7 +36,7 @@ class TestIntervalTriggerInitialization:
         ],
     )
     def test_initialization_with_valid_intervals(
-            self, interval: float, expected: timedelta, logger_factory: LoggerFactory
+        self, interval: float, expected: timedelta, logger_factory: LoggerFactory
     ):
         config = create_trigger_config(interval)
         trigger = IntervalTrigger(config=config, logger_factory=logger_factory)

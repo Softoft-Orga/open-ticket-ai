@@ -102,29 +102,29 @@ class TestFindAllConfiguredServicesOfType:
         "configs,filter_class,expected_ids",
         [
             (
-                    [
-                        InjectableConfig(id="renderer1", use="jinja_renderer"),
-                        InjectableConfig(id="injectable1", use="test_injectable1"),
-                    ],
-                    TemplateRenderer,
-                    {"renderer1"},
+                [
+                    InjectableConfig(id="renderer1", use="jinja_renderer"),
+                    InjectableConfig(id="injectable1", use="test_injectable1"),
+                ],
+                TemplateRenderer,
+                {"renderer1"},
             ),
             (
-                    [
-                        InjectableConfig(id="renderer1", use="jinja_renderer"),
-                        InjectableConfig(id="injectable1", use="test_injectable1"),
-                    ],
-                    RegistryTestInjectable1,
-                    {"injectable1"},
+                [
+                    InjectableConfig(id="renderer1", use="jinja_renderer"),
+                    InjectableConfig(id="injectable1", use="test_injectable1"),
+                ],
+                RegistryTestInjectable1,
+                {"injectable1"},
             ),
             (
-                    [
-                        InjectableConfig(id="renderer1", use="jinja_renderer"),
-                        InjectableConfig(id="injectable1", use="test_injectable1"),
-                        InjectableConfig(id="injectable2", use="test_injectable2"),
-                    ],
-                    Injectable,
-                    {"renderer1", "injectable1", "injectable2"},
+                [
+                    InjectableConfig(id="renderer1", use="jinja_renderer"),
+                    InjectableConfig(id="injectable1", use="test_injectable1"),
+                    InjectableConfig(id="injectable2", use="test_injectable2"),
+                ],
+                Injectable,
+                {"renderer1", "injectable1", "injectable2"},
             ),
         ],
     )

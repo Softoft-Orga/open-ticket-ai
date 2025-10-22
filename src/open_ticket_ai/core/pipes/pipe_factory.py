@@ -19,11 +19,11 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class PipeFactory:
     @inject
     def __init__(
-            self,
-            template_renderer: TemplateRenderer,
-            logger_factory: LoggerFactory,
-            otai_config: OpenTicketAIConfig,
-            component_registry: ComponentRegistry,
+        self,
+        template_renderer: TemplateRenderer,
+        logger_factory: LoggerFactory,
+        otai_config: OpenTicketAIConfig,
+        component_registry: ComponentRegistry,
     ):
         self._template_renderer = template_renderer
         self._logger_factory = logger_factory
@@ -32,15 +32,13 @@ class PipeFactory:
         self._component_registry = component_registry
         self._pipe_cache: dict[str, Pipe] = {}
 
-    @lru_cache()
+    @lru_cache
     def create_pipe(self, pipe_config: PipeConfig, pipe_context: PipeContext) -> Pipe:
         injected_services = self._resolve_service_injects(pipe_config.injects)
         pipe_class: type[Pipe] = self._component_registry.get_pipe(pipe_config.use)
 
         rendered_params = self._template_renderer.render_to_model(
-            model_cls=pipe_class.ParamsModel,
-            raw=pipe_config.params,
-            scope=pipe_context.model_dump()
+            model_cls=pipe_class.ParamsModel, raw=pipe_config.params, scope=pipe_context.model_dump()
         )
 
         rendered_config = pipe_config.model_copy(update={"params": rendered_params})

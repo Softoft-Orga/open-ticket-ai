@@ -46,7 +46,7 @@ class MockedTicketSystem(TicketSystemService):
             for ticket in self._tickets.values()
             if self._matches_criteria(ticket, criteria)
         ]
-        return results[criteria.offset: criteria.offset + criteria.limit]
+        return results[criteria.offset : criteria.offset + criteria.limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         for ticket in self._tickets.values():
