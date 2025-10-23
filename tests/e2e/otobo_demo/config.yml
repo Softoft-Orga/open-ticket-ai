@@ -2,7 +2,7 @@ open_ticket_ai:
   api_version: "1"
   infrastructure:
     logging:
-      level: "DEBUG"
+      level: "INFO"
       log_to_file: false
       log_file_path: null
       log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -16,7 +16,7 @@ open_ticket_ai:
       use: "otobo-znuny:OTOBOZnunyTicketSystemService"
       params:
         base_url: "http://52.57.217.182/otobo/nph-genericinterface.pl"
-
+        password: "{{ get_env('OTAI_OTOBO_DEMO_PASSWORD') }}"
     hf_local:
       use: "hf-local:HFClassificationService"
 
@@ -24,16 +24,15 @@ open_ticket_ai:
     use: "base:SimpleSequentialOrchestrator"
     params:
       orchestrator_sleep: "PT0.01S"
-
       steps:
         - id: ticket-routing-runner
           use: "base:SimpleSequentialRunner"
           params:
             "on":
-              id: "every_10ms"
+              id: "trigger_interval"
               use: "base:IntervalTrigger"
               params:
-                interval: "PT0.1S"
+                interval: "PT0.5S"
             run:
               id: "ticket-routing"
               use: "base:CompositePipe"

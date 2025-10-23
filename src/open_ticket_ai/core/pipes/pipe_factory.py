@@ -19,11 +19,11 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class PipeFactory:
     @inject
     def __init__(
-        self,
-        template_renderer: TemplateRenderer,
-        logger_factory: LoggerFactory,
-        otai_config: OpenTicketAIConfig,
-        component_registry: ComponentRegistry,
+            self,
+            template_renderer: TemplateRenderer,
+            logger_factory: LoggerFactory,
+            otai_config: OpenTicketAIConfig,
+            component_registry: ComponentRegistry,
     ):
         self._template_renderer = template_renderer
         self._logger_factory = logger_factory
@@ -34,7 +34,7 @@ class PipeFactory:
 
     @alru_cache()
     async def create_pipe(self, pipe_config: PipeConfig, pipe_context: PipeContext) -> Pipe:
-        injected_services = self._resolve_service_injects(pipe_config.injects)
+        injected_services = await self._resolve_service_injects(pipe_config.injects)
         pipe_class: type[Pipe] = self._component_registry.get_pipe(pipe_config.use)
 
         rendered_params = await self._template_renderer.render_to_model(
@@ -51,20 +51,24 @@ class PipeFactory:
             **injected_services,
         )
 
-    def _resolve_service_injects(self, injects: dict[str, str]) -> dict[str, Any]:
-        return {param_name: self._get_service_by_id(service_id) for param_name, service_id in injects.items()}
+    async def _resolve_service_injects(self, injects: dict[str, str]) -> dict[str, Any]:
+        return {param_name: await self._get_service_by_id(service_id) for param_name, service_id in injects.items()}
 
-    def _get_service_by_id(self, service_id: str) -> Injectable:
-        config = next(
+    async def _get_service_by_id(self, service_id: str) -> Injectable:
+        config: InjectableConfig = next(
             (service_config for service_config in self._service_configs if service_config.id == service_id), None
         )
         if config is None:
             raise NoServiceConfigurationFoundError(service_id, self._service_configs)
 
-        registry_identifier = config.use
-        cls: type[Injectable] = self._component_registry.get_injectable(registry_identifier)
+        injectable_class: type[Injectable] = self._component_registry.get_injectable(config.use)
+        rendered_params = await self._template_renderer.render_to_model(
+            to_model=injectable_class.ParamsModel, from_raw_dict=config.params,
+            with_scope={}
+        )
+        rendered_config = config.model_copy(update={"params": rendered_params})
 
-        return cls(
-            config=config,
+        return injectable_class(
+            config=rendered_config,
             logger_factory=self._logger_factory,
         )
