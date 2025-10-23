@@ -1,12 +1,12 @@
 import pytest
-from pydantic import ValidationError
-
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
-from otai_base.ticket_system_integration.unified_models import UnifiedNote
 from packages.base.src.otai_base.pipes.ticket_system_pipes import (
     AddNoteParams,
     AddNotePipe,
 )
+from pydantic import ValidationError
+
+from otai_base.ticket_system_integration.unified_models import UnifiedNote
 
 
 @pytest.mark.parametrize("ticket_id", ["TICKET-1", "TICKET-2", "TICKET-3"])

@@ -30,9 +30,9 @@ class Plugin(ABC):
     def _get_registry_name(self, injectable: type[Injectable]) -> str:
         """Get the name used to register this plugin's components."""
         return (
-                self._component_name_prefix
-                + self._app_config.REGISTRY_IDENTIFIER_SEPERATOR
-                + injectable.get_registry_name()
+            self._component_name_prefix
+            + self._app_config.REGISTRY_IDENTIFIER_SEPERATOR
+            + injectable.get_registry_name()
         )
 
     @abstractmethod

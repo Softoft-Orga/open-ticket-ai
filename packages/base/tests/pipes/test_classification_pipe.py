@@ -1,11 +1,11 @@
 from unittest.mock import MagicMock
 
 import pytest
-
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
+from packages.base.src.otai_base.pipes.classification_pipe import ClassificationPipe
+
 from otai_base.ai_classification_services.classification_models import ClassificationResult
 from otai_base.ai_classification_services.classification_service import ClassificationService
-from packages.base.src.otai_base.pipes.classification_pipe import ClassificationPipe
 
 
 @pytest.fixture
@@ -21,7 +21,7 @@ def classification_pipe_config():
 
 
 async def test_classification_pipe_successful_classification(
-        logger_factory, empty_pipeline_context, classification_pipe_config
+    logger_factory, empty_pipeline_context, classification_pipe_config
 ):
     mock_service = MagicMock(spec=ClassificationService)
     expected_result = ClassificationResult(label="urgent", confidence=0.95)
@@ -45,7 +45,7 @@ async def test_classification_pipe_successful_classification(
 
 
 async def test_classification_pipe_with_null_api_token(
-        logger_factory, empty_pipeline_context, classification_pipe_config
+    logger_factory, empty_pipeline_context, classification_pipe_config
 ):
     mock_service = MagicMock(spec=ClassificationService)
     expected_result = ClassificationResult(label="normal", confidence=0.85)
@@ -74,13 +74,13 @@ async def test_classification_pipe_with_null_api_token(
     ],
 )
 async def test_classification_pipe_different_inputs(
-        logger_factory,
-        empty_pipeline_context,
-        classification_pipe_config,
-        text,
-        model_name,
-        expected_label,
-        expected_confidence,
+    logger_factory,
+    empty_pipeline_context,
+    classification_pipe_config,
+    text,
+    model_name,
+    expected_label,
+    expected_confidence,
 ):
     mock_service = MagicMock(spec=ClassificationService)
     expected_result = ClassificationResult(label=expected_label, confidence=expected_confidence)

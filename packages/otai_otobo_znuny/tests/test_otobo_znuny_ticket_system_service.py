@@ -1,7 +1,6 @@
 import pytest
+from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote, UnifiedTicket
 from otobo_znuny.util.otobo_errors import OTOBOError
-
-from otai_base.ticket_system_integration.unified_models import UnifiedTicket, UnifiedEntity, UnifiedNote
 
 
 @pytest.mark.asyncio
@@ -13,7 +12,7 @@ from otai_base.ticket_system_integration.unified_models import UnifiedTicket, Un
     ],
 )
 async def test_find_tickets(
-        service, mock_client, sample_otobo_ticket, sample_search_criteria, has_tickets, expected_count
+    service, mock_client, sample_otobo_ticket, sample_search_criteria, has_tickets, expected_count
 ):
     mock_client.search_and_get.return_value = [sample_otobo_ticket] if has_tickets else []
     results = await service.find_tickets(sample_search_criteria)
@@ -38,7 +37,7 @@ async def test_find_tickets_error(service, mock_client, sample_search_criteria):
     ],
 )
 async def test_find_first_ticket(
-        service, mock_client, sample_otobo_ticket, sample_search_criteria, has_tickets, expected_id
+    service, mock_client, sample_otobo_ticket, sample_search_criteria, has_tickets, expected_id
 ):
     mock_client.search_and_get.return_value = [sample_otobo_ticket] if has_tickets else []
     result = await service.find_first_ticket(sample_search_criteria)
