@@ -24,8 +24,6 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - id: meta
-        run: echo "version=$(python scripts/resolve_version.py)" >> "$GITHUB_OUTPUT"
 
       - run: |
           rm -rf dist
@@ -35,11 +33,8 @@ jobs:
           uv build --out-dir dist packages/otai_hf_local
           uv build --out-dir dist packages/otai_otobo_znuny
 
-      - uses: pypa/gh-action-pypi-publish@v1.11.0
-        with:
-          user: __token__
-          packages-dir: dist
-          skip-existing: true
+      - run: |
+          uv publish dist/*
 
       - uses: docker/login-action@v3
         with:
