@@ -33,7 +33,7 @@ jobs:
           uv build --out-dir dist packages/otai_hf_local
           uv build --out-dir dist packages/otai_otobo_znuny
 
-      - uses: pypa/gh-action-pypi-publish@v1.11.0
+      - uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           user: __token__
           packages-dir: dist
