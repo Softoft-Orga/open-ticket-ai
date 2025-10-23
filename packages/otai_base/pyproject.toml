@@ -1,6 +1,6 @@
 [project]
 name = "otai_base"
-dynamic = ["version"]
+version = "1.2.5"
 description = "Base package with core implementations for Open Ticket AI"
 readme = "README.md"
 requires-python = ">=3.14"
