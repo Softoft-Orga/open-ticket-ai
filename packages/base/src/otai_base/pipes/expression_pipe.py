@@ -21,6 +21,7 @@ class ExpressionPipe(Pipe[ExpressionParams]):
     Pipe that returns a value based on the provided expression. If the expression evaluates to a FailMarker,
     the pipe returns a failure result. Otherwise, it returns the expression value.
     """
+
     ParamsModel: ClassVar[type[StrictBaseModel]] = ExpressionParams
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:

@@ -104,8 +104,8 @@ def integration_jinja_service_config() -> InjectableConfig:
 
 @pytest.fixture
 def integration_app_config(
-        integration_infrastructure_config: InfrastructureConfig,
-        integration_jinja_service_config: InjectableConfig,
+    integration_infrastructure_config: InfrastructureConfig,
+    integration_jinja_service_config: InjectableConfig,
 ) -> AppConfig:
     """Complete AppConfig for integration tests."""
     return AppConfig(
