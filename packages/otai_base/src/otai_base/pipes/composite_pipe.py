@@ -1,12 +1,11 @@
 from typing import Annotated, Any, ClassVar, final
 
-from pydantic import BaseModel, ConfigDict
-
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import NoRenderField
+from pydantic import BaseModel, ConfigDict
 
 
 class CompositePipeParams(BaseModel):
