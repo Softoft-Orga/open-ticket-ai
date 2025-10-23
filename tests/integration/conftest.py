@@ -24,7 +24,7 @@ from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_fac
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from tests.unit.mocked_ticket_system import MockedTicketSystem
+from tests.mocked_ticket_system import MockedTicketSystem
 
 # Mark all tests in this directory as integration tests
 pytestmark = [pytest.mark.integration]

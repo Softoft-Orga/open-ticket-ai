@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 from typing import Any, ClassVar
 
 from open_ticket_ai.base.ticket_system_integration.ticket_system_service import (
@@ -13,13 +12,18 @@ from open_ticket_ai.base.ticket_system_integration.unified_models import (
 )
 from open_ticket_ai.core.base_model import StrictBaseModel
 
+# Global ticket storage shared across all MockedTicketSystem instances in tests
+_GLOBAL_TICKET_STORE: dict[str, UnifiedTicket] = {}
+
 
 class MockedTicketSystem(TicketSystemService):
     ParamsModel: ClassVar[type[StrictBaseModel]] = StrictBaseModel
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self._tickets: dict[str, UnifiedTicket] = {}
+        # Share the underlying storage so multiple instances (created by the test harness)
+        # operate on the same dataset.
+        self._tickets: dict[str, UnifiedTicket] = _GLOBAL_TICKET_STORE
 
     async def create_ticket(self, ticket: UnifiedTicket) -> str:
         if ticket.id is None:
@@ -46,7 +50,7 @@ class MockedTicketSystem(TicketSystemService):
             for ticket in self._tickets.values()
             if self._matches_criteria(ticket, criteria)
         ]
-        return results[criteria.offset : criteria.offset + criteria.limit]
+        return results[criteria.offset: criteria.offset + criteria.limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         for ticket in self._tickets.values():
@@ -82,9 +86,12 @@ class MockedTicketSystem(TicketSystemService):
         return True
 
     def add_test_ticket(self, **kwargs: Any) -> str:
+        # Synchronous helper for tests: mirror the behavior of create_ticket without using asyncio.run()
         ticket = UnifiedTicket(**kwargs)
-
-        return asyncio.run(self.create_ticket(ticket))
+        if ticket.id is None:
+            raise RuntimeError("Ticket id is required")
+        self._tickets[ticket.id] = ticket
+        return ticket.id
 
     def get_all_tickets(self) -> list[UnifiedTicket]:
         return [ticket.model_copy(deep=True) for ticket in self._tickets.values()]

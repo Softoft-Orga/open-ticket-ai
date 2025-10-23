@@ -23,7 +23,7 @@ from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from tests.unit.mocked_ticket_system import MockedTicketSystem
+from tests.mocked_ticket_system import MockedTicketSystem
 
 pytestmark = [pytest.mark.unit]
 
@@ -114,6 +114,9 @@ def empty_mocked_ticket_system(logger_factory) -> MockedTicketSystem:
 def mocked_ticket_system(logger_factory) -> MockedTicketSystem:
     system = MockedTicketSystem(config=InjectableConfig(id="mocked-ticket-system"), logger_factory=logger_factory)
 
+    # Clear any data from previous tests (global store isolation)
+    system.clear_all_data()
+
     system.add_test_ticket(
         id="TICKET-1",
         subject="Test ticket 1",
@@ -143,7 +146,10 @@ def mocked_ticket_system(logger_factory) -> MockedTicketSystem:
         notes=[],
     )
 
-    return system
+    yield system
+
+    # Clean up after test to prevent leakage to next test
+    system.clear_all_data()
 
 
 @pytest.fixture

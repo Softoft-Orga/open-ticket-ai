@@ -7,8 +7,6 @@ verifying integration with PipeContext and template rendering results.
 
 import pytest
 
-from open_ticket_ai.base import ExpressionPipe
-from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams
 from open_ticket_ai.base.template_renderers.jinja_renderer_extras import FailMarker
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
@@ -100,3 +98,48 @@ async def test_expression_pipe_with_pipe_factory_evaluates_expression(
     pipe_result = await pipe.process(integration_empty_pipe_context)
     assert pipe_result.succeeded is True
     assert pipe_result.data["value"] == 60
+
+
+import pytest
+from open_ticket_ai.base import ExpressionPipe
+from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams
+from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
+
+
+@pytest.fixture
+def make_expr_pipe(expression_config_factory, integration_component_registry: ComponentRegistry,
+                   integration_pipe_factory: PipeFactory):
+    def _make(expr: str, ctx: PipeContext, pipe_id: str = "expr"):
+        integration_component_registry.register("base:ExpressionPipe", ExpressionPipe)
+        cfg = expression_config_factory(pipe_id=pipe_id, expression_params=ExpressionParams(expression=expr))
+        return integration_pipe_factory.create_pipe(cfg, ctx)
+
+    return _make
+
+
+@pytest.mark.integration
+async def test_expression_pipe_with_pipe_factory_evaluates_expression(
+        integration_empty_pipe_context: PipeContext,
+        make_expr_pipe,
+):
+    pipe = make_expr_pipe("{{ 20 * 3 }}", integration_empty_pipe_context, pipe_id="test_expression_eval")
+    assert isinstance(pipe, ExpressionPipe)
+    res = await pipe.process(integration_empty_pipe_context)
+    assert res.succeeded is True
+    assert res.data["value"] == 60
+
+
+@pytest.mark.integration
+async def test_expression_pipe_reads_from_context_params(
+        integration_empty_pipe_context: PipeContext,
+        make_expr_pipe,
+):
+    ctx = integration_empty_pipe_context
+    ctx.params["a"] = 7
+    pipe = make_expr_pipe("{{ params.a + 5 }}", ctx, pipe_id="read_from_params")
+    assert isinstance(pipe, ExpressionPipe)
+    res = await pipe.process(ctx)
+    assert res.succeeded is True
+    assert res.data["value"] == 12
