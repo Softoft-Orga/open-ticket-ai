@@ -1,7 +1,7 @@
 import pytest
 from pydantic import BaseModel
 
-from open_ticket_ai.base import ExpressionPipe, CompositePipe
+from open_ticket_ai.base import CompositePipe, ExpressionPipe
 from open_ticket_ai.base.pipes.composite_pipe import CompositePipeParams
 from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams
 from open_ticket_ai.base.template_renderers.jinja_renderer_extras import FailMarker
@@ -11,7 +11,6 @@ from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
-from tests.integration.conftest import integration_logger_factory
 
 COUNTER: list[str] = []
 
@@ -61,8 +60,9 @@ def counter_cfg():
 
 
 @pytest.fixture
-def make_composite(register_pipes: ComponentRegistry, integration_logger_factory: LoggerFactory,
-                   integration_pipe_factory: PipeFactory):
+def make_composite(
+    register_pipes: ComponentRegistry, integration_logger_factory: LoggerFactory, integration_pipe_factory: PipeFactory
+):
     def _make(steps: list[PipeConfig], extra_composite_params: dict = None) -> CompositePipe:
         return CompositePipe(
             config=PipeConfig(
@@ -71,7 +71,8 @@ def make_composite(register_pipes: ComponentRegistry, integration_logger_factory
                 params=CompositePipeParams(steps=steps).model_dump() | (extra_composite_params or {}),
             ),
             logger_factory=integration_logger_factory,
-            pipe_factory=integration_pipe_factory)
+            pipe_factory=integration_pipe_factory,
+        )
 
     return _make
 
@@ -83,9 +84,9 @@ def reset_counter():
 
 @pytest.mark.integration
 async def test_composite_runs_steps_and_aggregates(
-        integration_empty_pipe_context: PipeContext,
-        make_composite,
-        expr_cfg,
+    integration_empty_pipe_context: PipeContext,
+    make_composite,
+    expr_cfg,
 ):
     s1 = expr_cfg("s1", "{{ 2 }}")
     s2 = expr_cfg("s2", "{{ get_pipe_result('s1','value') + 3 }}")
@@ -97,10 +98,10 @@ async def test_composite_runs_steps_and_aggregates(
 
 @pytest.mark.integration
 async def test_composite_stops_after_failure_and_skips_remaining(
-        integration_empty_pipe_context: PipeContext,
-        make_composite,
-        expr_cfg,
-        counter_cfg,
+    integration_empty_pipe_context: PipeContext,
+    make_composite,
+    expr_cfg,
+    counter_cfg,
 ):
     s1 = expr_cfg("s1", "{{ 1 }}")
     s2 = expr_cfg("s2", FailMarker())
@@ -113,9 +114,9 @@ async def test_composite_stops_after_failure_and_skips_remaining(
 
 @pytest.mark.integration
 async def test_composite_passes_pipe_results_through_context(
-        integration_empty_pipe_context: PipeContext,
-        make_composite,
-        expr_cfg,
+    integration_empty_pipe_context: PipeContext,
+    make_composite,
+    expr_cfg,
 ):
     ctx = integration_empty_pipe_context
     ctx.params["x"] = 5
@@ -129,9 +130,9 @@ async def test_composite_passes_pipe_results_through_context(
 
 @pytest.mark.integration
 async def test_composite_parent_is_not_previous_pipe(
-        integration_empty_pipe_context: PipeContext,
-        make_composite,
-        expr_cfg,
+    integration_empty_pipe_context: PipeContext,
+    make_composite,
+    expr_cfg,
 ):
     """A Pipes Parent is the Composite, not the previous Pipe."""
     ctx = integration_empty_pipe_context
@@ -145,9 +146,9 @@ async def test_composite_parent_is_not_previous_pipe(
 
 @pytest.mark.integration
 async def test_get_parents_param_returns_correct_value(
-        integration_empty_pipe_context: PipeContext,
-        make_composite,
-        expr_cfg,
+    integration_empty_pipe_context: PipeContext,
+    make_composite,
+    expr_cfg,
 ):
     """A Pipes Parent is the Composite, not the previous Pipe."""
     ctx = integration_empty_pipe_context
@@ -162,8 +163,8 @@ async def test_get_parents_param_returns_correct_value(
 
 @pytest.mark.integration
 async def test_composite_with_no_steps_succeeds(
-        integration_empty_pipe_context: PipeContext,
-        make_composite,
+    integration_empty_pipe_context: PipeContext,
+    make_composite,
 ):
     pipe = make_composite([])
     res = await pipe.process(integration_empty_pipe_context)

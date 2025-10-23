@@ -5,6 +5,7 @@ Integration tests for JinjaRenderer with real dependencies.
 Tests the JinjaRenderer with actual Jinja2 environment and template rendering,
 verifying integration with PipeContext and custom template functions.
 """
+
 import os
 
 import pytest
@@ -29,8 +30,8 @@ def test_render_simple_string(integration_template_renderer: TemplateRenderer):
 
 @pytest.mark.integration
 def test_render_with_pipe_context(
-        integration_template_renderer: TemplateRenderer,
-        integration_rendering_context: PipeContext,
+    integration_template_renderer: TemplateRenderer,
+    integration_rendering_context: PipeContext,
 ):
     """Test rendering templates with PipeContext scope including pipe results."""
     # Given
@@ -46,7 +47,7 @@ def test_render_with_pipe_context(
 
 @pytest.mark.integration
 def test_render_with_get_pipe_result_function(
-        integration_template_renderer: TemplateRenderer,
+    integration_template_renderer: TemplateRenderer,
 ):
     """Test rendering with get_pipe_result() custom function."""
     # Given
@@ -65,10 +66,7 @@ def test_render_with_get_pipe_result_function(
     )
 
     # When
-    result = integration_template_renderer.render(
-        template,
-        pipe_context.model_dump()
-    )
+    result = integration_template_renderer.render(template, pipe_context.model_dump())
 
     # Then
     assert result == [{"id": "T-1", "subject": "Test"}]
@@ -76,7 +74,7 @@ def test_render_with_get_pipe_result_function(
 
 @pytest.mark.integration
 def test_render_with_has_failed_function(
-        integration_template_renderer: TemplateRenderer,
+    integration_template_renderer: TemplateRenderer,
 ):
     """Test rendering with has_failed() custom function for error checking."""
     # Given
@@ -95,10 +93,7 @@ def test_render_with_has_failed_function(
     )
 
     # When
-    result = integration_template_renderer.render(
-        template,
-        pipe_context.model_dump()
-    )
+    result = integration_template_renderer.render(template, pipe_context.model_dump())
 
     # Then
     assert result == "Failed"
@@ -157,10 +152,7 @@ def test_render_with_parent_context(integration_template_renderer: TemplateRende
     )
 
     # When
-    result = integration_template_renderer.render(
-        template,
-        pipe_context.model_dump()
-    )
+    result = integration_template_renderer.render(template, pipe_context.model_dump())
 
     # Then
     assert result == 0.8
@@ -171,17 +163,17 @@ def test_render_with_parent_context(integration_template_renderer: TemplateRende
     """Test rendering with parent context access in nested pipes."""
     # Given
     template = "{{ get_env('MY_TEST_ENV') }}"
-    os.environ['MY_TEST_ENV'] = 'test'
+    os.environ["MY_TEST_ENV"] = "test"
     # When
     result = integration_template_renderer.render(template, {})
 
     # Then
-    assert result == 'test'
+    assert result == "test"
 
 
 @pytest.mark.integration
 def test_render_conditional_with_pipe_results(
-        integration_template_renderer: TemplateRenderer,
+    integration_template_renderer: TemplateRenderer,
 ):
     """Test conditional template rendering based on pipe results."""
     # Given
@@ -206,10 +198,7 @@ def test_render_conditional_with_pipe_results(
     )
 
     # When
-    result = integration_template_renderer.render(
-        template,
-        pipe_context.model_dump()
-    )
+    result = integration_template_renderer.render(template, pipe_context.model_dump())
 
     # Then
     assert "High confidence: urgent" in result

@@ -38,7 +38,7 @@ def expression_pipe_factory(integration_logger_factory: LoggerFactory, expressio
 
 @pytest.mark.integration
 async def test_expression_pipe_with_jinja_expressions(
-        expression_pipe_factory, integration_empty_pipe_context: PipeContext
+    expression_pipe_factory, integration_empty_pipe_context: PipeContext
 ):
     """Test ExpressionPipe with various Jinja2 expression types."""
     # Given
@@ -57,9 +57,7 @@ async def test_expression_pipe_with_jinja_expressions(
 
 
 @pytest.mark.integration
-async def test_expression_pipe_with_fail_marker(
-        expression_pipe_factory, integration_empty_pipe_context: PipeContext
-):
+async def test_expression_pipe_with_fail_marker(expression_pipe_factory, integration_empty_pipe_context: PipeContext):
     """Test ExpressionPipe returns failure when expression is FailMarker."""
     # Given
     fail_marker = FailMarker()
@@ -78,15 +76,17 @@ async def test_expression_pipe_with_fail_marker(
 
 @pytest.mark.integration
 async def test_expression_pipe_with_pipe_factory_evaluates_expression(
-        expression_pipe_factory, integration_template_renderer,
-        integration_empty_pipe_context: PipeContext,
-        integration_pipe_factory: PipeFactory,
-        expression_config_factory,
-        integration_component_registry: ComponentRegistry,
+    expression_pipe_factory,
+    integration_template_renderer,
+    integration_empty_pipe_context: PipeContext,
+    integration_pipe_factory: PipeFactory,
+    expression_config_factory,
+    integration_component_registry: ComponentRegistry,
 ):
     """Test ExpressionPipe with expression evaluated by PipeFactory's TemplateRenderer."""
-    pipe_config = expression_config_factory(pipe_id="test_expression_eval",
-                                            expression_params=ExpressionParams(expression="{{ 20 * 3 }}"))
+    pipe_config = expression_config_factory(
+        pipe_id="test_expression_eval", expression_params=ExpressionParams(expression="{{ 20 * 3 }}")
+    )
     integration_component_registry.register(
         "base:ExpressionPipe",
         ExpressionPipe,
@@ -101,16 +101,15 @@ async def test_expression_pipe_with_pipe_factory_evaluates_expression(
 
 
 import pytest
+
 from open_ticket_ai.base import ExpressionPipe
 from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams
-from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 
 
 @pytest.fixture
-def make_expr_pipe(expression_config_factory, integration_component_registry: ComponentRegistry,
-                   integration_pipe_factory: PipeFactory):
+def make_expr_pipe(
+    expression_config_factory, integration_component_registry: ComponentRegistry, integration_pipe_factory: PipeFactory
+):
     def _make(expr: str, ctx: PipeContext, pipe_id: str = "expr"):
         integration_component_registry.register("base:ExpressionPipe", ExpressionPipe)
         cfg = expression_config_factory(pipe_id=pipe_id, expression_params=ExpressionParams(expression=expr))
@@ -121,8 +120,8 @@ def make_expr_pipe(expression_config_factory, integration_component_registry: Co
 
 @pytest.mark.integration
 async def test_expression_pipe_with_pipe_factory_evaluates_expression(
-        integration_empty_pipe_context: PipeContext,
-        make_expr_pipe,
+    integration_empty_pipe_context: PipeContext,
+    make_expr_pipe,
 ):
     pipe = make_expr_pipe("{{ 20 * 3 }}", integration_empty_pipe_context, pipe_id="test_expression_eval")
     assert isinstance(pipe, ExpressionPipe)
@@ -133,8 +132,8 @@ async def test_expression_pipe_with_pipe_factory_evaluates_expression(
 
 @pytest.mark.integration
 async def test_expression_pipe_reads_from_context_params(
-        integration_empty_pipe_context: PipeContext,
-        make_expr_pipe,
+    integration_empty_pipe_context: PipeContext,
+    make_expr_pipe,
 ):
     ctx = integration_empty_pipe_context
     ctx.params["a"] = 7
