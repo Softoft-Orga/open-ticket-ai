@@ -16,24 +16,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: astral-sh/setup-uv@v6
+
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - run: pip install build
-
       - id: meta
-        run: |
-          VERSION=$(python scripts/resolve_version.py)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(python scripts/resolve_version.py)" >> "$GITHUB_OUTPUT"
 
       - run: |
           rm -rf dist
           mkdir -p dist
-          python -m build --wheel --sdist --outdir dist .
-          python -m build --wheel --sdist --outdir dist packages/otai_base
-          python -m build --wheel --sdist --outdir dist packages/otai_hf_local
-          python -m build --wheel --sdist --outdir dist packages/otai_otobo_znuny
+          uv build --sdist --out-dir dist .
+          uv build --sdist --out-dir dist packages/otai_base
+          uv build --sdist --out-dir dist packages/otai_hf_local
+          uv build --sdist --out-dir dist packages/otai_otobo_znuny
 
       - uses: pypa/gh-action-pypi-publish@v1.11.0
         with:

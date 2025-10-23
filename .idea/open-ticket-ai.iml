@@ -35,6 +35,7 @@
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress/stories" />
       <excludeFolder url="file://$MODULE_DIR$/docs/.storybook" />
       <excludeFolder url="file://$MODULE_DIR$/docs/.vitepress/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/docs/.vitepress/cache" />
     </content>
     <content url="file://$MODULE_DIR$/docs/vitepress/_internal/diagrams" />
     <orderEntry type="jdk" jdkName="uv (open-ticket-ai)" jdkType="Python SDK" />
