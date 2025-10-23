@@ -1,8 +1,6 @@
 from typing import Any, ClassVar
 
 from injector import inject
-from otai_base.ticket_system_integration.ticket_system_service import TicketSystemService
-from otai_base.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedNote, UnifiedTicket
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import (
     Article,
@@ -11,6 +9,8 @@ from otobo_znuny.domain_models.ticket_models import (
     TicketUpdate,
 )
 
+from otai_base.ticket_system_integration.ticket_system_service import TicketSystemService
+from otai_base.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedNote, UnifiedTicket
 from otai_otobo_znuny.models import (
     RenderedOTOBOZnunyTSServiceParams,
     otobo_ticket_to_unified_ticket,
@@ -23,10 +23,10 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
     @inject
     def __init__(
-        self,
-        client: OTOBOZnunyClient | None = None,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            client: OTOBOZnunyClient | None = None,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._client: OTOBOZnunyClient | None = client
@@ -120,11 +120,12 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
         try:
             await self.client.update_ticket(ticket)
-            self._logger.info(f"✅ Successfully updated ticket {ticket_id} in OTOBO/Znuny")
-            return True
         except Exception as e:
             self._logger.error(f"❌ Failed to update ticket {ticket_id}: {e}", exc_info=True)
             raise
+        else:
+            self._logger.info(f"✅ Successfully updated ticket {ticket_id} in OTOBO/Znuny")
+            return True
 
     async def add_note(self, ticket_id: str, note: UnifiedNote) -> bool:
         self._logger.info(f"📌 Adding note to ticket {ticket_id}")

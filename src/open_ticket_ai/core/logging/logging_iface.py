@@ -8,6 +8,7 @@ class AppLogger(abc.ABC):
     @abc.abstractmethod
     def debug(self, message: str, **kwargs: Any) -> None: ...
 
+    @abc.abstractmethod
     def info(self, message: str, **kwargs: Any) -> None: ...
 
     @abc.abstractmethod

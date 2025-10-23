@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 from typing import Any, ClassVar
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
-
 from otai_base.ai_classification_services.classification_models import (
     ClassificationRequest,
     ClassificationResult,
 )
 from otai_base.ai_classification_services.classification_service import ClassificationService
+
+_TEXT_PREVIEW_LIMIT = 100
 
 
 class ClassificationPipeParams(StrictBaseModel):
@@ -22,18 +25,18 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
     ParamsModel: ClassVar[type[ClassificationPipeParams]] = ClassificationPipeParams
 
     def __init__(
-        self,
-        config: PipeConfig,
-        logger_factory: LoggerFactory,
-        classification_service: ClassificationService,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            config: PipeConfig,
+            logger_factory: LoggerFactory,
+            classification_service: ClassificationService,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._classification_service = classification_service
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
-        text_preview = self._params.text[:100] + "..." if len(self._params.text) > 100 else self._params.text
+        text_preview = self._preview_text(self._params.text)
 
         self._logger.info(f"🤖 Classifying text with model: {self._params.model_name}")
         self._logger.debug(f"Text preview: {text_preview}")
@@ -47,11 +50,18 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
             )
         )
 
-        self._logger.info(
-            f"✅ Classification result: {classification_result.label} (confidence: {classification_result.confidence:.4f})"
+        result_message = (
+            f"✅ Classification result: {classification_result.label} "
+            f"(confidence: {classification_result.confidence:.4f})"
         )
+        self._logger.info(result_message)
 
         if hasattr(classification_result, "scores") and classification_result.scores:
             self._logger.debug(f"All scores: {classification_result.scores}")
 
         return PipeResult.success(data=classification_result.model_dump())
+
+    def _preview_text(self, text: str) -> str:
+        if len(text) <= _TEXT_PREVIEW_LIMIT:
+            return text
+        return f"{text[:_TEXT_PREVIEW_LIMIT]}..."

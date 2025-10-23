@@ -1,22 +1,43 @@
+from dataclasses import dataclass
+
 import pytest
-from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote, UnifiedTicket
 from otobo_znuny.util.otobo_errors import OTOBOError
+
+from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote, UnifiedTicket
+
+
+@dataclass(frozen=True)
+class FindTicketsScenario:
+    has_tickets: bool
+    expected_count: int
+
+
+FIND_TICKETS_SCENARIOS: tuple[FindTicketsScenario, ...] = (
+    FindTicketsScenario(True, 1),
+    FindTicketsScenario(False, 0),
+)
+
+
+@dataclass(frozen=True)
+class FindFirstTicketScenario:
+    has_tickets: bool
+    expected_id: str | None
+
+
+FIND_FIRST_TICKET_SCENARIOS: tuple[FindFirstTicketScenario, ...] = (
+    FindFirstTicketScenario(True, "123"),
+    FindFirstTicketScenario(False, None),
+)
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize(
-    "has_tickets,expected_count",
-    [
-        (True, 1),
-        (False, 0),
-    ],
-)
+@pytest.mark.parametrize("scenario", FIND_TICKETS_SCENARIOS)
 async def test_find_tickets(
-    service, mock_client, sample_otobo_ticket, sample_search_criteria, has_tickets, expected_count
+        service, mock_client, sample_otobo_ticket, sample_search_criteria, scenario: FindTicketsScenario
 ):
-    mock_client.search_and_get.return_value = [sample_otobo_ticket] if has_tickets else []
+    mock_client.search_and_get.return_value = [sample_otobo_ticket] if scenario.has_tickets else []
     results = await service.find_tickets(sample_search_criteria)
-    assert len(results) == expected_count
+    assert len(results) == scenario.expected_count
     if results:
         assert results[0].id == "123"
 
@@ -29,20 +50,14 @@ async def test_find_tickets_error(service, mock_client, sample_search_criteria):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize(
-    "has_tickets,expected_id",
-    [
-        (True, "123"),
-        (False, None),
-    ],
-)
+@pytest.mark.parametrize("scenario", FIND_FIRST_TICKET_SCENARIOS)
 async def test_find_first_ticket(
-    service, mock_client, sample_otobo_ticket, sample_search_criteria, has_tickets, expected_id
+        service, mock_client, sample_otobo_ticket, sample_search_criteria, scenario: FindFirstTicketScenario
 ):
-    mock_client.search_and_get.return_value = [sample_otobo_ticket] if has_tickets else []
+    mock_client.search_and_get.return_value = [sample_otobo_ticket] if scenario.has_tickets else []
     result = await service.find_first_ticket(sample_search_criteria)
-    if expected_id:
-        assert result.id == expected_id
+    if scenario.expected_id:
+        assert result.id == scenario.expected_id
     else:
         assert result is None
 

@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from typing import Any, ClassVar
+
+from pydantic import Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
-from pydantic import Field
-
 from otai_base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
 from otai_base.ticket_system_integration.unified_models import UnifiedNote
 
@@ -30,11 +32,18 @@ class AddNotePipe(TicketSystemPipe[AddNoteParams]):
             f"Note subject: {self._params.note.subject if hasattr(self._params.note, 'subject') else 'N/A'}"
         )
 
-        note_preview = (
-            str(self._params.note)[:100] + "..." if len(str(self._params.note)) > 100 else str(self._params.note)
-        )
+        note_preview = self._preview_note(self._params.note)
         self._logger.debug(f"Note preview: {note_preview}")
 
         await self._ticket_system.add_note(ticket_id_str, self._params.note)
         self._logger.info(f"✅ Successfully added note to ticket {ticket_id_str}")
         return PipeResult(succeeded=True, data={})
+
+    def _preview_note(self, note: UnifiedNote) -> str:
+        note_str = str(note)
+        if len(note_str) <= _NOTE_PREVIEW_LIMIT:
+            return note_str
+        return f"{note_str[:_NOTE_PREVIEW_LIMIT]}..."
+
+
+_NOTE_PREVIEW_LIMIT = 100

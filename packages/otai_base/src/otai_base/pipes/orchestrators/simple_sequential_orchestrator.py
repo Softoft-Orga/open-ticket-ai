@@ -1,13 +1,13 @@
 import asyncio
 from datetime import timedelta
-from typing import ClassVar
+from typing import Annotated, ClassVar
+
+from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import NoRenderField
-from pydantic import BaseModel, Field
-
 from otai_base.pipes.composite_pipe import CompositePipe
 
 
@@ -15,7 +15,7 @@ class SimpleSequentialOrchestratorParams(StrictBaseModel):
     orchestrator_sleep: timedelta = Field(default=timedelta(seconds=0.01), description="Sleep time in minutes")
     exception_sleep: timedelta = Field(default=timedelta(seconds=5), description="Sleep time in minutes")
     always_retry: bool = Field(default=True, description="Whether to always retry failed steps")
-    steps: list[PipeConfig] = NoRenderField(default_factory=list, description="Steps to execute")
+    steps: Annotated[list[PipeConfig], NoRenderField(default_factory=list, description="Steps to execute")]
 
 
 class SimpleSequentialOrchestrator(CompositePipe[SimpleSequentialOrchestratorParams]):
@@ -33,9 +33,8 @@ class SimpleSequentialOrchestrator(CompositePipe[SimpleSequentialOrchestratorPar
                 await self._process_steps(context)
                 await asyncio.sleep(self._params.orchestrator_sleep.total_seconds())
 
-            except Exception as e:
-                self._logger.error(f"Orchestrator encountered an error: {e}")
+            except Exception:
+                self._logger.exception("Orchestrator encountered an error")
                 if not self._params.always_retry:
-                    raise e
-                else:
-                    await asyncio.sleep(self._params.exception_sleep.total_seconds())
+                    raise
+                await asyncio.sleep(self._params.exception_sleep.total_seconds())

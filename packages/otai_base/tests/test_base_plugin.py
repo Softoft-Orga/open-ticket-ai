@@ -2,8 +2,9 @@ from unittest.mock import MagicMock
 
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.plugins.plugin import Plugin
-
 from otai_base.base_plugin import BasePlugin, create_base_plugin
+
+MIN_REGISTERED_COMPONENTS = 2
 
 
 class TestBasePlugin:
@@ -21,7 +22,7 @@ class TestBasePlugin:
 
         base_plugin.on_load(mock_registry)
 
-        assert mock_registry.register.call_count >= 2
+        assert mock_registry.register.call_count >= MIN_REGISTERED_COMPONENTS
 
     def test_registry_identifier_format(self, mock_app_config):
         mock_app_config.PLUGIN_NAME_PREFIX = "otai-"

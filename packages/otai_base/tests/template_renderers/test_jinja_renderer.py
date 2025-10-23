@@ -4,10 +4,12 @@ import asyncio
 
 import pytest
 from jinja2.nativetypes import NativeEnvironment
+
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-
 from otai_base.template_renderers.jinja_renderer import JinjaRenderer
+
+EXPECTED_SUM_RESULT = 10
 
 
 @pytest.fixture
@@ -37,7 +39,7 @@ async def test_render_simple_calculation(jinja_renderer: JinjaRenderer) -> None:
     template = "{{ 5 + 5 }}"
     context: dict[str, str] = {}
     result = await jinja_renderer.render(template, context)
-    assert result == 10
+    assert result == EXPECTED_SUM_RESULT
 
 
 @pytest.mark.asyncio
@@ -69,7 +71,7 @@ async def test_render_dict(jinja_renderer: JinjaRenderer) -> None:
     template_dict = {"greeting": "Hello {{ name }}", "count": "{{ 5 * 2 }}"}
     context = {"name": "World"}
     result = await jinja_renderer.render(template_dict, context)
-    assert result == {"greeting": "Hello World", "count": 10}
+    assert result == {"greeting": "Hello World", "count": EXPECTED_SUM_RESULT}
 
 
 @pytest.mark.asyncio

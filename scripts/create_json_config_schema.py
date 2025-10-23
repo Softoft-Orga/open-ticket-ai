@@ -4,7 +4,7 @@ from typing import Any
 
 from tabulate import tabulate
 
-from open_ticket_ai.core import OpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
 
 
 def load_schema(path: Path) -> dict[str, Any]:
@@ -66,11 +66,11 @@ def desc_str(node: dict[str, Any]) -> str:
 
 
 def flatten(
-    node: dict[str, Any],
-    defs: dict[str, Any],
-    base: str = "",
-    required: bool = False,
-    seen_nodes: set[int] | None = None,
+        node: dict[str, Any],
+        defs: dict[str, Any],
+        base: str = "",
+        required: bool = False,
+        seen_nodes: set[int] | None = None,
 ) -> list[tuple[str, str, str, str, str]]:
     seen_nodes = seen_nodes or set()
     n = unwrap_ref(node, defs)

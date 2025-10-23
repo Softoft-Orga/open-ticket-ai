@@ -1,22 +1,26 @@
-from typing import Any, ClassVar, final
+from typing import Annotated, Any, ClassVar, final
+
+from pydantic import BaseModel, ConfigDict
 
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import NoRenderField
-from pydantic import BaseModel, ConfigDict
 
 
 class CompositePipeParams(BaseModel):
     model_config = ConfigDict(extra="allow")
-    steps: list[PipeConfig] = NoRenderField(
-        default_factory=list,
-        description="List of pipe configurations representing the steps in the composite pipe.",
-    )
+    steps: Annotated[
+        list[PipeConfig],
+        NoRenderField(
+            default_factory=list,
+            description="List of pipe configurations representing the steps in the composite pipe.",
+        ),
+    ]
 
 
-class CompositePipe[ParamsT: BaseModel = CompositePipeParams](Pipe[ParamsT]):
+class CompositePipe[ParamsT: CompositePipeParams = CompositePipeParams](Pipe[ParamsT]):
     ParamsModel: ClassVar[type[CompositePipeParams]] = CompositePipeParams
 
     def __init__(self, pipe_factory: PipeFactory, *args: Any, **kwargs: Any) -> None:
