@@ -6,12 +6,8 @@ These fixtures wire together actual implementations (not mocks) to test
 component interactions and integration points.
 """
 
-from pathlib import Path
-from typing import Any
-
 import pytest
 from injector import Injector
-from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
@@ -24,6 +20,7 @@ from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_fac
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 from tests.mocked_ticket_system import MockedTicketSystem
 
 # Mark all tests in this directory as integration tests
@@ -104,8 +101,8 @@ def integration_jinja_service_config() -> InjectableConfig:
 
 @pytest.fixture
 def integration_app_config(
-    integration_infrastructure_config: InfrastructureConfig,
-    integration_jinja_service_config: InjectableConfig,
+        integration_infrastructure_config: InfrastructureConfig,
+        integration_jinja_service_config: InjectableConfig,
 ) -> AppConfig:
     """Complete AppConfig for integration tests."""
     return AppConfig(
@@ -194,24 +191,6 @@ def integration_empty_pipe_context() -> PipeContext:
     return PipeContext.empty()
 
 
-@pytest.fixture
-def integration_pipe_context_with_results() -> PipeContext:
-    """PipeContext pre-populated with some pipe results."""
-    return PipeContext(
-        pipe_results={
-            "step1": {
-                "succeeded": True,
-                "data": {"value": "result1"},
-            },
-            "step2": {
-                "succeeded": True,
-                "data": {"value": "result2"},
-            },
-        },
-        params={"global_param": "test_value"},
-    )
-
-
 # ============================================================================
 # TICKET SYSTEM FIXTURES
 # ============================================================================
@@ -254,149 +233,3 @@ def integration_mocked_ticket_system(integration_logger_factory: LoggerFactory) 
     )
 
     return system
-
-
-@pytest.fixture
-def integration_ticket_system_service_config(integration_mocked_ticket_system: MockedTicketSystem) -> InjectableConfig:
-    """Service config for MockedTicketSystem."""
-    return InjectableConfig(
-        id="test_ticket_system",
-        use="test:MockedTicketSystem",
-        params={},
-    )
-
-
-# ============================================================================
-# SAMPLE DATA FIXTURES
-# ============================================================================
-
-
-@pytest.fixture
-def integration_sample_tickets_data() -> list[dict[str, Any]]:
-    """Sample ticket data for integration tests."""
-    return [
-        {
-            "id": "SAMPLE-001",
-            "subject": "Email not working",
-            "body": "User reports email delivery failures",
-            "queue": {"id": "1", "name": "Support"},
-            "priority": {"id": "3", "name": "Medium"},
-        },
-        {
-            "id": "SAMPLE-002",
-            "subject": "Feature request: Dark mode",
-            "body": "Users requesting dark mode for better accessibility",
-            "queue": {"id": "2", "name": "Development"},
-            "priority": {"id": "2", "name": "Low"},
-        },
-        {
-            "id": "SAMPLE-003",
-            "subject": "URGENT: Production down",
-            "body": "Critical production outage affecting all users",
-            "queue": {"id": "3", "name": "Incidents"},
-            "priority": {"id": "5", "name": "Critical"},
-        },
-    ]
-
-
-@pytest.fixture
-def integration_sample_config_yml(tmp_path: Path) -> Path:
-    """Create a temporary valid config.yml file for integration tests."""
-    config_content = """
-open_ticket_ai:
-  api_version: "1"
-
-  infrastructure:
-    logging:
-      level: "DEBUG"
-      log_to_file: false
-
-  services:
-    jinja_default:
-      use: "base:JinjaRenderer"
-
-    test_ticket_system:
-      use: "test:MockedTicketSystem"
-
-  orchestrator:
-    use: "base:SimpleSequentialOrchestrator"
-    params:
-      orchestrator_sleep: "PT0.01S"
-    steps:
-      - id: test_runner
-        use: "base:SimpleSequentialRunner"
-        params:
-          on:
-            id: every_100ms
-            use: "base:IntervalTrigger"
-            params:
-              interval: "PT0.1S"
-          run:
-            id: test_pipeline
-            use: "base:CompositePipe"
-            steps:
-              - id: fetch_step
-                use: "base:FetchTicketsPipe"
-                injects:
-                  ticket_system: "test_ticket_system"
-                params:
-                  ticket_search_criteria:
-                    queue:
-                      name: "Support"
-                    limit: 10
-"""
-
-    config_file = tmp_path / "config.yml"
-    config_file.write_text(config_content)
-    return config_file
-
-
-# ============================================================================
-# ENVIRONMENT FIXTURES
-# ============================================================================
-
-
-@pytest.fixture
-def integration_env_vars(monkeypatch: pytest.MonkeyPatch) -> dict[str, str]:
-    """Set up environment variables for integration tests."""
-    env_vars = {
-        "OTAI_TEST_VAR": "test_value",
-        "OTAI_API_KEY": "test_api_key_12345",
-        "OTAI_TIMEOUT": "30",
-        "OTAI_DEBUG": "true",
-    }
-
-    for key, value in env_vars.items():
-        monkeypatch.setenv(key, value)
-
-    return env_vars
-
-
-# ============================================================================
-# CLEANUP FIXTURES
-# ============================================================================
-
-
-@pytest.fixture(autouse=True)
-def integration_test_cleanup():
-    """Automatic cleanup after each integration test."""
-    # Setup
-    yield
-    # Teardown - add any cleanup needed after integration tests
-
-
-# ============================================================================
-# HELPER FIXTURES
-# ============================================================================
-
-
-@pytest.fixture
-def integration_wait_for_async():
-    """Helper to wait for async operations in integration tests."""
-    import asyncio
-
-    async def wait(coro, timeout: float = 5.0):
-        """Wait for coroutine with timeout."""
-        return await asyncio.wait_for(coro, timeout=timeout)
-
-    return wait

@@ -4,9 +4,9 @@ import asyncio
 
 import pytest
 from jinja2.nativetypes import NativeEnvironment
+
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-
 from otai_base.template_renderers.jinja_renderer import JinjaRenderer
 
 
@@ -137,8 +137,8 @@ def test_render_with_trim_blocks(jinja_renderer: JinjaRenderer) -> None:
 
 
 async def some_test_function():
-    await asyncio.sleep(10.11)
-    return "TEST2"
+    await asyncio.sleep(0.01)
+    return "TEST"
 
 
 async def test_async_env():
