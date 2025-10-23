@@ -1,3 +1,12 @@
+###
+
+TODO this is absoltely outdated.
+but the good thing about how I setup the config. Almost everything is an InjectableConfig having same atributes.
+Then for each Pipe, Service there are special params. There are about 10 Injectables. Create an overview table for them
+and
+then below that the details. what they do and what exactly arguments they get + for the Pipes the Result they produce
+and examples if needed.
+
 # Configuration Reference
 
 Complete reference for Open Ticket AI configuration schema.
@@ -13,11 +22,11 @@ Minimal configuration structure:
 
 ```yaml
 open_ticket_ai:
-  plugins: []
+  plugins: [ ]
   infrastructure:
     logging:
       version: 1
-  services: []
+  services: [ ]
   orchestrator:
     runners:
       - on:
@@ -28,7 +37,7 @@ open_ticket_ai:
         run:
           id: my_pipeline
           use: "open_ticket_ai.base.CompositePipe"
-          steps: []
+          steps: [ ]
 ```
 
 ## Root Configuration
@@ -59,19 +68,19 @@ open_ticket_ai:
       config:
         base_url: "${OTOBO_BASE_URL}"
         api_token: "${OTOBO_API_TOKEN}"
-  
+
   infrastructure:
     logging:
       version: 1
       root:
         level: INFO
-  
+
   services:
     - id: ticket_classifier
       use: "my_plugin.TicketClassifier"
       params:
         model_name: "bert-base-classifier"
-  
+
   orchestrator:
     runners:
       - on:
@@ -114,7 +123,7 @@ orchestrator:
             interval: "60s"
       run:
         id: my_pipeline
-        steps: []
+        steps: [ ]
 ```
 
 ### RunnerDefinition
@@ -269,13 +278,13 @@ infrastructure:
         formatter: simple
     root:
       level: INFO
-      handlers: [console]
-  
+      handlers: [ console ]
+
   template_renderer_config:
     type: "jinja"
     env_config:
       prefix: "OTAI_"
-      allowlist: ["OTAI_*"]
+      allowlist: [ "OTAI_*" ]
 ```
 
 ### LoggingDictConfig
@@ -377,7 +386,7 @@ template_renderer_config:
   type: "jinja"
   env_config:
     prefix: "OTAI_"
-    allowlist: 
+    allowlist:
       - "OTAI_*"
       - "HOME"
       - "USER"
@@ -493,7 +502,7 @@ services:
 # Reference with alias (*)
 orchestrator:
   runners:
-    - on: []
+    - on: [ ]
       run:
         id: pipeline1
         steps:
@@ -502,8 +511,8 @@ orchestrator:
             params:
               search: *common_search
 
-# Merge with << notation
-    - on: []
+    # Merge with << notation
+    - on: [ ]
       run:
         id: pipeline2
         steps:

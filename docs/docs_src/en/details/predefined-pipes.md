@@ -1,3 +1,5 @@
+### TODO still early idea. Mark as early idea!
+
 # Predefined Pipe Concepts
 
 This document captures early ideas for shipping reusable, predefined Pipes that can be imported into project-level YAML
@@ -40,7 +42,7 @@ pipe:
     - id: normalize
       uses: actions/normalize-text@v1
       with:
-        fields: [title, description]
+        fields: [ title, description ]
 
     - id: classify
       uses: actions/classify@v2

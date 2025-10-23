@@ -2,6 +2,8 @@
 description: Learn how Open Ticket AI uses dependency injection to manage services, resolve dependencies, and enable testability with loose coupling.
 ---
 
+## TODO not much changed.
+
 # Dependency Injection
 
 Open Ticket AI uses dependency injection (DI) to manage services and their dependencies, promoting loose coupling and

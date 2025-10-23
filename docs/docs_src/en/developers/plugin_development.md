@@ -2,6 +2,8 @@
 description: Complete guide to developing custom plugins for Open Ticket AI including project structure, entry points, and best practices.
 ---
 
+## TODO plugin package name otai-* needs entrypoint set to PluginFactory. Plugin returns list of injectables.
+
 # Plugin Development Guide
 
 Learn how to create custom plugins to extend Open Ticket AI functionality.
@@ -45,7 +47,7 @@ def setup(registry):
     """Register plugin components."""
     from my_plugin.pipes.my_pipe import MyPipe
     from my_plugin.services.my_service import MyService, MyServiceImpl
-    
+
     registry.register_pipe("my_pipe", MyPipe)
     registry.register_service(MyService, MyServiceImpl)
 ```

@@ -2,6 +2,12 @@
 description: Detailed installation guide for Open Ticket AI with system requirements, Python setup, Docker deployment, and ML model configuration.
 ---
 
+# TOODO DOcker Compose to install version with the 3 plugins installed. for not wanting all currently with pip uv nstallation.
+
+but in the future. other docker images and beter installation scripts.
+The hardware depends mostly on what AI you want to run. As such the OpenTicketAI can run on 512MB RAM systems if no ML
+models are used.
+
 # Installation Guide
 
 Detailed installation instructions for Open Ticket AI and its components.
@@ -67,6 +73,7 @@ uv pip install otai-otobo-znuny
 ```
 
 Features:
+
 - Ticket fetching and updating
 - Custom field support
 - API authentication
@@ -79,6 +86,7 @@ uv pip install otai-hf-local
 ```
 
 Features:
+
 - Local ML model inference
 - Support for classification models
 - GPU acceleration
@@ -96,6 +104,7 @@ uv pip install open-ticket-ai[otobo,ml]
 ```
 
 Available bundles:
+
 - `all`: All plugins
 - `otobo`: OTOBO/Znuny integration
 - `ml`: Machine learning plugins
@@ -230,6 +239,7 @@ uv pip install torch --index-url https://download.pytorch.org/whl/cu118
 
 ```python
 import torch
+
 print(f"CUDA available: {torch.cuda.is_available()}")
 print(f"CUDA device: {torch.cuda.get_device_name(0)}")
 ```

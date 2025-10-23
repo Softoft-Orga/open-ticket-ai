@@ -2,6 +2,8 @@
 description: Step-by-step tutorial for creating your first ticket classification pipeline with Open Ticket AI including fetching, classification, and updates.
 ---
 
+### TODO the main points didnt changed but the details like the settings config structure.
+
 # Creating Your First Pipeline
 
 Step-by-step tutorial for creating a complete ticket classification pipeline.
@@ -9,6 +11,7 @@ Step-by-step tutorial for creating a complete ticket classification pipeline.
 ## Overview
 
 In this tutorial, you'll create a pipeline that:
+
 1. Fetches open tickets from your ticket system
 2. Classifies them into queues
 3. Assigns priority levels
@@ -89,7 +92,7 @@ orchestrator:
   pipelines:
     - name: ticket_classifier
       run_every_milli_seconds: 60000
-      pipes: []  # We'll add pipes here
+      pipes: [ ]  # We'll add pipes here
 ```
 
 ### Step 2: Add Ticket Fetching
@@ -106,7 +109,7 @@ orchestrator:
         - pipe_name: fetch_tickets
           search:
             StateType: "Open"
-            QueueIDs: [1, 2, 3]  # Your queue IDs
+            QueueIDs: [ 1, 2, 3 ]  # Your queue IDs
             limit: 50
 ```
 
@@ -126,7 +129,7 @@ pipes:
     search:
       StateType: "Open"
       limit: 50
-  
+
   # Classify queue
   - pipe_name: classify_queue
     model_name: "bert-base-uncased"
@@ -145,10 +148,10 @@ Add priority assignment:
 pipes:
   - pipe_name: fetch_tickets
     # ... (as before)
-  
+
   - pipe_name: classify_queue
     # ... (as before)
-  
+
   # Classify priority
   - pipe_name: classify_priority
     confidence_threshold: 0.7
@@ -166,7 +169,7 @@ Add pipe to update tickets:
 ```yaml
 pipes:
   # ... (previous pipes)
-  
+
   # Update ticket with classifications
   - pipe_name: update_ticket
     fields:
@@ -181,7 +184,7 @@ Add a note to each ticket:
 ```yaml
 pipes:
   # ... (previous pipes)
-  
+
   # Add note documenting classification
   - pipe_name: add_note
     note_text: |
@@ -203,7 +206,7 @@ plugins:
     config:
       base_url: "${OTOBO_BASE_URL}"
       api_token: "${OTOBO_API_TOKEN}"
-  
+
   - name: hf_local
     config:
       model_name: "bert-base-uncased"
@@ -217,13 +220,13 @@ services:
   open_tickets: &open_tickets
     StateType: "Open"
     limit: 50
-  
+
   # Queue mapping
   queues: &queues
     billing: 1
     support: 2
     technical: 3
-  
+
   # Priority mapping
   priorities: &priorities
     low: 1
@@ -238,20 +241,20 @@ orchestrator:
       pipes:
         - pipe_name: fetch_tickets
           search: *open_tickets
-        
+
         - pipe_name: classify_queue
           confidence_threshold: 0.7
           queue_mapping: *queues
-        
+
         - pipe_name: classify_priority
           confidence_threshold: 0.7
           priority_mapping: *priorities
-        
+
         - pipe_name: update_ticket
           fields:
             QueueID: "{{ context.predicted_queue_id }}"
             PriorityID: "{{ context.predicted_priority_id }}"
-        
+
         - pipe_name: add_note
           note_text: |
             Auto-classified:
@@ -337,17 +340,20 @@ Process tickets in batches:
 ### Performance Tips
 
 1. **Adjust Interval**: Don't run too frequently
+
 ```yaml
 run_every_milli_seconds: 300000  # Every 5 minutes
 ```
 
 2. **Limit Results**: Process manageable batches
+
 ```yaml
 search:
   limit: 50  # Don't fetch too many
 ```
 
 3. **Use Caching**: Enable model caching
+
 ```yaml
 plugins:
   - name: hf_local
@@ -372,6 +378,7 @@ Add monitoring pipes:
 ### No Tickets Fetched
 
 Check search criteria:
+
 - Verify QueueIDs exist
 - Check StateType is correct
 - Ensure tickets match criteria
@@ -379,6 +386,7 @@ Check search criteria:
 ### Classification Fails
 
 Check model configuration:
+
 - Verify model name
 - Ensure model is downloaded
 - Check input format
@@ -386,6 +394,7 @@ Check model configuration:
 ### Updates Don't Apply
 
 Verify permissions:
+
 - API token has write access
 - Queue/Priority IDs are valid
 - Ticket exists and is updateable

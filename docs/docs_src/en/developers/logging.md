@@ -2,6 +2,8 @@
 description: Open Ticket AI logging system documentation covering abstract interfaces, stdlib and structlog implementations, and structured logging patterns.
 ---
 
+#### TODO there is only standardlogger implementation currently.
+
 # Logging System
 
 Open Ticket AI uses an abstract logging interface that allows developers to switch between different logging
@@ -120,7 +122,13 @@ The structlog adapter provides structured logging with rich formatting options.
 **Example output (JSON):**
 
 ```json
-{"event": "User created", "level": "info", "timestamp": "2025-10-11T00:21:36.765570Z", "user_id": "123", "operation": "create"}
+{
+  "event": "User created",
+  "level": "info",
+  "timestamp": "2025-10-11T00:21:36.765570Z",
+  "user_id": "123",
+  "operation": "create"
+}
 ```
 
 **Configuration:**

@@ -1,10 +1,18 @@
+# TODO
+
+luckily not much changed.the custom fucntins changed, but still jinjaa2.
+planning on extending this adding possibility to inject the services into the templates so that you can do await
+ticket_system.add_note(...) directly from the template.
+
 # Template Rendering
 
-Open Ticket AI uses template rendering to make configurations dynamic and adaptable to different environments and runtime conditions. This allows you to customize behavior without changing code.
+Open Ticket AI uses template rendering to make configurations dynamic and adaptable to different environments and
+runtime conditions. This allows you to customize behavior without changing code.
 
 ## What is Template Rendering?
 
-Template rendering processes special placeholders in your configuration files, replacing them with actual values at runtime. This enables:
+Template rendering processes special placeholders in your configuration files, replacing them with actual values at
+runtime. This enables:
 
 - Using environment variables in configs
 - Referencing results from previous pipeline steps
@@ -13,7 +21,8 @@ Template rendering processes special placeholders in your configuration files, r
 
 ## Jinja2 Templates
 
-Open Ticket AI uses [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/), a powerful templating engine for Python. Jinja2 provides:
+Open Ticket AI uses [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/), a powerful templating engine for Python.
+Jinja2 provides:
 
 - Variable substitution: `{{ variable }}`
 - Conditional blocks: `{% if condition %}...{% endif %}`
@@ -92,7 +101,8 @@ Different parts of your configuration are rendered at different times:
 
 ### Service Instantiation
 
-Services in the `services` section are rendered when the application starts, before any pipelines run. They have access to global context only.
+Services in the `services` section are rendered when the application starts, before any pipelines run. They have access
+to global context only.
 
 ### Pipeline Creation
 
@@ -107,21 +117,25 @@ Individual pipes are rendered just before execution. They have access to global,
 Template rendering applies to string values in these configuration sections:
 
 ### Services
+
 - `params` values
 - `injects` keys and values
 
 ### Orchestrator
+
 - `pipelines[].params` values
 - `pipelines[].pipes[].params` values
 - `pipelines[].pipes[].if` conditions
 - `pipelines[].pipes[].depends_on` lists
 
 ### Pipes
+
 - All parameter values
 - Conditional expressions
 - Dependency specifications
 
-Note: The template renderer configuration itself (`infrastructure.template_renderer_config`) is never rendered - it's used raw to bootstrap the rendering system.
+Note: The template renderer configuration itself (`infrastructure.template_renderer_config`) is never rendered - it's
+used raw to bootstrap the rendering system.
 
 ## Examples
 
@@ -157,12 +171,12 @@ orchestrator:
 pipes:
   - id: fetch_data
     use: "mypackage:Fetcher"
-    
+
   - id: process_data
     use: "mypackage:Processor"
     params:
       input: "{{ pipe_result('fetch_data').data }}"
-    depends_on: [fetch_data]
+    depends_on: [ fetch_data ]
     if: "{{ not has_failed('fetch_data') }}"
 ```
 
