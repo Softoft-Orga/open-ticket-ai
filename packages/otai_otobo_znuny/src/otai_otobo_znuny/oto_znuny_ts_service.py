@@ -120,11 +120,12 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
         try:
             await self.client.update_ticket(ticket)
-            self._logger.info(f"✅ Successfully updated ticket {ticket_id} in OTOBO/Znuny")
-            return True
         except Exception as e:
             self._logger.error(f"❌ Failed to update ticket {ticket_id}: {e}", exc_info=True)
             raise
+        else:
+            self._logger.info(f"✅ Successfully updated ticket {ticket_id} in OTOBO/Znuny")
+            return True
 
     async def add_note(self, ticket_id: str, note: UnifiedNote) -> bool:
         self._logger.info(f"📌 Adding note to ticket {ticket_id}")

@@ -29,6 +29,7 @@ def expr_cfg():
 
 @pytest.fixture
 def make_runner(integration_pipe_factory: PipeFactory, register_pipes: ComponentRegistry, integration_logger_factory):
+    _ = register_pipes
     def _make(on_cfg: PipeConfig, run_cfg: PipeConfig) -> SimpleSequentialRunner:
         return SimpleSequentialRunner(
             config=PipeConfig(

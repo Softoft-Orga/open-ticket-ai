@@ -1,4 +1,4 @@
-from typing import Any, ClassVar
+from typing import Annotated, Any, ClassVar
 
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe import Pipe
@@ -10,8 +10,8 @@ from pydantic import BaseModel
 
 
 class SimpleSequentialRunnerParams(BaseModel):
-    on: PipeConfig = NoRenderField(description="trigger Pipe the run pipe only runs when this succeeds")
-    run: PipeConfig = NoRenderField(description="Pipe to run when triggered")
+    on: Annotated[PipeConfig, NoRenderField(description="Trigger pipe that gates execution")]
+    run: Annotated[PipeConfig, NoRenderField(description="Pipe to run when triggered")]
 
 
 class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):

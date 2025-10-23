@@ -1,13 +1,19 @@
-from otai_base.ai_classification_services.classification_models import ClassificationRequest, ClassificationResult
+from otai_base.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
 from otai_base.ai_classification_services.classification_service import ClassificationService
+
+SYNC_CONFIDENCE = 0.95
+ASYNC_CONFIDENCE = 0.85
 
 
 class TestClassificationService(ClassificationService):
     def classify(self, _req: ClassificationRequest) -> ClassificationResult:
-        return ClassificationResult(label="test_label", confidence=0.95)
+        return ClassificationResult(label="test_label", confidence=SYNC_CONFIDENCE)
 
     async def aclassify(self, _req: ClassificationRequest) -> ClassificationResult:
-        return ClassificationResult(label="async_test_label", confidence=0.85)
+        return ClassificationResult(label="async_test_label", confidence=ASYNC_CONFIDENCE)
 
 
 def test_classification_service_protocol_compliance(empty_injectable_config, logger_factory):
@@ -26,7 +32,7 @@ def test_classification_service_sync_classify(empty_injectable_config, logger_fa
 
     assert isinstance(result, ClassificationResult)
     assert result.label == "test_label"
-    assert result.confidence == 0.95
+    assert result.confidence == SYNC_CONFIDENCE
 
 
 async def test_classification_service_async_aclassify(empty_injectable_config, logger_factory):
@@ -40,4 +46,4 @@ async def test_classification_service_async_aclassify(empty_injectable_config, l
 
     assert isinstance(result, ClassificationResult)
     assert result.label == "async_test_label"
-    assert result.confidence == 0.85
+    assert result.confidence == ASYNC_CONFIDENCE

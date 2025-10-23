@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, ClassVar
 
 from open_ticket_ai.core.base_model import StrictBaseModel
@@ -10,6 +12,8 @@ from otai_base.ai_classification_services.classification_models import (
     ClassificationResult,
 )
 from otai_base.ai_classification_services.classification_service import ClassificationService
+
+_TEXT_PREVIEW_LIMIT = 100
 
 
 class ClassificationPipeParams(StrictBaseModel):
@@ -33,7 +37,7 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
         self._classification_service = classification_service
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
-        text_preview = self._params.text[:100] + "..." if len(self._params.text) > 100 else self._params.text
+        text_preview = self._preview_text(self._params.text)
 
         self._logger.info(f"🤖 Classifying text with model: {self._params.model_name}")
         self._logger.debug(f"Text preview: {text_preview}")
@@ -47,11 +51,18 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
             )
         )
 
-        self._logger.info(
-            f"✅ Classification result: {classification_result.label} (confidence: {classification_result.confidence:.4f})"
+        result_message = (
+            f"✅ Classification result: {classification_result.label} "
+            f"(confidence: {classification_result.confidence:.4f})"
         )
+        self._logger.info(result_message)
 
         if hasattr(classification_result, "scores") and classification_result.scores:
             self._logger.debug(f"All scores: {classification_result.scores}")
 
         return PipeResult.success(data=classification_result.model_dump())
+
+    def _preview_text(self, text: str) -> str:
+        if len(text) <= _TEXT_PREVIEW_LIMIT:
+            return text
+        return f"{text[:_TEXT_PREVIEW_LIMIT]}..."

@@ -8,6 +8,9 @@ from otai_base.ticket_system_integration.unified_models import TicketSearchCrite
 pytestmark = [pytest.mark.unit]
 
 
+TOTAL_TICKETS = 3
+
+
 async def _fetch_tickets(mocked_ticket_system, logger_factory, search_criteria: TicketSearchCriteria):
     config = PipeConfig(
         id="fetch-tickets",
@@ -64,5 +67,5 @@ async def test_fetch_tickets_empty_results(mocked_ticket_system, logger_factory,
 async def test_fetch_tickets_no_filter(mocked_ticket_system, logger_factory):
     criteria = TicketSearchCriteria(queue=None)
     tickets = await _fetch_tickets(mocked_ticket_system, logger_factory, criteria)
-    assert len(tickets) == 3
+    assert len(tickets) == TOTAL_TICKETS
     assert {t.id for t in tickets} == {"TICKET-1", "TICKET-2", "TICKET-3"}

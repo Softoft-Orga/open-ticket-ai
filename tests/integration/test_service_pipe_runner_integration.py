@@ -97,7 +97,7 @@ def addnote_cfg() -> callable:
 
 
 @pytest.fixture
-def seed_tickets(factory: PipeFactory, ctx: PipeContext):
+def seed_tickets(factory: PipeFactory):
     def _seed(items: list[UnifiedTicket]) -> MockedTicketSystem:
         # Get the shared ticket system instance from the factory so seeded data is visible to all pipes
         svc: MockedTicketSystem = factory._get_service_by_id("tickets")
@@ -124,7 +124,7 @@ async def test_pipes_use_same_ticketsystem_instance(factory: PipeFactory, ctx: P
 async def test_flow_fetch_select_highest_priority_and_add_note(
     factory: PipeFactory, registry: ComponentRegistry, ctx: PipeContext, fetch_cfg, expr_cfg, addnote_cfg, seed_tickets
 ):
-    svc = seed_tickets(
+    seed_tickets(
         [
             UnifiedTicket(
                 id="1", subject="A", queue=UnifiedEntity(name="Support"), priority=UnifiedEntity(name="1"), notes=[]

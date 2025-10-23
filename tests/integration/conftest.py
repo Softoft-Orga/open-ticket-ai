@@ -1,25 +1,23 @@
 # tests/integration/conftest.py
-"""
-Integration test fixtures providing real instances of core components.
+"""Integration test fixtures providing real instances of core components."""
 
-These fixtures wire together actual implementations (not mocks) to test
-component interactions and integration points.
-"""
+from typing import Any
 
 import pytest
 from injector import Injector
 from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 
 from open_ticket_ai.core.config.app_config import AppConfig
-from open_ticket_ai.core.config.config_models import InfrastructureConfig
+from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.dependency_injection.container import AppModule
-from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from tests.mocked_ticket_system import MockedTicketSystem
 
@@ -50,7 +48,7 @@ def integration_logger_factory(integration_logging_config: LoggingConfig) -> Log
 
 
 @pytest.fixture
-def integration_component_registry(integration_logger_factory: LoggerFactory) -> ComponentRegistry:
+def integration_component_registry() -> ComponentRegistry:
     """Real ComponentRegistry with otai_base plugin registered."""
     registry = ComponentRegistry()
 
@@ -233,14 +231,6 @@ def integration_mocked_ticket_system(integration_logger_factory: LoggerFactory) 
     )
 
     return system
-
-
-from typing import Any
-
-from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
-from open_ticket_ai.core.injectables.injectable_models import InjectableConfigBase
-from open_ticket_ai.core.pipes.pipe_models import PipeConfig
-
 
 class ConfigBuilder:
     """
