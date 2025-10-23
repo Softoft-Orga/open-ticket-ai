@@ -50,11 +50,6 @@ include = ["otai_hf_local*"]
 [tool.uv.sources]
 open-ticket-ai = { workspace = true }
 
-[tool.setuptools_scm]
-root = "../.."
-version_scheme = "guess-next-dev"
-local_scheme = "no-local-version"
-tag_regex = '^v(?P<version>\d+\.\d+\.\d+)$'
 
 [project.optional-dependencies]
 dev = [
