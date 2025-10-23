@@ -28,7 +28,7 @@ jobs:
           python-version: '3.13'
 
       - name: Install dependencies
-        run: uv sync --locked --all-extras
+        run: uv sync --all-extras
 
       - id: ruff_fix
         name: Lint and auto-fix with ruff
