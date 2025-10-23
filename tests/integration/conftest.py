@@ -8,6 +8,7 @@ component interactions and integration points.
 
 import pytest
 from injector import Injector
+from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import InfrastructureConfig
@@ -20,7 +21,6 @@ from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_fac
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 from tests.mocked_ticket_system import MockedTicketSystem
 
 # Mark all tests in this directory as integration tests
@@ -101,8 +101,8 @@ def integration_jinja_service_config() -> InjectableConfig:
 
 @pytest.fixture
 def integration_app_config(
-        integration_infrastructure_config: InfrastructureConfig,
-        integration_jinja_service_config: InjectableConfig,
+    integration_infrastructure_config: InfrastructureConfig,
+    integration_jinja_service_config: InjectableConfig,
 ) -> AppConfig:
     """Complete AppConfig for integration tests."""
     return AppConfig(
@@ -237,10 +237,8 @@ def integration_mocked_ticket_system(integration_logger_factory: LoggerFactory) 
 
 from typing import Any
 
-from open_ticket_ai.core.config.app_config import AppConfig
-from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfigBase
-from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
@@ -263,10 +261,10 @@ class ConfigBuilder:
         self._plugins: list[str] = []
 
     def with_logging(
-            self,
-            level: str = "INFO",
-            log_to_file: bool = False,
-            log_file_path: str | None = None,
+        self,
+        level: str = "INFO",
+        log_to_file: bool = False,
+        log_file_path: str | None = None,
     ) -> ConfigBuilder:
         """Configure logging settings."""
         self._logging_config = LoggingConfig(
@@ -282,11 +280,11 @@ class ConfigBuilder:
         return self
 
     def add_service(
-            self,
-            service_id: str,
-            use: str,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
+        self,
+        service_id: str,
+        use: str,
+        params: dict[str, Any] | None = None,
+        injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
         """Add a service configuration."""
         self._services[service_id] = InjectableConfigBase(
@@ -305,9 +303,9 @@ class ConfigBuilder:
         )
 
     def set_orchestrator(
-            self,
-            use: str = "base:SimpleSequentialOrchestrator",
-            params: dict[str, Any] | None = None,
+        self,
+        use: str = "base:SimpleSequentialOrchestrator",
+        params: dict[str, Any] | None = None,
     ) -> ConfigBuilder:
         """Configure the orchestrator."""
         self._orchestrator = PipeConfig(
@@ -318,21 +316,23 @@ class ConfigBuilder:
         return self
 
     def add_orchestrator_step(
-            self,
-            step_id: str,
-            use: str,
-            params: dict[str, Any] | None = None,
+        self,
+        step_id: str,
+        use: str,
+        params: dict[str, Any] | None = None,
     ) -> ConfigBuilder:
         """Add a step to the orchestrator configuration."""
         if self._orchestrator is None:
             self.set_orchestrator()
 
         steps = list(self._orchestrator.params.get("steps", []))
-        steps.append({
-            "id": step_id,
-            "use": use,
-            "params": params or {},
-        })
+        steps.append(
+            {
+                "id": step_id,
+                "use": use,
+                "params": params or {},
+            }
+        )
 
         self._orchestrator = self._orchestrator.model_copy(
             update={"params": {**self._orchestrator.params, "steps": steps}}
@@ -369,10 +369,7 @@ class ConfigBuilder:
     @staticmethod
     def with_defaults() -> ConfigBuilder:
         """Create builder with common defaults."""
-        return (ConfigBuilder()
-                .with_logging(level="DEBUG")
-                .add_jinja_renderer()
-                .set_orchestrator())
+        return ConfigBuilder().with_logging(level="DEBUG").add_jinja_renderer().set_orchestrator()
 
 
 @pytest.fixture

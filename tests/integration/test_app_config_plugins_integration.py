@@ -4,6 +4,7 @@ Integration tests for plugin loading and component registration.
 Tests the complete plugin loading flow from entry points through
 component registration in the ComponentRegistry.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -11,7 +12,6 @@ from injector import Injector
 
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.plugins.plugin_loader import PluginLoader
-from tests.integration.conftest import integration_config_builder
 
 
 @pytest.mark.integration
@@ -28,14 +28,17 @@ def test_load_base_plugin_and_verify_registration(integration_config_builder):
     available = registry.get_available_injectables()
 
     # Verify base pipes are registered
-    assert any("base:CompositePipe" in name for name in available), \
+    assert any("base:CompositePipe" in name for name in available), (
         "CompositePipe should be registered from base plugin"
-    assert any("base:ExpressionPipe" in name for name in available), \
+    )
+    assert any("base:ExpressionPipe" in name for name in available), (
         "ExpressionPipe should be registered from base plugin"
+    )
 
     # Verify base services are registered
-    assert any("base:JinjaRenderer" in name for name in available), \
+    assert any("base:JinjaRenderer" in name for name in available), (
         "JinjaRenderer should be registered from base plugin"
+    )
 
     # Verify naming convention (plugin:Component)
     for name in available:
@@ -67,11 +70,7 @@ def test_plugin_loader_discovers_entry_points(integration_config_builder):
 def test_multiple_plugins_load_independently(integration_config_builder):
     """Test that multiple plugins load without conflicts."""
     # Given: Config with multiple plugins
-    config = (integration_config_builder
-              .add_plugin("otai_base")
-              .add_jinja_renderer()
-              .set_orchestrator()
-              .build())
+    config = integration_config_builder.add_plugin("otai_base").add_jinja_renderer().set_orchestrator().build()
 
     # When: Plugins load via AppModule
     app_module = AppModule(config)
@@ -79,14 +78,12 @@ def test_multiple_plugins_load_independently(integration_config_builder):
 
     # Then: No duplicate component names
     available = registry.get_available_injectables()
-    assert len(available) == len(set(available)), \
-        "No duplicate component names should exist"
+    assert len(available) == len(set(available)), "No duplicate component names should exist"
 
     # And: Each component has proper plugin prefix
     for component_name in available:
         parts = component_name.split(":")
-        assert len(parts) == 2, \
-            f"Component {component_name} should have format 'plugin:Component'"
+        assert len(parts) == 2, f"Component {component_name} should have format 'plugin:Component'"
 
 
 @pytest.mark.integration
@@ -111,8 +108,9 @@ def test_plugin_registration_follows_naming_convention(integration_config_builde
         assert len(component_name) > 0, f"Empty component name in {name}"
 
         # Plugin prefix should not contain special chars
-        assert plugin_prefix.replace("-", "").replace("_", "").isalnum(), \
+        assert plugin_prefix.replace("-", "").replace("_", "").isalnum(), (
             f"Plugin prefix '{plugin_prefix}' should be alphanumeric"
+        )
 
 
 @pytest.mark.integration
@@ -157,11 +155,12 @@ from open_ticket_ai.core.dependency_injection.container import AppModule
 def test_config_builder_creates_valid_config(integration_config_builder):
     """Test that integration_config_builder creates valid AppConfig."""
     # Given: integration_config_builder with services
-    config = (integration_config_builder
-              .with_logging(level="INFO")
-              .add_service("test_service", "base:JinjaRenderer")
-              .set_orchestrator("base:SimpleSequentialOrchestrator")
-              .build())
+    config = (
+        integration_config_builder.with_logging(level="INFO")
+        .add_service("test_service", "base:JinjaRenderer")
+        .set_orchestrator("base:SimpleSequentialOrchestrator")
+        .build()
+    )
 
     # When: Validating config structure
     services_list = config.open_ticket_ai.get_services_list()
@@ -192,15 +191,16 @@ def test_minimal_config_is_valid(integration_config_builder):
 def test_config_with_orchestrator_steps(integration_config_builder):
     """Test configuration with orchestrator steps."""
     # Given: Config with orchestrator steps
-    config = (integration_config_builder
-              .add_jinja_renderer()
-              .set_orchestrator()
-              .add_orchestrator_step(
-        step_id="test_runner",
-        use="base:SimpleSequentialRunner",
-        params={"run": {"id": "test", "use": "base:ExpressionPipe"}}
+    config = (
+        integration_config_builder.add_jinja_renderer()
+        .set_orchestrator()
+        .add_orchestrator_step(
+            step_id="test_runner",
+            use="base:SimpleSequentialRunner",
+            params={"run": {"id": "test", "use": "base:ExpressionPipe"}},
+        )
+        .build()
     )
-              .build())
 
     # When: Extracting orchestrator config
     orchestrator = config.open_ticket_ai.orchestrator
@@ -216,10 +216,11 @@ def test_config_with_orchestrator_steps(integration_config_builder):
 def test_config_services_are_accessible(integration_config_builder):
     """Test that configured services are accessible."""
     # Given: Config with multiple services
-    config = (integration_config_builder
-              .add_service("service1", "base:JinjaRenderer")
-              .add_service("service2", "base:JinjaRenderer", params={"key": "value"})
-              .build())
+    config = (
+        integration_config_builder.add_service("service1", "base:JinjaRenderer")
+        .add_service("service2", "base:JinjaRenderer", params={"key": "value"})
+        .build()
+    )
 
     # When: Getting services list
     services = config.open_ticket_ai.get_services_list()
@@ -234,11 +235,12 @@ def test_config_services_are_accessible(integration_config_builder):
 def test_config_from_yaml_matches_builder(integration_config_builder):
     """Test that YAML-loaded config matches builder-created config."""
     # Given: Config from builder
-    builder_config = (integration_config_builder
-                      .with_logging(level="DEBUG")
-                      .add_jinja_renderer("jinja_default")
-                      .set_orchestrator()
-                      .build())
+    builder_config = (
+        integration_config_builder.with_logging(level="DEBUG")
+        .add_jinja_renderer("jinja_default")
+        .set_orchestrator()
+        .build()
+    )
 
     # Then: Both have same structure
     assert builder_config.open_ticket_ai.infrastructure.logging.level == "DEBUG"
