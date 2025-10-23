@@ -1,0 +1,96 @@
+[project]
+name = "otai_hf_local"
+version = "1.1.2"
+description = "Hugging Face local text classification plugin for Open Ticket AI"
+readme = "README.md"
+requires-python = ">=3.14"
+
+authors = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
+
+license = "LGPL-2.1-only"
+
+keywords = ["ai", "ticket-system", "huggingface", "text-classification", "nlp", "automation"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "open-ticket-ai>=1.0.0,<2.0.0",
+    "transformers[torch]>=4.52.4",
+    "pydantic>=2.11.7",
+]
+
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
+Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+Documentation = "https://open-ticket-ai.com/guide/available-plugins.html#hugging-face-local-text-classification-pipe"
+Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_hf_local/CHANGELOG.md"
+
+[project.entry-points."open_ticket_ai.plugins"]
+hf_local = "otai_hf_local.plugin:create_hf_local_plugin"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["otai_hf_local*"]
+
+[tool.uv.sources]
+open-ticket-ai = { workspace = true }
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.4.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff",
+    "mypy",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "PL", "PERF", "TRY"]
+ignore = ["TRY003"]
+fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/otai_hf_local/*.py" = ["PLC0415"]
+"tests/*.py" = ["PLC0415"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ['pydantic.mypy']
+
+[[tool.mypy.overrides]]
+module = "transformers.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "test_*"
+ignore_errors = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "unit: schnelle, isolierte Tests",
+    "integration: core + plugin zusammen",
+    "slow: dauert länger"
+]

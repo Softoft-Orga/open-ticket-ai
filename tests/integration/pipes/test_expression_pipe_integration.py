@@ -7,12 +7,12 @@ verifying integration with PipeContext and template rendering results.
 
 import pytest
 
-from open_ticket_ai.base.template_renderers.jinja_renderer_extras import FailMarker
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
+from packages.base.src.otai_base.template_renderers.jinja_renderer_extras import FailMarker
 
 
 @pytest.fixture()
@@ -101,11 +101,9 @@ async def test_expression_pipe_with_pipe_factory_evaluates_expression(
 
 
 import pytest
-from open_ticket_ai.base import ExpressionPipe
-from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams
-from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
+
+from packages.base import ExpressionPipe
+from packages.base.src.otai_base.pipes import ExpressionParams
 
 
 @pytest.fixture

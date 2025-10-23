@@ -6,10 +6,6 @@ import pytest
 from injector import AssistedBuilder, Injector
 from pydantic import BaseModel, ConfigDict, Field
 
-from open_ticket_ai.base.ticket_system_integration.ticket_system_service import (
-    TicketSystemService,
-)
-from open_ticket_ai.base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
@@ -23,6 +19,10 @@ from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from packages.base.src.otai_base.ticket_system_integration import (
+    TicketSystemService,
+)
+from packages.base.src.otai_base.ticket_system_integration import UnifiedEntity, UnifiedNote
 from tests.mocked_ticket_system import MockedTicketSystem
 
 pytestmark = [pytest.mark.unit]

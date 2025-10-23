@@ -10,6 +10,10 @@ from open_ticket_ai.core.injectables.injectable import Injectable
 RENDER_FIELD_KEY = "render"
 
 
+class TemplateRenderError(Exception):
+    pass
+
+
 def NoRender(field: FieldInfo) -> FieldInfo:
     extra = (field.json_schema_extra or {}) | {RENDER_FIELD_KEY: False}
     field.json_schema_extra = extra

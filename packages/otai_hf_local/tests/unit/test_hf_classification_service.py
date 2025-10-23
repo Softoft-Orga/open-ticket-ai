@@ -1,11 +1,12 @@
 from unittest.mock import MagicMock
 
 import pytest
-from open_ticket_ai.base.ai_classification_services.classification_models import (
+
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
+from packages.base.src.otai_base.ai_classification_services import (
     ClassificationRequest,
     ClassificationResult,
 )
-from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from packages.otai_hf_local.src.otai_hf_local.hf_classification_service import HFClassificationService
 
 

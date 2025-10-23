@@ -1,17 +1,16 @@
 import pytest
 from pydantic import BaseModel
 
-from open_ticket_ai.base import ExpressionPipe, CompositePipe
-from open_ticket_ai.base.pipes.composite_pipe import CompositePipeParams
-from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams
-from open_ticket_ai.base.template_renderers.jinja_renderer_extras import FailMarker
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
-from tests.integration.conftest import integration_logger_factory
+from packages.base import CompositePipe, ExpressionPipe
+from packages.base.src.otai_base.pipes import ExpressionParams
+from packages.base.src.otai_base.pipes.composite_pipe import CompositePipeParams
+from packages.base.src.otai_base.template_renderers.jinja_renderer_extras import FailMarker
 
 COUNTER: list[str] = []
 

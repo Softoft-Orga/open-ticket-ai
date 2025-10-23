@@ -1,0 +1,20 @@
+import pytest
+
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
+from packages.base.src.otai_base.pipes import ExpressionPipe
+
+
+@pytest.mark.parametrize("expression", ["foo", "bar", "Hello World!"])
+async def test_expression_pipe_returns_value(logger_factory, expression):
+    config = PipeConfig(
+        id="test_expression_pipe",
+        use="open_ticket_ai.base.pipes.expression_pipe.ExpressionPipe",
+        params={"expression": expression},
+    )
+
+    pipe = ExpressionPipe(config=config, logger_factory=logger_factory)
+
+    result = await pipe._process()
+
+    assert result.succeeded is True
+    assert result.data["value"] == expression

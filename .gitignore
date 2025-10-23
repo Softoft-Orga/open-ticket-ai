@@ -207,7 +207,7 @@ storybook-static
 .netlify
 *.env
 
-*/.vitepress/cache/
+docs/vitepress/.vitepress/cache/
 .idea
 
 # Package build directories

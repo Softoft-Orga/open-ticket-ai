@@ -1,12 +1,6 @@
 import pytest
 
-from open_ticket_ai.base import ExpressionPipe, CompositePipe
-from open_ticket_ai.base.pipes.expression_pipe import ExpressionParams
-from open_ticket_ai.base.pipes.ticket_system_pipes.add_note_pipe import AddNotePipe, AddNoteParams
-from open_ticket_ai.base.pipes.ticket_system_pipes.fetch_tickets_pipe import FetchTicketsPipe, FetchTicketsParams
-from open_ticket_ai.base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote, UnifiedTicket, \
-    TicketSearchCriteria
-from open_ticket_ai.core.config.config_models import OpenTicketAIConfig, InfrastructureConfig
+from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
@@ -14,6 +8,16 @@ from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from packages.base import CompositePipe, ExpressionPipe
+from packages.base.src.otai_base.pipes import ExpressionParams
+from packages.base.src.otai_base.pipes.ticket_system_pipes import AddNoteParams, AddNotePipe
+from packages.base.src.otai_base.pipes.ticket_system_pipes import FetchTicketsParams, FetchTicketsPipe
+from packages.base.src.otai_base.ticket_system_integration import (
+    TicketSearchCriteria,
+    UnifiedEntity,
+    UnifiedNote,
+    UnifiedTicket,
+)
 from tests.mocked_ticket_system import MockedTicketSystem
 
 

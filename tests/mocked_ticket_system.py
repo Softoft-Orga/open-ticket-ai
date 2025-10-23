@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from open_ticket_ai.base.ticket_system_integration.ticket_system_service import (
-    TicketSystemService,
-)
-from open_ticket_ai.base.ticket_system_integration.unified_models import (
+from open_ticket_ai.core.base_model import StrictBaseModel
+from packages.base.src.otai_base.ticket_system_integration import (
     TicketSearchCriteria,
     UnifiedNote,
     UnifiedTicket,
 )
-from open_ticket_ai.core.base_model import StrictBaseModel
+from packages.base.src.otai_base.ticket_system_integration import (
+    TicketSystemService,
+)
 
 # Global ticket storage shared across all MockedTicketSystem instances in tests
 _GLOBAL_TICKET_STORE: dict[str, UnifiedTicket] = {}

@@ -1,9 +1,10 @@
 from unittest.mock import MagicMock
 
 import pytest
+
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from packages.otai_hf_local.src.otai_hf_local.plugin import create_hf_local_plugin
+from packages.otai_hf_local.src.otai_hf_local.hf_local_plugin import create_hf_local_plugin
 
 
 def test_plugin_registration_with_valid_config():

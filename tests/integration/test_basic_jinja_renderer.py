@@ -171,12 +171,12 @@ def test_render_with_parent_context(integration_template_renderer: TemplateRende
     """Test rendering with parent context access in nested pipes."""
     # Given
     template = "{{ get_env('MY_TEST_ENV') }}"
-    os.environ['MY_TEST_ENV'] = 'test'
+    os.environ["MY_TEST_ENV"] = "test"
     # When
     result = integration_template_renderer.render(template, {})
 
     # Then
-    assert result == 'test'
+    assert result == "test"
 
 
 @pytest.mark.integration

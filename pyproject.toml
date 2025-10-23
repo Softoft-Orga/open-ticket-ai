@@ -46,6 +46,8 @@ dependencies = [
     "otai-hf-local",
     "otai-otobo-znuny",
     "huggingface-hub[hf-xet]>=0.35.3",
+    "pydeps>=3.0.1",
+    "graphviz>=0.21",
 ]
 
 [project.urls]
