@@ -45,7 +45,7 @@ class AppModule(Module):
 
     @provider
     def create_renderer_from_service(
-        self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
+            self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         logger = logger_factory.create("AppModule")
         logger.debug("🔧 Creating TemplateRenderer from service configuration")

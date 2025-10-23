@@ -4,9 +4,9 @@ import asyncio
 
 import pytest
 from jinja2.nativetypes import NativeEnvironment
+
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-
 from otai_base.template_renderers.jinja_renderer import JinjaRenderer
 
 EXPECTED_SUM_RESULT = 10

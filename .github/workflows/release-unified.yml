@@ -10,10 +10,8 @@ on:
 
 env:
   DOCKER_REPOSITORY: softotobo/open-ticket-ai
-  PYTHON_VERSION: '3.14'
-  PYPI_REPOSITORY_URL: https://upload.pypi.org/legacy/
+  PYTHON_VERSION: '3.13'
   PYPI_INDEX_URL: https://pypi.org/simple
-  PYPI_FALLBACK_INDEX_URL: https://pypi.org/simple
 
 jobs:
   release:
@@ -21,8 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
-      id-token: write
     concurrency:
       group: release-${{ github.ref }}
       cancel-in-progress: false
@@ -53,29 +49,22 @@ jobs:
             exit 1
           fi
 
+          FLOATING_TAG="next"
+          PACKAGE_INDEX_URL="${PYPI_INDEX_URL}"
+
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             EXPECTED_TAG="v${VERSION}"
             if [[ "${GITHUB_REF_NAME}" != "$EXPECTED_TAG" ]]; then
               echo "Tag ${GITHUB_REF_NAME} does not match resolved version ${VERSION}" >&2
               exit 1
             fi
-            TARGET="pypi"
             FLOATING_TAG="latest"
-            PACKAGE_INDEX_URL="${PYPI_INDEX_URL}"
-            PACKAGE_EXTRA_INDEX_URL=""
-          else
-            TARGET="testpypi"
-            FLOATING_TAG="next"
-            PACKAGE_INDEX_URL="${TEST_PYPI_INDEX_URL}"
-            PACKAGE_EXTRA_INDEX_URL="${PYPI_FALLBACK_INDEX_URL}"
           fi
 
           {
             echo "version=${VERSION}"
-            echo "publish_target=${TARGET}"
             echo "floating_tag=${FLOATING_TAG}"
             echo "package_index_url=${PACKAGE_INDEX_URL}"
-            echo "package_extra_index_url=${PACKAGE_EXTRA_INDEX_URL}"
           } >> "${GITHUB_OUTPUT}"
 
           {
@@ -131,6 +120,5 @@ jobs:
           build-args: |
             PACKAGE_VERSION=${{ steps.metadata.outputs.version }}
             PACKAGE_INDEX_URL=${{ steps.metadata.outputs.package_index_url }}
-            PACKAGE_EXTRA_INDEX_URL=${{ steps.metadata.outputs.package_extra_index_url }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
