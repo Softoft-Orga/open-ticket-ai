@@ -28,10 +28,10 @@ jobs:
       - run: |
           rm -rf dist
           mkdir -p dist
-          uv build --sdist --out-dir dist .
-          uv build --sdist --out-dir dist packages/otai_base
-          uv build --sdist --out-dir dist packages/otai_hf_local
-          uv build --sdist --out-dir dist packages/otai_otobo_znuny
+          uv build --out-dir dist .
+          uv build --out-dir dist packages/otai_base
+          uv build --out-dir dist packages/otai_hf_local
+          uv build --out-dir dist packages/otai_otobo_znuny
 
       - uses: pypa/gh-action-pypi-publish@v1.11.0
         with:
