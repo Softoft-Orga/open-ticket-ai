@@ -51,10 +51,10 @@ def integration_logger_factory(integration_logging_config: LoggingConfig) -> Log
 
 @pytest.fixture
 def integration_component_registry(integration_logger_factory: LoggerFactory) -> ComponentRegistry:
-    """Real ComponentRegistry with base plugin registered."""
+    """Real ComponentRegistry with otai_base plugin registered."""
     registry = ComponentRegistry()
 
-    # Import and register base plugin components
+    # Import and register otai_base plugin components
     from otai_base.base_plugin import BasePlugin
 
     # Create minimal app config for plugin initialization
@@ -69,7 +69,7 @@ def integration_component_registry(integration_logger_factory: LoggerFactory) ->
         )
     )
 
-    # Load base plugin
+    # Load otai_base plugin
     plugin = BasePlugin(minimal_config)
     plugin.on_load(registry)
 

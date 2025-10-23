@@ -9,6 +9,7 @@ Step-by-step tutorial for creating a complete ticket classification pipeline.
 ## Overview
 
 In this tutorial, you'll create a pipeline that:
+
 1. Fetches open tickets from your ticket system
 2. Classifies them into queues
 3. Assigns priority levels
@@ -129,7 +130,7 @@ pipes:
   
   # Classify queue
   - pipe_name: classify_queue
-    model_name: "bert-base-uncased"
+    model_name: "bert-otai_base-uncased"
     confidence_threshold: 0.7
     queue_mapping:
       billing: 1
@@ -206,7 +207,7 @@ plugins:
   
   - name: hf_local
     config:
-      model_name: "bert-base-uncased"
+      model_name: "bert-otai_base-uncased"
       device: "cpu"
 
 infrastructure:
@@ -337,17 +338,20 @@ Process tickets in batches:
 ### Performance Tips
 
 1. **Adjust Interval**: Don't run too frequently
+
 ```yaml
 run_every_milli_seconds: 300000  # Every 5 minutes
 ```
 
 2. **Limit Results**: Process manageable batches
+
 ```yaml
 search:
   limit: 50  # Don't fetch too many
 ```
 
 3. **Use Caching**: Enable model caching
+
 ```yaml
 plugins:
   - name: hf_local
@@ -372,6 +376,7 @@ Add monitoring pipes:
 ### No Tickets Fetched
 
 Check search criteria:
+
 - Verify QueueIDs exist
 - Check StateType is correct
 - Ensure tickets match criteria
@@ -379,6 +384,7 @@ Check search criteria:
 ### Classification Fails
 
 Check model configuration:
+
 - Verify model name
 - Ensure model is downloaded
 - Check input format
@@ -386,6 +392,7 @@ Check model configuration:
 ### Updates Don't Apply
 
 Verify permissions:
+
 - API token has write access
 - Queue/Priority IDs are valid
 - Ticket exists and is updateable

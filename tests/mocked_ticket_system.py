@@ -2,23 +2,17 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from otai_base.ticket_system_integration.ticket_system_service import TicketSystemService
-from otai_base.ticket_system_integration.unified_models import UnifiedTicket
-
 from open_ticket_ai.core.base_model import StrictBaseModel
-
-# Global ticket storage shared across all MockedTicketSystem instances in tests
-_GLOBAL_TICKET_STORE: dict[str, UnifiedTicket] = {}
+from otai_base.ticket_system_integration.ticket_system_service import TicketSystemService
+from otai_base.ticket_system_integration.unified_models import UnifiedTicket, TicketSearchCriteria, UnifiedNote
 
 
 class MockedTicketSystem(TicketSystemService):
     ParamsModel: ClassVar[type[StrictBaseModel]] = StrictBaseModel
+    _tickets: ClassVar[dict[str, UnifiedTicket]] = {}
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        # Share the underlying storage so multiple instances (created by the test harness)
-        # operate on the same dataset.
-        self._tickets: dict[str, UnifiedTicket] = _GLOBAL_TICKET_STORE
 
     async def create_ticket(self, ticket: UnifiedTicket) -> str:
         if ticket.id is None:
@@ -45,7 +39,7 @@ class MockedTicketSystem(TicketSystemService):
             for ticket in self._tickets.values()
             if self._matches_criteria(ticket, criteria)
         ]
-        return results[criteria.offset : criteria.offset + criteria.limit]
+        return results[criteria.offset: criteria.offset + criteria.limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         for ticket in self._tickets.values():
@@ -81,7 +75,6 @@ class MockedTicketSystem(TicketSystemService):
         return True
 
     def add_test_ticket(self, **kwargs: Any) -> str:
-        # Synchronous helper for tests: mirror the behavior of create_ticket without using asyncio.run()
         ticket = UnifiedTicket(**kwargs)
         if ticket.id is None:
             raise RuntimeError("Ticket id is required")

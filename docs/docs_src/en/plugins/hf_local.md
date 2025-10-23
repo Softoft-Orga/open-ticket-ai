@@ -52,13 +52,13 @@ Models are:
 plugins:
   - name: hf_local
     config:
-      model_name: "bert-base-uncased"
+      model_name: "bert-otai_base-uncased"
       task: "text-classification"
       cache_dir: "./models"
 
 pipes:
   - pipe_name: classify_with_hf
-    model_name: "bert-base-uncased"
+    model_name: "bert-otai_base-uncased"
 ```
 
 ### GPU Acceleration

@@ -1,4 +1,4 @@
-from importlib.metadata import entry_points
+from importlib.metadata import entry_points, EntryPoint
 
 from injector import inject
 
@@ -18,25 +18,32 @@ class PluginLoadError(Exception):
 class PluginLoader:
     @inject
     def __init__(
-        self,
-        registry: ComponentRegistry,
-        logger_factory: LoggerFactory,
-        app_config: AppConfig,
-        entry_points_fn: GetEntryPointsFn = entry_points,
+            self,
+            registry: ComponentRegistry,
+            logger_factory: LoggerFactory,
+            app_config: AppConfig,
+            entry_points_fn: GetEntryPointsFn = entry_points,
     ):
         self._registry = registry
         self._logger = logger_factory.create(self.__class__.__name__)
         self._app_config = app_config
         self._entry_points_fn = entry_points_fn
 
+    def _load_plugin(self, entry_point: EntryPoint):
+        self._logger.info(f"Loading plugin {entry_point}")
+        try:
+            create_plugin: CreatePluginFn = entry_point.load()
+        except ModuleNotFoundError as e:
+            self._logger.error(f"Error loading plugin {entry_point.name}: {e}")
+            raise PluginLoadError(entry_point.name) from e
+        plugin = create_plugin(self._app_config)
+        if not isinstance(plugin, Plugin):
+            raise PluginLoadError(entry_point.name)
+
+        plugin.on_load(self._registry)
+
+        self._logger.info(f"Loaded plugin: {entry_point.name}")
+
     def load_plugins(self):
         for ep in self._entry_points_fn(group=self._app_config.PLUGIN_ENTRY_POINT_GROUP):
-            self._logger.info(f"Loading plugin {ep}")
-            create_plugin: CreatePluginFn = ep.load()
-            plugin = create_plugin(self._app_config)
-            if not isinstance(plugin, Plugin):
-                raise PluginLoadError(ep.name)
-
-            plugin.on_load(self._registry)
-
-            self._logger.info(f"Loaded plugin: {ep.name}")
+            self._load_plugin(ep)

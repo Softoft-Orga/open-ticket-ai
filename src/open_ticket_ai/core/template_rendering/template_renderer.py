@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from pydantic.fields import Field, FieldInfo
 
 from open_ticket_ai.core.base_model import StrictBaseModel
@@ -14,12 +14,14 @@ class TemplateRenderError(Exception):
     pass
 
 
+# noinspection PyPep8Naming
 def NoRender(field: FieldInfo) -> FieldInfo:
     extra = (field.json_schema_extra or {}) | {RENDER_FIELD_KEY: False}
     field.json_schema_extra = extra
     return field
 
 
+# noinspection PyPep8Naming
 def NoRenderField(**kwargs) -> FieldInfo:
     return NoRender(Field(**kwargs))
 
@@ -38,16 +40,16 @@ class TemplateRenderer[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT]
             return {k: self.render(v, scope) for k, v in obj.items()}
         return obj
 
-    def render_to_model[T](self, model_cls: type[T], raw: dict[str, Any], scope: dict[str, Any]) -> T:
-        out: dict[str, Any] = {}
-        for name, field in model_cls.model_fields.items():
-            if name in raw:
-                v = raw[name]
-                out[name] = self.render(v, scope) if self._should_render_field(field) else v
-        for k, v in raw.items():
-            if k not in out:
-                out[k] = v
-        return model_cls.model_validate(out)
+    def render_to_model[T](self, to_model: type[BaseModel], from_raw_dict: dict[str, Any],
+                           with_scope: dict[str, Any]) -> T:
+        out = dict(from_raw_dict)
+        for name, field in to_model.model_fields.items():
+            if name in out and self._should_render_field(field):
+                out[name] = self.render(out[name], with_scope)
+        try:
+            return to_model.model_validate(out)
+        except ValidationError as e:
+            raise TemplateRenderError("Failed to render template to model") from e
 
     @abstractmethod
     def _render(self, template_str: str, scope: dict[str, Any]) -> Any:

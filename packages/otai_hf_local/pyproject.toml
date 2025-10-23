@@ -11,7 +11,6 @@ authors = [
 
 license = "LGPL-2.1-only"
 
-keywords = ["ai", "ticket-system", "huggingface", "text-classification", "nlp", "automation"]
 
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -38,7 +37,7 @@ Documentation = "https://open-ticket-ai.com/guide/available-plugins.html#hugging
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_hf_local/CHANGELOG.md"
 
 [project.entry-points."open_ticket_ai.plugins"]
-hf_local = "otai_hf_local.plugin:create_hf_local_plugin"
+hf_local = "otai_hf_local.hf_local_plugin:create_hf_local_plugin"
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -72,7 +71,7 @@ fixable = ["ALL"]
 "tests/*.py" = ["PLC0415"]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 strict = true
 plugins = ['pydantic.mypy']
 

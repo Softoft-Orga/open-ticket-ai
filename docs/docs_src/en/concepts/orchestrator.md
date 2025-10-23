@@ -120,12 +120,12 @@ orchestrator:
     - id: periodic_task
       on:
         - id: "every_5_min"
-          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
+          use: "open_ticket_ai.otai_base.triggers.interval_trigger:IntervalTrigger"
           params:
             minutes: 5
       run:
         id: ticket_classifier
-        use: open_ticket_ai.base:CompositePipe
+        use: open_ticket_ai.otai_base:CompositePipe
         steps: [...]
 ```
 
@@ -152,11 +152,11 @@ orchestrator:
     - id: multi_trigger_task
       on:
         - id: "hourly"
-          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
+          use: "open_ticket_ai.otai_base.triggers.interval_trigger:IntervalTrigger"
           params:
             hours: 1
         - id: "daily"
-          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
+          use: "open_ticket_ai.otai_base.triggers.interval_trigger:IntervalTrigger"
           params:
             days: 1
       run:
@@ -174,7 +174,7 @@ orchestrator:
     - id: task_one
       on:
         - id: "shared_timer"  # Same trigger ID
-          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
+          use: "open_ticket_ai.otai_base.triggers.interval_trigger:IntervalTrigger"
           params:
             minutes: 10
       run: {...}

@@ -10,7 +10,7 @@ open_ticket_ai:
 
   services:
     jinja_default:
-      use: "base:JinjaRenderer"
+      use: "otai_base:JinjaRenderer"
 
     otobo_znuny:
       use: "otobo-znuny:OTOBOZnunyTicketSystemService"
@@ -21,26 +21,26 @@ open_ticket_ai:
       use: "hf-local:HFClassificationService"
 
   orchestrator:
-    use: "base:SimpleSequentialOrchestrator"
+    use: "otai_base:SimpleSequentialOrchestrator"
     params:
       orchestrator_sleep: "PT0.01S"
 
     steps:
       - id: ticket-routing-runner
-        use: "base:SimpleSequentialRunner"
+        use: "otai_base:SimpleSequentialRunner"
         params:
           "on":
             id: "every_10ms"
-            use: "base:IntervalTrigger"
+            use: "otai_base:IntervalTrigger"
             params:
               interval: "PT0.1S"
           run:
             id: "ticket-routing"
-            use: "base:CompositePipe"
+            use: "otai_base:CompositePipe"
             steps:
               # ===== FETCHING TICKET BY QUEUE =========
               - id: "ticket_fetcher"
-                use: "base:FetchTicketsPipe"
+                use: "otai_base:FetchTicketsPipe"
                 injects: { ticket_system: "otobo_znuny" }
                 params:
                   ticket_search_criteria:
@@ -49,32 +49,32 @@ open_ticket_ai:
                     limit: 1
 
               - id: fail_no_tickets
-                use: "base:ExpressionPipe"
+                use: "otai_base:ExpressionPipe"
                 params:
                   expression: >
                     {{ fail() if (get_pipe_result('ticket_fetcher', 'fetched_tickets') | length) == 0 else 'Tickets found' }}
 
               - id: ticket
-                use: "base:ExpressionPipe"
+                use: "otai_base:ExpressionPipe"
                 params:
                   expression: "{{ get_pipe_result('ticket_fetcher', 'fetched_tickets')[0] }}"
 
               # ===== QUEUE CLASSIFICATION =========
 
               - id: queue_classify
-                use: "base:ClassificationPipe"
+                use: "otai_base:ClassificationPipe"
                 injects: { classification_service: "hf_local" }
                 params:
                   text: "{{ get_pipe_result('ticket')['subject'] }} {{ get_pipe_result('ticket')['body'] }}"
                   model_name: "softoft/otai-queue-de-bert-v1"
 
               - id: queue_select_final
-                use: "base:ExpressionPipe"
+                use: "otai_base:ExpressionPipe"
                 params:
                   expression: "{{ get_pipe_result('queue_classify','label') if get_pipe_result('queue_classify','confidence') >= 0.8 else 'OpenTicketAI::Unclassified' }}"
 
               - id: queue_update_ticket
-                use: "base:UpdateTicketPipe"
+                use: "otai_base:UpdateTicketPipe"
                 injects: { ticket_system: "otobo_znuny" }
                 params:
                   ticket_id: "{{ get_pipe_result('ticket')['id'] }}"
@@ -83,7 +83,7 @@ open_ticket_ai:
                       name: "{{ get_pipe_result('queue_select_final') }}"
 
               - id: queue_add_note
-                use: "base:AddNotePipe"
+                use: "otai_base:AddNotePipe"
                 injects: { ticket_system: "otobo_znuny" }
                 params:
                   ticket_id: "{{ get_pipe_result('ticket')['id'] }}"
@@ -95,19 +95,19 @@ open_ticket_ai:
               # ===== PRIORITY CLASSIFICATION =========
 
               - id: priority_classify
-                use: "base:ClassificationPipe"
+                use: "otai_base:ClassificationPipe"
                 injects: { classification_service: "hf_local" }
                 params:
                   text: "{{ get_pipe_result('ticket')['subject'] }} {{ get_pipe_result('ticket')['body'] }}"
                   model_name: "softoft/otai-priority-de-bert-v1"
 
               - id: priority_select_final
-                use: "base:ExpressionPipe"
+                use: "otai_base:ExpressionPipe"
                 params:
                   expression: "{{ get_pipe_result('priority_classify','label') if get_pipe_result('priority_classify','confidence') >= 0.8 else 'medium' }}"
 
               - id: priority_update_ticket
-                use: "base:UpdateTicketPipe"
+                use: "otai_base:UpdateTicketPipe"
                 injects: { ticket_system: "otobo_znuny" }
                 params:
                   ticket_id: "{{ get_pipe_result('ticket')['id'] }}"
@@ -116,7 +116,7 @@ open_ticket_ai:
                       name: "{{ get_pipe_result('priority_select_final') }}"
 
               - id: priority_add_note
-                use: "base:AddNotePipe"
+                use: "otai_base:AddNotePipe"
                 injects: { ticket_system: "otobo_znuny" }
                 params:
                   ticket_id: "{{ get_pipe_result('ticket')['id'] }}"

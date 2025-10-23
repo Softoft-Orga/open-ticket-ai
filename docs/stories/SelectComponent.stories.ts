@@ -60,7 +60,7 @@ const sampleOptions = [
 ]
 
 /**
- * The default story is the base for all others. It uses a render function
+ * The default story is the otai_base for all others. It uses a render function
  * to correctly handle v-model updates in Storybook's interactive environment.
  */
 export const Default: Story = {

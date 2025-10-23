@@ -1,6 +1,6 @@
 import PipeSidecar from '../.vitepress/components/pipe/PipeSidecar.vue'
-import type { Meta, StoryObj } from '@storybook/vue3'
-import type { PipeSidecar as PipeSidecarType } from '../.vitepress/components/pipe/pipeSidecar.types'
+import type {Meta, StoryObj} from '@storybook/vue3'
+import type {PipeSidecar as PipeSidecarType} from '../.vitepress/components/pipe/pipeSidecar.types'
 
 const meta: Meta<typeof PipeSidecar> = {
     title: 'Components/PipeSidecar',
@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>
 
 const addNotePipeSidecar: PipeSidecarType = {
     _version: '1.0.x',
-    _class: 'open_ticket_ai.base.ticket_system_pipes.AddNotePipe',
+    _class: 'open_ticket_ai.otai_base.ticket_system_pipes.AddNotePipe',
     _extends: 'open_ticket_ai.core.pipeline.ConfigurablePipe',
     _title: 'Add Note',
     _summary: 'Appends a note/article to a ticket in the connected system.',
@@ -114,7 +114,7 @@ const addNotePipeSidecar: PipeSidecarType = {
 
 const updateTicketPipeSidecar: PipeSidecarType = {
     _version: '1.0.x',
-    _class: 'open_ticket_ai.base.ticket_system_pipes.UpdateTicketPipe',
+    _class: 'open_ticket_ai.otai_base.ticket_system_pipes.UpdateTicketPipe',
     _extends: 'open_ticket_ai.core.pipeline.ConfigurablePipe',
     _title: 'Update Ticket',
     _summary: 'Updates an existing ticket in the connected system with new data.',
@@ -220,9 +220,9 @@ const updateTicketPipeSidecar: PipeSidecarType = {
 
 export const AddNotePipe: Story = {
     render: (args) => ({
-        components: { PipeSidecar },
+        components: {PipeSidecar},
         setup() {
-            return { args }
+            return {args}
         },
         template: '<PipeSidecar v-bind="args" />',
     }),
@@ -233,9 +233,9 @@ export const AddNotePipe: Story = {
 
 export const UpdateTicketPipe: Story = {
     render: (args) => ({
-        components: { PipeSidecar },
+        components: {PipeSidecar},
         setup() {
-            return { args }
+            return {args}
         },
         template: '<PipeSidecar v-bind="args" />',
     }),
@@ -246,9 +246,9 @@ export const UpdateTicketPipe: Story = {
 
 export const WithActions: Story = {
     render: (args) => ({
-        components: { PipeSidecar },
+        components: {PipeSidecar},
         setup() {
-            return { args }
+            return {args}
         },
         template: `
             <PipeSidecar v-bind="args">

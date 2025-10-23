@@ -1,6 +1,7 @@
 # OTAI CLI Usage Guide
 
-The Open Ticket AI (OTAI) command-line interface provides tools for managing configurations, validating settings, and running the OTAI application.
+The Open Ticket AI (OTAI) command-line interface provides tools for managing configurations, validating settings, and
+running the OTAI application.
 
 ## Installation
 
@@ -81,6 +82,7 @@ open-ticket-ai check-config my-config.yml
 ```
 
 Example output:
+
 ```
 🔍 Validating config file: config.yml
 ✅ Config file is valid!
@@ -114,6 +116,7 @@ open-ticket-ai run
 ```
 
 The application will:
+
 1. Load and validate the configuration
 2. Initialize all plugins and services
 3. Start the orchestrator with configured runners
@@ -124,7 +127,8 @@ Press `Ctrl+C` to gracefully shut down the application.
 ## Plugin Management (Future Feature)
 
 :::warning Under Development
-Plugin management commands are placeholders for a future release. Currently, plugins should be installed using standard Python package managers.
+Plugin management commands are placeholders for a future release. Currently, plugins should be installed using standard
+Python package managers.
 :::
 
 ### Current Plugin Installation
@@ -157,7 +161,8 @@ open-ticket-ai plugin remove otai-hf-local
 
 ## Plugin-Specific Commands
 
-Some OTAI plugins expose their own CLI commands. These are separate from the main `open-ticket-ai` command and use their own entry points.
+Some OTAI plugins expose their own CLI commands. These are separate from the main `open-ticket-ai` command and use their
+own entry points.
 
 ### Example: OTOBO/Znuny Plugin Setup
 
@@ -169,7 +174,7 @@ otai-otobo-znuny setup
 
 # With command-line options
 otai-otobo-znuny setup \
-  --base-url https://ticket.example.com \
+  --otai_base-url https://ticket.example.com \
   --webservice-name OpenTicketAI \
   --username otai_user \
   --password <your-password> \
@@ -177,6 +182,7 @@ otai-otobo-znuny setup \
 ```
 
 The setup wizard will:
+
 1. Prompt for connection details
 2. Optionally verify the connection to your ticket system
 3. Generate a configuration file ready to use with OTAI
@@ -279,17 +285,17 @@ If `open-ticket-ai` command is not found after installation:
 If you see validation errors:
 
 1. **Check YAML syntax:**
-   - Ensure proper indentation (use spaces, not tabs)
-   - Verify all quotes are properly closed
-   - Check that lists use proper `- ` format
+    - Ensure proper indentation (use spaces, not tabs)
+    - Verify all quotes are properly closed
+    - Check that lists use proper `- ` format
 
 2. **Verify plugin names:**
-   - Plugin `use` fields must match installed plugin entry points
-   - Check `open-ticket-ai plugin list` (when implemented) or installed packages
+    - Plugin `use` fields must match installed plugin entry points
+    - Check `open-ticket-ai plugin list` (when implemented) or installed packages
 
 3. **Check required fields:**
-   - Each service must have required configuration fields
-   - Use `check-config` to see detailed error locations
+    - Each service must have required configuration fields
+    - Use `check-config` to see detailed error locations
 
 ### Permission Errors
 

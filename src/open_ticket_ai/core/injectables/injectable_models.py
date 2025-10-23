@@ -8,7 +8,7 @@ from open_ticket_ai.core.util.hashes import freeze
 
 class InjectableConfigBase(StrictBaseModel):
     use: str = Field(
-        default="base:CompositePipe",
+        default="otai_base:CompositePipe",
         description=(
             "Fully qualified class path of the injectables implementation to instantiate for this configuration."
         ),

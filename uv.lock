@@ -5,6 +5,7 @@ requires-python = ">=3.14"
 [manifest]
 members = [
     "open-ticket-ai",
+    "otai-base",
     "otai-hf-local",
     "otai-otobo-znuny",
 ]
@@ -538,6 +539,7 @@ dependencies = [
     { name = "huggingface-hub", extra = ["hf-xet"] },
     { name = "injector" },
     { name = "jinja2" },
+    { name = "otai-base" },
     { name = "otai-hf-local" },
     { name = "otai-otobo-znuny" },
     { name = "otobo-znuny" },
@@ -573,6 +575,7 @@ requires-dist = [
     { name = "huggingface-hub", extras = ["hf-xet"], specifier = ">=0.35.3" },
     { name = "injector", specifier = ">=0.22.0" },
     { name = "jinja2", specifier = "~=3.1.6" },
+    { name = "otai-base", editable = "packages/otai_base" },
     { name = "otai-hf-local", editable = "packages/otai_hf_local" },
     { name = "otai-otobo-znuny", editable = "packages/otai_otobo_znuny" },
     { name = "otobo-znuny", specifier = "~=1.4.0" },
@@ -599,6 +602,36 @@ dev = [
     { name = "ruff", specifier = "~=0.13.0" },
     { name = "types-pyyaml", specifier = "~=6.0.0" },
 ]
+
+[[package]]
+name = "otai-base"
+version = "1.1.2"
+source = { editable = "packages/otai_base" }
+dependencies = [
+    { name = "jinja2" },
+    { name = "open-ticket-ai" },
+    { name = "pydantic" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jinja2", specifier = ">=3.1.0" },
+    { name = "mypy", marker = "extra == 'dev'" },
+    { name = "open-ticket-ai", editable = "." },
+    { name = "pydantic", specifier = ">=2.11.7" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24.0" },
+    { name = "ruff", marker = "extra == 'dev'" },
+]
+provides-extras = ["dev"]
 
 [[package]]
 name = "otai-hf-local"

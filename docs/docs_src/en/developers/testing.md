@@ -721,7 +721,7 @@ def mock_hf_model():
 def sample_classification_config():
     """Sample configuration for text classification."""
     return {
-        "model_name": "bert-base-uncased",
+        "model_name": "bert-otai_base-uncased",
         "threshold": 0.7,
     }
 ```
@@ -770,7 +770,7 @@ def pipe_config_factory():
     def factory(**kwargs) -> dict:
         defaults = {
             "id": "test_pipe",
-            "use": "open_ticket_ai.base.DefaultPipe",
+            "use": "open_ticket_ai.otai_base.DefaultPipe",
             "when": True,
             "steps": [],
         }

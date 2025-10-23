@@ -45,6 +45,7 @@ dependencies = [
     "injector>=0.22.0",
     "otai-hf-local",
     "otai-otobo-znuny",
+    "otai-base",
     "huggingface-hub[hf-xet]>=0.35.3",
     "pydeps>=3.0.1",
     "graphviz>=0.21",
@@ -58,8 +59,7 @@ Documentation = "https://open-ticket-ai.com"
 [project.scripts]
 open-ticket-ai = "open_ticket_ai.core.cli:main"
 
-[project.entry-points."open_ticket_ai.plugins"]
-base = "open_ticket_ai.base.plugin:create_base_plugin"
+
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -73,18 +73,20 @@ include = ["open_ticket_ai*"]
 members = [
     "packages/otai_hf_local",
     "packages/otai_otobo_znuny",
+    "packages/otai_base",
 ]
 
 [tool.uv.sources]
 otai-hf-local = { workspace = true }
 otai-otobo-znuny = { workspace = true }
+otai_base = { workspace = true }
 
 [tool.ruff]
 line-length = 120
 
 [tool.ruff.lint]
 select = [
-    "E", "F", "W", # base
+    "E", "F", "W", # otai_base
     "I", # import sort
     "UP", # pyupgrade
     "B", "BLE", # bugbear + exceptions

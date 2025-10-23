@@ -15,13 +15,13 @@ def temp_config_file(tmp_path):
 
   services:
     jinja_default:
-      use: "base:JinjaRenderer"
+      use: "otai_base:JinjaRenderer"
 
   orchestrator:
-    use: "base:SimpleSequentialOrchestrator"
+    use: "otai_base:SimpleSequentialOrchestrator"
     steps:
       - id: test-runner
-        use: "base:SimpleSequentialRunner"
+        use: "otai_base:SimpleSequentialRunner"
 """
     config_file = tmp_path / "config.yml"
     config_file.write_text(config_content)

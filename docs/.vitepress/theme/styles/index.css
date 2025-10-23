@@ -6,7 +6,7 @@
  * 1. DEFINE VITEPRESS THEME VARIABLES
  * =================================================================== */
 :root {
-    /* Responsive base font size */
+    /* Responsive otai_base font size */
     font-size: clamp(1rem, 1rem + 0.5vw, 1.125rem);
     --vp-layout-max-width: 1600px;
     /* Brand Colors */

@@ -1,18 +1,11 @@
 import pytest
+
 from otai_base.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedEntity,
     UnifiedNote,
     UnifiedTicket,
 )
-
-
-@pytest.mark.asyncio
-async def test_create_ticket(empty_mocked_ticket_system):
-    ticket = UnifiedTicket(id="TICKET-1", subject="Test ticket", body="Test body")
-    ticket_id = await empty_mocked_ticket_system.create_ticket(ticket)
-    assert ticket_id == "TICKET-1"
-    assert empty_mocked_ticket_system.get_ticket_count() == 1
 
 
 @pytest.mark.asyncio
