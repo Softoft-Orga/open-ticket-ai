@@ -4,13 +4,13 @@ import pytest
 
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
-from packages.otai_base.src.otai_base.pipes.composite_pipe import CompositePipe
+from otai_base.pipes.composite_pipe import CompositePipe
 
 
 @pytest.fixture
 def mock_pipe_factory():
     factory = MagicMock(spec=PipeFactory)
-    factory.create_pipe = MagicMock()
+    factory.create_pipe = AsyncMock()
     return factory
 
 

@@ -1,5 +1,5 @@
 _version: 1.0.x
-_class: open_ticket_ai.otai_base.JinjaExpressionPipe
+_class: open_ticket_ai.base.JinjaExpressionPipe
 _extends: open_ticket_ai.core.pipeline.ConfigurablePipe
 
 _title: Jinja Expression

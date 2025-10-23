@@ -15,23 +15,25 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 
 
 @pytest.mark.integration
-def test_render_simple_string(integration_template_renderer: TemplateRenderer):
+@pytest.mark.asyncio
+async def test_render_simple_string(integration_template_renderer: TemplateRenderer):
     """Test rendering a simple string template with variable substitution."""
     # Given
     template = "Hello {{ name }}!"
     context = {"name": "World"}
 
     # When
-    result = integration_template_renderer.render(template, context)
+    result = await integration_template_renderer.render(template, context)
 
     # Then
     assert result == "Hello World!"
 
 
 @pytest.mark.integration
-def test_render_with_pipe_context(
-    integration_template_renderer: TemplateRenderer,
-    integration_rendering_context: PipeContext,
+@pytest.mark.asyncio
+async def test_render_with_pipe_context(
+        integration_template_renderer: TemplateRenderer,
+        integration_rendering_context: PipeContext,
 ):
     """Test rendering templates with PipeContext scope including pipe results."""
     # Given
@@ -39,15 +41,16 @@ def test_render_with_pipe_context(
     scope = integration_rendering_context.model_dump()
 
     # When
-    result = integration_template_renderer.render(template, scope)
+    result = await integration_template_renderer.render(template, scope)
 
     # Then
     assert result == "billing"
 
 
 @pytest.mark.integration
-def test_render_with_get_pipe_result_function(
-    integration_template_renderer: TemplateRenderer,
+@pytest.mark.asyncio
+async def test_render_with_get_pipe_result_function(
+        integration_template_renderer: TemplateRenderer,
 ):
     """Test rendering with get_pipe_result() custom function."""
     # Given
@@ -66,15 +69,16 @@ def test_render_with_get_pipe_result_function(
     )
 
     # When
-    result = integration_template_renderer.render(template, pipe_context.model_dump())
+    result = await integration_template_renderer.render(template, pipe_context.model_dump())
 
     # Then
     assert result == [{"id": "T-1", "subject": "Test"}]
 
 
 @pytest.mark.integration
-def test_render_with_has_failed_function(
-    integration_template_renderer: TemplateRenderer,
+@pytest.mark.asyncio
+async def test_render_with_has_failed_function(
+        integration_template_renderer: TemplateRenderer,
 ):
     """Test rendering with has_failed() custom function for error checking."""
     # Given
@@ -93,14 +97,15 @@ def test_render_with_has_failed_function(
     )
 
     # When
-    result = integration_template_renderer.render(template, pipe_context.model_dump())
+    result = await integration_template_renderer.render(template, pipe_context.model_dump())
 
     # Then
     assert result == "Failed"
 
 
 @pytest.mark.integration
-def test_render_list_of_templates(integration_template_renderer: TemplateRenderer):
+@pytest.mark.asyncio
+async def test_render_list_of_templates(integration_template_renderer: TemplateRenderer):
     """Test rendering a list of template strings."""
     # Given
     templates = [
@@ -111,14 +116,15 @@ def test_render_list_of_templates(integration_template_renderer: TemplateRendere
     context = {"value1": "first", "value2": "second"}
 
     # When
-    results = integration_template_renderer.render(templates, context)
+    results = await integration_template_renderer.render(templates, context)
 
     # Then
     assert results == ["first", "second", "first and second"]
 
 
 @pytest.mark.integration
-def test_render_dict_of_templates(integration_template_renderer: TemplateRenderer):
+@pytest.mark.asyncio
+async def test_render_dict_of_templates(integration_template_renderer: TemplateRenderer):
     """Test rendering a dictionary with template values."""
     # Given
     template_dict = {
@@ -129,7 +135,7 @@ def test_render_dict_of_templates(integration_template_renderer: TemplateRendere
     context = {"username": "Alice", "user_age": 30}
 
     # When
-    result = integration_template_renderer.render(template_dict, context)
+    result = await integration_template_renderer.render(template_dict, context)
 
     # Then
     assert result == {
@@ -140,7 +146,8 @@ def test_render_dict_of_templates(integration_template_renderer: TemplateRendere
 
 
 @pytest.mark.integration
-def test_render_with_parent_context(integration_template_renderer: TemplateRenderer):
+@pytest.mark.asyncio
+async def test_render_with_parent_context(integration_template_renderer: TemplateRenderer):
     """Test rendering with parent context access in nested pipes."""
     # Given
     template = "{{ get_parent_param('threshold') }}"
@@ -152,28 +159,30 @@ def test_render_with_parent_context(integration_template_renderer: TemplateRende
     )
 
     # When
-    result = integration_template_renderer.render(template, pipe_context.model_dump())
+    result = await integration_template_renderer.render(template, pipe_context.model_dump())
 
     # Then
     assert result == 0.8
 
 
 @pytest.mark.integration
-def test_render_with_parent_context(integration_template_renderer: TemplateRenderer):
+@pytest.mark.asyncio
+async def test_render_with_parent_context(integration_template_renderer: TemplateRenderer):
     """Test rendering with parent context access in nested pipes."""
     # Given
     template = "{{ get_env('MY_TEST_ENV') }}"
     os.environ["MY_TEST_ENV"] = "test"
     # When
-    result = integration_template_renderer.render(template, {})
+    result = await integration_template_renderer.render(template, {})
 
     # Then
     assert result == "test"
 
 
 @pytest.mark.integration
-def test_render_conditional_with_pipe_results(
-    integration_template_renderer: TemplateRenderer,
+@pytest.mark.asyncio
+async def test_render_conditional_with_pipe_results(
+        integration_template_renderer: TemplateRenderer,
 ):
     """Test conditional template rendering based on pipe results."""
     # Given
@@ -198,7 +207,7 @@ def test_render_conditional_with_pipe_results(
     )
 
     # When
-    result = integration_template_renderer.render(template, pipe_context.model_dump())
+    result = await integration_template_renderer.render(template, pipe_context.model_dump())
 
     # Then
     assert "High confidence: urgent" in result

@@ -191,7 +191,7 @@ Atomic processing units that implement specific business logic:
 
 ```yaml
 - id: fetch_tickets
-  use: open_ticket_ai.otai_base:FetchTicketsPipe
+  use: open_ticket_ai.base:FetchTicketsPipe
   injects:
     ticket_system: "otobo_znuny"
   params:
@@ -228,12 +228,12 @@ Orchestrators that contain and execute child pipes:
 
 ```yaml
 - id: ticket_workflow
-  use: open_ticket_ai.otai_base:CompositePipe
+  use: open_ticket_ai.base:CompositePipe
   params:
     threshold: 0.8
   steps:
     - id: fetch
-      use: open_ticket_ai.otai_base:FetchTicketsPipe
+      use: open_ticket_ai.base:FetchTicketsPipe
       injects: { ticket_system: "otobo_znuny" }
       params:
         search_criteria:
@@ -243,12 +243,12 @@ Orchestrators that contain and execute child pipes:
     - id: classify
       use: otai_hf_local:HFLocalTextClassificationPipe
       params:
-        model: "bert-otai_base-german-cased"
+        model: "bert-base-german-cased"
         text: "{{ pipe_result('fetch').data.fetched_tickets[0].subject }}"
       depends_on: [fetch]
     
     - id: update
-      use: open_ticket_ai.otai_base:UpdateTicketPipe
+      use: open_ticket_ai.base:UpdateTicketPipe
       injects: { ticket_system: "otobo_znuny" }
       params:
         ticket_id: "{{ pipe_result('fetch').data.fetched_tickets[0].id }}"

@@ -8,7 +8,6 @@ from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
 
 class AppConfig(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="OTAI_",
         env_nested_delimiter="__",
         env_file=".env",
         yaml_file="config.yml",
@@ -24,17 +23,17 @@ class AppConfig(BaseSettings):
 
     @classmethod
     def settings_customise_sources(
-        cls,
-        settings_cls: type[BaseSettings],
-        init_settings: PydanticBaseSettingsSource,
-        env_settings: PydanticBaseSettingsSource,
-        dotenv_settings: PydanticBaseSettingsSource,
-        file_secret_settings: PydanticBaseSettingsSource,
+            cls,
+            settings_cls: type[BaseSettings],
+            init_settings: PydanticBaseSettingsSource,
+            env_settings: PydanticBaseSettingsSource,
+            dotenv_settings: PydanticBaseSettingsSource,
+            file_secret_settings: PydanticBaseSettingsSource,
     ) -> tuple[PydanticBaseSettingsSource, ...]:
         return (
-            init_settings,
             env_settings,
             dotenv_settings,
             YamlConfigSettingsSource(settings_cls),
+            init_settings,
             file_secret_settings,
         )

@@ -115,54 +115,6 @@ export default withMermaid({
                         navGenerator.generateSidebar("en")
                 }
         }
-        ,
-        de: {
-            label: 'Deutsch',
-            lang:
-                'de',
-            link:
-                '/de/',
-            themeConfig:
-                {
-                    nav: [
-                        ...navGenerator.generateNavbar('en'),
-                    ],
-                    sidebar:
-                        navGenerator.generateSidebar("en")
-                }
-        }
-        ,
-        fr: {
-            label: 'French',
-            lang:
-                'fr',
-            link:
-                '/fr/',
-            themeConfig:
-                {
-                    nav: [
-                        ...navGenerator.generateNavbar('en'),
-                    ],
-                    sidebar:
-                        navGenerator.generateSidebar("en")
-                }
-        }
-        ,
-        es: {
-            label: 'Spanish',
-            lang:
-                'es',
-            link:
-                '/es/',
-            themeConfig:
-                {
-                    nav: [
-                        ...navGenerator.generateNavbar('en'),
-                    ],
-                    sidebar:
-                        navGenerator.generateSidebar("en")
-                }
-        }
 
     }
     ,

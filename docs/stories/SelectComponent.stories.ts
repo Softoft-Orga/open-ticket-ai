@@ -60,7 +60,7 @@ const sampleOptions = [
 ]
 
 /**
- * The default story is the otai_base for all others. It uses a render function
+ * The default story is the base for all others. It uses a render function
  * to correctly handle v-model updates in Storybook's interactive environment.
  */
 export const Default: Story = {
@@ -75,14 +75,14 @@ export const Default: Story = {
         },
         // Add a wrapper for better presentation in the Storybook canvas
         template: `
-      <div style="padding: 1rem; min-height: 250px; width: 300px;">
-        <SelectComponent
-          v-bind="args"
-          :modelValue="args.modelValue"
-          @update:modelValue="onUpdate"
-        />
-      </div>
-    `,
+          <div style="padding: 1rem; min-height: 250px; width: 300px;">
+            <SelectComponent
+                v-bind="args"
+                :modelValue="args.modelValue"
+                @update:modelValue="onUpdate"
+            />
+          </div>
+        `,
     }),
     args: {
         options: sampleOptions,

@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>
 
 const addNotePipeSidecar: PipeSidecarType = {
     _version: '1.0.x',
-    _class: 'open_ticket_ai.otai_base.ticket_system_pipes.AddNotePipe',
+    _class: 'open_ticket_ai.base.ticket_system_pipes.AddNotePipe',
     _extends: 'open_ticket_ai.core.pipeline.ConfigurablePipe',
     _title: 'Add Note',
     _summary: 'Appends a note/article to a ticket in the connected system.',
@@ -114,7 +114,7 @@ const addNotePipeSidecar: PipeSidecarType = {
 
 const updateTicketPipeSidecar: PipeSidecarType = {
     _version: '1.0.x',
-    _class: 'open_ticket_ai.otai_base.ticket_system_pipes.UpdateTicketPipe',
+    _class: 'open_ticket_ai.base.ticket_system_pipes.UpdateTicketPipe',
     _extends: 'open_ticket_ai.core.pipeline.ConfigurablePipe',
     _title: 'Update Ticket',
     _summary: 'Updates an existing ticket in the connected system with new data.',

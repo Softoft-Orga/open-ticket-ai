@@ -19,7 +19,7 @@ class SimpleTemplateRenderer(TemplateRenderer[SimpleParams]):
     def __init__(self, config: InjectableConfig, logger_factory: LoggerFactory) -> None:
         super().__init__(config, logger_factory)
 
-    def _render(self, template_str: str, scope: dict[str, Any]) -> str:
+    async def _render(self, template_str: str, scope: dict[str, Any]) -> str:
         result = template_str
         for key, value in scope.items():
             pattern = r"\{\{" + re.escape(key) + r"\}\}"
@@ -37,10 +37,11 @@ class SimpleTemplateRenderer(TemplateRenderer[SimpleParams]):
     ],
     ids=["simple_string", "multiple_placeholders", "no_placeholders", "extra_scope_data"],
 )
-def test_render_string(logger_factory, obj, scope, expected):
+@pytest.mark.asyncio
+async def test_render_string(logger_factory, obj, scope, expected):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
-    result = renderer.render(obj, scope)
+    result = await renderer.render(obj, scope)
     assert result == expected
 
 
@@ -54,10 +55,11 @@ def test_render_string(logger_factory, obj, scope, expected):
     ],
     ids=["list_all_templates", "list_mixed", "empty_list", "list_multiple"],
 )
-def test_render_list(logger_factory, obj, scope, expected):
+@pytest.mark.asyncio
+async def test_render_list(logger_factory, obj, scope, expected):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
-    result = renderer.render(obj, scope)
+    result = await renderer.render(obj, scope)
     assert result == expected
 
 
@@ -71,10 +73,11 @@ def test_render_list(logger_factory, obj, scope, expected):
     ],
     ids=["dict_single", "dict_multiple", "empty_dict", "dict_mixed"],
 )
-def test_render_dict(logger_factory, obj, scope, expected):
+@pytest.mark.asyncio
+async def test_render_dict(logger_factory, obj, scope, expected):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
-    result = renderer.render(obj, scope)
+    result = await renderer.render(obj, scope)
     assert result == expected
 
 
@@ -83,20 +86,21 @@ def test_render_dict(logger_factory, obj, scope, expected):
     [
         ({"outer": {"inner": "{{key}}"}}, {"key": "value"}, {"outer": {"inner": "value"}}),
         (
-            {"a": {"b": {"c": "{{deep}}"}}},
-            {"deep": "nested"},
-            {"a": {"b": {"c": "nested"}}},
+                {"a": {"b": {"c": "{{deep}}"}}},
+                {"deep": "nested"},
+                {"a": {"b": {"c": "nested"}}},
         ),
         (
-            {"list": ["{{x}}", "{{y}}"], "dict": {"z": "{{z}}"}},
-            {"x": "1", "y": "2", "z": "3"},
-            {"list": ["1", "2"], "dict": {"z": "3"}},
+                {"list": ["{{x}}", "{{y}}"], "dict": {"z": "{{z}}"}},
+                {"x": "1", "y": "2", "z": "3"},
+                {"list": ["1", "2"], "dict": {"z": "3"}},
         ),
     ],
     ids=["nested_dict", "deeply_nested", "mixed_structures"],
 )
-def test_render_nested_dict(logger_factory, obj, scope, expected):
+@pytest.mark.asyncio
+async def test_render_nested_dict(logger_factory, obj, scope, expected):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
-    result = renderer.render(obj, scope)
+    result = await renderer.render(obj, scope)
     assert result == expected

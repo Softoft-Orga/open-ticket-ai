@@ -174,7 +174,7 @@ otai-otobo-znuny setup
 
 # With command-line options
 otai-otobo-znuny setup \
-  --otai_base-url https://ticket.example.com \
+  --base-url https://ticket.example.com \
   --webservice-name OpenTicketAI \
   --username otai_user \
   --password <your-password> \

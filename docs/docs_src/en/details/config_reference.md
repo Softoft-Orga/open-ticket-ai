@@ -27,7 +27,7 @@ open_ticket_ai:
               interval: "60s"
         run:
           id: my_pipeline
-          use: "open_ticket_ai.otai_base.CompositePipe"
+          use: "open_ticket_ai.base.CompositePipe"
           steps: []
 ```
 
@@ -70,7 +70,7 @@ open_ticket_ai:
     - id: ticket_classifier
       use: "my_plugin.TicketClassifier"
       params:
-        model_name: "bert-otai_base-classifier"
+        model_name: "bert-base-classifier"
   
   orchestrator:
     runners:
@@ -219,7 +219,7 @@ Configuration for a pipeline or pipe.
 
 # Composite pipe with steps
 - id: full_workflow
-  use: "open_ticket_ai.otai_base.CompositePipe"
+  use: "open_ticket_ai.base.CompositePipe"
   steps:
     - id: step1
       use: "my_plugin.Pipe1"

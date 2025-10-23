@@ -192,7 +192,7 @@ Users write YAML with templates:
 Add service dependencies in the `__init__` signature:
 
 ```python
-from packages.otai_base.src.otai_base.ticket_system_integration import TicketSystemService
+from packages.base.src.otai_base.ticket_system_integration import TicketSystemService
 
 
 class FetchTicketsPipe(Pipe[FetchTicketsParams]):

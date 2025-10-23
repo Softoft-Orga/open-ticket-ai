@@ -110,9 +110,10 @@ def seed_tickets(factory: PipeFactory, ctx: PipeContext):
 
 
 @pytest.mark.integration
-def test_pipes_use_same_ticketsystem_instance(factory: PipeFactory, ctx: PipeContext, fetch_cfg, addnote_cfg):
-    f = factory.create_pipe(fetch_cfg("Support"), ctx)
-    a = factory.create_pipe(addnote_cfg("1", "s", "b"), ctx)
+@pytest.mark.asyncio
+async def test_pipes_use_same_ticketsystem_instance(factory: PipeFactory, ctx: PipeContext, fetch_cfg, addnote_cfg):
+    f = await factory.create_pipe(fetch_cfg("Support"), ctx)
+    a = await factory.create_pipe(addnote_cfg("1", "s", "b"), ctx)
     assert isinstance(f, FetchTicketsPipe)
     assert isinstance(a, AddNotePipe)
     assert isinstance(f._ticket_system, MockedTicketSystem)
@@ -147,10 +148,10 @@ async def test_flow_fetch_select_highest_priority_and_add_note(
     )
     composite = PipeConfig(id="flow", use="core:CompositePipe", params={"steps": [fetch, select, add]})
     registry.register("core:CompositePipe", CompositePipe)
-    pipe = factory.create_pipe(composite, ctx)
+    pipe = await factory.create_pipe(composite, ctx)
     res = await pipe.process(ctx)
     assert res.succeeded is True
-    refetch = factory.create_pipe(fetch_cfg("Support"), ctx)
+    refetch = await factory.create_pipe(fetch_cfg("Support"), ctx)
     out = await refetch.process(ctx)
     tickets = out.data["fetched_tickets"]
     t2 = next(t for t in tickets if t.id == "2")

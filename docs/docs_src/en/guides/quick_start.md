@@ -114,7 +114,7 @@ orchestrator:
         
         # Add ML classification
         - pipe_name: classify_queue
-          model_name: "bert-otai_base-uncased"
+          model_name: "bert-base-uncased"
         
         # Update tickets
         - pipe_name: update_ticket
@@ -167,7 +167,6 @@ Error: Plugin 'otobo_znuny' not found
 ```
 
 **Solution**: Install the plugin:
-
 ```bash
 uv pip install otai-otobo-znuny
 ```

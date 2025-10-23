@@ -2,7 +2,6 @@
 description: Fine-tune an AI model on your ticket data for accurate, automated classification.
   This guide shows how to prepare datasets and train with Hugging Face or a REST API.
 ---
-
 # How to Fine-Tune an AI Model with Your Own Ticket Data
 
 Fine-tuning an AI model on your own ticket data is a powerful way to customize ticket classification
@@ -119,7 +118,7 @@ ticket dataset. The core steps are: tokenize the text, set up a `Trainer`, and c
 
    ```python
    from transformers import AutoTokenizer
-   tokenizer = AutoTokenizer.from_pretrained("distilbert-otai_base-uncased")
+   tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 
    def preprocess_function(examples):
        # Tokenize the texts (this will produce input_ids, attention_mask, etc.)
@@ -139,7 +138,7 @@ ticket dataset. The core steps are: tokenize the text, set up a `Trainer`, and c
    from transformers import AutoModelForSequenceClassification
    num_labels = 4  # set this to the number of your categories
    model = AutoModelForSequenceClassification.from_pretrained(
-       "distilbert-otai_base-uncased", num_labels=num_labels
+       "distilbert-base-uncased", num_labels=num_labels
    )
    ```
 
@@ -279,15 +278,14 @@ Below is a consolidated example illustrating both workflows:
 ```python
 # Example: Fine-tuning with Hugging Face
 from transformers import AutoTokenizer,
-
-AutoModelForSequenceClassification,
-Trainer,
-TrainingArguments
+    AutoModelForSequenceClassification,
+    Trainer,
+    TrainingArguments
 from datasets import load_dataset
 
 # Load and split your CSV dataset
 dataset = load_dataset("csv", data_files={"train": "train.csv", "validation": "val.csv"})
-tokenizer = AutoTokenizer.from_pretrained("distilbert-otai_base-uncased")
+tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 
 
 # Tokenize
@@ -300,9 +298,9 @@ tokenized = dataset.map(preprocess, batched=True)
 # Load model
 num_labels = 5  # e.g., number of ticket categories
 model = AutoModelForSequenceClassification.from_pretrained(
-    "distilbert-otai_base-uncased",
+    "distilbert-base-uncased",
     num_labels=num_labels
-)
+    )
 
 # Set up Trainer
 training_args = TrainingArguments(
@@ -335,7 +333,7 @@ with open("tickets_labeled.csv", "rb") as data_file:
         "http://localhost:8080/api/v1/train-data",
         headers={"Content-Type": "text/csv"},
         data=data_file
-    )
+        )
     print("Upload status:", res.status_code)
 # Trigger training
 train_res = requests.post("http://localhost:8080/api/v1/train")
@@ -344,7 +342,7 @@ print("Training status:", train_res.status_code)
 res = requests.post(
     "http://localhost:8080/api/v1/classify",
     json={"ticket_data": "Cannot log into account"}
-)
+    )
 print("Prediction:", res.json())
 ```
 

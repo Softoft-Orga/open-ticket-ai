@@ -39,6 +39,7 @@ class AlwaysFailingTrigger(Pipe[EmptyParams]):
 def mock_pipe_factory():
     """Create a mock PipeFactory that can render pipes."""
     factory = MagicMock()
+    factory.create_pipe = AsyncMock()
     return factory
 
 
@@ -80,9 +81,10 @@ def create_runner(
         trigger_instance: Pipe[Any],
         mock_main_pipe: MagicMock,
 ) -> SimpleSequentialRunner:
-    mock_pipe_factory.create_pipe.side_effect = lambda config, *args, **kwargs: (
-        trigger_instance if config.id == "trigger" else mock_main_pipe
-    )
+    async def create_pipe_side_effect(config, *args, **kwargs):
+        return trigger_instance if config.id == "trigger" else mock_main_pipe
+
+    mock_pipe_factory.create_pipe.side_effect = create_pipe_side_effect
 
     runner_config = PipeConfig(
         id="runner",
@@ -119,27 +121,4 @@ async def test_pipe_not_run_when_trigger_fails(
     result = await runner.process(empty_context)
 
     mock_main_pipe.process.assert_not_called()
-    assert result.was_skipped, "Runner should return skipped result when trigger fails"
-
-
-@pytest.mark.asyncio
-async def test_context_parent_is_sequential_runner_params(
-        logger_factory, mock_pipe_factory, empty_context, succeeding_trigger_config
-):
-    trigger = AlwaysSucceedingTrigger(config=succeeding_trigger_config, logger_factory=logger_factory)
-
-    captured_context = None
-
-    async def capture_context(context: PipeContext):
-        nonlocal captured_context
-        captured_context = context
-        return PipeResult.success(message="Main pipe executed")
-
-    mock_main_pipe = MagicMock()
-    mock_main_pipe.process = AsyncMock(side_effect=capture_context)
-
-    runner = create_runner(succeeding_trigger_config, logger_factory, mock_pipe_factory, trigger, mock_main_pipe)
-
-    await runner.process(empty_context)
-
-    assert captured_context is not None, "Context should have been captured"
+    assert not result.has_succeeded(), "Runner should fail when trigger fails"

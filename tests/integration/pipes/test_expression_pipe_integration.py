@@ -92,7 +92,7 @@ async def test_expression_pipe_with_pipe_factory_evaluates_expression(
         "base:ExpressionPipe",
         ExpressionPipe,
     )
-    pipe = integration_pipe_factory.create_pipe(pipe_config, integration_empty_pipe_context)
+    pipe = await integration_pipe_factory.create_pipe(pipe_config, integration_empty_pipe_context)
 
     assert isinstance(pipe, ExpressionPipe)
 
@@ -106,10 +106,10 @@ def make_expr_pipe(
         expression_config_factory, integration_component_registry: ComponentRegistry,
         integration_pipe_factory: PipeFactory
 ):
-    def _make(expr: str, ctx: PipeContext, pipe_id: str = "expr"):
+    async def _make(expr: str, ctx: PipeContext, pipe_id: str = "expr"):
         integration_component_registry.register("base:ExpressionPipe", ExpressionPipe)
         cfg = expression_config_factory(pipe_id=pipe_id, expression_params=ExpressionParams(expression=expr))
-        return integration_pipe_factory.create_pipe(cfg, ctx)
+        return await integration_pipe_factory.create_pipe(cfg, ctx)
 
     return _make
 
@@ -119,7 +119,7 @@ async def test_expression_pipe_with_pipe_factory_evaluates_expression(
         integration_empty_pipe_context: PipeContext,
         make_expr_pipe,
 ):
-    pipe = make_expr_pipe("{{ 20 * 3 }}", integration_empty_pipe_context, pipe_id="test_expression_eval")
+    pipe = await make_expr_pipe("{{ 20 * 3 }}", integration_empty_pipe_context, pipe_id="test_expression_eval")
     assert isinstance(pipe, ExpressionPipe)
     res = await pipe.process(integration_empty_pipe_context)
     assert res.succeeded is True
@@ -133,7 +133,7 @@ async def test_expression_pipe_reads_from_context_params(
 ):
     ctx = integration_empty_pipe_context
     ctx.params["a"] = 7
-    pipe = make_expr_pipe("{{ params.a + 5 }}", ctx, pipe_id="read_from_params")
+    pipe = await make_expr_pipe("{{ params.a + 5 }}", ctx, pipe_id="read_from_params")
     assert isinstance(pipe, ExpressionPipe)
     res = await pipe.process(ctx)
     assert res.succeeded is True

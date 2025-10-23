@@ -11,7 +11,6 @@ Common issues and their solutions when working with Open Ticket AI.
 ### Cannot Connect to Ticket System
 
 **Symptoms**:
-
 ```
 Error: Failed to connect to https://tickets.example.com
 ConnectionError: Connection refused
@@ -20,7 +19,6 @@ ConnectionError: Connection refused
 **Solutions**:
 
 1. **Verify URL is correct**:
-
 ```bash
 # Test connection
 curl https://tickets.example.com
@@ -30,7 +28,6 @@ ping tickets.example.com
 ```
 
 2. **Check network connectivity**:
-
 ```bash
 # Test DNS resolution
 nslookup tickets.example.com
@@ -40,13 +37,11 @@ telnet tickets.example.com 443
 ```
 
 3. **Verify firewall rules**:
-
 - Check outbound firewall rules
 - Verify IP whitelisting
 - Check proxy configuration
 
 4. **SSL Certificate issues**:
-
 ```yaml
 # Temporarily disable SSL verification
 plugins:
@@ -58,7 +53,6 @@ plugins:
 ### Timeout Errors
 
 **Symptoms**:
-
 ```
 TimeoutError: Request timed out after 30 seconds
 ```
@@ -66,7 +60,6 @@ TimeoutError: Request timed out after 30 seconds
 **Solutions**:
 
 1. **Increase timeout**:
-
 ```yaml
 plugins:
   - name: otobo_znuny
@@ -75,7 +68,6 @@ plugins:
 ```
 
 2. **Reduce batch size**:
-
 ```yaml
 pipes:
   - pipe_name: fetch_tickets
@@ -84,7 +76,6 @@ pipes:
 ```
 
 3. **Check server performance**:
-
 - Monitor OTOBO/Znuny server load
 - Check database performance
 - Review server logs
@@ -94,7 +85,6 @@ pipes:
 ### 401 Unauthorized
 
 **Symptoms**:
-
 ```
 AuthenticationError: 401 Unauthorized
 Invalid API token
@@ -103,26 +93,22 @@ Invalid API token
 **Solutions**:
 
 1. **Verify token is set**:
-
 ```bash
 echo $OTOBO_API_TOKEN
 ```
 
 2. **Check token validity**:
-
 - Log into OTOBO/Znuny
 - Navigate to API token management
 - Verify token exists and is active
 - Check expiration date
 
 3. **Verify permissions**:
-
 - Ensure token has required permissions
 - Check role assignments
 - Verify access to queues
 
 4. **Regenerate token**:
-
 - Create new API token
 - Update environment variable
 - Restart application
@@ -130,7 +116,6 @@ echo $OTOBO_API_TOKEN
 ### 403 Forbidden
 
 **Symptoms**:
-
 ```
 PermissionError: 403 Forbidden
 Insufficient permissions
@@ -139,13 +124,11 @@ Insufficient permissions
 **Solutions**:
 
 1. **Check user permissions**:
-
 - Verify user has ticket read/write access
 - Check queue permissions
 - Verify role assignments
 
 2. **Review required permissions**:
-
 - Ticket read: Required for fetching
 - Ticket write: Required for updates
 - Note creation: Required for adding notes
@@ -155,7 +138,6 @@ Insufficient permissions
 ### Invalid Configuration
 
 **Symptoms**:
-
 ```
 ConfigurationError: Invalid configuration
 Missing required field: 'orchestrator'
@@ -164,7 +146,6 @@ Missing required field: 'orchestrator'
 **Solutions**:
 
 1. **Validate YAML syntax**:
-
 ```bash
 # Use online YAML validator
 # Or install yamllint
@@ -173,7 +154,6 @@ yamllint config.yml
 ```
 
 2. **Check required fields**:
-
 ```yaml
 # Minimum required configuration
 orchestrator:
@@ -185,7 +165,6 @@ orchestrator:
 ```
 
 3. **Verify field types**:
-
 ```yaml
 # Correct types
 run_every_milli_seconds: 60000  # Number
@@ -199,7 +178,6 @@ run_every_milli_seconds: "60000"  # Should be number
 ### Environment Variables Not Expanding
 
 **Symptoms**:
-
 ```
 Literal string "${OTOBO_API_TOKEN}" in configuration
 Environment variable not expanded
@@ -208,14 +186,12 @@ Environment variable not expanded
 **Solutions**:
 
 1. **Check variable is set**:
-
 ```bash
 echo $OTOBO_API_TOKEN
 env | grep OTOBO
 ```
 
 2. **Use correct syntax**:
-
 ```yaml
 # Correct
 api_token: "${OTOBO_API_TOKEN}"
@@ -226,7 +202,6 @@ api_token: '${OTOBO_API_TOKEN}'
 ```
 
 3. **Load environment file**:
-
 ```bash
 # Load .env file
 source .env
@@ -240,7 +215,6 @@ export OTOBO_API_TOKEN="your-token"
 ### No Tickets Fetched
 
 **Symptoms**:
-
 ```
 INFO: Fetched 0 tickets
 Pipeline completed with no results
@@ -249,7 +223,6 @@ Pipeline completed with no results
 **Solutions**:
 
 1. **Verify search criteria**:
-
 ```yaml
 # Check StateType is correct
 search:
@@ -257,13 +230,11 @@ search:
 ```
 
 2. **Test search manually**:
-
 - Log into ticket system
 - Use same search criteria
 - Verify tickets exist
 
 3. **Expand search**:
-
 ```yaml
 # Remove restrictive filters
 search:
@@ -271,7 +242,6 @@ search:
 ```
 
 4. **Check queue access**:
-
 ```yaml
 # Try without queue filter
 search:
@@ -282,7 +252,6 @@ search:
 ### Classification Fails
 
 **Symptoms**:
-
 ```
 ClassificationError: Model inference failed
 CUDA out of memory
@@ -291,7 +260,6 @@ CUDA out of memory
 **Solutions**:
 
 1. **Use CPU instead of GPU**:
-
 ```yaml
 plugins:
   - name: hf_local
@@ -300,7 +268,6 @@ plugins:
 ```
 
 2. **Reduce batch size**:
-
 ```yaml
 pipes:
   - pipe_name: classify_queue
@@ -308,16 +275,14 @@ pipes:
 ```
 
 3. **Use smaller model**:
-
 ```yaml
 plugins:
   - name: hf_local
     config:
-      model_name: "distilbert-otai_base-uncased"  # Smaller variant
+      model_name: "distilbert-base-uncased"  # Smaller variant
 ```
 
 4. **Check model download**:
-
 ```bash
 # Verify model cache
 ls -la ~/.cache/huggingface/
@@ -329,7 +294,6 @@ rm -rf ~/.cache/huggingface/
 ### Updates Don't Apply
 
 **Symptoms**:
-
 ```
 Update succeeded but ticket unchanged
 No error but no effect
@@ -338,7 +302,6 @@ No error but no effect
 **Solutions**:
 
 1. **Verify field names**:
-
 ```yaml
 # Correct field names
 updates:
@@ -347,7 +310,6 @@ updates:
 ```
 
 2. **Check field values**:
-
 ```yaml
 # Use valid IDs
 updates:
@@ -356,13 +318,11 @@ updates:
 ```
 
 3. **Verify ticket is updateable**:
-
 - Check ticket state allows updates
 - Verify no locks on ticket
 - Check ticket workflow rules
 
 4. **Enable debug logging**:
-
 ```bash
 open-ticket-ai run --config config.yml --log-level DEBUG
 ```
@@ -372,7 +332,6 @@ open-ticket-ai run --config config.yml --log-level DEBUG
 ### Slow Execution
 
 **Symptoms**:
-
 ```
 Pipeline taking 5+ minutes to complete
 High CPU/memory usage
@@ -381,14 +340,12 @@ High CPU/memory usage
 **Solutions**:
 
 1. **Reduce ticket limit**:
-
 ```yaml
 search:
   limit: 25  # Start small, increase gradually
 ```
 
 2. **Optimize search criteria**:
-
 ```yaml
 # More specific = faster
 search:
@@ -398,14 +355,12 @@ search:
 ```
 
 3. **Increase execution interval**:
-
 ```yaml
 # Don't run too frequently
 run_every_milli_seconds: 300000  # Every 5 minutes
 ```
 
 4. **Use model caching**:
-
 ```yaml
 plugins:
   - name: hf_local
@@ -416,7 +371,6 @@ plugins:
 ### High Memory Usage
 
 **Symptoms**:
-
 ```
 MemoryError: Out of memory
 Process killed by OOM killer
@@ -425,14 +379,12 @@ Process killed by OOM killer
 **Solutions**:
 
 1. **Process smaller batches**:
-
 ```yaml
 search:
   limit: 10  # Very small batches
 ```
 
 2. **Use CPU instead of GPU**:
-
 ```yaml
 plugins:
   - name: hf_local
@@ -441,7 +393,6 @@ plugins:
 ```
 
 3. **Clear context between runs**:
-
 ```yaml
 infrastructure:
   clear_context: true
@@ -491,7 +442,6 @@ print(result)
 ### Common Log Patterns
 
 **Successful execution**:
-
 ```
 [INFO] Pipeline started: my_pipeline
 [INFO] Fetched 10 tickets
@@ -501,7 +451,6 @@ print(result)
 ```
 
 **Connection error**:
-
 ```
 [ERROR] Failed to connect to ticket system
 [ERROR] ConnectionError: [Errno 111] Connection refused
@@ -509,7 +458,6 @@ print(result)
 ```
 
 **Authentication error**:
-
 ```
 [ERROR] Authentication failed
 [ERROR] HTTPError: 401 Unauthorized
@@ -534,13 +482,11 @@ grep ERROR ~/.local/share/open-ticket-ai/logs/open-ticket-ai.log
 ### Before Asking for Help
 
 1. **Check logs**:
-
 ```bash
 tail -100 ~/.local/share/open-ticket-ai/logs/open-ticket-ai.log
 ```
 
 2. **Gather system info**:
-
 ```bash
 open-ticket-ai info
 python --version
@@ -548,7 +494,6 @@ uv --version
 ```
 
 3. **Test with minimal config**:
-
 ```yaml
 # Simplest possible configuration
 plugins:
@@ -568,7 +513,6 @@ orchestrator:
 ```
 
 4. **Create minimal reproduction**:
-
 - Simplify configuration
 - Remove unnecessary pipes
 - Use test data
@@ -583,7 +527,6 @@ orchestrator:
 ### Creating Good Bug Reports
 
 Include:
-
 1. Open Ticket AI version
 2. Python version
 3. Operating system

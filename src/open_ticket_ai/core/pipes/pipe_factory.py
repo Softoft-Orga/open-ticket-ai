@@ -1,6 +1,6 @@
-from functools import lru_cache
 from typing import Any
 
+from async_lru import alru_cache
 from injector import inject, singleton
 
 from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
@@ -32,12 +32,12 @@ class PipeFactory:
         self._component_registry = component_registry
         self._pipe_cache: dict[str, Pipe] = {}
 
-    @lru_cache
-    def create_pipe(self, pipe_config: PipeConfig, pipe_context: PipeContext) -> Pipe:
+    @alru_cache()
+    async def create_pipe(self, pipe_config: PipeConfig, pipe_context: PipeContext) -> Pipe:
         injected_services = self._resolve_service_injects(pipe_config.injects)
         pipe_class: type[Pipe] = self._component_registry.get_pipe(pipe_config.use)
 
-        rendered_params = self._template_renderer.render_to_model(
+        rendered_params = await self._template_renderer.render_to_model(
             to_model=pipe_class.ParamsModel, from_raw_dict=pipe_config.params, with_scope=pipe_context.model_dump()
         )
 

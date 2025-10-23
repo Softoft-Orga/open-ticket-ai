@@ -51,9 +51,10 @@ def orchestrator_setup(logger_factory, mock_pipe_factory):
     spy_pipe1 = SpyPipe(config=PipeConfig(id="pipe1", use="test.pipe1", params={}), logger_factory=logger_factory)
     spy_pipe2 = SpyPipe(config=PipeConfig(id="pipe2", use="test.pipe2", params={}), logger_factory=logger_factory)
 
-    mock_pipe_factory.create_pipe.side_effect = lambda config, *args, **kwargs: (
-        spy_pipe1 if config.id == "pipe1" else spy_pipe2
-    )
+    async def create_pipe_async(config, *args, **kwargs):
+        return spy_pipe1 if config.id == "pipe1" else spy_pipe2
+
+    mock_pipe_factory.create_pipe = create_pipe_async
 
     orchestrator_config = PipeConfig(
         id="orchestrator",

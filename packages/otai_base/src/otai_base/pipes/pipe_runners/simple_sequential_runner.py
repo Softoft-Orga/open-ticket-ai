@@ -26,8 +26,8 @@ class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
 
     async def _process(self, context: PipeContext) -> PipeResult:
         context = context.model_copy(update={"parent": context.params})
-        on_pipe = self._factory.create_pipe(self._params.on, context)
-        run_pipe = self._factory.create_pipe(self._params.run, context)
+        on_pipe = await self._factory.create_pipe(self._params.on, context)
+        run_pipe = await self._factory.create_pipe(self._params.run, context)
 
         on_pipe_result: PipeResult = await on_pipe.process(context)
         if on_pipe_result.has_succeeded():

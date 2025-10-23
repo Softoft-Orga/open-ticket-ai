@@ -1,5 +1,5 @@
 _version: 1.0.x
-_class: open_ticket_ai.otai_base.IntervalTrigger
+_class: open_ticket_ai.base.IntervalTrigger
 _extends: open_ticket_ai.core.orchestration.Trigger
 
 _title: Interval Trigger
