@@ -13,8 +13,6 @@ env:
   PYTHON_VERSION: '3.14'
   PYPI_REPOSITORY_URL: https://upload.pypi.org/legacy/
   PYPI_INDEX_URL: https://pypi.org/simple
-  TEST_PYPI_REPOSITORY_URL: https://test.pypi.org/legacy/
-  TEST_PYPI_INDEX_URL: https://test.pypi.org/simple
   PYPI_FALLBACK_INDEX_URL: https://pypi.org/simple
 
 jobs:
@@ -104,21 +102,10 @@ jobs:
           retention-days: 7
 
       - name: Publish to PyPI
-        if: steps.metadata.outputs.publish_target == 'pypi'
         uses: pypa/gh-action-pypi-publish@v1.11.0
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: dist
-          skip-existing: true
-
-      - name: Publish to TestPyPI
-        if: steps.metadata.outputs.publish_target == 'testpypi'
-        uses: pypa/gh-action-pypi-publish@v1.11.0
-        with:
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository-url: ${{ env.TEST_PYPI_REPOSITORY_URL }}
           packages-dir: dist
           skip-existing: true
 
