@@ -4,13 +4,9 @@ from open_ticket_ai.core.dependency_injection.component_registry import Componen
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
-from packages.base import ExpressionPipe
-from packages.base.src.otai_base.pipes import ExpressionParams
-from packages.base.src.otai_base.pipes.pipe_runners import (
-    SimpleSequentialRunner,
-    SimpleSequentialRunnerParams,
-)
-from packages.base.src.otai_base.template_renderers.jinja_renderer_extras import FailMarker
+from otai_base.pipes.expression_pipe import ExpressionPipe, ExpressionParams
+from otai_base.pipes.pipe_runners.simple_sequential_runner import SimpleSequentialRunner, SimpleSequentialRunnerParams
+from otai_base.template_renderers.jinja_renderer_extras import FailMarker
 
 
 @pytest.fixture

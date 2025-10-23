@@ -9,7 +9,7 @@ from open_ticket_ai.core.dependency_injection.service_registry_util import find_
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from packages.base.src.otai_base.template_renderers.jinja_renderer import JinjaRenderer
+from otai_base.template_renderers.jinja_renderer import JinjaRenderer
 from tests.unit.conftest import SimpleInjectable
 
 

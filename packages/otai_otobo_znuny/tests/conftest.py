@@ -7,10 +7,7 @@ from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_factory
-from packages.base.src.otai_base.ticket_system_integration import (
-    TicketSearchCriteria,
-    UnifiedEntity,
-)
+from otai_base.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedEntity
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
     RenderedOTOBOZnunyTSServiceParams,
 )

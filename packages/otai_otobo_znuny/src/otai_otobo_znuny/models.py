@@ -5,7 +5,7 @@ from otobo_znuny.domain_models.ticket_operation import TicketOperation
 from pydantic import ConfigDict, Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
-from packages.base.src.otai_base.ticket_system_integration import UnifiedEntity, UnifiedNote, UnifiedTicket
+from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote, UnifiedTicket
 
 
 def _to_unified_entity(id_name: IdName | None) -> UnifiedEntity | None:

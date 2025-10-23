@@ -1,11 +1,7 @@
 import pytest
 from otobo_znuny.util.otobo_errors import OTOBOError
 
-from packages.base.src.otai_base.ticket_system_integration import (
-    UnifiedEntity,
-    UnifiedNote,
-    UnifiedTicket,
-)
+from otai_base.ticket_system_integration.unified_models import UnifiedTicket, UnifiedEntity, UnifiedNote
 
 
 @pytest.mark.asyncio

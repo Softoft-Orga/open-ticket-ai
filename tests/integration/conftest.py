@@ -23,7 +23,7 @@ from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_fac
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from packages.base.src.otai_base.ticket_system_integration import UnifiedEntity, UnifiedNote
+from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 from tests.mocked_ticket_system import MockedTicketSystem
 
 # Mark all tests in this directory as integration tests
@@ -58,7 +58,7 @@ def integration_component_registry(integration_logger_factory: LoggerFactory) ->
     registry = ComponentRegistry()
 
     # Import and register base plugin components
-    from packages.base.src.otai_base.base_plugin import BasePlugin
+    from otai_base.base_plugin import BasePlugin
 
     # Create minimal app config for plugin initialization
     minimal_config = AppConfig(
@@ -104,8 +104,8 @@ def integration_jinja_service_config() -> InjectableConfig:
 
 @pytest.fixture
 def integration_app_config(
-    integration_infrastructure_config: InfrastructureConfig,
-    integration_jinja_service_config: InjectableConfig,
+        integration_infrastructure_config: InfrastructureConfig,
+        integration_jinja_service_config: InjectableConfig,
 ) -> AppConfig:
     """Complete AppConfig for integration tests."""
     return AppConfig(

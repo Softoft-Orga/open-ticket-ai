@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import asyncio
+
 import pytest
+from jinja2.nativetypes import NativeEnvironment
 
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from packages.base.src.otai_base.template_renderers.jinja_renderer import JinjaRenderer
+from otai_base.template_renderers.jinja_renderer import JinjaRenderer
 
 
 @pytest.fixture
@@ -131,3 +134,15 @@ def test_render_with_trim_blocks(jinja_renderer: JinjaRenderer) -> None:
     context: dict[str, str] = {}
     result = jinja_renderer.render(template, context)
     assert result.strip() == "value"
+
+
+async def some_test_function():
+    await asyncio.sleep(10.11)
+    return "TEST2"
+
+
+async def test_async_env():
+    async_env = NativeEnvironment(trim_blocks=True, lstrip_blocks=True, enable_async=True)
+    async_env.globals["some_test_function"] = some_test_function
+    template = async_env.from_string("{{ some_test_function() }}")
+    assert await template.render_async() == "TEST"

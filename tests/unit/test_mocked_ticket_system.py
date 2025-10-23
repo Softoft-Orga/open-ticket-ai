@@ -1,11 +1,7 @@
 import pytest
 
-from packages.base.src.otai_base.ticket_system_integration import (
-    TicketSearchCriteria,
-    UnifiedEntity,
-    UnifiedNote,
-    UnifiedTicket,
-)
+from otai_base.ticket_system_integration.unified_models import UnifiedTicket, UnifiedNote, TicketSearchCriteria, \
+    UnifiedEntity
 
 
 @pytest.mark.asyncio

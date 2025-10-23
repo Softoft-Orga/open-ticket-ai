@@ -8,16 +8,12 @@ from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from packages.base import CompositePipe, ExpressionPipe
-from packages.base.src.otai_base.pipes import ExpressionParams
-from packages.base.src.otai_base.pipes.ticket_system_pipes import AddNoteParams, AddNotePipe
-from packages.base.src.otai_base.pipes.ticket_system_pipes import FetchTicketsParams, FetchTicketsPipe
-from packages.base.src.otai_base.ticket_system_integration import (
-    TicketSearchCriteria,
-    UnifiedEntity,
-    UnifiedNote,
-    UnifiedTicket,
-)
+from otai_base.pipes.composite_pipe import CompositePipe
+from otai_base.pipes.expression_pipe import ExpressionPipe, ExpressionParams
+from otai_base.pipes.ticket_system_pipes import AddNoteParams, AddNotePipe
+from otai_base.pipes.ticket_system_pipes import FetchTicketsParams, FetchTicketsPipe
+from otai_base.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedEntity, UnifiedNote, \
+    UnifiedTicket
 from tests.mocked_ticket_system import MockedTicketSystem
 
 

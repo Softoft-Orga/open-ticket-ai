@@ -18,10 +18,7 @@ from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from packages.base.src.otai_base.ai_classification_services import (
-    ClassificationRequest,
-    ClassificationResult,
-)
+from otai_base.ai_classification_services.classification_models import ClassificationRequest, ClassificationResult
 
 hf_logger = logging.getLogger("hf_local_detailed")
 hf_logger.setLevel(logging.DEBUG)

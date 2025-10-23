@@ -1,6 +1,6 @@
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 
-from packages.base.src.otai_base.ticket_system_integration import UnifiedEntity, UnifiedNote
+from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
     _to_unified_entity,
     otobo_article_to_unified_note,

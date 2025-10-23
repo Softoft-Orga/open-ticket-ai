@@ -7,10 +7,9 @@ from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
-from packages.base import CompositePipe, ExpressionPipe
-from packages.base.src.otai_base.pipes import ExpressionParams
-from packages.base.src.otai_base.pipes.composite_pipe import CompositePipeParams
-from packages.base.src.otai_base.template_renderers.jinja_renderer_extras import FailMarker
+from otai_base.pipes.composite_pipe import CompositePipeParams, CompositePipe
+from otai_base.pipes.expression_pipe import ExpressionPipe, ExpressionParams
+from otai_base.template_renderers.jinja_renderer_extras import FailMarker
 
 COUNTER: list[str] = []
 

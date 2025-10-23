@@ -1,6 +1,6 @@
 from typing import Any
 
-from packages.base.src.otai_base.ticket_system_integration import (
+from otai_base.ticket_system_integration import (
     TicketSearchCriteria,
     UnifiedEntity,
     UnifiedNote,

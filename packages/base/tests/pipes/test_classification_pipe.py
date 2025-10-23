@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 import pytest
 
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
-from packages.base.src.otai_base.ai_classification_services import ClassificationResult
-from packages.base.src.otai_base.ai_classification_services import ClassificationService
+from otai_base.ai_classification_services.classification_models import ClassificationResult
+from otai_base.ai_classification_services.classification_service import ClassificationService
 from packages.base.src.otai_base.pipes.classification_pipe import ClassificationPipe
 
 

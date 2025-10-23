@@ -9,7 +9,7 @@ from pydantic import ValidationError
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
-from packages.base.src.otai_base.pipes.interval_trigger_pipe import IntervalTrigger, IntervalTriggerParams
+from otai_base.pipes.interval_trigger_pipe import IntervalTrigger, IntervalTriggerParams
 
 
 @pytest.fixture

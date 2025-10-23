@@ -12,7 +12,8 @@ from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
-from packages.base.src.otai_base.template_renderers.jinja_renderer_extras import FailMarker
+from otai_base.pipes.expression_pipe import ExpressionParams
+from otai_base.template_renderers.jinja_renderer_extras import FailMarker
 
 
 @pytest.fixture()
@@ -98,12 +99,6 @@ async def test_expression_pipe_with_pipe_factory_evaluates_expression(
     pipe_result = await pipe.process(integration_empty_pipe_context)
     assert pipe_result.succeeded is True
     assert pipe_result.data["value"] == 60
-
-
-import pytest
-
-from packages.base import ExpressionPipe
-from packages.base.src.otai_base.pipes import ExpressionParams
 
 
 @pytest.fixture

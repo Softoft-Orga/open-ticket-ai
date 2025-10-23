@@ -1,11 +1,8 @@
-from packages.base.src.otai_base.ai_classification_services import (
-    ClassificationRequest,
-    ClassificationResult,
-)
-from packages.base.src.otai_base.ai_classification_services import ClassificationService
+from otai_base.ai_classification_services.classification_models import ClassificationRequest, ClassificationResult
+from otai_base.ai_classification_services.classification_service import ClassificationService
 
 
-class TestClassificationService:
+class TestClassificationService(ClassificationService):
     def classify(self, _req: ClassificationRequest) -> ClassificationResult:
         return ClassificationResult(label="test_label", confidence=0.95)
 

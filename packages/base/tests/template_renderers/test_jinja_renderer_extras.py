@@ -7,7 +7,7 @@ import pytest
 from pydantic import BaseModel
 
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
-from packages.base.src.otai_base.template_renderers.jinja_renderer_extras import (
+from otai_base.template_renderers.jinja_renderer_extras import (
     _get_pipe,
     at_path,
 )

@@ -1,7 +1,7 @@
 import pytest
 
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
-from packages.base.src.otai_base.pipes import ExpressionPipe
+from otai_base.pipes.expression_pipe import ExpressionPipe
 
 
 @pytest.mark.parametrize("expression", ["foo", "bar", "Hello World!"])

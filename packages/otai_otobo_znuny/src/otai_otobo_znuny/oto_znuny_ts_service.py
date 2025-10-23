@@ -9,17 +9,10 @@ from otobo_znuny.domain_models.ticket_models import (
     TicketUpdate,
 )
 
-from packages.base.src.otai_base.ticket_system_integration import (
-    TicketSearchCriteria,
-    UnifiedNote,
-    UnifiedTicket,
-)
-from packages.base.src.otai_base.ticket_system_integration import TicketSystemService
-from .models import (
-    RenderedOTOBOZnunyTSServiceParams,
-    otobo_ticket_to_unified_ticket,
-    unified_entity_to_id_name,
-)
+from otai_base.ticket_system_integration.ticket_system_service import TicketSystemService
+from otai_base.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedTicket, UnifiedNote
+from otai_otobo_znuny.models import RenderedOTOBOZnunyTSServiceParams, unified_entity_to_id_name, \
+    otobo_ticket_to_unified_ticket
 
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):

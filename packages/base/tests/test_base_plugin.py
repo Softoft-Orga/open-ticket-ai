@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.plugins.plugin import Plugin
-from packages.base.src.otai_base.base_plugin import BasePlugin, create_base_plugin
+from otai_base.base_plugin import BasePlugin, create_base_plugin
 
 
 class TestBasePlugin:

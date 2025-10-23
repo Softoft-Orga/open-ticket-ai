@@ -1,6 +1,8 @@
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.plugins.plugin import CreatePluginFn, Plugin
-from packages.base import AddNotePipe, CompositePipe, ExpressionPipe, FetchTicketsPipe, UpdateTicketPipe
+from otai_base.pipes.composite_pipe import CompositePipe
+from otai_base.pipes.expression_pipe import ExpressionPipe
+from otai_base.pipes.ticket_system_pipes import AddNotePipe, FetchTicketsPipe, UpdateTicketPipe
 from packages.base.src.otai_base.pipes.classification_pipe import ClassificationPipe
 from packages.base.src.otai_base.pipes.interval_trigger_pipe import IntervalTrigger
 from packages.base.src.otai_base.pipes.orchestrators.simple_sequential_orchestrator import SimpleSequentialOrchestrator
