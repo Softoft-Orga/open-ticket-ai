@@ -4,9 +4,10 @@ import re
 from typing import Any
 
 import jinja2
+from pydantic import BaseModel
+
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderError
-from pydantic import BaseModel
 
 
 class FailMarker:
@@ -30,8 +31,10 @@ def at_path(value: dict | BaseModel, path: str) -> dict[str, Any] | Any:
 
 
 def _get_pipe(ctx: jinja2.runtime.Context, pipe_id: str) -> PipeResult:
-    pipe = ctx.get("pipe_results", {}).get(pipe_id)
+    pipe_results = ctx.get("pipe_results", {})
+    pipe = pipe_results.get(pipe_id)
     if pipe is None:
+        logging.debug(pipe_results)
         raise TemplateRenderError(f"Pipe {pipe_id} not found")
     return PipeResult.model_validate(pipe)
 

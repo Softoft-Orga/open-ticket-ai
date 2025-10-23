@@ -2,7 +2,7 @@ open_ticket_ai:
   api_version: "1"
   infrastructure:
     logging:
-      level: "INFO"
+      level: "DEBUG"
       log_to_file: false
       log_file_path: null
       log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

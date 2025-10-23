@@ -23,7 +23,12 @@ def NoRender(field: FieldInfo) -> FieldInfo:
 
 # noinspection PyPep8Naming
 def NoRenderField(**kwargs) -> FieldInfo:
-    return NoRender(Field(**kwargs))
+    extra = kwargs.get("json_schema_extra", {})
+    if not isinstance(extra, dict):
+        extra = {}
+    extra[RENDER_FIELD_KEY] = False
+    kwargs["json_schema_extra"] = extra
+    return Field(**kwargs)
 
 
 class TemplateRenderer[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT], ABC):
@@ -42,9 +47,12 @@ class TemplateRenderer[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT]
 
     async def render_to_model[T](self, to_model: type[BaseModel], from_raw_dict: dict[str, Any],
                                  with_scope: dict[str, Any]) -> T:
+        self._logger.debug(f"Rendering to model {to_model.__name__} with scope keys: {list(with_scope.keys())}")
         out = dict(from_raw_dict)
         for name, field in to_model.model_fields.items():
+            self._logger.debug(f"Checking field {name} should render: {self._should_render_field(field)}")
             if name in out and self._should_render_field(field):
+                self._logger.debug(f"Rendering field {name}")
                 out[name] = await self.render(out[name], with_scope)
         try:
             return to_model.model_validate(out)

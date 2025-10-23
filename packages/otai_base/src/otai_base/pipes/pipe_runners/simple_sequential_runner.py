@@ -1,23 +1,26 @@
 from typing import Any, ClassVar
 
+from pydantic import BaseModel
+
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
-from pydantic import BaseModel, Field
+from open_ticket_ai.core.template_rendering.template_renderer import NoRenderField
 
 
 class SimpleSequentialRunnerParams(BaseModel):
-    on: PipeConfig = Field(..., description="trigger Pipe the run pipe only runs when this succeeds")
-    run: PipeConfig = Field(..., description="Pipe to run when triggered")
+    on: PipeConfig = NoRenderField(description="trigger Pipe the run pipe only runs when this succeeds")
+    run: PipeConfig = NoRenderField(description="Pipe to run when triggered")
 
 
 class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
     ParamsModel: ClassVar[type[BaseModel]] = SimpleSequentialRunnerParams
 
     def __init__(
-        self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any, **kwargs: Any
+            self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any,
+            **kwargs: Any
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._factory: PipeFactory = pipe_factory
