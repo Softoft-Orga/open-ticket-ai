@@ -45,8 +45,9 @@ class TemplateRenderer[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT]
             return {k: await self.render(v, scope) for k, v in obj.items()}
         return obj
 
-    async def render_to_model[T](self, to_model: type[BaseModel], from_raw_dict: dict[str, Any],
-                                 with_scope: dict[str, Any]) -> T:
+    async def render_to_model[T](
+        self, to_model: type[BaseModel], from_raw_dict: dict[str, Any], with_scope: dict[str, Any]
+    ) -> T:
         self._logger.debug(f"Rendering to model {to_model.__name__} with scope keys: {list(with_scope.keys())}")
         out = dict(from_raw_dict)
         for name, field in to_model.model_fields.items():

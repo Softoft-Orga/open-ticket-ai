@@ -8,8 +8,8 @@ from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 from open_ticket_ai.core.template_rendering.template_renderer import (
     NoRenderField,
-    TemplateRenderError,
     TemplateRenderer,
+    TemplateRenderError,
 )
 
 
@@ -90,14 +90,14 @@ async def test_render_dict(logger_factory, obj, scope, expected):
     [
         ({"outer": {"inner": "{{key}}"}}, {"key": "value"}, {"outer": {"inner": "value"}}),
         (
-                {"a": {"b": {"c": "{{deep}}"}}},
-                {"deep": "nested"},
-                {"a": {"b": {"c": "nested"}}},
+            {"a": {"b": {"c": "{{deep}}"}}},
+            {"deep": "nested"},
+            {"a": {"b": {"c": "nested"}}},
         ),
         (
-                {"list": ["{{x}}", "{{y}}"], "dict": {"z": "{{z}}"}},
-                {"x": "1", "y": "2", "z": "3"},
-                {"list": ["1", "2"], "dict": {"z": "3"}},
+            {"list": ["{{x}}", "{{y}}"], "dict": {"z": "{{z}}"}},
+            {"x": "1", "y": "2", "z": "3"},
+            {"list": ["1", "2"], "dict": {"z": "3"}},
         ),
     ],
     ids=["nested_dict", "deeply_nested", "mixed_structures"],
@@ -141,10 +141,7 @@ async def test_render_to_model_with_no_render_field(logger_factory):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
 
-    raw_dict = {
-        "renderable_field": "{{value}}",
-        "non_renderable_field": "{{value}}"
-    }
+    raw_dict = {"renderable_field": "{{value}}", "non_renderable_field": "{{value}}"}
     scope = {"value": "rendered"}
 
     result = await renderer.render_to_model(ModelWithNoRenderField, raw_dict, scope)
@@ -158,10 +155,7 @@ async def test_render_to_model_all_renderable(logger_factory):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
 
-    raw_dict = {
-        "field_a": "{{a}}",
-        "field_b": "{{b}}"
-    }
+    raw_dict = {"field_a": "{{a}}", "field_b": "{{b}}"}
     scope = {"a": "first", "b": "second"}
 
     result = await renderer.render_to_model(ModelAllRenderableFields, raw_dict, scope)
@@ -175,10 +169,7 @@ async def test_render_to_model_all_non_renderable(logger_factory):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
 
-    raw_dict = {
-        "field_x": "{{x}}",
-        "field_y": "{{y}}"
-    }
+    raw_dict = {"field_x": "{{x}}", "field_y": "{{y}}"}
     scope = {"x": "rendered_x", "y": "rendered_y"}
 
     result = await renderer.render_to_model(ModelAllNonRenderableFields, raw_dict, scope)
@@ -192,11 +183,7 @@ async def test_render_to_model_mixed_fields(logger_factory):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
 
-    raw_dict = {
-        "template_field": "{{template}}",
-        "config_field": [{"key": "{{value}}"}],
-        "static_field": "static"
-    }
+    raw_dict = {"template_field": "{{template}}", "config_field": [{"key": "{{value}}"}], "static_field": "static"}
     scope = {"template": "rendered", "value": "should_not_render"}
 
     result = await renderer.render_to_model(ModelMixedFields, raw_dict, scope)
@@ -211,10 +198,7 @@ async def test_render_to_model_nested_no_render_field(logger_factory):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
 
-    raw_dict = {
-        "outer": "{{outer}}",
-        "nested": {"inner": "{{inner}}"}
-    }
+    raw_dict = {"outer": "{{outer}}", "nested": {"inner": "{{inner}}"}}
     scope = {"outer": "outer_rendered", "inner": "inner_value"}
 
     result = await renderer.render_to_model(ModelNestedNoRenderField, raw_dict, scope)
@@ -228,9 +212,7 @@ async def test_render_to_model_partial_fields(logger_factory):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
 
-    raw_dict = {
-        "renderable_field": "{{value}}"
-    }
+    raw_dict = {"renderable_field": "{{value}}"}
     scope = {"value": "rendered"}
 
     result = await renderer.render_to_model(ModelWithNoRenderField, raw_dict, scope)
@@ -244,10 +226,7 @@ async def test_render_to_model_empty_scope(logger_factory):
     config = InjectableConfig(id="test-renderer")
     renderer = SimpleTemplateRenderer(config, logger_factory)
 
-    raw_dict = {
-        "renderable_field": "no_template",
-        "non_renderable_field": "{{value}}"
-    }
+    raw_dict = {"renderable_field": "no_template", "non_renderable_field": "{{value}}"}
     scope = {}
 
     result = await renderer.render_to_model(ModelWithNoRenderField, raw_dict, scope)
@@ -264,9 +243,7 @@ async def test_render_to_model_validation_error(logger_factory):
     class StrictModel(BaseModel):
         required_field: int
 
-    raw_dict = {
-        "required_field": "{{value}}"
-    }
+    raw_dict = {"required_field": "{{value}}"}
     scope = {"value": "not_an_int"}
 
     with pytest.raises(TemplateRenderError):
@@ -280,7 +257,7 @@ async def test_no_render_field_preserves_complex_structures(logger_factory):
 
     complex_config = [
         {"use": "pipe1", "params": {"key": "{{value}}"}},
-        {"use": "pipe2", "params": {"key": "{{another}}"}}
+        {"use": "pipe2", "params": {"key": "{{another}}"}},
     ]
 
     raw_dict = {
