@@ -40,8 +40,9 @@ class TemplateRenderer[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT]
             return {k: self.render(v, scope) for k, v in obj.items()}
         return obj
 
-    def render_to_model[T](self, to_model: type[BaseModel], from_raw_dict: dict[str, Any],
-                           with_scope: dict[str, Any]) -> T:
+    def render_to_model[T](
+        self, to_model: type[BaseModel], from_raw_dict: dict[str, Any], with_scope: dict[str, Any]
+    ) -> T:
         out = dict(from_raw_dict)
         for name, field in to_model.model_fields.items():
             if name in out and self._should_render_field(field):
