@@ -10,6 +10,7 @@ from otai_base.ticket_system_integration.unified_models import UnifiedNote
 
 EXPECTED_TICKET_NOTE_COUNT = 2
 
+
 @pytest.mark.parametrize("ticket_id", ["TICKET-1", "TICKET-2", "TICKET-3"])
 @pytest.mark.asyncio
 async def test_add_note_pipe_adds_note_to_ticket(mocked_ticket_system, logger_factory, ticket_id):

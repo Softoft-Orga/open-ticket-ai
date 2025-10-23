@@ -232,6 +232,7 @@ def integration_mocked_ticket_system(integration_logger_factory: LoggerFactory) 
 
     return system
 
+
 class ConfigBuilder:
     """
     Fluent builder for AppConfig instances in integration tests.

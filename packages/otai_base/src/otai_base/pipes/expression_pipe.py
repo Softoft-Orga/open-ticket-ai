@@ -41,5 +41,6 @@ class ExpressionPipe(Pipe[ExpressionParams]):
         if len(expression) <= _EXPRESSION_PREVIEW_LIMIT:
             return expression
         return f"{expression[:_EXPRESSION_PREVIEW_LIMIT]}..."
-_EXPRESSION_PREVIEW_LIMIT = 100
 
+
+_EXPRESSION_PREVIEW_LIMIT = 100

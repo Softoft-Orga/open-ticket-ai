@@ -2,7 +2,6 @@ from abc import ABC
 from typing import Any
 
 from open_ticket_ai.core.pipes.pipe import Pipe
-
 from pydantic import BaseModel
 
 from otai_base.ticket_system_integration.ticket_system_service import TicketSystemService

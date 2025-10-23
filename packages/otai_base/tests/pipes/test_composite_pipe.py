@@ -76,9 +76,7 @@ async def test_composite_pipe_calls_multiple_steps_sequentially(
     mock_steps: list[MagicMock] = []
     for index, _ in enumerate(simple_step_configs):
         mock_step = MagicMock()
-        mock_step.process = AsyncMock(
-            return_value=PipeResult.success(data={"value": chr(ALPHABET_START + index)})
-        )
+        mock_step.process = AsyncMock(return_value=PipeResult.success(data={"value": chr(ALPHABET_START + index)}))
         mock_steps.append(mock_step)
 
     mock_pipe_factory.create_pipe.side_effect = mock_steps

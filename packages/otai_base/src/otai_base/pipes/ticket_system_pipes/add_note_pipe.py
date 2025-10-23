@@ -45,4 +45,5 @@ class AddNotePipe(TicketSystemPipe[AddNoteParams]):
             return note_str
         return f"{note_str[:_NOTE_PREVIEW_LIMIT]}..."
 
+
 _NOTE_PREVIEW_LIMIT = 100
