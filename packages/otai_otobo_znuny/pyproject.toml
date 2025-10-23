@@ -1,6 +1,6 @@
 [project]
 name = "otai_otobo_znuny"
-version = "1.1.2"
+dynamic = ["version"]
 description = "OTOBO/Znuny ticket system plugin for Open Ticket AI"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -41,7 +41,7 @@ Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/o
 otobo_znuny = "otai_otobo_znuny.plugin:create_otobo_znuny_plugin"
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=8.1"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -50,6 +50,12 @@ include = ["otai_otobo_znuny*"]
 
 [tool.uv.sources]
 open-ticket-ai = { workspace = true }
+
+[tool.setuptools_scm]
+root = "../.."
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+tag_regex = '^v(?P<version>\d+\.\d+\.\d+)$'
 
 [project.optional-dependencies]
 dev = [
