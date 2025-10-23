@@ -4,7 +4,7 @@ from typing import Any
 
 from tabulate import tabulate
 
-from open_ticket_ai.core import OpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
 
 
 def load_schema(path: Path) -> dict[str, Any]:

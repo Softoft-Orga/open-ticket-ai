@@ -1,12 +1,4 @@
-# tests/integration/test_jinja_renderer_integration.py
-"""
-Integration tests for JinjaRenderer with real dependencies.
-
-Tests the JinjaRenderer with actual Jinja2 environment and template rendering,
-verifying integration with PipeContext and custom template functions.
-"""
-
-import os
+"""Integration tests for JinjaRenderer with real dependencies."""
 
 import pytest
 
@@ -167,15 +159,14 @@ async def test_render_with_parent_context(integration_template_renderer: Templat
 
 @pytest.mark.integration
 @pytest.mark.asyncio
-async def test_render_with_parent_context(integration_template_renderer: TemplateRenderer):
-    """Test rendering with parent context access in nested pipes."""
-    # Given
+async def test_render_reads_environment_variable(
+    integration_template_renderer: TemplateRenderer, monkeypatch: pytest.MonkeyPatch
+):
+    """Test rendering when accessing environment variables."""
     template = "{{ get_env('MY_TEST_ENV') }}"
-    os.environ["MY_TEST_ENV"] = "test"
-    # When
+    monkeypatch.setenv("MY_TEST_ENV", "test")
     result = await integration_template_renderer.render(template, {})
 
-    # Then
     assert result == "test"
 
 

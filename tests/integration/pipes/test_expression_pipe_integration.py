@@ -76,9 +76,7 @@ async def test_expression_pipe_with_fail_marker(expression_pipe_factory, integra
 
 
 @pytest.mark.integration
-async def test_expression_pipe_with_pipe_factory_evaluates_expression(
-    expression_pipe_factory,
-    integration_template_renderer,
+async def test_expression_pipe_with_pipe_factory_renders_expression(
     integration_empty_pipe_context: PipeContext,
     integration_pipe_factory: PipeFactory,
     expression_config_factory,
@@ -114,7 +112,7 @@ def make_expr_pipe(
 
 
 @pytest.mark.integration
-async def test_expression_pipe_with_pipe_factory_evaluates_expression(
+async def test_expression_pipe_with_make_fixture_evaluates_expression(
     integration_empty_pipe_context: PipeContext,
     make_expr_pipe,
 ):

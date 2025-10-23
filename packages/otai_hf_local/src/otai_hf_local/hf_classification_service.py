@@ -29,6 +29,9 @@ if not hf_logger.hasHandlers():
     hf_logger.addHandler(handler)
 
 
+TEXT_PREVIEW_LIMIT = 100
+
+
 @lru_cache(maxsize=16)
 def _get_hf_pipeline(model: str, token: str | None):
     hf_logger.info("=== 🧠 HUGGINGFACE PIPELINE LOADING START ===")
@@ -61,8 +64,8 @@ def _get_hf_pipeline(model: str, token: str | None):
         try:
             login(token=active_token, add_to_git_credential=False)
             hf_logger.info("✅ Successfully logged into Hugging Face Hub")
-        except Exception as e:
-            hf_logger.error(f"❌ Hugging Face login failed: {e}")
+        except Exception:
+            hf_logger.exception("❌ Hugging Face login failed")
     else:
         hf_logger.warning("⚠️ No active token found at all. Login skipped.")
 
@@ -129,8 +132,8 @@ class HFClassificationService(Injectable[HFClassificationServiceParams]):
         self._logger.info(f"🚀 Starting classification request {classification_request.model_dump()}")
         self._logger.info(f"🤖 Running HuggingFace classification with model: {classification_request.model_name}")
         text_preview = (
-            classification_request.text[:100] + "..."
-            if len(classification_request.text) > 100
+            classification_request.text[:TEXT_PREVIEW_LIMIT] + "..."
+            if len(classification_request.text) > TEXT_PREVIEW_LIMIT
             else classification_request.text
         )
         self._logger.debug(f"Text preview: {text_preview}")

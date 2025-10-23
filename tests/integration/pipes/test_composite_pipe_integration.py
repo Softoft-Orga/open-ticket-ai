@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytest
 from otai_base.pipes.composite_pipe import CompositePipe, CompositePipeParams
 from otai_base.pipes.expression_pipe import ExpressionParams, ExpressionPipe
@@ -22,7 +24,7 @@ class CounterParams(BaseModel):
 class CounterPipe(Pipe[CounterParams]):
     ParamsModel = CounterParams
 
-    async def _process(self, context: PipeContext) -> PipeResult:
+    async def _process(self, _context: PipeContext) -> PipeResult:
         COUNTER.append(self._params.tag)
         return PipeResult.success(data={"value": self._params.tag})
 
@@ -63,7 +65,9 @@ def counter_cfg():
 def make_composite(
     register_pipes: ComponentRegistry, integration_logger_factory: LoggerFactory, integration_pipe_factory: PipeFactory
 ):
-    def _make(steps: list[PipeConfig], extra_composite_params: dict = None) -> CompositePipe:
+    _ = register_pipes
+
+    def _make(steps: list[PipeConfig], extra_composite_params: dict[str, Any] | None = None) -> CompositePipe:
         return CompositePipe(
             config=PipeConfig(
                 id="composite",

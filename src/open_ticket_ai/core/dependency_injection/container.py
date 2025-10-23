@@ -35,9 +35,13 @@ class AppModule(Module):
         binder.bind(AppConfig, to=self.app_config, scope=singleton)
         binder.bind(ComponentRegistry, to=self.component_registry, scope=singleton)
         binder.bind(PluginLoader, to=self.plugin_loader, scope=singleton)
-        binder.bind(LoggerFactory, to=self.logger_factory, scope=singleton)
         binder.bind(OpenTicketAIConfig, to=self.app_config.open_ticket_ai, scope=singleton)
         binder.bind(PipeFactory, scope=singleton)
+
+    @provider
+    @singleton
+    def provide_logger_factory(self) -> LoggerFactory:
+        return self.logger_factory
 
     @provider
     def create_renderer_from_service(
