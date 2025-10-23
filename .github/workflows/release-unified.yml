@@ -10,7 +10,7 @@ on:
 
 env:
   DOCKER_REPOSITORY: softotobo/open-ticket-ai
-  PYTHON_VERSION: '3.13'
+  PYTHON_VERSION: '3.14'
   PYPI_REPOSITORY_URL: https://upload.pypi.org/legacy/
   PYPI_INDEX_URL: https://pypi.org/simple
   TEST_PYPI_REPOSITORY_URL: https://test.pypi.org/legacy/
