@@ -19,11 +19,11 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class PipeFactory:
     @inject
     def __init__(
-            self,
-            template_renderer: TemplateRenderer,
-            logger_factory: LoggerFactory,
-            otai_config: OpenTicketAIConfig,
-            component_registry: ComponentRegistry,
+        self,
+        template_renderer: TemplateRenderer,
+        logger_factory: LoggerFactory,
+        otai_config: OpenTicketAIConfig,
+        component_registry: ComponentRegistry,
     ):
         self._template_renderer = template_renderer
         self._logger_factory = logger_factory

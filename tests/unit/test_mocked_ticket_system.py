@@ -1,5 +1,4 @@
 import pytest
-
 from otai_base.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedEntity,

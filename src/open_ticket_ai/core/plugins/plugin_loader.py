@@ -1,4 +1,4 @@
-from importlib.metadata import entry_points, EntryPoint
+from importlib.metadata import EntryPoint, entry_points
 
 from injector import inject
 
@@ -18,11 +18,11 @@ class PluginLoadError(Exception):
 class PluginLoader:
     @inject
     def __init__(
-            self,
-            registry: ComponentRegistry,
-            logger_factory: LoggerFactory,
-            app_config: AppConfig,
-            entry_points_fn: GetEntryPointsFn = entry_points,
+        self,
+        registry: ComponentRegistry,
+        logger_factory: LoggerFactory,
+        app_config: AppConfig,
+        entry_points_fn: GetEntryPointsFn = entry_points,
     ):
         self._registry = registry
         self._logger = logger_factory.create(self.__class__.__name__)

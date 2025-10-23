@@ -1,10 +1,10 @@
 from typing import Any, ClassVar
 
-from pydantic import Field
-
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
+from pydantic import Field
+
 from otai_base.template_renderers.jinja_renderer_extras import FailMarker
 
 

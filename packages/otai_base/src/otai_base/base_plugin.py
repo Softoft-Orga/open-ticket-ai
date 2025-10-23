@@ -1,5 +1,6 @@
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.plugins.plugin import CreatePluginFn, Plugin
+
 from otai_base.pipes.classification_pipe import ClassificationPipe
 from otai_base.pipes.composite_pipe import CompositePipe
 from otai_base.pipes.expression_pipe import ExpressionPipe
