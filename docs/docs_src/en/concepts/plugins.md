@@ -4,6 +4,10 @@ description: Learn how Open Ticket AI's plugin system enables modular extensibil
 
 # Plugin System
 
+### TODO not much has changed here. Not regarding the concepts at least
+
+###
+
 The plugin system enables extending Open Ticket AI through standalone Python packages that provide custom services,
 pipes, and configuration schemas.
 

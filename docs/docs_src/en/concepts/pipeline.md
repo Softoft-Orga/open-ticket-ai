@@ -20,15 +20,13 @@ flowchart TD
     Pipe2[Pipe 2 - Classify Tickets]:::pipeNode
     Pipe3[Pipe 3 - Update Tickets]:::pipeNode
     End([Complete]):::endNode
-    
     Start --> Pipe1
     Pipe1 --> Pipe2
     Pipe2 --> Pipe3
     Pipe3 --> End
-    
-    classDef startNode fill:#2d6a4f,stroke:#1b4332,stroke-width:3px,color:#fff,font-weight:bold
-    classDef endNode fill:#2d6a4f,stroke:#1b4332,stroke-width:3px,color:#fff,font-weight:bold
-    classDef pipeNode fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
+    classDef startNode fill: #2d6a4f, stroke: #1b4332, stroke-width: 3px, color: #fff, font-weight: bold
+    classDef endNode fill: #2d6a4f, stroke: #1b4332, stroke-width: 3px, color: #fff, font-weight: bold
+    classDef pipeNode fill: #2b2d42, stroke: #14213d, stroke-width: 2px, color: #e0e0e0
 ```
 
 Each pipe:
@@ -58,48 +56,48 @@ A **pipe** is a self-contained processing unit that:
   "elk": { "spacing": { "nodeNode": 20, "nodeNodeBetweenLayers": 20, "componentComponent": 15 } }
 }}%%
 classDiagram
-direction TD
+    direction TD
 
-  class Pipe {
-    +config: PipeConfig
-    +process(ctx: PipeContext) PipeContext
-    #_process()* PipeResult
-  }
-  
-  class CompositePipe {
-    +steps: list[PipeConfig]
-    +_factory: RenderableFactory
-    +_process_steps(ctx) list~PipeResult~
-    +process(ctx) PipeContext
-  }
-  
-  class PipeConfig {
-    +id: str
-    +use: str
-    +params: BaseModel
-    +if_: str | bool
-    +depends_on: list[str]
-    +steps: list[PipeConfig]
-  }
-  
-  class PipeContext {
-    +pipes: dict[str, PipeResult]
-    +params: dict[str, Any]
-    +parent: PipeContext | None
-  }
-  
-  class PipeResult {
-    +success: bool
-    +message: str
-    +data: BaseModel
-  }
+    class Pipe {
+        +config: PipeConfig
+        +process(ctx: PipeContext) PipeContext
+        #_process()* PipeResult
+    }
 
-  CompositePipe --|> Pipe
-  Pipe --> PipeConfig : configured by
-  Pipe --> PipeContext : receives & updates
-  Pipe --> PipeResult : produces
-  PipeContext --> PipeResult : stores by pipe_id
-  CompositePipe --> Pipe : contains
+    class CompositePipe {
+        +steps: list[PipeConfig]
+        +_factory: RenderableFactory
+        +_process_steps(ctx) list~PipeResult~
+        +process(ctx) PipeContext
+    }
+
+    class PipeConfig {
+        +id: str
+        +use: str
+        +params: BaseModel
+        +if_: str | bool
+        +depends_on: list[str]
+        +steps: list[PipeConfig]
+    }
+
+    class PipeContext {
+        +pipes: dict[str, PipeResult]
+        +params: dict[str, Any]
+        +parent: PipeContext | None
+    }
+
+    class PipeResult {
+        +success: bool
+        +message: str
+        +data: BaseModel
+    }
+
+    CompositePipe --|> Pipe
+    Pipe --> PipeConfig: configured by
+    Pipe --> PipeContext: receives & updates
+    Pipe --> PipeResult: produces
+    PipeContext --> PipeResult: stores by pipe_id
+    CompositePipe --> Pipe: contains
 ```
 
 ## Pipe Execution Lifecycle
@@ -110,64 +108,59 @@ How individual pipes execute their logic:
 flowchart TB
 
 %% ===================== PIPE ENTRY =====================
-subgraph ENTRY["📥 Pipe.process()"]
-  direction TB
-  Start([pipe.process]):::start
-  CheckShould{"should_run?"}:::dec
-  CheckDeps{"Dependencies met?"}:::dec
-  Skip["⏭️ Skip execution"]:::skip
-  
-  Start --> CheckShould
-  CheckShould -- ✓ True --> CheckDeps
-  CheckShould -- ✗ False --> Skip
-  CheckDeps -- ✗ Missing --> Skip
-end
+    subgraph ENTRY["📥 Pipe.process()"]
+        direction TB
+        Start([pipe.process]):::start
+        CheckShould{"should_run?"}:::dec
+        CheckDeps{"Dependencies met?"}:::dec
+        Skip["⏭️ Skip execution"]:::skip
+        Start --> CheckShould
+        CheckShould -- ✓ True --> CheckDeps
+        CheckShould -- ✗ False --> Skip
+        CheckDeps -- ✗ Missing --> Skip
+    end
 
 %% ===================== EXECUTION =====================
-subgraph EXEC["⚙️ Execution"]
-  direction TB
-  ProcessAndSave["__process_and_save()"]:::proc
-  TryCatch["try-catch wrapper"]:::proc
-  RunProcess["await _process()<br/>(subclass implementation)"]:::proc
-  CreateResult["Create PipeResult<br/>with data"]:::proc
-  
-  ProcessAndSave --> TryCatch --> RunProcess --> CreateResult
-end
+    subgraph EXEC["⚙️ Execution"]
+        direction TB
+        ProcessAndSave["__process_and_save()"]:::proc
+        TryCatch["try-catch wrapper"]:::proc
+        RunProcess["await _process()<br/>(subclass implementation)"]:::proc
+        CreateResult["Create PipeResult<br/>with data"]:::proc
+        ProcessAndSave --> TryCatch --> RunProcess --> CreateResult
+    end
 
 %% ===================== ERROR HANDLING =====================
-subgraph ERROR["❌ Error Handling"]
-  direction TB
-  CatchEx["Catch Exception"]:::error
-  LogError["Logger.error<br/>+ traceback"]:::log
-  CreateFailed["Create failed<br/>PipeResult"]:::error
-  
-  CatchEx --> LogError --> CreateFailed
-end
+    subgraph ERROR["❌ Error Handling"]
+        direction TB
+        CatchEx["Catch Exception"]:::error
+        LogError["Logger.error<br/>+ traceback"]:::log
+        CreateFailed["Create failed<br/>PipeResult"]:::error
+        CatchEx --> LogError --> CreateFailed
+    end
 
 %% ===================== PERSISTENCE =====================
-subgraph PERSIST["💾 Context Update"]
-  direction TB
-  SaveResult["context.pipes[pipe_id]<br/>= result"]:::ctx
-  LogResult["Log result<br/>(info/warning)"]:::log
-  Return["Return updated<br/>context"]:::ctx
-  
-  SaveResult --> LogResult --> Return
-end
+    subgraph PERSIST["💾 Context Update"]
+        direction TB
+        SaveResult["context.pipes[pipe_id]<br/>= result"]:::ctx
+        LogResult["Log result<br/>(info/warning)"]:::log
+        Return["Return updated<br/>context"]:::ctx
+        SaveResult --> LogResult --> Return
+    end
 
 %% ===================== CONNECTIONS =====================
-CheckDeps -- ✓ Met --> ProcessAndSave
-TryCatch --> CatchEx
-CreateResult --> SaveResult
-CreateFailed --> SaveResult
-
+    CheckDeps -- ✓ Met --> ProcessAndSave
+    TryCatch --> CatchEx
+    CreateResult --> SaveResult
+    CreateFailed --> SaveResult
 %% ===================== STYLES =====================
-classDef start fill:#2d6a4f,stroke:#1b4332,stroke-width:3px,color:#fff,font-weight:bold
-classDef dec fill:#d97706,stroke:#b45309,stroke-width:2px,color:#fff,font-weight:bold
-classDef skip fill:#374151,stroke:#1f2937,stroke-width:2px,color:#9ca3af
-classDef proc fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
-classDef error fill:#dc2626,stroke:#991b1b,stroke-width:2px,color:#fff
-classDef log fill:#0891b2,stroke:#0e7490,stroke-width:2px,color:#fff
-classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
+    classDef start fill: #2d6a4f, stroke: #1b4332, stroke-width: 3px, color: #fff, font-weight: bold
+    classDef dec fill: #d97706, stroke: #b45309, stroke-width: 2px, color: #fff, font-weight: bold
+    classDef skip fill: #374151, stroke: #1f2937, stroke-width: 2px, color: #9ca3af
+    classDef proc fill: #2b2d42, stroke: #14213d, stroke-width: 2px, color: #e0e0e0
+    classDef error fill: #dc2626, stroke: #991b1b, stroke-width: 2px, color: #fff
+    classDef log fill: #0891b2, stroke: #0e7490, stroke-width: 2px, color: #fff
+    classDef ctx fill: #165b33, stroke: #0d3b24, stroke-width: 2px, color: #e0e0e0
 ```
 
 **Processing Steps:**
@@ -239,14 +232,14 @@ Orchestrators that contain and execute child pipes:
         search_criteria:
           queue: { name: "Incoming" }
           limit: 10
-    
+
     - id: classify
       use: otai_hf_local:HFLocalTextClassificationPipe
       params:
         model: "bert-base-german-cased"
         text: "{{ pipe_result('fetch').data.fetched_tickets[0].subject }}"
-      depends_on: [fetch]
-    
+      depends_on: [ fetch ]
+
     - id: update
       use: open_ticket_ai.base:UpdateTicketPipe
       injects: { ticket_system: "otobo_znuny" }
@@ -255,7 +248,7 @@ Orchestrators that contain and execute child pipes:
         updated_ticket:
           queue:
             name: "{{ pipe_result('classify').data.predicted_queue }}"
-      depends_on: [classify]
+      depends_on: [ classify ]
 ```
 
 **Characteristics:**
@@ -273,54 +266,49 @@ Orchestrators that contain and execute child pipes:
   "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
   "themeVariables":{"fontSize":"14px","fontFamily":"system-ui","lineColor":"#718096"},
 }}%%
-
 flowchart TB
 
 %% ===================== COMPOSITE START =====================
-subgraph START["🔀 CompositePipe.process()"]
-  direction TB
-  Entry([Composite pipe<br/>starts]):::start
-  InitLoop["Initialize step<br/>iteration"]:::proc
-  
-  Entry --> InitLoop
-end
+    subgraph START["🔀 CompositePipe.process()"]
+        direction TB
+        Entry([Composite pipe<br/>starts]):::start
+        InitLoop["Initialize step<br/>iteration"]:::proc
+        Entry --> InitLoop
+    end
 
 %% ===================== STEP PROCESSING =====================
-subgraph STEP_LOOP["🔁 For Each Step"]
-  direction TB
-  HasStep{"Has next<br/>step?"}:::dec
-  MergeCtx["Merge parent +<br/>step params"]:::proc
-  RenderStep["🎨 Render step config<br/>with Jinja"]:::render
-  BuildChild["factory.create_pipe<br/>(step_config)"]:::factory
-  RunChild["child.process<br/>(context)"]:::proc
-  CollectResult["Collect result<br/>in context"]:::ctx
-  
-  HasStep -- Yes --> MergeCtx --> RenderStep --> BuildChild
-  BuildChild --> RunChild --> CollectResult --> HasStep
-end
+    subgraph STEP_LOOP["🔁 For Each Step"]
+        direction TB
+        HasStep{"Has next<br/>step?"}:::dec
+        MergeCtx["Merge parent +<br/>step params"]:::proc
+        RenderStep["🎨 Render step config<br/>with Jinja"]:::render
+        BuildChild["factory.create_pipe<br/>(step_config)"]:::factory
+        RunChild["child.process<br/>(context)"]:::proc
+        CollectResult["Collect result<br/>in context"]:::ctx
+        HasStep -- Yes --> MergeCtx --> RenderStep --> BuildChild
+        BuildChild --> RunChild --> CollectResult --> HasStep
+    end
 
 %% ===================== FINALIZATION =====================
-subgraph FINAL["✅ Finalization"]
-  direction TB
-  AllDone["All steps<br/>done"]:::proc
-  UnionResults["PipeResult.union<br/>(all results)"]:::proc
-  SaveComposite["Save composite<br/>result"]:::ctx
-  Return["Return updated<br/>context"]:::ctx
-  
-  AllDone --> UnionResults --> SaveComposite --> Return
-end
+    subgraph FINAL["✅ Finalization"]
+        direction TB
+        AllDone["All steps<br/>done"]:::proc
+        UnionResults["PipeResult.union<br/>(all results)"]:::proc
+        SaveComposite["Save composite<br/>result"]:::ctx
+        Return["Return updated<br/>context"]:::ctx
+        AllDone --> UnionResults --> SaveComposite --> Return
+    end
 
 %% ===================== CONNECTIONS =====================
-InitLoop --> HasStep
-HasStep -- No --> AllDone
-
+    InitLoop --> HasStep
+    HasStep -- No --> AllDone
 %% ===================== STYLES =====================
-classDef start fill:#2d6a4f,stroke:#1b4332,stroke-width:3px,color:#fff,font-weight:bold
-classDef dec fill:#d97706,stroke:#b45309,stroke-width:2px,color:#fff,font-weight:bold
-classDef proc fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
-classDef render fill:#4338ca,stroke:#312e81,stroke-width:2px,color:#e0e0e0
-classDef factory fill:#7c2d12,stroke:#5c1a0a,stroke-width:2px,color:#e0e0e0
-classDef ctx fill:#165b33,stroke:#0d3b24,stroke-width:2px,color:#e0e0e0
+    classDef start fill: #2d6a4f, stroke: #1b4332, stroke-width: 3px, color: #fff, font-weight: bold
+    classDef dec fill: #d97706, stroke: #b45309, stroke-width: 2px, color: #fff, font-weight: bold
+    classDef proc fill: #2b2d42, stroke: #14213d, stroke-width: 2px, color: #e0e0e0
+    classDef render fill: #4338ca, stroke: #312e81, stroke-width: 2px, color: #e0e0e0
+    classDef factory fill: #7c2d12, stroke: #5c1a0a, stroke-width: 2px, color: #e0e0e0
+    classDef ctx fill: #165b33, stroke: #0d3b24, stroke-width: 2px, color: #e0e0e0
 ```
 
 **Composite Execution:**
@@ -349,12 +337,12 @@ The `depends_on` field creates execution dependencies between pipes:
 
 - id: step_b
   use: PipeB
-  depends_on: [step_a]
+  depends_on: [ step_a ]
   # Executes only if step_a succeeded
 
 - id: step_c
   use: PipeC
-  depends_on: [step_a, step_b]
+  depends_on: [ step_a, step_b ]
   # Executes only if both step_a and step_b succeeded
 ```
 
@@ -372,20 +360,20 @@ steps:
   - id: fetch
     use: FetchTicketsPipe
     # No dependencies, executes first
-  
+
   - id: validate
     use: ValidateTicketsPipe
-    depends_on: [fetch]
+    depends_on: [ fetch ]
     # Only runs if fetch succeeded
-  
+
   - id: classify
     use: ClassifyPipe
-    depends_on: [fetch, validate]
+    depends_on: [ fetch, validate ]
     # Only runs if both fetch and validate succeeded
-  
+
   - id: update
     use: UpdateTicketPipe
-    depends_on: [classify]
+    depends_on: [ classify ]
     # Only runs if classify succeeded
 ```
 
@@ -447,8 +435,8 @@ The `PipeContext` is the core data structure for data flow between pipes:
 ```python
 class PipeContext(BaseModel):
     pipes: dict[str, PipeResult[Any]]  # All previous pipe results
-    params: dict[str, Any]              # Current pipe parameters
-    parent: PipeContext | None          # Parent context (for nested pipes)
+    params: dict[str, Any]  # Current pipe parameters
+    parent: PipeContext | None  # Parent context (for nested pipes)
 ```
 
 **Field Details:**
@@ -475,13 +463,13 @@ class PipeContext(BaseModel):
   params:
     # Access previous pipe result
     tickets: "{{ pipe_result('fetch').data.fetched_tickets }}"
-    
+
     # Access parent parameter
     threshold: "{{ parent.params.confidence_threshold }}"
-    
+
     # Access own parameter
     limit: "{{ params.limit }}"
-    
+
     # Check if pipe succeeded
     should_update: "{{ has_succeeded('classify') }}"
 ```
@@ -492,10 +480,10 @@ Each pipe produces a `PipeResult` containing execution outcome and data:
 
 ```python
 class PipeResult[T]():
-    success: bool      # True if execution succeeded
-    failed: bool       # True if execution failed
-    message: str       # Human-readable message
-    data: T            # Pipe-specific result data (Pydantic model)
+    success: bool  # True if execution succeeded
+    failed: bool  # True if execution failed
+    message: str  # Human-readable message
+    data: T  # Pipe-specific result data (Pydantic model)
 ```
 
 ## Best Practices

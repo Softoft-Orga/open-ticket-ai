@@ -4,6 +4,11 @@ pageClass: full-page
 aside: false
 ---
 
+### TODO not much has changed here!
+
+The only thing changed is that the templaterenderer config is part of the services. No need to set default or anything.
+if there is not exactly one templaterenderer service defined an error is raised.
+
 # Configuration and Template Rendering
 
 The configuration and template rendering system is the foundation of Open Ticket AI's dynamic behavior. It transforms
@@ -41,67 +46,60 @@ The following diagram illustrates the complete lifecycle of configuration from Y
     "lineColor":"#64748b"
   }
 }}%%
-
 flowchart TB
-    %% ===================== CONFIGURATION LOADING =====================
+%% ===================== CONFIGURATION LOADING =====================
     subgraph LOAD["📁 Configuration Loading"]
         direction TB
         YAML["config.yml<br/><small>YAML File</small>"]
         Loader["ConfigLoader<br/><small>Parse & Load</small>"]
         RawConfig["RawOpenTicketAIConfig<br/><small>Validated Model</small>"]
-        
         YAML -->|Read & Parse| Loader
         Loader -->|Validate with<br/>Pydantic| RawConfig
     end
 
-    %% ===================== BOOTSTRAP PHASE =====================
+%% ===================== BOOTSTRAP PHASE =====================
     subgraph BOOT["🔧 Bootstrap Phase"]
         direction TB
         InfraConfig["InfrastructureConfig<br/><small>Extract Infrastructure</small>"]
         RendererConfig["TemplateRendererConfig<br/><small>Renderer Settings</small>"]
         BootstrapRenderer["JinjaRenderer<br/><small>⚠️ NOT Rendered</small>"]:::critical
-        
         InfraConfig --> RendererConfig
         RendererConfig -->|Instantiate<br/>NO rendering| BootstrapRenderer
     end
 
-    %% ===================== SERVICE RENDERING PHASE =====================
+%% ===================== SERVICE RENDERING PHASE =====================
     subgraph RENDER["🎨 Service Rendering Phase"]
         direction TB
         Renderer["TemplateRenderer<br/><small>Active Renderer</small>"]
         Factory["RenderableFactory<br/><small>Service Factory</small>"]
         ServiceConfigs["RenderableConfig List<br/><small>Service Definitions</small>"]
-        
         BootstrapRenderer -.->|Register as<br/>singleton| Renderer
         ServiceConfigs --> Factory
         Renderer -.->|Inject template<br/>renderer| Factory
     end
 
-    %% ===================== RUNTIME OBJECTS =====================
+%% ===================== RUNTIME OBJECTS =====================
     subgraph RUNTIME["⚡ Runtime Objects"]
         direction TB
         Services["Service Instances<br/><small>Ticket System, etc.</small>"]
         Orchestrator["Orchestrator<br/><small>Pipeline Manager</small>"]
         Runners["PipeRunner<br/><small>Execution Units</small>"]
-        
         Factory -->|Render &<br/>instantiate| Services
         Services -.->|Register| Orchestrator
         Orchestrator -->|Create| Runners
     end
 
-    %% ===================== MAIN FLOW =====================
+%% ===================== MAIN FLOW =====================
     RawConfig ==>|Extract<br/>infrastructure| InfraConfig
     RawConfig ==>|Extract<br/>services| ServiceConfigs
     RawConfig ==>|Extract<br/>orchestrator| Orchestrator
-
-    %% ===================== STYLES =====================
-    classDef critical fill:#dc2626,stroke:#b91c1c,stroke-width:3px,color:#fff,font-weight:bold
-    
-    %% ===================== SUBGRAPH STYLES =====================
-    style LOAD fill:#f8fafc,stroke:#64748b,stroke-width:2px
-    style BOOT fill:#fef3c7,stroke:#d97706,stroke-width:2px
-    style RENDER fill:#dbeafe,stroke:#2563eb,stroke-width:2px
-    style RUNTIME fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+%% ===================== STYLES =====================
+    classDef critical fill: #dc2626, stroke: #b91c1c, stroke-width: 3px, color: #fff, font-weight: bold
+%% ===================== SUBGRAPH STYLES =====================
+    style LOAD fill: #f8fafc, stroke: #64748b, stroke-width: 2px
+    style BOOT fill: #fef3c7, stroke: #d97706, stroke-width: 2px
+    style RENDER fill: #dbeafe, stroke: #2563eb, stroke-width: 2px
+    style RUNTIME fill: #dcfce7, stroke: #16a34a, stroke-width: 2px
 ```
 
 ## Template Rendering Scope
@@ -113,7 +111,6 @@ When templates are rendered during pipe execution, the rendering scope is built 
   "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
   "themeVariables":{"fontSize":"14px","fontFamily":"system-ui"},
 }}%%
-
 flowchart TB
     subgraph ENV["🌍 Environment Variables"]
         direction TB
@@ -123,14 +120,14 @@ flowchart TB
 
     subgraph CONTEXT["📦 PipeContext Structure"]
         direction TB
-        
+
         subgraph CURRENT["Current Pipe Context"]
             direction TB
             CurParams["params: dict<br/>(This pipe's parameters)"]
             CurPipes["pipes: dict<br/>(All previous pipe results)"]
             ParentRef["parent: PipeContext | None<br/>(Link to parent context)"]
         end
-        
+
         subgraph PARENT["Parent Context (if in CompositePipe)"]
             direction TB
             ParParams["params: dict<br/>(Parent pipe parameters)"]
@@ -148,25 +145,20 @@ flowchart TB
     end
 
     EnvVars --> EnvAccess
-    
     CurParams --> Scope1
     CurPipes --> Scope2
     ParentRef --> PARENT
-    
     ParParams -.-> Scope1
     ParPipes -.-> Scope2
     ParParent -.-> Scope3
-    
     EnvAccess --> Scope4
-    
     CURRENT --> RENDER
     PARENT -.-> RENDER
-
-    style ENV fill:#1e3a5f,stroke:#0d1f3d,stroke-width:2px,color:#e0e0e0
-    style CONTEXT fill:#5a189a,stroke:#3c096c,stroke-width:2px,color:#e0e0e0
-    style RENDER fill:#2d6a4f,stroke:#1b4332,stroke-width:2px,color:#e0e0e0
-    style CURRENT fill:#2b2d42,stroke:#14213d,stroke-width:2px,color:#e0e0e0
-    style PARENT fill:#374151,stroke:#1f2937,stroke-width:2px,color:#9ca3af
+    style ENV fill: #1e3a5f, stroke: #0d1f3d, stroke-width: 2px, color: #e0e0e0
+    style CONTEXT fill: #5a189a, stroke: #3c096c, stroke-width: 2px, color: #e0e0e0
+    style RENDER fill: #2d6a4f, stroke: #1b4332, stroke-width: 2px, color: #e0e0e0
+    style CURRENT fill: #2b2d42, stroke: #14213d, stroke-width: 2px, color: #e0e0e0
+    style PARENT fill: #374151, stroke: #1f2937, stroke-width: 2px, color: #9ca3af
 ```
 
 ## Key Concepts
@@ -178,8 +170,8 @@ The `PipeContext` is the core data structure that holds execution state and is u
 ```python
 class PipeContext(BaseModel):
     pipes: dict[str, PipeResult[Any]]  # All previous pipe results
-    params: dict[str, Any]              # Current pipe parameters
-    parent: PipeContext | None          # Parent context (for nested pipes)
+    params: dict[str, Any]  # Current pipe parameters
+    parent: PipeContext | None  # Parent context (for nested pipes)
 ```
 
 **What each field provides:**
@@ -250,7 +242,7 @@ pipes:
     params:
       limit: 50
     # Context: { pipes: {}, params: { limit: 50 }, parent: None }
-  
+
   - id: classify
     params:
       threshold: "{{ params.threshold }}"  # Access own params
@@ -343,15 +335,16 @@ class MyParams(BaseModel):
     timeout: int
     model: str
 
+
 class MyPipe(Pipe[MyParams]):
     params_class = MyParams  # Required
-    
+
     def __init__(
-        self,
-        pipe_config: PipeConfig[MyParams],
-        logger_factory: LoggerFactory,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            pipe_config: PipeConfig[MyParams],
+            logger_factory: LoggerFactory,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(pipe_config, logger_factory)
         # self.params is now validated MyParams instance
@@ -376,7 +369,7 @@ services:
     use: "mypackage:DatabaseClient"
     params:
       connection_string: "{{ env('DB_CONNECTION') }}"
-  
+
   - id: ticket_fetcher
     use: "mypackage:TicketFetcher"
     injects:
@@ -554,7 +547,7 @@ class OldPipe(Pipe[OldParams]):
 ```python
 class NewPipe(Pipe[NewParams]):
     params_class = NewParams  # Just add this class attribute
-    
+
     def __init__(self, pipe_config, logger_factory, *args, **kwargs):
         super().__init__(pipe_config, logger_factory)
         # self.params is automatically validated by parent __init__

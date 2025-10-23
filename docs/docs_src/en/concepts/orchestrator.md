@@ -4,6 +4,13 @@ pageClass: full-page
 aside: false
 ---
 
+
+===================
+!!!!! # TODO THERES NO DIFFERENCE BETWEEN Orchestrators and Pipes anymore. Orchestrators and Runners are normal Pipe.
+The Default Orchestrator behaves in a special way since its a while loop that never stops. but otherwise its a pipe.
+The Runners are also Pipes. The Default Runner has an on and a run param.
+on and run are both pipess. when the on pipe succeeds the run pipe runs!
+
 # Orchestrator System
 
 The orchestrator coordinates pipeline execution by managing triggers and runners. It implements the Observer pattern,
@@ -126,7 +133,7 @@ orchestrator:
       run:
         id: ticket_classifier
         use: open_ticket_ai.base:CompositePipe
-        steps: [...]
+        steps: [ ... ]
 ```
 
 ### Startup Execution
@@ -137,7 +144,7 @@ Execute once at application startup (no triggers):
 orchestrator:
   runners:
     - id: initialization
-      run:  # No "on" field = runs once at startup
+      run: # No "on" field = runs once at startup
         id: cache_warmup
         use: CacheWarmupPipe
 ```
@@ -177,12 +184,12 @@ orchestrator:
           use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
           params:
             minutes: 10
-      run: {...}
-    
+      run: { ... }
+
     - id: task_two
       on:
         - id: "shared_timer"  # Reuses the trigger above
-      run: {...}
+      run: { ... }
 ```
 
 ## Execution Guarantees
