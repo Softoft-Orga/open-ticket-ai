@@ -115,7 +115,7 @@ When rendering individual pipes during execution:
 
 Parent parameters are now populated automatically for nested pipelines, so composite pipes can coordinate with their
 children using `get_parent_param()` or by reading from `parent_params` directly. Service instances are **not** injected
-into templates today. We plan to explore service injection in the future, but this documentation reflects the currently
+into templates at this time. We plan to explore service injection in the future, but this documentation reflects the currently
 implemented behaviour.
 
 ## When Rendering Happens
