@@ -17,7 +17,8 @@ class Pipe[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT], ABC):
 
     @final
     async def process(self, context: PipeContext) -> PipeResult:
-        return await self._process(context)
+        result: PipeResult = await self._process(context)
+        return result
 
     async def _process(self, *_: Any, **__: Any) -> PipeResult:
         return PipeResult.skipped()

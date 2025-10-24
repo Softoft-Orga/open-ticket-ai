@@ -22,8 +22,8 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class AppModule(Module):
     def __init__(self, app_config: AppConfig | None = None) -> None:
         self.app_config = app_config or AppConfig()
-        self.component_registry = ComponentRegistry()
         self.logger_factory = create_logger_factory(self.app_config.open_ticket_ai.infrastructure.logging)
+        self.component_registry = ComponentRegistry()
         self.plugin_loader = PluginLoader(
             registry=self.component_registry,
             logger_factory=self.logger_factory,
@@ -45,7 +45,7 @@ class AppModule(Module):
 
     @provider
     def create_renderer_from_service(
-        self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
+            self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         logger = logger_factory.create("AppModule")
         logger.debug("🔧 Creating TemplateRenderer from service configuration")
