@@ -77,7 +77,7 @@ def generate_sidecars_json(root_dir: Path, output_path: Path) -> int:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(output_path, "w") as f:
-        json.dump(sidecars, f, indent=2, sort_keys=False)
+        json.dump(sidecars, f, indent=2)
 
     print(f"✅ Generated {output_path}")
     print(f"   Added {len(sidecars)} sidecars:")

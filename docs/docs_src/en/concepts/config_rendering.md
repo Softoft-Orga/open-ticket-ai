@@ -12,7 +12,8 @@ template rendering, and dependency injection.
 
 Unlike earlier revisions where the renderer lived under infrastructure defaults, the active `TemplateRenderer` is now
 configured explicitly as a **service entry**. During bootstrap, the service container searches the raw service
-definitions for exactly one renderer entry. It resolves this entry without performing any template rendering and registers the
+definitions for exactly one renderer entry. It resolves this entry without performing any template rendering and
+registers the
 instance for reuse. If the bootstrapper finds zero or more than one renderer entry the configuration loader raises a
 validation error before any other services are touched. This single-instance enforcement guarantees that every
 downstream dependency resolves against the same renderer instance.
@@ -143,73 +144,11 @@ Both failures occur before any other services are rendered, making the requireme
 
 When templates are rendered during pipe execution, the rendering scope is built from the **PipeContext** structure:
 
-```mermaid
-%%{init:{
-  "flowchart":{"defaultRenderer":"elk","htmlLabels":true,"curve":"linear"},
-  "themeVariables":{"fontSize":"14px","fontFamily":"system-ui"},
-}}%%
-flowchart TB
-    subgraph ENV["🌍 Environment Variables"]
-        direction TB
-        EnvVars["Filtered by prefix<br/>(default: OTAI_*)"]
-        EnvAccess["Accessed via env() function"]
-    end
-
-    subgraph CONTEXT["📦 PipeContext Structure"]
-        direction TB
-
-        subgraph CURRENT["Current Pipe Context"]
-            direction TB
-            CurParams["params: dict<br/>(This pipe's parameters)"]
-            CurPipes["pipes: dict<br/>(All previous pipe results)"]
-            ParentRef["parent: PipeContext | None<br/>(Link to parent context)"]
-        end
-
-        subgraph PARENT["Parent Context (if in CompositePipe)"]
-            direction TB
-            ParParams["params: dict<br/>(Parent pipe parameters)"]
-            ParPipes["pipes: dict<br/>(Parent's pipe results)"]
-            ParParent["parent: PipeContext | None<br/>(Grandparent context)"]
-        end
-    end
-
-    subgraph RENDER["🎨 Template Rendering Scope"]
-        direction TB
-        Scope1["params → Current pipe params"]
-        Scope2["pipes → All accumulated results"]
-        Scope3["parent → Parent context chain"]
-        Scope4["env() → Filtered env vars"]
-    end
-
-    EnvVars --> EnvAccess
-    CurParams --> Scope1
-    CurPipes --> Scope2
-    ParentRef --> PARENT
-    ParParams -.-> Scope1
-    ParPipes -.-> Scope2
-    ParParent -.-> Scope3
-    EnvAccess --> Scope4
-    CURRENT --> RENDER
-    PARENT -.-> RENDER
-    style ENV fill: #1e3a5f, stroke: #0d1f3d, stroke-width: 2px, color: #e0e0e0
-    style CONTEXT fill: #5a189a, stroke: #3c096c, stroke-width: 2px, color: #e0e0e0
-    style RENDER fill: #2d6a4f, stroke: #1b4332, stroke-width: 2px, color: #e0e0e0
-    style CURRENT fill: #2b2d42, stroke: #14213d, stroke-width: 2px, color: #e0e0e0
-    style PARENT fill: #374151, stroke: #1f2937, stroke-width: 2px, color: #9ca3af
-```
-
 ## Key Concepts
 
 ### PipeContext Structure
 
 The `PipeContext` is the core data structure that holds execution state and is used as the rendering scope:
-
-```python
-class PipeContext(BaseModel):
-    pipes: dict[str, PipeResult[Any]]  # All previous pipe results
-    params: dict[str, Any]  # Current pipe parameters
-    parent: PipeContext | None  # Parent context (for nested pipes)
-```
 
 **What each field provides:**
 
@@ -366,27 +305,6 @@ params:
 **Pipe Implementation Pattern:**
 
 The `Pipe` base class automatically handles this validation:
-
-```python
-class MyParams(BaseModel):
-    timeout: int
-    model: str
-
-
-class MyPipe(Pipe[MyParams]):
-    params_class = MyParams  # Required
-
-    def __init__(
-            self,
-            pipe_config: PipeConfig[MyParams],
-            logger_factory: LoggerFactory,
-            *args: Any,
-            **kwargs: Any,
-    ) -> None:
-        super().__init__(pipe_config, logger_factory)
-        # self.params is now validated MyParams instance
-        # pipe_config.params was a dict from YAML rendering
-```
 
 **Key Points:**
 
@@ -570,26 +488,7 @@ If you have custom pipes using older patterns, update them as follows:
 
 **Old Pattern (if you had params_class validation in subclass):**
 
-```python
-class OldPipe(Pipe[OldParams]):
-    def __init__(self, pipe_config, logger_factory, *args, **kwargs):
-        super().__init__(pipe_config, logger_factory)
-        # Manual validation (don't do this anymore)
-        if isinstance(self.pipe_config._config, dict):
-            self.params = OldParams.model_validate(self.pipe_config._config)
-```
-
 **New Pattern (current):**
-
-```python
-class NewPipe(Pipe[NewParams]):
-    params_class = NewParams  # Just add this class attribute
-
-    def __init__(self, pipe_config, logger_factory, *args, **kwargs):
-        super().__init__(pipe_config, logger_factory)
-        # self.params is automatically validated by parent __init__
-        # No manual validation needed!
-```
 
 **Migration Steps:**
 
@@ -608,14 +507,6 @@ class NewPipe(Pipe[NewParams]):
 ### When Params Are Dict vs. Model
 
 The Pipe base class handles both cases:
-
-```python
-# In Pipe.__init__ (pipe.py:27-30)
-if isinstance(pipe_params._config, dict):
-    self._config: ParamsT = self.params_class.model_validate(pipe_params._config)
-else:
-    self._config: ParamsT = pipe_params._config
-```
 
 **Params arrive as dict when:**
 

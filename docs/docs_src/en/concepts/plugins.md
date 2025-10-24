@@ -53,6 +53,7 @@ orchestrator:
         use: "otobo-znuny:FetchTicketsPipe"
         injects:
           ticket_system: "ticket_system"
+```
 
 ## Plugin Factory Lifecycle
 
@@ -67,14 +68,6 @@ orchestrator:
    configuration files and dependency injection.
 
 ## API Compatibility
-
-Plugins declare compatibility with core API versions:
-
-```python
-# In plugin __init__.py
-__version__ = "1.0.0"
-__core_api_version__ = "^2.0"  # Compatible with 2.x
-```
 
 Core validates compatibility at load time and fails gracefully if versions mismatch.
 
@@ -124,11 +117,11 @@ See [Plugin Development Guide](../developers/plugin_development.md) for complete
 
 ```
 otai-my-plugin/
-├── pyproject.toml          # Entry point targets the plugin factory
+├── pyproject.toml
 ├── src/
 │   └── otai_my_plugin/
 │       ├── __init__.py
-│       ├── plugin.py       # Plugin subclass + factory callable
+│       ├── plugin.py
 │       ├── services/
 │       └── pipes/
 └── tests/
