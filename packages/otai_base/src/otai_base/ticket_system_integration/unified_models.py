@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from pydantic import Field
-
 from open_ticket_ai import StrictBaseModel
+from pydantic import Field
 
 
 class UnifiedNote(StrictBaseModel):

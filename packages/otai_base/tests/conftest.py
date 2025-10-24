@@ -4,8 +4,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from injector import AssistedBuilder, Injector
-from pydantic import BaseModel, ConfigDict, Field
-
 from open_ticket_ai import (
     AppConfig,
     AppModule,
@@ -24,9 +22,11 @@ from open_ticket_ai import (
     TemplateRenderer,
     create_logger_factory,
 )
+from pydantic import BaseModel, ConfigDict, Field
+from tests.mocked_ticket_system import MockedTicketSystem
+
 from otai_base.ticket_system_integration.ticket_system_service import TicketSystemService
 from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
-from tests.mocked_ticket_system import MockedTicketSystem
 
 pytestmark = [pytest.mark.unit]
 

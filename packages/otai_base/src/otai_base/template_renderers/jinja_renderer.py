@@ -2,9 +2,9 @@ from typing import Any, ClassVar
 
 from injector import inject
 from jinja2.nativetypes import NativeEnvironment
+from open_ticket_ai import InjectableConfig, LoggerFactory, StrictBaseModel, TemplateRenderer
 from pydantic import BaseModel
 
-from open_ticket_ai import InjectableConfig, LoggerFactory, StrictBaseModel, TemplateRenderer
 from otai_base.template_renderers.jinja_renderer_extras import (
     at_path,
     fail,

@@ -1,5 +1,4 @@
 import pytest
-
 from open_ticket_ai import LoggerFactory, StdlibLoggerFactory
 
 

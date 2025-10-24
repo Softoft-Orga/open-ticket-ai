@@ -23,10 +23,7 @@ def level_no(level: str) -> int:
 
 
 def build_formatter(logging_format_config: LoggingFormatConfig) -> logging.Formatter:
-    return logging.Formatter(
-        fmt=logging_format_config.message_format,
-        datefmt=logging_format_config.date_format
-    )
+    return logging.Formatter(fmt=logging_format_config.message_format, datefmt=logging_format_config.date_format)
 
 
 class StdlibLogger(AppLogger):
@@ -60,8 +57,14 @@ class StdlibLoggerFactory(LoggerFactory):
     def __init__(self, cfg: LoggingConfig | None = None):
         self._cfg = cfg or LoggingConfig()
 
-    def create(self, name: str, format_config: LoggingFormatConfig | None = None,
-               extras: dict[str, Any] | None = None, *_: Any, **__: Any) -> AppLogger:
+    def create(
+        self,
+        name: str,
+        format_config: LoggingFormatConfig | None = None,
+        extras: dict[str, Any] | None = None,
+        *_: Any,
+        **__: Any,
+    ) -> AppLogger:
         # PAD Name to 30 chars for alignment
         padded_name = name.ljust(30)
         logger = logging.getLogger(padded_name)

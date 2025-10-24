@@ -4,9 +4,8 @@ import re
 from typing import Any
 
 import jinja2
-from pydantic import BaseModel
-
 from open_ticket_ai import PipeResult, TemplateRenderError
+from pydantic import BaseModel
 
 
 class FailMarker:

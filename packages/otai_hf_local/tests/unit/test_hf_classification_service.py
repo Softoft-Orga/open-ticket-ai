@@ -1,7 +1,6 @@
 from unittest.mock import MagicMock
 
 import pytest
-
 from open_ticket_ai import InjectableConfig
 from otai_base.ai_classification_services.classification_models import ClassificationRequest, ClassificationResult
 from packages.otai_hf_local.src.otai_hf_local.hf_classification_service import HFClassificationService

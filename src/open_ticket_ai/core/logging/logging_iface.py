@@ -25,6 +25,12 @@ class AppLogger(abc.ABC):
 
 class LoggerFactory(abc.ABC):
     @abc.abstractmethod
-    def create(self, name: str, format_config: LoggingFormatConfig | None = None,
-               extras: dict[str, Any] | None = None, *args: Any, **kwargs: Any) -> AppLogger:
+    def create(
+        self,
+        name: str,
+        format_config: LoggingFormatConfig | None = None,
+        extras: dict[str, Any] | None = None,
+        *args: Any,
+        **kwargs: Any,
+    ) -> AppLogger:
         pass

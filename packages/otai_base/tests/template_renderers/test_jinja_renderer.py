@@ -4,8 +4,8 @@ import asyncio
 
 import pytest
 from jinja2.nativetypes import NativeEnvironment
-
 from open_ticket_ai import InjectableConfig, LoggerFactory
+
 from otai_base.template_renderers.jinja_renderer import JinjaRenderer
 
 EXPECTED_SUM_RESULT = 10
