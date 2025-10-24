@@ -1,9 +1,9 @@
 from unittest.mock import MagicMock
 
 import pytest
-
 from open_ticket_ai import AppConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
+
 from otai_hf_local.hf_local_plugin import HFLocalPlugin
 
 

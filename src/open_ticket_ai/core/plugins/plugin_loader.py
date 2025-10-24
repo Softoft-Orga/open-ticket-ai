@@ -22,11 +22,11 @@ default_entry_point_function: GetEntryPointsFn = typing.cast(GetEntryPointsFn, e
 class PluginLoader:
     @inject
     def __init__(
-            self,
-            registry: ComponentRegistry,
-            logger_factory: LoggerFactory,
-            app_config: AppConfig,
-            entry_points_fn: GetEntryPointsFn = default_entry_point_function,
+        self,
+        registry: ComponentRegistry,
+        logger_factory: LoggerFactory,
+        app_config: AppConfig,
+        entry_points_fn: GetEntryPointsFn = default_entry_point_function,
     ):
         self._registry = registry
         self._logger = logger_factory.create(self.__class__.__name__)
