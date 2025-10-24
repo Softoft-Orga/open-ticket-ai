@@ -1,147 +1,101 @@
 ---
-description: Open Ticket AI logging system documentation covering abstract interfaces, stdlib and structlog implementations, and structured logging patterns.
+description: Open Ticket AI logging system documentation covering the abstract interfaces and current standard-library implementation.
 ---
-
-#### TODO there is only standardlogger implementation currently.
 
 # Logging System
 
-Open Ticket AI uses an abstract logging interface that allows developers to switch between different logging
-implementations without modifying application code.
+Open Ticket AI uses an abstract logging interface that allows developers to configure logging behaviour without modifying
+application code. The current implementation is built entirely on Python's standard-library `logging` module.
 
 ## Overview
 
 The logging system provides:
 
 - **Abstract interfaces**: `AppLogger` and `LoggerFactory` protocols
-- **Multiple implementations**: stdlib and structlog adapters
-- **Dependency injection**: AppModule provides LoggerFactory for automatic setup
-- **Context binding**: Attach structured context to log messages
-- **Environment-based selection**: Choose implementation via `LOG_IMPL` environment variable
+- **Standard-library implementation**: `StdlibLoggerFactory`
+- **Dependency injection**: `AppModule` provides `LoggerFactory` for automatic setup
+- **Context binding**: Attach structured context to log messages using the logger API
 
 ## Quick Start
 
-### Using with Dependency Injection
+### Using with dependency injection
 
-Services can inject the `LoggerFactory` and use it to create loggers with bound context. The logger factory creates
-logger instances with optional initial context data.
+Services can inject the `LoggerFactory` and use it to create loggers with bound context. The factory returns instances of
+`StdlibLogger`, which proxy to `logging.getLogger`.
 
-### Direct Usage (without DI)
+### Direct usage (without DI)
 
-The logging adapters can be configured and used directly without the dependency injection container. Configure the
+The standard-library adapter can be configured and used directly without the dependency injection container. Configure the
 logging system at application startup and create loggers as needed.
 
 ```python
+from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.logging.stdlib_logging_adapter import (
     StdlibLoggerFactory,
     create_logger_factory,
 )
 
-# Configure logging
-create_logger_factory(level="INFO")
+config = LoggingConfig(level="INFO")
+factory = create_logger_factory(config)
 
-# Create factory and logger
-factory = StdlibLoggerFactory()
 logger = factory.create("my_module")
-
-# Use logger
 logger.info("Application started")
 ```
 
 ## Configuration
 
-### Environment Variables
+### Runtime configuration
 
-**LOG_IMPL**
+The logging system is configured through the application's YAML configuration file under the
+`infrastructure.logging` section, which is loaded by the `AppModule` during dependency injection setup.
 
-- Controls which logging implementation to use
-- Values: `stdlib` (default) or `structlog`
-- Example: `export LOG_IMPL=structlog`
+### LoggingConfig fields
 
-**LOG_LEVEL**
+`LoggingConfig` defines the supported runtime configuration:
 
-- Sets the logging level
-- Values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
-- Default: `INFO`
-- Example: `export LOG_LEVEL=DEBUG`
+| Field | Type | Default | Description |
+| --- | --- | --- | --- |
+| `level` | Literal[`"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"`, `"CRITICAL"`] | `"INFO"` | Minimum severity level captured by handlers. |
+| `log_to_file` | `bool` | `False` | Enables writing log output to a file handler. |
+| `log_file_path` | `str \| None` | `None` | Absolute or relative path for file logging. Required when `log_to_file` is `True`. |
+| `log_format` | `str` | `"%(asctime)s - %(name)s - %(levelname)s - %(message)s"` | Format string passed to `logging.Formatter`. |
+| `date_format` | `str` | `"%Y-%m-%d %H:%M:%S"` | Timestamp format used by the formatter. |
 
-### Runtime Configuration
+## Logging implementation
 
-The logging system is configured through the application's YAML configuration file under the `infrastructure.logging`
-section, which is loaded by the AppModule during dependency injection setup.
+### Stdlib (Python standard library)
 
-## Logging Implementations
-
-### Stdlib (Python Standard Library)
-
-The stdlib adapter wraps Python's built-in `logging` module.
+The standard-library adapter wraps Python's built-in `logging` module.
 
 **Features:**
 
 - Familiar API for Python developers
 - Compatible with existing logging configurations
-- Context is formatted as key-value pairs in log messages
+- Respects the `LoggingConfig` options for format, level, and optional file output
 
 **Example output:**
 
 ```
-2025-10-11 00:21:14 - MyService - INFO - User created [user_id=123 operation=create]
+2025-10-11 00:21:14 - my_module - INFO - Application started
 ```
 
-**Configuration:**
+### Handler wiring
 
-The stdlib logging can be configured with custom format strings and date formats.
+`create_logger_factory` prepares the global logging state:
 
-```python
-from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_factory
+1. Fetch the root logger and set its level from `LoggingConfig.level`.
+2. Remove any previously registered handlers to avoid duplicate messages.
+3. Build a `logging.Formatter` using `log_format` and `date_format`.
+4. Attach a `StreamHandler` writing to `sys.stdout`, configured with the selected level and formatter.
+5. Optionally attach a `FileHandler` when `log_to_file` is `True` and `log_file_path` is provided.
+6. Return a `StdlibLoggerFactory`, which creates `StdlibLogger` instances bound to named loggers.
 
-create_logger_factory(
-    level="INFO",
-    format_string="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
-```
-
-### Structlog
-
-The structlog adapter provides structured logging with rich formatting options.
-
-**Features:**
-
-- True structured logging with key-value pairs
-- JSON output support
-- Better for log aggregation systems (ELK, Splunk, etc.)
-- Colored console output
-
-**Example output (console):**
-
-```
-2025-10-11T00:21:36.765570Z [info] User created  operation=create user_id=123
-```
-
-**Example output (JSON):**
-
-```json
-{
-  "event": "User created",
-  "level": "info",
-  "timestamp": "2025-10-11T00:21:36.765570Z",
-  "user_id": "123",
-  "operation": "create"
-}
-```
-
-**Configuration:**
-
-Structlog can be configured for console output with colors or JSON output for production environments.
-
-## Context Binding
+## Context binding
 
 Context binding allows you to attach structured data to log messages. Create a base logger with service context, then
-bind request-specific context. All subsequent log messages from that logger will include the bound context
-automatically.
+bind request-specific context. All subsequent log messages from that logger will include the bound context automatically.
 
-## Logger Methods
+## Logger methods
 
 The `AppLogger` protocol defines the following methods:
 
@@ -152,19 +106,19 @@ The `AppLogger` protocol defines the following methods:
 - **`error(message, **kwargs)`**: Log errors
 - **`exception(message, **kwargs)`**: Log exceptions with traceback
 
-## Best Practices
+## Best practices
 
-### 1. Use Dependency Injection
+### 1. Use dependency injection
 
-Always inject the `LoggerFactory` rather than creating loggers directly. This allows for easier testing and
-configuration management.
+Always inject the `LoggerFactory` rather than creating loggers directly. This allows for easier testing and configuration
+management.
 
-### 2. Bind Context Early
+### 2. Bind context early
 
 Create scoped loggers with bound context for better traceability. Bind context data like request IDs, user IDs, or
 operation names early so all subsequent logs include this information.
 
-### 3. Use Appropriate Log Levels
+### 3. Use appropriate log levels
 
 - **DEBUG**: Detailed diagnostic information
 - **INFO**: General informational messages
@@ -172,7 +126,7 @@ operation names early so all subsequent logs include this information.
 - **ERROR**: Error events that might still allow the app to continue
 - **EXCEPTION**: Like ERROR but includes exception traceback
 
-### 4. Include Relevant Context
+### 4. Include relevant context
 
 Add context that helps with debugging and monitoring, such as:
 
@@ -181,40 +135,28 @@ Add context that helps with debugging and monitoring, such as:
 - Table or resource names
 - Operation identifiers
 
-### 5. Don't Log Sensitive Data
+### 5. Don't log sensitive data
 
 Never log passwords, tokens, or personal information. Always log identifiers instead of sensitive values.
 
-## Testing with Logging
+## Testing with logging
 
-When writing tests, you can verify logging behavior by capturing log output and asserting on the messages and context
-data.
+When writing tests, you can verify logging behavior by capturing log output and asserting on the messages and context data.
 
-## Migration Guide
+## Migration guide
 
-### From Direct logging.getLogger()
+### From direct `logging.getLogger()`
 
-Replace direct use of Python's logging module with dependency injection of the LoggerFactory. This allows the logging
+Replace direct use of Python's logging module with dependency injection of the `LoggerFactory`. This allows the logging
 implementation to be swapped without code changes.
 
-### From AppConfig.get_logger()
+### From `AppConfig.get_logger()`
 
-Replace AppConfig-based logger creation with LoggerFactory injection. This decouples logging from the global
-configuration object.
+Replace usages of legacy factory helpers with dependency-injected instances of `LoggerFactory` created by
+`create_logger_factory`.
 
-## Advanced Usage
+## Future roadmap
 
-### Custom Structlog Processors
-
-Structlog configuration can be customized with custom processors for specialized formatting or filtering needs.
-
-### Multiple Logger Instances
-
-Different parts of your application can have different loggers with different bound context to help distinguish log
-sources.
-
-## Related Documentation
-
-- [Dependency Injection](dependency_injection.md)
-- [Services](services.md)
-- [Configuration](../../details/configuration/config_structure.md)
+The logging abstraction allows for introducing alternative adapters (such as Structlog or OpenTelemetry exporters) in the
+future. These integrations are currently under evaluation and not yet available. This page will be updated when new
+implementations are added so readers can adopt them confidently.
