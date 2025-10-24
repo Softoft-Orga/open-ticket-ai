@@ -1,9 +1,15 @@
-### TODO still early idea. Mark as early idea!
-
 # Predefined Pipe Concepts
+
+:::warning Exploratory design
+This page documents an exploratory design for predefined Pipes. The feature is not yet available in production releases and the concepts here may change significantly as we validate the approach with internal prototypes.
+:::
 
 This document captures early ideas for shipping reusable, predefined Pipes that can be imported into project-level YAML
 pipelines.
+
+## Current status
+
+Predefined Pipes are in the discovery phase with only YAML prototypes drafted for internal review. No runtime support exists in the engine, and the catalog has not been published. Engineering is validating the import mechanics, dependency handling, and packaging flows before committing to an implementation timeline. The immediate focus is on delivering the loader, compatibility tests, and developer tooling outlined below, followed by iterative pilot programs with a small set of design partners.
 
 ## Goals
 
@@ -102,7 +108,7 @@ Before publishing a predefined Pipe:
 
 ## Next Steps
 
-1. Build a lightweight loader that merges imported parameters into the active pipeline context.
-2. Create smoke tests to ensure imported pipes remain compatible across version bumps.
-3. Prototype a CLI command `ot pipe add triage-basic` that fetches the YAML into a project.
-4. Evaluate hosting the catalog in a Git-based registry for versioned distribution.
+1. Build a lightweight loader that merges imported parameters into the active pipeline context and validates dependencies.
+2. Create automated smoke and contract tests to ensure imported pipes remain compatible across version bumps.
+3. Prototype a CLI command `ot pipe add triage-basic` that fetches and verifies the YAML before adding it to a project repository.
+4. Evaluate hosting the catalog in a Git-based registry for versioned distribution and controlled pilot access.
