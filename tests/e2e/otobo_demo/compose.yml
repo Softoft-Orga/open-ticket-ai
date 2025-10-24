@@ -1,0 +1,6 @@
+services:
+  open-ticket-ai:
+    image: softotobo/open-ticket-ai:1.2.5
+    restart: "unless-stopped"
+    volumes:
+      - ./config.yml:/app/config.yml:ro
