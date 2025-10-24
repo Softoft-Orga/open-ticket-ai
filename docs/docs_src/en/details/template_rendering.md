@@ -160,7 +160,7 @@ Template rendering applies to string values in these configuration sections:
 - Dependency specifications
 
 > The template renderer configuration itself (`infrastructure.template_renderer_config`) is never rendered—it is used as
-> raw input to bootstrap the rendering system.
+> raw input to bootstrap the rendering system. Rendering this configuration would create a circular dependency, since it is needed to initialize the renderer itself.
 
 ## Examples
 
