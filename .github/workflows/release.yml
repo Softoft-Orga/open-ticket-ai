@@ -24,6 +24,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - run: uv pip install --system setuptools-scm
 
       - id: meta
         run: |
