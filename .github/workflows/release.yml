@@ -24,14 +24,9 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+
       - id: meta
-        run: |
-          uv add setuptools_scm
-          python - <<'PY'
-          from setuptools_scm import get_version
-          print(f"version={get_version(root='.', version_scheme='guess-next-dev', local_scheme='no-local-version')}")
-          PY
-          >> "$GITHUB_OUTPUT"
+        run: echo "version=$(python scripts/resolve_version.py)" >> "$GITHUB_OUTPUT"
 
       - run: |
           rm -rf dist
@@ -51,8 +46,26 @@ jobs:
           username: softotobo
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - id: tags
+        shell: bash
+        run: |
+          V="${{ steps.meta.outputs.version }}"
+          if [[ "$V" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            IFS='.' read -r MAJ MIN PAT <<<"$V"
+            {
+              echo "list<<EOF"
+              echo "${{ env.DOCKER_REPOSITORY }}:${V}"
+              echo "${{ env.DOCKER_REPOSITORY }}:${MAJ}.${MIN}"
+              echo "${{ env.DOCKER_REPOSITORY }}:${MAJ}"
+              echo "${{ env.DOCKER_REPOSITORY }}:latest"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "list=${{ env.DOCKER_REPOSITORY }}:${V}" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ env.DOCKER_REPOSITORY }}:${{ steps.meta.outputs.version }}
+          tags: ${{ steps.tags.outputs.list }}
