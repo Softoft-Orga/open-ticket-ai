@@ -4,23 +4,25 @@ pageClass: full-page
 aside: false
 ---
 
-### TODO not much has changed here!
-
-The only thing changed is that the templaterenderer config is part of the services. No need to set default or anything.
-if there is not exactly one templaterenderer service defined an error is raised.
-
 # Configuration and Template Rendering
 
 The configuration and template rendering system is the foundation of Open Ticket AI's dynamic behavior. It transforms
 static YAML files into live, context-aware application objects through a multi-stage process involving validation,
 template rendering, and dependency injection.
 
+Unlike earlier revisions where the renderer lived under infrastructure defaults, the active `TemplateRenderer` is now
+configured explicitly as a **service entry**. During bootstrap the service container searches the raw service
+definitions for exactly one renderer entry, resolves it without performing any template rendering, and registers the
+instance for reuse. If the bootstrapper finds zero or more than one renderer entry the configuration loader raises a
+validation error before any other services are touched. This single-instance enforcement guarantees that every
+downstream dependency resolves against the same renderer instance.
+
 ## Overview
 
 Configuration flows through several stages from file to runtime:
 
 1. **YAML Parsing**: Configuration files are loaded and validated
-2. **Template Bootstrapping**: The template renderer is initialized first
+2. **Template Bootstrapping**: The template renderer service is resolved before anything else
 3. **Configuration Rendering**: Templates in config are evaluated against runtime context
 4. **Object Instantiation**: Rendered configurations become application objects
 
@@ -60,11 +62,12 @@ flowchart TB
 %% ===================== BOOTSTRAP PHASE =====================
     subgraph BOOT["🔧 Bootstrap Phase"]
         direction TB
-        InfraConfig["InfrastructureConfig<br/><small>Extract Infrastructure</small>"]
-        RendererConfig["TemplateRendererConfig<br/><small>Renderer Settings</small>"]
-        BootstrapRenderer["JinjaRenderer<br/><small>⚠️ NOT Rendered</small>"]:::critical
-        InfraConfig --> RendererConfig
-        RendererConfig -->|Instantiate<br/>NO rendering| BootstrapRenderer
+        ServiceDefs["ServiceConfig List<br/><small>All service definitions</small>"]
+        RendererDef["TemplateRenderer Service<br/><small>Service entry</small>"]
+        BootstrapRenderer["TemplateRenderer<br/><small>Resolved Singleton</small>"]:::critical
+        ServiceDefs -->|Validate<br/>exactly one| RendererDef
+        RendererDef -->|Resolve without<br/>template rendering| BootstrapRenderer
+        BootstrapRenderer -->|Register as<br/>singleton| ServiceDefs
     end
 
 %% ===================== SERVICE RENDERING PHASE =====================
@@ -72,8 +75,8 @@ flowchart TB
         direction TB
         Renderer["TemplateRenderer<br/><small>Active Renderer</small>"]
         Factory["RenderableFactory<br/><small>Service Factory</small>"]
-        ServiceConfigs["RenderableConfig List<br/><small>Service Definitions</small>"]
-        BootstrapRenderer -.->|Register as<br/>singleton| Renderer
+        ServiceConfigs["RenderableConfig List<br/><small>Remaining Services</small>"]
+        ServiceDefs -.->|Resolve renderer<br/>before others| Renderer
         ServiceConfigs --> Factory
         Renderer -.->|Inject template<br/>renderer| Factory
     end
@@ -90,8 +93,8 @@ flowchart TB
     end
 
 %% ===================== MAIN FLOW =====================
-    RawConfig ==>|Extract<br/>infrastructure| InfraConfig
-    RawConfig ==>|Extract<br/>services| ServiceConfigs
+    RawConfig ==>|Extract<br/>services| ServiceDefs
+    ServiceDefs ==>|Remove renderer<br/>entry after bootstrap| ServiceConfigs
     RawConfig ==>|Extract<br/>orchestrator| Orchestrator
 %% ===================== STYLES =====================
     classDef critical fill: #dc2626, stroke: #b91c1c, stroke-width: 3px, color: #fff, font-weight: bold
@@ -101,6 +104,40 @@ flowchart TB
     style RENDER fill: #dbeafe, stroke: #2563eb, stroke-width: 2px
     style RUNTIME fill: #dcfce7, stroke: #16a34a, stroke-width: 2px
 ```
+
+## TemplateRenderer Service Contract
+
+The bootstrapper enforces three rules while extracting the renderer definition:
+
+1. **Presence**: exactly one service must declare it provides the `TemplateRenderer` contract.
+2. **Eagerness**: the renderer is materialized before any other service graph nodes are rendered.
+3. **Reuse**: the resolved renderer is cached as a singleton and injected anywhere templates need evaluation.
+
+Because the renderer is resolved from the unrendered configuration, the service definition itself must avoid template
+expressions. Any attempt to template the renderer definition fails during validation because the renderer has not yet
+been constructed.
+
+### Example Service Definition
+
+```yaml
+services:
+  - id: template_renderer
+    provides: TemplateRenderer
+    type: builtins.jinja
+    config:
+      loader: filesystem
+      search_paths:
+        - "${project_root}/templates"
+```
+
+With this configuration:
+
+- If the `TemplateRenderer` entry is missing, bootstrap stops with `ConfigError: exactly one TemplateRenderer service
+  must be defined`.
+- If a second service also advertises `provides: TemplateRenderer`, bootstrap raises
+  `ConfigError: duplicate TemplateRenderer service definitions found`.
+
+Both failures occur before any other services are rendered, making the requirement obvious during validation.
 
 ## Template Rendering Scope
 
