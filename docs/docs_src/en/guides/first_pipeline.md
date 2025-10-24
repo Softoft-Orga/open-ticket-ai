@@ -1,418 +1,181 @@
 ---
-description: Step-by-step tutorial for creating your first ticket classification pipeline with Open Ticket AI including fetching, classification, and updates.
+description: Step-by-step tutorial for creating your first ticket classification pipeline with Open Ticket AI using the current configuration schema (module-based plugins, service registry, and PipeConfig orchestrator).
 ---
-
-### TODO the main points didnt changed but the details like the settings config structure.
 
 # Creating Your First Pipeline
 
-Step-by-step tutorial for creating a complete ticket classification pipeline.
+This guide walks through building a working ticket-classification pipeline on top of the latest Open Ticket AI configuration schema. You will learn how plugin modules are loaded, how services are registered by identifier, and how the orchestrator is composed entirely from nested `PipeConfig` definitions.
 
-## Overview
+## Configuration building blocks
 
-In this tutorial, you'll create a pipeline that:
+All configuration lives under the top-level `open_ticket_ai` key. Every object underneath is validated by Pydantic models before the orchestrator starts, so matching the schema is essential.
 
-1. Fetches open tickets from your ticket system
-2. Classifies them into queues
-3. Assigns priority levels
-4. Updates tickets with classifications
-5. Adds notes documenting the changes
+### Plugin modules (`open_ticket_ai.plugins`)
 
-## Prerequisites
+Plugins are enabled by module (entry point) name. List each plugin you want to load as a string. At minimum you need the core `otai-base` plugin to access the built-in runners, orchestrators, and utility pipes.
 
-- Open Ticket AI installed
-- OTOBO/Znuny instance with API access
-- Environment variables configured
+### Service registry (`open_ticket_ai.services`)
 
-## Understanding Configuration Sections
+Services are defined in a dictionary keyed by their identifier. Each service describes the implementation to instantiate via `use`, optional constructor dependencies via `injects`, and configuration data via `params`. Services become injectable dependencies for pipes and other services. Open Ticket AI expects exactly one `TemplateRenderer` service; the example below registers the default Jinja renderer.
 
-A complete configuration has four main sections:
+### Orchestrator (`open_ticket_ai.orchestrator`)
 
-### 1. Plugins
+The orchestrator itself is a `PipeConfig`. You choose an orchestrator implementation via `use` (for example `base:SimpleSequentialOrchestrator`) and configure it via `params`. In the sequential orchestrator, `params.steps` is a list of nested `PipeConfig` objects. Each step can be any pipe—including runners such as `SimpleSequentialRunner`, other orchestrators, or concrete business logic pipes.
 
-Load and configure plugins:
+The following minimal configuration highlights the structure and validates against the current schema:
 
 ```yaml
-plugins:
-  - name: otobo_znuny
-    config:
-      base_url: "${OTOBO_BASE_URL}"
-      api_token: "${OTOBO_API_TOKEN}"
+open_ticket_ai:
+  api_version: "1"
+  plugins:
+    - otai-base
+  services:
+    default_renderer:
+      use: "base:JinjaRenderer"
+  orchestrator:
+    id: orchestrator
+    use: "base:SimpleSequentialOrchestrator"
+    params:
+      steps: []
 ```
 
-### 2. General Config (Optional)
+## Build a minimal ticket-routing pipeline
 
-Application-wide settings:
+We will extend the skeleton above into a runnable pipeline that fetches tickets from OTOBO/Znuny, classifies the queue using a Hugging Face model, updates the ticket, and stores a note. Each section explains how the configuration maps to concrete classes in the codebase.
+
+### Step 1: Declare plugin modules and template renderer
+
+Add the plugins that provide the injectables we need:
+
+- `otai-base` – core orchestrators (`SimpleSequentialOrchestrator`), runners (`SimpleSequentialRunner`), pipes (`CompositePipe`, `FetchTicketsPipe`, `UpdateTicketPipe`, `AddNotePipe`, `ExpressionPipe`), triggers (`IntervalTrigger`), and the default `JinjaRenderer`.
+- `otai-otobo-znuny` – ticket system integration service (`OTOBOZnunyTicketSystemService`).
+- `otai-hf-local` – on-device Hugging Face classification service (`HFClassificationService`).
+
+Keep the `default_renderer` service registered so template rendering is available before any other service instantiates.
+
+### Step 2: Connect external services
+
+Define services keyed by ID:
+
+- `default_renderer` instantiates `base:JinjaRenderer`, satisfying the requirement that exactly one `TemplateRenderer` exists.
+- `otobo_znuny` points at `otobo-znuny:OTOBOZnunyTicketSystemService` and passes connection credentials inside `params`.
+- `hf_classifier` resolves to `hf-local:HFClassificationService` with an optional API token.
+
+These IDs (for example `otobo_znuny` and `hf_classifier`) will be referenced from pipe `injects` sections later.
+
+### Step 3: Configure the orchestrator and runner
+
+Use `base:SimpleSequentialOrchestrator` for a continuously running event loop. Its `params.orchestrator_sleep` controls the idle time between cycles. Inside `params.steps`, add a single `SimpleSequentialRunner`. This runner expects two nested `PipeConfig` definitions under `params`:
+
+- `on` – a trigger pipe; we use `base:IntervalTrigger` with a `timedelta` interval (`PT60S` runs once per minute).
+- `run` – the pipeline to execute when the trigger succeeds. Here we reference `base:CompositePipe`, which processes its own `params.steps` sequentially.
+
+### Step 4: Define the composite pipeline steps
+
+Inside the composite pipe, each element in `params.steps` is another `PipeConfig` that maps 1:1 to a pipe class:
+
+1. **`fetch_open_tickets`** (`base:FetchTicketsPipe`) injects the ticket system service and loads incoming tickets via `ticket_search_criteria`.
+2. **`ensure_tickets_found`** (`base:ExpressionPipe`) calls `fail()` if no tickets were fetched, stopping the runner gracefully.
+3. **`queue_classifier`** (`base:ClassificationPipe`) injects the Hugging Face service and classifies the ticket text.
+4. **`update_queue`** (`base:UpdateTicketPipe`) writes the new queue selection back to OTOBO/Znuny.
+5. **`add_classification_note`** (`base:AddNotePipe`) records an audit trail of the automated classification.
+
+All parameters reference earlier results using helper functions exposed by the Jinja renderer (`get_pipe_result`, `fail`, `get_env`, etc.).
+
+### Complete configuration
+
+Save the following validated configuration as `config.yml` in your working directory. It combines all steps described above and matches the current schema exactly.
 
 ```yaml
-infrastructure:
-  log_level: "INFO"
-  max_workers: 4
+open_ticket_ai:
+  api_version: "1"
+  plugins:
+    - otai-base
+    - otai-otobo-znuny
+    - otai-hf-local
+  services:
+    default_renderer:
+      use: "base:JinjaRenderer"
+    otobo_znuny:
+      use: "otobo-znuny:OTOBOZnunyTicketSystemService"
+      params:
+        base_url: "https://helpdesk.example.com/otobo/nph-genericinterface.pl"
+        username: "open_ticket_ai"
+        password: "{{ get_env('OTOBO_API_TOKEN') }}"
+    hf_classifier:
+      use: "hf-local:HFClassificationService"
+      params:
+        api_token: "{{ get_env('HF_TOKEN') }}"
+  orchestrator:
+    id: ticket-automation
+    use: "base:SimpleSequentialOrchestrator"
+    params:
+      orchestrator_sleep: "PT60S"
+      steps:
+        - id: ticket-routing-runner
+          use: "base:SimpleSequentialRunner"
+          params:
+            on:
+              id: every-minute
+              use: "base:IntervalTrigger"
+              params:
+                interval: "PT60S"
+            run:
+              id: ticket-routing
+              use: "base:CompositePipe"
+              params:
+                steps:
+                  - id: fetch_open_tickets
+                    use: "base:FetchTicketsPipe"
+                    injects:
+                      ticket_system: "otobo_znuny"
+                    params:
+                      ticket_search_criteria:
+                        queue:
+                          name: "OpenTicketAI::Incoming"
+                        limit: 25
+                  - id: ensure_tickets_found
+                    use: "base:ExpressionPipe"
+                    params:
+                      expression: "{{ fail('No open tickets found') if (get_pipe_result('fetch_open_tickets','fetched_tickets') | length) == 0 else 'tickets ready' }}"
+                  - id: queue_classifier
+                    use: "base:ClassificationPipe"
+                    injects:
+                      classification_service: "hf_classifier"
+                    params:
+                      text: "{{ get_pipe_result('fetch_open_tickets','fetched_tickets')[0]['subject'] }} {{ get_pipe_result('fetch_open_tickets','fetched_tickets')[0]['body'] }}"
+                      model_name: "softoft/otai-queue-de-bert-v1"
+                  - id: update_queue
+                    use: "base:UpdateTicketPipe"
+                    injects:
+                      ticket_system: "otobo_znuny"
+                    params:
+                      ticket_id: "{{ get_pipe_result('fetch_open_tickets','fetched_tickets')[0]['id'] }}"
+                      updated_ticket:
+                        queue:
+                          name: "{{ get_pipe_result('queue_classifier','label') }}"
+                  - id: add_classification_note
+                    use: "base:AddNotePipe"
+                    injects:
+                      ticket_system: "otobo_znuny"
+                    params:
+                      ticket_id: "{{ get_pipe_result('fetch_open_tickets','fetched_tickets')[0]['id'] }}"
+                      note:
+                        subject: "Queue classification"
+                        body: |
+                          Auto-classified queue: {{ get_pipe_result('queue_classifier','label') }}
+                          Confidence: {{ (get_pipe_result('queue_classifier','confidence') * 100) | round(1) }}%
 ```
 
-### 3. Definitions (Optional)
+## Running and verifying the pipeline
 
-Reusable configuration blocks:
+1. Install the required packages (core plus the plugins listed above).
+2. Provide credentials through environment variables referenced in the configuration (for example `OTOBO_API_TOKEN`, `HF_TOKEN`).
+3. Place the configuration file at `config.yml` in your working directory so `AppConfig` picks it up automatically.
+4. Start the orchestrator:
 
-```yaml
-services:
-  search_criteria: &search
-    StateType: "Open"
-    limit: 50
-```
+   ```bash
+   uv run python -m open_ticket_ai.main
+   ```
 
-### 4. Orchestrator
-
-Pipeline definitions:
-
-```yaml
-orchestrator:
-  pipelines:
-    - name: my_pipeline
-      run_every_milli_seconds: 60000
-      pipes:
-        - pipe_name: step1
-        - pipe_name: step2
-```
-
-## Step-by-Step Pipeline Creation
-
-### Step 1: Start with Basic Structure
-
-Create `config.yml`:
-
-```yaml
-plugins:
-  - name: otobo_znuny
-    config:
-      base_url: "${OTOBO_BASE_URL}"
-      api_token: "${OTOBO_API_TOKEN}"
-
-orchestrator:
-  pipelines:
-    - name: ticket_classifier
-      run_every_milli_seconds: 60000
-      pipes: [ ]  # We'll add pipes here
-```
-
-### Step 2: Add Ticket Fetching
-
-Add a pipe to fetch tickets:
-
-```yaml
-orchestrator:
-  pipelines:
-    - name: ticket_classifier
-      run_every_milli_seconds: 60000
-      pipes:
-        # Fetch open tickets
-        - pipe_name: fetch_tickets
-          search:
-            StateType: "Open"
-            QueueIDs: [ 1, 2, 3 ]  # Your queue IDs
-            limit: 50
-```
-
-Test this step:
-
-```bash
-open-ticket-ai run --config config.yml --dry-run
-```
-
-### Step 3: Add Queue Classification
-
-Add queue classification pipe:
-
-```yaml
-pipes:
-  - pipe_name: fetch_tickets
-    search:
-      StateType: "Open"
-      limit: 50
-
-  # Classify queue
-  - pipe_name: classify_queue
-    model_name: "bert-base-uncased"
-    confidence_threshold: 0.7
-    queue_mapping:
-      billing: 1
-      support: 2
-      technical: 3
-```
-
-### Step 4: Add Priority Classification
-
-Add priority assignment:
-
-```yaml
-pipes:
-  - pipe_name: fetch_tickets
-    # ... (as before)
-
-  - pipe_name: classify_queue
-    # ... (as before)
-
-  # Classify priority
-  - pipe_name: classify_priority
-    confidence_threshold: 0.7
-    priority_mapping:
-      low: 1
-      normal: 2
-      high: 3
-      urgent: 4
-```
-
-### Step 5: Update Tickets
-
-Add pipe to update tickets:
-
-```yaml
-pipes:
-  # ... (previous pipes)
-
-  # Update ticket with classifications
-  - pipe_name: update_ticket
-    fields:
-      QueueID: "{{ context.predicted_queue_id }}"
-      PriorityID: "{{ context.predicted_priority_id }}"
-```
-
-### Step 6: Add Documentation Note
-
-Add a note to each ticket:
-
-```yaml
-pipes:
-  # ... (previous pipes)
-
-  # Add note documenting classification
-  - pipe_name: add_note
-    note_text: |
-      Automatically classified by AI:
-      - Queue: {{ context.predicted_queue }}
-      - Priority: {{ context.predicted_priority }}
-      - Confidence: {{ context.confidence }}%
-      - Timestamp: {{ now() }}
-    note_type: "internal"
-```
-
-### Step 7: Complete Configuration
-
-Your complete `config.yml`:
-
-```yaml
-plugins:
-  - name: otobo_znuny
-    config:
-      base_url: "${OTOBO_BASE_URL}"
-      api_token: "${OTOBO_API_TOKEN}"
-
-  - name: hf_local
-    config:
-      model_name: "bert-base-uncased"
-      device: "cpu"
-
-infrastructure:
-  log_level: "INFO"
-
-services:
-  # Reusable search criteria
-  open_tickets: &open_tickets
-    StateType: "Open"
-    limit: 50
-
-  # Queue mapping
-  queues: &queues
-    billing: 1
-    support: 2
-    technical: 3
-
-  # Priority mapping
-  priorities: &priorities
-    low: 1
-    normal: 2
-    high: 3
-    urgent: 4
-
-orchestrator:
-  pipelines:
-    - name: ticket_classifier
-      run_every_milli_seconds: 60000
-      pipes:
-        - pipe_name: fetch_tickets
-          search: *open_tickets
-
-        - pipe_name: classify_queue
-          confidence_threshold: 0.7
-          queue_mapping: *queues
-
-        - pipe_name: classify_priority
-          confidence_threshold: 0.7
-          priority_mapping: *priorities
-
-        - pipe_name: update_ticket
-          fields:
-            QueueID: "{{ context.predicted_queue_id }}"
-            PriorityID: "{{ context.predicted_priority_id }}"
-
-        - pipe_name: add_note
-          note_text: |
-            Auto-classified:
-            Queue: {{ context.predicted_queue }}
-            Priority: {{ context.predicted_priority }}
-            Confidence: {{ context.confidence }}%
-          note_type: "internal"
-```
-
-## Testing and Debugging
-
-### Dry Run
-
-Test without making changes:
-
-```bash
-open-ticket-ai run --config config.yml --dry-run
-```
-
-### Verbose Logging
-
-Enable debug logging:
-
-```bash
-open-ticket-ai run --config config.yml --log-level DEBUG
-```
-
-### Limit Processing
-
-Process only a few tickets:
-
-```bash
-# Modify config temporarily
-search:
-  StateType: "Open"
-  limit: 5  # Start small
-```
-
-### Validate Configuration
-
-Check for errors:
-
-```bash
-open-ticket-ai validate --config config.yml
-```
-
-## Common Patterns
-
-### Conditional Execution
-
-Execute pipes based on conditions:
-
-```yaml
-- pipe_name: add_urgent_note
-  if: "{{ context.priority == 'urgent' }}"
-  note_text: "URGENT: Requires immediate attention"
-```
-
-### Error Handling
-
-Handle errors gracefully:
-
-```yaml
-- pipe_name: classify_queue
-  on_error: continue  # Continue pipeline on error
-  fallback_queue: "General"  # Fallback value
-```
-
-### Batching
-
-Process tickets in batches:
-
-```yaml
-- pipe_name: fetch_tickets
-  search:
-    StateType: "Open"
-    limit: 100
-  batch_size: 10  # Process 10 at a time
-```
-
-## Optimizing Your Pipeline
-
-### Performance Tips
-
-1. **Adjust Interval**: Don't run too frequently
-
-```yaml
-run_every_milli_seconds: 300000  # Every 5 minutes
-```
-
-2. **Limit Results**: Process manageable batches
-
-```yaml
-search:
-  limit: 50  # Don't fetch too many
-```
-
-3. **Use Caching**: Enable model caching
-
-```yaml
-plugins:
-  - name: hf_local
-    config:
-      cache_models: true
-```
-
-### Monitoring
-
-Add monitoring pipes:
-
-```yaml
-- pipe_name: log_metrics
-  metrics:
-    - tickets_processed
-    - classification_accuracy
-    - processing_time
-```
-
-## Troubleshooting
-
-### No Tickets Fetched
-
-Check search criteria:
-
-- Verify QueueIDs exist
-- Check StateType is correct
-- Ensure tickets match criteria
-
-### Classification Fails
-
-Check model configuration:
-
-- Verify model name
-- Ensure model is downloaded
-- Check input format
-
-### Updates Don't Apply
-
-Verify permissions:
-
-- API token has write access
-- Queue/Priority IDs are valid
-- Ticket exists and is updateable
-
-## Next Steps
-
-Now that you have a working pipeline:
-
-1. **Customize**: Adapt to your specific needs
-2. **Monitor**: Track performance and accuracy
-3. **Refine**: Improve classification models
-4. **Scale**: Increase throughput
-5. **Extend**: Add custom pipes
-
-## Related Documentation
-
-- [Configuration Reference](../details/config_reference.md)
-- [Configuration Examples](../details/configuration/examples.md)
-- [Pipeline Architecture](../concepts/pipeline-architecture.md)
-- [Template Rendering](../developers/template_rendering.md)
-- [Troubleshooting](troubleshooting.md)
+`AppConfig` validates the YAML against the schema on startup. If a section is missing or a parameter name is wrong, the application exits with a descriptive validation error before any tickets are processed. Once running, the orchestrator executes the `SimpleSequentialRunner` every minute, applies the nested `CompositePipe` steps, and logs progress through the configured services.
