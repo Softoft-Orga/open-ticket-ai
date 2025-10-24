@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 from typing import Literal
 
 from pydantic import Field
@@ -38,13 +37,3 @@ class LoggingConfig(StrictBaseModel):
         default_factory=LoggingFormatConfig,
         description="Message and date formats",
     )
-
-    def create_format(self) -> LoggingFormatConfig:
-        return self.format
-
-    @property
-    def level_no(self) -> int:
-        return getattr(logging, self.level)
-
-    def to_formatter(self) -> logging.Formatter:
-        return self.format.to_formatter()

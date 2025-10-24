@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
-from open_ticket_ai.core.pipes._pipe_models import PipeConfig
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
 class InfrastructureConfig(BaseModel):

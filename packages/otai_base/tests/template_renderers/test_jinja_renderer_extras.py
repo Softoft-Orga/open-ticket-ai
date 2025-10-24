@@ -4,9 +4,10 @@ from unittest.mock import MagicMock
 
 import jinja2
 import pytest
-from open_ticket_ai import PipeResult, TemplateRenderError
 from pydantic import BaseModel
 
+from open_ticket_ai import TemplateRenderError
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
 from otai_base.template_renderers.jinja_renderer_extras import (
     _get_pipe,
     at_path,

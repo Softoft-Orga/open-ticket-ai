@@ -1,3 +1,4 @@
+import typing
 from typing import Any, ClassVar
 
 from pydantic import BaseModel
@@ -13,7 +14,8 @@ class Injectable[ParamsT: BaseModel = StrictBaseModel]:
     def __init__(self, config: InjectableConfig, logger_factory: LoggerFactory, *_: Any, **__: Any) -> None:
         self._config: InjectableConfig = config
         self._logger: AppLogger = logger_factory.create(name=f"{self.__class__.__name__}.{self._config.id}")
-        self._params: ParamsT = self.ParamsModel.model_validate(config.params)
+        # noinspection PyUnnecessaryCast
+        self._params: ParamsT = typing.cast(ParamsT, self.ParamsModel.model_validate(config.params))
         self._log_init()
 
     def _log_init(self) -> None:

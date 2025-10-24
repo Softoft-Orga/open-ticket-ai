@@ -1,4 +1,4 @@
-from open_ticket_ai import CreatePluginFn, Injectable, Plugin
+from open_ticket_ai import Injectable, Plugin
 
 from otai_base.pipes.classification_pipe import ClassificationPipe
 from otai_base.pipes.composite_pipe import CompositePipe
@@ -24,6 +24,3 @@ class BasePlugin(Plugin):
             IntervalTrigger,
             JinjaRenderer,
         ]
-
-
-create_base_plugin: CreatePluginFn = BasePlugin

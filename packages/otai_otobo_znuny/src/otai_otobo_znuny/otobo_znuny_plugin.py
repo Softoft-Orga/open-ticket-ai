@@ -1,5 +1,5 @@
 # language: python
-from open_ticket_ai import CreatePluginFn, Injectable, Plugin
+from open_ticket_ai import Injectable, Plugin
 
 from . import OTOBOZnunyTicketSystemService
 
@@ -9,6 +9,3 @@ class OTOBOZnunyPlugin(Plugin):
         return [
             OTOBOZnunyTicketSystemService,
         ]
-
-
-create_otobo_znuny_plugin: CreatePluginFn = OTOBOZnunyPlugin

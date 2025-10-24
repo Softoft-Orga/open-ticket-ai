@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from open_ticket_ai import Pipe, PipeResult, StrictBaseModel
 from pydantic import Field
 
+from open_ticket_ai import Pipe, StrictBaseModel
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
 from otai_base.template_renderers.jinja_renderer_extras import FailMarker
 
 

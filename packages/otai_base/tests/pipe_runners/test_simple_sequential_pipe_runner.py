@@ -2,9 +2,11 @@ from typing import Any, ClassVar
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from open_ticket_ai import LoggerFactory, Pipe, PipeConfig, PipeContext, PipeResult
 from pydantic import BaseModel
 
+from open_ticket_ai import LoggerFactory, Pipe
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from otai_base.pipes.pipe_runners.simple_sequential_runner import SimpleSequentialRunner
 
 
@@ -72,11 +74,11 @@ def mock_main_pipe():
 
 
 def create_runner(
-    trigger_config: PipeConfig,
-    logger_factory: LoggerFactory,
-    mock_pipe_factory: MagicMock,
-    trigger_instance: Pipe[Any],
-    mock_main_pipe: MagicMock,
+        trigger_config: PipeConfig,
+        logger_factory: LoggerFactory,
+        mock_pipe_factory: MagicMock,
+        trigger_instance: Pipe[Any],
+        mock_main_pipe: MagicMock,
 ) -> SimpleSequentialRunner:
     async def create_pipe_side_effect(config, *args, **kwargs):
         return trigger_instance if config.id == "trigger" else mock_main_pipe
@@ -93,7 +95,7 @@ def create_runner(
 
 @pytest.mark.asyncio
 async def test_pipe_runs_when_trigger_succeeds(
-    logger_factory, mock_pipe_factory, empty_context, succeeding_trigger_config, mock_main_pipe
+        logger_factory, mock_pipe_factory, empty_context, succeeding_trigger_config, mock_main_pipe
 ):
     trigger = AlwaysSucceedingTrigger(config=succeeding_trigger_config, logger_factory=logger_factory)
     runner = create_runner(succeeding_trigger_config, logger_factory, mock_pipe_factory, trigger, mock_main_pipe)
@@ -110,7 +112,7 @@ async def test_pipe_runs_when_trigger_succeeds(
 
 @pytest.mark.asyncio
 async def test_pipe_not_run_when_trigger_fails(
-    logger_factory, mock_pipe_factory, empty_context, failing_trigger_config, mock_main_pipe
+        logger_factory, mock_pipe_factory, empty_context, failing_trigger_config, mock_main_pipe
 ):
     trigger = AlwaysFailingTrigger(config=failing_trigger_config, logger_factory=logger_factory)
     runner = create_runner(failing_trigger_config, logger_factory, mock_pipe_factory, trigger, mock_main_pipe)

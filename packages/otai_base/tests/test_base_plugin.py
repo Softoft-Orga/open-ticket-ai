@@ -1,15 +1,15 @@
 from unittest.mock import MagicMock
 
-from open_ticket_ai import ComponentRegistry, Plugin
-
-from otai_base.base_plugin import BasePlugin, create_base_plugin
+from open_ticket_ai import Plugin
+from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
+from otai_base.base_plugin import BasePlugin
 
 MIN_REGISTERED_COMPONENTS = 2
 
 
 class TestBasePlugin:
     def test_plugin_function_returns_plugin_instance(self, mock_app_config):
-        result = create_base_plugin(mock_app_config)
+        result = BasePlugin(mock_app_config)
 
         assert isinstance(result, Plugin)
         assert isinstance(result, BasePlugin)

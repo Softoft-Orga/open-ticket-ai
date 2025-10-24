@@ -36,7 +36,7 @@ Documentation = "https://open-ticket-ai.com"
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/base/CHANGELOG.md"
 
 [project.entry-points."open_ticket_ai.plugins"]
-base = "otai_base.base_plugin:create_base_plugin"
+base = "otai_base.base_plugin:BasePlugin"
 
 [build-system]
 requires = ["setuptools>=61.0", "setuptools_scm[toml]>=8.1"]

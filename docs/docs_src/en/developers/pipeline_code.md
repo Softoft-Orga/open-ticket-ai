@@ -102,7 +102,7 @@ class MyPipeResultData(BaseModel):
 ```python
 from typing import Any
 from open_ticket_ai.core.pipes.pipe import Pipe
-from open_ticket_ai.core.pipes._pipe_models import PipeConfig, PipeResult
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
 
 
@@ -255,8 +255,8 @@ async def _process(self) -> PipeResult[MyPipeResultData]:
 
 ```python
 import pytest
-from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes._pipe_models import PipeConfig
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
 @pytest.mark.asyncio

@@ -1,4 +1,4 @@
-from open_ticket_ai import CreatePluginFn, Injectable, Plugin
+from open_ticket_ai import Injectable, Plugin
 
 from .hf_classification_service import HFClassificationService
 
@@ -8,6 +8,3 @@ class HFLocalPlugin(Plugin):
         return [
             HFClassificationService,
         ]
-
-
-create_hf_local_plugin: CreatePluginFn = HFLocalPlugin

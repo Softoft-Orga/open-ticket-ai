@@ -33,7 +33,7 @@ logging system at application startup and create loggers as needed.
 
 ```python
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
-from open_ticket_ai.core.logging._stdlib_logging_adapter import (
+from open_ticket_ai.core.logging.stdlib_logging_adapter import (
     StdlibLoggerFactory,
     create_logger_factory,
 )

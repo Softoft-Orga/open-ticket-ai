@@ -2,7 +2,7 @@
 
 import pytest
 
-from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
@@ -24,8 +24,8 @@ async def test_render_simple_string(integration_template_renderer: TemplateRende
 @pytest.mark.integration
 @pytest.mark.asyncio
 async def test_render_with_pipe_context(
-    integration_template_renderer: TemplateRenderer,
-    integration_rendering_context: PipeContext,
+        integration_template_renderer: TemplateRenderer,
+        integration_rendering_context: PipeContext,
 ):
     """Test rendering templates with PipeContext scope including pipe results."""
     # Given
@@ -42,7 +42,7 @@ async def test_render_with_pipe_context(
 @pytest.mark.integration
 @pytest.mark.asyncio
 async def test_render_with_get_pipe_result_function(
-    integration_template_renderer: TemplateRenderer,
+        integration_template_renderer: TemplateRenderer,
 ):
     """Test rendering with get_pipe_result() custom function."""
     # Given
@@ -70,7 +70,7 @@ async def test_render_with_get_pipe_result_function(
 @pytest.mark.integration
 @pytest.mark.asyncio
 async def test_render_with_has_failed_function(
-    integration_template_renderer: TemplateRenderer,
+        integration_template_renderer: TemplateRenderer,
 ):
     """Test rendering with has_failed() custom function for error checking."""
     # Given
@@ -160,7 +160,7 @@ async def test_render_with_parent_context(integration_template_renderer: Templat
 @pytest.mark.integration
 @pytest.mark.asyncio
 async def test_render_reads_environment_variable(
-    integration_template_renderer: TemplateRenderer, monkeypatch: pytest.MonkeyPatch
+        integration_template_renderer: TemplateRenderer, monkeypatch: pytest.MonkeyPatch
 ):
     """Test rendering when accessing environment variables."""
     template = "{{ get_env('MY_TEST_ENV') }}"
@@ -173,7 +173,7 @@ async def test_render_reads_environment_variable(
 @pytest.mark.integration
 @pytest.mark.asyncio
 async def test_render_conditional_with_pipe_results(
-    integration_template_renderer: TemplateRenderer,
+        integration_template_renderer: TemplateRenderer,
 ):
     """Test conditional template rendering based on pipe results."""
     # Given

@@ -2,21 +2,21 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes._pipe_models import PipeConfig
 from open_ticket_ai.core.pipes.pipe import Pipe
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from tests.unit.conftest import SimpleParams, SimplePipe
 
 
 @pytest.mark.asyncio
 async def test_render_pipe_creates_pipe_instance(
-    mock_template_renderer: MagicMock,
-    mock_component_registry: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_component_registry: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     mock_component_registry.get_pipe.return_value = SimplePipe
     mock_template_renderer.render_to_model = AsyncMock(return_value=SimpleParams())
@@ -39,11 +39,11 @@ async def test_render_pipe_creates_pipe_instance(
 
 @pytest.mark.asyncio
 async def test_render_pipe_passes_correct_params_to_instance(
-    mock_template_renderer: MagicMock,
-    mock_component_registry: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_component_registry: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     mock_component_registry.get_pipe.return_value = SimplePipe
     mock_template_renderer.render_to_model = AsyncMock(return_value=SimpleParams(value="custom_value"))
@@ -66,10 +66,10 @@ async def test_render_pipe_passes_correct_params_to_instance(
 
 @pytest.mark.asyncio
 async def test_render_pipe_applies_template_rendering_to_params(
-    mock_component_registry: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_component_registry: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     mock_component_registry.get_pipe.return_value = SimplePipe
     mock_renderer = MagicMock(spec=TemplateRenderer)
@@ -94,11 +94,11 @@ async def test_render_pipe_applies_template_rendering_to_params(
 
 @pytest.mark.asyncio
 async def test_render_pipe_raises_type_error_for_non_pipe_class(
-    mock_template_renderer: MagicMock,
-    mock_component_registry: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_component_registry: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     from open_ticket_ai.core.config.errors import InjectableNotFoundError
 
@@ -121,11 +121,11 @@ async def test_render_pipe_raises_type_error_for_non_pipe_class(
 
 @pytest.mark.asyncio
 async def test_render_pipe_raises_error_for_nonexistent_class(
-    mock_template_renderer: MagicMock,
-    mock_component_registry: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_component_registry: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     from open_ticket_ai.core.config.errors import InjectableNotFoundError
 
@@ -150,11 +150,11 @@ async def test_render_pipe_raises_error_for_nonexistent_class(
 
 @pytest.mark.asyncio
 async def test_render_pipe_raises_value_error_for_missing_inject_service(
-    mock_template_renderer: MagicMock,
-    mock_component_registry: MagicMock,
-    logger_factory: MagicMock,
-    mock_otai_config: MagicMock,
-    sample_pipe_context: PipeContext,
+        mock_template_renderer: MagicMock,
+        mock_component_registry: MagicMock,
+        logger_factory: MagicMock,
+        mock_otai_config: MagicMock,
+        sample_pipe_context: PipeContext,
 ) -> None:
     from open_ticket_ai.core.config.errors import NoServiceConfigurationFoundError
 

@@ -6,7 +6,6 @@ import DefaultTheme from 'vitepress/theme'
 import './styles/index.css'
 
 import {createI18n, useI18n} from 'vue-i18n'
-import deMessages from '../../docs_src/de/messages'
 import enMessages from '../../docs_src/en/messages'
 
 const i18n = createI18n({

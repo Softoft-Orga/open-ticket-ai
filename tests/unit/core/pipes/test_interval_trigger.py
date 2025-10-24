@@ -4,12 +4,12 @@ from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
-from otai_base.pipes.interval_trigger_pipe import IntervalTrigger, IntervalTriggerParams
 from pydantic import ValidationError
 
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes._pipe_models import PipeConfig
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
+from otai_base.pipes.interval_trigger_pipe import IntervalTrigger, IntervalTriggerParams
 
 
 @pytest.fixture
@@ -36,7 +36,7 @@ class TestIntervalTriggerInitialization:
         ],
     )
     def test_initialization_with_valid_intervals(
-        self, interval: float, expected: timedelta, logger_factory: LoggerFactory
+            self, interval: float, expected: timedelta, logger_factory: LoggerFactory
     ):
         config = create_trigger_config(interval)
         trigger = IntervalTrigger(config=config, logger_factory=logger_factory)

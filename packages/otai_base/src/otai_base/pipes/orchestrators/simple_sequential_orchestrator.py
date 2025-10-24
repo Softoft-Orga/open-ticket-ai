@@ -2,9 +2,11 @@ import asyncio
 from datetime import timedelta
 from typing import Annotated, ClassVar
 
-from open_ticket_ai import NoRenderField, PipeConfig, PipeContext, PipeResult, StrictBaseModel
 from pydantic import BaseModel, Field
 
+from open_ticket_ai import NoRenderField, StrictBaseModel
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
 from otai_base.pipes.composite_pipe import CompositePipe
 
 

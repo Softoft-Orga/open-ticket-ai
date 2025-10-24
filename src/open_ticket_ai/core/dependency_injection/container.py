@@ -10,12 +10,12 @@ from open_ticket_ai.core.config.errors import (
     MissingConfigurationForRequiredServiceError,
     MultipleConfigurationsForSingletonServiceError,
 )
-from open_ticket_ai.core.dependency_injection._service_registry_util import find_all_configured_services_of_type
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from open_ticket_ai.core.logging._stdlib_logging_adapter import create_logger_factory
+from open_ticket_ai.core.dependency_injection.service_registry_util import find_all_configured_services_of_type
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
-from open_ticket_ai.core.plugins._plugin_loader import PluginLoader
+from open_ticket_ai.core.plugins.plugin_loader import PluginLoader
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
@@ -45,7 +45,7 @@ class AppModule(Module):
 
     @provider
     def create_renderer_from_service(
-        self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
+            self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         logger = logger_factory.create("AppModule")
         logger.debug("🔧 Creating TemplateRenderer from service configuration")

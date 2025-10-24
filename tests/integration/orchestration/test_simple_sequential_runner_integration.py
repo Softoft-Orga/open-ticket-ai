@@ -1,12 +1,12 @@
 import pytest
+
+from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from otai_base.pipes.expression_pipe import ExpressionParams, ExpressionPipe
 from otai_base.pipes.pipe_runners.simple_sequential_runner import SimpleSequentialRunner, SimpleSequentialRunnerParams
 from otai_base.template_renderers.jinja_renderer_extras import FailMarker
-
-from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes._pipe_models import PipeConfig
-from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 
 
 @pytest.fixture
@@ -47,9 +47,9 @@ def make_runner(integration_pipe_factory: PipeFactory, register_pipes: Component
 
 @pytest.mark.integration
 async def test_runner_executes_run_when_on_succeeds(
-    integration_empty_pipe_context: PipeContext,
-    make_runner,
-    expr_cfg,
+        integration_empty_pipe_context: PipeContext,
+        make_runner,
+        expr_cfg,
 ):
     on = expr_cfg("on", "{{ 1 }}")
     run = expr_cfg("run", "{{ 40 + 2 }}")
@@ -61,9 +61,9 @@ async def test_runner_executes_run_when_on_succeeds(
 
 @pytest.mark.integration
 async def test_runner_skips_when_on_fails(
-    integration_empty_pipe_context: PipeContext,
-    make_runner,
-    expr_cfg,
+        integration_empty_pipe_context: PipeContext,
+        make_runner,
+        expr_cfg,
 ):
     on = expr_cfg("on", FailMarker())
     run = expr_cfg("run", "{{ 1 }}")

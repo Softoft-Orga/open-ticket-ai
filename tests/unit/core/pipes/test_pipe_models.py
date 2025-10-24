@@ -1,4 +1,4 @@
-from open_ticket_ai.core.pipes._pipe_models import PipeResult
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
 
 
 def test_and_combines_two_success_results() -> None:

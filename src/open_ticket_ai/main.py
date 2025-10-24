@@ -3,7 +3,7 @@ import asyncio
 from injector import Injector
 
 from open_ticket_ai.app import OpenTicketAIApp
-from open_ticket_ai.core.dependency_injection._container import AppModule
+from open_ticket_ai.core.dependency_injection.container import AppModule
 
 
 async def run() -> None:
