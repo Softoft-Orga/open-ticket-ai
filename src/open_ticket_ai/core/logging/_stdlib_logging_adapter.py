@@ -52,7 +52,7 @@ class StdlibLogger(AppLogger):
 class _PipeNameDefaultFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         if not hasattr(record, "pipe_name"):
-            setattr(record, "pipe_name", "-")
+            record.pipe_name = "-"
         return True
 
 
@@ -61,8 +61,10 @@ class StdlibLoggerFactory(LoggerFactory):
         self._cfg = cfg or LoggingConfig()
 
     def create(self, name: str, format_config: LoggingFormatConfig | None = None,
-               extras: dict[str, Any] | None = None, *args: Any, **kwargs: Any) -> AppLogger:
-        logger = logging.getLogger(name)
+               extras: dict[str, Any] | None = None, *_: Any, **__: Any) -> AppLogger:
+        # PAD Name to 30 chars for alignment
+        padded_name = name.ljust(30)
+        logger = logging.getLogger(padded_name)
         if format_config:
             logger.handlers.clear()
             logger.propagate = False
@@ -78,26 +80,6 @@ class StdlibLoggerFactory(LoggerFactory):
             adapter = logging.LoggerAdapter(logger, extras or {})
             return StdlibLogger(adapter)
         return StdlibLogger(logger)
-
-    def create_pipe_logger(self, name: str, pipe_name: str, format_cfg: LoggingFormatConfig | None = None) -> AppLogger:
-        logger = logging.getLogger(name)
-        logger.handlers.clear()
-        logger.propagate = False
-        fmt_cfg = format_cfg or LoggingFormatConfig(message_format=PIPE_FMT_DEFAULT,
-                                                    date_format=self._cfg.format.date_format)
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setLevel(level_no(self._cfg.level))
-        handler.setFormatter(build_formatter(fmt_cfg))
-        handler.addFilter(_PipeNameDefaultFilter())
-        logger.addHandler(handler)
-        if self._cfg.log_to_file and self._cfg.log_file_path:
-            fh = logging.FileHandler(self._cfg.log_file_path)
-            fh.setLevel(level_no(self._cfg.level))
-            fh.setFormatter(build_formatter(fmt_cfg))
-            fh.addFilter(_PipeNameDefaultFilter())
-            logger.addHandler(fh)
-        adapter = logging.LoggerAdapter(logger, {"pipe_name": pipe_name})
-        return StdlibLogger(adapter)
 
 
 def create_logger_factory(logging_config: LoggingConfig) -> LoggerFactory:

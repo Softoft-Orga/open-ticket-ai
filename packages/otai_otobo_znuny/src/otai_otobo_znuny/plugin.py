@@ -1,6 +1,5 @@
 # language: python
-from open_ticket_ai.core.injectables.injectable import Injectable
-from open_ticket_ai.core.plugins.plugin import CreatePluginFn, Plugin
+from open_ticket_ai import CreatePluginFn, Injectable, Plugin
 
 from . import OTOBOZnunyTicketSystemService
 

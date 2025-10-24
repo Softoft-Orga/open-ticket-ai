@@ -1,5 +1,5 @@
 import logging
-from typing import Iterable
+from collections.abc import Iterable
 
 from open_ticket_ai.core.config.errors import InjectableNotFoundError, RegistryError
 from open_ticket_ai.core.injectables.injectable import Injectable

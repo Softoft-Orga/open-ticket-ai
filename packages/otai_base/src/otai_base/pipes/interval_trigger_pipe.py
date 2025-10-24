@@ -4,9 +4,7 @@ from typing import Any, ClassVar
 
 from pydantic import BaseModel, Field
 
-from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.pipes._pipe_models import PipeResult
-from open_ticket_ai.core.pipes.pipe import Pipe
+from open_ticket_ai import Pipe, PipeResult, StrictBaseModel
 
 
 class IntervalTriggerParams(StrictBaseModel):

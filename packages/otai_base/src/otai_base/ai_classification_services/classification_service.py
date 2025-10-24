@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from open_ticket_ai.core.injectables.injectable import Injectable
+from open_ticket_ai import Injectable
 from packages.otai_base.src.otai_base.ai_classification_services.classification_models import (
     ClassificationRequest,
     ClassificationResult,

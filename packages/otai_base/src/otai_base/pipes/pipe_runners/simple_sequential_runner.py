@@ -1,12 +1,8 @@
 from typing import Annotated, Any, ClassVar
 
-from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes._pipe_models import PipeConfig, PipeResult
-from open_ticket_ai.core.pipes.pipe import Pipe
-from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
-from open_ticket_ai.core.template_rendering.template_renderer import NoRenderField
 from pydantic import BaseModel
+
+from open_ticket_ai import LoggerFactory, NoRenderField, Pipe, PipeConfig, PipeContext, PipeFactory, PipeResult
 
 
 class SimpleSequentialRunnerParams(BaseModel):
@@ -18,7 +14,8 @@ class SimpleSequentialRunner(Pipe[SimpleSequentialRunnerParams]):
     ParamsModel: ClassVar[type[BaseModel]] = SimpleSequentialRunnerParams
 
     def __init__(
-        self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any, **kwargs: Any
+            self, config: PipeConfig, logger_factory: LoggerFactory, pipe_factory: PipeFactory, *args: Any,
+            **kwargs: Any
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._factory: PipeFactory = pipe_factory

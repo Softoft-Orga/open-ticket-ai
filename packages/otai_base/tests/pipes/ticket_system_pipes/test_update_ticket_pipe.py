@@ -1,8 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes._pipe_models import PipeConfig
+from open_ticket_ai import PipeConfig, PipeContext
 from otai_base.ticket_system_integration.unified_models import UnifiedTicket
 from packages.otai_base.src.otai_base.pipes.ticket_system_pipes import (
     UpdateTicketParams,

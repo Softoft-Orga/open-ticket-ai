@@ -6,7 +6,6 @@ from pydantic import BaseModel
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.logging.logging_models import LoggingFormatConfig
 from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes._pipe_models import PipeConfig, PipeResult
 
@@ -14,17 +13,8 @@ from open_ticket_ai.core.pipes._pipe_models import PipeConfig, PipeResult
 class Pipe[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT], ABC):
     def __init__(self, config: PipeConfig, logger_factory: LoggerFactory, *args: Any, **kwargs: Any) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
-        self._logger = logger_factory.create(
-            name=f"{self.__class__.__name__}.{self._config.id}",
-            format_config=LoggingFormatConfig(
-                message_format=f"%(asctime)s - %(name)s - %(levelname)s - {f"{self.__class__.__name__}.{self._config.id}"} %(message)s"
-            )
-
-        )
+        self._logger = logger_factory.create(name=f"{self.__class__.__name__}.{self._config.id}")
         self._config: PipeConfig = PipeConfig.model_validate(config.model_dump())
-
-    def _log_init(self):
-        self._logger.info(f"Initializing with config: {self._config.model_dump()}")
 
     @final
     async def process(self, context: PipeContext) -> PipeResult:

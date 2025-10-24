@@ -16,7 +16,7 @@ class Injectable[ParamsT: BaseModel = StrictBaseModel]:
         self._params: ParamsT = self.ParamsModel.model_validate(config.params)
         self._log_init()
 
-    def _log_init(self):
+    def _log_init(self) -> None:
         self._logger.info(f"Initializing with config: {self._config.model_dump()}")
 
     @classmethod

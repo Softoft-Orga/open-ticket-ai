@@ -2,11 +2,7 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipes._pipe_models import PipeConfig, PipeResult
-from open_ticket_ai.core.pipes.pipe import Pipe
-
+from open_ticket_ai import LoggerFactory, Pipe, PipeConfig, PipeResult, StrictBaseModel
 from otai_base.ai_classification_services.classification_models import (
     ClassificationRequest,
     ClassificationResult,
@@ -26,12 +22,12 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
     ParamsModel: ClassVar[type[ClassificationPipeParams]] = ClassificationPipeParams
 
     def __init__(
-        self,
-        config: PipeConfig,
-        logger_factory: LoggerFactory,
-        classification_service: ClassificationService,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            config: PipeConfig,
+            logger_factory: LoggerFactory,
+            classification_service: ClassificationService,
+            *args: Any,
+            **kwargs: Any,
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._classification_service = classification_service
