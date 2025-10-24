@@ -1,73 +1,52 @@
-###
-
-TODO this is absoltely outdated.
-but the good thing about how I setup the config. Almost everything is an InjectableConfig having same atributes.
-Then for each Pipe, Service there are special params. There are about 10 Injectables. Create an overview table for them
-and
-then below that the details. what they do and what exactly arguments they get + for the Pipes the Result they produce
-and examples if needed.
-
 # Configuration Reference
 
-Complete reference for Open Ticket AI configuration schema.
+Open Ticket AI loads its YAML configuration into the `OpenTicketAIConfig` model. The schema is built around a single `open_ticket_ai` object that contains API/version metadata, infrastructure settings, dependency-injected services, and the pipeline orchestrator definition. 【F:src/open_ticket_ai/core/config/config_models.py†L17-L37】
 
-## Overview
+## Root configuration shape
 
-This reference provides the complete schema for Open Ticket AI configuration files, auto-generated from the Python
-Pydantic models. For practical examples and usage patterns, see the [Configuration Examples](configuration/examples.md).
+| Field | Type | Description |
+| --- | --- | --- |
+| `api_version` | `str` | Optional version string that defaults to `"1"`. 【F:src/open_ticket_ai/core/config/config_models.py†L18-L21】 |
+| `plugins` | `list[str]` | Python modules that expose plugin entry points. Each plugin contributes additional injectables to the registry. 【F:src/open_ticket_ai/core/config/config_models.py†L22-L25】 |
+| `infrastructure` | [`InfrastructureConfig`](#infrastructure-config) | Logging and other host-level concerns. 【F:src/open_ticket_ai/core/config/config_models.py†L26-L29】 |
+| `services` | `dict[str, InjectableConfigBase]` | Map of injectable service definitions keyed by the identifier you will reference in pipelines. 【F:src/open_ticket_ai/core/config/config_models.py†L30-L33】 |
+| `orchestrator` | [`PipeConfig`](#orchestrator-and-pipeconfig) | Top-level pipe (typically an orchestrator) executed by the runtime. 【F:src/open_ticket_ai/core/config/config_models.py†L34-L36】 |
 
-## Quick Start
+### Infrastructure config
 
-Minimal configuration structure:
+`InfrastructureConfig` currently exposes logging configuration and defaults to the built-in logging schema. 【F:src/open_ticket_ai/core/config/config_models.py†L10-L14】
 
-```yaml
-open_ticket_ai:
-  plugins: [ ]
-  infrastructure:
-    logging:
-      version: 1
-  services: [ ]
-  orchestrator:
-    runners:
-      - on:
-          - id: my_trigger
-            use: "open_ticket_ai.triggers.IntervalTrigger"
-            params:
-              interval: "60s"
-        run:
-          id: my_pipeline
-          use: "open_ticket_ai.base.CompositePipe"
-          steps: [ ]
-```
+## Services dictionary (`open_ticket_ai.services`)
 
-## Root Configuration
+All services share the same base schema because they are instances of `InjectableConfigBase`. Each entry lives under the `services` dictionary and uses the dictionary key as its identifier. 【F:src/open_ticket_ai/core/config/config_models.py†L30-L43】
 
-| Field            | Type                                            | Required | Default | Description |
-|------------------|-------------------------------------------------|----------|---------|-------------|
-| `open_ticket_ai` | [RawOpenTicketAIConfig](#rawopenticketaiconfig) | ✓        |         |             |
+| Field | Type | Description |
+| --- | --- | --- |
+| `use` | `str` | Registry identifier of the injectable implementation to instantiate. Defaults to `"otai_base:CompositePipe"`. 【F:src/open_ticket_ai/core/injectables/injectable_models.py†L9-L15】 |
+| `injects` | `dict[str, str]` | Optional mapping from constructor parameter names to other service identifiers. This is how you connect one injectable to another. 【F:src/open_ticket_ai/core/injectables/injectable_models.py†L16-L20】 |
+| `params` | `dict[str, Any]` | Arbitrary configuration passed as keyword arguments to the injectable’s parameter model. 【F:src/open_ticket_ai/core/injectables/injectable_models.py†L21-L25】 |
 
-## Type Definitions
+When the runtime materialises services it merges the dictionary key into the model, making the identifier available to dependency injection consumers. 【F:src/open_ticket_ai/core/config/config_models.py†L39-L43】
 
-### RawOpenTicketAIConfig
+### How registry identifiers are built
 
-The main configuration object containing all application settings.
+Plugins derive registry identifiers from their module name. Every plugin starts with the prefix `otai-`; the runtime strips that prefix and concatenates the remainder with the injectable class name using `:`. For example, the `otai_base` plugin contributes identifiers such as `base:CompositePipe`. 【F:src/open_ticket_ai/core/config/app_config.py†L16-L21】【F:src/open_ticket_ai/core/plugins/plugin.py†L18-L46】
 
-| Field            | Type                                          | Required | Default | Description                                           |
-|------------------|-----------------------------------------------|----------|---------|-------------------------------------------------------|
-| `plugins`        | array                                         |          |         | Plugin configurations                                 |
-| `infrastructure` | [InfrastructureConfig](#infrastructureconfig) |          |         | Infrastructure settings (logging, template rendering) |
-| `services`       | array                                         |          |         | Service definitions for dependency injection          |
-| `orchestrator`   | [OrchestratorConfig](#orchestratorconfig)     |          |         | Pipeline and runner definitions                       |
+## Orchestrator and `PipeConfig`
 
-**Example:**
+Pipelines are described with `PipeConfig`, which extends the same base injectable schema with an `id` field, forbids extra keys, and keeps all values immutable for consistent hashing. 【F:src/open_ticket_ai/core/pipes/pipe_models.py†L9-L15】 Each pipe returns a `PipeResult` indicating success, skip, failure, and any structured data produced for downstream steps. 【F:src/open_ticket_ai/core/pipes/pipe_models.py†L17-L68】
+
+## Updated configuration example
+
+The snippet below mirrors the current `OpenTicketAIConfig` structure: services are keyed by identifier, and the orchestrator is a `PipeConfig` that renders nested pipes and triggers.
 
 ```yaml
 open_ticket_ai:
+  api_version: "1"
   plugins:
-    - name: otobo_znuny
-      config:
-        base_url: "${OTOBO_BASE_URL}"
-        api_token: "${OTOBO_API_TOKEN}"
+    - otai_base
+    - otai_hf_local
+    - otai_otobo_znuny
 
   infrastructure:
     logging:
@@ -76,479 +55,175 @@ open_ticket_ai:
         level: INFO
 
   services:
-    - id: ticket_classifier
-      use: "my_plugin.TicketClassifier"
+    ticketing:
+      use: "otobo-znuny:OTOBOZnunyTicketSystemService"
       params:
-        model_name: "bert-base-classifier"
+        base_url: "${OTOBO_BASE_URL}"
+        username: "${OTOBO_USERNAME}"
+        password: "${OTOBO_PASSWORD}"
+    classifier:
+      use: "hf-local:HFClassificationService"
+      params:
+        api_token: "${HF_TOKEN}"
+    renderer:
+      use: "base:JinjaRenderer"
 
   orchestrator:
-    runners:
-      - on:
-          - id: interval_trigger
-            use: "open_ticket_ai.triggers.IntervalTrigger"
-            params:
-              interval: "60s"
-        run:
-          id: classify_pipeline
-          steps:
-            - id: fetch
-              use: "otobo_znuny.pipes.FetchTickets"
-            - id: classify
-              use: "my_plugin.ClassifyPipe"
-```
-
-### OrchestratorConfig
-
-Defines pipeline runners and default settings.
-
-| Field      | Type           | Required | Default | Description                        |
-|------------|----------------|----------|---------|------------------------------------|
-| `defaults` | object or null |          | None    | Default parameters for all runners |
-| `runners`  | array          |          |         | List of runner definitions         |
-
-**Example:**
-
-```yaml
-orchestrator:
-  defaults:
-    timeout: "5m"
-    retry:
-      attempts: 3
-      delay: "5s"
-  runners:
-    - on:
-        - id: every_minute
-          use: "open_ticket_ai.triggers.IntervalTrigger"
+    id: support-orchestrator
+    use: "base:SimpleSequentialOrchestrator"
+    params:
+      orchestrator_sleep: "0:00:05"
+      exception_sleep: "0:01:00"
+      steps:
+        - id: ticket-runner
+          use: "base:SimpleSequentialRunner"
           params:
-            interval: "60s"
-      run:
-        id: my_pipeline
-        steps: [ ]
+            on:
+              id: every-minute
+              use: "base:IntervalTrigger"
+              params:
+                interval: "0:01:00"
+            run:
+              id: ticket-flow
+              use: "base:CompositePipe"
+              params:
+                steps:
+                  - id: fetch
+                    use: "base:FetchTicketsPipe"
+                    injects:
+                      ticket_system: ticketing
+                    params:
+                      ticket_search_criteria:
+                        queue:
+                          id: Raw
+                          name: Raw
+                        limit: 1
+                  - id: classify
+                    use: "base:ClassificationPipe"
+                    injects:
+                      classification_service: classifier
+                    params:
+                      text: "{{ get_pipe_result('fetch').data.fetched_tickets[0].body }}"
+                      model_name: "distilbert-base-uncased"
+                  - id: respond
+                    use: "base:AddNotePipe"
+                    injects:
+                      ticket_system: ticketing
+                    params:
+                      ticket_id: "{{ get_pipe_result('fetch').data.fetched_tickets[0].id }}"
+                      note:
+                        subject: "Classification result"
+                        body: "{{ get_pipe_result('classify').data.label }}"
 ```
 
-### RunnerDefinition
-
-Defines a pipeline runner with its trigger and execution configuration.
-
-| Field    | Type                          | Required | Default | Description                              |
-|----------|-------------------------------|----------|---------|------------------------------------------|
-| `id`     | string or null                |          | None    | Optional identifier for the runner       |
-| `on`     | array                         |          |         | List of trigger definitions              |
-| `run`    | [PipeConfig](#pipeconfig)     | ✓        |         | Pipeline to execute                      |
-| `params` | [RunnerParams](#runnerparams) |          |         | Runner parameters (retry, timeout, etc.) |
-
-**Example:**
-
-```yaml
-- id: classification_runner
-  on:
-    - id: interval_trigger
-      use: "open_ticket_ai.triggers.IntervalTrigger"
-      params:
-        interval: "60s"
-  run:
-    id: classify_tickets
-    steps:
-      - id: fetch
-        use: "otobo_znuny.pipes.FetchTickets"
-  params:
-    concurrency:
-      max_workers: 4
-    retry:
-      attempts: 5
-```
-
-### RunnerParams
-
-Parameters controlling runner behavior.
-
-| Field         | Type                                                | Required | Default      | Description                                |
-|---------------|-----------------------------------------------------|----------|--------------|--------------------------------------------|
-| `concurrency` | [ConcurrencySettings](#concurrencysettings) or null |          | None         | Concurrency configuration                  |
-| `retry`       | [RetrySettings](#retrysettings) or null             |          | None         | Retry configuration                        |
-| `timeout`     | string or null                                      |          | None         | Maximum execution time (e.g., "5m", "30s") |
-| `retry_scope` | string                                              |          | `"pipeline"` | Scope of retry logic                       |
-| `priority`    | integer                                             |          | `10`         | Execution priority                         |
-
-### TriggerDefinition
-
-Defines when a pipeline should be executed.
-
-| Field     | Type           | Required | Default                               | Description                                                 |
-|-----------|----------------|----------|---------------------------------------|-------------------------------------------------------------|
-| `uid`     | string         |          |                                       | Auto-generated unique identifier                            |
-| `id`      | string or null |          | None                                  | User-defined identifier (auto-set to `uid` if not provided) |
-| `use`     | string         |          | `"open_ticket_ai.base.CompositePipe"` | Fully qualified class name                                  |
-| `injects` | object         |          |                                       | Dependencies to inject                                      |
-| `params`  | any            |          |                                       | Trigger-specific parameters                                 |
-
-**Note:** When `id` is not explicitly set, it automatically defaults to the `uid` value. This ensures all triggers have
-a valid identifier for the orchestrator registry, preventing collisions and enabling trigger reuse across multiple
-runners.
-
-**Common Triggers:**
-
-- `open_ticket_ai.triggers.IntervalTrigger` - Execute at regular intervals
-- `open_ticket_ai.triggers.CronTrigger` - Execute on cron schedule
-- `open_ticket_ai.triggers.ManualTrigger` - Execute manually
-
-### PipeConfig
-
-Configuration for a pipeline or pipe.
-
-| Field        | Type              | Required | Default                               | Description                                                 |
-|--------------|-------------------|----------|---------------------------------------|-------------------------------------------------------------|
-| `uid`        | string            |          |                                       | Auto-generated unique identifier                            |
-| `id`         | string or null    |          | None                                  | User-defined identifier (auto-set to `uid` if not provided) |
-| `use`        | string            |          | `"open_ticket_ai.base.CompositePipe"` | Fully qualified class name                                  |
-| `injects`    | object            |          |                                       | Dependencies to inject                                      |
-| `params`     | any               |          |                                       | Pipe-specific parameters                                    |
-| `if`         | string or boolean |          | `"True"`                              | Conditional execution (template expression)                 |
-| `depends_on` | string or array   |          | []                                    | Dependencies on other pipes (by id)                         |
-| `steps`      | array or null     |          | None                                  | Sub-steps for composite pipes                               |
-
-**Example:**
-
-<div v-pre>
-
-```yaml
-# Simple pipe
-- id: fetch_tickets
-  use: "otobo_znuny.pipes.FetchTickets"
-  params:
-    search:
-      StateType: "Open"
-      limit: 100
-
-# Conditional pipe
-- id: send_notification
-  use: "my_plugin.NotifyPipe"
-  if: "{{ context.pipes.classify.confidence > 0.8 }}"
-  depends_on: classify
-
-# Composite pipe with steps
-- id: full_workflow
-  use: "open_ticket_ai.base.CompositePipe"
-  steps:
-    - id: step1
-      use: "my_plugin.Pipe1"
-    - id: step2
-      use: "my_plugin.Pipe2"
-      depends_on: step1
-```
-
-</div>
-
-### RenderableConfig
-
-Base configuration for renderable components.
-
-| Field     | Type           | Required | Default                               | Description                                                 |
-|-----------|----------------|----------|---------------------------------------|-------------------------------------------------------------|
-| `uid`     | string         |          |                                       | Auto-generated unique identifier                            |
-| `id`      | string or null |          | None                                  | User-defined identifier (auto-set to `uid` if not provided) |
-| `use`     | string         |          | `"open_ticket_ai.base.CompositePipe"` | Fully qualified class name                                  |
-| `injects` | object         |          |                                       | Dependencies to inject                                      |
-| `params`  | any            |          |                                       | Component-specific parameters                               |
-
-**Note:** When `id` is not explicitly set, it automatically defaults to the `uid` value. This ensures all components
-have a valid identifier.
-
-### InfrastructureConfig
-
-Infrastructure and system-level configuration.
-
-| Field                      | Type                                              | Required | Default | Description                           |
-|----------------------------|---------------------------------------------------|----------|---------|---------------------------------------|
-| `logging`                  | [LoggingDictConfig](#loggingdictconfig)           |          |         | Python logging configuration          |
-| `template_renderer_config` | [TemplateRendererConfig](#templaterendererconfig) |          |         | (Deprecated) Template renderer config |
-
-**Example:**
-
-```yaml
-infrastructure:
-  logging:
-    version: 1
-    formatters:
-      simple:
-        format: '%(levelname)s - %(message)s'
-    handlers:
-      console:
-        class: logging.StreamHandler
-        formatter: simple
-    root:
-      level: INFO
-      handlers: [ console ]
-
-  template_renderer_config:
-    type: "jinja"
-    env_config:
-      prefix: "OTAI_"
-      allowlist: [ "OTAI_*" ]
-```
-
-### LoggingDictConfig
-
-Python dictConfig-compatible logging configuration.
-
-| Field                      | Type                              | Required | Default | Description                 |
-|----------------------------|-----------------------------------|----------|---------|-----------------------------|
-| `version`                  | integer                           |          | `1`     | Config version (always 1)   |
-| `disable_existing_loggers` | boolean or null                   |          | None    | Disable existing loggers    |
-| `incremental`              | boolean or null                   |          | None    | Incremental configuration   |
-| `root`                     | [RootConfig](#rootconfig) or null |          | None    | Root logger configuration   |
-| `loggers`                  | object                            |          |         | Named logger configurations |
-| `handlers`                 | object                            |          |         | Handler definitions         |
-| `formatters`               | object                            |          |         | Formatter definitions       |
-| `filters`                  | object                            |          |         | Filter definitions          |
-
-See [Python logging.config documentation](https://docs.python.org/3/library/logging.config.html#logging-config-dictschema)
-for complete reference.
-
-### RootConfig
-
-Root logger configuration.
-
-| Field      | Type           | Required | Default | Description                                           |
-|------------|----------------|----------|---------|-------------------------------------------------------|
-| `level`    | string or null |          | None    | Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL) |
-| `handlers` | array or null  |          | None    | Handler names to use                                  |
-| `filters`  | array or null  |          | None    | Filter names to apply                                 |
-
-### LoggerConfig
-
-Named logger configuration.
-
-| Field       | Type            | Required | Default | Description                |
-|-------------|-----------------|----------|---------|----------------------------|
-| `level`     | string or null  |          | None    | Logging level              |
-| `handlers`  | array or null   |          | None    | Handler names              |
-| `propagate` | boolean or null |          | None    | Propagate to parent logger |
-| `filters`   | array or null   |          | None    | Filter names               |
-
-### HandlerConfig
-
-Logging handler configuration.
-
-| Field       | Type           | Required | Default | Description                                   |
-|-------------|----------------|----------|---------|-----------------------------------------------|
-| `class`     | string         | ✓        |         | Handler class (e.g., `logging.StreamHandler`) |
-| `level`     | string or null |          | None    | Minimum level to handle                       |
-| `formatter` | string or null |          | None    | Formatter name                                |
-| `filters`   | array or null  |          | None    | Filter names                                  |
-| `()`        | string or null |          | None    | Alternative class specification               |
-
-### FormatterConfig
-
-Logging formatter configuration.
-
-| Field     | Type           | Required | Default | Description                     |
-|-----------|----------------|----------|---------|---------------------------------|
-| `class`   | string or null |          | None    | Formatter class                 |
-| `format`  | string or null |          | None    | Log message format              |
-| `datefmt` | string or null |          | None    | Date format                     |
-| `style`   | string or null |          | None    | Format style (%, {, $)          |
-| `()`      | string or null |          | None    | Alternative class specification |
-
-### FilterConfig
-
-Logging filter configuration.
-
-| Field   | Type           | Required | Default | Description                     |
-|---------|----------------|----------|---------|---------------------------------|
-| `class` | string or null |          | None    | Filter class                    |
-| `name`  | string or null |          | None    | Filter name                     |
-| `()`    | string or null |          | None    | Alternative class specification |
-
-### TemplateRendererConfig
-
-Template rendering configuration (deprecated - use services instead).
-
-| Field        | Type                                                    | Required | Default | Description                        |
-|--------------|---------------------------------------------------------|----------|---------|------------------------------------|
-| `type`       | string                                                  | ✓        |         | Type of template renderer          |
-| `env_config` | [TemplateRendererEnvConfig](#templaterendererenvconfig) |          |         | Environment variable configuration |
-
-### TemplateRendererEnvConfig
-
-Environment variable handling for template renderer.
-
-| Field       | Type           | Required | Default   | Description                         |
-|-------------|----------------|----------|-----------|-------------------------------------|
-| `prefix`    | string or null |          | `"OTAI_"` | Primary environment variable prefix |
-| `allowlist` | array or null  |          | None      | Allowed environment variable names  |
-| `denylist`  | array or null  |          | None      | Denied environment variable names   |
-
-**Example:**
-
-```yaml
-template_renderer_config:
-  type: "jinja"
-  env_config:
-    prefix: "OTAI_"
-    allowlist:
-      - "OTAI_*"
-      - "HOME"
-      - "USER"
-    denylist:
-      - "OTAI_SECRET_*"
-```
-
-### ConcurrencySettings
-
-Concurrency control settings.
-
-| Field            | Type    | Required | Default  | Description                     |
-|------------------|---------|----------|----------|---------------------------------|
-| `max_workers`    | integer |          | `1`      | Maximum concurrent workers      |
-| `when_exhausted` | string  |          | `"wait"` | Behavior when workers exhausted |
-
-**Example:**
-
-```yaml
-concurrency:
-  max_workers: 4
-  when_exhausted: "wait"
-```
-
-### RetrySettings
-
-Retry behavior configuration.
-
-| Field            | Type    | Required | Default | Description                    |
-|------------------|---------|----------|---------|--------------------------------|
-| `attempts`       | integer |          | `3`     | Maximum retry attempts         |
-| `delay`          | string  |          | `"5s"`  | Initial delay between retries  |
-| `backoff_factor` | number  |          | `2.0`   | Exponential backoff multiplier |
-| `max_delay`      | string  |          | `"30s"` | Maximum delay between retries  |
-| `jitter`         | boolean |          | `True`  | Add random jitter to delays    |
-
-**Example:**
-
-```yaml
-retry:
-  attempts: 5
-  delay: "3s"
-  backoff_factor: 2.0
-  max_delay: "60s"
-  jitter: true
-```
-
-## Environment Variables
-
-Use environment variables in configuration with the `${VAR_NAME}` syntax:
-
-<div v-pre>
-
-```yaml
-# Required variable (fails if not set)
-api_token: "${OTOBO_API_TOKEN}"
-
-# Optional with default value
-base_url: "${OTOBO_BASE_URL:-https://default.example.com}"
-
-# In template expressions
-note: "User: ${USER}, Time: {{ now() }}"
-```
-
-</div>
-
-**Syntax:**
-
-- `${VAR}` - Required variable (error if missing)
-- `${VAR:-default}` - Optional with default value
-- Variables are resolved before template rendering
-
-## Template Expressions
-
-Use Jinja2 template expressions for dynamic values:
-
-<div v-pre>
-
-```yaml
-# Access context values
-note_text: "Classified as {{ context.queue }} at {{ now() }}"
-
-# Conditional logic
-if: "{{ context.pipes.classify.confidence > 0.8 }}"
-
-# Reference pipe outputs
-queue_id: "{{ context.pipes.fetch_tickets.results[0].queue_id }}"
-```
-
-</div>
-
-**Common template functions:**
-
-<div v-pre>
-
-- `{{ now() }}` - Current timestamp
-- `{{ env.VAR_NAME }}` - Environment variable access
-- `{{ context.pipes.pipe_id.result }}` - Access pipe outputs
-
-</div>
-
-## YAML Anchors and Aliases
-
-Use YAML anchors to define reusable configuration blocks:
-
-```yaml
-# Define with anchor (&)
-services:
-  - &common_search
-    StateType: "Open"
-    limit: 100
-
-# Reference with alias (*)
-orchestrator:
-  runners:
-    - on: [ ]
-      run:
-        id: pipeline1
-        steps:
-          - id: fetch
-            use: "otobo_znuny.pipes.FetchTickets"
-            params:
-              search: *common_search
-
-    # Merge with << notation
-    - on: [ ]
-      run:
-        id: pipeline2
-        steps:
-          - id: fetch
-            use: "otobo_znuny.pipes.FetchTickets"
-            params:
-              search:
-                <<: *common_search
-                limit: 50  # Override one field
-```
-
-## Validation Rules
-
-Configuration is validated on startup:
-
-1. **Required fields** must be present
-2. **Field types** must match schema (string, integer, boolean, array, object)
-3. **Reference keys** must exist when using `depends_on`
-4. **Template syntax** must be valid Jinja2
-5. **Environment variables** must be set if required (no default)
-
-Validation errors will include:
-
-- Field path (e.g., `orchestrator.runners[0].run.steps[1].id`)
-- Expected type vs actual type
-- Missing required fields
-- Invalid values
-
-## Related Documentation
-
-- [Configuration Examples](configuration/examples.md) - Complete working configurations
-- [Configuration Structure](configuration/config_structure.md) - File organization and best practices
-- [YAML Definitions and Anchors](configuration/defs_and_anchors.md) - Advanced YAML techniques
-- [Environment Variables](configuration/environment_variables.md) - Environment variable reference
-- [Template Rendering](../developers/template_rendering.md) - Template syntax and functions
-
----
-
-_This reference is auto-generated from Pydantic models. Last updated: 2025-10-12_
+## Core injectables
+
+The table summarises the core injectables shipped with the default plugins. Follow the links for parameter and output details.
+
+| Identifier | Plugin | Kind | Summary |
+| --- | --- | --- | --- |
+| `base:JinjaRenderer` | `otai_base` | Template renderer | Async Jinja renderer with helpers for accessing pipe output. [Details](#basejinjarenderer) |
+| `base:SimpleSequentialOrchestrator` | `otai_base` | Orchestrator pipe | Loops through child pipes on a schedule, retrying on failure. [Details](#basesimplesequentialorchestrator) |
+| `base:SimpleSequentialRunner` | `otai_base` | Runner pipe | Executes a `run` pipe when the `on` trigger succeeds. [Details](#basesimplesequentialrunner) |
+| `base:CompositePipe` | `otai_base` | Composite pipe | Evaluates nested pipes in sequence and merges their results. [Details](#basecompositepipe) |
+| `base:ExpressionPipe` | `otai_base` | Utility pipe | Returns literal values or fails when a `FailMarker` is produced. [Details](#baseexpressionpipe) |
+| `base:ClassificationPipe` | `otai_base` | AI pipe | Delegates to a `ClassificationService` and returns the model output. [Details](#baseclassificationpipe) |
+| `base:IntervalTrigger` | `otai_base` | Trigger pipe | Emits success when the configured interval elapses. [Details](#baseintervaltrigger) |
+| `base:FetchTicketsPipe` | `otai_base` | Ticket pipe | Loads tickets via an injected `TicketSystemService`. [Details](#basefetchticketspipe) |
+| `base:UpdateTicketPipe` | `otai_base` | Ticket pipe | Applies updates to a ticket through the injected ticket service. [Details](#baseupdateticketpipe) |
+| `base:AddNotePipe` | `otai_base` | Ticket pipe | Appends a note to a ticket using the ticket service. [Details](#baseaddnotepipe) |
+| `hf-local:HFClassificationService` | `otai_hf_local` | Service | Hugging Face text-classification client with optional auth token. [Details](#hf-localhfclassificationservice) |
+| `otobo-znuny:OTOBOZnunyTicketSystemService` | `otai_otobo_znuny` | Service | Async ticket service backed by the OTOBO/Znuny API. [Details](#otobo-znunyotoboznuny-ticketsystemservice) |
+
+### `base:JinjaRenderer`
+
+* **Use**: `base:JinjaRenderer`
+* **Params**: none (defaults to an empty `StrictBaseModel`). 【F:packages/otai_base/src/otai_base/template_renderers/jinja_renderer.py†L21-L38】
+* **Behaviour**: Renders strings, lists, and dicts asynchronously with helper globals such as `get_pipe_result` and `fail`. 【F:packages/otai_base/src/otai_base/template_renderers/jinja_renderer.py†L29-L38】
+
+### `base:SimpleSequentialOrchestrator`
+
+* **Use**: `base:SimpleSequentialOrchestrator`
+* **Params**:
+  * `orchestrator_sleep` (`timedelta`) – wait time between cycles. 【F:packages/otai_base/src/otai_base/pipes/orchestrators/simple_sequential_orchestrator.py†L14-L18】
+  * `exception_sleep` (`timedelta`) – delay before retrying after an error. 【F:packages/otai_base/src/otai_base/pipes/orchestrators/simple_sequential_orchestrator.py†L14-L18】
+  * `always_retry` (`bool`) – rethrow on failure when `false`. 【F:packages/otai_base/src/otai_base/pipes/orchestrators/simple_sequential_orchestrator.py†L14-L18】
+  * `steps` (`list[PipeConfig]`) – nested steps rendered with full template support. 【F:packages/otai_base/src/otai_base/pipes/orchestrators/simple_sequential_orchestrator.py†L14-L27】
+* **Output**: Runs indefinitely, returning the aggregate `PipeResult` of all steps each cycle. Failures respect `always_retry`. 【F:packages/otai_base/src/otai_base/pipes/orchestrators/simple_sequential_orchestrator.py†L24-L40】【F:src/open_ticket_ai/core/pipes/pipe_models.py†L36-L52】
+
+### `base:SimpleSequentialRunner`
+
+* **Use**: `base:SimpleSequentialRunner`
+* **Params**:
+  * `on` (`PipeConfig`) – trigger pipe; the runner skips execution when it fails. 【F:packages/otai_base/src/otai_base/pipes/pipe_runners/simple_sequential_runner.py†L12-L36】
+  * `run` (`PipeConfig`) – pipe to execute when the trigger succeeds. 【F:packages/otai_base/src/otai_base/pipes/pipe_runners/simple_sequential_runner.py†L12-L36】
+* **Output**: Returns the downstream pipe result or a skipped `PipeResult` with a diagnostic message. 【F:packages/otai_base/src/otai_base/pipes/pipe_runners/simple_sequential_runner.py†L26-L36】【F:src/open_ticket_ai/core/pipes/pipe_models.py†L17-L64】
+
+### `base:CompositePipe`
+
+* **Use**: `base:CompositePipe`
+* **Params**: `steps` – ordered list of `PipeConfig` definitions. Extra keys are allowed to support custom composite implementations. 【F:packages/otai_base/src/otai_base/pipes/composite_pipe.py†L11-L33】
+* **Output**: Executes each step in order, stops on the first failure, and merges data from all successful steps with `PipeResult.union`. 【F:packages/otai_base/src/otai_base/pipes/composite_pipe.py†L29-L47】【F:src/open_ticket_ai/core/pipes/pipe_models.py†L36-L52】
+
+### `base:ExpressionPipe`
+
+* **Use**: `base:ExpressionPipe`
+* **Params**: `expression` – literal value or rendered expression result. 【F:packages/otai_base/src/otai_base/pipes/expression_pipe.py†L13-L18】
+* **Output**: Returns `PipeResult.success` with `{"value": expression}` unless the expression evaluates to a `FailMarker`, in which case it fails. 【F:packages/otai_base/src/otai_base/pipes/expression_pipe.py†L21-L38】【F:src/open_ticket_ai/core/pipes/pipe_models.py†L59-L68】
+
+### `base:ClassificationPipe`
+
+* **Use**: `base:ClassificationPipe`
+* **Injects**: `classification_service` must point to a `ClassificationService` implementation.
+* **Params**:
+  * `text` (`str`) – content to classify.
+  * `model_name` (`str`) – identifier forwarded to the service.
+  * `api_token` (`str | None`) – optional token overriding the service default. 【F:packages/otai_base/src/otai_base/pipes/classification_pipe.py†L19-L52】
+* **Output**: Successful results include the full `ClassificationResult` payload (label, confidence, optional scores). 【F:packages/otai_base/src/otai_base/pipes/classification_pipe.py†L54-L63】
+
+### `base:IntervalTrigger`
+
+* **Use**: `base:IntervalTrigger`
+* **Params**: `interval` (`timedelta`) – required elapsed time between successes. 【F:packages/otai_base/src/otai_base/pipes/interval_trigger_pipe.py†L11-L28】
+* **Output**: Returns success once the interval has elapsed since the previous run; otherwise returns a failure result so downstream runners can skip work. 【F:packages/otai_base/src/otai_base/pipes/interval_trigger_pipe.py†L21-L30】【F:src/open_ticket_ai/core/pipes/pipe_models.py†L17-L64】
+
+### `base:FetchTicketsPipe`
+
+* **Use**: `base:FetchTicketsPipe`
+* **Injects**: `ticket_system` must resolve to a `TicketSystemService` implementation. 【F:packages/otai_base/src/otai_base/ticket_system_integration/ticket_system_service.py†L1-L27】
+* **Params**: `ticket_search_criteria` describing queue, limit, and other filters. 【F:packages/otai_base/src/otai_base/pipes/ticket_system_pipes/fetch_tickets_pipe.py†L11-L26】
+* **Output**: Success result with `data.fetched_tickets` set to a list of `UnifiedTicket` records. 【F:packages/otai_base/src/otai_base/pipes/ticket_system_pipes/fetch_tickets_pipe.py†L20-L26】
+
+### `base:UpdateTicketPipe`
+
+* **Use**: `base:UpdateTicketPipe`
+* **Injects**: `ticket_system` (same as above).
+* **Params**:
+  * `ticket_id` (`str | int`) – target ticket identifier.
+  * `updated_ticket` (`UnifiedTicket`) – fields to update. 【F:packages/otai_base/src/otai_base/pipes/ticket_system_pipes/update_ticket_pipe.py†L11-L28】
+* **Output**: Returns success when the ticket service confirms the update. 【F:packages/otai_base/src/otai_base/pipes/ticket_system_pipes/update_ticket_pipe.py†L21-L31】
+
+### `base:AddNotePipe`
+
+* **Use**: `base:AddNotePipe`
+* **Injects**: `ticket_system`.
+* **Params**:
+  * `ticket_id` (`str | int`) – ticket receiving the note.
+  * `note` (`UnifiedNote`) – subject/body payload. 【F:packages/otai_base/src/otai_base/pipes/ticket_system_pipes/add_note_pipe.py†L13-L40】
+* **Output**: Returns success after delegating to the ticket service to append the note. 【F:packages/otai_base/src/otai_base/pipes/ticket_system_pipes/add_note_pipe.py†L27-L40】
+
+### `hf-local:HFClassificationService`
+
+* **Use**: `hf-local:HFClassificationService`
+* **Params**: `api_token` (`str | None`) – default Hugging Face token used when requests omit a token. 【F:packages/otai_hf_local/src/otai_hf_local/hf_classification_service.py†L105-L158】
+* **Behaviour**: Lazily loads and caches a Hugging Face transformers pipeline, logs in when a token is provided, and exposes synchronous/asynchronous classification helpers. 【F:packages/otai_hf_local/src/otai_hf_local/hf_classification_service.py†L34-L163】
+
+### `otobo-znuny:OTOBOZnunyTicketSystemService`
+
+* **Use**: `otobo-znuny:OTOBOZnunyTicketSystemService`
+* **Params** (`RenderedOTOBOZnunyTSServiceParams`):
+  * `base_url` – OTOBO/Znuny endpoint base URL.
+  * `username` / `password` – credentials for the configured web service.
+  * `webservice_name` – optional service name override (defaults to `OpenTicketAI`).
+  * `operation_urls` – mapping of ticket operations to relative API paths. 【F:packages/otai_otobo_znuny/src/otai_otobo_znuny/models.py†L44-L76】
+* **Behaviour**: Creates and logs in an `OTOBOZnunyClient`, then implements the `TicketSystemService` interface for searching, retrieving, updating, and annotating tickets. 【F:packages/otai_otobo_znuny/src/otai_otobo_znuny/oto_znuny_ts_service.py†L21-L135】
