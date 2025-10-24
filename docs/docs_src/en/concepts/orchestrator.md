@@ -4,229 +4,84 @@ pageClass: full-page
 aside: false
 ---
 
-
-===================
-!!!!! # TODO THERES NO DIFFERENCE BETWEEN Orchestrators and Pipes anymore. Orchestrators and Runners are normal Pipe.
-The Default Orchestrator behaves in a special way since its a while loop that never stops. but otherwise its a pipe.
-The Runners are also Pipes. The Default Runner has an on and a run param.
-on and run are both pipess. when the on pipe succeeds the run pipe runs!
-
 # Orchestrator System
 
-The orchestrator coordinates pipeline execution by managing triggers and runners. It implements the Observer pattern,
-where triggers notify runners when conditions are met, and runners execute pipelines in response.
+Open Ticket AI treats the orchestrator itself as an injectable pipe. The orchestrator entry in your workspace configuration is a normal `PipeConfig` that is resolved through dependency injection, exactly like any other pipe in the system. The default implementation, `base:SimpleSequentialOrchestrator`, receives its configuration via `params` and builds the runtime loop from the nested pipe definitions you supply.
 
-## Core Components
+## SimpleSequentialOrchestrator lifecycle
 
-The orchestrator system consists of three main components that work together:
+`SimpleSequentialOrchestrator` is a `CompositePipe` that performs an endless cycle:
 
-**Orchestrator**  
-The central coordinator that manages the lifecycle of triggers and runners. It initializes the system, attaches runners
-to triggers, and handles startup and shutdown.
+1. Each iteration it renders the configured `steps` list, which must contain `PipeConfig` objects.
+2. For every step it resolves the referenced pipe (typically a runner) and awaits its execution.
+3. After all steps complete it sleeps for `orchestrator_sleep` (defaults to 10 ms) before starting the next cycle.
+4. Any exception inside a step is logged. When `always_retry` is `True` (the default) the orchestrator waits for `exception_sleep` and then restarts the cycle; otherwise the exception is propagated.
 
-**Trigger**  
-An event source that monitors for conditions (like time intervals or external events). When a condition is met, it
-notifies all attached runners. Multiple runners can observe the same trigger.
+Because the orchestrator is just a pipe, you can replace it with any other implementation by changing the `use` target or inject additional collaborators through `params`.
 
-**PipeRunner**  
-An execution unit that runs a pipeline when notified by a trigger. Each runner is configured with a specific pipeline to
-execute and can be attached to one or more triggers.
+## Runner pipes inside `steps`
 
-## Component Relationships
+The orchestrator’s `steps` array is where runner pipes live. Each entry is a fully qualified `PipeConfig` that will be instantiated inside the orchestrator’s execution context. Runners can inject services, render templates, and emit results the same way any other pipe does. You can mix different runner implementations within the same orchestrator loop by adding multiple step entries.
 
-```mermaid
-%%{init: {
-  "classDiagram": { "layout": "elk", "useMaxWidth": false },
-  "elk": { "spacing": { "nodeNode": 25, "nodeNodeBetweenLayers": 30 } },
-  "themeVariables": { "fontSize": "13px" }
-}}%%
-classDiagram
-    direction TD
+## SimpleSequentialRunner semantics
 
-    class Orchestrator {
-        +start()
-        +stop()
-        +run()
-        -triggers
-        -runners
-    }
+`SimpleSequentialRunner` is the default runner pipe. It accepts two nested `PipeConfig` values:
 
-    class Trigger {
-        +attach(observer)
-        +detach(observer)
-        +notify()
-        +start()
-        +stop()
-        -observers
-    }
+- `on`: A pipe that decides whether the runner should execute its workload. The pipe runs first on every orchestrator cycle. If it returns a successful `PipeResult`, the runner proceeds.
+- `run`: The pipe that performs the actual work. It executes only when the `on` pipe succeeds. If the `on` pipe fails or is skipped, the runner skips execution and reports the reason in its result message.
 
-    class PipeRunner {
-        +execute()
-        +on_trigger_fired()
-        -definition
-    }
+Both nested configs are rendered within the runner’s context, so they have access to the parent orchestrator parameters and any templating variables produced earlier in the pipeline.
 
-    Orchestrator "1" --> "*" Trigger: manages
-    Orchestrator "1" --> "*" PipeRunner: manages
-    Trigger "1" --> "*" PipeRunner: observes
-    note for Orchestrator "Coordinates lifecycle\nof triggers and runners"
-    note for Trigger "Notifies runners when\nconditions are met"
-    note for PipeRunner "Executes pipes\nin response to trigger"
-```
+## Configuration example
 
-**How they work together:**
-
-1. The **Orchestrator** creates triggers and runners based on configuration
-2. Each **PipeRunner** is attached as an observer to one or more **Triggers**
-3. When a **Trigger** fires, it notifies all attached **PipeRunners**
-4. Each notified **PipeRunner** executes its configured pipeline
-
-## Configuration
-
-The orchestrator is configured through YAML with three main sections:
-
-### Basic Structure
+The current end-to-end demo configuration shows how the orchestrator and runners are composed:
 
 ```yaml
-orchestrator:
-  runners:
-    - id: "unique_id"           # Optional identifier
-      on: # Optional triggers (omit for one-time execution)
-        - id: "trigger_id"
-          use: "module:TriggerClass"
-          params: { }
-      run: # Required: pipes to execute
-        id: "pipeline_id"
-        use: "module:PipeClass"
-        params: { }
-```
-
-### Configuration Elements
-
-**Runner Definition** - Defines what pipeline to run and when:
-
-- `id`: Optional unique identifier for the runner
-- `on`: List of triggers that will execute this pipeline (optional)
-- `run`: The pipeline configuration to execute (required)
-
-**Trigger Definition** - Specifies when to execute:
-
-- `id`: Unique identifier for trigger reuse
-- `use`: Fully qualified class path to trigger implementation
-- `params`: Trigger-specific parameters (e.g., interval duration)
-
-## Common Usage Patterns
-
-### Time-Based Execution
-
-Execute a pipeline at regular intervals:
-
-```yaml
-orchestrator:
-  runners:
-    - id: periodic_task
-      on:
-        - id: "every_5_min"
-          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
+open_ticket_ai:
+  orchestrator:
+    use: "base:SimpleSequentialOrchestrator"
+    params:
+      orchestrator_sleep: "PT0.01S"
+      steps:
+        - id: ticket-routing-runner
+          use: "base:SimpleSequentialRunner"
           params:
-            minutes: 5
-      run:
-        id: ticket_classifier
-        use: open_ticket_ai.base:CompositePipe
-        steps: [ ... ]
+            on:
+              id: trigger_interval
+              use: "base:IntervalTrigger"
+              params:
+                interval: "PT0.5S"
+            run:
+              id: ticket-routing
+              use: "base:CompositePipe"
+              params:
+                steps:
+                  - id: ticket_fetcher
+                    use: "base:FetchTicketsPipe"
+                    injects: { ticket_system: "otobo_znuny" }
+                    params:
+                      ticket_search_criteria:
+                        queue:
+                          name: "OpenTicketAI::Incoming"
+                        limit: 1
+                  - id: queue_classify
+                    use: "base:ClassificationPipe"
+                    injects: { classification_service: "hf_local" }
+                    params:
+                      text: "{{ get_pipe_result('ticket')['subject'] }} {{ get_pipe_result('ticket')['body'] }}"
+                      model_name: "softoft/otai-queue-de-bert-v1"
+                  # additional steps omitted for brevity
 ```
 
-### Startup Execution
+Key points illustrated above:
 
-Execute once at application startup (no triggers):
+- The orchestrator itself is declared with `use` and `params`, just like any other pipe.
+- Runner definitions reside inside the orchestrator’s `steps` list and can inject services.
+- Runner `on` and `run` sections are full pipe configs whose templates are rendered within the orchestrator loop.
+- The orchestrator continues looping, evaluating the `on` pipe each cycle and running the workload only when it succeeds.
 
-```yaml
-orchestrator:
-  runners:
-    - id: initialization
-      run: # No "on" field = runs once at startup
-        id: cache_warmup
-        use: CacheWarmupPipe
-```
+## Related documentation
 
-### Multiple Triggers
-
-Execute the same pipeline from different triggers:
-
-```yaml
-orchestrator:
-  runners:
-    - id: multi_trigger_task
-      on:
-        - id: "hourly"
-          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
-          params:
-            hours: 1
-        - id: "daily"
-          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
-          params:
-            days: 1
-      run:
-        id: maintenance
-        use: MaintenancePipe
-```
-
-### Shared Triggers
-
-Reuse the same trigger for multiple pipelines:
-
-```yaml
-orchestrator:
-  runners:
-    - id: task_one
-      on:
-        - id: "shared_timer"  # Same trigger ID
-          use: "open_ticket_ai.base.triggers.interval_trigger:IntervalTrigger"
-          params:
-            minutes: 10
-      run: { ... }
-
-    - id: task_two
-      on:
-        - id: "shared_timer"  # Reuses the trigger above
-      run: { ... }
-```
-
-## Execution Guarantees
-
-The orchestrator provides these execution characteristics:
-
-- **Clean Lifecycle**: Graceful startup and shutdown of all components
-- **Error Isolation**: A failure in one runner doesn't affect others
-- **Non-Overlapping**: Pipelines won't start if a previous execution is still running (per runner)
-- **Multiple Observers**: One trigger can notify multiple runners
-
-## Best Practices
-
-**Trigger Design**
-
-- Use appropriate intervals based on data freshness requirements
-- Avoid overly frequent execution that wastes resources
-- Consider pipeline execution time when setting intervals
-- Reuse triggers with the same schedule to reduce overhead
-
-**Runner Organization**
-
-- Use descriptive IDs for easier debugging
-- Group related operations in a single pipeline
-- Separate fast checks from slow batch operations
-- Monitor execution times and adjust intervals accordingly
-
-## Key Implementation Files
-
-- **`orchestrator.py`** - Main orchestrator class
-- **`trigger.py`** - Base trigger class and observer protocol
-- **`scheduled_runner.py`** - PipeRunner implementation
-- **`orchestrator_config.py`** - Configuration models
-
-## Related Documentation
-
-- [Pipe System](pipeline.md) - Understanding pipeline structure
-- [Configuration Reference](../details/config_reference.md) - Full config options
-- [First Pipeline Tutorial](../guides/first_pipeline.md) - Getting started guide
-
+- [Pipe System](pipeline.md)
+- [Configuration Reference](../details/config_reference.md)
+- [First Pipeline Tutorial](../guides/first_pipeline.md)
