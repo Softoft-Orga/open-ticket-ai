@@ -4,16 +4,12 @@ description: Learn how Open Ticket AI's plugin system enables modular extensibil
 
 # Plugin System
 
-### TODO not much has changed here. Not regarding the concepts at least
-
-###
-
-The plugin system enables extending Open Ticket AI through standalone Python packages that provide custom services,
-pipes, and configuration schemas.
+Open Ticket AI's plugin system enables modular extensibility through standalone Python packages that expose custom
+injectables (services and pipes) and related configuration schemas.
 
 ## What is a Plugin?
 
-A **plugin** is a Python package that extends capabilities by providing:
+A **plugin** is a Python package (published under the `otai-` prefix) that extends capabilities by providing:
 
 - **Custom Services**: Ticket systems, ML models, API clients
 - **Custom Pipes**: Data fetching, processing, classification
@@ -28,13 +24,24 @@ A **plugin** is a Python package that extends capabilities by providing:
 uv pip install otai-otobo-znuny
 ```
 
-### Usage in Configuration
+### 2. Discovery and Registration
+
+Plugins are discovered via the `open_ticket_ai.plugins` entry-point group. Each entry point must resolve to a *plugin
+factory*—a callable that accepts the application configuration and returns an instance of a subclass of
+`open_ticket_ai.core.plugins.plugin.Plugin`. When Open Ticket AI boots, it calls each factory, gathers the injectables
+the plugin exposes, and registers them in the dependency-injection registry using the plugin's identifier as a prefix.
+
+The registry prefix is derived from the package name: the `otai-` prefix is removed and remaining underscores are
+converted to hyphens. For example, `otai_otobo_znuny` becomes `otobo-znuny`. Injectables are then registered as
+`<plugin-prefix>:<InjectableName>`.
+
+### 3. Usage in Configuration
 
 ```yaml
 # Use plugin service
 services:
   - id: ticket_system
-    use: "otobo_znuny:OtoboAdapter"
+    use: "otobo-znuny:OTOBOZnunyTicketSystemService"
     params:
       base_url: "${OTOBO_URL}"
 
@@ -43,10 +50,21 @@ orchestrator:
   runners:
     - run:
         id: fetch
-        use: "otobo_znuny:FetchTicketsPipe"
+        use: "otobo-znuny:FetchTicketsPipe"
         injects:
           ticket_system: "ticket_system"
-```
+
+## Plugin Factory Lifecycle
+
+1. **Entry Point Resolution** – During startup the plugin loader iterates over every entry point in
+   `open_ticket_ai.plugins` and imports the referenced factory, such as `otai_base.base_plugin:create_base_plugin`.
+2. **Factory Execution** – The loader calls the factory with the runtime `AppConfig`. Plugins can read global settings
+   such as the registry separator (`:`) or the plugin prefix (`otai-`) from this object.
+3. **Injectable Enumeration** – The returned `Plugin` subclass implements `_get_all_injectables()` to list every pipe or
+   service it contributes. The base implementation automatically transforms each injectable into its registry name using
+   the `<plugin-prefix>:<InjectableName>` pattern.
+4. **Registration** – Each injectable is registered with the shared `ComponentRegistry`, making it available for use in
+   configuration files and dependency injection.
 
 ## API Compatibility
 
@@ -105,12 +123,12 @@ See [Plugin Development Guide](../developers/plugin_development.md) for complete
 **Basic Structure:**
 
 ```
-my-plugin/
-├── pyproject.toml          # Entry points defined here
+otai-my-plugin/
+├── pyproject.toml          # Entry point targets the plugin factory
 ├── src/
-│   └── my_plugin/
+│   └── otai_my_plugin/
 │       ├── __init__.py
-│       ├── plugin.py       # setup() function
+│       ├── plugin.py       # Plugin subclass + factory callable
 │       ├── services/
 │       └── pipes/
 └── tests/
