@@ -2,188 +2,133 @@
 description: Complete guide to developing custom plugins for Open Ticket AI including project structure, entry points, and best practices.
 ---
 
-## TODO plugin package name otai-* needs entrypoint set to PluginFactory. Plugin returns list of injectables.
-
 # Plugin Development Guide
 
 Learn how to create custom plugins to extend Open Ticket AI functionality.
 
-## Creating a New Plugin
+## Packaging & Naming Requirements
 
-### 1. Project Structure
+Open Ticket AI discovers plugins by their Python package name and project metadata.
 
-Create a Python package with this structure:
+- **Distribution/project name**: must start with `otai-`. This matches the `AppConfig.PLUGIN_NAME_PREFIX` (`otai-`) that the runtime uses when computing registry keys.
+- **Python package name**: use the same words as the distribution name but with underscores (`otai_my_plugin`). The loader converts the top-level module name to kebab-case automatically, so `otai_my_plugin` becomes `otai-my-plugin` internally.
+- **Registry prefix**: when a plugin registers injectables it strips the global prefix (`otai-`) and keeps the remainder (e.g. `otai-my-plugin` → `my-plugin`). That portion becomes the registry key prefix when combined with the injectable name, such as `my-plugin:MyPipe`.
+
+## Recommended Project Layout
 
 ```
-my_plugin/
+otai-my-plugin/
 ├── pyproject.toml
 ├── src/
-│   └── my_plugin/
+│   └── otai_my_plugin/
 │       ├── __init__.py
 │       ├── pipes/
 │       │   └── my_pipe.py
 │       ├── services/
 │       │   └── my_service.py
-│       └── plugin.py
+│       └── plugin_factory.py
 └── tests/
-    └── test_my_plugin.py
+    └── unit/
+        └── test_my_plugin.py
 ```
 
-### 2. Plugin Entry Point
+## Entry Point Contract
 
-Define entry point in `pyproject.toml`:
+Open Ticket AI loads plugins via the `open_ticket_ai.plugins` entry-point group. The entry point must resolve to a callable that accepts an `AppConfig` instance and returns a `Plugin`. Subclassing `Plugin` already satisfies that contract, so expose your subclass directly.
 
 ```toml
 [project.entry-points."open_ticket_ai.plugins"]
-my_plugin = "my_plugin.plugin:setup"
+my_plugin = "otai_my_plugin.plugin_factory:PluginFactory"
 ```
 
-### 3. Setup Function
+### Why reference the class?
 
-Implement the setup function in `plugin.py`:
+- The loader invokes the target like a factory. Referencing the subclass keeps the wiring declarative—no wrapper function required.
+- The class name clarifies that instantiating the plugin may involve dependency wiring (for example, constructor parameters beyond `AppConfig` can be injected by the IoC container).
+
+## Implementing the PluginFactory Class
+
+All plugins inherit from `open_ticket_ai.core.plugins.plugin.Plugin`. The base class:
+
+1. Accepts `AppConfig` (injected by the loader) in its constructor.
+2. Uses the top-level module name to infer the plugin name and registry prefix.
+3. Calls `_get_all_injectables()` during `on_load` and registers each `Injectable` automatically with the `ComponentRegistry` using the pattern `<plugin-prefix>:<injectable-registry-name>`.
+
+The separator between the prefix and the injectable name is `AppConfig.REGISTRY_IDENTIFIER_SEPERATOR`, which defaults to `:`.
+
+Override `_get_all_injectables()` to return every injectable you want to expose. You should **not** call `registry.register(...)` yourself inside `on_load`; the base class does it for you.
 
 ```python
-def setup(registry):
-    """Register plugin components."""
-    from my_plugin.pipes.my_pipe import MyPipe
-    from my_plugin.services.my_service import MyService, MyServiceImpl
+# src/otai_my_plugin/plugin_factory.py
 
-    registry.register_pipe("my_pipe", MyPipe)
-    registry.register_service(MyService, MyServiceImpl)
+from open_ticket_ai.core.injectables.injectable import Injectable
+from open_ticket_ai.core.plugins.plugin import Plugin
+
+from otai_my_plugin.pipes.my_pipe import MyPipe
+from otai_my_plugin.services.my_service import MyService
+
+
+class PluginFactory(Plugin):
+    """Create the plugin instance and declare exported injectables."""
+
+    def _get_all_injectables(self) -> list[type[Injectable]]:
+        return [
+            MyPipe,
+            MyService,
+        ]
 ```
 
-## Plugin Interface Requirements
+When the loader instantiates `PluginFactory`, the base implementation will:
 
-### Required Functions
+1. Compute the registry prefix (`my-plugin` in this example).
+2. Call `MyPipe.get_registry_name()` and `MyService.get_registry_name()`.
+3. Register each injectable as `my-plugin:<registry-name>` with the shared `ComponentRegistry`.
 
-Every plugin must provide:
+### Returning Injectables vs Manual Registration
 
-- `setup(registry)`: Register plugin components
+Prior implementations required a `setup(registry)` helper that performed manual registration. With the factory pattern above you simply return the list of injectables and let the base class handle the rest. This keeps registration consistent and ensures registry names follow the `prefix:Injectable` convention automatically.
 
-### Optional Functions
+If you do need to opt out of the automatic behaviour—for example, to register additional aliases—you can still access the registry inside `_get_all_injectables()` by overriding `on_load`. For typical use cases, returning the list is sufficient and preferred.
 
-Plugins may provide:
+## pyproject.toml Essentials
 
-- `configure(config)`: Plugin-specific configuration
-- `validate()`: Validate plugin installation
-- `cleanup()`: Cleanup on shutdown
+Ensure the metadata aligns with the naming rules and entry-point contract:
 
-## Registering Services and Pipes
+```toml
+[project]
+name = "otai-my-plugin"
+version = "0.1.0"
+description = "Custom plugin for Open Ticket AI"
+requires-python = ">=3.13"
+dependencies = [
+    "open-ticket-ai>=1.0.0,<2.0.0",
+]
 
-### Register a Pipe
-
-```python
-from open_ticket_ai.pipeline import BasePipe
-
-
-class MyPipe(BasePipe):
-    def execute(self, context):
-        # Pipe logic
-        return PipeResult.succeeded()
-
-
-# In setup function
-registry.register_pipe("my_pipe", MyPipe)
+[project.entry-points."open_ticket_ai.plugins"]
+my_plugin = "otai_my_plugin.plugin_factory:PluginFactory"
 ```
 
-### Register a Service
+Use the distribution name (`otai-my-plugin`) to derive both the module prefix (`otai_my_plugin`) and registry prefix (`my-plugin`). Keeping these consistent ensures the loader resolves entry points correctly and produces predictable registry keys.
 
-```python
-from injector import singleton
+## Packaging, Distribution & Testing
 
-
-class MyService:
-    def do_work(self):
-        pass
-
-
-# In setup function
-registry.register_service(MyService, MyServiceImpl, scope=singleton)
 ```
-
-## Plugin Packaging and Distribution
-
-### Using uv
-
-```bash
-# Build plugin
 uv build
-
-# Publish to PyPI
 uv publish
 ```
 
-### Installation
+Install your plugin into an Open Ticket AI environment with:
 
-Users install plugins via pip/uv:
-
-```bash
-uv pip install my-plugin
+```
+uv pip install otai-my-plugin
 ```
 
-## Testing Plugins
+Write unit tests alongside your plugin code under `tests/unit/` and run them with `uv run -m pytest`.
 
-### Unit Tests
-
-Test individual components:
-
-```python
-def test_my_pipe():
-    pipe = MyPipe()
-    context = PipelineContext()
-    result = pipe.execute(context)
-    assert result.succeeded
-```
-
-### Integration Tests
-
-Test plugin integration:
-
-```python
-def test_plugin_registration():
-    registry = UnifiedRegistry()
-    setup(registry)
-    assert registry.has_pipe("my_pipe")
-```
-
-### E2E Tests
-
-Test complete workflows:
-
-```python
-def test_pipeline_with_plugin():
-    config = load_config("test_config.yml")
-    pipeline = create_pipeline(config)
-    result = pipeline.run()
-    assert result.succeeded
-```
-
-## Best Practices
-
-### Do:
-
-- Follow naming conventions
-- Document configuration options
-- Provide examples
-- Write comprehensive tests
-- Version your plugin
-- Declare API dependencies
-
-### Don't:
-
-- Modify core system behavior
-- Create circular dependencies
-- Store state in pipes
-- Ignore error handling
-- Skip documentation
-
-## Example Plugin
-
-See the [HuggingFace Local plugin](../plugins/hf_local.md) for a complete example.
-
-## Related Documentation
+## Additional Resources
 
 - [Plugin System](../plugins/plugin_system.md)
 - [Dependency Injection](dependency_injection.md)
 - [Services](services.md)
 - [Pipeline Architecture](../concepts/pipeline-architecture.md)
+- [Hugging Face Local plugin example](../plugins/hf_local.md)
