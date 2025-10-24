@@ -11,8 +11,8 @@ static YAML files into live, context-aware application objects through a multi-s
 template rendering, and dependency injection.
 
 Unlike earlier revisions where the renderer lived under infrastructure defaults, the active `TemplateRenderer` is now
-configured explicitly as a **service entry**. During bootstrap the service container searches the raw service
-definitions for exactly one renderer entry, resolves it without performing any template rendering, and registers the
+configured explicitly as a **service entry**. During bootstrap, the service container searches the raw service
+definitions for exactly one renderer entry. It resolves this entry without performing any template rendering and registers the
 instance for reuse. If the bootstrapper finds zero or more than one renderer entry the configuration loader raises a
 validation error before any other services are touched. This single-instance enforcement guarantees that every
 downstream dependency resolves against the same renderer instance.
