@@ -3,6 +3,8 @@ from __future__ import annotations
 import abc
 from typing import Any
 
+from open_ticket_ai.core.logging.logging_models import LoggingFormatConfig
+
 
 class AppLogger(abc.ABC):
     @abc.abstractmethod
@@ -23,5 +25,6 @@ class AppLogger(abc.ABC):
 
 class LoggerFactory(abc.ABC):
     @abc.abstractmethod
-    def create(self, *args: Any, **kwargs: Any) -> AppLogger:
+    def create(self, name: str, format_config: LoggingFormatConfig | None = None,
+               extras: dict[str, Any] | None = None, *args: Any, **kwargs: Any) -> AppLogger:
         pass

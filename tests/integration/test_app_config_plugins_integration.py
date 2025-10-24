@@ -100,7 +100,7 @@ def test_retrieve_registered_pipe_from_registry(integration_config_builder):
     app_module = AppModule(config)
     registry = app_module.component_registry
 
-    expression_pipe = registry.get_pipe("base:ExpressionPipe")
+    expression_pipe = registry.get_pipe(by_identifier="base:ExpressionPipe")
 
     assert expression_pipe is not None
     assert expression_pipe.__name__ == "ExpressionPipe"

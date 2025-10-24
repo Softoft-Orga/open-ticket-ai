@@ -5,6 +5,8 @@ import pytest
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import LoggingConfig, PipeConfig
 
+__TESTING_CLASS__ = AppConfig
+
 
 @pytest.mark.integration
 def test_appconfig_reads_yaml_open_ticket_ai_key(tmp_path, monkeypatch):

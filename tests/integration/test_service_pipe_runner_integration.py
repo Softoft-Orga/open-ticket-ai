@@ -1,13 +1,4 @@
 import pytest
-from otai_base.pipes.composite_pipe import CompositePipe
-from otai_base.pipes.expression_pipe import ExpressionParams, ExpressionPipe
-from otai_base.pipes.ticket_system_pipes import AddNoteParams, AddNotePipe, FetchTicketsParams, FetchTicketsPipe
-from otai_base.ticket_system_integration.unified_models import (
-    TicketSearchCriteria,
-    UnifiedEntity,
-    UnifiedNote,
-    UnifiedTicket,
-)
 
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
@@ -17,6 +8,15 @@ from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes._pipe_models import PipeConfig
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from otai_base.pipes.composite_pipe import CompositePipe
+from otai_base.pipes.expression_pipe import ExpressionParams, ExpressionPipe
+from otai_base.pipes.ticket_system_pipes import AddNoteParams, AddNotePipe, FetchTicketsParams, FetchTicketsPipe
+from otai_base.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedEntity,
+    UnifiedNote,
+    UnifiedTicket,
+)
 from tests.mocked_ticket_system import MockedTicketSystem
 
 
@@ -47,10 +47,10 @@ def renderer(integration_template_renderer: TemplateRenderer) -> TemplateRendere
 
 @pytest.fixture
 def factory(
-    registry: ComponentRegistry,
-    renderer: TemplateRenderer,
-    integration_logger_factory,
-    otai_with_ticketsvc: OpenTicketAIConfig,
+        registry: ComponentRegistry,
+        renderer: TemplateRenderer,
+        integration_logger_factory,
+        otai_with_ticketsvc: OpenTicketAIConfig,
 ) -> PipeFactory:
     return PipeFactory(
         component_registry=registry,
@@ -97,10 +97,10 @@ def addnote_cfg() -> callable:
 
 
 @pytest.fixture
-def seed_tickets(factory: PipeFactory):
-    def _seed(items: list[UnifiedTicket]) -> MockedTicketSystem:
+async def seed_tickets(factory: PipeFactory):
+    async def _seed(items: list[UnifiedTicket]) -> MockedTicketSystem:
         # Get the shared ticket system instance from the factory so seeded data is visible to all pipes
-        svc: MockedTicketSystem = factory._get_service_by_id("tickets")
+        svc: MockedTicketSystem = await factory._get_service_by_id("tickets")
         for t in items:
             svc.add_test_ticket(**t.model_dump())
         return svc
@@ -122,9 +122,10 @@ async def test_pipes_use_same_ticketsystem_instance(factory: PipeFactory, ctx: P
 @pytest.mark.integration
 @pytest.mark.asyncio
 async def test_flow_fetch_select_highest_priority_and_add_note(
-    factory: PipeFactory, registry: ComponentRegistry, ctx: PipeContext, fetch_cfg, expr_cfg, addnote_cfg, seed_tickets
+        factory: PipeFactory, registry: ComponentRegistry, ctx: PipeContext, fetch_cfg, expr_cfg, addnote_cfg,
+        seed_tickets
 ):
-    seed_tickets(
+    await seed_tickets(
         [
             UnifiedTicket(
                 id="1", subject="A", queue=UnifiedEntity(name="Support"), priority=UnifiedEntity(name="1"), notes=[]

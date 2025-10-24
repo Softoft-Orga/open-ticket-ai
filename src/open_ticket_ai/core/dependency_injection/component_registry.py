@@ -1,4 +1,5 @@
 import logging
+from typing import Iterable
 
 from open_ticket_ai.core.config.errors import InjectableNotFoundError, RegistryError
 from open_ticket_ai.core.injectables.injectable import Injectable
@@ -10,42 +11,33 @@ logger = logging.getLogger(__name__)
 
 class ComponentRegistry:
     def __init__(self) -> None:
-        self._pipes: dict[str, type[Pipe]] = {}
-        self._services: dict[str, type[Injectable]] = {}
+        self._injectables: dict[str, type[Injectable]] = {}
 
     def register(self, registry_identifier: str, register_class: type[Injectable]) -> None:
-        if issubclass(register_class, Pipe):
-            self._pipes[registry_identifier] = register_class
-            logger.info(f"Registered pipe: {registry_identifier}")
-        elif issubclass(register_class, Injectable):
-            self._services[registry_identifier] = register_class
-            logger.info(f"Registered injectable: {registry_identifier}")
-        else:
-            raise RegistryError("Registered class must be a subclass of Pipe or Injectable")
+        if not issubclass(register_class, Injectable):
+            raise RegistryError(self, "Registered class must be a subclass of Injectable")
+        self._injectables[registry_identifier] = register_class
 
-    def get_pipe(self, registry_identifier: str) -> type[Pipe]:
-        pipe = self._pipes.get(registry_identifier)
-        if pipe is None:
-            logger.warning(f"Pipe not found: {registry_identifier}")
+    def find[T: Injectable](self, *, by_type: type[T]) -> dict[str, type[T]]:
+        return {
+            registry_id: cls for registry_id, cls in self._injectables.items()
+            if issubclass(cls, by_type)
+        }
+
+    def find_one[T: Injectable](self, *, by_identifier: str, by_type: type[T]) -> type[T]:
+        injectable = self.find(by_type=by_type).get(by_identifier)
+        if injectable is None:
             raise InjectableNotFoundError(
-                registry_identifier,
+                by_identifier,
                 self,
             )
-        logger.debug(f"Retrieved pipe: {registry_identifier}")
-        return pipe
+        return injectable
 
-    def get_injectable(self, registry_identifier: str) -> type[Injectable]:
-        service = self._services.get(registry_identifier)
-        if service is None:
-            logger.warning(f"Injectable not found: {registry_identifier}")
-            raise InjectableNotFoundError(
-                registry_identifier,
-                self,
-            )
-        logger.debug(f"Retrieved injectable: {registry_identifier}")
-        return service
+    def get_pipe(self, *, by_identifier: str) -> type[Pipe]:
+        return self.find_one(by_identifier=by_identifier, by_type=Pipe)
 
-    def get_available_injectables(self) -> list[str]:
-        available = list(self._services.keys()) + list(self._pipes.keys())
-        logger.info(f"Available injectables: {available}")
-        return available
+    def get_injectable(self, *, by_identifier: str) -> type[Injectable]:
+        return self.find_one(by_identifier=by_identifier, by_type=Injectable)
+
+    def get_available_injectables(self) -> Iterable[str]:
+        return self._injectables.keys()

@@ -45,7 +45,7 @@ class AppModule(Module):
 
     @provider
     def create_renderer_from_service(
-        self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
+            self, config: OpenTicketAIConfig, logger_factory: LoggerFactory
     ) -> TemplateRenderer:
         logger = logger_factory.create("AppModule")
         logger.debug("🔧 Creating TemplateRenderer from service configuration")
@@ -68,7 +68,7 @@ class AppModule(Module):
         logger.debug(f"Using TemplateRenderer service: {service_config.id}")
 
         cls: type[TemplateRenderer] = typing.cast(
-            type[TemplateRenderer], self.component_registry.get_injectable(service_config.use)
+            type[TemplateRenderer], self.component_registry.get_injectable(by_identifier=service_config.use)
         )
 
         renderer = cls(service_config, logger_factory=logger_factory)

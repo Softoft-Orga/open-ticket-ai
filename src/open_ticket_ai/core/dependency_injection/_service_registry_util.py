@@ -9,7 +9,7 @@ def find_all_configured_services_of_type(
     found_services: list[InjectableConfig] = []
     for service_config in services_configs:
         registry_identifier = service_config.use
-        service: type[Injectable] = component_registry.get_injectable(registry_identifier)
+        service: type[Injectable] = component_registry.get_injectable(by_identifier=registry_identifier)
         if issubclass(service, subclass_of):
             found_services.append(service_config)
     return found_services

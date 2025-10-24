@@ -20,23 +20,22 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class PipeFactory:
     @inject
     def __init__(
-        self,
-        template_renderer: TemplateRenderer,
-        logger_factory: LoggerFactory,
-        otai_config: OpenTicketAIConfig,
-        component_registry: ComponentRegistry,
+            self,
+            template_renderer: TemplateRenderer,
+            logger_factory: LoggerFactory,
+            otai_config: OpenTicketAIConfig,
+            component_registry: ComponentRegistry,
     ):
         self._template_renderer = template_renderer
         self._logger_factory = logger_factory
         self._logger = logger_factory.create(self.__class__.__name__)
         self._service_configs: list[InjectableConfig] = otai_config.get_services_list()
         self._component_registry = component_registry
-        self._pipe_cache: dict[str, Pipe] = {}
 
     @alru_cache()
     async def create_pipe(self, pipe_config: PipeConfig, pipe_context: PipeContext) -> Pipe:
         injected_services = await self._resolve_service_injects(pipe_config.injects)
-        pipe_class: type[Pipe] = self._component_registry.get_pipe(pipe_config.use)
+        pipe_class: type[Pipe] = self._component_registry.get_pipe(by_identifier=pipe_config.use)
 
         rendered_params: BaseModel = await self._template_renderer.render_to_model(
             to_model=pipe_class.ParamsModel, from_raw_dict=pipe_config.params, with_scope=pipe_context.model_dump()
@@ -62,7 +61,7 @@ class PipeFactory:
         if config is None:
             raise NoServiceConfigurationFoundError(service_id, self._service_configs)
 
-        injectable_class: type[Injectable] = self._component_registry.get_injectable(config.use)
+        injectable_class: type[Injectable] = self._component_registry.get_injectable(by_identifier=config.use)
         rendered_params: BaseModel = await self._template_renderer.render_to_model(
             to_model=injectable_class.ParamsModel, from_raw_dict=config.params, with_scope={}
         )

@@ -1,4 +1,4 @@
-from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai import StrictBaseModel
 
 
 class ClassificationRequest(StrictBaseModel):

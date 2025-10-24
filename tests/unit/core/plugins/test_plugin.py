@@ -47,7 +47,7 @@ class TestOnLoad:
         assert mock_component_registry.register.call_count == 2
 
     def test_on_load_with_empty_injectables_does_not_call_register(
-        self, app_config_for_plugin, mock_component_registry
+            self, app_config_for_plugin, mock_component_registry
     ):
         plugin = ConcretePlugin(app_config_for_plugin, [])
 
@@ -57,7 +57,8 @@ class TestOnLoad:
 
     def test_on_load_propagates_registry_error(self, app_config_for_plugin):
         mock_registry = MagicMock(spec=ComponentRegistry)
-        mock_registry.register.side_effect = RegistryError("Test error")
+        mock_registry.get_available_injectables.return_value = [SimpleInjectable]
+        mock_registry.register.side_effect = RegistryError(mock_registry, "Test error")
         plugin = ConcretePlugin(app_config_for_plugin, [SimpleInjectable])
 
         with pytest.raises(RegistryError, match="Test error"):

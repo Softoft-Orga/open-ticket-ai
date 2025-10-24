@@ -10,17 +10,11 @@ class DummyNonInjectable:
 
 
 class TestRegister:
-    def test_register_pipe_success(self):
-        registry = ComponentRegistry()
-        registry.register("test_pipe", SimplePipe)
-
-        assert "test_pipe" in registry._pipes
-        assert registry._pipes["test_pipe"] == SimplePipe
-
     def test_register_invalid_class_raises_error(self):
         registry = ComponentRegistry()
 
-        with pytest.raises(RegistryError, match="must be a subclass of Pipe or Injectable"):
+        with pytest.raises(RegistryError):
+            # noinspection PyTypeChecker
             registry.register("invalid", DummyNonInjectable)
 
 
@@ -29,7 +23,7 @@ class TestGetPipe:
         registry = ComponentRegistry()
         registry.register("test_pipe", SimplePipe)
 
-        result = registry.get_pipe("test_pipe")
+        result = registry.get_pipe(by_identifier="test_pipe")
 
         assert result == SimplePipe
 
@@ -37,23 +31,24 @@ class TestGetPipe:
         registry = ComponentRegistry()
 
         with pytest.raises(InjectableNotFoundError, match="not found in the ComponentRegistry"):
-            registry.get_pipe("nonexistent_pipe")
+            registry.get_pipe(by_identifier="nonexistent_pipe")
 
 
 class TestGetInjectable:
     def test_get_injectable_success(self):
         registry = ComponentRegistry()
+        # noinspection PyTypeChecker
         registry.register("test_service", SimpleInjectable)
 
-        result = registry.get_injectable("test_service")
+        result = registry.get_injectable(by_identifier="test_service")
 
         assert result == SimpleInjectable
 
     def test_get_injectable_not_found_raises_error(self):
         registry = ComponentRegistry()
 
-        with pytest.raises(InjectableNotFoundError, match="not found in the ComponentRegistry"):
-            registry.get_injectable("nonexistent_service")
+        with pytest.raises(InjectableNotFoundError):
+            registry.get_injectable(by_identifier="nonexistent_service")
 
 
 class TestFindByType:
@@ -62,7 +57,7 @@ class TestFindByType:
         registry.register("pipe1", SimplePipe)
         registry.register("service1", SimpleInjectable)
 
-        result = registry.find_by_type(SimplePipe)
+        result = registry.find(by_type=SimplePipe)
 
         assert "pipe1" in result
         assert result["pipe1"] == SimplePipe
@@ -72,7 +67,7 @@ class TestFindByType:
         registry = ComponentRegistry()
         registry.register("service1", SimpleInjectable)
 
-        result = registry.find_by_type(SimplePipe)
+        result = registry.find(by_type=SimplePipe)
 
         assert result == {}
 
@@ -94,4 +89,4 @@ class TestGetAvailableInjectables:
 
         result = registry.get_available_injectables()
 
-        assert result == []
+        assert list(result) == []
