@@ -26,7 +26,9 @@ jobs:
 
 
       - id: meta
-        run: echo "version=$(python scripts/resolve_version.py)" >> "$GITHUB_OUTPUT"
+        run: |
+          uv pip install setuptools_scm
+          echo "version=$(python scripts/resolve_version.py)" >> "$GITHUB_OUTPUT"
 
       - run: |
           rm -rf dist
