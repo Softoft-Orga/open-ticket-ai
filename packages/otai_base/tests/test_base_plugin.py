@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 from open_ticket_ai import Plugin
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
+
 from otai_base.base_plugin import BasePlugin
 
 MIN_REGISTERED_COMPONENTS = 2

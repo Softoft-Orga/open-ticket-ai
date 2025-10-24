@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pytest
 from _pytest.logging import LogCaptureFixture
-
 from open_ticket_ai import LoggingConfig
 from open_ticket_ai.core.logging.logging_models import LogLevel
 from open_ticket_ai.core.logging.stdlib_logging_adapter import StdlibLoggerFactory, create_logger_factory

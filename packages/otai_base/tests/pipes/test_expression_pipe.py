@@ -1,6 +1,6 @@
 import pytest
-
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
+
 from otai_base.pipes.expression_pipe import ExpressionPipe
 
 

@@ -58,12 +58,12 @@ class StdlibLoggerFactory(LoggerFactory):
         self._cfg = cfg or LoggingConfig()
 
     def create(
-            self,
-            name: str,
-            format_config: LoggingFormatConfig | None = None,
-            extras: dict[str, Any] | None = None,
-            *_: Any,
-            **__: Any,
+        self,
+        name: str,
+        format_config: LoggingFormatConfig | None = None,
+        extras: dict[str, Any] | None = None,
+        *_: Any,
+        **__: Any,
     ) -> AppLogger:
         # PAD Name to 30 chars for alignment
         padded_name = name.ljust(30)

@@ -5,11 +5,11 @@ from typing import Any, ClassVar
 from unittest.mock import MagicMock
 
 import pytest
-from pydantic import BaseModel
-
 from open_ticket_ai import LoggerFactory, Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
+from pydantic import BaseModel
+
 from otai_base.pipes.orchestrators.simple_sequential_orchestrator import SimpleSequentialOrchestrator
 
 
