@@ -1,6 +1,6 @@
 [project]
 name = "open_ticket_ai"
-version = "1.2.5"
+dynamic = ["version"]
 description = "AI-powered ticket processing and automation system"
 readme = "docs/raw_en_docs/README.md"
 requires-python = ">=3.14"
@@ -50,7 +50,6 @@ dependencies = [
     "pydeps>=3.0.1",
     "graphviz>=0.21",
     "async-lru>=2.0.5",
-    "setuptools-scm>=9.2.2",
 ]
 
 [project.urls]
