@@ -193,6 +193,8 @@ scope:
 
 **Available in templates:**
 
+<div v-pre>
+
 - `{{ params.field_name }}`: Access current pipe parameters
 - `{{ pipe_result('pipe_id').data.field }}`: Access previous pipe results
 - `{{ parent.params.field }}`: Access parent context parameters
@@ -200,6 +202,8 @@ scope:
 - `{% if condition %}...{% endif %}`: Conditional blocks
 - `{% for item in list %}...{% endfor %}`: Iteration
 - `{{ value | filter }}`: Jinja2 filters
+
+</div>
 
 **Template rendering is recursive:**
 
@@ -296,11 +300,13 @@ params:
 
 **Validation Flow:**
 
+<div v-pre>
 1. YAML parsed as dict: `{"timeout": "{{ env('TIMEOUT', '30') }}", "model": "{{ params.global_model }}"}`
 2. Templates rendered: `{"timeout": "30", "model": "gpt-4"}`
 3. Passed to Pipe constructor as dict
 4. Pipe converts: `self.params = self.params_class.model_validate(dict)`
 5. Pydantic validates and coerces types (e.g., "30" → int(30))
+</div>
 
 **Pipe Implementation Pattern:**
 
@@ -459,10 +465,11 @@ The current pattern where Pipe params are validated at runtime (dict → Pydanti
 reasons:
 
 **1. Jinja2 Template Rendering Compatibility:**
-
+<div v-pre>
 - YAML configs are rendered as untyped dicts by Jinja2
 - Templates can't know the final type until after rendering
 - Example: `"{{ env('PORT') }}"` is a string until rendered to `"8080"`, then validated as `int`
+</div>
 
 **2. YAML Flexibility:**
 

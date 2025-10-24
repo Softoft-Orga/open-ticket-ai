@@ -1,4 +1,3 @@
-// .vitepress/theme/index.ts
 import {defineAsyncComponent, h, watch} from 'vue'
 import type {Theme} from 'vitepress'
 import {useData} from 'vitepress'
@@ -9,10 +8,9 @@ import {createI18n, useI18n} from 'vue-i18n'
 import enMessages from '../../docs_src/en/messages'
 
 const i18n = createI18n({
-    legacy: false,
     locale: 'en',
     fallbackLocale: 'en',
-    messages: {de: deMessages, en: enMessages}
+    messages: {en: enMessages}
 })
 
 export default {
