@@ -45,6 +45,9 @@ hero:
     - link: /en/products/overview
       text: Feature Overview
       theme: alt
+    - link: /en/blog/open-ticket-ai-1-2-release
+      text: What's New in 1.2.0
+      theme: alt
   image:
     alt: Open Ticket AI Logo
     dark: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=120&q=80
@@ -72,5 +75,10 @@ title="Open Ticket AI — The Open-Source Solution for Automated Ticket Classifi
 <SupportPlans/>
 
 <ContactForm/>
+
+
+## Latest News
+
+- [Open Ticket AI 1.2.0 Release Highlights](/en/blog/open-ticket-ai-1-2-release) — HuggingFace local inference, nested composite pipelines, and adapter updates now shipping in v1.2.0.【F:docs/docs_src/en/blog/open-ticket-ai-1-2-release.md†L1-L64】
 
 
