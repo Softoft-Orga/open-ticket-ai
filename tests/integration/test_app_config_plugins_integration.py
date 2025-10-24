@@ -5,9 +5,9 @@ from __future__ import annotations
 import pytest
 from injector import Injector
 
+from open_ticket_ai.core.dependency_injection._container import AppModule
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from open_ticket_ai.core.dependency_injection.container import AppModule
-from open_ticket_ai.core.plugins.plugin_loader import PluginLoader
+from open_ticket_ai.core.plugins._plugin_loader import PluginLoader
 
 
 @pytest.mark.integration

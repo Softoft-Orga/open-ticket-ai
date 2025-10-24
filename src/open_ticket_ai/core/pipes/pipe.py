@@ -6,8 +6,8 @@ from pydantic import BaseModel
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
-from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
+from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes._pipe_models import PipeConfig, PipeResult
 
 
 class Pipe[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT], ABC):

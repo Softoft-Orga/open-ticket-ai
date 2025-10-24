@@ -6,11 +6,12 @@ from pathlib import Path
 
 import pytest
 from _pytest.logging import LogCaptureFixture
-from open_ticket_ai.core.logging.logging_models import LoggingConfig
-from open_ticket_ai.core.logging.stdlib_logging_adapter import (
+
+from open_ticket_ai.core.logging._stdlib_logging_adapter import (
     StdlibLoggerFactory,
     create_logger_factory,
 )
+from open_ticket_ai.core.logging.logging_models import LoggingConfig
 
 
 def test_create_logger_factory_returns_stdlib_factory() -> None:
@@ -64,7 +65,7 @@ def test_logger_respects_log_format(log_format: str, expected_pattern: str, caps
     ],
 )
 def test_logger_respects_date_format(
-    date_format: str, expected_pattern: str, capsys: pytest.CaptureFixture[str]
+        date_format: str, expected_pattern: str, capsys: pytest.CaptureFixture[str]
 ) -> None:
     factory = create_logger_factory(
         LoggingConfig(

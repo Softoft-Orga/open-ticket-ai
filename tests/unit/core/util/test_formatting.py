@@ -1,4 +1,4 @@
-from open_ticket_ai.core.util.formatting import prettify
+from open_ticket_ai.core._util.formatting import prettify
 
 
 def test_prettify_nested_dict():

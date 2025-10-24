@@ -1,5 +1,5 @@
-from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes.pipe_models import PipeResult
+from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes._pipe_models import PipeResult
 
 
 def test_has_succeeded_returns_true_for_successful_result():

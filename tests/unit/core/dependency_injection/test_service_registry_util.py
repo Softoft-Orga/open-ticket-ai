@@ -1,15 +1,15 @@
 from unittest.mock import MagicMock
 
 import pytest
-from otai_base.template_renderers.jinja_renderer import JinjaRenderer
 from pydantic import BaseModel
 
 from open_ticket_ai.core.config.errors import InjectableNotFoundError
+from open_ticket_ai.core.dependency_injection._service_registry_util import find_all_configured_services_of_type
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
-from open_ticket_ai.core.dependency_injection.service_registry_util import find_all_configured_services_of_type
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
+from otai_base.template_renderers.jinja_renderer import JinjaRenderer
 from tests.unit.conftest import SimpleInjectable
 
 
@@ -102,29 +102,29 @@ class TestFindAllConfiguredServicesOfType:
         "configs,filter_class,expected_ids",
         [
             (
-                [
-                    InjectableConfig(id="renderer1", use="jinja_renderer"),
-                    InjectableConfig(id="injectable1", use="test_injectable1"),
-                ],
-                TemplateRenderer,
-                {"renderer1"},
+                    [
+                        InjectableConfig(id="renderer1", use="jinja_renderer"),
+                        InjectableConfig(id="injectable1", use="test_injectable1"),
+                    ],
+                    TemplateRenderer,
+                    {"renderer1"},
             ),
             (
-                [
-                    InjectableConfig(id="renderer1", use="jinja_renderer"),
-                    InjectableConfig(id="injectable1", use="test_injectable1"),
-                ],
-                RegistryTestInjectable1,
-                {"injectable1"},
+                    [
+                        InjectableConfig(id="renderer1", use="jinja_renderer"),
+                        InjectableConfig(id="injectable1", use="test_injectable1"),
+                    ],
+                    RegistryTestInjectable1,
+                    {"injectable1"},
             ),
             (
-                [
-                    InjectableConfig(id="renderer1", use="jinja_renderer"),
-                    InjectableConfig(id="injectable1", use="test_injectable1"),
-                    InjectableConfig(id="injectable2", use="test_injectable2"),
-                ],
-                Injectable,
-                {"renderer1", "injectable1", "injectable2"},
+                    [
+                        InjectableConfig(id="renderer1", use="jinja_renderer"),
+                        InjectableConfig(id="injectable1", use="test_injectable1"),
+                        InjectableConfig(id="injectable2", use="test_injectable2"),
+                    ],
+                    Injectable,
+                    {"renderer1", "injectable1", "injectable2"},
             ),
         ],
     )

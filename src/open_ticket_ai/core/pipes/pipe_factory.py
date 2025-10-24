@@ -10,9 +10,9 @@ from open_ticket_ai.core.dependency_injection.component_registry import Componen
 from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes._pipe_models import PipeConfig
 from open_ticket_ai.core.pipes.pipe import Pipe
-from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
-from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 
 
@@ -20,11 +20,11 @@ from open_ticket_ai.core.template_rendering.template_renderer import TemplateRen
 class PipeFactory:
     @inject
     def __init__(
-        self,
-        template_renderer: TemplateRenderer,
-        logger_factory: LoggerFactory,
-        otai_config: OpenTicketAIConfig,
-        component_registry: ComponentRegistry,
+            self,
+            template_renderer: TemplateRenderer,
+            logger_factory: LoggerFactory,
+            otai_config: OpenTicketAIConfig,
+            component_registry: ComponentRegistry,
     ):
         self._template_renderer = template_renderer
         self._logger_factory = logger_factory

@@ -2,8 +2,8 @@ from typing import Any
 
 from pydantic import Field
 
+from open_ticket_ai.core._util.hashes import freeze
 from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.util.hashes import freeze
 
 
 class InjectableConfigBase(StrictBaseModel):

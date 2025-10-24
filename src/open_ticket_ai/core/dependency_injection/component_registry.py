@@ -45,15 +45,6 @@ class ComponentRegistry:
         logger.debug(f"Retrieved injectable: {registry_identifier}")
         return service
 
-    def find_by_type(self, cls: type[Injectable]) -> dict[str, type[Injectable]]:
-        found = {
-            registry_id: registered_cls
-            for registry_id, registered_cls in {**self._pipes, **self._services}.items()
-            if issubclass(registered_cls, cls)
-        }
-        logger.info(f"Found by type {cls.__name__}: {list(found.keys())}")
-        return found
-
     def get_available_injectables(self) -> list[str]:
         available = list(self._services.keys()) + list(self._pipes.keys())
         logger.info(f"Available injectables: {available}")

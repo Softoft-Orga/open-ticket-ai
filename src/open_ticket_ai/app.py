@@ -2,20 +2,20 @@ from injector import inject
 
 from open_ticket_ai.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.core.logging.logging_iface import LoggerFactory
+from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe import Pipe
-from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
-from open_ticket_ai.core.plugins.plugin_loader import PluginLoader
+from open_ticket_ai.core.plugins._plugin_loader import PluginLoader
 
 
 class OpenTicketAIApp:
     @inject
     def __init__(
-        self,
-        config: OpenTicketAIConfig,
-        pipe_factory: PipeFactory,
-        logger_factory: LoggerFactory,
-        plugin_loader: PluginLoader,
+            self,
+            config: OpenTicketAIConfig,
+            pipe_factory: PipeFactory,
+            logger_factory: LoggerFactory,
+            plugin_loader: PluginLoader,
     ):
         self._logger = logger_factory.create(self.__class__.__name__)
         self._config = config

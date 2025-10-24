@@ -4,9 +4,9 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from open_ticket_ai.core._util.hashes import freeze
 from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.pipes.pipe_models import PipeResult
-from open_ticket_ai.core.util.hashes import freeze
+from open_ticket_ai.core.pipes._pipe_models import PipeResult
 
 
 class PipeContext(StrictBaseModel):
