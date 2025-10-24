@@ -47,7 +47,7 @@ class TestOnLoad:
         assert mock_component_registry.register.call_count == 2
 
     def test_on_load_with_empty_injectables_does_not_call_register(
-            self, app_config_for_plugin, mock_component_registry
+        self, app_config_for_plugin, mock_component_registry
     ):
         plugin = ConcretePlugin(app_config_for_plugin, [])
 
