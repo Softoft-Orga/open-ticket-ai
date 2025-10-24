@@ -5,6 +5,7 @@ from typing import Any
 
 import pytest
 from injector import Injector
+from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
@@ -18,7 +19,6 @@ from open_ticket_ai.core.pipes._pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes._pipe_models import PipeConfig
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
-from otai_base.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 from tests.mocked_ticket_system import MockedTicketSystem
 
 # Mark all tests in this directory as integration tests
@@ -37,9 +37,8 @@ def integration_logging_config() -> LoggingConfig:
         level="DEBUG",
         log_to_file=False,
         format=LoggingFormatConfig(
-            message_format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            date_format="%Y-%m-%d %H:%M:%S"
-        )
+            message_format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", date_format="%Y-%m-%d %H:%M:%S"
+        ),
     )
 
 
@@ -101,8 +100,8 @@ def integration_jinja_service_config() -> InjectableConfig:
 
 @pytest.fixture
 def integration_app_config(
-        integration_infrastructure_config: InfrastructureConfig,
-        integration_jinja_service_config: InjectableConfig,
+    integration_infrastructure_config: InfrastructureConfig,
+    integration_jinja_service_config: InjectableConfig,
 ) -> AppConfig:
     """Complete AppConfig for integration tests."""
     return AppConfig(
@@ -254,10 +253,10 @@ class ConfigBuilder:
         self._plugins: list[str] = []
 
     def with_logging(
-            self,
-            level: str = "INFO",
-            log_to_file: bool = False,
-            log_file_path: str | None = None,
+        self,
+        level: str = "INFO",
+        log_to_file: bool = False,
+        log_file_path: str | None = None,
     ) -> ConfigBuilder:
         """Configure logging settings."""
         self._logging_config = LoggingConfig(
@@ -273,11 +272,11 @@ class ConfigBuilder:
         return self
 
     def add_service(
-            self,
-            service_id: str,
-            use: str,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
+        self,
+        service_id: str,
+        use: str,
+        params: dict[str, Any] | None = None,
+        injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
         """Add a service configuration."""
         self._services[service_id] = InjectableConfigBase(
@@ -296,9 +295,9 @@ class ConfigBuilder:
         )
 
     def set_orchestrator(
-            self,
-            use: str = "base:SimpleSequentialOrchestrator",
-            params: dict[str, Any] | None = None,
+        self,
+        use: str = "base:SimpleSequentialOrchestrator",
+        params: dict[str, Any] | None = None,
     ) -> ConfigBuilder:
         """Configure the orchestrator."""
         self._orchestrator = PipeConfig(
@@ -309,10 +308,10 @@ class ConfigBuilder:
         return self
 
     def add_orchestrator_step(
-            self,
-            step_id: str,
-            use: str,
-            params: dict[str, Any] | None = None,
+        self,
+        step_id: str,
+        use: str,
+        params: dict[str, Any] | None = None,
     ) -> ConfigBuilder:
         """Add a step to the orchestrator configuration."""
         if self._orchestrator is None:

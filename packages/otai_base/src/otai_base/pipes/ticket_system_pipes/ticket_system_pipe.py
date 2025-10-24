@@ -1,9 +1,9 @@
 from abc import ABC
 from typing import Any
 
+from open_ticket_ai import Pipe
 from pydantic import BaseModel
 
-from open_ticket_ai import Pipe
 from otai_base.ticket_system_integration.ticket_system_service import TicketSystemService
 
 

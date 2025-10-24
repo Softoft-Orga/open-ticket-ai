@@ -2,9 +2,8 @@ import datetime
 from datetime import timedelta
 from typing import Any, ClassVar
 
-from pydantic import BaseModel, Field
-
 from open_ticket_ai import Pipe, PipeResult, StrictBaseModel
+from pydantic import BaseModel, Field
 
 
 class IntervalTriggerParams(StrictBaseModel):

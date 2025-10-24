@@ -1,8 +1,8 @@
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
 from open_ticket_ai import PipeConfig, PipeFactory, PipeResult
+
 from otai_base.pipes.composite_pipe import CompositePipe
 
 ALPHABET_START = ord("A")
@@ -47,7 +47,7 @@ async def test_composite_pipe_with_none_steps(mock_pipe_factory, logger_factory,
 
 
 async def test_composite_pipe_calls_single_step_with_correct_context(
-        mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
+    mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
 ):
     mock_step = MagicMock()
     mock_step.process = AsyncMock(return_value=PipeResult.success(data={"value": "A"}))
@@ -70,7 +70,7 @@ async def test_composite_pipe_calls_single_step_with_correct_context(
 
 
 async def test_composite_pipe_calls_multiple_steps_sequentially(
-        mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
+    mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
 ):
     mock_steps: list[MagicMock] = []
     for index, _ in enumerate(simple_step_configs):
@@ -92,7 +92,7 @@ async def test_composite_pipe_calls_multiple_steps_sequentially(
 
 
 async def test_composite_pipe_returns_union_of_results(
-        mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
+    mock_pipe_factory, logger_factory, simple_step_configs, empty_pipeline_context
 ):
     mock_step1 = MagicMock()
     mock_step1.process = AsyncMock(return_value=PipeResult.success(message="step1", data={"key1": "val1"}))

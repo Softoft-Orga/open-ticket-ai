@@ -19,10 +19,7 @@ class ComponentRegistry:
         self._injectables[registry_identifier] = register_class
 
     def find[T: Injectable](self, *, by_type: type[T]) -> dict[str, type[T]]:
-        return {
-            registry_id: cls for registry_id, cls in self._injectables.items()
-            if issubclass(cls, by_type)
-        }
+        return {registry_id: cls for registry_id, cls in self._injectables.items() if issubclass(cls, by_type)}
 
     def find_one[T: Injectable](self, *, by_identifier: str, by_type: type[T]) -> type[T]:
         injectable = self.find(by_type=by_type).get(by_identifier)

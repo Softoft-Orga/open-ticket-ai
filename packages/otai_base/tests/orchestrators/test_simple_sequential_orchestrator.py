@@ -5,9 +5,9 @@ from typing import Any, ClassVar
 from unittest.mock import MagicMock
 
 import pytest
+from open_ticket_ai import LoggerFactory, Pipe, PipeConfig, PipeContext, PipeResult
 from pydantic import BaseModel
 
-from open_ticket_ai import LoggerFactory, Pipe, PipeConfig, PipeContext, PipeResult
 from otai_base.pipes.orchestrators.simple_sequential_orchestrator import SimpleSequentialOrchestrator
 
 

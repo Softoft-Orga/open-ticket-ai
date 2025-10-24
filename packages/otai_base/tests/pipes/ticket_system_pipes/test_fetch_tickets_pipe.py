@@ -1,8 +1,8 @@
 import pytest
-
 from open_ticket_ai import PipeConfig, PipeContext
-from otai_base.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedEntity
 from packages.otai_base.src.otai_base.pipes.ticket_system_pipes import FetchTicketsPipe
+
+from otai_base.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedEntity
 
 pytestmark = [pytest.mark.unit]
 

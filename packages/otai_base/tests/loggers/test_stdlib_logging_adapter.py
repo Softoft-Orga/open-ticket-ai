@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pytest
 from _pytest.logging import LogCaptureFixture
-
 from open_ticket_ai import (
     LoggingConfig,
     LogLevel,

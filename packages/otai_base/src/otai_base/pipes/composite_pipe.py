@@ -1,8 +1,7 @@
 from typing import Annotated, Any, ClassVar, final
 
-from pydantic import BaseModel, ConfigDict
-
 from open_ticket_ai import NoRenderField, Pipe, PipeConfig, PipeContext, PipeFactory, PipeResult
+from pydantic import BaseModel, ConfigDict
 
 
 class CompositePipeParams(BaseModel):
