@@ -30,7 +30,7 @@ export default withMermaid({
         themeVariables: {
             fontFamily:
                 'Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica Neue, Arial',
-            fontSize: '14px',
+            fontSize: '12px',
 
             textColor: '#e6e7ea',
             lineColor: '#94a3b8',

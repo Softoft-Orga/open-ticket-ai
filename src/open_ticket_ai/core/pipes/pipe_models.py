@@ -11,6 +11,7 @@ from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
 
 
 class PipeConfig(InjectableConfig):
+    # DONT USE; WILL BE REMOVED!
     model_config = ConfigDict(populate_by_name=True, frozen=True, extra="forbid")
 
 
