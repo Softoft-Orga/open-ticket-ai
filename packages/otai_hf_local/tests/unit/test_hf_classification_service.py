@@ -28,6 +28,52 @@ def test_classify_returns_correct_result(logger_factory):
     mock_pipeline.assert_called_once_with("This is a test text", truncation=True)
 
 
+def test_classify_uses_service_token_when_request_missing(logger_factory):
+    config = InjectableConfig(id="test-hf-service", params={"api_token": "default-token"})
+    mock_pipeline = MagicMock()
+    mock_pipeline.return_value = [{"label": "default-label", "score": 0.88}]
+    mock_get_pipeline = MagicMock(return_value=mock_pipeline)
+
+    service = HFClassificationService(config, logger_factory, get_pipeline=mock_get_pipeline)
+
+    request = ClassificationRequest(
+        text="Request without token",
+        model_name="default-model",
+        api_token=None,
+    )
+
+    result = service.classify(request)
+
+    assert isinstance(result, ClassificationResult)
+    assert result.label == "default-label"
+    assert result.confidence == 0.88  # noqa: PLR2004
+    mock_get_pipeline.assert_called_once_with("default-model", "default-token")
+    mock_pipeline.assert_called_once_with("Request without token", truncation=True)
+
+
+def test_classify_prefers_request_token_over_service_default(logger_factory):
+    config = InjectableConfig(id="test-hf-service", params={"api_token": "default-token"})
+    mock_pipeline = MagicMock()
+    mock_pipeline.return_value = [{"label": "request-label", "score": 0.77}]
+    mock_get_pipeline = MagicMock(return_value=mock_pipeline)
+
+    service = HFClassificationService(config, logger_factory, get_pipeline=mock_get_pipeline)
+
+    request = ClassificationRequest(
+        text="Request with token",
+        model_name="request-model",
+        api_token="request-token",
+    )
+
+    result = service.classify(request)
+
+    assert isinstance(result, ClassificationResult)
+    assert result.label == "request-label"
+    assert result.confidence == 0.77  # noqa: PLR2004
+    mock_get_pipeline.assert_called_once_with("request-model", "request-token")
+    mock_pipeline.assert_called_once_with("Request with token", truncation=True)
+
+
 @pytest.mark.asyncio
 async def test_aclassify_returns_correct_result(logger_factory):
     config = InjectableConfig(id="test-hf-service")
