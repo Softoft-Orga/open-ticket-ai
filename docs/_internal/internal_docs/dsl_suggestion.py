@@ -39,10 +39,7 @@ app = (
                     .that(Result("ticket_fetcher", "fetched_tickets").length().gt(0))
                     .otherwise_fail("No tickets")
                 )
-                .then(
-                    Pipe.let("ticket")
-                    .value(Result("ticket_fetcher", "fetched_tickets").at(0))
-                )
+                .then(Pipe.let("ticket").value(Result("ticket_fetcher", "fetched_tickets").at(0)))
                 .then(
                     Pipe.classify("queue_classify")
                     .inject(classification_service="hf_local")

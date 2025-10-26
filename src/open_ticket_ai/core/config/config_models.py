@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from packaging.specifiers import SpecifierSet
-from pydantic import BaseModel, Field, Sem, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 from open_ticket_ai.core.config.types import VersionSpecifier
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
