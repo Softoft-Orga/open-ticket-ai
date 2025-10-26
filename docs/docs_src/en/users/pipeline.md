@@ -6,7 +6,8 @@ aside: false
 
 # Pipe System
 
-Pipes are the fundamental processing units in Open Ticket AI. Each pipe performs a specific task, receives context from
+Pipes are the fundamental processing units in Open Ticket AI. Each pipe performs a specific task,
+receives context from
 previous pipes, executes its logic, and passes updated context forward.
 
 ## Basic Pipeline Flow
@@ -19,7 +20,7 @@ flowchart TD
     Pipe1["Pipe 1 - Fetch Tickets"]
     Pipe2["Pipe 2 - Classify Tickets"]
     Pipe3["Pipe 3 - Update Tickets"]
-    End([Complete]):::endNode
+    End([Complete])
     Start --> Pipe1
     Pipe1 --> Pipe2
     Pipe2 --> Pipe3
@@ -31,8 +32,6 @@ Each pipe:
 1. Receives the `PipeContext` (containing results from previous pipes)
 2. Executes its specific task
 3. Creates a `PipeResult` with output data
-4. Updates the context with its result
-5. Passes the updated context to the next pipe
 
 ## What is a Pipe?
 
@@ -41,25 +40,20 @@ A **pipe** is a self-contained processing unit that:
 - Implements specific business logic (fetch data, classify, update, etc.)
 - Receives input via `PipeContext`
 - Produces output as `PipeResult`
-- Can depend on other pipes
-- Can execute conditionally
-- Can be composed into larger workflows
 
-## Core Architecture
+```mermaid
+flowchart TB
+    subgraph Rendering
+        PipeContext["PipeContext"]
+        Renderer["Jinja Renderer"]
+        PipeParams["PipeParams"]
+        PipeContext --> Renderer --> PipeParams
+    end
+    PIPE["Pipe"]
+    PR["<strong>PipeResult</strong> <small><br/>succeeded <br/> was_skipped <br/> message <br/> data<br/> } </small>"]
+    PipeParams --> PIPE --> PR
 
-## Pipe Execution Lifecycle
-
-How individual pipes execute their logic:
-
-**Processing Steps:**
-
-1. **Execute Path**: If checks pass:
-    - Wrap execution in try-catch
-    - Call `_process()` (implemented by pipe subclass)
-    - Create `PipeResult` from return value
-    - On exception: create failed `PipeResult` with error message
-2. **Persistence**: Save result to `context.pipes[pipe_id]`
-3. **Return**: Return updated context to next pipe
+```
 
 ## Pipe Types
 
@@ -86,11 +80,24 @@ Atomic processing units that implement specific business logic:
 - No child pipes
 - Accesses injected services via `self.<service_name>`
 
-**Example Implementation:**
-
 ### Composite Pipes
 
 Orchestrators that contain and execute child pipes:
+
+```mermaid
+flowchart TB
+    subgraph CompositePipe
+        A["Pipe #1"] --> B["Pipe #2"] --> C["Pipe #3"]
+    end
+
+    A --> U["Result #1"]
+    B --> U["Result #2"]
+    C --> U["Result #3"]
+    U["union([Result #1, Result #2, Result #3])"]
+    U --> CR["CompositeResult"]
+```
+
+:::details Composite Pipe Example
 
 ```yaml
 - id: ticket_workflow
@@ -124,10 +131,12 @@ Orchestrators that contain and execute child pipes:
       depends_on: [ classify ]
 ```
 
+:::
+
 **Characteristics:**
 
 - Contains `steps` list of child pipe configs
-- Uses `RenderableFactory` to build child pipes
+- Uses `PipeFactory` to build child pipes
 - Executes children sequentially
 - Merges results via `PipeResult.union()`
 - Children can access parent params via `parent.params`
@@ -137,38 +146,6 @@ Orchestrators that contain and execute child pipes:
 ```mermaid
 flowchart TB
 
-%% ===================== COMPOSITE START =====================
-    subgraph START["🔀 CompositePipe.process()"]
-        direction TB
-        Entry([Composite pipe]):::start
-        InitLoop["Initialize step"]:::proc
-        Entry --> InitLoop
-    end
-
-%% ===================== STEP PROCESSING =====================
-    subgraph STEP_LOOP["🔁 For Each Step"]
-        direction TB
-        HasStep{"Has next?"}:::dec
-        MergeCtx["Merge parent +"]:::proc
-        BuildChild["factory.create_pipe"]:::factory
-        RunChild["child.process"]:::proc
-        CollectResult["Collect result"]:::ctx
-        UnionResults["PipeResult.union"]:::proc
-        Return["Return Result"]:::ctx
-        End(["End"])
-    end
-
-%% ===================== CONNECTIONS =====================
-    InitLoop --> HasStep
-    HasStep -- Yes --> MergeCtx --> BuildChild --> RunChild --> CollectResult --> HasStep
-    HasStep -- No --> UnionResults --> Return --> End
-%% ===================== STYLES =====================
-    classDef start fill: #2d6a4f, stroke: #1b4332, stroke-width: 3px, color: #fff, font-weight: bold
-    classDef dec fill: #d97706, stroke: #b45309, stroke-width: 2px, color: #fff, font-weight: bold
-    classDef proc fill: #2b2d42, stroke: #14213d, stroke-width: 2px, color: #e0e0e0
-    classDef render fill: #4338ca, stroke: #312e81, stroke-width: 2px, color: #e0e0e0
-    classDef factory fill: #7c2d12, stroke: #5c1a0a, stroke-width: 2px, color: #e0e0e0
-    classDef ctx fill: #165b33, stroke: #0d3b24, stroke-width: 2px, color: #e0e0e0
 ```
 
 **Composite Execution:**
@@ -176,7 +153,6 @@ flowchart TB
 1. **Initialization**: Prepare to iterate through `steps` list
 2. **For Each Step**:
     - **Merge**: Combine parent params with step params (step overrides)
-    - **Render**: Apply Jinja2 template rendering to step config
     - **Build**: Use factory to create child pipe instance
     - **Execute**: Call `child.process(context)` → updates context
     - **Collect**: Child result stored in `context.pipes[child_id]`
@@ -252,6 +228,70 @@ class PipeResult[T]():
     message: str  # Human-readable message
     data: T  # Pipe-specific result data (Pydantic model)
 ```
+
+# Pipe Parameter Reference
+
+## AddNotePipe – `AddNoteParams`
+
+| Field     | Type        | Default | Required | Description                                                                                            |
+|-----------|-------------|---------|----------|--------------------------------------------------------------------------------------------------------|
+| ticket_id | str \| int  | —       | Yes      | Identifier of the ticket to which the note should be added, accepting either string or integer format. |
+| note      | UnifiedNote | —       | Yes      | Note content including subject and body to be added to the specified ticket.                           |
+
+## FetchTicketsPipe – `FetchTicketsParams`
+
+| Field                  | Type                 | Default | Required | Description                                                                                     |
+|------------------------|----------------------|---------|----------|-------------------------------------------------------------------------------------------------|
+| ticket_search_criteria | TicketSearchCriteria | —       | Yes      | Search criteria including queue, limit, and offset for querying tickets from the ticket system. |
+
+## UpdateTicketPipe – `UpdateTicketParams`
+
+| Field          | Type          | Default | Required | Description                                                                           |
+|----------------|---------------|---------|----------|---------------------------------------------------------------------------------------|
+| ticket_id      | str \| int    | —       | Yes      | Unique identifier of the ticket to be updated in the ticket system.                   |
+| updated_ticket | UnifiedTicket | —       | Yes      | Updated ticket data containing the fields and values to apply to the existing ticket. |
+
+## ClassificationPipe – `ClassificationPipeParams`
+
+| Field      | Type        | Default | Required | Description                                              |
+|------------|-------------|---------|----------|----------------------------------------------------------|
+| text       | str         | —       | Yes      | Text to classify.                                        |
+| model_name | str         | —       | Yes      | Name of the model to use.                                |
+| api_token  | str \| None | None    | No       | Optional API token passed to the classification service. |
+
+## ExpressionPipe – `ExpressionParams`
+
+| Field      | Type | Default | Required | Description                                                                                      |
+|------------|------|---------|----------|--------------------------------------------------------------------------------------------------|
+| expression | Any  | —       | Yes      | Expression string/value to be evaluated; if it becomes a `FailMarker`, the pipe returns failure. |
+
+## IntervalTrigger – `IntervalTriggerParams`
+
+| Field    | Type      | Default | Required | Description                               |
+|----------|-----------|---------|----------|-------------------------------------------|
+| interval | timedelta | —       | Yes      | Time interval between trigger executions. |
+
+## CompositePipe – `CompositePipeParams`
+
+| Field | Type             | Default | Required | Description                                                               |
+|-------|------------------|---------|----------|---------------------------------------------------------------------------|
+| steps | list[PipeConfig] | []      | No       | List of pipe configurations representing the steps in the composite pipe. |
+
+## SimpleSequentialRunner – `SimpleSequentialRunnerParams`
+
+| Field | Type       | Default | Required | Description                                                               |
+|-------|------------|---------|----------|---------------------------------------------------------------------------|
+| on    | PipeConfig | —       | Yes      | Trigger pipe that gates execution. Not rendered by the template renderer. |
+| run   | PipeConfig | —       | Yes      | Pipe to run when triggered. Not rendered by the template renderer.        |
+
+## SimpleSequentialOrchestrator – `SimpleSequentialOrchestratorParams`
+
+| Field              | Type             | Default | Required | Description                                               |
+|--------------------|------------------|---------|----------|-----------------------------------------------------------|
+| orchestrator_sleep | timedelta        | 0.01s   | No       | Sleep time between orchestrator cycles.                   |
+| exception_sleep    | timedelta        | 5s      | No       | Sleep time after exceptions when retrying.                |
+| always_retry       | bool             | True    | No       | Whether to always retry failed steps.                     |
+| steps              | list[PipeConfig] | []      | No       | Steps to execute (not rendered by the template renderer). |
 
 ## Best Practices
 
@@ -337,4 +377,5 @@ Pipes are the building blocks of Open Ticket AI workflows:
 - Type-safe results
 - Graceful error handling
 
-This architecture enables building complex automation workflows from simple, testable, composable components.
+This architecture enables building complex automation workflows from simple, testable, composable
+components.

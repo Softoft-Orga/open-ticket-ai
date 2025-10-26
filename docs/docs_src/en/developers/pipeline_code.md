@@ -410,7 +410,8 @@ Use the `depends_on` field:
 
 ## Related Documentation
 
-- [Configuration and Template Rendering](../concepts/config_rendering.md) - Understanding the rendering flow
+- [Configuration and Template Rendering](../users/config_rendering.md) - Understanding the rendering
+  flow
 - [Configuration Reference](../details/config_reference.md) - YAML configuration syntax
 - [Testing Guide](./testing.md) - Testing strategies for pipes
 - [Dependency Injection](./dependency_injection.md) - Service injection patterns

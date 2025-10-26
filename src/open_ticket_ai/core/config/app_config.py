@@ -18,17 +18,17 @@ class AppConfig(BaseSettings):
     PLUGIN_ENTRY_POINT_GROUP: ClassVar[str] = "open_ticket_ai.plugins"
 
     open_ticket_ai: OpenTicketAIConfig = Field(
-        default_factory=OpenTicketAIConfig, validation_alias=AliasChoices("cfg", "open_ticket_ai")
+        default_factory=OpenTicketAIConfig, validation_alias=AliasChoices("cfg", "otai", "open_ticket_ai")
     )
 
     @classmethod
     def settings_customise_sources(
-        cls,
-        settings_cls: type[BaseSettings],
-        init_settings: PydanticBaseSettingsSource,
-        env_settings: PydanticBaseSettingsSource,
-        dotenv_settings: PydanticBaseSettingsSource,
-        file_secret_settings: PydanticBaseSettingsSource,
+            cls,
+            settings_cls: type[BaseSettings],
+            init_settings: PydanticBaseSettingsSource,
+            env_settings: PydanticBaseSettingsSource,
+            dotenv_settings: PydanticBaseSettingsSource,
+            file_secret_settings: PydanticBaseSettingsSource,
     ) -> tuple[PydanticBaseSettingsSource, ...]:
         return (
             env_settings,

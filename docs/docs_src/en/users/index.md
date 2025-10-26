@@ -1,14 +1,16 @@
 ---
-description: Explore Open Ticket AI's core architectural concepts including pipelines, configuration rendering, plugins, and versioning strategies.
+description: Explore Open Ticket AI's core architectural users including pipelines, configuration rendering, plugins, and versioning strategies.
 ---
 
 # Core Concepts
 
-This directory contains architectural documentation that explains the fundamental concepts and design of Open Ticket AI.
+This directory contains architectural documentation that explains the fundamental concepts and
+design of Open Ticket AI.
 
 ## What's in Concepts?
 
-The concepts documentation focuses on **what** the system is and **why** it's designed that way, rather than **how** to
+The concepts documentation focuses on **what** the system is and **why** it's designed that way,
+rather than **how** to
 use it.
 
 ### Available Documentation
@@ -21,7 +23,8 @@ use it.
     - Mermaid architecture and sequence diagrams
     - Implementation references and best practices
 
-- **[Configuration and Template Rendering](config_rendering.md)** - Visual guide to configuration loading and rendering:
+- **[Configuration and Template Rendering](config_rendering.md)** - Visual guide to configuration
+  loading and rendering:
     - Configuration lifecycle from YAML to runtime objects
     - Template rendering architecture and process flow
     - Environment variable substitution
@@ -39,7 +42,8 @@ use it.
     - Plugin lifecycle management
     - Design principles and benefits
 
-- **[Application Flow](app_flow.md)** - Diagram illustrating the application startup and orchestration process:
+- **[Application Flow](app_flow.md)** - Diagram illustrating the application startup and
+  orchestration process:
     - Application bootstrap sequence
     - Dependency injection container setup
     - Orchestrator initialization and runner creation
@@ -61,12 +65,3 @@ Read the concepts documentation when you want to:
 - Learn about core design patterns
 - Get theoretical background on system components
 - Make informed decisions about extending the system
-
-## Related Documentation
-
-For practical guides and tutorials, see:
-
-- [Guides](../guides/) - Step-by-step tutorials
-- [Configuration](../details/configuration/) - Configuration reference
-- [Code](../developers/code/) - Technical implementation details
-- [Plugins](../plugins/) - Plugin development
