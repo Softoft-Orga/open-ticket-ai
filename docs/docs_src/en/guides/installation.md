@@ -5,7 +5,8 @@ description: Detailed installation guide for Open Ticket AI with system requirem
 # TOODO DOcker Compose to install version with the 3 plugins installed. for not wanting all currently with pip uv nstallation.
 
 but in the future. other docker images and beter installation scripts.
-The hardware depends mostly on what AI you want to run. As such the OpenTicketAI can run on 512MB RAM systems if no ML
+The hardware depends mostly on what AI you want to run. As such the OpenTicketAI can run on 512MB
+RAM systems if no ML
 models are used.
 
 # Installation Guide
@@ -383,5 +384,5 @@ pip install --index-url https://pypi.org/simple open-ticket-ai
 
 - [Quick Start](quick_start.md)
 - [First Pipeline](first_pipeline.md)
-- [Configuration Reference](../details/config_reference.md)
+- [Configuration Reference](../details/_config_reference.md)
 - [Troubleshooting](troubleshooting.md)

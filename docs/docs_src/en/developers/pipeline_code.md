@@ -6,6 +6,283 @@ description: Developer guide for implementing custom pipes in Open Ticket AI wit
 
 This guide explains how to implement custom pipes using the current parameter validation pattern.
 
+## Pipe Types
+
+### Simple Pipes
+
+Atomic processing units that implement specific business logic:
+
+```yaml
+- id: fetch_tickets
+  use: open_ticket_ai.base:FetchTicketsPipe
+  injects:
+    ticket_system: "otobo_znuny"
+  params:
+    search_criteria:
+      queue:
+        name: "Support"
+      limit: 10
+```
+
+**Characteristics:**
+
+- Runs specific logic
+- No child pipes
+
+### Composite Pipes
+
+Orchestrators that contain and execute child pipes:
+
+```mermaid
+flowchart TB
+    subgraph CompositePipe
+        A["Pipe #1"] --> B["Pipe #2"] --> C["Pipe #3"]
+    end
+
+    A --> U["Result #1"]
+    B --> U["Result #2"]
+    C --> U["Result #3"]
+    U["union([Result #1, Result #2, Result #3])"]
+    U --> CR["CompositeResult"]
+```
+
+:::details Composite Pipe Example
+
+```yaml
+- id: ticket_workflow
+  use: open_ticket_ai.base:CompositePipe
+  params:
+    threshold: 0.8
+  steps:
+    - id: fetch
+      use: open_ticket_ai.base:FetchTicketsPipe
+      injects: { ticket_system: "otobo_znuny" }
+      params:
+        search_criteria:
+          queue: { name: "Incoming" }
+          limit: 10
+
+    - id: classify
+      use: otai_hf_local:HFLocalTextClassificationPipe
+      params:
+        model: "bert-base-german-cased"
+        text: "{{ get_pipe_result('fetch').data.fetched_tickets[0].subject }}"
+      depends_on: [ fetch ]
+
+    - id: update
+      use: open_ticket_ai.base:UpdateTicketPipe
+      injects: { ticket_system: "otobo_znuny" }
+      params:
+        ticket_id: "{{ get_pipe_result('fetch').data.fetched_tickets[0].id }}"
+        updated_ticket:
+          queue:
+            name: "{{ get_pipe_result('classify').data.predicted_queue }}"
+      depends_on: [ classify ]
+```
+
+:::
+
+**Characteristics:**
+
+- Contains `steps` list of child pipe configs
+- Uses `PipeFactory` to build child pipes
+- Executes children sequentially
+- Merges results via `PipeResult.union()`
+- Children can access parent params via `parent.params`
+
+**Composite Execution:**
+
+1. **Initialization**: Prepare to iterate through `steps` list
+2. **For Each Step**:
+    - **Merge**: Combine parent params with step params (step overrides)
+    - **Build**: Use factory to create child pipe instance
+    - **Execute**: Call `child.process(context)` → updates context
+    - **Collect**: Child result stored in `context.pipes[child_id]`
+    - **Loop**: Continue to next step
+3. **Finalization**:
+    - **Union**: Merge all child results using `PipeResult.union()`
+    - **Save**: Store composite result in context
+    - **Return**: Return final updated context
+
+**Field Details:**
+
+- **`pipes`**: Contains results from all previously executed pipes, keyed by pipe ID
+    - Accumulated as each pipe completes
+    - In CompositePipe: merged results from all child steps
+    - Access via `pipe_result('pipe_id')` in templates
+
+- **`params`**: Current pipe's parameters
+    - Set when the pipe is created
+    - Accessible via `params.*` in templates
+    - For nested pipes, can reference parent via `parent.params`
+
+- **`parent`**: Reference to parent context (if inside a CompositePipe)
+    - Allows access to parent scope variables
+    - Creates hierarchical context chain
+    - Can traverse multiple levels (`parent.parent...`)
+
+## Pipe Types (Simple Guide)
+
+### Simple Pipes
+
+Small, focused steps. Examples:
+
+* **AddNotePipe** — `registryKey: base:AddNotePipe`
+* **FetchTicketsPipe** — `registryKey: base:FetchTicketsPipe`
+* **UpdateTicketPipe** — `registryKey: base:UpdateTicketPipe`
+
+```yaml
+- id: fetch_tickets
+  use: "base:FetchTicketsPipe"
+  injects: { ticket_system: "otobo_znuny" }
+  params:
+    ticket_search_criteria:
+      queue: { name: "Support" }
+      limit: 10
+```
+
+---
+
+### Expression Pipe (special)
+
+Renders an expression and returns that value. If it renders to a FailMarker, the pipe fails.
+`registryKey: base:ExpressionPipe`
+
+```yaml
+- id: check_any_tickets
+  use: "base:ExpressionPipe"
+  params:
+    expression: >
+      {{ fail() if (get_pipe_result('fetch_tickets','fetched_tickets')|length)==0 else 'ok' }}
+```
+
+---
+
+### Composite Pipes
+
+Run several child pipes in order and return the **union** of their results.
+`registryKey: base:CompositePipe`
+
+```mermaid
+flowchart LR
+    A["Pipe #1"] --> B["Pipe #2"] --> C["Pipe #3"]
+    classDef node fill: #111827, stroke: #374151, color: #e6e7ea
+class A, B, C node
+```
+
+```yaml
+- id: ticket_flow
+  use: "base:CompositePipe"
+  params:
+    steps:
+      - id: fetch
+        use: "base:FetchTicketsPipe"
+        injects: { ticket_system: "otobo_znuny" }
+        params:
+          ticket_search_criteria: { queue: { name: "Incoming" }, limit: 10 }
+
+      - id: pick_first
+        use: "base:ExpressionPipe"
+        params:
+          expression: "{{ get_pipe_result('fetch','fetched_tickets')[0] }}"
+
+      - id: classify
+        use: "base:ClassificationPipe"
+        injects: { classification_service: "hf_local" }
+        params:
+          text: "{{ get_pipe_result('pick_first')['subject'] }} {{ get_pipe_result('pick_first')['body'] }}"
+          model_name: "softoft/otai-queue-de-bert-v1"
+
+      - id: update
+        use: "base:UpdateTicketPipe"
+        injects: { ticket_system: "otobo_znuny" }
+        params:
+          ticket_id: "{{ get_pipe_result('pick_first')['id'] }}"
+          updated_ticket:
+            queue:
+              name: "{{ get_pipe_result('classify','label') if get_pipe_result('classify','confidence') >= 0.8 else 'OpenTicketAI::Unclassified' }}"
+```
+
+**How it behaves (non-technical):**
+
+* Runs children one by one
+* Stops on first failure
+* Returns a merged result of everything that succeeded
+  Here you go — tiny + simple.
+
+```mermaid
+flowchart TB
+    subgraph SimpleSequentialOrchestrator
+        S1["step #1"] --> S2["step #2"] --> S3["step #3"]
+    end
+    S3 --> Z(("sleep"))
+    Z -->|loop| S1
+```
+
+```mermaid
+flowchart TB
+    subgraph SimpleSequentialRunner
+        ON["on (trigger)"] -->|success| RUN["run (action)"]
+        ON -.->|fail| SKIP["skipped"]
+    end
+```
+
+---
+
+### SimpleSequentialOrchestrator (special)
+
+Runs its `steps` **in an endless loop**. It’s for background-style cycles. It does **not** expose
+the child pipes’ results as a single pipe result. `registryKey: base:SimpleSequentialOrchestrator`
+
+```yaml
+- id: orchestrator
+  use: "base:SimpleSequentialOrchestrator"
+  params:
+    orchestrator_sleep: "PT0.5S"
+    exception_sleep: "PT5S"
+    always_retry: true
+    steps:
+      - id: tick
+        use: "base:IntervalTrigger"
+        params: { interval: "PT5S" }
+      - id: fetch
+        use: "base:FetchTicketsPipe"
+        injects: { ticket_system: "otobo_znuny" }
+        params:
+          ticket_search_criteria: { queue: { name: "Incoming" }, limit: 1 }
+```
+
+---
+
+### SimpleSequentialRunner (special)
+
+Has two params: `on` and `run` (both are pipe configs). If `on` **succeeds**, it executes `run`;
+otherwise it skips. `registryKey: base:SimpleSequentialRunner`
+
+```yaml
+- id: run-when-triggered
+  use: "base:SimpleSequentialRunner"
+  params:
+    on:
+      id: gate
+      use: "base:IntervalTrigger"
+      params: { interval: "PT60S" }
+    run:
+      id: do-something
+      use: "base:ExpressionPipe"
+      params: { expression: "Triggered run" }
+```
+
+---
+
+## Short Notes
+
+* **registryKey** = what you put into `use`, e.g. `use: "base:FetchTicketsPipe"`.
+* **Accessing parent params:** Use `parent` for the **direct** parent’s params only (no multi-level
+  chains).
+
+If you want, I’ll convert this into a VitePress page with the same structure.
+
 ## Pipe Execution Flow
 
 ```mermaid
@@ -412,6 +689,6 @@ Use the `depends_on` field:
 
 - [Configuration and Template Rendering](../users/config_rendering.md) - Understanding the rendering
   flow
-- [Configuration Reference](../details/config_reference.md) - YAML configuration syntax
+- [Configuration Reference](../details/_config_reference.md) - YAML configuration syntax
 - [Testing Guide](./testing.md) - Testing strategies for pipes
 - [Dependency Injection](./dependency_injection.md) - Service injection patterns

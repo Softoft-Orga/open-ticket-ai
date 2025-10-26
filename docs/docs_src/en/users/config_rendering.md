@@ -9,90 +9,88 @@ aside: false
 Open Ticket AI allows you to create dynamic configurations using **YAML** plus **Jinja2 template
 expressions** like
 <div class="pre">
-
-`{\{ ... }\}`
-
+<code>{ { ... } }</code> without spaces
 </div>
 This lets you reuse values, read environment variables, and reference results from other pipes — all
 while keeping configuration clean and declarative.
 
-## Configuration Lifecycle
-
-The following diagram illustrates the complete lifecycle of configuration from YAML to runtime
-objects:
-
-## Template Rendering Scope
-
-When templates are rendered during pipe execution, the rendering scope is built from the *
-*PipeContext** structure:
-
 ## Key Concepts
 
-## Available helper functions (for `config.yml` templates)
+# Injectable Configuration Structure
 
-| Function           | Parameters                                | Returns                                                          | Errors if…                    |
-|--------------------|-------------------------------------------|------------------------------------------------------------------|-------------------------------|
-| `at_path`          | `value: Any`, `path: str`                 | Nested value at `"a.b.c"` path; supports dicts + Pydantic models | Invalid path format           |
-| `has_failed`       | `pipe_id: str`                            | `True` if the given pipe result is marked failed                 | Unknown pipe ID               |
-| `get_pipe_result`  | `pipe_id: str`, `data_key: str = "value"` | Value stored in previous pipe result under given `data_key`      | Pipe or key missing           |
-| `get_parent_param` | `param_key: str`                          | Inherited parent parameter value                                 | Parent missing or key missing |
-| `get_env`          | `name: str`                               | Value of environment variable                                    | Env var missing               |
-| `fail`             | *(none)*                                  | A “FailMarker” sentinel object to signal explicit failure paths  | —                             |
+Both **Services** and **Pipes** in Open Ticket AI use the same configuration structure called
+`InjectableConfig`. Understanding these three core attributes will help you configure any component
+in the system.
+
+## Configuration Attributes
+
+| Attribute | Type             | Description                                                                                           | Example                            |
+|-----------|------------------|-------------------------------------------------------------------------------------------------------|------------------------------------|
+| `use`     | `TEXT`           | Identifies which component to create. Format: `plugin-name:ComponentName`                             | `"base:FetchTicketsPipe"`          |
+| `injects` | name:value pairs | Maps constructor parameter names to service IDs, connecting dependencies to this component            | `{ ticket_system: "otobo_znuny" }` |
+| `params`  | name:value pairs | Configuration parameters specific to this component. Each component type expects different parameters | `{ limit: 25, queue: "Support" }`  |
+
+## Key Differences: Services vs. Pipes
+
+While both use `InjectableConfig`, they differ in usage:
+
+### Services
+
+- Defined once in the `services` section
+- Reusable across multiple pipes
+- Must have an `id` field for reference
+- Usually represent external systems
+
+**Example:**
+
+```yaml
+services:
+  otobo_znuny:
+    use: "otobo-znuny:OTOBOZnunyTicketSystemService"
+    injects: { }
+    params:
+      base_url: "https://helpdesk.example.com"
+      password: "{{ get_env('OTOBO_PASSWORD') }}"
+```
+
+### Pipes
+
+- Defined inside pipeline `steps`
+- Execute actions in sequence
+- Also have an `id` field to reference results
+- Use services via `injects` to perform work
+
+**Example:**
+
+```yaml
+steps:
+  - id: fetch_tickets
+    use: "base:FetchTicketsPipe"
+    injects:
+      ticket_system: "otobo_znuny"
+    params:
+      ticket_search_criteria:
+        limit: 25
+```
+
+## Template Rendering
+
+All `params` and `injects` values support Jinja2 templating for dynamic configuration:
+
+```yaml
+params:
+  api_key: "{{ get_env('API_KEY') }}"
+  queue: "{{ get_pipe_result('classify', 'label') }}"
+```
 
 ---
 
-## Usage examples in `config.yml`
-
-### Read an environment variable
-
-```yaml
-api:
-  token: "{{ get_env('API_TOKEN') }}"
-  baseUrl: "https://api.example.com"
-```
-
-### Access nested data (dict or Pydantic model)
-
-```yaml
-userCity: "{{ at_path(user, 'address.city') }}"
-```
-
-### Consume a previous pipe’s result
-
-```yaml
-classification:
-  label: "{{ get_pipe_result('classify_ticket', 'label') }}"
-  confidence: "{{ get_pipe_result('classify_ticket', 'score') }}"
-  isLowConfidence: "{{ get_pipe_result('classify_ticket', 'score') < 0.6 }}"
-```
-
-### Check if a pipe failed
-
-```yaml
-shouldRetry: "{{ has_failed('fetch_customer') }}"
-```
-
-### Read a parent parameter
-
-```yaml
-timeoutMs: "{{ get_parent_param('timeoutMs') }}"
-```
-
-### Emit an explicit failure marker
-
-```yaml
-result: "{{ fail() }}"
-```
-
----
+**Related:
+** [Template Rendering](../details/_template_rendering.md) · [Dependency Injection](../developers/dependency_injection.md)
 
 ## Config Reference
 
 Here is the Markdown table describing the **full config structure** clean and ready for your docs.
-
----
-
-# Config Structure — Nested (single table)
 
 | Path                                        | Type                              | Description                                                   | Example                                       |                      |
 |---------------------------------------------|-----------------------------------|---------------------------------------------------------------|-----------------------------------------------|----------------------|
@@ -130,15 +128,71 @@ otai:
       level: "INFO"
   services:
     ticket-db:
-      use: "project.services.Database"
+      use: "plugin_name:Database"
       params:
         url: "{{ get_env('DB_URL') }}"
   orchestrator:
     id: "root"
-    use: "project.pipes.CompositePipe"
+    use: "base:CompositePipe"
     injects:
       step1: "ticket-db"
     params: { }
 ```
 
 </div>
+
+## Available helper functions (for `config.yml` templates)
+
+| Function           | Parameters                                          | Returns                                                          | Errors if…                    |
+|--------------------|-----------------------------------------------------|------------------------------------------------------------------|-------------------------------|
+| `at_path`          | `value: Any`, `path: text`                          | Nested value at `"a.b.c"` path; supports dicts + Pydantic models | Invalid path format           |
+| `has_failed`       | `pipe_id: text`                                     | `True` if the given pipe result is marked failed                 | Unknown pipe ID               |
+| `get_pipe_result`  | `pipe_id: text`, `data_key: text;default = "value"` | Value stored in previous pipe result under given `data_key`      | Pipe or key missing           |
+| `get_parent_param` | `param_key: text`                                   | Inherited parent parameter value                                 | Parent missing or key missing |
+| `get_env`          | `name: text`                                        | Value of environment variable                                    | Env var missing               |
+| `fail`             | *(none)*                                            | A “FailMarker” sentinel object to signal explicit failure paths  | —                             |
+
+---
+
+## Usage examples in `config.yml`
+
+### Read an environment variable
+
+```yaml
+api:
+  token: "{{ get_env('API_TOKEN') }}"
+  baseUrl: "https://api.example.com"
+```
+
+### Consume a previous pipe’s result
+
+```yaml
+classification:
+  label: "{{ get_pipe_result('classify_ticket', 'label') }}"
+  confidence: "{{ get_pipe_result('classify_ticket', 'score') }}"
+  isLowConfidence: "{{ get_pipe_result('classify_ticket', 'score') < 0.6 }}"
+```
+
+### Check if a pipe failed
+
+```yaml
+shouldRetry: "{{ has_failed('fetch_customer') }}"
+```
+
+### Read a parent parameter
+
+```yaml
+timeoutMs: "{{ get_parent_param('timeoutMs') }}"
+```
+
+### Emit an explicit failure marker
+
+```yaml
+result: "{{ fail() }}"
+```
+
+### Access nested data (dict or Pydantic model)
+
+```yaml
+userCity: "{{ at_path(user, 'address.city') }}"
+```

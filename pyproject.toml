@@ -51,6 +51,9 @@ dependencies = [
     "graphviz>=0.21",
     "async-lru>=2.0.5",
     "setuptools-scm>=9.2.2",
+    "pydantic-extra-types[pendulum]>=2.10.6",
+    "node-semver>=0.9.0",
+    "semver>=3.0.4",
 ]
 
 [project.urls]

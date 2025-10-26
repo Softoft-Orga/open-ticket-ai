@@ -42,17 +42,17 @@ A **pipe** is a self-contained processing unit that:
 - Produces output as `PipeResult`
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph Rendering
-        PipeContext["PipeContext"]
-        Renderer["Jinja Renderer"]
-        PipeParams["PipeParams"]
-        PipeContext --> Renderer --> PipeParams
+        PC["PipeContext"]:::value --> JR[["Jinja Renderer"]]:::renderer --> PP["PipeParams"]:::value
     end
-    PIPE["Pipe"]
-    PR["<strong>PipeResult</strong> <small><br/>succeeded <br/> was_skipped <br/> message <br/> data<br/> } </small>"]
-    PipeParams --> PIPE --> PR
 
+    P(("Pipe")):::pipe
+    PR["PipeResult"]:::value
+    PP --> P --> PR
+    classDef pipe fill: #0b1220, stroke: #7c4dff, stroke-width: 2px, color: #e6e7ea
+    classDef renderer fill: #0b1220, stroke: #22c55e, stroke-dasharray: 5 3, stroke-width: 2px, color: #e6e7ea
+    classDef value fill: #111827, stroke: #475569, color: #e6e7ea
 ```
 
 ## Pipe Types
@@ -60,6 +60,8 @@ flowchart TB
 ### Simple Pipes
 
 Atomic processing units that implement specific business logic:
+
+#### Yaml Example
 
 ```yaml
 - id: fetch_tickets
@@ -73,16 +75,39 @@ Atomic processing units that implement specific business logic:
       limit: 10
 ```
 
-**Characteristics:**
+#### Characteristics:
 
-- Implements `_process()` method
-- Returns single `PipeResult`
+- Runs specific logic
 - No child pipes
-- Accesses injected services via `self.<service_name>`
+
+#### Specific Simple Pipes:
+
+- AddNotePipe — registryKey: base:AddNotePipe
+- FetchTicketsPipe — registryKey: base:FetchTicketsPipe
+- UpdateTicketPipe — registryKey: base:UpdateTicketPipe
+
+### Expression Pipe (special)
+
+Renders an expression and returns that value. If it renders to a FailMarker, the pipe fails.
+`registryKey: base:ExpressionPipe`
+
+#### Yaml Example
+
+```yaml
+- id: check_any_tickets
+  use: "base:ExpressionPipe"
+  params:
+    expression: >
+      {{ fail() if (get_pipe_result('fetch_tickets','fetched_tickets')|length)==0 else 'ok' }}
+```
+
+---
 
 ### Composite Pipes
 
 Orchestrators that contain and execute child pipes:
+
+#### Flowchart
 
 ```mermaid
 flowchart TB
@@ -93,9 +118,11 @@ flowchart TB
     A --> U["Result #1"]
     B --> U["Result #2"]
     C --> U["Result #3"]
-    U["union([Result #1, Result #2, Result #3])"]
-    U --> CR["CompositeResult"]
+    U["union(Results #1, #2 #3)"]
+    U --> CR["PipeResult"]
 ```
+
+#### Yaml Example
 
 :::details Composite Pipe Example
 
@@ -118,7 +145,6 @@ flowchart TB
       params:
         model: "bert-base-german-cased"
         text: "{{ get_pipe_result('fetch').data.fetched_tickets[0].subject }}"
-      depends_on: [ fetch ]
 
     - id: update
       use: open_ticket_ai.base:UpdateTicketPipe
@@ -127,255 +153,394 @@ flowchart TB
         ticket_id: "{{ get_pipe_result('fetch').data.fetched_tickets[0].id }}"
         updated_ticket:
           queue:
-            name: "{{ get_pipe_result('classify').data.predicted_queue }}"
-      depends_on: [ classify ]
+            name: "{{ get_pipe_result('classify', 'predicted_queue') }}"
 ```
 
 :::
 
-**Characteristics:**
+#### Characteristics
 
 - Contains `steps` list of child pipe configs
-- Uses `PipeFactory` to build child pipes
 - Executes children sequentially
-- Merges results via `PipeResult.union()`
+- Merges results
 - Children can access parent params via `parent.params`
-
-### Composite Pipe Execution
-
-```mermaid
-flowchart TB
-
-```
 
 **Composite Execution:**
 
-1. **Initialization**: Prepare to iterate through `steps` list
-2. **For Each Step**:
-    - **Merge**: Combine parent params with step params (step overrides)
-    - **Build**: Use factory to create child pipe instance
-    - **Execute**: Call `child.process(context)` → updates context
-    - **Collect**: Child result stored in `context.pipes[child_id]`
+1. **For Each Step**:
+    - **Render**: Renders Params with Jinja2 using current context
+    - **Execute**: Execute next child pipe with rendered params
     - **Loop**: Continue to next step
-3. **Finalization**:
-    - **Union**: Merge all child results using `PipeResult.union()`
-    - **Save**: Store composite result in context
+2. **Finalization**:
+    - **Union**: Merge all child results using
     - **Return**: Return final updated context
 
-## Dependency Management
+### SimpleSequentialOrchestrator (special)
 
-The `depends_on` field creates execution dependencies between pipes:
+Runs its `steps` **in an endless loop**. It’s for background-style cycles. It does **not** expose
+the child pipes’ results as a single pipe result. `registryKey: base:SimpleSequentialOrchestrator`
+
+#### Flowchart
+
+```mermaid
+flowchart TB
+    subgraph SimpleSequentialOrchestrator
+        S1["step #1"] --> S2["step #2"] --> S3["step #3"]
+    end
+    S3 --> Z(("sleep"))
+    Z -->|loop| S1
+```
+
+#### Yaml Example
+
+:::details SimpleSequentialOrchestrator Example
 
 ```yaml
-- id: step_a
-  use: PipeA
-  # Executes first (no dependencies)
-
-- id: step_b
-  use: PipeB
-  depends_on: [ step_a ]
-  # Executes only if step_a succeeded
-
-- id: step_c
-  use: PipeC
-  depends_on: [ step_a, step_b ]
-  # Executes only if both step_a and step_b succeeded
+- id: orchestrator
+  use: "base:SimpleSequentialOrchestrator"
+  params:
+    orchestrator_sleep: "PT0.5S"
+    exception_sleep: "PT5S"
+    always_retry: true
+    steps:
+      - id: tick
+        use: "base:IntervalTrigger"
+        params: { interval: "PT5S" }
+      - id: fetch
+        use: "base:FetchTicketsPipe"
+        injects: { ticket_system: "otobo_znuny" }
+        params:
+          ticket_search_criteria: { queue: { name: "Incoming" }, limit: 1 }
 ```
+
+:::
+
+---
+
+### SimpleSequentialRunner (special)
+
+Has two params: `on` and `run` (both are pipe configs). If `on` **succeeds**, it executes `run`;
+otherwise it skips. `registryKey: base:SimpleSequentialRunner`
+
+#### Flowchart
+
+```mermaid
+flowchart TB
+    subgraph SimpleSequentialRunner
+        ON{"on (trigger) succeded ?"} -->|yes| RUN["run (action)"]
+        ON -.->|no| SKIP["skipped"]
+    end
+
+```
+
+#### Yaml Example
+
+```yaml
+- id: run-when-triggered
+  use: "base:SimpleSequentialRunner"
+  params:
+    on:
+      id: gate
+      use: "base:IntervalTrigger"
+      params: { interval: "PT60S" }
+    run:
+      id: do-something
+      use: "base:ExpressionPipe"
+      params: { expression: "Triggered run" }
+```
+
+## Context Passing Between Pipes
 
 **Field Details:**
 
 - **`pipes`**: Contains results from all previously executed pipes, keyed by pipe ID
+    - **Access via `pipe_result('pipe_id')` in templates**
     - Accumulated as each pipe completes
     - In CompositePipe: merged results from all child steps
-    - Access via `pipe_result('pipe_id')` in templates
 
 - **`params`**: Current pipe's parameters
     - Set when the pipe is created
     - Accessible via `params.*` in templates
-    - For nested pipes, can reference parent via `parent.params`
+    - For nested pipes, can reference parent via `parent`
 
-- **`parent`**: Reference to parent context (if inside a CompositePipe)
-    - Allows access to parent scope variables
-    - Creates hierarchical context chain
-    - Can traverse multiple levels (`parent.parent...`)
-
-**Accessing Context in Templates:**
-
-```yaml
-- id: child_pipe
-  params:
-    # Access previous pipe result
-    tickets: "{{ pipe_result('fetch').data.fetched_tickets }}"
-
-    # Access parent parameter
-    threshold: "{{ parent.params.confidence_threshold }}"
-
-    # Access own parameter
-    limit: "{{ params.limit }}"
-
-    # Check if pipe succeeded
-    should_update: "{{ has_succeeded('classify') }}"
-```
+- **`parent`**: Reference to parent params
 
 ## PipeResult Structure
 
 Each pipe produces a `PipeResult` containing execution outcome and data:
 
-```python
-class PipeResult[T]():
-    success: bool  # True if execution succeeded
-    failed: bool  # True if execution failed
-    message: str  # Human-readable message
-    data: T  # Pipe-specific result data (Pydantic model)
+| Attribute     | Data Type        | Description                                                                      |
+|---------------|------------------|----------------------------------------------------------------------------------|
+| **succeeded** | true/false       | Whether the pipe completed successfully without errors                           |
+| **data**      | name:value pairs | Output data produced by the pipe for use by following pipes or external systems  |
+| *was_skipped* | true/false       | Whether the pipe was skipped due to failed dependencies or conditional execution |
+| *message*     | TEXT             | Human-readable message describing the result or any issues                       |
+
+you access those results in the params of another pipe with those functions. Currenly there is no
+way to read was_skipped or message;
+
+| Function          | Parameters                                         | Returns                                                      | Errors if…          |
+|-------------------|----------------------------------------------------|--------------------------------------------------------------|---------------------|
+| `has_failed`      | `pipe_id: text`                                    | `True` if the given pipe result is  marked failed            | Unknown pipe ID     |
+| `get_pipe_result` | `pipe_id: text`, `data_key: text; default = value` | Value stored in previous pipe  result under given `data_key` | Pipe or key missing |
+
+So for example if piperesult is
+
+````yaml
+- id: ticket_fetcher
+  result:
+    succeeded: true
+    data:
+      fetched_tickets:
+        - id: 123
+          subject: "Help me!"
+        - id: 124
+          subject: "Another ticket"
+````
+
+To access the fetched tickets you would use:
+
+```yaml
+{ { get_pipe_result('ticket_fetcher', 'fetched_tickets') } }
 ```
 
-# Pipe Parameter Reference
+Returning:
 
-## AddNotePipe – `AddNoteParams`
+```yaml
+- id: 123
+  subject: "Help me!"
+- id: 124
+  subject: "Another ticket"
+```
 
-| Field     | Type        | Default | Required | Description                                                                                            |
-|-----------|-------------|---------|----------|--------------------------------------------------------------------------------------------------------|
-| ticket_id | str \| int  | —       | Yes      | Identifier of the ticket to which the note should be added, accepting either string or integer format. |
-| note      | UnifiedNote | —       | Yes      | Note content including subject and body to be added to the specified ticket.                           |
+To access the subject of the first ticket you would use:
 
-## FetchTicketsPipe – `FetchTicketsParams`
+```yaml
+{ { (get_pipe_result('ticket_fetcher', 'fetched_tickets') | first)[ 'subject' ] }
+```
 
-| Field                  | Type                 | Default | Required | Description                                                                                     |
-|------------------------|----------------------|---------|----------|-------------------------------------------------------------------------------------------------|
-| ticket_search_criteria | TicketSearchCriteria | —       | Yes      | Search criteria including queue, limit, and offset for querying tickets from the ticket system. |
+Returning:
 
-## UpdateTicketPipe – `UpdateTicketParams`
+```
+Help me!
+```
 
-| Field          | Type          | Default | Required | Description                                                                           |
-|----------------|---------------|---------|----------|---------------------------------------------------------------------------------------|
-| ticket_id      | str \| int    | —       | Yes      | Unique identifier of the ticket to be updated in the ticket system.                   |
-| updated_ticket | UnifiedTicket | —       | Yes      | Updated ticket data containing the fields and values to apply to the existing ticket. |
+To check if the ticket_fetcher pipe failed you would use:
 
-## ClassificationPipe – `ClassificationPipeParams`
+```yaml
+{ { has_failed('ticket_fetcher') } }
+```
 
-| Field      | Type        | Default | Required | Description                                              |
-|------------|-------------|---------|----------|----------------------------------------------------------|
-| text       | str         | —       | Yes      | Text to classify.                                        |
-| model_name | str         | —       | Yes      | Name of the model to use.                                |
-| api_token  | str \| None | None    | No       | Optional API token passed to the classification service. |
+Returning:
 
-## ExpressionPipe – `ExpressionParams`
+```
+false
+```
 
-| Field      | Type | Default | Required | Description                                                                                      |
-|------------|------|---------|----------|--------------------------------------------------------------------------------------------------|
-| expression | Any  | —       | Yes      | Expression string/value to be evaluated; if it becomes a `FailMarker`, the pipe returns failure. |
+Checking the success can be used in combination with fail() to create guards:
 
-## IntervalTrigger – `IntervalTriggerParams`
+```yaml
+- id: fail_no_tickets
+  use: "base:ExpressionPipe"
+  params:
+    expression: >
+      {{ fail() if has_failed('ticket_fetcher' else 'ok' }}
+```
 
-| Field    | Type      | Default | Required | Description                               |
-|----------|-----------|---------|----------|-------------------------------------------|
-| interval | timedelta | —       | Yes      | Time interval between trigger executions. |
+The Pipeline/FLow would stop executing at this point if the ticket_fetcher pipe failed.
 
-## CompositePipe – `CompositePipeParams`
+## Pipe Registry Overview
 
-| Field | Type             | Default | Required | Description                                                               |
-|-------|------------------|---------|----------|---------------------------------------------------------------------------|
-| steps | list[PipeConfig] | []      | No       | List of pipe configurations representing the steps in the composite pipe. |
+| Name                         | registryKey                         | Params (names, comma-separated)                          |
+|------------------------------|-------------------------------------|----------------------------------------------------------|
+| AddNotePipe                  | `base:AddNotePipe`                  | ticket_id, note                                          |
+| FetchTicketsPipe             | `base:FetchTicketsPipe`             | ticket_search_criteria                                   |
+| UpdateTicketPipe             | `base:UpdateTicketPipe`             | ticket_id, updated_ticket                                |
+| ClassificationPipe           | `base:ClassificationPipe`           | text, model_name, api_token                              |
+| ExpressionPipe               | `base:ExpressionPipe`               | expression                                               |
+| IntervalTrigger              | `base:IntervalTrigger`              | interval                                                 |
+| SimpleSequentialRunner       | `base:SimpleSequentialRunner`       | on, run                                                  |
+| SimpleSequentialOrchestrator | `base:SimpleSequentialOrchestrator` | orchestrator_sleep, exception_sleep, always_retry, steps |
+| CompositePipe                | `base:CompositePipe`                | steps                                                    |
 
-## SimpleSequentialRunner – `SimpleSequentialRunnerParams`
+> Use these values in your YAML as: `use: "<registryKey>"`.
 
-| Field | Type       | Default | Required | Description                                                               |
-|-------|------------|---------|----------|---------------------------------------------------------------------------|
-| on    | PipeConfig | —       | Yes      | Trigger pipe that gates execution. Not rendered by the template renderer. |
-| run   | PipeConfig | —       | Yes      | Pipe to run when triggered. Not rendered by the template renderer.        |
+---
 
-## SimpleSequentialOrchestrator – `SimpleSequentialOrchestratorParams`
+## Pipe Details
 
-| Field              | Type             | Default | Required | Description                                               |
-|--------------------|------------------|---------|----------|-----------------------------------------------------------|
-| orchestrator_sleep | timedelta        | 0.01s   | No       | Sleep time between orchestrator cycles.                   |
-| exception_sleep    | timedelta        | 5s      | No       | Sleep time after exceptions when retrying.                |
-| always_retry       | bool             | True    | No       | Whether to always retry failed steps.                     |
-| steps              | list[PipeConfig] | []      | No       | Steps to execute (not rendered by the template renderer). |
+### AddNotePipe
 
-## Best Practices
+The Pipe `AddNotePipe` adds a structured note (subject/body) to a given ticket in the ticket system.
+It logs a short preview of the note and writes it via the ticket system service.
 
-### Pipe Design
+**registryKey:** `base:AddNotePipe`
+So to “use” it set `use` to this registryKey.
 
-- Keep pipes focused on single responsibility
-- Make pipes reusable across different workflows
-- Use descriptive pipe IDs
-- Document expected input and output
-- Handle errors gracefully
+```yaml
+- id: "my-add_note_pipe"
+  use: "base:AddNotePipe"
+  params:
+    ticket_id: "<ticket id>"
+    note:
+      subject: "<subject>"
+      body: "<body>"
+```
 
-### Configuration
+---
 
-- Use template variables for dynamic values
-- Leverage `depends_on` for clear execution order
-- Use `if_` conditions to skip unnecessary work
-- Group related pipes in CompositePipe
+### FetchTicketsPipe
 
-### Performance
+The Pipe `FetchTicketsPipe` queries tickets from the ticket system using a unified
+`TicketSearchCriteria` (queue, limit, offset, etc.) and returns them as `fetched_tickets`.
 
-- Avoid blocking operations in `_process()`
-- Use async/await for I/O operations
-- Keep pipe execution time reasonable
-- Consider batching for large datasets
+**registryKey:** `base:FetchTicketsPipe`
 
-### Testing
+```yaml
+- id: "my-fetch_tickets"
+  use: "base:FetchTicketsPipe"
+  params:
+    ticket_search_criteria:
+      queue:
+        name: "<QueueName>"
+      limit: 10
+```
 
-- Test pipes independently with mock services
-- Test dependency chains
-- Test conditional execution paths
-- Test error scenarios
+---
 
-## Key Implementation Files
+### UpdateTicketPipe
 
-### Core Pipeline
+The Pipe `UpdateTicketPipe` updates an existing ticket by ID using a unified `UnifiedTicket`
+payload (e.g., queue, priority, fields). Returns success state from the ticket system.
 
-- **`src/open_ticket_ai/core/pipeline/pipe.py`** - Base `Pipe` class
-- **`src/open_ticket_ai/core/pipeline/pipe_config.py`** - `PipeConfig`, `PipeResult` models
-- **`src/open_ticket_ai/core/pipeline/pipe_context.py`** - `PipeContext` model
+**registryKey:** `base:UpdateTicketPipe`
 
-### Base Pipes
+```yaml
+- id: "my-update_ticket"
+  use: "base:UpdateTicketPipe"
+  params:
+    ticket_id: "<ticket id>"
+    updated_ticket:
+      queue:
+        name: "<QueueName>"
+```
 
-- **`src/open_ticket_ai/base/pipes/composite_pipe.py`** - `CompositePipe` implementation
-- **`src/open_ticket_ai/base/pipes/jinja_expression_pipe.py`** - Expression evaluation
-- **`src/open_ticket_ai/base/pipes/ticket_system_pipes/`** - Ticket operations
+---
 
-### Configuration
+### ClassificationPipe
 
-- **`src/open_ticket_ai/core/config/renderable_factory.py`** - Pipe instantiation
-- **`src/open_ticket_ai/core/config/renderable.py`** - `Renderable` interface
+The Pipe `ClassificationPipe` classifies input text using a configured `ClassificationService` and
+model, returning label, confidence, and scores (if available).
 
-## Related Documentation
+**registryKey:** `base:ClassificationPipe`
 
-- **[Orchestrator System](orchestrator.md)** - How pipelines are scheduled and executed
-- **[Configuration & Rendering](config_rendering.md)** - Template rendering and context
-- **[First Pipeline Tutorial](../guides/first_pipeline.md)** - Step-by-step guide
-- **[Plugin Development](../developers/plugin_development.md)** - Creating custom pipes
-- **[Configuration Reference](../details/config_reference.md)** - YAML structure
+```yaml
+- id: "my-classify"
+  use: "base:ClassificationPipe"
+  injects: { classification_service: "hf_local" }
+  params:
+    text: "{{ some_text }}"
+    model_name: "softoft/otai-queue-de-bert-v1"
+    api_token: "{{ env.HF_TOKEN | default(None) }}"
+```
 
-## Summary
+---
 
-Pipes are the building blocks of Open Ticket AI workflows:
+### ExpressionPipe
 
-**Core Concepts:**
+The Pipe `ExpressionPipe` returns the value of `expression`; if it evaluates to a `FailMarker`, the
+pipe fails (useful for control-flow/guards).
 
-- Self-contained processing units
-- Context-driven data flow
-- Sequential execution with dependencies
-- Conditional and composable
+**registryKey:** `base:ExpressionPipe`
 
-**Key Features:**
+```yaml
+- id: "my-expression"
+  use: "base:ExpressionPipe"
+  params:
+    expression: "{{ fail() if condition else 'ok' }}"
+```
 
-- Dependency management (`depends_on`)
-- Conditional execution (`if_`)
-- Nested composition (CompositePipe)
-- Error isolation and handling
-- Template-driven configuration
+---
 
-**Design Principles:**
+### IntervalTrigger
 
-- Single responsibility
-- Reusability across workflows
-- Type-safe results
-- Graceful error handling
+The Pipe `IntervalTrigger` gates downstream execution based on a time interval; it succeeds once the
+interval has passed since the last trigger, otherwise fails.
 
-This architecture enables building complex automation workflows from simple, testable, composable
-components.
+**registryKey:** `base:IntervalTrigger`
+
+```yaml
+- id: "my-interval"
+  use: "base:IntervalTrigger"
+  params:
+    interval: "PT60S"
+```
+
+---
+
+### SimpleSequentialRunner
+
+The Pipe `SimpleSequentialRunner` runs `on` and, only if it succeeds, runs `run`. It’s a minimal
+two-step control runner.
+
+**registryKey:** `base:SimpleSequentialRunner`
+
+```yaml
+- id: "my-simple_runner"
+  use: "base:SimpleSequentialRunner"
+  params:
+    on:
+      id: "interval"
+      use: "base:IntervalTrigger"
+      params: { interval: "PT5M" }
+    run:
+      id: "do-something"
+      use: "base:ExpressionPipe"
+      params: { expression: "go!" }
+```
+
+---
+
+### SimpleSequentialOrchestrator
+
+The Pipe `SimpleSequentialOrchestrator` loops forever, executing `steps` in order each cycle; it
+optionally sleeps between cycles and on exceptions, and can auto-retry.
+
+**registryKey:** `base:SimpleSequentialOrchestrator`
+For `SimpleSequentialOrchestrator` you don’t need to set params, since all attributes are optional.
+
+```yaml
+- id: "my-orchestrator"
+  use: "base:SimpleSequentialOrchestrator"
+  params:
+    orchestrator_sleep: "PT0.5S"
+    exception_sleep: "PT5S"
+    always_retry: true
+    steps:
+      - id: "step-1"
+        use: "base:ExpressionPipe"
+        params: { expression: "ok" }
+```
+
+---
+
+### CompositePipe
+
+The Pipe `CompositePipe` executes its `steps` sequentially, stops on the first failure, and returns
+a union of prior results. It’s the base building block for multi-step flows.
+
+**registryKey:** `base:CompositePipe`
+For `CompositePipe` you don’t need to set params, since all attributes are optional.
+
+```yaml
+- id: "my-composite"
+  use: "base:CompositePipe"
+  params:
+    steps:
+      - id: "one"
+        use: "base:ExpressionPipe"
+        params: { expression: "first" }
+      - id: "two"
+        use: "base:ExpressionPipe"
+        params: { expression: "second" }
+```

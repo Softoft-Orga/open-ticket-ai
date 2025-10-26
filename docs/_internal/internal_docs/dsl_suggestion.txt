@@ -1,0 +1,13 @@
+ON: ALWAYS
+TICKET = FROM Tickets IF Ticket.QueueName == "Docs"
+IF TICKET:
+    PROMPT = TICKET.LAST_ARTICLE.SUBJECT + " " + TICKET.LAST_ARTICLE.BODY
+    CLASSIFIER = HF_LOCAL(model="my-model-name")
+    CLASSIFICATION = CLASSIFIER.classify(PROMPT)
+    IF CLASSIFICATION in tickets.QueueNames.unique():
+        TICKET.QueueName = CLASSIFICATION
+    ELSE:
+        TICKET.QueueName = "General"
+    SAVE TICKET
+ELSE:
+   SLEEP 10

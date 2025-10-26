@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from packaging.specifiers import SpecifierSet
+from pydantic import BaseModel, Field, Sem, field_validator
 
+from open_ticket_ai.core.config.types import VersionSpecifier
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
@@ -14,8 +16,19 @@ class InfrastructureConfig(BaseModel):
     )
 
 
+class PluginConfig(BaseModel):
+    name: str = Field(
+        default="",
+        description="Name of the plugin for identification purposes.",
+    )
+    version: str = Field(
+        default="",
+        description="Version of the plugin for compatibility management.",
+    )
+
+
 class OpenTicketAIConfig(BaseModel):
-    api_version: str = Field(
+    api_version: VersionSpecifier = Field(
         default="1",
         description="API version of the OpenTicketAI application for compatibility and feature management.",
     )
@@ -41,3 +54,13 @@ class OpenTicketAIConfig(BaseModel):
             InjectableConfig.model_validate({"id": _id, **service_base.model_dump()})
             for _id, service_base in self.services.items()
         ]
+
+    @field_validator("api_version")
+    @classmethod
+    def validate_spec(cls, v: str) -> str:
+        """Ensure the version spec is valid."""
+        try:
+            SpecifierSet(v)
+        except Exception as e:
+            raise ValueError(f"Invalid version specifier '{v}': {e}") from e
+        return v

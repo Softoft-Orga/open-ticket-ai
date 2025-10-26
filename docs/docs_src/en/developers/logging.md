@@ -4,9 +4,11 @@ description: Open Ticket AI logging system documentation covering the abstract i
 
 # Logging System
 
-Open Ticket AI uses an abstract logging interface that allows developers to configure logging behaviour without
+Open Ticket AI uses an abstract logging interface that allows developers to configure logging
+behaviour without
 modifying
-application code. The current implementation is built entirely on Python's standard-library `logging` module.
+application code. The current implementation is built entirely on Python's standard-library
+`logging` module.
 
 ## Overview
 
@@ -21,13 +23,15 @@ The logging system provides:
 
 ### Using with dependency injection
 
-Services can inject the `LoggerFactory` and use it to create loggers with bound context. The factory returns instances
+Services can inject the `LoggerFactory` and use it to create loggers with bound context. The factory
+returns instances
 of
 `StdlibLogger`, which proxy to `logging.getLogger`.
 
 ### Direct usage (without DI)
 
-The standard-library adapter can be configured and used directly without the dependency injection container. Configure
+The standard-library adapter can be configured and used directly without the dependency injection
+container. Configure
 the
 logging system at application startup and create loggers as needed.
 
@@ -50,19 +54,20 @@ logger.info("Application started")
 ### Runtime configuration
 
 The logging system is configured through the application's YAML configuration file under the
-`infrastructure.logging` section, which is loaded by the `AppModule` during dependency injection setup.
+`infrastructure.logging` section, which is loaded by the `AppModule` during dependency injection
+setup.
 
 ### LoggingConfig fields
 
 `LoggingConfig` defines the supported runtime configuration:
 
-| Field           | Type                                                               | Default                                                  | Description                                                                        |
-|-----------------|--------------------------------------------------------------------|----------------------------------------------------------|------------------------------------------------------------------------------------|
-| `level`         | Literal[`"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"`, `"CRITICAL"`] | `"INFO"`                                                 | Minimum severity level captured by handlers.                                       |
-| `log_to_file`   | `bool`                                                             | `False`                                                  | Enables writing log output to a file handler.                                      |
-| `log_file_path` | `str \| None`                                                      | `None`                                                   | Absolute or relative path for file logging. Required when `log_to_file` is `True`. |
-| `log_format`    | `str`                                                              | `"%(asctime)s - %(name)s - %(levelname)s - %(message)s"` | Format string passed to `logging.Formatter`.                                       |
-| `date_format`   | `str`                                                              | `"%Y-%m-%d %H:%M:%S"`                                    | Timestamp format used by the formatter.                                            |
+| Field                   | Type                                                               | Default                                                  | Description                                                                        |
+|-------------------------|--------------------------------------------------------------------|----------------------------------------------------------|------------------------------------------------------------------------------------|
+| `level`                 | Literal[`"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"`, `"CRITICAL"`] | `"INFO"`                                                 | Minimum severity level captured by handlers.                                       |
+| `log_to_file`           | `bool`                                                             | `False`                                                  | Enables writing log output to a file handler.                                      |
+| `log_file_path`         | `str \| None`                                                      | `None`                                                   | Absolute or relative path for file logging. Required when `log_to_file` is `True`. |
+| `format.message_format` | `str`                                                              | `"%(asctime)s - %(name)s - %(levelname)s - %(message)s"` | Format string passed to `logging.Formatter`.                                       |
+| `format.date_format`    | `str`                                                              | `"%Y-%m-%d %H:%M:%S"`                                    | Timestamp format used by the formatter.                                            |
 
 ## Logging implementation
 
@@ -89,14 +94,17 @@ The standard-library adapter wraps Python's built-in `logging` module.
 1. Fetch the root logger and set its level from `LoggingConfig.level`.
 2. Remove any previously registered handlers to avoid duplicate messages.
 3. Build a `logging.Formatter` using `log_format` and `date_format`.
-4. Attach a `StreamHandler` writing to `sys.stdout`, configured with the selected level and formatter.
+4. Attach a `StreamHandler` writing to `sys.stdout`, configured with the selected level and
+   formatter.
 5. Optionally attach a `FileHandler` when `log_to_file` is `True` and `log_file_path` is provided.
 6. Return a `StdlibLoggerFactory`, which creates `StdlibLogger` instances bound to named loggers.
 
 ## Context binding
 
-Context binding allows you to attach structured data to log messages. Create a base logger with service context, then
-bind request-specific context. All subsequent log messages from that logger will include the bound context
+Context binding allows you to attach structured data to log messages. Create a base logger with
+service context, then
+bind request-specific context. All subsequent log messages from that logger will include the bound
+context
 automatically.
 
 ## Logger methods
@@ -114,13 +122,15 @@ The `AppLogger` protocol defines the following methods:
 
 ### 1. Use dependency injection
 
-Always inject the `LoggerFactory` rather than creating loggers directly. This allows for easier testing and
+Always inject the `LoggerFactory` rather than creating loggers directly. This allows for easier
+testing and
 configuration
 management.
 
 ### 2. Bind context early
 
-Create scoped loggers with bound context for better traceability. Bind context data like request IDs, user IDs, or
+Create scoped loggers with bound context for better traceability. Bind context data like request
+IDs, user IDs, or
 operation names early so all subsequent logs include this information.
 
 ### 3. Use appropriate log levels
@@ -142,28 +152,34 @@ Add context that helps with debugging and monitoring, such as:
 
 ### 5. Don't log sensitive data
 
-Never log passwords, tokens, or personal information. Always log identifiers instead of sensitive values.
+Never log passwords, tokens, or personal information. Always log identifiers instead of sensitive
+values.
 
 ## Testing with logging
 
-When writing tests, you can verify logging behavior by capturing log output and asserting on the messages and context
+When writing tests, you can verify logging behavior by capturing log output and asserting on the
+messages and context
 data.
 
 ## Migration guide
 
 ### From direct `logging.getLogger()`
 
-Replace direct use of Python's logging module with dependency injection of the `LoggerFactory`. This allows the logging
+Replace direct use of Python's logging module with dependency injection of the `LoggerFactory`. This
+allows the logging
 implementation to be swapped without code changes.
 
 ### From `AppConfig.get_logger()`
 
-Replace usages of legacy factory helpers with dependency-injected instances of `LoggerFactory` created by
+Replace usages of legacy factory helpers with dependency-injected instances of `LoggerFactory`
+created by
 `create_logger_factory`.
 
 ## Future roadmap
 
-The logging abstraction allows for introducing alternative adapters (such as Structlog or OpenTelemetry exporters) in
+The logging abstraction allows for introducing alternative adapters (such as Structlog or
+OpenTelemetry exporters) in
 the
-future. These integrations are currently under evaluation and not yet available. This page will be updated when new
+future. These integrations are currently under evaluation and not yet available. This page will be
+updated when new
 implementations are added so readers can adopt them confidently.
