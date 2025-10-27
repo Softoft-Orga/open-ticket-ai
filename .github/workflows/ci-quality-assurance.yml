@@ -77,7 +77,7 @@ jobs:
 
       - id: ruff_sarif
         name: Generate ruff lint report (SARIF)
-        run: uv run ruff check . --output-format=sarif > ruff-report.sarif
+        run: uv run ruff check src packages tests --output-format=sarif > ruff-report.sarif
         continue-on-error: true
 
       - id: mypy_report
