@@ -92,7 +92,7 @@ open_ticket_ai:
       params:
         base_url: "https://your-ticket-system.com"
         username: "your-username"
-        password: "${OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__PASSWORD}"
+        password: "${OTAI_OPEN_TICKET_PASSWORD}"
 
   orchestrator:
     id: "main_orchestrator"

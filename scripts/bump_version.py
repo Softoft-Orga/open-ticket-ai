@@ -34,21 +34,22 @@ def ensure_clean(allow_dirty: bool) -> None:
 
 def bump(ver: str, kind: Literal["major", "minor", "patch"]) -> str:
     v = semver.Version.parse(ver.lstrip("v"))
-    if kind == "major":
-        v = v.bump_major()
-    elif kind == "minor":
-        v = v.bump_minor()
-    else:
-        v = v.bump_patch()
+    match kind:
+        case "major":
+            v = v.bump_major()
+        case "minor":
+            v = v.bump_minor()
+        case "patch":
+            v = v.bump_patch()
     return f"v{v}"
 
 
 @App.command()
 def main(
-    kind: Literal["major", "minor", "patch"] = "patch",
-    push: bool = False,
-    allow_dirty: bool = False,
-    start: str = "v0.1.0",
+        kind: Literal["major", "minor", "patch"] = "patch",
+        push: bool = False,
+        allow_dirty: bool = False,
+        start: str = "v0.1.0",
 ) -> None:
     ensure_repo_root()
     ensure_clean(allow_dirty)

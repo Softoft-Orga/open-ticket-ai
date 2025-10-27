@@ -9,7 +9,7 @@ def main() -> None:
     root = Path(__file__).resolve().parents[1]
     version = get_version(
         root=root,
-        version_scheme="guess-next-dev",
+        version_scheme="only-version",
         local_scheme="no-local-version",
         tag_regex=r"^v(?P<version>\d+\.\d+\.\d+)$",
     )
