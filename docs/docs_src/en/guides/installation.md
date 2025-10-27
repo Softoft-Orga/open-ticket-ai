@@ -1,388 +1,280 @@
 ---
-description: Detailed installation guide for Open Ticket AI with system requirements, Python setup, Docker deployment, and ML model configuration.
+description: Easy installation guide for Open Ticket AI using Docker Compose - the recommended method for production deployment with all plugins included.
 ---
-
-# TOODO DOcker Compose to install version with the 3 plugins installed. for not wanting all currently with pip uv nstallation.
-
-but in the future. other docker images and beter installation scripts.
-The hardware depends mostly on what AI you want to run. As such the OpenTicketAI can run on 512MB
-RAM systems if no ML
-models are used.
 
 # Installation Guide
 
-Detailed installation instructions for Open Ticket AI and its components.
+This guide will help you install Open Ticket AI on your server. We recommend using Docker Compose
+for the easiest and most reliable installation.
 
 ## System Requirements
 
-### Minimum Requirements
+The hardware requirements depend on which AI models you want to run:
 
-- **Python**: 3.13 or higher
-- **RAM**: 2 GB minimum, 4 GB recommended
-- **Disk Space**: 500 MB for core, additional for models
-- **OS**: Linux, macOS, or Windows
+- **Minimum (no ML models)**: 512 MB RAM, 1 GB disk space
+- **Recommended (with ML models)**: 4 GB RAM, 5 GB disk space
+- **Operating System**: Linux, Windows, or macOS with Docker installed
 
-### Recommended for ML
+## Docker Compose Installation (Recommended)
 
-- **RAM**: 8 GB or more
-- **GPU**: NVIDIA GPU with CUDA support (optional but recommended)
-- **Disk Space**: 5 GB+ for model storage
+**Docker Compose is the recommended way to install Open Ticket AI.** It's the easiest method and
+comes with all three currently available plugins pre-installed:
 
-## Core Package Installation
+- **Base Plugin** (`otai-base`): Core functionality
+- **OTOBO/Znuny Plugin** (`otai-otobo-znuny`): Ticket system integration
+- **HuggingFace Local Plugin** (`otai-hf-local`): Local AI model support
 
-### Using uv (Recommended)
+### What is Docker and Docker Compose?
 
-```bash
-# Install uv if not already installed
-curl -LsSf https://astral.sh/uv/install.sh | sh
+**Docker** is a tool that packages software and all its dependencies into a container, so it runs
+the same way on any computer. Think of it like a self-contained box with everything the application
+needs to run.
 
-# Install Open Ticket AI
-uv pip install open-ticket-ai
-```
+**Docker Compose** is a tool that makes it easy to run Docker applications with a simple
+configuration file. Instead of typing long commands, you just create one file and run one command.
 
-### Using pip
+### Step 1: Install Docker
 
-```bash
-# Ensure pip is up to date
-pip install --upgrade pip
+If you don't have Docker installed yet:
 
-# Install Open Ticket AI
-pip install open-ticket-ai
-```
-
-### From Source
+**Linux (Ubuntu/Debian):**
 
 ```bash
-# Clone repository
-git clone https://github.com/Softoft-Orga/open-ticket-ai.git
-cd open-ticket-ai
-
-# Install with uv
-uv sync
-
-# Or with pip
-pip install -e .
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo apt install docker-compose-plugin
 ```
 
-## Plugin Installation
+**Windows/macOS:**
+Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-### OTOBO/Znuny Plugin
+### Step 2: Create Configuration Files
 
-```bash
-# Install OTOBO/Znuny integration
-uv pip install otai-otobo-znuny
-```
+Create a new folder for Open Ticket AI and create two files inside it:
 
-Features:
-
-- Ticket fetching and updating
-- Custom field support
-- API authentication
-
-### HuggingFace Local Plugin
-
-```bash
-# Install HuggingFace plugin
-uv pip install otai-hf-local
-```
-
-Features:
-
-- Local ML model inference
-- Support for classification models
-- GPU acceleration
-
-## Bundle Installation
-
-Install everything at once:
-
-```bash
-# Install all plugins
-uv pip install open-ticket-ai[all]
-
-# Or specific combinations
-uv pip install open-ticket-ai[otobo,ml]
-```
-
-Available bundles:
-
-- `all`: All plugins
-- `otobo`: OTOBO/Znuny integration
-- `ml`: Machine learning plugins
-- `dev`: Development dependencies
-
-## Verification
-
-Verify installation:
-
-```bash
-# Check version
-open-ticket-ai --version
-
-# List installed plugins
-open-ticket-ai plugins list
-
-# Show system info
-open-ticket-ai info
-```
-
-Expected output:
-
-```
-Open Ticket AI version 2.0.0
-Python 3.13.0
-
-Installed plugins:
-  - otobo_znuny (v1.5.0)
-  - hf_local (v1.0.0)
-```
-
-## Development Setup
-
-For contributing or customization:
-
-### Clone Repository
-
-```bash
-git clone https://github.com/Softoft-Orga/open-ticket-ai.git
-cd open-ticket-ai
-```
-
-### Install Dependencies
-
-```bash
-# Install with development dependencies
-uv sync --all-extras
-
-# Or specific groups
-uv sync --group dev --group test
-```
-
-### Setup Pre-commit Hooks
-
-```bash
-# Install pre-commit
-uv pip install pre-commit
-
-# Install hooks
-pre-commit install
-```
-
-### Run Tests
-
-```bash
-# Run all tests
-uv run -m pytest
-
-# Run with coverage
-uv run -m pytest --cov=open_ticket_ai
-
-# Run specific tests
-uv run -m pytest tests/unit/
-```
-
-## Configuration
-
-### Environment Setup
-
-Create `.env` file:
-
-```bash
-# Ticket System
-OTOBO_BASE_URL=https://your-ticket-system.com
-OTOBO_API_TOKEN=your-api-token
-
-# Application
-LOG_LEVEL=INFO
-ENVIRONMENT=production
-
-# ML (optional)
-HF_HOME=/path/to/model/cache
-```
-
-### Configuration File
-
-Create `config.yml`:
+**1. Create `docker-compose.yml`:**
 
 ```yaml
-plugins:
-  - name: otobo_znuny
-    config:
-      base_url: "${OTOBO_BASE_URL}"
-      api_token: "${OTOBO_API_TOKEN}"
-
-infrastructure:
-  log_level: "${LOG_LEVEL}"
-
-orchestrator:
-  pipelines:
-    - name: main_pipeline
-      run_every_milli_seconds: 60000
-      pipes:
-        - pipe_name: fetch_tickets
-```
-
-## GPU Support (Optional)
-
-### Install CUDA
-
-For NVIDIA GPU support:
-
-```bash
-# Check if CUDA is available
-nvidia-smi
-
-# Install PyTorch with CUDA support
-uv pip install torch --index-url https://download.pytorch.org/whl/cu118
-```
-
-### Verify GPU
-
-```python
-import torch
-
-print(f"CUDA available: {torch.cuda.is_available()}")
-print(f"CUDA device: {torch.cuda.get_device_name(0)}")
-```
-
-## Docker Installation
-
-### Using Docker
-
-```bash
-# Pull image
-docker pull softoft/open-ticket-ai:latest
-
-# Run container
-docker run -d \
-  --name open-ticket-ai \
-  -e OTOBO_BASE_URL="https://your-system.com" \
-  -e OTOBO_API_TOKEN="your-token" \
-  -v $(pwd)/config.yml:/app/config.yml \
-  softoft/open-ticket-ai:latest
-```
-
-### Using Docker Compose
-
-Create `docker-compose.yml`:
-
-```yaml
-version: '3.8'
-
 services:
   open-ticket-ai:
-    image: softoft/open-ticket-ai:latest
+    image: openticketai/engine:latest
+    restart: "unless-stopped"
     environment:
-      - OTOBO_BASE_URL=${OTOBO_BASE_URL}
-      - OTOBO_API_TOKEN=${OTOBO_API_TOKEN}
-      - LOG_LEVEL=INFO
+      - OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__PASSWORD=1234
     volumes:
-      - ./config.yml:/app/config.yml
-      - ./models:/app/models
-    restart: unless-stopped
+      - ./config.yml:/app/config.yml:ro
 ```
 
-Run:
+**What does this mean?**
+
+- `image: openticketai/engine:latest` - Uses our pre-built image with all plugins
+- `restart: "unless-stopped"` - Automatically restarts if it crashes
+- `environment` - Configuration via environment variables
+- `volumes` - Links your configuration file into the container
+
+**2. Create `config.yml`:**
+
+```yaml
+open_ticket_ai:
+  api_version: ">=1.0.0"
+  plugins:
+    - otai-base
+    - otai-otobo-znuny
+    - otai-hf-local
+
+  infrastructure:
+    logging:
+      level: INFO
+
+  services:
+    otobo_znuny:
+      use: "otobo_znuny:OTOBOZnunyClient"
+      params:
+        base_url: "https://your-ticket-system.com"
+        username: "your-username"
+        password: "${OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__PASSWORD}"
+
+  orchestrator:
+    id: "main_orchestrator"
+    use: "core:CompositePipe"
+    params:
+      pipes:
+        - id: "fetch_tickets"
+          use: "otobo_znuny:FetchTickets"
+```
+
+**Important:** Replace `https://your-ticket-system.com` and `your-username` with your actual ticket
+system details.
+
+### Step 3: Start Open Ticket AI
+
+In the folder where you created the files, run:
 
 ```bash
 docker-compose up -d
 ```
 
-## Upgrading
+**What does this do?**
 
-### Upgrade Core Package
+- Downloads the Open Ticket AI image (only needed the first time)
+- Starts the application in the background
+- All three plugins are automatically available
+
+### Step 4: Verify Installation
+
+Check if Open Ticket AI is running:
 
 ```bash
-# Using uv
-uv pip install --upgrade open-ticket-ai
+# View running containers
+docker-compose ps
 
-# Using pip
-pip install --upgrade open-ticket-ai
+# View logs
+docker-compose logs -f open-ticket-ai
 ```
 
-### Upgrade Plugins
+You should see output indicating the application started successfully.
+
+### Step 5: Stop or Update
+
+**Stop the application:**
 
 ```bash
-# Upgrade all
-uv pip install --upgrade otai-otobo-znuny otai-hf-local
-
-# Or upgrade everything
-uv pip install --upgrade open-ticket-ai[all]
+docker-compose down
 ```
 
-### Check for Breaking Changes
+**Update to the latest version:**
 
 ```bash
-# Review changelog
-open-ticket-ai changelog
-
-# Check plugin compatibility
-open-ticket-ai plugins check-compatibility
+docker-compose pull
+docker-compose up -d
 ```
 
-## Uninstallation
+## Configuration with Environment Variables
 
-### Remove Package
+You can configure Open Ticket AI using environment variables in your `docker-compose.yml`:
 
-```bash
-# Uninstall core
-uv pip uninstall open-ticket-ai
+```yaml
+services:
+  open-ticket-ai:
+    image: openticketai/engine:latest
+    restart: "unless-stopped"
+    environment:
+      # Ticket System Credentials
+      - OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__BASE_URL=https://your-system.com
+      - OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__USERNAME=admin
+      - OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__PASSWORD=secret
 
-# Uninstall plugins
-uv pip uninstall otai-otobo-znuny otai-hf-local
+      # Logging Level
+      - OTAI_OPEN_TICKET_AI__INFRASTRUCTURE__LOGGING__LEVEL=INFO
+    volumes:
+      - ./config.yml:/app/config.yml:ro
 ```
 
-### Clean Cache
+Environment variables override settings in `config.yml`, which is useful for sensitive information
+like passwords.
+
+## Alternative: Python Installation (Advanced Users)
+
+If you prefer to install without Docker or need a development setup:
+
+### Using pip/uv
 
 ```bash
-# Remove model cache
-rm -rf ~/.cache/huggingface
+# Install with all plugins
+pip install open-ticket-ai[all]
 
-# Remove configuration
-rm -rf ~/.config/open-ticket-ai
+# Or install selectively
+pip install open-ticket-ai
+pip install otai-otobo-znuny
+pip install otai-hf-local
+```
+
+**Requirements:**
+
+- Python 3.13 or higher
+- pip or uv package manager
+
+### Using uv (Faster)
+
+```bash
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install Open Ticket AI with all plugins
+uv pip install open-ticket-ai[all]
 ```
 
 ## Troubleshooting
 
-### Python Version Issues
+### Docker Issues
+
+**Container won't start:**
 
 ```bash
-# Check Python version
-python --version
+# Check logs for errors
+docker-compose logs open-ticket-ai
 
-# Install Python 3.13
-# Ubuntu/Debian
-sudo apt install python3.13
-
-# macOS with Homebrew
-brew install python@3.13
+# Restart the container
+docker-compose restart
 ```
 
-### Permission Errors
+**Port already in use:**
+If you get a port conflict error, add a port mapping to your `docker-compose.yml`:
+
+```yaml
+services:
+  open-ticket-ai:
+    image: openticketai/engine:latest
+    ports:
+      - "8080:8080"  # Change 8080 to an available port
+    # ...rest of config
+```
+
+**Configuration not loading:**
+Make sure your `config.yml` file is in the same folder as `docker-compose.yml` and has correct YAML
+syntax.
+
+### Connection Issues
+
+**Can't connect to ticket system:**
+
+1. Verify the `base_url` in your config is correct
+2. Check that your ticket system is accessible from the server
+3. Verify username and password are correct
+4. Check firewall settings
+
+**Test connection:**
 
 ```bash
-# Install in user directory
-pip install --user open-ticket-ai
+# Test if ticket system is reachable
+curl https://your-ticket-system.com
 
-# Or use virtual environment
-python -m venv venv
-source venv/bin/activate
-pip install open-ticket-ai
+# Check Open Ticket AI logs
+docker-compose logs -f open-ticket-ai
 ```
 
-### Network Issues
+### Getting Help
 
-```bash
-# Use proxy
-pip install --proxy http://proxy:port open-ticket-ai
+If you encounter issues:
 
-# Or specify index
-pip install --index-url https://pypi.org/simple open-ticket-ai
-```
+1. Check the logs: `docker-compose logs -f`
+2. Verify your configuration file syntax
+3. Review the [Configuration Reference](../details/_config_reference.md)
+4. Visit our [GitHub Issues](https://github.com/Softoft-Orga/open-ticket-ai/issues)
+5. Join our community discussions
+
+## Next Steps
+
+After installation:
+
+1. **Configure your first pipeline** - See [First Pipeline Guide](first_pipeline.md)
+2. **Connect to your ticket system** - See [OTOBO/Znuny Integration](../users/ticket_systems.md)
+3. **Set up AI classification** - See [ML Model Configuration](../users/ml_models.md)
+4. **Review security settings** - See [Security Best Practices](../users/security.md)
 
 ## Related Documentation
 
-- [Quick Start](quick_start.md)
-- [First Pipeline](first_pipeline.md)
-- [Configuration Reference](../details/_config_reference.md)
-- [Troubleshooting](troubleshooting.md)
+- [Quick Start Guide](quick_start.md) - Get started quickly
+- [First Pipeline](first_pipeline.md) - Create your first automation
+- [Configuration Reference](../details/_config_reference.md) - Complete config documentation
+- [Plugin System](../users/plugins.md) - Understanding plugins
