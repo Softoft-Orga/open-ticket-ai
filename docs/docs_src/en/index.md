@@ -13,12 +13,12 @@ features:
       alt: Plug Icon
       dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/plug.svg&filt=negate&w=48
     title: Flexible Integration
-  - details: Automate the classification of support tickets by queue and priority to
-      streamline your workflow.
+  - details: Coordinate complex automation flows with sequential and conditional
+      pipelines to handle every stage of your ticket lifecycle.
     icon:
-      alt: Robot Icon
-      dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/robot.svg&filt=negate&w=48
-    title: Automated Classification
+      alt: Diagram Project Icon
+      dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/diagram-project.svg&filt=negate&w=48
+    title: Pipeline Orchestration
   - details: As a fully on-premise solution, all your data is processed locally on your
       infrastructure, ensuring maximum privacy and security.
     icon:
@@ -70,15 +70,26 @@ title="Open Ticket AI — The Open-Source Solution for Automated Ticket Classifi
 </ClientOnly>
 
 
+<LatestNews />
+
+
+## Build Plugins and Grow with Open Ticket AI
+
+Open Ticket AI ships with a fully documented plugin SDK so you can extend the platform with new
+integrations, automations, and AI models. Package your plugin as a standard Python project, publish
+it to a public or private index, and start monetizing your expertise without waiting for an
+official marketplace.
+
+- Follow the step-by-step [Plugin Development Guide](/en/developers/plugin_development) to scaffold
+  a new integration in minutes.
+- Distribute plugins however you like—from private PyPI servers to commercial offerings with license
+  checks—and list them on the [Plugins Overview](/en/users/plugins) to reach the community.
+- Leverage our adapter architecture to connect to any helpdesk or data source while keeping the core
+  platform untouched.
+
+
 <ServicePackages/>
 
 <SupportPlans/>
 
 <ContactForm/>
-
-
-## Latest News
-
-- [Open Ticket AI 1.2.0 Release Highlights](/en/blog/open-ticket-ai-1-2-release) — HuggingFace local inference, nested composite pipelines, and adapter updates now shipping in v1.2.0.【F:docs/docs_src/en/blog/open-ticket-ai-1-2-release.md†L1-L64】
-
-
