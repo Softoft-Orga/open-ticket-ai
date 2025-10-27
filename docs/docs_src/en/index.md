@@ -57,6 +57,8 @@ hero:
 layout: home
 ---
 
+<LatestNews />
+
 ## Explanation Video
 
 <YoutubeVideo
@@ -68,10 +70,6 @@ title="Open Ticket AI — The Open-Source Solution for Automated Ticket Classifi
 <ClientOnly>
 <AIClassificationAnimation/>
 </ClientOnly>
-
-
-<LatestNews />
-
 
 ## Build Plugins and Grow with Open Ticket AI
 
@@ -86,7 +84,6 @@ official marketplace.
   checks—and list them on the [Plugins Overview](/en/users/plugins) to reach the community.
 - Leverage our adapter architecture to connect to any helpdesk or data source while keeping the core
   platform untouched.
-
 
 <ServicePackages/>
 

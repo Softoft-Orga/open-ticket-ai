@@ -1,4 +1,5 @@
 import {computed, readonly} from 'vue'
+import {data as blogPosts} from '../data/blogPosts.data.mts'
 
 export interface NewsArticle {
     title: string
@@ -12,58 +13,29 @@ export interface NewsArticle {
     showOnNews: boolean
 }
 
-type MarkdownModule = {
-    frontmatter?: Record<string, unknown>
-}
-
-const blogModules = import.meta.glob('../docs_src/en/blog/**/*.md', {eager: true}) as Record<string, MarkdownModule>
-
-const parseArticle = (path: string, mod: MarkdownModule): NewsArticle | null => {
-    const frontmatter = mod.frontmatter ?? {}
-    const title = typeof frontmatter.title === 'string' ? frontmatter.title.trim() : ''
-    const description = typeof frontmatter.description === 'string' ? frontmatter.description.trim() : ''
-    const dateValue = typeof frontmatter.date === 'string' ? frontmatter.date.trim() : ''
-    const image = typeof frontmatter.image === 'string' ? frontmatter.image.trim() : ''
-    const toastMessage = typeof frontmatter.toast_message === 'string' ? frontmatter.toast_message.trim() : ''
-    const showOnNews = Boolean(frontmatter['show-on-news'])
-
-    if (!title || !description || !dateValue) {
-        return null
-    }
-
-    const parsedDate = new Date(dateValue)
-    if (Number.isNaN(parsedDate.getTime())) {
-        return null
-    }
-
-    const link = path.replace('../docs_src', '').replace(/\.md$/, '')
-
-    return {
-        title,
-        description,
-        link,
-        date: dateValue,
-        dateTime: parsedDate,
-        formattedDate: parsedDate.toISOString().slice(0, 10),
-        image,
-        toastMessage,
-        showOnNews
-    }
-}
-
 export const useNewsArticles = () => {
     const allArticles = computed(() => {
-        const articles: NewsArticle[] = []
-        for (const [path, mod] of Object.entries(blogModules)) {
-            const article = parseArticle(path, mod)
-            if (article) {
-                articles.push(article)
+        return blogPosts.map(post => {
+            const dateTime = new Date(post.date)
+            return {
+                title: post.title,
+                description: post.description,
+                link: post.url,
+                date: post.date,
+                dateTime,
+                formattedDate: dateTime.toISOString().slice(0, 10),
+                image: post.image || '',
+                toastMessage: post.toast_message || '',
+                showOnNews: post['show-on-news'] || false
             }
-        }
-        return articles.sort((a, b) => b.dateTime.getTime() - a.dateTime.getTime())
+        })
     })
 
-    const newsArticles = computed(() => allArticles.value.filter(article => article.showOnNews && article.image && article.toastMessage))
+    const newsArticles = computed(() =>
+        allArticles.value.filter(article =>
+            article.showOnNews && article.image && article.toastMessage
+        )
+    )
 
     const mostRecentNewsArticle = computed(() => newsArticles.value.at(0) ?? null)
 
@@ -88,3 +60,4 @@ export const useNewsArticles = () => {
         isMostRecentNewsRecentlyPublished
     }
 }
+

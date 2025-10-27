@@ -7,7 +7,7 @@ import pytest
 @pytest.fixture
 def temp_config_file(tmp_path):
     config_content = """open_ticket_ai:
-  api_version: "1"
+  api_version: ">=1.0.0"
   infrastructure:
     logging:
       level: "DEBUG"

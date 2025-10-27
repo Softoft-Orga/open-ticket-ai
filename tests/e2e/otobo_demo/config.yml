@@ -1,5 +1,5 @@
 open_ticket_ai:
-  api_version: "1"
+  api_version: ">=1.0.0"
   infrastructure:
     logging:
       level: "INFO"

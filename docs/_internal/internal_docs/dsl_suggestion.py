@@ -1,6 +1,6 @@
 # noinspection PyUnresolvedReferences
 app = (
-    App(api_version="1")
+    App(api_version=">=1.0.0")
     .infrastructure(
         Logging()
         .level("INFO")

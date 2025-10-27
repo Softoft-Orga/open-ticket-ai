@@ -1,16 +1,10 @@
-show-on-news: true
-toast_message: New Release: Open Ticket AI 1.4.1 — Explore the production-ready platform
-image: https://softoft.sirv.com/Images/open-ticket-ai/releases/1-4-hero.jpg
+---
 title: Open Ticket AI 1.4.1 Release - The First Major Production Release
-description: Discover Open Ticket AI 1.4.1, the first production-ready release featuring powerful plugin architecture, flexible pipelines, dynamic configuration, and commercial plugin support.
+description: "Discover Open Ticket AI 1.4.1, the first production-ready release featuring powerful"
+toast_message: "New Release: Open Ticket AI 1.4.1 — Explore the production-ready platform"
+image: "https://softoft.sirv.com/Images/open-ticket-ai/releases/1-4-hero.jpg"
+show-on-news: true
 date: 2025-10-27
-authors:
-  - Open Ticket AI Team
-tags:
-  - release
-  - changelog
-  - automation
-  - production
 ---
 
 # Open Ticket AI 1.4.X: The First Major Production Release
@@ -51,10 +45,14 @@ the complete guide in [Pipe System](../users/pipeline.md).
 
 Configure everything using **YAML + Jinja2** for maximum flexibility:
 
+<div v-pre>
+
 - Reference environment variables: `{{ get_env('API_KEY') }}`
 - Access pipe results: `{{ get_pipe_result('fetch', 'tickets') }}`
 - Conditional parameters based on runtime state
 - Type-safe configuration schemas
+
+</div>
 
 Services are defined once and reused across multiple pipes via dependency injection.
 Explore [Configuration & Template Rendering](../users/config_rendering.md) for details.

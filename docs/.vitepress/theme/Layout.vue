@@ -6,9 +6,9 @@ const {Layout: DefaultLayout} = DefaultTheme
 </script>
 
 <template>
-    <DefaultLayout>
-        <template #layout-top>
-            <RecentNewsToast />
-        </template>
-    </DefaultLayout>
+  <DefaultLayout>
+    <template #layout-top>
+      <RecentNewsToast/>
+    </template>
+  </DefaultLayout>
 </template>

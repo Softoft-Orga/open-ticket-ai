@@ -132,7 +132,7 @@ def test_config_builder_creates_valid_config(integration_config_builder):
 
     services_list = config.open_ticket_ai.get_services_list()
 
-    assert config.open_ticket_ai.api_version == "1"
+    assert str(config.open_ticket_ai.api_version) == ">=1.0.0"
     assert config.open_ticket_ai.infrastructure.logging.level == "INFO"
     assert len(services_list) > 0
     assert config.open_ticket_ai.orchestrator is not None

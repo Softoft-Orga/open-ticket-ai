@@ -12,7 +12,7 @@ __TESTING_CLASS__ = AppConfig
 def test_appconfig_reads_yaml_open_ticket_ai_key(tmp_path, monkeypatch):
     yml = """
 open_ticket_ai:
-  api_version: "9"
+  api_version: ">=9.0.0"
   plugins: ["otai-base","otai-extra"]
   infrastructure:
     logging:
@@ -24,7 +24,7 @@ open_ticket_ai:
     (tmp_path / "config.yml").write_text(yml)
     monkeypatch.chdir(tmp_path)
     cfg = AppConfig()
-    assert cfg.open_ticket_ai.api_version == "9"
+    assert str(cfg.open_ticket_ai.api_version) == ">=9.0.0"
     assert cfg.open_ticket_ai.plugins == ["otai-base", "otai-extra"]
     assert isinstance(cfg.open_ticket_ai.infrastructure.logging, LoggingConfig)
     assert cfg.open_ticket_ai.infrastructure.logging.level == "WARNING"
@@ -37,13 +37,13 @@ open_ticket_ai:
 def test_appconfig_reads_yaml_with_cfg_alias(tmp_path, monkeypatch):
     yml = """
 cfg:
-  api_version: "2"
+  api_version: ">=2.0.0"
   plugins: ["otai-alias"]
 """
     (tmp_path / "config.yml").write_text(yml)
     monkeypatch.chdir(tmp_path)
     cfg = AppConfig()
-    assert cfg.open_ticket_ai.api_version == "2"
+    assert str(cfg.open_ticket_ai.api_version) == ">=2.0.0"
     assert cfg.open_ticket_ai.plugins == ["otai-alias"]
 
 
@@ -62,11 +62,11 @@ open_ticket_ai:
     (tmp_path / "config.yml").write_text(yml)
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("OPEN_TICKET_AI__INFRASTRUCTURE__LOGGING__LEVEL", "ERROR")
-    monkeypatch.setenv("OPEN_TICKET_AI__API_VERSION", "3")
-    monkeypatch.setenv("OPEN_TICKET_AI__API_VERSION", "3")
+    monkeypatch.setenv("OPEN_TICKET_AI__API_VERSION", ">=3.0.0")
+    monkeypatch.setenv("OPEN_TICKET_AI__API_VERSION", ">=3.0.0")
     cfg = AppConfig()
     assert cfg.open_ticket_ai.plugins == ["otai-yaml-a", "otai-yaml-b"]
-    assert cfg.open_ticket_ai.api_version == "3"
+    assert str(cfg.open_ticket_ai.api_version) == ">=3.0.0"
     assert cfg.open_ticket_ai.infrastructure.logging.level == "ERROR"
     assert cfg.open_ticket_ai.orchestrator.id == "orch-yaml"
     assert cfg.open_ticket_ai.orchestrator.use == "core:CompositePipe"

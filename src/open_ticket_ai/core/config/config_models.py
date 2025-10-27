@@ -29,7 +29,7 @@ class PluginConfig(BaseModel):
 
 class OpenTicketAIConfig(BaseModel):
     api_version: VersionSpecifier = Field(
-        default="1",
+        default=">=1.0.0",
         description="API version of the OpenTicketAI application for compatibility and feature management.",
     )
     plugins: list[str] = Field(
