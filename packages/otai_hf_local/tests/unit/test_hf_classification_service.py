@@ -6,7 +6,7 @@ from otai_base.ai_classification_services.classification_models import Classific
 from packages.otai_hf_local.src.otai_hf_local.hf_classification_service import HFClassificationService
 
 
-def test_classify_returns_correct_result(logger_factory):
+def test_classify_forwards_request_token_and_returns_result(logger_factory):
     config = InjectableConfig(id="test-hf-service")
     mock_pipeline = MagicMock()
     mock_get_pipeline = MagicMock(return_value=mock_pipeline)
@@ -26,6 +26,22 @@ def test_classify_returns_correct_result(logger_factory):
     assert result.confidence == 0.99  # noqa: PLR2004
     mock_get_pipeline.assert_called_once_with("test-model", "test-token")
     mock_pipeline.assert_called_once_with("This is a test text", truncation=True)
+
+
+def test_classify_uses_configured_token_when_request_missing(logger_factory):
+    config = InjectableConfig(id="test-hf-service", params={"api_token": "configured-token"})
+    mock_pipeline = MagicMock(return_value=[{"label": "config-label", "score": 0.75}])
+    mock_get_pipeline = MagicMock(return_value=mock_pipeline)
+    service = HFClassificationService(config, logger_factory, get_pipeline=mock_get_pipeline)
+
+    request = ClassificationRequest(text="Configured token", model_name="config-model", api_token=None)
+
+    result = service.classify(request)
+
+    assert result.label == "config-label"
+    assert result.confidence == 0.75  # noqa: PLR2004
+    mock_get_pipeline.assert_called_once_with("config-model", "configured-token")
+    mock_pipeline.assert_called_once_with("Configured token", truncation=True)
 
 
 @pytest.mark.asyncio
