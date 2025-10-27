@@ -1,4 +1,6 @@
----
+show-on-news: true
+toast_message: New Release: Open Ticket AI 1.4.1 — Explore the production-ready platform
+image: https://softoft.sirv.com/Images/open-ticket-ai/releases/1-4-hero.jpg
 title: Open Ticket AI 1.4.1 Release - The First Major Production Release
 description: Discover Open Ticket AI 1.4.1, the first production-ready release featuring powerful plugin architecture, flexible pipelines, dynamic configuration, and commercial plugin support.
 date: 2025-10-27

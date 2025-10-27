@@ -6,6 +6,7 @@ import './styles/index.css'
 
 import {createI18n, useI18n} from 'vue-i18n'
 import enMessages from '../../docs_src/en/messages'
+import Layout from './Layout.vue'
 
 const i18n = createI18n({
     locale: 'en',
@@ -15,13 +16,14 @@ const i18n = createI18n({
 
 export default {
     extends: DefaultTheme,
-    Layout: () => h(DefaultTheme.Layout),
+    Layout: () => h(Layout),
     enhanceApp({app}) {
         app.use(i18n)
         app.component('ProductCards', defineAsyncComponent(() => import('../components/product/ProductCards.vue')))
         app.component('OTAIPredictionDemo', defineAsyncComponent(() => import('../components/predictionDemo/OTAIPredictionDemo.vue')))
         app.component('ServicePackages', defineAsyncComponent(() => import('../components/product/ServicePackages.vue')))
         app.component('SupportPlans', defineAsyncComponent(() => import('../components/product/SupportPlans.vue')))
+        app.component('LatestNews', defineAsyncComponent(() => import('../components/news/LatestNews.vue')))
         app.component('AppTabs', defineAsyncComponent(() => import('../components/core/basic/Tabs.vue')))
         app.component('Table', defineAsyncComponent(() => import('../components/core/table/Table.vue')))
         app.component('Row', defineAsyncComponent(() => import('../components/core/table/Row.vue')))
