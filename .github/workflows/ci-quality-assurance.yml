@@ -33,8 +33,8 @@ jobs:
       - id: ruff_fix
         name: Lint and auto-fix with ruff
         run: |
-          uv run ruff format .
-          uv run ruff check . --fix
+          uv run ruff format --check src packages tests
+          uv run ruff check src packages tests --fix
         continue-on-error: true
 
       - id: autocmt
