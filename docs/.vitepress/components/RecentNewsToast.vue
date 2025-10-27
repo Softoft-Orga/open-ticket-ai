@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed} from 'vue'
+import {computed, onMounted, onUnmounted, ref} from 'vue'
 import {useNewsArticles} from '../composables/useNewsArticles'
 
 const {mostRecentNewsArticle, isMostRecentNewsRecentlyPublished} = useNewsArticles()
@@ -14,16 +14,41 @@ const recentArticle = computed(() => {
   }
   return article
 })
+
+const toastRef = ref<HTMLElement | null>(null)
+
+const updateToastHeight = () => {
+  if (toastRef.value) {
+    const height = toastRef.value.offsetHeight
+    document.documentElement.style.setProperty('--toast-height', `${height}px`)
+  } else {
+    document.documentElement.style.setProperty('--toast-height', '0px')
+  }
+}
+
+onMounted(() => {
+  updateToastHeight()
+  window.addEventListener('resize', updateToastHeight)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateToastHeight)
+  document.documentElement.style.setProperty('--toast-height', '0px')
+})
 </script>
 
 <template>
-  <div v-if="recentArticle" aria-live="polite" class="recent-news-toast" role="status">
+  <div v-if="recentArticle" ref="toastRef" aria-live="polite" class="recent-news-toast" role="status">
     <a :href="recentArticle.link" class="recent-news-toast__link">{{ recentArticle.toastMessage }}</a>
   </div>
 </template>
 
 <style scoped>
 .recent-news-toast {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
@@ -32,6 +57,7 @@ const recentArticle = computed(() => {
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(100, 108, 255, 0.25);
+  z-index: 100;
 }
 
 .recent-news-toast__link {

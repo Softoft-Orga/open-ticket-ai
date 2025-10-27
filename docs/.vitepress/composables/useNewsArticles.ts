@@ -15,25 +15,27 @@ export interface NewsArticle {
 
 export const useNewsArticles = () => {
     const allArticles = computed(() => {
-        return blogPosts.map(post => {
-            const dateTime = new Date(post.date)
-            return {
-                title: post.title,
-                description: post.description,
-                link: post.url,
-                date: post.date,
-                dateTime,
-                formattedDate: dateTime.toISOString().slice(0, 10),
-                image: post.image || '',
-                toastMessage: post.toast_message || '',
-                showOnNews: post['show-on-news'] || false
-            }
-        })
+        return blogPosts
+            .filter(post => post.date) // Filter out posts without a date
+            .map(post => {
+                const dateTime = new Date(post.date)
+                return {
+                    title: post.title,
+                    description: post.description,
+                    link: post.url,
+                    date: post.date,
+                    dateTime,
+                    formattedDate: dateTime.toISOString().slice(0, 10),
+                    image: post.image || '',
+                    toastMessage: post.toast_message || '',
+                    showOnNews: post['show-on-news'] || false
+                }
+            })
     })
 
     const newsArticles = computed(() =>
         allArticles.value.filter(article =>
-            article.showOnNews && article.image && article.toastMessage
+            article.showOnNews && article.image && article.toastMessage && !isNaN(article.dateTime.getTime())
         )
     )
 
