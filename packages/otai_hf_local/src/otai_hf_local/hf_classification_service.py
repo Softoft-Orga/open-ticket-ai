@@ -61,9 +61,7 @@ class HFClassificationService(Injectable[HFClassificationServiceParams]):
         classification_request = classification_request.model_copy(
             update={"api_token": classification_request.api_token or self._params.api_token}
         )
-        self._logger.info(
-            f"Classification started for model {classification_request.model_name}"
-        )
+        self._logger.info(f"Classification started for model {classification_request.model_name}")
         classify: Pipeline = self._get_pipeline(classification_request.model_name, classification_request.api_token)
 
         classifications: Any = classify(classification_request.text, truncation=True)
