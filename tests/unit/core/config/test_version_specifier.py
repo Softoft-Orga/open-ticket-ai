@@ -19,9 +19,7 @@ class TestVersionSpecifierFormats:
             ("==1.*", True, "==1.*"),
         ],
     )
-    def test_version_specifier_validation(
-            self, spec: str, expected_valid: bool, expected_normalized: str | None
-    ):
+    def test_version_specifier_validation(self, spec: str, expected_valid: bool, expected_normalized: str | None):
         if expected_valid:
             result = SpecifierSet(spec)
             assert str(result) == expected_normalized
