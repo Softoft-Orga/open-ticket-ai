@@ -45,16 +45,18 @@ def bump(ver: str, kind: Literal["major", "minor", "patch"]) -> str:
 
 @App.command()
 def main(
-    kind: Literal["major", "minor", "patch"] = "patch",
-    push: bool = False,
-    allow_dirty: bool = False,
-    start: str = "v0.1.0",
+        kind: Literal["major", "minor", "patch"] = "patch",
+        push: bool = False,
+        allow_dirty: bool = False,
+        start: str = "v0.1.0",
 ) -> None:
     ensure_repo_root()
     ensure_clean(allow_dirty)
     current = latest_tag() or start
     new = bump(current, kind)
     run(["git", "tag", "-a", new, "-m", new])
+    if new not in run(["git", "tag", "--list"]).splitlines():
+        raise RuntimeError(f"Tag {new} was not created")
     if push:
         run(["git", "push", "origin", new])
     print(new)
