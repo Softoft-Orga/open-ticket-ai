@@ -45,7 +45,7 @@ jobs:
       - uses: docker/login-action@v3
         continue-on-error: true
         with:
-          username: softotobo
+          username: openticketai
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - id: tags
