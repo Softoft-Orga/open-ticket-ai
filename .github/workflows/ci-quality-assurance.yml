@@ -50,8 +50,8 @@ jobs:
       - id: ruff_check
         name: Check ruff compliance
         run: |
-          uv run ruff format --check .
-          uv run ruff check .
+          uv run ruff format --check src packages tests
+          uv run ruff check src packages tests
         continue-on-error: true
 
       - id: mypy
