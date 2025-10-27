@@ -2,7 +2,14 @@ FROM ghcr.io/astral-sh/uv:python3.14-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    UV_LINK_MODE=copy
+    UV_LINK_MODE=copy \
+    DEBIAN_FRONTEND=noninteractive
+
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y autoremove && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -17,5 +24,4 @@ RUN useradd -m -u 10001 app && chown -R app:app /app
 USER app
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD python -c "import open_ticket_ai; print('ok')"
-
 CMD ["uv", "run", "-m", "open_ticket_ai.main"]
