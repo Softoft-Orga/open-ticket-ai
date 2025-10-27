@@ -45,10 +45,10 @@ def bump(ver: str, kind: Literal["major", "minor", "patch"]) -> str:
 
 @App.command()
 def main(
-        kind: Literal["major", "minor", "patch"] = "patch",
-        push: bool = False,
-        allow_dirty: bool = False,
-        start: str = "v0.1.0",
+    kind: Literal["major", "minor", "patch"] = "patch",
+    push: bool = False,
+    allow_dirty: bool = False,
+    start: str = "v0.1.0",
 ) -> None:
     ensure_repo_root()
     ensure_clean(allow_dirty)
