@@ -28,7 +28,7 @@ class PluginConfig(BaseModel):
 
 
 class OpenTicketAIConfig(BaseModel):
-    api_version: VersionSpecifier = Field(
+    api_version: VersionSpecifier = Field(  # type: ignore[assignment]
         default=">=1.0.0",
         description="API version of the OpenTicketAI application for compatibility and feature management.",
     )
