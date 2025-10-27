@@ -28,6 +28,10 @@ export default createContentLoader('en/blog/**/*.md', {
             .sort((a, b) => {
                 const dateA = new Date(a.date).getTime()
                 const dateB = new Date(b.date).getTime()
+                // Handle invalid dates by treating them as oldest
+                if (isNaN(dateA) && isNaN(dateB)) return 0
+                if (isNaN(dateA)) return 1
+                if (isNaN(dateB)) return -1
                 return dateB - dateA
             })
     }
