@@ -10,8 +10,11 @@ from otobo_znuny.domain_models.ticket_models import (
 )
 
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
-from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedNote, \
-    UnifiedTicket
+from open_ticket_ai.core.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedNote,
+    UnifiedTicket,
+)
 from otai_otobo_znuny.models import (
     RenderedOTOBOZnunyTSServiceParams,
     otobo_ticket_to_unified_ticket,

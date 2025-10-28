@@ -29,6 +29,14 @@ from open_ticket_ai.core.template_rendering.template_renderer import (
     TemplateRenderer,
     TemplateRenderError,
 )
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
+from open_ticket_ai.core.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedEntity,
+    UnifiedNote,
+    UnifiedTicket,
+    UnifiedTicketBase,
+)
 
 __all__ = [
     "AppConfig",
@@ -54,5 +62,11 @@ __all__ = [
     "StrictBaseModel",
     "TemplateRenderError",
     "TemplateRenderer",
+    "TicketSearchCriteria",
+    "TicketSystemService",
+    "UnifiedEntity",
+    "UnifiedNote",
+    "UnifiedTicket",
+    "UnifiedTicketBase",
     "WrongConfigError",
 ]

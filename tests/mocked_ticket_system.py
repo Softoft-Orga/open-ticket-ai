@@ -4,8 +4,11 @@ from typing import Any, ClassVar
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
-from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedNote, \
-    UnifiedTicket
+from open_ticket_ai.core.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedNote,
+    UnifiedTicket,
+)
 
 
 class MockedTicketSystem(TicketSystemService):

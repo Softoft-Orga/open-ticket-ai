@@ -13,8 +13,10 @@ from transformers import (
 )
 
 from open_ticket_ai import Injectable, InjectableConfig, LoggerFactory, StrictBaseModel
-from open_ticket_ai.core.ai_classification_services.classification_models import ClassificationRequest, \
-    ClassificationResult
+from open_ticket_ai.core.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
 
 
 @lru_cache(maxsize=16)
