@@ -61,16 +61,30 @@ Explore [Configuration & Template Rendering](../users/config_rendering.md) for d
 
 Get started in minutes:
 
-```bash
+::: code-group
+
+```bash [uv (Recommended)]
 # Install uv package manager
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install Open Ticket AI
-uv pip install open-ticket-ai
+# Install Open Ticket AI with all plugins
+uv pip install open-ticket-ai[all]
 
-# Add plugins as needed
-uv add otai-otobo-znuny otai-hf-local
+# Or install plugins individually
+uv pip install open-ticket-ai
+uv pip install otai-otobo-znuny otai-hf-local
 ```
+
+```bash [pip]
+# Install Open Ticket AI with all plugins
+pip install open-ticket-ai[all]
+
+# Or install plugins individually
+pip install open-ticket-ai
+pip install otai-otobo-znuny otai-hf-local
+```
+
+:::
 
 See the full [Installation Guide](../guides/installation.md) for system requirements and deployment
 options.

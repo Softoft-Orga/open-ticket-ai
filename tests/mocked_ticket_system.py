@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from otai_base.ticket_system_integration.ticket_system_service import TicketSystemService
-from otai_base.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedNote, UnifiedTicket
-
 from open_ticket_ai.core.base_model import StrictBaseModel
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
+from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria, UnifiedNote, \
+    UnifiedTicket
 
 
 class MockedTicketSystem(TicketSystemService):
@@ -40,7 +40,7 @@ class MockedTicketSystem(TicketSystemService):
             for ticket in self._tickets.values()
             if self._matches_criteria(ticket, criteria)
         ]
-        return results[criteria.offset : criteria.offset + criteria.limit]
+        return results[criteria.offset: criteria.offset + criteria.limit]
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         for ticket in self._tickets.values():

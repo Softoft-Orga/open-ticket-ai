@@ -1,11 +1,11 @@
 from typing import Any, ClassVar
 
-from open_ticket_ai import StrictBaseModel
-from open_ticket_ai.core.pipes.pipe_models import PipeResult
 from pydantic import Field
 
+from open_ticket_ai import StrictBaseModel
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
+from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
 from otai_base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
-from otai_base.ticket_system_integration.unified_models import TicketSearchCriteria
 
 
 class FetchTicketsParams(StrictBaseModel):

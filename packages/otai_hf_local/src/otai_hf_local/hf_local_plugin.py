@@ -1,6 +1,6 @@
 from open_ticket_ai import Injectable, Plugin
 
-from .hf_classification_service import HFClassificationService
+from otai_hf_local.hf_classification_service import HFClassificationService
 
 
 class HFLocalPlugin(Plugin):

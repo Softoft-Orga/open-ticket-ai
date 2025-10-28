@@ -4,8 +4,6 @@ from collections.abc import Callable
 from functools import lru_cache
 from typing import Any, ClassVar
 
-from open_ticket_ai import Injectable, InjectableConfig, LoggerFactory, StrictBaseModel
-from otai_base.ai_classification_services.classification_models import ClassificationRequest, ClassificationResult
 from pydantic import BaseModel, Field
 from transformers import (
     AutoModelForSequenceClassification,
@@ -13,6 +11,10 @@ from transformers import (
     Pipeline,
     pipeline,
 )
+
+from open_ticket_ai import Injectable, InjectableConfig, LoggerFactory, StrictBaseModel
+from open_ticket_ai.core.ai_classification_services.classification_models import ClassificationRequest, \
+    ClassificationResult
 
 
 @lru_cache(maxsize=16)
@@ -44,12 +46,12 @@ class HFClassificationService(Injectable[HFClassificationServiceParams]):
     ParamsModel: ClassVar[type[BaseModel]] = HFClassificationServiceParams
 
     def __init__(
-        self,
-        config: InjectableConfig,
-        logger_factory: LoggerFactory,
-        get_pipeline: GetPipelineFunc = _get_hf_pipeline,
-        *args: Any,
-        **kwargs: Any,
+            self,
+            config: InjectableConfig,
+            logger_factory: LoggerFactory,
+            get_pipeline: GetPipelineFunc = _get_hf_pipeline,
+            *args: Any,
+            **kwargs: Any,
     ):
         super().__init__(config, logger_factory, *args, **kwargs)
         self._get_pipeline = get_pipeline

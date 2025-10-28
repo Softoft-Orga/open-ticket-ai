@@ -52,7 +52,7 @@ Download and install [Docker Desktop](https://www.docker.com/products/docker-des
 
 Create a new folder for Open Ticket AI and create two files inside it:
 
-**1. Create `docker-compose.yml`:**
+**1. Create `compose.yml`:**
 
 ```yaml
 services:
@@ -60,7 +60,7 @@ services:
     image: openticketai/engine:latest
     restart: "unless-stopped"
     environment:
-      - OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__PASSWORD=1234
+      OTAI_TS_PASSWORD: "${OTAI_TS_PASSWORD}"
     volumes:
       - ./config.yml:/app/config.yml:ro
 ```
@@ -92,11 +92,11 @@ open_ticket_ai:
       params:
         base_url: "https://your-ticket-system.com"
         username: "your-username"
-        password: "${OTAI_OPEN_TICKET_PASSWORD}"
+        password: "${OTAI_TS_PASSWORD}"
 
   orchestrator:
     id: "main_orchestrator"
-    use: "core:CompositePipe"
+    use: "core:someOrchestrator"
     params:
       pipes:
         - id: "fetch_tickets"

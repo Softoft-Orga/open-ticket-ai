@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 from open_ticket_ai import Injectable
-
 from .unified_models import (
     TicketSearchCriteria,
     UnifiedNote,

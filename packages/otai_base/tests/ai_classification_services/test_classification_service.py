@@ -1,8 +1,8 @@
-from otai_base.ai_classification_services.classification_models import (
+from open_ticket_ai.core.ai_classification_services.classification_models import (
     ClassificationRequest,
     ClassificationResult,
 )
-from otai_base.ai_classification_services.classification_service import ClassificationService
+from open_ticket_ai.core.ai_classification_services.classification_service import ClassificationService
 
 SYNC_CONFIDENCE = 0.95
 ASYNC_CONFIDENCE = 0.85

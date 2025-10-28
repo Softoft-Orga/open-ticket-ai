@@ -1,7 +1,5 @@
-# language: python
 from open_ticket_ai import Injectable, Plugin
-
-from . import OTOBOZnunyTicketSystemService
+from otai_otobo_znuny.oto_znuny_ts_service import OTOBOZnunyTicketSystemService
 
 
 class OTOBOZnunyPlugin(Plugin):
