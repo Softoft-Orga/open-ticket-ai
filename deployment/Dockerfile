@@ -1,29 +1,23 @@
-FROM ghcr.io/astral-sh/uv:python3.14-bookworm-slim
+FROM python:3.14-alpine
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    UV_LINK_MODE=copy \
-    DEBIAN_FRONTEND=noninteractive
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-RUN --mount=type=cache,target=/var/cache/apt \
-    apt-get update && \
-    apt-get purge -y --auto-remove --allow-change-held-packages \
-        libexpat1-dev libexpat1-dev:amd64 || true && \
-    apt-get install -y --no-install-recommends libexpat1 && \
-    apt-get install -y --only-upgrade libexpat1 && \
-    rm -rf /var/lib/apt/lists/* /usr/share/doc/libexpat1-dev || true
+RUN apk add --no-cache expat ca-certificates git
 
-RUN --mount=type=cache,id=uvcache,sharing=locked,target=/root/.cache/uv \
-    uv pip install --system \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    apk add --no-cache --virtual .build-deps build-base rust cargo && \
+    pip install \
       open-ticket-ai \
       otai-base \
       otai-hf-local \
-      otai-otobo-znuny
+      otai-otobo-znuny && \
+    apk del .build-deps
 
-RUN useradd -m -u 10001 app && chown -R app:app /app
+RUN adduser -D -u 10001 app && chown -R app:app /app
 USER app
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD python -c "import open_ticket_ai; print('ok')"
-CMD ["uv", "run", "-m", "open_ticket_ai.main"]
+CMD ["python","-m","open_ticket_ai.main"]
