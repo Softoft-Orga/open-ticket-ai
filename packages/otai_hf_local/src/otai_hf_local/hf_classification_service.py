@@ -4,18 +4,17 @@ from collections.abc import Callable
 from functools import lru_cache
 from typing import Any, ClassVar
 
+from open_ticket_ai import Injectable, InjectableConfig, LoggerFactory, StrictBaseModel
+from open_ticket_ai.core.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
 from pydantic import BaseModel, Field
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
     Pipeline,
     pipeline,
-)
-
-from open_ticket_ai import Injectable, InjectableConfig, LoggerFactory, StrictBaseModel
-from open_ticket_ai.core.ai_classification_services.classification_models import (
-    ClassificationRequest,
-    ClassificationResult,
 )
 
 

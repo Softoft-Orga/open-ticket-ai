@@ -1,6 +1,4 @@
 import pytest
-from pydantic import ValidationError
-
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedTicket
@@ -8,6 +6,7 @@ from packages.otai_base.src.otai_base.pipes.ticket_system_pipes import (
     UpdateTicketParams,
     UpdateTicketPipe,
 )
+from pydantic import ValidationError
 
 pytestmark = [pytest.mark.unit]
 

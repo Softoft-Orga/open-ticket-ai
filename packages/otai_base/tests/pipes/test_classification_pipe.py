@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from unittest.mock import MagicMock
 
 import pytest
-
 from open_ticket_ai.core.ai_classification_services.classification_models import ClassificationResult
 from open_ticket_ai.core.ai_classification_services.classification_service import ClassificationService
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
+
 from otai_base.pipes.classification_pipe import ClassificationPipe
 
 CONFIDENCE_URGENT = 0.95

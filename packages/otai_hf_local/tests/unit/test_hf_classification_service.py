@@ -1,7 +1,6 @@
 from unittest.mock import MagicMock
 
 import pytest
-
 from open_ticket_ai import InjectableConfig
 from open_ticket_ai.core.ai_classification_services.classification_models import (
     ClassificationRequest,

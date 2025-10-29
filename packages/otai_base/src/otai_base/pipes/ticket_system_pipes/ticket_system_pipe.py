@@ -1,10 +1,9 @@
 from abc import ABC
 from typing import Any
 
-from pydantic import BaseModel
-
 from open_ticket_ai import Pipe
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
+from pydantic import BaseModel
 
 
 class TicketSystemPipe[ParamsT: BaseModel](Pipe[ParamsT], ABC):

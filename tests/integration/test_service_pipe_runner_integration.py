@@ -1,4 +1,7 @@
 import pytest
+from otai_base.pipes.composite_pipe import CompositePipe
+from otai_base.pipes.expression_pipe import ExpressionParams, ExpressionPipe
+from otai_base.pipes.ticket_system_pipes import AddNoteParams, AddNotePipe, FetchTicketsParams, FetchTicketsPipe
 
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
@@ -14,9 +17,6 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedNote,
     UnifiedTicket,
 )
-from otai_base.pipes.composite_pipe import CompositePipe
-from otai_base.pipes.expression_pipe import ExpressionParams, ExpressionPipe
-from otai_base.pipes.ticket_system_pipes import AddNoteParams, AddNotePipe, FetchTicketsParams, FetchTicketsPipe
 from tests.mocked_ticket_system import MockedTicketSystem
 
 

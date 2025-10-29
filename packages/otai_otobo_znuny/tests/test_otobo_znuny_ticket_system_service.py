@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 
 import pytest
-from otobo_znuny.util.otobo_errors import OTOBOError
-
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote, UnifiedTicket
+from otobo_znuny.util.otobo_errors import OTOBOError
 
 
 @dataclass(frozen=True)

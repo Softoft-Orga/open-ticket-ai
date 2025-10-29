@@ -1,12 +1,11 @@
 import pytest
-from pydantic import ValidationError
-
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
 from packages.otai_base.src.otai_base.pipes.ticket_system_pipes import (
     AddNoteParams,
     AddNotePipe,
 )
+from pydantic import ValidationError
 
 EXPECTED_TICKET_NOTE_COUNT = 2
 
