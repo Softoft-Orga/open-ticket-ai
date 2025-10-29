@@ -1,6 +1,6 @@
 services:
   open-ticket-ai:
-    image: openticketai/engine:1.4.8
+    image: openticketai/engine:1.4.9
     restart: "unless-stopped"
     environment:
       OTAI_OTOBO_DEMO_PASSWORD: "${OTAI_OTOBO_DEMO_PASSWORD}"
