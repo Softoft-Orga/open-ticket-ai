@@ -65,6 +65,10 @@ jobs:
             echo "${{ env.DOCKER_REPOSITORY }}:latest"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker-container
+          install: true
 
       - uses: docker/build-push-action@v6
         with:
