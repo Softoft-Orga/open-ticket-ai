@@ -75,7 +75,5 @@ jobs:
           context: ./deployment
           push: true
           tags: ${{ steps.tags.outputs.list }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           provenance: false
           sbom: false
