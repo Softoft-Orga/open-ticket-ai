@@ -1,30 +1,24 @@
-# syntax=docker/dockerfile:1.7
+FROM ghcr.io/astral-sh/uv:python3.14-bookworm
 
-FROM ghcr.io/astral-sh/uv:python3.14-bookworm AS wheels
-ENV UV_LINK_MODE=copy PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
-WORKDIR /w
-RUN --mount=type=cache,id=uvcache,sharing=locked,target=/root/.cache/uv \
-    uv pip wheel -w /wheels \
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    UV_LINK_MODE=copy \
+    DEBIAN_FRONTEND=noninteractive
+
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y autoremove && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --system \
       open-ticket-ai \
       otai-base \
       otai-hf-local \
       otai-otobo-znuny
-
-FROM ghcr.io/astral-sh/uv:python3.14-bookworm
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_LINK_MODE=copy DEBIAN_FRONTEND=noninteractive
-WORKDIR /app
-
-# Remove dev headers; ensure runtime lib is on the latest security build
-RUN --mount=type=cache,target=/var/cache/apt \
-    apt-get update && \
-    apt-get purge -y libexpat1-dev || true && \
-    apt-get install -y --no-install-recommends libexpat1 && \
-    rm -rf /var/lib/apt/lists/*
-
-COPY --from=wheels /wheels /wheels
-RUN --mount=type=cache,id=uvcache,sharing=locked,target=/root/.cache/uv \
-    uv pip install --system --no-index --find-links=/wheels \
-      open-ticket-ai otai-base otai-hf-local otai-otobo-znuny
 
 RUN useradd -m -u 10001 app && chown -R app:app /app
 USER app
