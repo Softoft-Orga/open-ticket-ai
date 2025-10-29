@@ -28,7 +28,12 @@ jobs:
 
       - id: meta
         run: |
-          echo "version=$(python scripts/resolve_version.py)" >> "$GITHUB_OUTPUT"
+          V=$(python scripts/resolve_version.py)
+          if [[ ! "$V" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Version '$V' is not a valid semantic version (x.y.z)"
+            exit 1
+          fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
 
       - run: |
           rm -rf dist
@@ -52,19 +57,15 @@ jobs:
         shell: bash
         run: |
           V="${{ steps.meta.outputs.version }}"
-          if [[ "$V" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            IFS='.' read -r MAJ MIN PAT <<<"$V"
-            {
-              echo "list<<EOF"
-              echo "${{ env.DOCKER_REPOSITORY }}:${V}"
-              echo "${{ env.DOCKER_REPOSITORY }}:${MAJ}.${MIN}"
-              echo "${{ env.DOCKER_REPOSITORY }}:${MAJ}"
-              echo "${{ env.DOCKER_REPOSITORY }}:latest"
-              echo "EOF"
-            } >> "$GITHUB_OUTPUT"
-          else
-            echo "list=${{ env.DOCKER_REPOSITORY }}:${V}" >> "$GITHUB_OUTPUT"
-          fi
+          IFS='.' read -r MAJ MIN PAT <<<"$V"
+          {
+            echo "list<<EOF"
+            echo "${{ env.DOCKER_REPOSITORY }}:${V}"
+            echo "${{ env.DOCKER_REPOSITORY }}:${MAJ}.${MIN}"
+            echo "${{ env.DOCKER_REPOSITORY }}:${MAJ}"
+            echo "${{ env.DOCKER_REPOSITORY }}:latest"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - uses: docker/build-push-action@v6
         with:

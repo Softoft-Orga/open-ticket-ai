@@ -1,6 +1,11 @@
 from abc import ABC, abstractmethod
 
-from open_ticket_ai import Injectable, TicketSearchCriteria, UnifiedNote, UnifiedTicket
+from open_ticket_ai.core.injectables.injectable import Injectable
+from open_ticket_ai.core.ticket_system_integration.unified_models import (
+    TicketSearchCriteria,
+    UnifiedNote,
+    UnifiedTicket,
+)
 
 
 class TicketSystemService(Injectable, ABC):
