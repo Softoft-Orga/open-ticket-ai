@@ -3,13 +3,16 @@
 Open Ticket AI is an intelligent ticket classification and routing system that uses machine learning to automatically
 categorize and prioritize support tickets.
 
+- User documentation main page: https://open-ticket-ai.com
+- User installation guide: https://open-ticket-ai.com/users/installation
+- Developer documentation: https://open-ticket-ai.com/developers/
+
 ## CI/CD Automation
 
 The repository includes automated workflows for handling Copilot-generated Pull Requests. When GitHub Copilot creates a
 PR that fails CI checks, the workflow automatically labels it with `retry-needed` and `copilot-pr`, posts a comment
 explaining the failures, and closes the PR to allow Copilot to retry with fixes. This automation only affects PRs
 created by `github-copilot[bot]` and has no impact on manually created PRs.
-AI-powered ticket processing and automation system.
 
 ## Quick Start
 
@@ -24,14 +27,22 @@ pip install open-ticket-ai otai-hf-local otai-otobo-znuny
 ## Docker
 
 ```bash
-# Core only
-docker pull ghcr.io/softoft-orga/open-ticket-ai:core-latest
-
-# With all plugins
-docker pull ghcr.io/softoft-orga/open-ticket-ai:all-latest
+docker pull openticketai/engine:latest
 ```
 
-Available variants: `core`, `hf_local`, `otobo_znuny`, `all`
+### Docker Compose
+
+```yaml
+services:
+  open-ticket-ai:
+    image: openticketai/engine:latest
+    ports:
+      - "8080:8080"
+    environment:
+      OT_AI_CONFIG: /app/config.yml
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+```
 
 ## Development
 
@@ -50,31 +61,21 @@ uv run -m pytest
 ### Create Release
 
 ```bash
-# Tag and push (triggers automatic release)
-git tag v1.0.18
-git push origin v1.0.18
+./scripts/bump_version
+git push origin <your-branch>
 ```
 
-The workflow automatically:
-
-- Sets all package versions to match
-- Builds and publishes to PyPI via OIDC
-- Builds 4 Docker image variants (multi-platform)
-
-### PyPI Setup (one-time)
-
-Configure [Trusted Publishers](https://docs.pypi.org/trusted-publishers/) for each package:
-
-- Publisher: GitHub
-- Owner: `Softoft-Orga`
-- Repository: `open-ticket-ai`
-- Workflow: `release.yml`
-
-Required for: `open-ticket-ai`, `otai-hf-local`, `otai-otobo-znuny`
+Open a pull request targeting the `main` branch after pushing your changes. The release workflow runs once the pull
+request is merged.
 
 ## Documentation
 
 Full documentation: https://open-ticket-ai.com
+
+## Contributing
+
+The easiest way to extend Open Ticket AI is by creating a plugin. Explore the developer documentation to learn how to
+build and integrate new capabilities.
 
 ## License
 
