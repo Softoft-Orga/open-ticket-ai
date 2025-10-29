@@ -1,0 +1,246 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ATC API",
+    "description": "AI Ticket Classification API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/tickets": {
+      "post": {
+        "summary": "Post training tickets!",
+        "description": "Post training tickets!",
+        "operationId": "post_tickets_tickets_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/Ticket"
+                },
+                "type": "array",
+                "title": "Tickets"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/model/train": {
+      "post": {
+        "summary": "Train the model",
+        "description": "Training the model. This will start the training process!",
+        "operationId": "train_model_model_train_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/model/status": {
+      "get": {
+        "summary": "Check the training status",
+        "description": "Check the training status of the model. If the model is not started, it will return NOT_STARTED",
+        "operationId": "check_status_model_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ticket/classify": {
+      "post": {
+        "summary": "Classify a ticket",
+        "description": "Classify a ticket based on the trained model",
+        "operationId": "classify_ticket_ticket_classify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TicketInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "StateResponse": {
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/TrainState"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "StateResponse"
+      },
+      "Ticket": {
+        "properties": {
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "priority": {
+            "type": "integer",
+            "title": "Priority"
+          },
+          "queue": {
+            "type": "string",
+            "title": "Queue"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subject",
+          "text",
+          "priority",
+          "queue"
+        ],
+        "title": "Ticket"
+      },
+      "TicketInput": {
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "title": "Priority"
+          },
+          "queue": {
+            "type": "string",
+            "title": "Queue"
+          }
+        },
+        "type": "object",
+        "required": [
+          "priority",
+          "queue"
+        ],
+        "title": "TicketInput"
+      },
+      "TrainState": {
+        "type": "string",
+        "enum": [
+          "NOT_STARTED",
+          "IN_PROGRESS",
+          "SUCCESSFULLY_FINISHED",
+          "FAILED"
+        ],
+        "title": "TrainState"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

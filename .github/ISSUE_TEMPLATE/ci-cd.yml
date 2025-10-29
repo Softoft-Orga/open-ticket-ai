@@ -1,0 +1,36 @@
+name: CI/CD Issue
+description: Propose changes to CI/CD workflows, build processes, deployments, or automation
+title: "[CI/CD] "
+labels: [ "ci-cd", "needs-triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## CI/CD Issue - Implementation Guide
+
+
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of Change
+
+  - type: textarea
+    id: impact-assessment
+    attributes:
+      label: Impact Assessment
+      description: Build time impact, breaking changes, rollback plan?
+      placeholder: |
+        Impact: +2-3 minutes to CI builds
+        Breaking: None - additive change only
+        Rollback: Revert commit and re-run workflows
+        Testing: Test in fork first with sample PRs
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Config examples, references, dependencies
+      placeholder: |
+        Reference: https://github.com/github/codeql-action
+        Example workflow step: ...

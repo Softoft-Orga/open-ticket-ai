@@ -51,6 +51,11 @@ coverage.xml
 .pytest_cache/
 cover/
 
+# Code quality reports
+ruff-report.sarif
+mypy-report.txt
+mypy-report.json
+
 # Translations
 *.mo
 *.pot
@@ -202,5 +207,27 @@ storybook-static
 .netlify
 *.env
 
-*/.vitepress/cache/
+docs/vitepress/.vitepress/cache/
 .idea
+
+# Package build directories
+packages/*/dist/
+packages/*/build/
+packages/*/*.egg-info/
+
+# Generated config files
+config.yml
+my_config.yml
+
+# Generated documentation assets
+docs/public/assets/sidecars.json
+
+# Schema files generated at root (should be in src/open_ticket_ai/extras/)
+/CONFIG_SCHEMA.md
+/config.schema.json
+# Generated schema files (created by create_json_config_schema.py)
+CONFIG_SCHEMA.md
+config.schema.json
+/docs/package-lock.json
+/docs/.vitepress/cache/
+

@@ -1,0 +1,49 @@
+_version: 1.0.x
+_class: open_ticket_ai.base.DefaultPipe
+_extends: open_ticket_ai.core.pipeline.ConfigurablePipe
+
+_title: Default Pipe
+_summary: A no-op pipe that performs no operations and returns empty state.
+_category: utility
+
+_inputs:
+  placement: flat
+  alongside: [ id, use ]
+  params: { }
+_defaults: { }
+
+_output:
+  state_enum: [ ok ]
+  description: Pipe always returns ok state with empty payload.
+  payload_schema_ref: OpenTicketAI.Pipes.Default.Result
+  examples:
+    ok:
+      state: ok
+      payload: { }
+
+_errors:
+  fail: [ ]
+  break: [ ]
+  continue: [ ]
+
+_engine_support:
+  on_failure: false
+  on_success: false
+
+_examples:
+  minimal: |
+    - id: default_step
+      use: open_ticket_ai.base.DefaultPipe
+
+  full: |
+    - id: placeholder_step
+      use: open_ticket_ai.base.DefaultPipe
+      when: "{{ context.debug_mode }}"
+
+  large: |
+    - id: debug_placeholder
+      use: open_ticket_ai.base.DefaultPipe
+      when: "{{ env.PIPELINE_DEBUG == 'true' }}"
+      steps:
+        - id: nested_default
+          use: open_ticket_ai.base.DefaultPipe

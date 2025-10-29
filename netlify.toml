@@ -1,8 +1,8 @@
 [build]
-base = "docs/vitepress_docs"
+base = "docs"
 command = "npm run docs:build"
-publish = ".vitepress/dist"
-functions = "netlify/functions"
+publish = "docs/.vitepress/dist"
+functions = "docs/netlify/functions"
 
 # --- API function (keep above catch-alls) ---
 [[redirects]]
@@ -43,11 +43,6 @@ to = "/assets/:splat"
 status = 200
 
 # --- Root language redirects ---
-[[redirects]]
-from = "/"
-to = "/de"
-status = 302
-conditions = { Language = ["de"] }
 
 [[redirects]]
 from = "/"
@@ -55,17 +50,6 @@ to = "/en"
 status = 302
 conditions = { Language = ["en"] }
 
-[[redirects]]
-from = "/"
-to = "/fr"
-status = 302
-conditions = { Language = ["fr"] }
-
-[[redirects]]
-from = "/"
-to = "/es"
-status = 302
-conditions = { Language = ["es"] }
 
 # Fallback for other languages -> English
 [[redirects]]

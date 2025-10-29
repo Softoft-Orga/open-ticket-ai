@@ -1,0 +1,115 @@
+_class: open_ticket_ai.basic_pipes.ticket_system_pipes.AddNotePipe
+_extends: open_ticket_ai.core.pipeline.BasePipe
+_title:
+    en: Add Note
+    de: Notiz hinzufügen
+_summary:
+    en: Appends a note/article to a ticket in the connected system.
+    de: Fügt einem Ticket eine Notiz/Artikel hinzu.
+_category: ticket-system
+
+_inputs:
+    config: RawTicketSystemBasePipeConfig
+    params:
+        ticket_id:
+            en: ID of the target ticket
+            de: Ticket-ID
+        body:
+            en: Text of the note
+            de: Notiztext
+        visibility:
+            en: internal|public
+            de: internal|public
+_defaults:
+    visibility: internal
+
+_output:
+    state_enum: [ ok, skipped, failed ]
+    description:
+        en: Pipe returns a state and optional payload.
+        de: Pipe liefert einen Status und optional Payload.
+    payload_schema_ref: OpenTicketAI.Pipes.AddNote.Result
+    examples:
+        ok:
+            state: ok
+            payload:
+                article_id: 12345
+        skipped:
+            state: skipped
+            payload:
+                reason: visibility_not_supported
+        failed:
+            state: failed
+            error: ticket_not_found
+
+_errors:
+    fail:
+        -   code: ticket_not_found
+            when:
+                en: Ticket ID does not exist
+                de: Ticket-ID existiert nicht
+        -   code: backend_unauthorized
+            when:
+                en: Adapter cannot authenticate
+                de: Adapter kann nicht authentifizieren
+    break:
+        -   code: config_invalid
+            when:
+                en: Required config missing or invalid type
+                de: Erforderliche Konfiguration fehlt oder falscher Typ
+    continue:
+        -   code: empty_body
+            when:
+                en: Body is empty → pipe skips
+                de: Body leer → Pipe überspringt
+        -   code: visibility_not_supported
+            when:
+                en: Adapter ignores unsupported visibility → skip
+                de: Adapter ignoriert nicht unterstützte Sichtbarkeit → skip
+
+_examples:
+    minimal: |
+        use: open_ticket_ai.basic_pipes.ticket_system_pipes.AddNotePipe
+        config:
+          ticket_system: otobo_znuny
+    full: |
+        use: open_ticket_ai.basic_pipes.ticket_system_pipes.AddNotePipe
+        when: true
+        config:
+          ticket_system: otobo_znuny
+        with:
+          ticket_id: '202501231234'
+          body: 'Investigating'
+          visibility: internal
+    large: |
+        use: open_ticket_ai.basic_pipes.ticket_system_pipes.AddNotePipe
+        when: ${ env.PIPE_ADD_NOTE_ENABLED }
+        config:
+          ticket_system: otobo_znuny
+        with:
+          ticket_id: ${ context.last_created_ticket_id }
+          body: |
+            Root cause: database connection pool exhaustion
+            Action: scaling pool to 50; adding slow query log
+          visibility: public
+
+_orchestrations:
+    -   name: Basic Routing With Notes
+        snippet: |
+            orchestrator:
+              - use: ...FetchTicketPipe
+              - use: open_ticket_ai.basic_pipes.ticket_system_pipes.AddNotePipe
+                with:
+                  ticket_id: ${ context.ticket.id }
+                  body: 'Auto-routed to L2'
+                  visibility: internal
+              - use: ...RouteTicketPipe
+    -   name: Post-Classification Feedback
+        file: examples/orchestrations/post_classification.yml
+
+_notes:
+    -   en: Visibility must be supported by the backend adapter.
+        de: Sichtbarkeit muss vom Backend-Adapter unterstützt werden.
+_related:
+    - RouteTicketPipe
+    - UpdateTicketPipe

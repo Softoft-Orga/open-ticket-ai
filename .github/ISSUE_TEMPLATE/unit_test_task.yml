@@ -1,0 +1,165 @@
+# .github/ISSUE_TEMPLATE/unit_test_task.yml
+name: "Unit Tests"
+description: Minimal, behavior-focused pytest tests (no internals, no spam)
+title: "tests: <module>"
+labels: [ "tests", "unit" ]
+
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ CRITICAL RULE: NO SOURCE CODE MODIFICATIONS ⚠️
+        
+        **This is a TEST-ONLY task. NEVER modify ANY source code (src/, packages/*/src/).**
+        
+        **If source code behavior is unclear or seems wrong:**
+        - ❌ DO NOT modify src/
+        - ❌ DO NOT fix bugs
+        - Option 1: Know the intended behavior? → Write tests for the CORRECT behavior (tests may fail, that's OK)
+        - Option 2: Don't know what it should do? → Write NO tests. Document shortly in 1–3 sentences why and close the issue.
+        
+        **Modify:** test files, `tests/fixtures/`, `tests/conftest.py`, `tests/data/`
+        If necessary write short docs in `docs/` or `README.md` only if essential.
+        
+        **PRs that touch src/ will be REJECTED.**
+        
+        ---
+        
+        ## Unit Test Task – Implementation Guide
+        
+        **How to write tests:**
+        - Create test file in appropriate location (NOT under src/)
+        - Package tests: `packages/<name>/tests/unit/test_*.py`
+        - Root tests: `tests/unit/**/test_*.py`
+        - Test PUBLIC API only – no private methods/attributes
+        - Keep tests minimal: ≤5 tests per file, ≤20 lines per test
+        
+        ### Assertion Style (flexible, not exact)
+        Do NOT assert exact strings or overly rigid structures. Tests must tolerate harmless formatting changes.
+        
+        **Strings**
+        - Prefer containment or regex, not equality:
+          ```py
+          assert "failure" in message.lower()
+          # or
+          import re
+          assert re.search(r"\bfailure\b", message, re.I)
+          ```
+        - Normalize before asserting:
+          ```py
+          def norm(s: str) -> str: return " ".join((s or "").split()).casefold()
+          assert "operation failed" in norm(message)
+          ```
+        - Exceptions:
+          ```py
+          import pytest, re
+          with pytest.raises(ValueError) as e:
+              fn()
+          assert re.search(r"\binvalid\b", str(e.value), re.I)
+          ```
+        
+        **Numbers**
+        - Use tolerances:
+          ```py
+          from pytest import approx
+          assert duration == approx(0.25, rel=1e-2, abs=1e-3)
+          ```
+        
+        **Collections / Dicts**
+        - Subset / order-insensitive checks:
+          ```py
+          assert expected_keys <= data.keys()
+          assert {"status": "ok"}.items() <= data.items()
+          assert set(items) == set(expected)  # if order irrelevant
+          ```
+        
+        **Snapshots (optional)**
+        - If used, strip dynamic fields (timestamps, IDs) and whitespace first.
+        
+        **Fixtures – CRITICAL RULES**
+        - Never create fixtures in test files
+        - Check existing fixtures first: `uv run -m pytest --fixtures`
+        - Put reusable fixtures in `tests/fixtures/<domain>.py`
+        - Workspace-wide in `tests/conftest.py`, package-specific in `packages/<name>/tests/conftest.py`
+        - Reuse: `tmp_path`, `monkeypatch`, existing `sample_*`, `mock_*`
+        - Naming: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
+        
+        **What to test**
+        - Input → output behavior with representative inputs
+        - Invariants and business rules
+        - Exactly ONE negative/error case per file
+        - Edge cases only if relevant
+        - Test intended behavior even if src/ is wrong
+        
+        **What NOT to test**
+        - Private implementation details (`_`-prefixed)
+        - Exact error messages
+        - Exact formatting/whitespace/punctuation
+        - Rigid ordering when contract doesn’t require it
+        
+        **Test isolation**
+        - No network I/O – mock/fake external calls
+        - No real FS (use `tmp_path`)
+        - Deterministic (fixed seeds/time)
+        - Tests independent
+        
+        **Quality gates (must pass)**
+        - `uv run ruff check .` – no warnings
+        - `uv run mypy .` – no errors
+        - No changes under `src/**` or `packages/*/src/**`
+        
+        **Issue is DONE when**
+        - Tests live under `tests/**` (not src/)
+        - Fixtures reused or centralized
+        - Flexible assertions used (no brittle equals)
+        - No source files modified
+        - Or: explained in 1–3 sentences why tests can’t be written and closed
+
+  - type: input
+    id: target
+    attributes:
+      label: Target module
+      description: Module to test (e.g., open_ticket_ai.core.config.config_loader)
+      placeholder: package.module
+
+  - type: textarea
+    id: behaviors
+    attributes:
+      label: Behaviors to Test
+      description: What behaviors need test coverage? Include 1 error case
+      placeholder: |
+        - Load valid YAML config and return AppConfig
+        - Handle missing config file (FileNotFoundError)
+        - Validate config schema with Pydantic
+        
+        NOTE: If unclear what the code should do, write NO tests and document in a few sentences why.
+
+  - type: textarea
+    id: implementation-plan
+    attributes:
+      label: Implementation Plan
+      description: Test file location, fixtures needed, parametrized cases?
+      placeholder: |
+        File: tests/unit/core/config/test_config_loader.py
+        
+        Check existing fixtures: uv run -m pytest --fixtures
+        Search: tests/fixtures/ directory
+        
+        Reuse or create centralized fixtures in tests/fixtures/<domain>.py
+        
+        Tests:
+        - test_load_valid_config (parametrize valid variations)
+        - test_load_missing_file (FileNotFoundError)
+        
+        FILES TO MODIFY: test files, tests/fixtures/, tests/conftest.py ONLY
+        FILES FORBIDDEN: src/**, packages/*/src/**
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Special considerations, dependencies to mock, test data needed
+      placeholder: |
+        Check existing fixtures before creating new ones:
+        uv run -m pytest --fixtures | grep <keyword>

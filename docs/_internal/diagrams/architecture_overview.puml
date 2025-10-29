@@ -1,0 +1,90 @@
+@startuml Architecture Overview - Core Concepts
+
+package "Pipeline Execution" {
+    abstract class Pipe<T> {
+        +process(ctx: PipeContext): PipeResult
+    }
+
+    class CompositePipe {
+        +process(ctx: PipeContext): PipeResult
+    }
+
+    class PipeContext {
+        +pipe_results: dict
+        +params: T
+        +parent: dict
+    }
+
+    class PipeResult {
+        +succeeded: bool
+        +data: dict
+        +message: str
+    }
+}
+
+package "Configuration" {
+    class PipeConfig {
+        +id: str
+        +use: str
+        +params: dict
+        +steps: list[PipeConfig]
+    }
+
+    class OpenTicketAIConfig {
+        +plugins: list[str]
+        +services: dict
+        +orchestrator: PipeConfig
+    }
+}
+
+package "Dependency Injection" {
+    class PipeFactory {
+        +create_pipe(config, context): Pipe
+    }
+
+    class Registry {
+        +register(id, cls)
+        +get_pipe(id): type[Pipe]
+        +get_injectable(id): type[Injectable]
+    }
+}
+
+package "Plugin System" {
+    abstract class Plugin {
+        +on_load(registry: Registry)
+    }
+
+    class PluginLoader {
+        +load_plugins()
+    }
+}
+
+abstract class TemplateRenderer {
+    +render(obj, scope): Any
+}
+
+abstract class Injectable<T> {
+    +get_params_model(): type[T]
+}
+
+' Core relationships
+Pipe -up-|> Injectable
+CompositePipe -up-|> Pipe
+Pipe -left-> PipeContext
+Pipe ...> PipeResult : returns
+Pipe ... PipeConfig
+
+' Factory relationships
+PipeFactory -down-> Pipe : creates
+PipeFactory *-right-> Registry : queries
+PipeFactory *-down-> TemplateRenderer : uses
+
+' Plugin relationships
+Plugin ... Registry
+PluginLoader --> Plugin : loads
+
+' Config relationships
+OpenTicketAIConfig --> PipeConfig
+PipeConfig --> PipeConfig : nested steps
+
+@enduml

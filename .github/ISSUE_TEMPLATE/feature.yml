@@ -1,0 +1,76 @@
+name: Feature Request (General)
+description: Suggest a new feature or enhancement for Open Ticket AI (not a specific pipe/plugin)
+title: "[Feature] "
+labels: [ "enhancement", "needs-triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Feature Request - Implementation Guide
+        
+        **How to implement:**
+        - Write clean, type-annotated Python 3.13 code using modern typing (PEP 695)
+        - Follow composition over inheritance; use dependency injection (Injector)
+        - Use Pydantic v2 for data models with explicit type annotations
+        - No inline code comments - code should be self-documenting
+        - Place code in appropriate package under `src/open_ticket_ai/` or `packages/`
+        
+        **Testing requirements:**
+        - Write unit tests in `packages/<name>/tests/unit/` for package code
+        - Write integration tests in `packages/<name>/tests/integration/` if touching I/O or package boundaries
+        - Write e2e tests in root `tests/e2e/` if testing full application flow
+        - Use existing fixtures from conftest.py - check with `uv run -m pytest --fixtures`
+        - Keep tests minimal: ≤5 tests per file, ≤20 lines per test, use parametrize
+        - No tests under any `src/` directory
+        
+        **Quality gates (must pass):**
+        - `uv run ruff check .` - no warnings allowed
+        - `uv run mypy .` - no errors allowed
+        - `uv run -m pytest` - all tests must pass
+        
+        **Issue is DONE when:**
+        - Feature is implemented with proper types and DI
+        - Tests are written and passing
+        - All quality gates pass
+        - No code under `src/**/tests`
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: What feature should be implemented?
+      placeholder: "Add support for hot-reloading configuration changes without restarting the orchestrator..."
+
+  - type: textarea
+    id: implementation-approach
+    attributes:
+      label: Implementation Approach
+      description: How should this be coded? Which modules/classes?
+      placeholder: |
+        - Add FileWatcher class in src/open_ticket_ai/core/config/file_watcher.py
+        - Integrate with ConfigLoader to reload on file changes
+        - Update Orchestrator to accept config updates
+        - Use watchdog library for file monitoring
+
+  - type: textarea
+    id: test-plan
+    attributes:
+      label: Test Plan
+      description: What tests should be written?
+      placeholder: |
+        Unit tests in tests/unit/core/config/test_file_watcher.py:
+        - Test file change detection
+        - Test config reload trigger
+        - Test error handling for invalid configs
+        
+        Integration test in tests/integration/:
+        - Test full reload cycle with real config file
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Dependencies, config examples, edge cases
+      placeholder: |
+        Dependencies: Add watchdog to pyproject.toml
+        Edge case: Handle config errors during reload gracefully

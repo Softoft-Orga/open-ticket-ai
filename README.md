@@ -1,82 +1,82 @@
-# Open Ticket AI Project Summary
+# Open Ticket AI
 
-This document provides a high-level technical overview of the Open Ticket AI system, based on the
-provided source code documentation. The system is designed for the automated classification and
-processing of support tickets.
+Open Ticket AI is an intelligent ticket classification and routing system that uses machine learning to automatically
+categorize and prioritize support tickets.
 
-## 1. Core Architecture
+- User documentation main page: https://open-ticket-ai.com
+- User installation guide: https://open-ticket-ai.com/users/installation
+- Developer documentation: https://open-ticket-ai.com/developers/
 
-The application is built around a modular, configurable **pipeline architecture**. It operates as a
-long-running, scheduled service that continuously processes tickets from integrated systems.
+## CI/CD Automation
 
-The main components of this architecture are:
+The repository includes automated workflows for handling Copilot-generated Pull Requests. When GitHub Copilot creates a
+PR that fails CI checks, the workflow automatically labels it with `retry-needed` and `copilot-pr`, posts a comment
+explaining the failures, and closes the PR to allow Copilot to retry with fixes. This automation only affects PRs
+created by `github-copilot[bot]` and has no impact on manually created PRs.
 
-- **App (`app.py`):** The main application entry point. It initializes the system, validates the
-  configuration, sets up scheduled jobs via the `Orchestrator`, and runs an infinite loop to execute
-  pending tasks.
-- **Orchestrator (`orchestrator.py`):** The top-level manager responsible for building and
-  scheduling the execution of processing pipelines based on the application's configuration. It uses
-  the `schedule` library to run pipelines at periodic intervals.
-- **Pipeline (`pipeline.py`):** A composite component that executes a sequence of individual
-  processing stages (`Pipes`) in a defined order. It manages the flow of data through its
-  constituent pipes.
-- **Pipe (`pipe.py`):** An abstract base class representing a single stage in a processing pipeline.
-  Each `Pipe` implementation performs a specific task, such as fetching data, preparing it, running
-  an AI model, or updating a ticket.
-- **PipelineContext (`context.py`):** A state object that is passed between each `Pipe` in a
-  `Pipeline`. It carries the `ticket_id` and a flexible `data` dictionary to share information (
-  e.g., ticket content, model predictions) across stages.
+## Quick Start
 
-### Standard Processing Flow
+```bash
+# Install core package
+pip install open-ticket-ai
 
-A typical ticket classification pipeline follows these steps:
+# Install with plugins
+pip install open-ticket-ai otai-hf-local otai-otobo-znuny
+```
 
-1. **Fetch Ticket:** A fetcher pipe (e.g., `BasicTicketFetcher`) retrieves ticket data from an
-   external system using a `TicketSystemAdapter`.
-2. **Prepare Data:** A preparer pipe (e.g., `SubjectBodyPreparer`) cleans and transforms the raw
-   ticket data (like subject and body) into a format suitable for the AI model.
-3. **AI Inference:** An inference service pipe (e.g., `HFAIInferenceService`) processes the prepared
-   data with a machine learning model (e.g., a local Hugging Face model) to generate predictions.
-4. **Update Ticket:** An updater pipe (e.g., `GenericTicketUpdater`) uses the prediction results
-   stored in the `PipelineContext` to update the ticket in the source system.
+## Docker
 
-## 2. Modularity and Configuration
+```bash
+docker pull openticketai/engine:latest
+```
 
-The system is designed to be highly extensible and configurable, primarily through Dependency
-Injection (DI) and a component registry.
+### Docker Compose
 
-- **Dependency Injection (`di.md`):** A central DI container is responsible for instantiating and
-  wiring together all components of the system. The `create_registry()` function registers the
-  default implementations for adapters, preparers, and AI services, allowing them to be referenced
-  in the configuration.
-- **Registry & Providables (`mixins.md`):** Components intended to be managed by the DI system
-  inherit from `RegistryProvidableInstance`. This base class allows them to be identified by a
-  unique `provider_key` (their class name) and configured with specific parameters via a
-  `RegistryInstanceConfig` object. This makes the system's components discoverable and configurable.
-- **Configuration (`ce_core_config.md`):** The entire application, including the pipelines and their
-  components, is defined in a configuration file (e.g., `config.yml`). This configuration is
-  validated against Pydantic models at startup. Utilities like `create_json_config_schema.py` are
-  provided to generate a JSON schema for configuration validation and editor support.
+```yaml
+services:
+  open-ticket-ai:
+    image: openticketai/engine:latest
+    ports:
+      - "8080:8080"
+    environment:
+      OT_AI_CONFIG: /app/config.yml
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+```
 
-## 3. Extensibility
+## Development
 
-The architecture makes it straightforward to extend the system's functionality:
+```bash
+# Clone and setup
+git clone https://github.com/Softoft-Orga/open-ticket-ai.git
+cd open-ticket-ai
+uv sync
 
-- **Ticket System Integration (`ticket_system_integration.md`):** To support a new ticketing system,
-  a developer can create a new class that inherits from the abstract `TicketSystemAdapter` and
-  implements its methods (`find_tickets`, `update_ticket`, etc.). This new adapter can then be
-  registered and used in the configuration. The `OTOBOAdapter` serves as the primary example.
-- **Custom Pipeline Stages (`pipes.md`):** New processing logic can be added by creating a new class
-  that inherits from the `Pipe` interface and implements the `process()` method. Once created, this
-  new pipe can be registered and included in any pipeline via the configuration file.
+# Run tests
+uv run -m pytest
+```
 
-## 4. Execution Model
+## Releasing
 
-The application is launched via a Command-Line Interface (CLI) defined in `main.py`.
+### Create Release
 
-1. The `start()` command initializes the DI container and retrieves the main `App` instance.
-2. The `App.run()` method is called.
-3. The `Orchestrator` builds all pipelines defined in the configuration.
-4. The `Orchestrator` then configures a scheduler to execute each pipeline's processing function at
-   its specified interval.
-5. The application enters a continuous loop, checking for and running scheduled jobs.
+```bash
+./scripts/bump_version
+git push origin <your-branch>
+```
+
+Open a pull request targeting the `main` branch after pushing your changes. The release workflow runs once the pull
+request is merged.
+
+## Documentation
+
+Full documentation: https://open-ticket-ai.com
+
+## Contributing
+
+The easiest way to extend Open Ticket AI is by creating a plugin. Explore the developer documentation to learn how to
+build and integrate new capabilities.
+
+## License
+
+LGPL-2.1-only

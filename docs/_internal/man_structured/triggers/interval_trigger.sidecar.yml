@@ -1,0 +1,102 @@
+_version: 1.0.x
+_class: open_ticket_ai.base.IntervalTrigger
+_extends: open_ticket_ai.core.orchestration.Trigger
+
+_title: Interval Trigger
+_summary: Executes a pipeline at regular time intervals.
+_category: scheduling
+
+_inputs:
+  placement: flat
+  alongside: [ id, use ]
+  params:
+    milliseconds: Interval in milliseconds (default 0)
+    seconds: Interval in seconds (default 0)
+    minutes: Interval in minutes (default 0)
+    hours: Interval in hours (default 0)
+    days: Interval in days (default 0)
+_defaults:
+  milliseconds: 0
+  seconds: 0
+  minutes: 0
+  hours: 0
+  days: 0
+
+_output:
+  state_enum: [ triggered ]
+  description: Trigger notifies observers when the interval elapses.
+  payload_schema_ref: OpenTicketAI.Triggers.Interval.Result
+  examples:
+    triggered:
+      state: triggered
+      payload:
+        trigger_time: "2025-10-13T18:45:00Z"
+
+_errors:
+  fail:
+    - code: invalid_interval
+      when: All interval parameters are zero or negative
+  break:
+    - code: config_invalid
+      when: Required config missing or invalid type
+  continue: [ ]
+
+_engine_support:
+  on_failure: false
+  on_success: false
+
+_examples:
+  minimal: |
+    orchestrator:
+      runners:
+        - on:
+            - id: every_minute
+              use: open_ticket_ai.base.IntervalTrigger
+              params:
+                minutes: 1
+          run:
+            id: my_pipeline
+            use: open_ticket_ai.base.CompositePipe
+            steps: []
+
+  full: |
+    orchestrator:
+      runners:
+        - on:
+            - id: every_hour
+              use: open_ticket_ai.base.IntervalTrigger
+              params:
+                hours: 1
+                minutes: 30
+          run:
+            id: periodic_task
+            use: open_ticket_ai.base.CompositePipe
+            steps:
+              - id: fetch
+                use: open_ticket_ai.base.ticket_system_pipes.FetchTicketsPipe
+                ticket_system_id: "otobo_znuny"
+
+  large: |
+    orchestrator:
+      runners:
+        - on:
+            - id: daily_check
+              use: open_ticket_ai.base.IntervalTrigger
+              params:
+                days: 1
+                hours: 0
+                minutes: 0
+                seconds: 0
+          run:
+            id: daily_workflow
+            use: open_ticket_ai.base.CompositePipe
+            steps:
+              - id: fetch_all
+                use: open_ticket_ai.base.ticket_system_pipes.FetchTicketsPipe
+                ticket_system_id: "otobo_znuny"
+                ticket_search_criteria:
+                  status: ["open", "pending"]
+              - id: classify_bulk
+                use: otai_hf_local.HFLocalTextClassificationPipe
+                model: "distilbert-base-uncased"
+                prompt: "{{ context.tickets | map(attribute='subject') | join(' ') }}"

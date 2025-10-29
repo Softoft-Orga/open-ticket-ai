@@ -1,0 +1,100 @@
+[project]
+name = "otai_base"
+dynamic = ["version"]
+description = "Base package with core implementations for Open Ticket AI"
+readme = "README.md"
+requires-python = ">=3.14"
+
+authors = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
+
+license = "LGPL-2.1-only"
+
+keywords = ["ai", "ticket-system", "base", "automation"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "open-ticket-ai>=1.0.0,<2.0.0",
+    "pydantic>=2.11.7",
+    "jinja2>=3.1.0",
+]
+
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
+Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+Documentation = "https://open-ticket-ai.com"
+Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/base/CHANGELOG.md"
+
+[project.entry-points."open_ticket_ai.plugins"]
+base = "otai_base.base_plugin:BasePlugin"
+
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=8.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["otai_base*"]
+
+[tool.uv.sources]
+open-ticket-ai = { workspace = true }
+
+[tool.setuptools_scm]
+root = "../.."
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+tag_regex = '^v(?P<version>\d+\.\d+\.\d+)$'
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.4.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff",
+    "mypy",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "PL", "PERF", "TRY"]
+ignore = ["TRY003"]
+fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/otai_base/*.py" = ["PLC0415"]
+"tests/*.py" = ["PLC0415"]
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+plugins = ['pydantic.mypy']
+
+[[tool.mypy.overrides]]
+module = "transformers.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "test_*"
+ignore_errors = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "unit: schnelle, isolierte Tests",
+    "integration: core + plugin zusammen",
+    "slow: dauert länger"
+]

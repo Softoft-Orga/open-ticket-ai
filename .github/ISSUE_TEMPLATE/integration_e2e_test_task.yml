@@ -1,0 +1,320 @@
+# .github/ISSUE_TEMPLATE/integration_e2e_test_task.yml
+name: "Integration & E2E Tests"
+description: Test real component interactions and full workflows (no mocks unless external deps)
+title: "tests: <feature/workflow>"
+labels: [ "tests", "integration" ]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ CRITICAL RULE: NO SOURCE CODE MODIFICATIONS ⚠️
+        
+        **This is a TEST-ONLY task. NEVER modify ANY source code (src/, packages/*/src/).**
+        
+        **If source code behavior is unclear or seems wrong:**
+        - ❌ DO NOT modify src/
+        - ❌ DO NOT fix bugs
+        - Option 1: Know the intended behavior? → Write tests for the CORRECT behavior (tests may fail, that's OK)
+        - Option 2: Don't know what it should do? → Write NO tests. Document shortly in 1–3 sentences why and close the issue.
+        
+        **Modify:** test files, `tests/fixtures/`, `tests/conftest.py`, `tests/integration/conftest.py`, `tests/e2e/conftest.py`, `tests/data/`
+        
+        **PRs that touch src/ will be REJECTED.**
+        
+        ---
+        
+        ## Integration & E2E Test Task – Implementation Guide
+        
+        **Integration vs E2E:**
+        - **Integration:** Multiple real components together (DI container + services, pipeline + pipes, config → runtime)
+        - **E2E:** Complete user workflows (CLI command → output, config file → orchestrator → ticket updates)
+        
+        **Test location:**
+        - Integration: `tests/integration/test_*.py`
+        - E2E: `tests/e2e/test_*.py`
+        - Package-specific: `packages/<name>/tests/integration/` or `packages/<name>/tests/e2e/`
+        
+        **NO PYTEST MARKS NEEDED** – already configured in conftest.py:
+        ```python
+        # tests/integration/conftest.py has: pytestmark = [pytest.mark.integration]
+        # tests/e2e/conftest.py has: pytestmark = [pytest.mark.e2e]
+        ```
+        
+        ### What to Test (Integration)
+        - **Config → Runtime flow:** YAML → AppConfig → DI Container → Services instantiated
+        - **Plugin system:** Discovery → Registration → Component availability
+        - **Pipeline execution:** Multi-pipe workflows with real context passing
+        - **Template rendering:** Jinja2 with actual pipe results and context
+        - **Service injection:** Pipes receive and use injected services correctly
+        - **Orchestrator workflows:** Triggers → Runners → Pipe execution
+        
+        ### What to Test (E2E)
+        - **Complete workflows:** User action → final outcome
+        - **CLI commands:** `open-ticket-ai run --config` → log output
+        - **Full pipeline:** Fetch tickets → Classify → Update → Add note
+        - **Error handling:** Invalid config → clear error message
+        - **Real integrations:** With `MockedTicketSystem` (not external systems)
+        
+        ### Test with REAL Components
+        - Use actual classes, not mocks (unless external dependencies like APIs)
+        - Use `MockedTicketSystem` for ticket operations (it's a real implementation)
+        - Use real `JinjaRenderer` for templates
+        - Use real `PipeFactory` and `PipeContext`
+        - Use real DI container (`Injector([AppModule()])`)
+        
+        ### When to Mock
+        - ✅ External APIs (HTTP, databases)
+        - ✅ File system (use `tmp_path`)
+        - ✅ Time/randomness (for determinism)
+        - ❌ Internal services (use real ones)
+        - ❌ Pipes (use real implementations)
+        - ❌ Config models (use real Pydantic)
+        
+        ### Assertion Style (flexible, not exact)
+        **Same principles as unit tests – DO NOT assert exact strings or rigid structures.**
+        
+        **Workflow outcomes (not exact steps):**
+        ```python
+        # ✅ Good: verify outcome
+        result = await orchestrator.run()
+        assert result.has_succeeded()
+        assert "fetched_tickets" in result.data
+        assert len(result.data["fetched_tickets"]) > 0
+        
+        # ❌ Bad: exact sequence/timing
+        assert len(orchestrator._executed_pipes) == 5
+        assert orchestrator._pipe_times[0] == 0.123
+        ```
+        
+        **Log output:**
+        ```python
+        # ✅ Good: key messages present
+        assert "starting orchestrator" in logs.lower()
+        assert "pipeline completed" in logs.lower()
+        
+        # ❌ Bad: exact format
+        assert logs == "2025-10-19 19:31:20 - Starting orchestrator..."
+        ```
+        
+        **Config rendering:**
+        ```python
+        # ✅ Good: rendered values correct
+        assert rendered_config.base_url == "https://example.com"
+        assert "password" not in str(rendered_config)  # no secrets leaked
+        
+        # ❌ Bad: exact structure
+        assert rendered_config == exact_dict_copy
+        ```
+        
+        **Error messages:**
+        ```python
+        # ✅ Good: key error info present
+        with pytest.raises(ConfigError) as exc:
+            load_config(bad_yaml)
+        assert "invalid" in str(exc.value).lower()
+        assert "queue" in str(exc.value).lower()
+        
+        # ❌ Bad: exact wording
+        assert str(exc.value) == "Invalid queue configuration at line 42"
+        ```
+        
+        ### Fixtures – Use Existing Integration Fixtures
+        
+        **Check existing integration fixtures first:**
+        ```bash
+        uv run -m pytest tests/integration/ --fixtures
+        uv run -m pytest tests/e2e/ --fixtures
+        ```
+        
+        **Available in `tests/conftest.py` (shared):**
+        - `logging_config`, `logger_factory` – real logging setup
+        - `integration_config` – full OpenTicketAIConfig
+        - `integration_container` – real DI container with plugins
+        - `integration_mocked_ticket_system` – pre-populated MockedTicketSystem
+        - `temp_config_file` – temporary YAML config file
+        
+        **Create new fixtures in:**
+        - `tests/integration/conftest.py` – integration-specific fixtures
+        - `tests/e2e/conftest.py` – e2e-specific fixtures
+        - `tests/conftest.py` – shared across test types
+        
+        **Naming conventions:**
+        - `integration_*` – for integration tests
+        - `e2e_*` – for e2e tests
+        - `tmp_*` – temporary files/dirs
+        - `sample_*` – test data
+        
+        ### Test Structure
+        
+        **Integration test example:**
+        ```python
+        # tests/integration/test_pipeline_execution.py
+        
+        async def test_multi_pipe_execution_with_context(
+            integration_mocked_ticket_system,
+            logger_factory,
+            integration_container
+        ):
+            """Test: Fetch → Classify → Update pipeline with real context flow"""
+            from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
+        
+            factory = integration_container.get(PipeFactory)
+        
+            # Create real pipe configs
+            fetch_config = PipeConfig(
+                id="fetch_tickets",
+                use="open_ticket_ai.base:FetchTicketsPipe",
+                injects={"ticket_system": "integration-mocked-ts"},
+                params={"ticket_search_criteria": {"queue": {"name": "Support"}, "limit": 5}}
+            )
+        
+            # Execute with real components
+            context = PipeContext(pipe_results={}, params={})
+            fetch_pipe = factory.render_pipe(fetch_config, context)
+            result = await fetch_pipe.process(context)
+        
+            # Flexible assertions
+            assert result.has_succeeded()
+            assert "fetched_tickets" in result.data
+            assert len(result.data["fetched_tickets"]) > 0
+        ```
+        
+        **E2E test example:**
+        ```python
+        # tests/e2e/test_cli_workflow.py
+        from typer.testing import CliRunner
+        
+        def test_run_command_with_config(temp_config_file):
+            """Test: CLI run command executes pipeline successfully"""
+            runner = CliRunner()
+            result = runner.invoke(cli.app, ['run', '--config', str(temp_config_file)])
+        
+            # Flexible assertions on outcome
+            assert result.exit_code == 0
+            assert "starting" in result.output.lower()
+            assert "complete" in result.output.lower()
+        ```
+        
+        ### Test Guidelines (1 Golden Path per Feature)
+        
+        - **ONE comprehensive test per feature/workflow**
+        - Focus on the HAPPY PATH (successful execution)
+        - Optionally add ONE error case if critical
+        - Keep tests focused and deterministic
+        - Use `asyncio_mode = "auto"` (already configured)
+        
+        ### Quality Gates (must pass)
+        - `uv run ruff check .` – no warnings
+        - `uv run mypy .` – no errors
+        - `uv run -m pytest tests/integration/ -v` – all pass
+        - `uv run -m pytest tests/e2e/ -v` – all pass
+        - No changes under `src/**` or `packages/*/src/**`
+        
+        ### Running Tests
+        ```bash
+        # Run all integration tests
+        uv run -m pytest tests/integration/ -v
+        
+        # Run all e2e tests
+        uv run -m pytest tests/e2e/ -v
+        
+        # Run specific test
+        uv run -m pytest tests/integration/test_pipeline.py::test_multi_pipe -v
+        
+        # Run with coverage
+        uv run -m pytest tests/integration/ --cov=open_ticket_ai --cov-report=term
+        ```
+        
+        **Issue is DONE when:**
+        - Tests live under `tests/integration/` or `tests/e2e/` (not src/)
+        - Tests use real components (not excessive mocks)
+        - Fixtures reused or centralized in conftest.py
+        - Flexible assertions used (no brittle exact matches)
+        - No source files modified
+        - Or: explained in 1–3 sentences why tests can't be written and closed
+
+  - type: input
+    id: target
+    attributes:
+      label: Target Feature/Workflow
+      description: What feature or workflow to test? (e.g., "Pipeline Execution", "Config Rendering", "CLI Run Command")
+      placeholder: "Multi-pipe execution with context passing"
+
+  - type: textarea
+    id: test-scenarios
+    attributes:
+      label: Test Scenarios
+      description: What workflows/integrations need coverage? Focus on 1 golden path, optionally 1 error case
+      placeholder: |
+        **Integration Test Scenarios:**
+        - Config lifecycle: YAML → AppConfig → DI Container → Services instantiated
+        - Pipeline execution: Fetch tickets → Classify → Update with real context
+        - Template rendering: Jinja2 resolves pipe_result() and env() correctly
+        
+        **E2E Test Scenarios:**
+        - CLI workflow: `open-ticket-ai run --config` → successful execution
+        - Full pipeline: Fetch → Classify → Update → Verify ticket changed
+        
+        NOTE: If unclear what the system should do, write NO tests and document in a few sentences why.
+
+  - type: textarea
+    id: implementation-plan
+    attributes:
+      label: Implementation Plan
+      description: Test file location, fixtures needed, real components vs mocks?
+      placeholder: |
+        **Test Type:** Integration / E2E (choose one)
+        
+        **File:** tests/integration/test_pipeline_execution.py
+        
+        **Check existing fixtures:**
+        ```bash
+        uv run -m pytest tests/integration/ --fixtures
+        uv run -m pytest --fixtures | grep integration
+        ```
+        
+        **Fixtures to use:**
+        - `integration_container` – real DI container
+        - `integration_mocked_ticket_system` – pre-populated test tickets
+        - `logger_factory` – real logger
+        - `temp_config_file` – temporary YAML config
+        
+        **Real components:**
+        - PipeFactory (real)
+        - PipeContext (real)
+        - JinjaRenderer (real)
+        - MockedTicketSystem (real implementation, not mock)
+        
+        **Mock only:**
+        - External HTTP APIs (if any)
+        - File system (use tmp_path)
+        
+        **Tests to write:**
+        1. test_multi_pipe_execution_with_context – golden path
+        2. test_pipeline_handles_missing_dependency – error case (optional)
+        
+        **FILES TO MODIFY:** test files, tests/integration/conftest.py, tests/conftest.py ONLY
+        **FILES FORBIDDEN:** src/**, packages/*/src/**
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Special considerations, data setup needed, external dependencies to handle
+      placeholder: |
+        **Integration-specific notes:**
+        - Use real MockedTicketSystem with pre-populated test tickets
+        - Verify template rendering with actual Jinja2 templates
+        - Test full context chain (parent → child context)
+        
+        **E2E-specific notes:**
+        - Test complete user workflow from CLI to output
+        - Use temp config files for each test
+        - Verify log output contains key messages (flexible matching)
+        
+        **Check existing fixtures first:**
+        ```bash
+        uv run -m pytest --fixtures | grep integration
+        uv run -m pytest --fixtures | grep e2e
+        ```

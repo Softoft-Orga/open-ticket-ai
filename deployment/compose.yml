@@ -1,0 +1,8 @@
+services:
+  open-ticket-ai:
+    image: openticketai/engine:latest
+    restart: "unless-stopped"
+    environment:
+      - OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__PASSWORD=1234
+    volumes:
+      - ./config.yml:/app/config.yml:ro

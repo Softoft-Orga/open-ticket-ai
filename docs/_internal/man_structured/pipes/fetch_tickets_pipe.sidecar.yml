@@ -1,0 +1,85 @@
+_version: 1.0.x
+_class: open_ticket_ai.base.ticket_system_pipes.FetchTicketsPipe
+_extends: open_ticket_ai.core.pipeline.ConfigurablePipe
+
+_title: Fetch Tickets
+_summary: Retrieves tickets from the connected system based on search criteria.
+_category: ticket-system
+
+_inputs:
+  placement: flat
+  alongside: [ id, use ]
+  params:
+    ticket_system_id: Target ticket system ID from registry
+    ticket_search_criteria: Search criteria (TicketSearchCriteria object, dict, or None)
+_defaults:
+  ticket_search_criteria: null
+
+_output:
+  state_enum: [ ok, skipped, failed ]
+  description: Pipe returns a state and optional payload containing found tickets.
+  payload_schema_ref: OpenTicketAI.Pipes.FetchTickets.Result
+  examples:
+    ok:
+      state: ok
+      payload:
+        found_tickets:
+          - id: 12345
+            subject: "Example ticket"
+            status: "open"
+    skipped:
+      state: skipped
+      payload:
+        reason: no_criteria_specified
+    failed:
+      state: failed
+      error: search_failed
+
+_errors:
+  fail:
+    - code: search_failed
+      when: Backend search operation failed
+    - code: backend_unauthorized
+      when: Adapter cannot authenticate
+    - code: invalid_criteria
+      when: Search criteria format is invalid
+  break:
+    - code: config_invalid
+      when: Required config missing or invalid type
+  continue:
+    - code: no_results
+      when: Search returned no tickets → pipe returns ok with empty list
+    - code: no_criteria
+      when: No search criteria provided → pipe returns all tickets
+
+_engine_support:
+  on_failure: false
+  on_success: false
+
+_examples:
+  minimal: |
+    - id: fetch_tickets
+      use: open_ticket_ai.base.ticket_system_pipes.FetchTicketsPipe
+      ticket_system_id: "otobo_znuny"
+
+  full: |
+    - id: fetch_open_tickets
+      use: open_ticket_ai.base.ticket_system_pipes.FetchTicketsPipe
+      ticket_system_id: "otobo_znuny"
+      ticket_search_criteria:
+        status: "open"
+        queue: "Support"
+        limit: 10
+
+  large: |
+    - id: fetch_priority_tickets
+      use: open_ticket_ai.base.ticket_system_pipes.FetchTicketsPipe
+      ticket_system_id: "otobo_znuny"
+      ticket_search_criteria:
+        status: ["open", "pending"]
+        priority: ["high", "critical"]
+        queue: ["L1_Support", "L2_Support"]
+        created_after: "{{ context.last_run_time }}"
+        limit: 50
+        sort_by: "created_time"
+        sort_order: "desc"

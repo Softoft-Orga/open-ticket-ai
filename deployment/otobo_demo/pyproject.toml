@@ -1,0 +1,11 @@
+[project]
+name = "otobo-demo"
+version = "0.1.8"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "open-ticket-ai>=1.0.15",
+    "otai-hf-local>=1.0.1",
+    "otai-otobo-znuny>=1.0.1",
+]

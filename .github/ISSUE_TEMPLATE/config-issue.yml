@@ -1,0 +1,76 @@
+name: Configuration Issue
+description: Report problems with YAML config, Jinja2 templates, or dependency injection
+title: "[Config] "
+labels: [ "configuration", "needs-triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Configuration Issue - Fix Implementation Guide
+        
+        **How to fix:**
+        - Identify the root cause in config parsing, Jinja2 rendering, or DI setup
+        - Fix the issue in the appropriate module (ConfigLoader, JinjaRenderer, RenderableFactory, etc.)
+        - Add proper error messages and validation
+        - Update Pydantic models if schema changes needed
+        - Add type annotations and proper error handling
+        
+        **Testing requirements:**
+        - Add unit test in `tests/unit/core/config/` reproducing the issue
+        - Test should fail before fix, pass after fix
+        - Add test cases for edge cases and error conditions
+        - Test with real YAML config snippets in `tests/data/`
+        
+        **Quality gates (must pass):**
+        - `uv run ruff check .` - no warnings
+        - `uv run mypy .` - no errors
+        - `uv run -m pytest` - all tests pass including new ones
+        - Original reported config should now work or give clear error message
+        
+        **Issue is DONE when:**
+        - Root cause identified and fixed
+        - Tests added covering the issue
+        - All quality gates pass
+        - Configuration now works as expected or fails with clear error
+
+  - type: textarea
+    id: issue-description
+    attributes:
+      label: Issue Description
+      description: What configuration problem needs to be fixed?
+      placeholder: "Jinja2 template in 'if' field fails with UndefinedError when referencing parent.params..."
+
+  - type: textarea
+    id: config-snippet
+    attributes:
+      label: Configuration Snippet
+      description: Config that triggers the issue (redact secrets)
+      render: yaml
+      placeholder: |
+        steps:
+          - id: my_step
+            if: "{{ parent.params.some_value }}"
+            use: "open_ticket_ai.base:SomePipe"
+
+  - type: textarea
+    id: fix-approach
+    attributes:
+      label: Fix Approach
+      description: How should this be fixed? Which code to change?
+      placeholder: |
+        Fix in src/open_ticket_ai/core/renderable/renderable_factory.py:
+        - Ensure parent context is properly passed to child steps
+        - Update render_recursive to include parent in scope
+        
+        Add test in tests/unit/core/renderable/test_renderable_factory.py:
+        - Test parent.params access in child step conditions
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Error messages, stack traces, version info
+      placeholder: |
+        Error: jinja2.exceptions.UndefinedError: 'parent' is undefined
+        Version: 1.0.0rc1
+        Stack trace: ...

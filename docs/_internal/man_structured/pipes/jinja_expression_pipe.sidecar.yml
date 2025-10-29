@@ -1,0 +1,65 @@
+_version: 1.0.x
+_class: open_ticket_ai.base.JinjaExpressionPipe
+_extends: open_ticket_ai.core.pipeline.ConfigurablePipe
+
+_title: Jinja Expression
+_summary: Evaluates a Jinja expression and returns the result as pipe output.
+_category: utility
+
+_inputs:
+  placement: flat
+  alongside: [ id, use ]
+  params:
+    expression: Any value or Jinja template expression to evaluate
+_defaults: { }
+
+_output:
+  state_enum: [ ok, failed ]
+  description: Pipe returns the evaluated expression value in the payload.
+  payload_schema_ref: OpenTicketAI.Pipes.JinjaExpression.Result
+  examples:
+    ok:
+      state: ok
+      payload:
+        value: "evaluated_result"
+    failed:
+      state: failed
+      error: expression_evaluation_failed
+
+_errors:
+  fail:
+    - code: expression_evaluation_failed
+      when: Jinja expression could not be evaluated
+    - code: template_syntax_error
+      when: Invalid Jinja template syntax
+  break:
+    - code: config_invalid
+      when: Required expression parameter missing
+  continue: [ ]
+
+_engine_support:
+  on_failure: false
+  on_success: false
+
+_examples:
+  minimal: |
+    - id: simple_expression
+      use: open_ticket_ai.base.JinjaExpressionPipe
+      expression: "Hello World"
+
+  full: |
+    - id: template_expression
+      use: open_ticket_ai.base.JinjaExpressionPipe
+      expression: "Ticket {{ context.ticket.id }} has status {{ context.ticket.status }}"
+
+  large: |
+    - id: complex_expression
+      use: open_ticket_ai.base.JinjaExpressionPipe
+      expression: |
+        {%- if context.classification.confidence > 0.8 -%}
+          high_confidence_{{ context.classification.label }}
+        {%- elif context.classification.confidence > 0.5 -%}
+          medium_confidence_{{ context.classification.label }}
+        {%- else -%}
+          low_confidence_unknown
+        {%- endif -%}

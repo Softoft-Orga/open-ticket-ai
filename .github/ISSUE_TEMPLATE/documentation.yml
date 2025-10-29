@@ -1,0 +1,79 @@
+name: Documentation Request
+description: Request improvements, clarifications, or additions to documentation
+title: "[Docs] "
+labels: [ "documentation", "needs-triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Documentation Request - Implementation Guide
+        
+        **How to write documentation:**
+        - Write in Markdown format for VitePress
+        - Place docs in `docs/vitepress_docs/docs_src/en/` (English)
+        - Include YAML config examples with proper syntax highlighting
+        - Add links to related documentation and API references
+        
+        **Documentation structure:**
+        - User guides: End-to-end workflows and tutorials
+        - Developer docs: Architecture, API, and implementation details
+        - Reference docs: Configuration schema, pipe catalog, CLI commands
+        - Use VitePress components for callouts, tabs, and code groups
+        
+        **Quality gates (must pass):**
+          KEEP the documentation small and precise, especially dont add long texts! Focus on the core of the software.
+          Use Mermaid Diagrams, Tables, and Lists to structure information clearly.
+          DO NOT write long texts!
+          NEVER write documentations in oher languages than in english!
+          THE documentation in fr, de, es, it, pt, nl, pl, ru, cn, jp is automatically generated with AI from the english docs.
+          DO NOT write documentations in other languages than in english!
+        - Markdown files have valid syntax
+        - All links work (internal and external)
+        - Code examples are tested and working
+        - VitePress builds successfully: `cd docs && npm run docs:build`
+        - No spelling/grammar issues in English docs
+        
+        **Issue is DONE when:**
+        - Documentation is written and placed in correct location
+        - All code examples are tested
+        - Links are verified
+        - VitePress builds without errors
+        - Documentation is clear and helpful
+
+  - type: textarea
+    id: documentation-need
+    attributes:
+      label: Documentation Need
+      description: What documentation should be written or updated?
+      placeholder: "Add comprehensive guide for writing custom pipes with dependency injection..."
+
+  - type: textarea
+    id: content-outline
+    attributes:
+      label: Content Outline
+      description: What sections and topics should be covered?
+      placeholder: |
+        File: docs/ABCD.md
+        
+        Sections:
+        1. Introduction to custom pipes
+        2. Pipe class structure and inheritance
+        3. Using dependency injection with injects
+        4. Parameter validation with Pydantic
+        5. Testing custom pipes
+        6. Complete example: Building a custom classification pipe
+
+  - type: textarea
+    id: code-examples
+    attributes:
+      label: Code Examples Needed
+      description: What code examples should be included?
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Related docs, existing content to update, references
+      placeholder: |
+        Update existing file: docs/.../XYZ with link to new guide
+        Reference: src/open_ticket_ai/XYZ/ABC/ for examples

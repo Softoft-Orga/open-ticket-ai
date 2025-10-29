@@ -1,6 +1,0 @@
-services:
-    open-ticket-ai:
-        image: softotobo/open-ticket-ai:otobo-znuny-mvp
-        restart: "always"
-        volumes:
-            - ./config.yml:/app/config.yml:ro

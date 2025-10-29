@@ -1,0 +1,90 @@
+name: Pipe or Plugin Request
+description: Request a new pipe, plugin, or extension to the pipes system
+title: "[Pipe/Plugin] "
+labels: [ "enhancement", "pipe-request", "needs-triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Pipe/Plugin Request - Implementation Guide
+        
+        **How to implement a pipe:**
+        - Create new pipe class inheriting from `Pipe` base class
+        - Place in `src/open_ticket_ai/base/*
+        - Use Pydantic models for config validation (params class)
+        - Add proper type annotations (Python 3.13, PEP 695)
+        
+        **Code structure:**
+        - Register in `__init__.py` for imports
+        - No inline comments - self-documenting code
+        
+        **Testing requirements:**
+        - Test input/output behavior with different params
+        - Use mocks/fakes for external dependencies
+        - Integration test if pipe touches external systems
+        - Keep tests minimal: ≤5 tests, ≤20 lines each, use parametrize
+        
+        **Quality gates (must pass):**
+        - `uv run ruff check .` - no warnings
+        - `uv run mypy .` - no errors
+        - `uv run -m pytest` - all tests pass
+        - Pipe works in real YAML config
+        
+        **Issue is DONE when:**
+        - Pipe class implemented with proper types and DI
+        - Tests written and passing
+        - All quality gates pass
+        - Example YAML config works
+
+  - type: textarea
+    id: pipe-description
+    attributes:
+      label: Pipe Description
+      description: What should this pipe do?
+      placeholder: "A pipe that classifies tickets by urgency level using ML model..."
+
+  - type: textarea
+    id: implementation-spec
+    attributes:
+      label: Implementation Specification
+      description: Class name, location, dependencies, input/output?
+      placeholder: |
+        Class: ClassifyUrgencyPipe
+        Location: src/open_ticket_ai/base/*/classify_urgency_pipe.py
+        Inherits: Pipe
+        
+        Dependencies (inject):
+        - ml_model: MLModelService
+        
+        Params:
+        - urgency_levels: list[str]
+        - confidence_threshold: float
+        
+        Input: PipeContext with ticket data
+        Output: PipeResult with urgency_level and confidence
+
+  - type: textarea
+    id: config-example
+    attributes:
+      label: YAML Configuration Example
+      description: How should this be configured?
+      render: yaml
+      placeholder: |
+        - id: classify_urgency
+          use: "open_ticket_ai.base:ClassifyUrgencyPipe"
+          injects:
+            ml_model: urgency_classifier
+          params:
+            example: A
+
+  - type: textarea
+    id: test-plan
+    attributes:
+      label: Test Plan
+      description: What tests should be written?
+      placeholder: |
+        tests/unit/base/pipes/test_classify_urgency_pipe.py:
+        - test_function_exampleA (with input XYZ)
+        - test_function_exampleA (with input ABC)
+        
+        Mock the ABC dependency

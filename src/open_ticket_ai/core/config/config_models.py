@@ -1,72 +1,66 @@
-from pathlib import Path
-from typing import Any, Dict, List, Annotated, Union
+from __future__ import annotations
 
-import yaml
-from pydantic import BaseModel, Field
+from packaging.specifiers import SpecifierSet
+from pydantic import BaseModel, Field, field_validator
 
-from open_ticket_ai.extensions.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
-from open_ticket_ai.extensions.pipe_implementations.pipe_configs import TicketSystemServiceConfig, \
-    HFLocalAIInferenceServiceConfig, ContextModifierConfig, SimpleKeyValueMapperConfig
-
-
-class PipelineStepOutput(BaseModel):
-    """Output configuration for a pipeline step."""
-
-    data: Dict[str, Any] = Field(default_factory=dict)
+from open_ticket_ai.core.config.types import VersionSpecifier
+from open_ticket_ai.core.injectables.injectable_models import InjectableConfig, InjectableConfigBase
+from open_ticket_ai.core.logging.logging_models import LoggingConfig
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
-class PipelineConfig(BaseModel):
-    """Configuration for a pipeline."""
-
-    id: str
-    pipeline_config: Dict[str, Any]
-    steps: list[Annotated[
-        Union[
-            TicketSystemServiceConfig,
-            HFLocalAIInferenceServiceConfig,
-            ContextModifierConfig,
-            SimpleKeyValueMapperConfig,
-        ],
-        Field(discriminator="type"),
-    ]]
+class InfrastructureConfig(BaseModel):
+    logging: LoggingConfig = Field(
+        default_factory=LoggingConfig,
+        description="Configuration for application logging including level, format, and output destination.",
+    )
 
 
-class LoggingConfig(BaseModel):
-    """Configuration for logging."""
-
-    version: int = 1
-    disable_existing_loggers: bool = False
-    formatters: Dict[str, Dict[str, str]]
-    handlers: Dict[str, Dict[str, Any]]
-    loggers: Dict[str, Dict[str, Any]]
-    root: Dict[str, Any]
-
-
-class SystemConfig(BaseModel):
-    type: str
-    config: Dict[str, str]
-
-class OrchestratorConfig(BaseModel):
-    """Configuration for the main orchestrator."""
-
-    run_every_milli_seconds: int = Field(..., gt=0)
+class PluginConfig(BaseModel):
+    name: str = Field(
+        default="",
+        description="Name of the plugin for identification purposes.",
+    )
+    version: str = Field(
+        default="",
+        description="Version of the plugin for compatibility management.",
+    )
 
 
 class OpenTicketAIConfig(BaseModel):
-    """Root configuration model for Open Ticket AI."""
+    api_version: VersionSpecifier = Field(  # type: ignore[assignment]
+        default=">=1.0.0",
+        description="API version of the OpenTicketAI application for compatibility and feature management.",
+    )
+    plugins: list[str] = Field(
+        default_factory=list,
+        description="List of plugin module paths to load and enable for extending application functionality.",
+    )
+    infrastructure: InfrastructureConfig = Field(
+        default_factory=InfrastructureConfig,
+        description="Infrastructure-level configuration including logging and template rendering settings.",
+    )
+    services: dict[str, InjectableConfigBase] = Field(
+        default_factory=dict,
+        description="List of service configurations defining available ticket system integrations and other services.",
+    )
+    orchestrator: PipeConfig = Field(
+        default_factory=PipeConfig,
+        description="Orchestrator configuration defining runners, triggers, and pipes execution workflow.",
+    )
 
-    logging: LoggingConfig
-    system: SystemConfig
-    pipelines: List[PipelineConfig]
-    orchestrator: OrchestratorConfig
+    def get_services_list(self) -> list[InjectableConfig]:
+        return [
+            InjectableConfig.model_validate({"id": _id, **service_base.model_dump()})
+            for _id, service_base in self.services.items()
+        ]
 
-
-def load_config(path: str | Path) -> OpenTicketAIConfig:
-    """Load YAML config with root key 'open_ticket_ai'."""
-    with open(path, encoding="utf-8") as fh:
-        data = yaml.safe_load(fh)
-
-    if "open_ticket_ai" not in data:
-        raise KeyError("Missing 'open_ticket_ai' root key in YAML configuration.")
-
-    return OpenTicketAIConfig(**data["open_ticket_ai"])
+    @field_validator("api_version")
+    @classmethod
+    def validate_spec(cls, v: str) -> str:
+        """Ensure the version spec is valid."""
+        try:
+            SpecifierSet(v)
+        except Exception as e:
+            raise ValueError(f"Invalid version specifier '{v}': {e}") from e
+        return v

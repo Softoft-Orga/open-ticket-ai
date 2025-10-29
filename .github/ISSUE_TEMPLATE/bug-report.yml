@@ -1,0 +1,67 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in Open Ticket AI
+title: "[Bug] "
+labels: [ "bug", "needs-triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Report
+        Help us identify and fix issues in Open Ticket AI.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear description of what the bug is
+      placeholder: "When I run the orchestrator with..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Configure pipe with...
+        2. Run orchestrator...
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: "The pipe should..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: "Instead, the pipe..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and Error Messages (Optional)
+      description: Include relevant logs, stack traces, or error messages
+      render: shell
+      placeholder: |
+        ERROR: PipeExecutionError in pipe 'my_pipe'
+        Traceback (most recent call last):
+        ...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context (Optional)
+      description: Any other information that might help (config snippets, version, environment, etc.)
+      placeholder: "Open Ticket AI version 1.0.0rc1, Python 3.13, Ubuntu 22.04..."

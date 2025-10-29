@@ -1,0 +1,95 @@
+_version: 1.0.x
+_class: open_ticket_ai.base.CompositePipe
+_extends: open_ticket_ai.core.pipeline.ConfigurablePipe
+
+_title: Composite Pipe
+_summary: A pipe that runs multiple sub-steps sequentially, composing complex workflows.
+_category: orchestration
+
+_inputs:
+  placement: flat
+  alongside: [ id, use ]
+  params:
+    steps: List of pipe configurations to execute sequentially
+_defaults: { }
+
+_output:
+  state_enum: [ ok, failed ]
+  description: Pipe returns a union of all step results. Success if all steps succeed, failed if any step fails.
+  payload_schema_ref: OpenTicketAI.Pipes.Composite.Result
+  examples:
+    ok:
+      state: ok
+      payload:
+        steps_executed: 3
+        all_successful: true
+    failed:
+      state: failed
+      error: step_execution_failed
+      payload:
+        failed_step_id: "step_2"
+
+_errors:
+  fail:
+    - code: step_execution_failed
+      when: One of the sub-steps failed during execution
+    - code: factory_not_provided
+      when: RenderableFactory is required but not provided
+  break:
+    - code: config_invalid
+      when: Steps configuration is missing or invalid
+    - code: step_config_invalid
+      when: One of the step configurations is invalid
+  continue: [ ]
+
+_engine_support:
+  on_failure: false
+  on_success: false
+
+_examples:
+  minimal: |
+    - id: workflow
+      use: open_ticket_ai.base.CompositePipe
+      steps:
+        - id: step1
+          use: open_ticket_ai.base.JinjaExpressionPipe
+          expression: "Starting workflow"
+
+  full: |
+    - id: ticket_processing
+      use: open_ticket_ai.base.CompositePipe
+      steps:
+        - id: fetch
+          use: open_ticket_ai.base.ticket_system_pipes.FetchTicketsPipe
+          ticket_system_id: "otobo_znuny"
+        - id: add_note
+          use: open_ticket_ai.base.ticket_system_pipes.AddNotePipe
+          ticket_system_id: "otobo_znuny"
+          ticket_id: "{{ context.ticket.id }}"
+          note: "Processing ticket"
+
+  large: |
+    - id: complex_workflow
+      use: open_ticket_ai.base.CompositePipe
+      steps:
+        - id: fetch_tickets
+          use: open_ticket_ai.base.ticket_system_pipes.FetchTicketsPipe
+          ticket_system_id: "otobo_znuny"
+          ticket_search_criteria:
+            status: "open"
+            queue: "Support"
+        - id: classify
+          use: otai_hf_local.HFLocalTextClassificationPipe
+          model: "distilbert-base-uncased"
+          prompt: "{{ context.tickets[0].subject }}"
+        - id: update_ticket
+          use: open_ticket_ai.base.ticket_system_pipes.UpdateTicketPipe
+          ticket_system_id: "otobo_znuny"
+          ticket_id: "{{ context.tickets[0].id }}"
+          updated_ticket:
+            priority: "high"
+        - id: add_note
+          use: open_ticket_ai.base.ticket_system_pipes.AddNotePipe
+          ticket_system_id: "otobo_znuny"
+          ticket_id: "{{ context.tickets[0].id }}"
+          note: "Classified as {{ context.classify.label }}"

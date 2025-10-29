@@ -1,0 +1,8 @@
+services:
+  open-ticket-ai:
+    image: openticketai/engine:1.4.19
+    restart: "unless-stopped"
+    environment:
+      OTAI_OTOBO_DEMO_PASSWORD: "${OTAI_OTOBO_DEMO_PASSWORD}"
+    volumes:
+      - ./config.yml:/app/config.yml:ro

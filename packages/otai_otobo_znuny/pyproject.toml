@@ -1,0 +1,99 @@
+[project]
+name = "otai_otobo_znuny"
+dynamic = ["version"]
+description = "OTOBO/Znuny ticket system plugin for Open Ticket AI"
+readme = "README.md"
+requires-python = ">=3.14"
+
+authors = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
+
+license = "LGPL-2.1-only"
+
+keywords = ["open-ticket-ai", "plugin", "otobo", "znuny", "otrs", "ticket-system", "automation"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Systems Administration",
+]
+
+dependencies = [
+    "open-ticket-ai>=1.0.0,<2.0.0",
+    "otobo-znuny>=1.4.0",
+    "injector>=0.22.0",
+    "pydantic>=2.11.7",
+]
+
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
+Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+Documentation = "https://open-ticket-ai.com/en/guide/available-plugins.html"
+Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_otobo_znuny/CHANGELOG.md"
+
+[project.entry-points."open_ticket_ai.plugins"]
+otobo_znuny = "otai_otobo_znuny.otobo_znuny_plugin:OTOBOZnunyPlugin"
+
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=8.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["otai_otobo_znuny*"]
+
+[tool.uv.sources]
+open-ticket-ai = { workspace = true }
+
+[tool.setuptools_scm]
+root = "../.."
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+tag_regex = '^v(?P<version>\d+\.\d+\.\d+)$'
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.4.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff",
+    "mypy",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "PL", "PERF", "TRY"]
+ignore = ["TRY003"]
+fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/otai_otobo_znuny/cli.py" = ["PLC0415", "PLR0913"]
+"tests/*.py" = ["PLR2004"]
+"tests/test_otobo_znuny_ticket_system_service_config.py" = ["PLR2004", "E402"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ['pydantic.mypy']
+
+[[tool.mypy.overrides]]
+module = ["otobo_znuny.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "unit: schnelle, isolierte Tests",
+    "integration: core + plugin zusammen",
+    "slow: dauert länger"
+]

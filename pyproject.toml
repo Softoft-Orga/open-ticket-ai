@@ -1,57 +1,204 @@
 [project]
-name = "open-ticket-ai"
-version = "1.0.0rc1"
-description = "AI enhancements for open source ticket systems"
-requires-python = ">=3.13"
+name = "open_ticket_ai"
+dynamic = ["version"]
+description = "AI-powered ticket processing and automation system"
+readme = "docs/raw_en_docs/README.md"
+requires-python = ">=3.14"
 
-# ADDED: Author and license information
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
-license = { text = "LGPL-2.1-only" } # Using the standard SPDX identifier
+
+license = "LGPL-2.1-only"
+
+keywords = ["ai", "ticket-system", "automation", "nlp", "workflow"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
 dependencies = [
-    "pydantic~=2.11.7",
-    "pydantic_core",
-    "typing_extensions",
-    "pytest~=8.4.0",
-    "pluggy",
-    "pygments",
-    "transformers[torch]~=4.52.4",
-    "injector~=0.22.0",
-    "requests~=2.32.4",
-    "huggingface-hub[hf-xet]>=0.33.0",
-    "openai>=1.108.1",
-    "mdxlate>=0.1.0",
-    "pathspec>=0.12.1",
-    "docstring-parser>=0.17.0",
-    "otobo-znuny>=1.2.5",
-    "pyfiglet>=1.0.4",
-    "tenacity>=9.0.0",
+    "pydantic~=2.12.0",
+    "pyyaml~=6.0.0",
+    "pyfiglet~=1.0.2",
+    "apscheduler~=3.11.0",
+    "jinja2~=3.1.6",
+    "transformers~=4.57.1",
+    "python-dotenv~=1.1.1",
+    "typer~=0.19.2",
+    "rich~=14.2.0",
+    "httpx~=0.27.0",
+    "otobo-znuny~=1.4.0",
+    "pydantic-settings>=2.11.0",
+    "tabulate>=0.9.0",
+    "types-tabulate>=0.9.0.20241207",
+    "pytest-cov>=6.0.0",
+    "injector>=0.22.0",
+    "otai-hf-local",
+    "otai-otobo-znuny",
+    "otai-base",
+    "huggingface-hub[hf-xet]>=0.35.3",
+    "pydeps>=3.0.1",
+    "graphviz>=0.21",
+    "async-lru>=2.0.5",
+    "setuptools-scm>=9.2.2",
+    "pydantic-extra-types[pendulum]>=2.10.6",
+    "node-semver>=0.9.0",
+    "semver>=3.0.4",
 ]
 
-# ADDED: Project URLs
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
+Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+Documentation = "https://open-ticket-ai.com"
 
-[project.optional-dependencies]
-dev = [
-    "ruff",
-    "mypy",
-    "pytest~=8.4.0",
-]
+[project.scripts]
+open-ticket-ai = "open_ticket_ai.core.cli:main"
+
+
+
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=8.1"]
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["open_ticket_ai*"]
 
+[tool.uv.workspace]
+members = [
+    "packages/otai_hf_local",
+    "packages/otai_otobo_znuny",
+    "packages/otai_base",
+]
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+tag_regex = '^v(?P<version>\d+\.\d+\.\d+)$'
+
+[tool.uv.sources]
+otai-hf-local = { workspace = true }
+otai-otobo-znuny = { workspace = true }
+otai_base = { workspace = true }
+
 [tool.ruff]
 line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I"]
+select = [
+    "E", "F", "W", # otai_base
+    "I", # import sort
+    "UP", # pyupgrade
+    "B", "BLE", # bugbear + exceptions
+    "C4", "SIM", # comp/simplify
+    "PERF", # performance
+    "PTH", # pathlib preferred
+    "ARG", # unused args
+    "PIE", "Q", # misc + quotes
+    "ERA", # no commented-out code
+    "DTZ", # tz-aware datetimes
+    "RUF", # ruff extras
+    "TID", # tidy imports
+    "ANN", # type annotation coverage
+    "S", # security
+    "PD",
+]
+ignore = ["TRY003", "TC003", "TC002", "TC001", "ANN204", "PTH123", "ANN401"]
+fixable = ["ALL"]
 
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "ANN001", "ANN201", "ANN202", "ANN401", "S101", "S105"
+]
 [tool.mypy]
-python_version = "3.13"
-strict = true
+python_version = "3.14"
+plugins = ["pydantic.mypy"]
+strict = false
+warn_unused_ignores = false
+disallow_untyped_defs = false
+check_untyped_defs = false
+no_implicit_optional = false
+warn_return_any = false
+disallow_any_generics = false
+implicit_reexport = true
+follow_imports = "silent"
 ignore_missing_imports = true
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "packages.*.tests.*"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["open_ticket_ai.base.pipes.*", "open_ticket_ai.base.triggers.*"]
+disable_error_code = ["attr-defined", "no-any-return", "call-arg"]
+
+[[tool.mypy.overrides]]
+module = ["packages.otai_otobo_znuny.*"]
+ignore_missing_imports = true
+warn_return_any = false
+disable_error_code = ["attr-defined", "arg-type", "no-any-return"]
+
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests", "packages/*/tests"]
+python_files = "test_*.py"
+addopts = "-q"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "unit: fast isolated tests",
+    "integration: integration of multiple components",
+    "e2e: end-to-end flows",
+    "slow: tests that take a long time to run",
+]
+[tool.coverage.run]
+branch = true
+source = [
+    "src/open_ticket_ai",
+    "packages/otai_hf_local/src",
+    "packages/otai_otobo_znuny/src",
+]
+omit = [
+    "*model.py",
+    "*models.py",
+    "tests/*",
+    "__init__.py",
+]
+
+[tool.coverage.report]
+fail_under = 90
+skip_covered = true
+show_missing = true
+exclude_lines = [
+    'if __name__ == "__main__":',
+    "pragma: no cover",
+]
+
+[dependency-groups]
+dev = [
+    "mypy~=1.18.1",
+    "pytest~=8.4.2",
+    "pytest-asyncio~=0.24.0",
+    "pytest-cov~=6.0.0",
+    "ruff~=0.13.0",
+    "types-PyYAML~=6.0.0",
+]
