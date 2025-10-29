@@ -1,8 +1,8 @@
 [build]
 base = "docs"
 command = "npm run docs:build"
-publish = "docs/.vitepress/dist"
-functions = "docs/netlify/functions"
+publish = ".vitepress/dist"
+functions = "netlify/functions"
 
 # --- API function (keep above catch-alls) ---
 [[redirects]]
