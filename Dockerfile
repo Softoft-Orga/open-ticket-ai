@@ -5,15 +5,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     UV_LINK_MODE=copy \
     DEBIAN_FRONTEND=noninteractive
 
-RUN --mount=type=cache,target=/var/cache/apt \
-    apt-get update && \
-    apt-get -y upgrade && \
-    apt-get -y autoremove && \
-    rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
-RUN --mount=type=cache,target=/root/.cache/uv \
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get update && \
+    apt-get purge -y libexpat1-dev || true && \
+    apt-get install -y --no-install-recommends libexpat1 && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN --mount=type=cache,id=uvcache,sharing=locked,target=/root/.cache/uv \
     uv pip install --system \
       open-ticket-ai \
       otai-base \
