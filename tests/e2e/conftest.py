@@ -13,7 +13,7 @@ import pytest_asyncio
 import yaml
 
 from open_ticket_ai.core.config.app_config import AppConfig
-from open_ticket_ai.testing import ConfigBuilder
+from open_ticket_ai.core.config.config_builder import ConfigBuilder
 from otai_otobo_znuny.models import RenderedOTOBOZnunyTSServiceParams
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import Article, IdName, TicketCreate, TicketSearch, TicketUpdate

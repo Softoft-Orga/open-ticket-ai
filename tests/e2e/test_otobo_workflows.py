@@ -5,7 +5,7 @@ from uuid import uuid4
 
 import pytest
 
-from open_ticket_ai.testing import ConfigBuilder
+from open_ticket_ai.core.config.config_builder import ConfigBuilder
 from tests.e2e.conftest import (
     DockerComposeController,
     OtoboConnectionSettings,
@@ -16,10 +16,10 @@ pytestmark = pytest.mark.e2e
 
 
 async def wait_for_condition(
-    check: Callable[[], Awaitable[bool]],
-    *,
-    timeout: float,
-    poll_interval: float,
+        check: Callable[[], Awaitable[bool]],
+        *,
+        timeout: float,
+        poll_interval: float,
 ) -> None:
     deadline = time.monotonic() + timeout
     await asyncio.sleep(min(poll_interval, 5.0))
@@ -33,10 +33,10 @@ async def wait_for_condition(
 
 @pytest.mark.asyncio
 async def test_update_ticket_subject(
-    base_config_builder: ConfigBuilder,
-    docker_compose_controller: DockerComposeController,
-    otobo_helper: OtoboTestHelper,
-    otobo_settings: OtoboConnectionSettings,
+        base_config_builder: ConfigBuilder,
+        docker_compose_controller: DockerComposeController,
+        otobo_helper: OtoboTestHelper,
+        otobo_settings: OtoboConnectionSettings,
 ) -> None:
     original_subject = f"E2E Update {uuid4()}"
     ticket_id = await otobo_helper.create_ticket(subject=original_subject, body="initial subject validation")
@@ -83,10 +83,10 @@ async def test_update_ticket_subject(
 
 @pytest.mark.asyncio
 async def test_fetch_queue_and_add_notes(
-    base_config_builder: ConfigBuilder,
-    docker_compose_controller: DockerComposeController,
-    otobo_helper: OtoboTestHelper,
-    otobo_settings: OtoboConnectionSettings,
+        base_config_builder: ConfigBuilder,
+        docker_compose_controller: DockerComposeController,
+        otobo_helper: OtoboTestHelper,
+        otobo_settings: OtoboConnectionSettings,
 ) -> None:
     await otobo_helper.empty_test_queue()
 
