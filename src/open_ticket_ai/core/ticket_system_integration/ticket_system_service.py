@@ -10,6 +10,10 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 
 class TicketSystemService(Injectable, ABC):
     @abstractmethod
+    async def create_ticket(self, ticket: UnifiedTicket) -> str:
+        pass
+
+    @abstractmethod
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         pass
 

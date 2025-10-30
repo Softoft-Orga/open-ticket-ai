@@ -126,7 +126,7 @@ def test_config_builder_creates_valid_config(integration_config_builder):
     config = (
         integration_config_builder.with_logging(level="INFO")
         .add_service("test_service", "base:JinjaRenderer")
-        .set_orchestrator("base:SimpleSequentialOrchestrator")
+        .set_orchestrator()
         .build()
     )
 

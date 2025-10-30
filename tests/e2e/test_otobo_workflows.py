@@ -16,10 +16,10 @@ pytestmark = pytest.mark.e2e
 
 
 async def wait_for_condition(
-    check: Callable[[], Awaitable[bool]],
-    *,
-    timeout: float,
-    poll_interval: float,
+        check: Callable[[], Awaitable[bool]],
+        *,
+        timeout: float,
+        poll_interval: float,
 ) -> None:
     deadline = time.monotonic() + timeout
     await asyncio.sleep(min(poll_interval, 5.0))
@@ -33,10 +33,10 @@ async def wait_for_condition(
 
 @pytest.mark.asyncio
 async def test_update_ticket_subject(
-    base_config_builder: ConfigBuilder,
-    docker_compose_controller: DockerComposeController,
-    otobo_helper: OtoboTestHelper,
-    otobo_settings: OtoboConnectionSettings,
+        base_config_builder: ConfigBuilder,
+        docker_compose_controller: DockerComposeController,
+        otobo_helper: OtoboTestHelper,
+        otobo_settings: OtoboConnectionSettings,
 ) -> None:
     pipe_factory = PipeConfigFactory()
     original_subject = f"E2E Update {uuid4()}"
@@ -81,10 +81,10 @@ async def test_update_ticket_subject(
 
 @pytest.mark.asyncio
 async def test_fetch_queue_and_add_notes(
-    base_config_builder: ConfigBuilder,
-    docker_compose_controller: DockerComposeController,
-    otobo_helper: OtoboTestHelper,
-    otobo_settings: OtoboConnectionSettings,
+        base_config_builder: ConfigBuilder,
+        docker_compose_controller: DockerComposeController,
+        otobo_helper: OtoboTestHelper,
+        otobo_settings: OtoboConnectionSettings,
 ) -> None:
     pipe_factory = PipeConfigFactory()
     await otobo_helper.empty_test_queue()
