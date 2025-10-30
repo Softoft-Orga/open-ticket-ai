@@ -111,7 +111,8 @@ class ConfigBuilder:
     def build(self) -> AppConfig:
         self._ensure_services()
         self._ensure_orchestrator()
-        assert self._orchestrator is not None
+        if self._orchestrator is None:
+            raise ValueError("Orchestrator must be set before building the configuration.")
         return AppConfig(
             open_ticket_ai=OpenTicketAIConfig(
                 api_version=">=1.0.0",
