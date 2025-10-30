@@ -19,6 +19,7 @@ from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
+from open_ticket_ai.testing.config_builder import ConfigBuilder
 from tests.mocked_ticket_system import MockedTicketSystem
 
 # Mark all tests in this directory as integration tests
@@ -100,8 +101,8 @@ def integration_jinja_service_config() -> InjectableConfig:
 
 @pytest.fixture
 def integration_app_config(
-        integration_infrastructure_config: InfrastructureConfig,
-        integration_jinja_service_config: InjectableConfig,
+    integration_infrastructure_config: InfrastructureConfig,
+    integration_jinja_service_config: InjectableConfig,
 ) -> AppConfig:
     """Complete AppConfig for integration tests."""
     return AppConfig(
@@ -232,136 +233,6 @@ def integration_mocked_ticket_system(integration_logger_factory: LoggerFactory) 
     )
 
     return system
-
-
-class ConfigBuilder:
-    """
-    Fluent builder for AppConfig instances in integration tests.
-
-    Example usage:
-        config = (ConfigBuilder()
-            .with_logging(level="DEBUG")
-            .add_service("jinja", "base:JinjaRenderer")
-            .set_orchestrator("base:SimpleSequentialOrchestrator")
-            .build())
-    """
-
-    def __init__(self) -> None:
-        self._logging_config = LoggingConfig(level="INFO")
-        self._services: dict[str, InjectableConfigBase] = {}
-        self._orchestrator: PipeConfig | None = None
-        self._plugins: list[str] = []
-
-    def with_logging(
-            self,
-            level: str = "INFO",
-            log_to_file: bool = False,
-            log_file_path: str | None = None,
-    ) -> ConfigBuilder:
-        """Configure logging settings."""
-        self._logging_config = LoggingConfig(
-            level=level,
-            log_to_file=log_to_file,
-            log_file_path=log_file_path,
-        )
-        return self
-
-    def add_plugin(self, plugin_name: str) -> ConfigBuilder:
-        """Add a plugin to load."""
-        self._plugins.append(plugin_name)
-        return self
-
-    def add_service(
-            self,
-            service_id: str,
-            use: str,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
-    ) -> ConfigBuilder:
-        """Add a service configuration."""
-        self._services[service_id] = InjectableConfigBase(
-            use=use,
-            params=params or {},
-            injects=injects or {},
-        )
-        return self
-
-    def add_jinja_renderer(self, service_id: str = "jinja_default") -> ConfigBuilder:
-        """Add default JinjaRenderer service."""
-        return self.add_service(
-            service_id=service_id,
-            use="base:JinjaRenderer",
-            params={},
-        )
-
-    def set_orchestrator(
-            self,
-            use: str = "base:SimpleSequentialOrchestrator",
-            params: dict[str, Any] | None = None,
-    ) -> ConfigBuilder:
-        """Configure the orchestrator."""
-        self._orchestrator = PipeConfig(
-            id="orchestrator",
-            use=use,
-            params=params or {},
-        )
-        return self
-
-    def add_orchestrator_step(
-            self,
-            step_id: str,
-            use: str,
-            params: dict[str, Any] | None = None,
-    ) -> ConfigBuilder:
-        """Add a step to the orchestrator configuration."""
-        if self._orchestrator is None:
-            self.set_orchestrator()
-
-        steps = list(self._orchestrator.params.get("steps", []))
-        steps.append(
-            {
-                "id": step_id,
-                "use": use,
-                "params": params or {},
-            }
-        )
-
-        self._orchestrator = self._orchestrator.model_copy(
-            update={"params": {**self._orchestrator.params, "steps": steps}}
-        )
-        return self
-
-    def build(self) -> AppConfig:
-        """Build the final AppConfig instance."""
-        # Ensure required services exist
-        if not self._services:
-            self.add_jinja_renderer()
-
-        # Ensure orchestrator exists
-        if self._orchestrator is None:
-            self.set_orchestrator()
-
-        return AppConfig(
-            open_ticket_ai=OpenTicketAIConfig(
-                api_version=">=1.0.0",
-                plugins=self._plugins,
-                infrastructure=InfrastructureConfig(
-                    logging=self._logging_config,
-                ),
-                services=self._services,
-                orchestrator=self._orchestrator,
-            )
-        )
-
-    @staticmethod
-    def minimal() -> AppConfig:
-        """Create minimal valid AppConfig."""
-        return ConfigBuilder().build()
-
-    @staticmethod
-    def with_defaults() -> ConfigBuilder:
-        """Create builder with common defaults."""
-        return ConfigBuilder().with_logging(level="DEBUG").add_jinja_renderer().set_orchestrator()
 
 
 @pytest.fixture
