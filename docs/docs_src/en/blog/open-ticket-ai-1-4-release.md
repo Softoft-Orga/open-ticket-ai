@@ -1,20 +1,21 @@
 ---
 title: Open Ticket AI 1.4.1 Release - The First Major Production Release
-description: "Discover Open Ticket AI 1.4.1, the first production-ready release featuring powerful"
-toast_message: "New Release: Open Ticket AI 1.4.1 — Explore the production-ready platform"
+description: "Discover Open Ticket AI 1.4, the first production-ready release featuring powerful"
+toast_message: "New Release: Open Ticket AI 1.4 — Explore the production-ready platform"
 image: "https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png"
 show-on-news: true
-date: 2025-10-27
+date: 2025-10-28
 ---
 
-# Open Ticket AI 1.4.X: The First Major Production Release
+# Open Ticket AI 1.4: The First Major Production Release
 
 Open Ticket AI 1.4.X is here, marking the **first major production-ready release**! This version
 brings enterprise-grade features, a mature plugin ecosystem, and the flexibility to automate your
 ticket system workflows like never before. Get the full release
 on [GitHub](https://github.com/Softoft-Orga/open-ticket-ai/releases/tag/v1.4.1).
 
-## What Open Ticket AI 1.4.X Offers
+![https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png](https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png)
+## What Open Ticket AI 1.4 Offers
 
 ### Powerful Plugin Architecture
 
@@ -59,7 +60,35 @@ Explore [Configuration & Template Rendering](../users/config_rendering.md) for d
 
 ### Easy Installation
 
-Get started in minutes:
+The easiest way to setup Open Ticket AI on your server is using **Docker Compose**:
+
+**1. Create `compose.yml`:**
+
+```yaml
+services:
+  open-ticket-ai:
+    image: openticketai/engine:latest
+    restart: "unless-stopped"
+    environment:
+      OTAI_TS_PASSWORD: "${OTAI_TS_PASSWORD}"
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+```
+
+**2. Create your `config.yml`** (see [Configuration Guide](../users/config_rendering.md))
+
+**3. Start the service:**
+
+```bash
+docker compose up -d
+```
+
+**4. You also need to setup the Ticketsystem**
+
+
+#### Alternative: Install with pip/uv
+
+For local development or custom deployments:
 
 ::: code-group
 
@@ -93,7 +122,7 @@ options.
 
 ## For Plugin Developers: Build and Monetize
 
-Open Ticket AI 1.4.1 empowers developers to **create and sell commercial plugins** with complete
+Open Ticket AI 1.4 empowers developers to **create and sell commercial plugins** with complete
 licensing freedom. There's no marketplace yet, but the foundation is ready.
 
 ### Plugin Development Freedom
@@ -103,48 +132,6 @@ licensing freedom. There's no marketplace yet, but the foundation is ready.
 - **Full documentation**: Complete guide
   at [Plugin Development](../developers/plugin_development.md)
 - **Community visibility**: Your plugin can be listed on our [Plugins](../users/plugins.md) page
-
-### Monetization Approaches
-
-#### Private PyPI + License Keys
-
-Host your plugin on a private PyPI server (DevPI, Gemfury, AWS CodeArtifact) with authentication
-tokens. Add license validation in your plugin's `__init__` method:
-
-```python
-import os
-from open_ticket_ai.core.plugins.plugin import Plugin
-
-
-class CommercialPlugin(Plugin):
-    def __init__(self, config):
-        license_key = os.getenv('MY_PLUGIN_LICENSE_KEY')
-        if not license_key or not self._validate_license(license_key):
-            raise LicenseError("Valid license key required")
-        super().__init__(config)
-
-    def _validate_license(self, key: str) -> bool:
-        # Your validation logic
-        pass
-```
-
-#### Public PyPI + License Enforcement
-
-Publish freely to PyPI but enforce runtime licensing:
-
-```python
-class PublicCommercialPlugin(Plugin):
-    def _get_all_injectables(self):
-        license_key = os.getenv('MY_PLUGIN_LICENSE_KEY')
-        if not license_key or not self._verify_license(license_key):
-            raise LicenseError(
-                "This plugin requires a valid license. "
-                "Visit https://myplugin.com for licensing."
-            )
-        return [MyPipe, MyService]
-```
-
-Installation remains open, but usage requires purchasing a license key.
 
 ### Future Marketplace
 
@@ -160,7 +147,7 @@ Start building now, and your plugin will be ready when the marketplace launches!
 
 ## Technical Highlights
 
-- **Python 3.13**: Modern type hints, performance improvements
+- **Python 3.14**: Modern type hints, performance improvements
 - **Dependency Injection**: Clean architecture with Injector framework
 - **Entry Point Discovery**: Standard Python packaging for plugin loading
 - **API Compatibility Validation**: Plugins and core versions checked at runtime
@@ -168,6 +155,6 @@ Start building now, and your plugin will be ready when the marketplace launches!
 
 ---
 
-Open Ticket AI 1.4.1 is production-ready, extensible, and built for the future. Install it today,
+Open Ticket AI 1.4 is production-ready, extensible, and built for the future. Install it today,
 automate your workflows, and join the growing plugin ecosystem!
 

@@ -17,23 +17,11 @@ const recentArticle = computed(() => {
 
 const toastRef = ref<HTMLElement | null>(null)
 
-const updateToastHeight = () => {
-  if (toastRef.value) {
-    const height = toastRef.value.offsetHeight
-    document.documentElement.style.setProperty('--toast-height', `${height}px`)
-  } else {
-    document.documentElement.style.setProperty('--toast-height', '0px')
-  }
-}
 
 onMounted(() => {
-  updateToastHeight()
-  window.addEventListener('resize', updateToastHeight)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', updateToastHeight)
-  document.documentElement.style.setProperty('--toast-height', '0px')
 })
 </script>
 
@@ -45,19 +33,15 @@ onUnmounted(() => {
 
 <style scoped>
 .recent-news-toast {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   width: 100%;
+  height: 50px;
   background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
-  padding: 0.75rem 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(100, 108, 255, 0.25);
-  z-index: 100;
+  z-index: 10;
 }
 
 .recent-news-toast__link {

@@ -1,8 +1,6 @@
 # tests/integration/conftest.py
 """Integration test fixtures providing real instances of core components."""
 
-from typing import Any
-
 import pytest
 from injector import Injector
 
@@ -16,10 +14,9 @@ from open_ticket_ai.core.logging.logging_models import LoggingConfig, LoggingFor
 from open_ticket_ai.core.logging.stdlib_logging_adapter import create_logger_factory
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
-from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
-from open_ticket_ai.testing.config_builder import ConfigBuilder
+from open_ticket_ai.core.config.config_builder import ConfigBuilder
 from tests.mocked_ticket_system import MockedTicketSystem
 
 # Mark all tests in this directory as integration tests

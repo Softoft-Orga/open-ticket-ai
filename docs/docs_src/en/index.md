@@ -45,8 +45,8 @@ hero:
     - link: /en/products/overview
       text: Feature Overview
       theme: alt
-    - link: /en/blog/open-ticket-ai-1-2-release
-      text: What's New in 1.2.0
+    - link: /en/blog/open-ticket-ai-1-4-release
+      text: What's New in 1.4
       theme: alt
   image:
     alt: Open Ticket AI Logo

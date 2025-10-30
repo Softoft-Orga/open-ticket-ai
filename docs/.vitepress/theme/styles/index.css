@@ -23,9 +23,6 @@
 }
 
 /* Toast notification spacing - ensure navbar doesn't overlap with fixed toast */
-.VPNav {
-    padding-top: var(--toast-height, 0px);
-}
 
 /* ===================================================================
  * 2. CUSTOM COMPONENT STYLES USING TAILWIND APPLIES

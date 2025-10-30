@@ -20,10 +20,10 @@ class ConfigBuilder:
         self._plugins: list[str] = []
 
     def with_logging(
-        self,
-        level: str = "INFO",
-        log_to_file: bool = False,
-        log_file_path: str | None = None,
+            self,
+            level: str = "INFO",
+            log_to_file: bool = False,
+            log_file_path: str | None = None,
     ) -> ConfigBuilder:
         self._logging_config = LoggingConfig(
             level=level,
@@ -37,11 +37,11 @@ class ConfigBuilder:
         return self
 
     def add_service(
-        self,
-        service_id: str,
-        use: str,
-        params: dict[str, Any] | None = None,
-        injects: dict[str, str] | None = None,
+            self,
+            service_id: str,
+            use: str,
+            params: dict[str, Any] | None = None,
+            injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
         self._services[service_id] = InjectableConfigBase(
             use=use,
@@ -58,12 +58,12 @@ class ConfigBuilder:
         )
 
     def set_orchestrator(
-        self,
-        *,
-        use: str = "base:SimpleSequentialOrchestrator",
-        params: dict[str, Any] | None = None,
-        orchestrator_id: str = "orchestrator",
-        injects: dict[str, str] | None = None,
+            self,
+            *,
+            use: str = "base:SimpleSequentialOrchestrator",
+            params: dict[str, Any] | None = None,
+            orchestrator_id: str = "orchestrator",
+            injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
         self._orchestrator = PipeConfig(
             id=orchestrator_id,
@@ -74,26 +74,22 @@ class ConfigBuilder:
         return self
 
     def configure_simple_orchestrator(
-        self,
-        *,
-        orchestrator_id: str = "orchestrator",
-        orchestrator_sleep: str | None = None,
+            self,
+            *,
+            orchestrator_id: str = "orchestrator",
+            orchestrator_sleep: str | None = None,
     ) -> ConfigBuilder:
         params: dict[str, Any] = {}
         if orchestrator_sleep is not None:
             params["orchestrator_sleep"] = orchestrator_sleep
-        return self.set_orchestrator(
-            use="base:SimpleSequentialOrchestrator",
-            params=params,
-            orchestrator_id=orchestrator_id,
-        )
+        return self.set_orchestrator(params=params, orchestrator_id=orchestrator_id)
 
     def add_orchestrator_step(
-        self,
-        step_id: str,
-        use: str,
-        params: dict[str, Any] | None = None,
-        injects: dict[str, str] | None = None,
+            self,
+            step_id: str,
+            use: str,
+            params: dict[str, Any] | None = None,
+            injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
         pipe = ConfigBuilder.pipe(step_id, use, params=params, injects=injects)
         return self.add_orchestrator_pipe(pipe)
@@ -135,11 +131,11 @@ class ConfigBuilder:
 
     @staticmethod
     def pipe(
-        pipe_id: str,
-        use: str,
-        *,
-        params: dict[str, Any] | None = None,
-        injects: dict[str, str] | None = None,
+            pipe_id: str,
+            use: str,
+            *,
+            params: dict[str, Any] | None = None,
+            injects: dict[str, str] | None = None,
     ) -> PipeConfig:
         return PipeConfig(
             id=pipe_id,
@@ -150,12 +146,12 @@ class ConfigBuilder:
 
     @staticmethod
     def composite_pipe(
-        pipe_id: str,
-        steps: Sequence[PipeConfig],
-        *,
-        params: dict[str, Any] | None = None,
-        injects: dict[str, str] | None = None,
-        use: str = "base:CompositePipe",
+            pipe_id: str,
+            steps: Sequence[PipeConfig],
+            *,
+            params: dict[str, Any] | None = None,
+            injects: dict[str, str] | None = None,
+            use: str = "base:CompositePipe",
     ) -> PipeConfig:
         combined_params = dict(params or {})
         combined_params["steps"] = [step.model_dump(mode="json", exclude_none=True) for step in steps]
@@ -163,10 +159,10 @@ class ConfigBuilder:
 
     @staticmethod
     def interval_trigger(
-        *,
-        trigger_id: str = "interval_trigger",
-        interval: str = "PT5S",
-        params: dict[str, Any] | None = None,
+            *,
+            trigger_id: str = "interval_trigger",
+            interval: str = "PT5S",
+            params: dict[str, Any] | None = None,
     ) -> PipeConfig:
         trigger_params = dict(params or {})
         trigger_params.setdefault("interval", interval)
@@ -174,12 +170,12 @@ class ConfigBuilder:
 
     @staticmethod
     def simple_sequential_runner(
-        *,
-        runner_id: str,
-        on: PipeConfig,
-        run: PipeConfig,
-        params: dict[str, Any] | None = None,
-        injects: dict[str, str] | None = None,
+            *,
+            runner_id: str,
+            on: PipeConfig,
+            run: PipeConfig,
+            params: dict[str, Any] | None = None,
+            injects: dict[str, str] | None = None,
     ) -> PipeConfig:
         runner_params = dict(params or {})
         runner_params["on"] = on.model_dump(mode="json", exclude_none=True)
