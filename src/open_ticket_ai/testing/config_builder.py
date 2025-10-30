@@ -33,8 +33,7 @@ class ConfigBuilder:
         return self
 
     def add_plugin(self, plugin_name: str) -> ConfigBuilder:
-        if plugin_name not in self._plugins:
-            self._plugins.append(plugin_name)
+        self._plugins.append(plugin_name)
         return self
 
     def add_service(
