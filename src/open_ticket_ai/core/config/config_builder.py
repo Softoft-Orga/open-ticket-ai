@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 from typing import Any
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
+from open_ticket_ai.core.config.pipe_config_builder import PipeConfigBuilder, PipeConfigFactory
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfigBase
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
@@ -18,6 +18,7 @@ class ConfigBuilder:
         self._services: dict[str, InjectableConfigBase] = {}
         self._orchestrator: PipeConfig | None = None
         self._plugins: list[str] = []
+        self._pipe_factory = PipeConfigFactory()
 
     def with_logging(
             self,
@@ -57,6 +58,10 @@ class ConfigBuilder:
             params={},
         )
 
+    @property
+    def pipe_factory(self) -> PipeConfigFactory:
+        return self._pipe_factory
+
     def set_orchestrator(
             self,
             *,
@@ -65,12 +70,20 @@ class ConfigBuilder:
             orchestrator_id: str = "orchestrator",
             injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
-        self._orchestrator = PipeConfig(
-            id=orchestrator_id,
+        params_copy = dict(params or {})
+        steps_data = params_copy.pop("steps", None)
+        builder = self._pipe_factory.create_composite_builder(
+            orchestrator_id,
+            params=params_copy,
+            injects=injects,
             use=use,
-            params=params or {},
-            injects=injects or {},
         )
+        if steps_data:
+            builder.add_steps(
+                step if isinstance(step, PipeConfig) else PipeConfig.model_validate(step)
+                for step in steps_data
+            )
+        self._orchestrator = builder.build()
         return self
 
     def configure_simple_orchestrator(
@@ -91,17 +104,15 @@ class ConfigBuilder:
             params: dict[str, Any] | None = None,
             injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
-        pipe = ConfigBuilder.pipe(step_id, use, params=params, injects=injects)
+        pipe = self._pipe_factory.create_pipe(step_id, use, params=params, injects=injects)
         return self.add_orchestrator_pipe(pipe)
 
     def add_orchestrator_pipe(self, pipe: PipeConfig) -> ConfigBuilder:
         self._ensure_orchestrator()
         assert self._orchestrator is not None
-        current_params = dict(self._orchestrator.params)
-        steps = list(current_params.get("steps", []))
-        steps.append(pipe.model_dump(mode="json", exclude_none=True))
-        current_params["steps"] = steps
-        self._orchestrator = self._orchestrator.model_copy(update={"params": current_params})
+        builder = self._create_orchestrator_builder(self._orchestrator)
+        builder.add_step(pipe)
+        self._orchestrator = builder.build()
         return self
 
     def build(self) -> AppConfig:
@@ -129,64 +140,6 @@ class ConfigBuilder:
     def with_defaults() -> ConfigBuilder:
         return ConfigBuilder().with_logging(level="DEBUG").add_jinja_renderer().configure_simple_orchestrator()
 
-    @staticmethod
-    def pipe(
-            pipe_id: str,
-            use: str,
-            *,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
-    ) -> PipeConfig:
-        return PipeConfig(
-            id=pipe_id,
-            use=use,
-            params=params or {},
-            injects=injects or {},
-        )
-
-    @staticmethod
-    def composite_pipe(
-            pipe_id: str,
-            steps: Sequence[PipeConfig],
-            *,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
-            use: str = "base:CompositePipe",
-    ) -> PipeConfig:
-        combined_params = dict(params or {})
-        combined_params["steps"] = [step.model_dump(mode="json", exclude_none=True) for step in steps]
-        return ConfigBuilder.pipe(pipe_id, use, params=combined_params, injects=injects)
-
-    @staticmethod
-    def interval_trigger(
-            *,
-            trigger_id: str = "interval_trigger",
-            interval: str = "PT5S",
-            params: dict[str, Any] | None = None,
-    ) -> PipeConfig:
-        trigger_params = dict(params or {})
-        trigger_params.setdefault("interval", interval)
-        return ConfigBuilder.pipe(trigger_id, "base:IntervalTrigger", params=trigger_params)
-
-    @staticmethod
-    def simple_sequential_runner(
-            *,
-            runner_id: str,
-            on: PipeConfig,
-            run: PipeConfig,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
-    ) -> PipeConfig:
-        runner_params = dict(params or {})
-        runner_params["on"] = on.model_dump(mode="json", exclude_none=True)
-        runner_params["run"] = run.model_dump(mode="json", exclude_none=True)
-        return ConfigBuilder.pipe(
-            runner_id,
-            "base:SimpleSequentialRunner",
-            params=runner_params,
-            injects=injects,
-        )
-
     def _ensure_services(self) -> None:
         if not self._services:
             self.add_jinja_renderer()
@@ -194,3 +147,19 @@ class ConfigBuilder:
     def _ensure_orchestrator(self) -> None:
         if self._orchestrator is None:
             self.configure_simple_orchestrator()
+
+    def _create_orchestrator_builder(self, orchestrator: PipeConfig) -> PipeConfigBuilder:
+        params = dict(orchestrator.params)
+        steps = params.pop("steps", [])
+        builder = self._pipe_factory.create_composite_builder(
+            orchestrator.id,
+            params=params,
+            injects=orchestrator.injects,
+            use=orchestrator.use,
+        )
+        if steps:
+            builder.add_steps(
+                step if isinstance(step, PipeConfig) else PipeConfig.model_validate(step)
+                for step in steps
+            )
+        return builder

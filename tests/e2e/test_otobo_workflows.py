@@ -5,7 +5,7 @@ from uuid import uuid4
 
 import pytest
 
-from open_ticket_ai.testing import ConfigBuilder
+from open_ticket_ai.testing import ConfigBuilder, PipeConfigFactory
 from tests.e2e.conftest import (
     DockerComposeController,
     OtoboConnectionSettings,
@@ -38,11 +38,12 @@ async def test_update_ticket_subject(
     otobo_helper: OtoboTestHelper,
     otobo_settings: OtoboConnectionSettings,
 ) -> None:
+    pipe_factory = PipeConfigFactory()
     original_subject = f"E2E Update {uuid4()}"
     ticket_id = await otobo_helper.create_ticket(subject=original_subject, body="initial subject validation")
     updated_subject = f"{original_subject} :: updated"
 
-    update_pipe = ConfigBuilder.pipe(
+    update_pipe = pipe_factory.create_pipe(
         "update-ticket",
         "base:UpdateTicketPipe",
         params={
@@ -53,13 +54,10 @@ async def test_update_ticket_subject(
         },
         injects={"ticket_system": "otobo_znuny"},
     )
-    composite = ConfigBuilder.composite_pipe(
-        "update-workflow",
-        steps=[update_pipe],
-    )
-    runner = ConfigBuilder.simple_sequential_runner(
+    composite = pipe_factory.create_composite_builder("update-workflow").add_step(update_pipe).build()
+    runner = pipe_factory.create_simple_sequential_runner(
         runner_id="update-runner",
-        on=ConfigBuilder.interval_trigger(interval=otobo_settings.interval),
+        on=pipe_factory.create_interval_trigger(interval=otobo_settings.interval),
         run=composite,
     )
 
@@ -88,6 +86,7 @@ async def test_fetch_queue_and_add_notes(
     otobo_helper: OtoboTestHelper,
     otobo_settings: OtoboConnectionSettings,
 ) -> None:
+    pipe_factory = PipeConfigFactory()
     await otobo_helper.empty_test_queue()
 
     ticket_subjects = [f"E2E Queue Ticket {uuid4()}" for _ in range(2)]
@@ -98,7 +97,7 @@ async def test_fetch_queue_and_add_notes(
     note_subject = f"E2E Note {uuid4()}"
     note_body = f"Processed by pipeline {uuid4()}"
 
-    fetch_step = ConfigBuilder.pipe(
+    fetch_step = pipe_factory.create_pipe(
         "fetch-test-queue",
         "base:FetchTicketsPipe",
         params={
@@ -110,11 +109,12 @@ async def test_fetch_queue_and_add_notes(
         injects={"ticket_system": "otobo_znuny"},
     )
 
-    note_steps = []
+    composite_builder = pipe_factory.create_composite_builder("note-workflow")
+    composite_builder.add_step(fetch_step)
     for index in range(len(ticket_ids)):
         ticket_ref = f"{{{{ get_pipe_result('fetch-test-queue','fetched_tickets')[{index}]['id'] }}}}"
-        note_steps.append(
-            ConfigBuilder.pipe(
+        composite_builder.add_step(
+            pipe_factory.create_pipe(
                 f"add-note-{index}",
                 "base:AddNotePipe",
                 params={
@@ -128,13 +128,10 @@ async def test_fetch_queue_and_add_notes(
             )
         )
 
-    composite = ConfigBuilder.composite_pipe(
-        "note-workflow",
-        steps=[fetch_step, *note_steps],
-    )
-    runner = ConfigBuilder.simple_sequential_runner(
+    composite = composite_builder.build()
+    runner = pipe_factory.create_simple_sequential_runner(
         runner_id="note-runner",
-        on=ConfigBuilder.interval_trigger(interval=otobo_settings.interval),
+        on=pipe_factory.create_interval_trigger(interval=otobo_settings.interval),
         run=composite,
     )
 
