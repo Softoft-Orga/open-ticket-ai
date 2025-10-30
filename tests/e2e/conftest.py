@@ -11,13 +11,12 @@ from typing import Any, AsyncIterator, Iterator
 import pytest
 import pytest_asyncio
 import yaml
+from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
+from otobo_znuny.domain_models.ticket_models import Article, IdName, TicketCreate, TicketSearch, TicketUpdate
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_builder import ConfigBuilder
 from otai_otobo_znuny.models import RenderedOTOBOZnunyTSServiceParams
-from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
-from otobo_znuny.domain_models.ticket_models import Article, IdName, TicketCreate, TicketSearch, TicketUpdate
-
 
 _DURATION_PATTERN = re.compile(r"^PT(?:(?P<hours>\d+)H)?(?:(?P<minutes>\d+)M)?(?:(?P<seconds>\d+(?:\.\d+)?)S)?$")
 
@@ -73,12 +72,13 @@ class OtoboConnectionSettings:
 
 
 class DockerComposeController:
-    def __init__(self, root: Path) -> None:
-        self._root = root
-        self._compose_file = root / "compose.yml"
-        self._config_file = root / "config.yml"
+    def __init__(self, compose_file: Path, work_dir: Path) -> None:
+        self._compose_file = compose_file
+        self._work_dir = work_dir
+        self._config_file = work_dir / "config.yml"
 
     def write_config(self, config: AppConfig) -> Path:
+        self._work_dir.mkdir(parents=True, exist_ok=True)
         data = config.model_dump(mode="json", exclude_none=True)
         with self._config_file.open("w", encoding="utf-8") as handle:
             yaml.safe_dump(data, handle, sort_keys=False)
@@ -100,7 +100,7 @@ class DockerComposeController:
 
     def _run(self, args: list[str]) -> None:
         command = ["docker", "compose", "-f", str(self._compose_file), *args]
-        subprocess.run(command, check=True, cwd=self._root)
+        subprocess.run(command, check=True, cwd=self._work_dir)
 
 
 class OtoboTestHelper:
@@ -110,11 +110,11 @@ class OtoboTestHelper:
         self._created_ticket_ids: list[str] = []
 
     async def create_ticket(
-        self,
-        *,
-        subject: str,
-        body: str,
-        queue_name: str | None = None,
+            self,
+            *,
+            subject: str,
+            body: str,
+            queue_name: str | None = None,
     ) -> str:
         queue_value = queue_name or self._settings.test_queue
         ticket = TicketCreate(
@@ -158,22 +158,34 @@ class OtoboTestHelper:
 
 
 @pytest.fixture(scope="session")
-def deployment_root() -> Path:
-    return Path(__file__).resolve().parents[3] / "deployment"
+def e2e_compose_file() -> Path:
+    """Path to E2E-specific docker-compose file"""
+    return Path(__file__).parent / "compose.e2e.yml"
 
 
 @pytest.fixture(scope="session")
-def docker_compose_controller(deployment_root: Path) -> Iterator[DockerComposeController]:
+def docker_compose_controller(
+    e2e_compose_file: Path,
+    tmp_path_factory: pytest.TempPathFactory,
+) -> Iterator[DockerComposeController]:
     if shutil.which("docker") is None:
         pytest.skip("docker is required for E2E tests")
-    controller = DockerComposeController(deployment_root)
-    controller.down()
-    controller.remove_config()
+
+    skip_compose = os.getenv("OTAI_E2E_SKIP_COMPOSE", "").lower() in ("1", "true", "yes")
+
+    work_dir = tmp_path_factory.mktemp("e2e_compose")
+    controller = DockerComposeController(e2e_compose_file, work_dir)
+
+    if not skip_compose:
+        controller.down()
+        controller.remove_config()
+
     try:
         yield controller
     finally:
-        controller.down()
-        controller.remove_config()
+        if not skip_compose:
+            controller.down()
+            controller.remove_config()
 
 
 @pytest.fixture(scope="session")
@@ -228,8 +240,8 @@ async def otobo_client(otobo_settings: OtoboConnectionSettings) -> AsyncIterator
 
 @pytest_asyncio.fixture
 async def otobo_helper(
-    otobo_client: OTOBOZnunyClient,
-    otobo_settings: OtoboConnectionSettings,
+        otobo_client: OTOBOZnunyClient,
+        otobo_settings: OtoboConnectionSettings,
 ) -> AsyncIterator[OtoboTestHelper]:
     helper = OtoboTestHelper(otobo_client, otobo_settings)
     try:

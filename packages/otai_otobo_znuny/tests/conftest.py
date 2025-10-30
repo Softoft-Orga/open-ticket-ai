@@ -20,6 +20,7 @@ def mock_client():
     mock.login = MagicMock()
     mock.search_and_get = AsyncMock()
     mock.get_ticket = AsyncMock()
+    mock.create_ticket = AsyncMock()
     mock.update_ticket = AsyncMock()
     return mock
 
