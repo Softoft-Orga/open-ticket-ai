@@ -5,10 +5,12 @@ from uuid import uuid4
 
 import pytest
 
-from open_ticket_ai.testing import ConfigBuilder, PipeConfigFactory
+from open_ticket_ai.core.config.config_builder import ConfigBuilder
+from open_ticket_ai.core.config.pipe_config_builder import PipeConfigFactory
+
 from tests.e2e.conftest import (
     DockerComposeController,
-    OtoboConnectionSettings,
+    OtoboE2EConfig,
     OtoboTestHelper,
 )
 
@@ -36,7 +38,7 @@ async def test_update_ticket_subject(
         base_config_builder: ConfigBuilder,
         docker_compose_controller: DockerComposeController,
         otobo_helper: OtoboTestHelper,
-        otobo_settings: OtoboConnectionSettings,
+        otobo_e2e_config: OtoboE2EConfig,
 ) -> None:
     pipe_factory = PipeConfigFactory()
     original_subject = f"E2E Update {uuid4()}"
@@ -57,7 +59,7 @@ async def test_update_ticket_subject(
     composite = pipe_factory.create_composite_builder("update-workflow").add_step(update_pipe).build()
     runner = pipe_factory.create_simple_sequential_runner(
         runner_id="update-runner",
-        on=pipe_factory.create_interval_trigger(interval=otobo_settings.interval),
+        on=pipe_factory.create_interval_trigger(interval=otobo_e2e_config.environment.polling_interval),
         run=composite,
     )
 
@@ -74,8 +76,8 @@ async def test_update_ticket_subject(
 
     await wait_for_condition(
         subject_matches,
-        timeout=180.0,
-        poll_interval=max(otobo_settings.interval_seconds, 5.0),
+        timeout=10.0,
+        poll_interval=max(otobo_e2e_config.environment.interval_seconds, 5.0),
     )
 
 
@@ -84,10 +86,10 @@ async def test_fetch_queue_and_add_notes(
         base_config_builder: ConfigBuilder,
         docker_compose_controller: DockerComposeController,
         otobo_helper: OtoboTestHelper,
-        otobo_settings: OtoboConnectionSettings,
+        otobo_e2e_config: OtoboE2EConfig,
 ) -> None:
     pipe_factory = PipeConfigFactory()
-    await otobo_helper.empty_test_queue()
+    await otobo_helper.empty_monitored_queue()
 
     ticket_subjects = [f"E2E Queue Ticket {uuid4()}" for _ in range(2)]
     ticket_ids = [
@@ -102,7 +104,7 @@ async def test_fetch_queue_and_add_notes(
         "base:FetchTicketsPipe",
         params={
             "ticket_search_criteria": {
-                "queue": {"name": otobo_settings.test_queue},
+                "queue": {"name": otobo_e2e_config.environment.monitored_queue},
                 "limit": len(ticket_ids),
             }
         },
@@ -131,7 +133,7 @@ async def test_fetch_queue_and_add_notes(
     composite = composite_builder.build()
     runner = pipe_factory.create_simple_sequential_runner(
         runner_id="note-runner",
-        on=pipe_factory.create_interval_trigger(interval=otobo_settings.interval),
+        on=pipe_factory.create_interval_trigger(interval=otobo_e2e_config.environment.polling_interval),
         run=composite,
     )
 
@@ -153,5 +155,5 @@ async def test_fetch_queue_and_add_notes(
     await wait_for_condition(
         notes_applied,
         timeout=240.0,
-        poll_interval=max(otobo_settings.interval_seconds, 5.0),
+        poll_interval=max(otobo_e2e_config.environment.interval_seconds, 5.0),
     )

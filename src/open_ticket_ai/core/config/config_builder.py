@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import Any
 
 from open_ticket_ai.core.config.app_config import AppConfig
@@ -90,7 +91,7 @@ class ConfigBuilder:
             self,
             *,
             orchestrator_id: str = "orchestrator",
-            orchestrator_sleep: str | None = None,
+            orchestrator_sleep: timedelta | None = None,
     ) -> ConfigBuilder:
         params: dict[str, Any] = {}
         if orchestrator_sleep is not None:

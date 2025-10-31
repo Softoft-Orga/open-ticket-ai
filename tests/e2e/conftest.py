@@ -1,112 +1,131 @@
-from __future__ import annotations
-
+import logging
 import os
-import re
 import shutil
 import subprocess
-from dataclasses import dataclass, field
+from datetime import timedelta
 from pathlib import Path
-from typing import Any, AsyncIterator, Iterator
+from typing import Any, AsyncIterator, Iterator, Self
 
 import pytest
 import pytest_asyncio
 import yaml
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import Article, IdName, TicketCreate, TicketSearch, TicketUpdate
+from otobo_znuny.domain_models.ticket_operation import TicketOperation
+from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_builder import ConfigBuilder
-from otai_otobo_znuny.models import RenderedOTOBOZnunyTSServiceParams
+from otai_otobo_znuny.models import OTOBOZnunyTSServiceParams
 
-_DURATION_PATTERN = re.compile(r"^PT(?:(?P<hours>\d+)H)?(?:(?P<minutes>\d+)M)?(?:(?P<seconds>\d+(?:\.\d+)?)S)?$")
-
-
-def _parse_duration_seconds(value: str) -> float:
-    match = _DURATION_PATTERN.match(value)
-    if not match:
-        raise ValueError(value)
-    hours = int(match.group("hours") or 0)
-    minutes = int(match.group("minutes") or 0)
-    seconds = float(match.group("seconds") or 0.0)
-    total = (hours * 3600) + (minutes * 60) + seconds
-    if total == 0:
-        raise ValueError(value)
-    return total
+logger = logging.getLogger(__name__)
 
 
-@dataclass(frozen=True)
-class OtoboConnectionSettings:
-    base_url: str
-    username: str
-    password: str
-    test_queue: str
-    new_queue: str
-    interval: str
-    state_name: str
-    priority_name: str
-    webservice_name: str = "OpenTicketAI"
-    operation_urls: dict[str, str] = field(
-        default_factory=lambda: {
-            "TicketCreate": "ticket-create",
-            "TicketSearch": "ticket-search",
-            "TicketGet": "ticket-get",
-            "TicketUpdate": "ticket-update",
-        }
+class OtoboTestEnvironment(BaseModel):
+    """Test environment configuration for OTOBO E2E tests"""
+    monitored_queue: str = Field(
+        description="Queue that is actively monitored and processed by the test workflows"
     )
+    cleanup_queue: str = Field(
+        description="Queue where test tickets are moved for cleanup after tests"
+    )
+    polling_interval: timedelta = Field(
+        description="How frequently the orchestrator checks for new tickets"
+    )
+
+    # Default ticket properties for test ticket creation
+    default_state: str = Field(default="new", description="Default state for created test tickets")
+    default_priority: str = Field(default="medium", description="Default priority for created test tickets")
+    default_type: str = Field(default="Incident", description="Default type for created test tickets")
+    default_customer_user: str = Field(default="otai-demo-user", description="Default customer user for test tickets")
 
     @property
     def interval_seconds(self) -> float:
-        try:
-            return _parse_duration_seconds(self.interval)
-        except ValueError:
-            return 5.0
+        """Get polling interval as seconds (helper for timeout calculations)"""
+        return self.polling_interval.total_seconds()
 
-    def to_service_params(self) -> dict[str, Any]:
-        return {
-            "base_url": self.base_url,
-            "username": self.username,
-            "password": self.password,
-            "webservice_name": self.webservice_name,
-            "operation_urls": dict(self.operation_urls),
-        }
+
+class OtoboE2EConfig(BaseModel):
+    """Complete E2E test configuration for OTOBO integration"""
+    service: OTOBOZnunyTSServiceParams
+    environment: OtoboTestEnvironment
+
+    @classmethod
+    def from_env(cls) -> Self:
+        """Create configuration from environment variables"""
+        password = os.getenv("OTAI_E2E_OTOBO_PASSWORD")
+        if not password:
+            raise ValueError("OTAI_E2E_OTOBO_PASSWORD must be set for E2E tests")
+
+        service = OTOBOZnunyTSServiceParams(
+            base_url="http://3.66.72.29/otobo/nph-genericinterface.pl",
+            username="open_ticket_ai",
+            password=password,
+            operation_urls={
+                TicketOperation.CREATE.value: "ticket-create",
+                TicketOperation.SEARCH.value: "ticket-search",
+                TicketOperation.GET.value: "ticket-get",
+                TicketOperation.UPDATE.value: "ticket-update",
+            },
+        )
+
+        environment = OtoboTestEnvironment(
+            monitored_queue="~Test-Queue1",
+            cleanup_queue="~Test-Queue2",
+            polling_interval=timedelta(seconds=0.1),
+        )
+
+        return cls(service=service, environment=environment)
 
 
 class DockerComposeController:
     def __init__(self, compose_file: Path, work_dir: Path) -> None:
         self._compose_file = compose_file
         self._work_dir = work_dir
-        self._config_file = work_dir / "config.yml"
+        self._config_file = compose_file.parent / "config.yml"
 
     def write_config(self, config: AppConfig) -> Path:
         self._work_dir.mkdir(parents=True, exist_ok=True)
         data = config.model_dump(mode="json", exclude_none=True)
+        logger.info(f"Writing E2E config to {self._config_file}")
+        logger.debug(f"Config services: {list(data.get('open_ticket_ai', {}).get('services', {}).keys())}")
         with self._config_file.open("w", encoding="utf-8") as handle:
             yaml.safe_dump(data, handle, sort_keys=False)
+        logger.info(f"Config written successfully")
         return self._config_file
 
     def restart(self) -> None:
+        logger.info("Restarting Docker Compose services")
         self.down()
         self.up()
 
     def up(self) -> None:
+        logger.info(f"Starting Docker Compose services from {self._compose_file}")
         self._run(["up", "-d", "--remove-orphans"])
+        logger.info("Docker Compose services started")
 
     def down(self) -> None:
+        logger.info("Stopping Docker Compose services")
         self._run(["down", "--remove-orphans"])
+        logger.info("Docker Compose services stopped")
 
     def remove_config(self) -> None:
         if self._config_file.exists():
+            logger.info(f"Removing config file: {self._config_file}")
             self._config_file.unlink()
 
     def _run(self, args: list[str]) -> None:
         command = ["docker", "compose", "-f", str(self._compose_file), *args]
+        logger.debug(f"Running docker compose command: {' '.join(command)}")
         subprocess.run(command, check=True, cwd=self._work_dir)
 
 
 class OtoboTestHelper:
-    def __init__(self, client: OTOBOZnunyClient, settings: OtoboConnectionSettings) -> None:
+    """Helper class for managing OTOBO tickets during E2E tests"""
+
+    def __init__(self, client: OTOBOZnunyClient, config: OtoboE2EConfig) -> None:
         self._client = client
-        self._settings = settings
+        self._config = config
         self._created_ticket_ids: list[str] = []
 
     async def create_ticket(
@@ -116,45 +135,77 @@ class OtoboTestHelper:
             body: str,
             queue_name: str | None = None,
     ) -> str:
-        queue_value = queue_name or self._settings.test_queue
+        """Create a test ticket in OTOBO"""
+        env = self._config.environment
+        queue_value = queue_name or env.monitored_queue
+
+        logger.info(f"Creating test ticket: subject='{subject}', queue='{queue_value}'")
         ticket = TicketCreate(
             title=subject,
             queue=IdName(name=queue_value),
-            state=IdName(name=self._settings.state_name),
-            priority=IdName(name=self._settings.priority_name),
+            state=IdName(name=env.default_state),
+            priority=IdName(name=env.default_priority),
+            type=IdName(name=env.default_type),
             article=Article(subject=subject, body=body, content_type="text/plain"),
+            customer_user=env.default_customer_user,
         )
         created = await self._client.create_ticket(ticket)
         if created.id is None:
             raise RuntimeError("Ticket creation did not return an id")
         ticket_id = str(created.id)
         self._created_ticket_ids.append(ticket_id)
+        logger.info(f"Ticket created successfully: id={ticket_id}")
         return ticket_id
 
     async def move_ticket_to_queue(self, ticket_id: str, queue_name: str) -> None:
+        """Move a ticket to a different queue"""
+        logger.debug(f"Moving ticket {ticket_id} to queue '{queue_name}'")
         await self._client.update_ticket(
             TicketUpdate(
                 id=int(ticket_id),
                 queue=IdName(name=queue_name),
             )
         )
+        logger.debug(f"Ticket {ticket_id} moved to '{queue_name}'")
 
     async def get_ticket(self, ticket_id: str) -> Any:
+        """Fetch a ticket by ID"""
+        logger.debug(f"Fetching ticket {ticket_id}")
         return await self._client.get_ticket(int(ticket_id))
 
-    async def empty_test_queue(self) -> None:
-        search = TicketSearch(queues=[IdName(name=self._settings.test_queue)], limit=100)
+    async def empty_monitored_queue(self) -> None:
+        """Move all tickets from the monitored queue to the cleanup queue"""
+        env = self._config.environment
+        logger.info(f"Emptying monitored queue: {env.monitored_queue}")
+
+        search = TicketSearch(queues=[IdName(name=env.monitored_queue)], limit=100)
+        total_moved = 0
+
         while True:
             ticket_ids = await self._client.search_tickets(search)
             if not ticket_ids:
                 break
+            logger.debug(f"Found {len(ticket_ids)} tickets to move")
             for identifier in ticket_ids:
-                await self.move_ticket_to_queue(str(identifier), self._settings.new_queue)
+                await self.move_ticket_to_queue(str(identifier), env.cleanup_queue)
+                total_moved += 1
+
+        logger.info(f"Monitored queue emptied: {total_moved} tickets moved")
 
     async def cleanup(self) -> None:
+        """Clean up all tickets created during tests"""
+        if not self._created_ticket_ids:
+            logger.debug("No tickets to cleanup")
+            return
+
+        logger.info(f"Cleaning up {len(self._created_ticket_ids)} test tickets")
+        env = self._config.environment
+
         for ticket_id in self._created_ticket_ids:
-            await self.move_ticket_to_queue(ticket_id, self._settings.new_queue)
+            await self.move_ticket_to_queue(ticket_id, env.cleanup_queue)
+
         self._created_ticket_ids.clear()
+        logger.info("Cleanup complete")
 
 
 @pytest.fixture(scope="session")
@@ -165,15 +216,17 @@ def e2e_compose_file() -> Path:
 
 @pytest.fixture(scope="session")
 def docker_compose_controller(
-    e2e_compose_file: Path,
-    tmp_path_factory: pytest.TempPathFactory,
+        e2e_compose_file: Path,
+        tmp_path_factory: pytest.TempPathFactory,
 ) -> Iterator[DockerComposeController]:
     if shutil.which("docker") is None:
         pytest.skip("docker is required for E2E tests")
 
     skip_compose = os.getenv("OTAI_E2E_SKIP_COMPOSE", "").lower() in ("1", "true", "yes")
+    logger.info(f"Docker Compose controller setup (skip_compose={skip_compose})")
 
     work_dir = tmp_path_factory.mktemp("e2e_compose")
+    logger.info(f"E2E work directory: {work_dir}")
     controller = DockerComposeController(e2e_compose_file, work_dir)
 
     if not skip_compose:
@@ -189,31 +242,20 @@ def docker_compose_controller(
 
 
 @pytest.fixture(scope="session")
-def otobo_settings() -> OtoboConnectionSettings:
-    password = os.getenv("OTAI_E2E_OTOBO_PASSWORD") or os.getenv("OTAI_OTOBO_DEMO_PASSWORD")
-    if not password:
-        pytest.skip("OTAI_E2E_OTOBO_PASSWORD or OTAI_OTOBO_DEMO_PASSWORD must be set for OTOBO E2E tests")
-    base_url = os.getenv("OTAI_E2E_OTOBO_BASE_URL", "http://3.66.72.29/otobo/nph-genericinterface.pl")
-    username = os.getenv("OTAI_E2E_OTOBO_USERNAME", "open_ticket_ai")
-    test_queue = os.getenv("OTAI_E2E_TEST_QUEUE", "TEST_QUEUE")
-    new_queue = os.getenv("OTAI_E2E_NEW_QUEUE", "NEW_QUEUE")
-    interval = os.getenv("OTAI_E2E_INTERVAL_ISO", "PT5S")
-    state_name = os.getenv("OTAI_E2E_TICKET_STATE", "new")
-    priority_name = os.getenv("OTAI_E2E_TICKET_PRIORITY", "3 normal")
-    return OtoboConnectionSettings(
-        base_url=base_url,
-        username=username,
-        password=password,
-        test_queue=test_queue,
-        new_queue=new_queue,
-        interval=interval,
-        state_name=state_name,
-        priority_name=priority_name,
+def otobo_e2e_config() -> OtoboE2EConfig:
+    """Complete OTOBO E2E test configuration"""
+    config = OtoboE2EConfig.from_env()
+    logger.info(
+        f"OTOBO E2E Config: base_url={config.service.base_url}, "
+        f"monitored_queue={config.environment.monitored_queue}"
     )
+    return config
 
 
 @pytest.fixture
-def base_config_builder(otobo_settings: OtoboConnectionSettings) -> ConfigBuilder:
+def base_config_builder(otobo_e2e_config: OtoboE2EConfig) -> ConfigBuilder:
+    """Base configuration builder with OTOBO service configured"""
+    logger.info("Building E2E config with OTOBO service")
     builder = ConfigBuilder().with_logging(level="DEBUG")
     builder.add_plugin("otai-base")
     builder.add_plugin("otai-otobo-znuny")
@@ -221,17 +263,20 @@ def base_config_builder(otobo_settings: OtoboConnectionSettings) -> ConfigBuilde
     builder.add_service(
         "otobo_znuny",
         "otobo-znuny:OTOBOZnunyTicketSystemService",
-        params=otobo_settings.to_service_params(),
+        params=otobo_e2e_config.service.model_dump(exclude_none=True),
     )
-    builder.configure_simple_orchestrator(orchestrator_sleep=otobo_settings.interval)
+    builder.configure_simple_orchestrator(
+        orchestrator_sleep=otobo_e2e_config.environment.polling_interval
+    )
+    logger.info("Config builder ready")
     return builder
 
 
 @pytest_asyncio.fixture
-async def otobo_client(otobo_settings: OtoboConnectionSettings) -> AsyncIterator[OTOBOZnunyClient]:
-    params = RenderedOTOBOZnunyTSServiceParams(**otobo_settings.to_service_params())
-    client = OTOBOZnunyClient(config=params.to_client_config())
-    client.login(params.get_basic_auth())
+async def otobo_client(otobo_e2e_config: OtoboE2EConfig) -> AsyncIterator[OTOBOZnunyClient]:
+    """OTOBO client for direct API interactions in tests"""
+    client = OTOBOZnunyClient(config=otobo_e2e_config.service.to_client_config())
+    client.login(otobo_e2e_config.service.get_basic_auth())
     try:
         yield client
     finally:
@@ -241,9 +286,10 @@ async def otobo_client(otobo_settings: OtoboConnectionSettings) -> AsyncIterator
 @pytest_asyncio.fixture
 async def otobo_helper(
         otobo_client: OTOBOZnunyClient,
-        otobo_settings: OtoboConnectionSettings,
+        otobo_e2e_config: OtoboE2EConfig,
 ) -> AsyncIterator[OtoboTestHelper]:
-    helper = OtoboTestHelper(otobo_client, otobo_settings)
+    """Helper for OTOBO ticket operations during tests"""
+    helper = OtoboTestHelper(otobo_client, otobo_e2e_config)
     try:
         yield helper
     finally:

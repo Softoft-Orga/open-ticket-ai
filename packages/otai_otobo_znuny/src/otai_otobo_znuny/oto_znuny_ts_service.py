@@ -16,14 +16,14 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
 )
 from otai_otobo_znuny.models import (
-    RenderedOTOBOZnunyTSServiceParams,
+    OTOBOZnunyTSServiceParams,
     otobo_ticket_to_unified_ticket,
     unified_entity_to_id_name,
 )
 
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
-    ParamsModel: ClassVar[type[RenderedOTOBOZnunyTSServiceParams]] = RenderedOTOBOZnunyTSServiceParams
+    ParamsModel: ClassVar[type[OTOBOZnunyTSServiceParams]] = OTOBOZnunyTSServiceParams
 
     @inject
     def __init__(
