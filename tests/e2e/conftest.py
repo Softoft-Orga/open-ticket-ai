@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 import subprocess
+import sys
 from datetime import timedelta
 from pathlib import Path
 from typing import Any, AsyncIterator, Iterator, Self
@@ -30,6 +31,7 @@ class OtoboTestEnvironment(BaseModel):
         description="Queue where test tickets are moved for cleanup after tests"
     )
     polling_interval: timedelta = Field(
+        default=timedelta(seconds=5),
         description="How frequently the orchestrator checks for new tickets"
     )
 
@@ -41,7 +43,6 @@ class OtoboTestEnvironment(BaseModel):
 
     @property
     def interval_seconds(self) -> float:
-        """Get polling interval as seconds (helper for timeout calculations)"""
         return self.polling_interval.total_seconds()
 
 
@@ -50,32 +51,76 @@ class OtoboE2EConfig(BaseModel):
     service: OTOBOZnunyTSServiceParams
     environment: OtoboTestEnvironment
 
-    @classmethod
-    def from_env(cls) -> Self:
-        """Create configuration from environment variables"""
+
+def create_otobo_e2e_config(
+        *,
+        password: str | None = None,
+        base_url: str = "http://3.66.72.29/otobo/nph-genericinterface.pl",
+        username: str = "open_ticket_ai",
+        webservice_name: str = "OpenTicketAI",
+        monitored_queue: str = "~Test-Queue1",
+        cleanup_queue: str = "~Test-Queue2",
+        polling_interval: timedelta = timedelta(seconds=0.1),
+        default_state: str = "new",
+        default_priority: str = "medium",
+        default_type: str = "Incident",
+        default_customer_user: str = "otai-demo-user",
+) -> OtoboE2EConfig:
+    """
+    Factory function to create OTOBO E2E configuration with sensible defaults.
+
+    Args:
+        password: OTOBO API password (reads from OTAI_E2E_OTOBO_PASSWORD env var if not provided)
+        base_url: OTOBO instance base URL
+        username: OTOBO API username
+        webservice_name: Name of the OTOBO web service
+        monitored_queue: Queue to monitor in tests
+        cleanup_queue: Queue for cleaning up test tickets
+        polling_interval: How often to poll for tickets
+        default_state: Default ticket state for test tickets
+        default_priority: Default ticket priority for test tickets
+        default_type: Default ticket type for test tickets
+        default_customer_user: Default customer user for test tickets
+
+    Returns:
+        Configured OtoboE2EConfig instance
+
+    Raises:
+        ValueError: If password is not provided and OTAI_E2E_OTOBO_PASSWORD is not set
+    """
+    # Get password from env if not explicitly provided
+    if password is None:
         password = os.getenv("OTAI_E2E_OTOBO_PASSWORD")
         if not password:
-            raise ValueError("OTAI_E2E_OTOBO_PASSWORD must be set for E2E tests")
+            raise ValueError(
+                "OTOBO password must be provided via 'password' parameter "
+                "or OTAI_E2E_OTOBO_PASSWORD environment variable"
+            )
 
-        service = OTOBOZnunyTSServiceParams(
-            base_url="http://3.66.72.29/otobo/nph-genericinterface.pl",
-            username="open_ticket_ai",
-            password=password,
-            operation_urls={
-                TicketOperation.CREATE.value: "ticket-create",
-                TicketOperation.SEARCH.value: "ticket-search",
-                TicketOperation.GET.value: "ticket-get",
-                TicketOperation.UPDATE.value: "ticket-update",
-            },
-        )
+    service = OTOBOZnunyTSServiceParams(
+        base_url=base_url,
+        username=username,
+        password=password,
+        webservice_name=webservice_name,
+        operation_urls={
+            TicketOperation.CREATE.value: "ticket-create",
+            TicketOperation.SEARCH.value: "ticket-search",
+            TicketOperation.GET.value: "ticket-get",
+            TicketOperation.UPDATE.value: "ticket-update",
+        },
+    )
 
-        environment = OtoboTestEnvironment(
-            monitored_queue="~Test-Queue1",
-            cleanup_queue="~Test-Queue2",
-            polling_interval=timedelta(seconds=0.1),
-        )
+    environment = OtoboTestEnvironment(
+        monitored_queue=monitored_queue,
+        cleanup_queue=cleanup_queue,
+        polling_interval=polling_interval,
+        default_state=default_state,
+        default_priority=default_priority,
+        default_type=default_type,
+        default_customer_user=default_customer_user,
+    )
 
-        return cls(service=service, environment=environment)
+    return OtoboE2EConfig(service=service, environment=environment)
 
 
 class DockerComposeController:
@@ -84,12 +129,19 @@ class DockerComposeController:
         self._work_dir = work_dir
         self._config_file = compose_file.parent / "config.yml"
 
-    def write_config(self, config: AppConfig) -> Path:
+    def write_config_to_test_storage(self, config: AppConfig, test_name: str) -> Path:
+        config_file_path = Path(__file__).parent / "config_files" / f"{test_name}-config.yml" or self._config_file
+        return self.write_config(config, config_file_path)
+
+    def write_config(self, config: AppConfig, config_file: Path | None = None) -> Path:
         self._work_dir.mkdir(parents=True, exist_ok=True)
         data = config.model_dump(mode="json", exclude_none=True)
+        logger.info(f"Config {data}")
         logger.info(f"Writing E2E config to {self._config_file}")
         logger.debug(f"Config services: {list(data.get('open_ticket_ai', {}).get('services', {}).keys())}")
-        with self._config_file.open("w", encoding="utf-8") as handle:
+
+        config_file_path = config_file or self._config_file
+        with config_file_path.open("w", encoding="utf-8") as handle:
             yaml.safe_dump(data, handle, sort_keys=False)
         logger.info(f"Config written successfully")
         return self._config_file
@@ -244,7 +296,7 @@ def docker_compose_controller(
 @pytest.fixture(scope="session")
 def otobo_e2e_config() -> OtoboE2EConfig:
     """Complete OTOBO E2E test configuration"""
-    config = OtoboE2EConfig.from_env()
+    config = create_otobo_e2e_config()
     logger.info(
         f"OTOBO E2E Config: base_url={config.service.base_url}, "
         f"monitored_queue={config.environment.monitored_queue}"
@@ -294,3 +346,47 @@ async def otobo_helper(
         yield helper
     finally:
         await helper.cleanup()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def configure_e2e_logging():
+    """Configure logging for E2E tests"""
+    # Create logs directory
+    log_dir = Path(__file__).parent / "logs"
+    log_dir.mkdir(exist_ok=True)
+
+    # Configure root logger
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+
+    # Console handler (for pytest output)
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.INFO)
+    console_formatter = logging.Formatter(
+        "%(asctime)s [%(levelname)8s] [%(name)s] %(message)s",
+        datefmt="%H:%M:%S"
+    )
+    console_handler.setFormatter(console_formatter)
+
+    # File handler (detailed logs)
+    file_handler = logging.FileHandler(log_dir / "e2e_test.log", mode="w")
+    file_handler.setLevel(logging.DEBUG)
+    file_formatter = logging.Formatter(
+        "%(asctime)s [%(levelname)8s] [%(name)s] (%(filename)s:%(lineno)d) - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+    file_handler.setFormatter(file_formatter)
+
+    # Add handlers if not already present
+    if not any(isinstance(h, logging.StreamHandler) for h in root_logger.handlers):
+        root_logger.addHandler(console_handler)
+    if not any(isinstance(h, logging.FileHandler) for h in root_logger.handlers):
+        root_logger.addHandler(file_handler)
+
+    logger.info("E2E test logging configured")
+
+    yield
+
+    # Cleanup
+    root_logger.removeHandler(console_handler)
+    root_logger.removeHandler(file_handler)
