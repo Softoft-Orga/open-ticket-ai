@@ -178,6 +178,7 @@ source = [
     "src/open_ticket_ai",
     "packages/otai_hf_local/src",
     "packages/otai_otobo_znuny/src",
+    "packages/otai_base/src",
 ]
 omit = [
     "*model.py",
