@@ -5,6 +5,7 @@ import pytest
 from injector import Injector
 
 from open_ticket_ai.core.config.app_config import AppConfig
+from open_ticket_ai.core.config.config_builder import ConfigBuilder
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.dependency_injection.container import AppModule
@@ -16,7 +17,6 @@ from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
 from open_ticket_ai.core.template_rendering.template_renderer import TemplateRenderer
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
-from open_ticket_ai.core.config.config_builder import ConfigBuilder
 from tests.mocked_ticket_system import MockedTicketSystem
 
 # Mark all tests in this directory as integration tests

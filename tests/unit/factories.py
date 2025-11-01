@@ -1,6 +1,6 @@
 from typing import Any
 
-from open_ticket_ai import UnifiedTicket, UnifiedEntity, UnifiedNote, TicketSearchCriteria
+from open_ticket_ai import TicketSearchCriteria, UnifiedEntity, UnifiedNote, UnifiedTicket
 
 
 class UnifiedTicketFactory:

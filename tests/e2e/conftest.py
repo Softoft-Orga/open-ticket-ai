@@ -3,13 +3,15 @@ import os
 import shutil
 import subprocess
 import sys
+from collections.abc import AsyncIterator, Iterator
 from datetime import timedelta
 from pathlib import Path
-from typing import Any, AsyncIterator, Iterator, Self
+from typing import Any
 
 import pytest
 import pytest_asyncio
 import yaml
+from otai_otobo_znuny.models import OTOBOZnunyTSServiceParams
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import Article, IdName, TicketCreate, TicketSearch, TicketUpdate
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
@@ -17,7 +19,6 @@ from pydantic import BaseModel, Field
 
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_builder import ConfigBuilder
-from otai_otobo_znuny.models import OTOBOZnunyTSServiceParams
 
 logger = logging.getLogger(__name__)
 
@@ -143,7 +144,7 @@ class DockerComposeController:
         config_file_path = config_file or self._config_file
         with config_file_path.open("w", encoding="utf-8") as handle:
             yaml.safe_dump(data, handle, sort_keys=False)
-        logger.info(f"Config written successfully")
+        logger.info("Config written successfully")
         return self._config_file
 
     def restart(self) -> None:

@@ -6,8 +6,9 @@ from typing import Any
 from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
 from open_ticket_ai.core.config.pipe_config_builder import PipeConfigBuilder, PipeConfigFactory
+from open_ticket_ai.core.config.types import VersionSpecifier
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfigBase
-from open_ticket_ai.core.logging.logging_models import LoggingConfig
+from open_ticket_ai.core.logging.logging_models import LoggingConfig, LogLevel
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
@@ -23,7 +24,7 @@ class ConfigBuilder:
 
     def with_logging(
             self,
-            level: str = "INFO",
+            level: LogLevel = "INFO",
             log_to_file: bool = False,
             log_file_path: str | None = None,
     ) -> ConfigBuilder:
@@ -56,7 +57,6 @@ class ConfigBuilder:
         return self.add_service(
             service_id=service_id,
             use="base:JinjaRenderer",
-            params={},
         )
 
     @property
@@ -71,11 +71,10 @@ class ConfigBuilder:
             orchestrator_id: str = "orchestrator",
             injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
-        params_copy = dict(params or {})
-        steps_data = params_copy.pop("steps", None)
+        steps_data = dict(params or {}).pop("steps", None)
         builder = self._pipe_factory.create_composite_builder(
             orchestrator_id,
-            params=params_copy,
+            params=(dict(params or {})),
             injects=injects,
             use=use,
         )
@@ -93,9 +92,9 @@ class ConfigBuilder:
             orchestrator_id: str = "orchestrator",
             orchestrator_sleep: timedelta | None = None,
     ) -> ConfigBuilder:
-        params: dict[str, Any] = {}
-        if orchestrator_sleep is not None:
-            params["orchestrator_sleep"] = orchestrator_sleep
+        params: dict[str, Any] = {
+            "orchestrator_sleep": orchestrator_sleep or timedelta(seconds=0.1),
+        }
         return self.set_orchestrator(params=params, orchestrator_id=orchestrator_id)
 
     def add_orchestrator_step(
@@ -110,7 +109,8 @@ class ConfigBuilder:
 
     def add_orchestrator_pipe(self, pipe: PipeConfig) -> ConfigBuilder:
         self._ensure_orchestrator()
-        assert self._orchestrator is not None
+        if self._orchestrator is None:
+            raise ValueError("Orchestrator must be set before adding steps.")
         builder = self._create_orchestrator_builder(self._orchestrator)
         builder.add_step(pipe)
         self._orchestrator = builder.build()
@@ -123,7 +123,7 @@ class ConfigBuilder:
             raise ValueError("Orchestrator must be set before building the configuration.")
         return AppConfig(
             open_ticket_ai=OpenTicketAIConfig(
-                api_version=">=1.0.0",
+                api_version=VersionSpecifier(specifiers=">=1.0.0"),
                 plugins=list(self._plugins),
                 infrastructure=InfrastructureConfig(
                     logging=self._logging_config,

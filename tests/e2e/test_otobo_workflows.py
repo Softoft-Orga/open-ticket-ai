@@ -1,14 +1,12 @@
 import asyncio
 import time
 from collections.abc import Awaitable, Callable
-from pathlib import Path
 from uuid import uuid4
 
 import pytest
 
 from open_ticket_ai.core.config.config_builder import ConfigBuilder
 from open_ticket_ai.core.config.pipe_config_builder import PipeConfigFactory
-
 from tests.e2e.conftest import (
     DockerComposeController,
     OtoboE2EConfig,
