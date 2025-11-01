@@ -64,7 +64,7 @@ open_ticket_ai:
                   ticket_id: '{{ get_pipe_result(''fetch-next-ticket'', ''fetched_tickets'')[0][''id'']
                     }}'
                   note:
-                    subject: E2E Acknowledgment 92276129-d7be-4c5c-a558-add76158bc19
+                    subject: E2E Acknowledgment 01fb3383-e210-4c98-9b43-f20dddbb56fb
                     body: Your ticket has been received and is being processed.
                 id: add-acknowledgment
               - use: base:UpdateTicketPipe
