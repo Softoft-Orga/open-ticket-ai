@@ -11,12 +11,12 @@ class PipeConfigFactory:
     """Factory for constructing pipe-related ``PipeConfig`` instances."""
 
     def create_pipe(
-            self,
-            pipe_id: str,
-            use: str,
-            *,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
+        self,
+        pipe_id: str,
+        use: str,
+        *,
+        params: dict[str, Any] | None = None,
+        injects: dict[str, str] | None = None,
     ) -> PipeConfig:
         return PipeConfig(
             id=pipe_id,
@@ -26,13 +26,13 @@ class PipeConfigFactory:
         )
 
     def create_composite_builder(
-            self,
-            pipe_id: str,
-            *,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
-            use: str = "base:CompositePipe",
-            steps: Sequence[PipeConfig] | None = None,
+        self,
+        pipe_id: str,
+        *,
+        params: dict[str, Any] | None = None,
+        injects: dict[str, str] | None = None,
+        use: str = "base:CompositePipe",
+        steps: Sequence[PipeConfig] | None = None,
     ) -> PipeConfigBuilder:
         builder = PipeConfigBuilder(
             factory=self,
@@ -46,13 +46,13 @@ class PipeConfigFactory:
         return builder
 
     def create_composite_pipe(
-            self,
-            pipe_id: str,
-            steps: Sequence[PipeConfig],
-            *,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
-            use: str = "base:CompositePipe",
+        self,
+        pipe_id: str,
+        steps: Sequence[PipeConfig],
+        *,
+        params: dict[str, Any] | None = None,
+        injects: dict[str, str] | None = None,
+        use: str = "base:CompositePipe",
     ) -> PipeConfig:
         return self.create_composite_builder(
             pipe_id,
@@ -63,24 +63,24 @@ class PipeConfigFactory:
         ).build()
 
     def create_interval_trigger(
-            self,
-            *,
-            trigger_id: str = "interval_trigger",
-            interval: timedelta,
-            params: dict[str, Any] | None = None,
+        self,
+        *,
+        trigger_id: str = "interval_trigger",
+        interval: timedelta,
+        params: dict[str, Any] | None = None,
     ) -> PipeConfig:
         trigger_params = dict(params or {})
         trigger_params.setdefault("interval", interval)
         return self.create_pipe(trigger_id, "base:IntervalTrigger", params=trigger_params)
 
     def create_simple_sequential_runner(
-            self,
-            *,
-            runner_id: str,
-            on: PipeConfig,
-            run: PipeConfig,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
+        self,
+        *,
+        runner_id: str,
+        on: PipeConfig,
+        run: PipeConfig,
+        params: dict[str, Any] | None = None,
+        injects: dict[str, str] | None = None,
     ) -> PipeConfig:
         runner_params = dict(params or {})
         runner_params["on"] = on.model_dump(mode="json", exclude_none=True)
@@ -97,13 +97,13 @@ class PipeConfigBuilder:
     """Builder that accumulates steps for composite pipes."""
 
     def __init__(
-            self,
-            *,
-            factory: PipeConfigFactory,
-            pipe_id: str,
-            use: str = "base:CompositePipe",
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
+        self,
+        *,
+        factory: PipeConfigFactory,
+        pipe_id: str,
+        use: str = "base:CompositePipe",
+        params: dict[str, Any] | None = None,
+        injects: dict[str, str] | None = None,
     ) -> None:
         self._factory = factory
         self._pipe_id = pipe_id
@@ -122,9 +122,7 @@ class PipeConfigBuilder:
 
     def build(self) -> PipeConfig:
         composite_params = dict(self._params)
-        composite_params["steps"] = [
-            step.model_dump(mode="json", exclude_none=True) for step in self._steps
-        ]
+        composite_params["steps"] = [step.model_dump(mode="json", exclude_none=True) for step in self._steps]
         return self._factory.create_pipe(
             self._pipe_id,
             self._use,

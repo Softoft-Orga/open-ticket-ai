@@ -17,11 +17,11 @@ pytestmark = pytest.mark.e2e
 
 
 async def wait_for_condition(
-        check: Callable[[], Awaitable[bool]],
-        *,
-        timeout: float = 10.0,
-        interval: float = 0.1,
-        message: str | None = None,
+    check: Callable[[], Awaitable[bool]],
+    *,
+    timeout: float = 10.0,
+    interval: float = 0.1,
+    message: str | None = None,
 ) -> None:
     deadline = time.monotonic() + timeout
     await asyncio.sleep(min(interval, 0.1))
@@ -39,10 +39,10 @@ async def wait_for_condition(
 
 @pytest.mark.asyncio
 async def test_update_ticket_subject(
-        base_config_builder: ConfigBuilder,
-        docker_compose_controller: DockerComposeController,
-        otobo_helper: OtoboTestHelper,
-        otobo_e2e_config: OtoboE2EConfig,
+    base_config_builder: ConfigBuilder,
+    docker_compose_controller: DockerComposeController,
+    otobo_helper: OtoboTestHelper,
+    otobo_e2e_config: OtoboE2EConfig,
 ) -> None:
     pipe_factory = PipeConfigFactory()
     original_subject = f"E2E Update {uuid4()}"
@@ -84,10 +84,10 @@ async def test_update_ticket_subject(
 
 @pytest.mark.asyncio
 async def test_fetch_queue_and_add_note(
-        base_config_builder: ConfigBuilder,
-        docker_compose_controller: DockerComposeController,
-        otobo_helper: OtoboTestHelper,
-        otobo_e2e_config: OtoboE2EConfig,
+    base_config_builder: ConfigBuilder,
+    docker_compose_controller: DockerComposeController,
+    otobo_helper: OtoboTestHelper,
+    otobo_e2e_config: OtoboE2EConfig,
 ) -> None:
     """
     Demonstrate: Queue monitoring with automated note addition
@@ -121,8 +121,7 @@ async def test_fetch_queue_and_add_note(
     # Create a single test ticket in the monitored queue
     test_subject = f"E2E Queue Ticket {uuid4()}"
     ticket_id = await otobo_helper.create_ticket(
-        subject=test_subject,
-        body="This ticket will receive an automated note and be moved"
+        subject=test_subject, body="This ticket will receive an automated note and be moved"
     )
 
     note_subject = f"E2E Acknowledgment {uuid4()}"
@@ -199,10 +198,7 @@ async def test_fetch_queue_and_add_note(
 
         # Check if note was added
         articles = ticket.articles or []
-        has_note = any(
-            article.subject == note_subject and (note_body in (article.body or ""))
-            for article in articles
-        )
+        has_note = any(article.subject == note_subject and (note_body in (article.body or "")) for article in articles)
 
         # Check if ticket was moved to cleanup queue
         in_cleanup_queue = ticket.queue.name == otobo_e2e_config.environment.cleanup_queue

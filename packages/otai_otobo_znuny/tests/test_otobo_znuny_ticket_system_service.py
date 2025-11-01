@@ -32,7 +32,7 @@ FIND_FIRST_TICKET_SCENARIOS: tuple[FindFirstTicketScenario, ...] = (
 @pytest.mark.asyncio
 @pytest.mark.parametrize("scenario", FIND_TICKETS_SCENARIOS)
 async def test_find_tickets(
-        service, mock_client, sample_otobo_ticket, sample_search_criteria, scenario: FindTicketsScenario
+    service, mock_client, sample_otobo_ticket, sample_search_criteria, scenario: FindTicketsScenario
 ):
     mock_client.search_and_get.return_value = [sample_otobo_ticket] if scenario.has_tickets else []
     results = await service.find_tickets(sample_search_criteria)
@@ -51,7 +51,7 @@ async def test_find_tickets_error(service, mock_client, sample_search_criteria):
 @pytest.mark.asyncio
 @pytest.mark.parametrize("scenario", FIND_FIRST_TICKET_SCENARIOS)
 async def test_find_first_ticket(
-        service, mock_client, sample_otobo_ticket, sample_search_criteria, scenario: FindFirstTicketScenario
+    service, mock_client, sample_otobo_ticket, sample_search_criteria, scenario: FindFirstTicketScenario
 ):
     mock_client.search_and_get.return_value = [sample_otobo_ticket] if scenario.has_tickets else []
     result = await service.find_first_ticket(sample_search_criteria)
@@ -173,4 +173,3 @@ async def test_create_ticket_error(service, mock_client):
     )
     with pytest.raises(OTOBOError):
         await service.create_ticket(new_ticket)
-

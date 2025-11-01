@@ -23,10 +23,10 @@ class ConfigBuilder:
         self._pipe_factory = PipeConfigFactory()
 
     def with_logging(
-            self,
-            level: LogLevel = "INFO",
-            log_to_file: bool = False,
-            log_file_path: str | None = None,
+        self,
+        level: LogLevel = "INFO",
+        log_to_file: bool = False,
+        log_file_path: str | None = None,
     ) -> ConfigBuilder:
         self._logging_config = LoggingConfig(
             level=level,
@@ -40,11 +40,11 @@ class ConfigBuilder:
         return self
 
     def add_service(
-            self,
-            service_id: str,
-            use: str,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
+        self,
+        service_id: str,
+        use: str,
+        params: dict[str, Any] | None = None,
+        injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
         self._services[service_id] = InjectableConfigBase(
             use=use,
@@ -64,12 +64,12 @@ class ConfigBuilder:
         return self._pipe_factory
 
     def set_orchestrator(
-            self,
-            *,
-            use: str = "base:SimpleSequentialOrchestrator",
-            params: dict[str, Any] | None = None,
-            orchestrator_id: str = "orchestrator",
-            injects: dict[str, str] | None = None,
+        self,
+        *,
+        use: str = "base:SimpleSequentialOrchestrator",
+        params: dict[str, Any] | None = None,
+        orchestrator_id: str = "orchestrator",
+        injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
         steps_data = dict(params or {}).pop("steps", None)
         builder = self._pipe_factory.create_composite_builder(
@@ -80,17 +80,16 @@ class ConfigBuilder:
         )
         if steps_data:
             builder.add_steps(
-                step if isinstance(step, PipeConfig) else PipeConfig.model_validate(step)
-                for step in steps_data
+                step if isinstance(step, PipeConfig) else PipeConfig.model_validate(step) for step in steps_data
             )
         self._orchestrator = builder.build()
         return self
 
     def configure_simple_orchestrator(
-            self,
-            *,
-            orchestrator_id: str = "orchestrator",
-            orchestrator_sleep: timedelta | None = None,
+        self,
+        *,
+        orchestrator_id: str = "orchestrator",
+        orchestrator_sleep: timedelta | None = None,
     ) -> ConfigBuilder:
         params: dict[str, Any] = {
             "orchestrator_sleep": orchestrator_sleep or timedelta(seconds=0.1),
@@ -98,11 +97,11 @@ class ConfigBuilder:
         return self.set_orchestrator(params=params, orchestrator_id=orchestrator_id)
 
     def add_orchestrator_step(
-            self,
-            step_id: str,
-            use: str,
-            params: dict[str, Any] | None = None,
-            injects: dict[str, str] | None = None,
+        self,
+        step_id: str,
+        use: str,
+        params: dict[str, Any] | None = None,
+        injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
         pipe = self._pipe_factory.create_pipe(step_id, use, params=params, injects=injects)
         return self.add_orchestrator_pipe(pipe)
@@ -160,7 +159,6 @@ class ConfigBuilder:
         )
         if steps:
             builder.add_steps(
-                step if isinstance(step, PipeConfig) else PipeConfig.model_validate(step)
-                for step in steps
+                step if isinstance(step, PipeConfig) else PipeConfig.model_validate(step) for step in steps
             )
         return builder

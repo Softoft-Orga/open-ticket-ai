@@ -8,11 +8,11 @@ class UnifiedTicketFactory:
 
     @staticmethod
     def build(
-            ticket_id: str = "TEST-123",
-            subject: str = "Test Ticket",
-            queue_id: str = "1",
-            queue_name: str = "Support",
-            **kwargs: Any,
+        ticket_id: str = "TEST-123",
+        subject: str = "Test Ticket",
+        queue_id: str = "1",
+        queue_name: str = "Support",
+        **kwargs: Any,
     ) -> UnifiedTicket:
         defaults = {
             "id": ticket_id,
@@ -46,11 +46,11 @@ class TicketSearchCriteriaFactory:
 
     @staticmethod
     def build(
-            queue_id: str = "1",
-            queue_name: str = "Support",
-            limit: int = 25,
-            offset: int = 0,
-            **kwargs: Any,
+        queue_id: str = "1",
+        queue_name: str = "Support",
+        limit: int = 25,
+        offset: int = 0,
+        **kwargs: Any,
     ) -> TicketSearchCriteria:
         defaults = {
             "queue": UnifiedEntity(id=queue_id, name=queue_name),
