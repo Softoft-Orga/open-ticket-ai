@@ -21,6 +21,7 @@ from open_ticket_ai.core.config.app_config import AppConfig
 from open_ticket_ai.core.config.config_builder import ConfigBuilder
 
 logger = logging.getLogger(__name__)
+pytestmark = [pytest.mark.e2e]
 
 
 class OtoboTestEnvironment(BaseModel):

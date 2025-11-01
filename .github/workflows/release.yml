@@ -13,7 +13,7 @@ jobs:
   release:
     permissions:
       id-token: write
-    runs-on: ubuntu-latest
+    runs-on: BigSoftoftRunner
     steps:
       - uses: actions/checkout@v4
 
@@ -79,41 +79,13 @@ jobs:
           provenance: false
           sbom: false
 
-      - name: Start test containers
-        env:
-          OTAI_IMAGE: ${{ env.DOCKER_REPOSITORY }}:test
-        run: |
-          cd tests/e2e
-          echo "logging:" > config.yml
-          echo "  level: DEBUG" >> config.yml
-          docker compose -f compose.e2e.yml up -d --wait
-
-      - name: Wait for services to be ready
-        run: sleep 5
-
       - name: Run E2E tests
         env:
-          OTAI_E2E_SKIP_COMPOSE: "true"
+          OTAI_IMAGE: ${{ env.DOCKER_REPOSITORY }}:test
           OTAI_E2E_OTOBO_PASSWORD: ${{ secrets.OTAI_E2E_OTOBO_PASSWORD }}
         run: |
           uv sync
-          uv run -m pytest tests/e2e/ -v
-
-      - name: Stop test containers
-        if: always()
-        run: |
-          cd tests/e2e
-          docker compose -f compose.e2e.yml down
-
-      - name: Upload test logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: e2e-test-logs
-          path: |
-            tests/e2e/*.log
-            tests/e2e/logs/
-          retention-days: 7
+          uv run -m pytest -m e2e -v
 
       - uses: docker/build-push-action@v6
         with:
