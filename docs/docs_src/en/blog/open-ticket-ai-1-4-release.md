@@ -1,5 +1,5 @@
 ---
-title: Open Ticket AI 1.4.1 Release - The First Major Production Release
+title: Open Ticket AI 1.4 Release - The First Major Production Release
 description: "Discover Open Ticket AI 1.4, the first production-ready release featuring powerful"
 toast_message: "New Release: Open Ticket AI 1.4 — Explore the production-ready platform"
 image: "https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png"
@@ -9,12 +9,36 @@ date: 2025-10-28
 
 # Open Ticket AI 1.4: The First Major Production Release
 
-Open Ticket AI 1.4.X is here, marking the **first major production-ready release**! This version
+Open Ticket AI 1.4 is here, marking the **first major production-ready release**! This version
 brings enterprise-grade features, a mature plugin ecosystem, and the flexibility to automate your
 ticket system workflows like never before. Get the full release
 on [GitHub](https://github.com/Softoft-Orga/open-ticket-ai/releases/tag/v1.4.1).
 
 ![https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png](https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png)
+
+## Checkout the Demo!
+This Demo shows the OTOBO Ticketsystem with OTAI setup to classify queue and priority based on the
+ticket content. You can login with the following link!
+
+::: warning German Models!
+The Queue and Priority model only work for German tickets as it was trained with German data.
+:::
+
+[OTOBO Queue Priority Demo](https://otobo-demo.open-ticket-ai.com/otobo/customer.pl?Action=Login;User=otai;Password=otai)
+
+Example!
+
+Subject: "DRINGEND! Wohnung in Mainzer Straße 8 Heizung kaputt;"
+Text: "Hallo,
+meine Heizung in der Wohnung in der Mainzer Straße 8 funktioniert nicht. Bitte um schnelle Hilfe! dringend!
+Die Heizungsrohre sind kalt und es ist sehr kalt in der Wohnung. Vielen Dank!
+Mit freundlichen Grüßen,
+Max Mustermann
+"
+
+These are just test models. You can use any model you want with Open Ticket AI!
+It works with Huggingface Models
+
 ## What Open Ticket AI 1.4 Offers
 
 ### Powerful Plugin Architecture

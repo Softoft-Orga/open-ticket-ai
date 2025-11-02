@@ -27,7 +27,7 @@ class Plugin(ABC):
             registry: ComponentRegistry to register components into.
         """
         for injectable in self._get_all_injectables():
-            registry_name = self._get_registry_name(injectable)
+            registry_name = self.get_registry_name(injectable)
             registry.register(registry_name, injectable)
 
     @property
@@ -42,7 +42,7 @@ class Plugin(ABC):
         return self._plugin_name.replace(self._app_config.PLUGIN_NAME_PREFIX, "")
 
     @final
-    def _get_registry_name(self, injectable: type[Injectable]) -> str:
+    def get_registry_name(self, injectable: type[Injectable]) -> str:
         """Get the name used to register this plugin's components."""
         return (
             self._component_name_prefix

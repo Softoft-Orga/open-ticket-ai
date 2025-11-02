@@ -13,23 +13,22 @@ RENDER_FIELD_KEY = "render"
 class TemplateRenderError(Exception):
     pass
 
+class NoRender:
+    def __call__(self, field: FieldInfo) -> FieldInfo:
+        extra = field.json_schema_extra
+        extra_dict = dict(extra) if isinstance(extra, dict) else {}
+        extra_dict[RENDER_FIELD_KEY] = False
+        field.json_schema_extra = extra_dict
+        return field
 
-# noinspection PyPep8Naming
-def NoRender(field: FieldInfo) -> FieldInfo:
-    extra = field.json_schema_extra
-    extra_dict = dict(extra) if isinstance(extra, dict) else {}
-    extra_dict[RENDER_FIELD_KEY] = False
-    field.json_schema_extra = extra_dict
-    return field
 
-
-# noinspection PyPep8Naming
-def NoRenderField(**kwargs: Any) -> FieldInfo:
-    extra = kwargs.get("json_schema_extra")
-    extra_dict = dict(extra) if isinstance(extra, dict) else {}
-    extra_dict[RENDER_FIELD_KEY] = False
-    kwargs["json_schema_extra"] = extra_dict
-    return Field(**kwargs)
+class NoRenderField:
+    def __call__(self, field: FieldInfo, *args: Any, **kwargs: Any) -> FieldInfo:
+        extra = kwargs.get("json_schema_extra")
+        extra_dict = dict(extra) if isinstance(extra, dict) else {}
+        extra_dict[RENDER_FIELD_KEY] = False
+        kwargs["json_schema_extra"] = extra_dict
+        return Field(**kwargs)
 
 
 class TemplateRenderer[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT], ABC):

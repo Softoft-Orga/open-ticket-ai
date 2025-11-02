@@ -6,6 +6,10 @@ from datetime import timedelta
 from typing import Any
 
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
+from otai_base.base_plugin import BasePlugin
+from otai_base.pipes.composite_pipe import CompositePipe
+from otai_base.pipes.interval_trigger_pipe import IntervalTrigger
+from otai_base.pipes.pipe_runners.simple_sequential_runner import SimpleSequentialRunner
 
 
 class PipeConfigFactory:
@@ -32,13 +36,12 @@ class PipeConfigFactory:
         *,
         params: dict[str, Any] | None = None,
         injects: dict[str, str] | None = None,
-        use: str = "base:CompositePipe",
         steps: Sequence[PipeConfig] | None = None,
     ) -> PipeConfigBuilder:
         builder = PipeConfigBuilder(
             factory=self,
             pipe_id=pipe_id,
-            use=use,
+            use=BasePlugin().get_registry_name(CompositePipe),
             params=params,
             injects=injects,
         )
@@ -53,13 +56,11 @@ class PipeConfigFactory:
         *,
         params: dict[str, Any] | None = None,
         injects: dict[str, str] | None = None,
-        use: str = "base:CompositePipe",
     ) -> PipeConfig:
         return self.create_composite_builder(
             pipe_id,
             params=params,
             injects=injects,
-            use=use,
             steps=steps,
         ).build()
 
@@ -72,7 +73,7 @@ class PipeConfigFactory:
     ) -> PipeConfig:
         trigger_params = dict(params or {})
         trigger_params.setdefault("interval", interval)
-        return self.create_pipe(trigger_id, "base:IntervalTrigger", params=trigger_params)
+        return self.create_pipe(trigger_id, BasePlugin().get_registry_name(IntervalTrigger), params=trigger_params)
 
     def create_simple_sequential_runner(
         self,
@@ -88,7 +89,7 @@ class PipeConfigFactory:
         runner_params["run"] = run.model_dump(mode="json", exclude_none=True)
         return self.create_pipe(
             runner_id,
-            "base:SimpleSequentialRunner",
+            BasePlugin().get_registry_name(SimpleSequentialRunner),
             params=runner_params,
             injects=injects,
         )
@@ -102,14 +103,14 @@ class PipeConfigBuilder:
         *,
         factory: PipeConfigFactory | None = None,
         pipe_id: str | None = None,
-        use: str = "base:CompositePipe",
+        use: str | None = None,
         params: dict[str, Any] | None = None,
         injects: dict[str, str] | None = None,
     ) -> None:
         self._factory = factory or PipeConfigFactory()
 
         self._pipe_id = pipe_id or uuid.uuid4().hex
-        self._use = use
+        self._use = use or BasePlugin().get_registry_name(CompositePipe)
         self._params = dict(params or {})
         self._injects = dict(injects or {})
         self._steps: list[PipeConfig] = []

@@ -23,6 +23,7 @@ from open_ticket_ai.core.config.config_builder import ConfigBuilder
 logger = logging.getLogger(__name__)
 pytestmark = [pytest.mark.e2e]
 
+SAFE_ARGS = {"up", "down", "restart", "-d", "--remove-orphans", "-f"}
 
 class OtoboTestEnvironment(BaseModel):
     """Test environment configuration for OTOBO E2E tests"""
@@ -166,6 +167,8 @@ class DockerComposeController:
             self._config_file.unlink()
 
     def _run(self, args: list[str]) -> None:
+        if not all(arg in SAFE_ARGS for arg in args):
+            raise ValueError(f"disallowed arg: {args}")
         command = ["docker", "compose", "-f", str(self._compose_file), *args]
         logger.debug(f"Running docker compose command: {' '.join(command)}")
         subprocess.run(command, check=True, cwd=self._work_dir)
