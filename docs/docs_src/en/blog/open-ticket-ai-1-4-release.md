@@ -17,6 +17,7 @@ on [GitHub](https://github.com/Softoft-Orga/open-ticket-ai/releases/tag/v1.4.1).
 ![https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png](https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png)
 
 ## Checkout the Demo!
+
 This Demo shows the OTOBO Ticketsystem with OTAI setup to classify queue and priority based on the
 ticket content. You can login with the following link!
 
@@ -30,14 +31,27 @@ Example!
 
 Subject: "DRINGEND! Wohnung in Mainzer Straße 8 Heizung kaputt;"
 Text: "Hallo,
-meine Heizung in der Wohnung in der Mainzer Straße 8 funktioniert nicht. Bitte um schnelle Hilfe! dringend!
+meine Heizung in der Wohnung in der Mainzer Straße 8 funktioniert nicht. Bitte um schnelle Hilfe!
+dringend!
 Die Heizungsrohre sind kalt und es ist sehr kalt in der Wohnung. Vielen Dank!
 Mit freundlichen Grüßen,
 Max Mustermann
 "
 
+[Queue Priority - Test Ticket](https://otobo-demo.open-ticket-ai.com/otobo/customer.pl?Action=CustomerTicketMessage;Subject=DRINGEND!%20Wohnung%20in%20Mainzer%20Stra%C3%9Fe%208%20Heizung%20kaputt;Body=Hallo,%20meine%20Heizung%20in%20der%20Wohnung%20in%20der%20Mainzer%20Stra%C3%9Fe%208%20funktioniert%20nicht.%20Bitte%20um%20schnelle%20Hilfe!%20dringend!%20Die%20Heizungsrohre%20sind%20kalt%20und%20es%20ist%20sehr%20kalt%20in%20der%20Wohnung.%20Vielen%20Dank!%20Mit%20freundlichen%20Gr%C3%BC%C3%9Fen,%20Max%20Mustermann)
+
 These are just test models. You can use any model you want with Open Ticket AI!
 It works with Huggingface Models
+
+interesting models:
+OpenAlex/bert-base-multilingual-cased-finetuned-openalex-topic-classification-title-abstract
+oliverguhr/german-sentiment-bert
+siebert/sentiment-roberta-large-english
+distilbert/distilbert-base-uncased-finetuned-sst-2-english
+
+Often it is better to train your own models with your own data.
+Then you need to publish this to huggingface_hub change the model and HF_TOKEN in the config.yml and
+restart OTAI.
 
 ## What Open Ticket AI 1.4 Offers
 
@@ -90,13 +104,13 @@ The easiest way to setup Open Ticket AI on your server is using **Docker Compose
 
 ```yaml
 services:
-  open-ticket-ai:
-    image: openticketai/engine:latest
-    restart: "unless-stopped"
-    environment:
-      OTAI_TS_PASSWORD: "${OTAI_TS_PASSWORD}"
-    volumes:
-      - ./config.yml:/app/config.yml:ro
+    open-ticket-ai:
+        image: openticketai/engine:latest
+        restart: "unless-stopped"
+        environment:
+            OTAI_TS_PASSWORD: "${OTAI_TS_PASSWORD}"
+        volumes:
+            - ./config.yml:/app/config.yml:ro
 ```
 
 **2. Create your `config.yml`** (see [Configuration Guide](../users/config_rendering.md))
@@ -108,7 +122,6 @@ docker compose up -d
 ```
 
 **4. You also need to setup the Ticketsystem**
-
 
 #### Alternative: Install with pip/uv
 

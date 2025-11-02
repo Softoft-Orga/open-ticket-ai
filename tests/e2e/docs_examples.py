@@ -6,6 +6,7 @@ from typing import Literal
 import yaml
 from pydantic import BaseModel
 
+# IDEA: Also report the version the config was tested with
 
 def _slugify(s: str) -> str:
     s = s.strip().lower()
