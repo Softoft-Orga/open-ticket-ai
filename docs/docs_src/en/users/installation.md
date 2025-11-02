@@ -52,6 +52,8 @@ Download and install [Docker Desktop](https://www.docker.com/products/docker-des
 
 Create a new folder for Open Ticket AI and create two files inside it:
 
+<InlineExample slug="basics-minimal" />
+
 **1. Create `compose.yml`:**
 
 ```yaml
