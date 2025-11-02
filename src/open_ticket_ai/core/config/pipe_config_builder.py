@@ -5,11 +5,12 @@ from collections.abc import Iterable, Sequence
 from datetime import timedelta
 from typing import Any
 
-from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 from otai_base.base_plugin import BasePlugin
 from otai_base.pipes.composite_pipe import CompositePipe
 from otai_base.pipes.interval_trigger_pipe import IntervalTrigger
 from otai_base.pipes.pipe_runners.simple_sequential_runner import SimpleSequentialRunner
+
+from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
 class PipeConfigFactory:

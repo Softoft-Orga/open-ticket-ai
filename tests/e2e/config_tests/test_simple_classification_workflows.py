@@ -1,5 +1,6 @@
 import os
 from uuid import uuid4
+
 import pytest
 
 from open_ticket_ai.core.config.config_builder import ConfigBuilder
@@ -9,6 +10,7 @@ from tests.e2e.docs_examples import OTAIConfigExampleMetaInfo, save_example
 from tests.e2e.util import wait_for_condition
 
 pytestmark = pytest.mark.e2e
+
 
 @pytest.mark.asyncio
 async def test_e2e_classify_sets_ticket_subject(
@@ -23,7 +25,8 @@ async def test_e2e_classify_sets_ticket_subject(
 # Classify Text and Set Ticket Subject
 
 Classifies a fixed text via HF local model and sets the ticket subject to the returned label.
-Pipes: `base:ClassificationPipe`, `base:UpdateTicketPipe`. Injects: `classification_service: hf_local`, `ticket_system: otobo_znuny`.
+Pipes: `base:ClassificationPipe`, `base:UpdateTicketPipe`.
+Injects: `classification_service: hf_local`, `ticket_system: otobo_znuny`.
 """,
         tags=["basic", "simple-ai", "simple-ticket-system"],
     )
@@ -48,11 +51,14 @@ Pipes: `base:ClassificationPipe`, `base:UpdateTicketPipe`. Injects: `classificat
             {
                 "text": "I absolutely love this product. It works perfectly and I would recommend it to everyone.",
                 "model_name": "finiteautomata/bertweet-base-sentiment-analysis",
-            }
+            },
         )
         .build()
     )
 
+    label_template = "{{ get_pipe_result('classify-text', 'label') }}"
+    confidence_template = "{{ get_pipe_result('classify-text', 'confidence') }}"
+    subject_template = label_template + ";" + confidence_template
     update_subject_step = (
         PipeConfigBuilder()
         .set_injects({"ticket_system": "otobo_znuny"})
@@ -62,9 +68,9 @@ Pipes: `base:ClassificationPipe`, `base:UpdateTicketPipe`. Injects: `classificat
             {
                 "ticket_id": ticket_id,
                 "updated_ticket": {
-                    "subject": "{{ get_pipe_result('classify-text', 'label') }};{{ get_pipe_result('classify-text', 'confidence') }}",
+                    "subject": subject_template,
                 },
-            }
+            },
         )
         .build()
     )
@@ -87,6 +93,7 @@ Pipes: `base:ClassificationPipe`, `base:UpdateTicketPipe`. Injects: `classificat
     docker_compose_controller.restart()
 
     save_example(config, meta=_CONFIG_META_INFO)
+
     async def subject_matches() -> bool:
         t = await otobo_helper.get_ticket(ticket_id)
         parts = (t.title or "").split(";")
@@ -100,4 +107,3 @@ Pipes: `base:ClassificationPipe`, `base:UpdateTicketPipe`. Injects: `classificat
         return label == expected_label and 0.8 <= score <= 1.0
 
     await wait_for_condition(subject_matches, timeout=300.0)
-

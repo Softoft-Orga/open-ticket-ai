@@ -27,7 +27,7 @@ async def test_update_ticket_subject(
         name="Update Ticket Subject",
         description=dedent("""
         # Update Ticket Subject
-        Periodic single-step workflow that sets a ticket’s subject in OTOBO/Znuny.
+        Periodic single-step workflow that sets a ticket's subject in OTOBO/Znuny.
         Pipe: `base:UpdateTicketPipe` with `ticket_system: otobo_znuny`.
         Key: `ticket_id`, `updated_ticket.subject`, `environment.polling_interval`.
         """),
@@ -66,10 +66,7 @@ async def test_update_ticket_subject(
         return ticket.title == updated_subject
 
     await wait_for_condition(subject_matches)
-    save_example(
-        config,
-        meta=_CONFIG_META_INFO
-    )
+    save_example(config, meta=_CONFIG_META_INFO)
 
 
 @pytest.mark.asyncio
@@ -214,7 +211,4 @@ async def test_fetch_queue_and_add_note(
         message=f"Ticket {ticket_id} was not processed (note added and moved to cleanup queue)",
     )
 
-    save_example(
-        config,
-        meta=_CONFIG_META_INFO
-    )
+    save_example(config, meta=_CONFIG_META_INFO)

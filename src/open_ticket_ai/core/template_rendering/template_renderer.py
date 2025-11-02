@@ -13,6 +13,7 @@ RENDER_FIELD_KEY = "render"
 class TemplateRenderError(Exception):
     pass
 
+
 class NoRender:
     def __call__(self, field: FieldInfo) -> FieldInfo:
         extra = field.json_schema_extra
@@ -23,7 +24,7 @@ class NoRender:
 
 
 class NoRenderField:
-    def __call__(self, field: FieldInfo, *args: Any, **kwargs: Any) -> FieldInfo:
+    def __call__(self, **kwargs: Any) -> FieldInfo:
         extra = kwargs.get("json_schema_extra")
         extra_dict = dict(extra) if isinstance(extra, dict) else {}
         extra_dict[RENDER_FIELD_KEY] = False

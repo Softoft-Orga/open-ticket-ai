@@ -25,6 +25,7 @@ pytestmark = [pytest.mark.e2e]
 
 SAFE_ARGS = {"up", "down", "restart", "-d", "--remove-orphans", "-f"}
 
+
 class OtoboTestEnvironment(BaseModel):
     """Test environment configuration for OTOBO E2E tests"""
 

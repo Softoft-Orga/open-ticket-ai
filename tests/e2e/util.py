@@ -1,6 +1,6 @@
 import asyncio
 import time
-from typing import Callable, Awaitable
+from collections.abc import Awaitable, Callable
 
 
 async def wait_for_condition(

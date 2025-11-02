@@ -66,7 +66,6 @@ class ConfigBuilder:
     def set_orchestrator(
         self,
         *,
-        use: str = "base:SimpleSequentialOrchestrator",
         params: dict[str, Any] | None = None,
         orchestrator_id: str = "orchestrator",
         injects: dict[str, str] | None = None,
@@ -76,7 +75,6 @@ class ConfigBuilder:
             orchestrator_id,
             params=(dict(params or {})),
             injects=injects,
-            use=use,
         )
         if steps_data:
             builder.add_steps(
@@ -155,7 +153,6 @@ class ConfigBuilder:
             orchestrator.id,
             params=params,
             injects=orchestrator.injects,
-            use=orchestrator.use,
         )
         if steps:
             builder.add_steps(
