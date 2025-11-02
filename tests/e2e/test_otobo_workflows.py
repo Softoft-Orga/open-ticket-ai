@@ -12,6 +12,7 @@ from tests.e2e.conftest import (
     OtoboE2EConfig,
     OtoboTestHelper,
 )
+from tests.e2e.docs_examples import save_example
 
 pytestmark = pytest.mark.e2e
 
@@ -188,7 +189,6 @@ async def test_fetch_queue_and_add_note(
     config = builder.build()
 
     docker_compose_controller.write_config(config)
-    docker_compose_controller.write_config_to_test_storage(config, "test_fetch_queue_and_add_note")
     docker_compose_controller.restart()
 
     # Verify: The ticket should receive the note AND be moved to cleanup queue
@@ -210,3 +210,6 @@ async def test_fetch_queue_and_add_note(
         timeout=240.0,
         message=f"Ticket {ticket_id} was not processed (note added and moved to cleanup queue)",
     )
+
+    save_example(config, "basics-minimal", "Basics: Minimal Setup", ["basics"], "Clean minimal config")
+
