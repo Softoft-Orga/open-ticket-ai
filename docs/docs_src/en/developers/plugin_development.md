@@ -6,6 +6,8 @@ description: Complete guide to developing custom plugins for Open Ticket AI incl
 
 Learn how to create custom plugins to extend Open Ticket AI functionality.
 
+<InlineExample slug="basics-minimal" />
+
 ## Packaging & Naming Requirements
 
 Open Ticket AI discovers plugins by their Python package name and project metadata.

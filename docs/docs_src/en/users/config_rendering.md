@@ -14,6 +14,8 @@ expressions** like
 This lets you reuse values, read environment variables, and reference results from other pipes — all
 while keeping configuration clean and declarative.
 
+<InlineExample slug="basics-minimal" />
+
 ## Key Concepts
 
 # Injectable Configuration Structure

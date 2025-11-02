@@ -14,6 +14,8 @@ previous pipes, executes its logic, and passes updated context forward.
 
 A pipeline is a sequence of pipes that execute one after another:
 
+<InlineExample slug="basics-minimal" />
+
 ```mermaid
 flowchart TD
     Start([Start])

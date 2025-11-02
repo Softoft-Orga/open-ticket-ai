@@ -38,6 +38,8 @@ Plugins provide services and pipes that you reference in your YAML configuration
 
 ### Example: Complete Workflow with Plugins
 
+<InlineExample slug="basics-minimal" />
+
 ```yaml
 # Define services from plugins
 services:
