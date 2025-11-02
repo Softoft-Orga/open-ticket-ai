@@ -1,20 +1,40 @@
-from pathlib import Path
 import json
+import re
+from pathlib import Path
+from typing import Literal
 
-from pydantic import BaseModel
 import yaml
+from pydantic import BaseModel
 
 
-def save_example(config: BaseModel, slug: str, name: str, tags: list[str], description: str,
-    out_dir: str = "docs/examples") -> Path:
+def _slugify(s: str) -> str:
+    s = s.strip().lower()
+    s = re.sub(r"[^a-z0-9]+", "-", s)
+    s = re.sub(r"-{2,}", "-", s)
+    return s.strip("-")
+
+
+type Tag = Literal["basic", "simple-ticket-system", "simple-ai", "complex-workflow"]
+
+
+class OTAIConfigExampleMetaInfo(BaseModel):
+    name: str
+    description: str
+    tags: list[Tag]
+
+
+def save_example(config: BaseModel, meta: OTAIConfigExampleMetaInfo, out_dir: str = "docs/examples") -> Path:
+    slug = _slugify(meta.name)
     base = Path(out_dir) / slug
     base.mkdir(parents=True, exist_ok=True)
     (base / "config.yml").write_text(
-        yaml.safe_dump(config.model_dump(mode="json", exclude_none=True), sort_keys=False, allow_unicode=True))
-    meta = {"slug": slug, "name": name, "tags": tags, "description": description,
-        "path": f"/examples/{slug}/config.yml"}
-    (base / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2))
-    _update_registry(Path(out_dir), meta)
+        yaml.safe_dump(config.model_dump(mode="json", exclude_none=True), sort_keys=False, allow_unicode=True)
+    )
+    meta_dict = meta.model_dump()
+    meta_dict["slug"] = slug
+    meta_dict["path"] = f"/examples/{slug}/config.yml"
+    (base / "meta.json").write_text(json.dumps(meta_dict, ensure_ascii=False, indent=2))
+    _update_registry(Path(out_dir), meta_dict)
     return base / "config.yml"
 
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import uuid
 from collections.abc import Iterable, Sequence
 from datetime import timedelta
 from typing import Any
@@ -99,14 +100,15 @@ class PipeConfigBuilder:
     def __init__(
         self,
         *,
-        factory: PipeConfigFactory,
-        pipe_id: str,
+        factory: PipeConfigFactory | None = None,
+        pipe_id: str | None = None,
         use: str = "base:CompositePipe",
         params: dict[str, Any] | None = None,
         injects: dict[str, str] | None = None,
     ) -> None:
-        self._factory = factory
-        self._pipe_id = pipe_id
+        self._factory = factory or PipeConfigFactory()
+
+        self._pipe_id = pipe_id or uuid.uuid4().hex
         self._use = use
         self._params = dict(params or {})
         self._injects = dict(injects or {})
@@ -119,6 +121,33 @@ class PipeConfigBuilder:
     def add_steps(self, steps: Iterable[PipeConfig]) -> PipeConfigBuilder:
         self._steps.extend(steps)
         return self
+
+    def set_id(self, pipe_id: str) -> PipeConfigBuilder:
+        self._pipe_id = pipe_id
+        return self
+
+    def set_use(self, use: str) -> PipeConfigBuilder:
+        self._use = use
+        return self
+
+    def set_params(self, params: dict[str, Any]) -> PipeConfigBuilder:
+        self._params = dict(params)
+        return self
+
+    def set_injects(self, injects: dict[str, str]) -> PipeConfigBuilder:
+        self._injects = dict(injects)
+        return self
+
+    def copy(self) -> PipeConfigBuilder:
+        builder = PipeConfigBuilder(
+            factory=self._factory,
+            pipe_id=self._pipe_id,
+            use=self._use,
+            params=self._params.copy(),
+            injects=self._injects.copy(),
+        )
+        builder._steps = self._steps.copy()
+        return builder
 
     def build(self) -> PipeConfig:
         composite_params = dict(self._params)

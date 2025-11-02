@@ -1,0 +1,6 @@
+- slug: basics-minimal
+  name: 'Basics: Minimal Setup'
+  tags:
+  - basics
+  description: Clean minimal config
+  path: /examples/basics-minimal/config.yml

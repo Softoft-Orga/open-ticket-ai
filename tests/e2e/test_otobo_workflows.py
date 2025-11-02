@@ -1,41 +1,18 @@
-import asyncio
-import time
-from collections.abc import Awaitable, Callable
 from uuid import uuid4
 
 import pytest
 
 from open_ticket_ai.core.config.config_builder import ConfigBuilder
-from open_ticket_ai.core.config.pipe_config_builder import PipeConfigFactory
+from open_ticket_ai.core.config.pipe_config_builder import PipeConfigBuilder, PipeConfigFactory
 from tests.e2e.conftest import (
     DockerComposeController,
     OtoboE2EConfig,
     OtoboTestHelper,
 )
-from tests.e2e.docs_examples import save_example
+from tests.e2e.docs_examples import OTAIConfigExampleMetaInfo, save_example
+from tests.e2e.util import wait_for_condition
 
 pytestmark = pytest.mark.e2e
-
-
-async def wait_for_condition(
-    check: Callable[[], Awaitable[bool]],
-    *,
-    timeout: float = 10.0,
-    interval: float = 0.1,
-    message: str | None = None,
-) -> None:
-    deadline = time.monotonic() + timeout
-    await asyncio.sleep(min(interval, 0.1))
-
-    while True:
-        if await check():
-            return
-
-        if time.monotonic() >= deadline:
-            error_msg = message or f"Timed out after {timeout}s waiting for condition"
-            raise AssertionError(error_msg)
-
-        await asyncio.sleep(interval)
 
 
 @pytest.mark.asyncio
@@ -45,6 +22,17 @@ async def test_update_ticket_subject(
     otobo_helper: OtoboTestHelper,
     otobo_e2e_config: OtoboE2EConfig,
 ) -> None:
+    _CONFIG_META_INFO = OTAIConfigExampleMetaInfo(
+        name="Update Ticket Subject",
+        description="""
+            # Update Ticket Subject
+
+            Configures a periodic single-step workflow that sets a specific ticket’s subject in OTOBO/Znuny.
+            Requires: `ticket_id`, `updated_ticket.subject`, `environment.polling_interval`.
+            Pipe: `base:UpdateTicketPipe` with `ticket_system: otobo_znuny`.
+            """,
+        tags=["basic", "simple-ticket-system"],
+    )
     pipe_factory = PipeConfigFactory()
     original_subject = f"E2E Update {uuid4()}"
     ticket_id = await otobo_helper.create_ticket(subject=original_subject, body="initial subject validation")
@@ -68,9 +56,7 @@ async def test_update_ticket_subject(
         run=composite,
     )
 
-    builder = base_config_builder
-    builder.add_orchestrator_pipe(runner)
-    config = builder.build()
+    config = base_config_builder.add_orchestrator_pipe(runner).build()
 
     docker_compose_controller.write_config(config)
     docker_compose_controller.write_config_to_test_storage(config, "test_update_ticket_subject")
@@ -81,6 +67,10 @@ async def test_update_ticket_subject(
         return ticket.title == updated_subject
 
     await wait_for_condition(subject_matches)
+    save_example(
+        config,
+        meta=_CONFIG_META_INFO
+    )
 
 
 @pytest.mark.asyncio
@@ -90,91 +80,111 @@ async def test_fetch_queue_and_add_note(
     otobo_helper: OtoboTestHelper,
     otobo_e2e_config: OtoboE2EConfig,
 ) -> None:
-    """
-    Demonstrate: Queue monitoring with automated note addition
+    _CONFIG_META_INFO = OTAIConfigExampleMetaInfo(
+        name="Fetch Ticket from Queue and Add Note",
+        description="""
+            # Simple Ticket: Fetch → Add Note → Move
 
-    Use Case:
-        Monitor a support queue and automatically add a standardized note to
-        each new ticket. The orchestrator runs continuously, processing one
-        ticket at a time on each run.
+            Configures a periodic queue processor for OTOBO/Znuny.
 
-    Real-World Example:
-        Every minute, check the "New Tickets" queue and add an acknowledgment
-        note to the first unprocessed ticket, then move it to "In Progress".
+            ## Components
+            - Orchestrator: SimpleSequential with interval trigger (`environment.polling_interval`)
+            - Injects: `ticket_system: otobo_znuny`
+            - Pipes:
+              1. `base:FetchTicketsPipe` fetches exactly one ticket from `environment.monitored_queue`
+              2. `base:AddNotePipe` adds an acknowledgment note (`subject`, `body`)
+              3. `base:UpdateTicketPipe` moves the ticket to `environment.cleanup_queue`
 
-    Configuration Pattern:
-        - Fetch one ticket from queue
-        - Add note to that ticket
-        - Move ticket to cleanup queue (marks as "processed")
-        - Orchestrator runs repeatedly, processing tickets one by one
+            ## Key parameters
+            - `environment.monitored_queue`
+            - `environment.cleanup_queue`
+            - `environment.polling_interval`
+            - Note `subject`, `body`
 
-    What This Tests:
-        1. Continuous queue monitoring (repeated orchestrator runs)
-        2. Processing tickets individually
-        3. Using Jinja2 to reference fetched ticket data
-        4. Moving tickets between queues after processing
-    """
+            ## Outcome
+            Each cycle processes one ticket: adds the note and moves it to the cleanup queue.
+            If the queue is empty, nothing happens.
+        """,
+        tags=[
+            "basic",
+            "simple-ticket-system",
+        ],
+    )
+
     pipe_factory = PipeConfigFactory()
 
     # Ensure queue is empty before starting
     await otobo_helper.empty_monitored_queue()
 
     # Create a single test ticket in the monitored queue
-    test_subject = f"E2E Queue Ticket {uuid4()}"
     ticket_id = await otobo_helper.create_ticket(
-        subject=test_subject, body="This ticket will receive an automated note and be moved"
+        subject=f"E2E Queue Ticket {uuid4()}",
+        body="This ticket will receive an automated note and be moved",
     )
 
     note_subject = f"E2E Acknowledgment {uuid4()}"
     note_body = "Your ticket has been received and is being processed."
 
+    otobo_znuny_pipe_builder = PipeConfigBuilder().set_injects({"ticket_system": "otobo_znuny"})
+
     # Step 1: Fetch ONE ticket from the monitored queue
-    fetch_step = pipe_factory.create_pipe(
-        "fetch-next-ticket",
-        "base:FetchTicketsPipe",
-        params={
-            "ticket_search_criteria": {
-                "queue": {"name": otobo_e2e_config.environment.monitored_queue},
-                "limit": 1,  # Process one ticket at a time
-            }
-        },
-        injects={"ticket_system": "otobo_znuny"},
+    fetch_step = (
+        otobo_znuny_pipe_builder.copy()
+        .set_id("fetch-next-ticket")
+        .set_use("base:FetchTicketsPipe")
+        .set_params(
+            {
+                "ticket_search_criteria": {
+                    "queue": {"name": otobo_e2e_config.environment.monitored_queue},
+                    "limit": 1,  # Process one ticket at a time
+                },
+            },
+        )
+        .build()
     )
 
     # Step 2: Add note to the fetched ticket
     # Use Jinja2 to reference the first (and only) ticket from fetch results
-    add_note_step = pipe_factory.create_pipe(
-        "add-acknowledgment",
-        "base:AddNotePipe",
-        params={
-            "ticket_id": "{{ get_pipe_result('fetch-next-ticket', 'fetched_tickets')[0]['id'] }}",
-            "note": {
-                "subject": note_subject,
-                "body": note_body,
+    add_note_step = (
+        otobo_znuny_pipe_builder.copy()
+        .set_id("add-acknowledgment")
+        .set_use("base:AddNotePipe")
+        .set_params(
+            {
+                "ticket_id": "{{ get_pipe_result('fetch-next-ticket', 'fetched_tickets')[0]['id'] }}",
+                "note": {
+                    "subject": note_subject,
+                    "body": note_body,
+                },
             },
-        },
-        injects={"ticket_system": "otobo_znuny"},
+        )
+        .build()
     )
 
     # Step 3: Move ticket to cleanup queue (marks as processed)
-    move_ticket_step = pipe_factory.create_pipe(
-        "move-to-processed",
-        "base:UpdateTicketPipe",
-        params={
-            "ticket_id": "{{ get_pipe_result('fetch-next-ticket', 'fetched_tickets')[0]['id'] }}",
-            "updated_ticket": {
-                "queue": {"name": otobo_e2e_config.environment.cleanup_queue},
+    move_ticket_step = (
+        otobo_znuny_pipe_builder.copy()
+        .set_id("move-to-processed")
+        .set_use("base:UpdateTicketPipe")
+        .set_params(
+            {
+                "ticket_id": "{{ get_pipe_result('fetch-next-ticket', 'fetched_tickets')[0]['id'] }}",
+                "updated_ticket": {
+                    "queue": {"name": otobo_e2e_config.environment.cleanup_queue},
+                },
             },
-        },
-        injects={"ticket_system": "otobo_znuny"},
+        )
+        .build()
     )
 
     # Build the composite workflow: fetch -> add note -> move
-    composite_builder = pipe_factory.create_composite_builder("process-queue-ticket")
-    composite_builder.add_step(fetch_step)
-    composite_builder.add_step(add_note_step)
-    composite_builder.add_step(move_ticket_step)
-    composite = composite_builder.build()
+    composite = (
+        pipe_factory.create_composite_builder("process-queue-ticket")
+        .add_step(fetch_step)
+        .add_step(add_note_step)
+        .add_step(move_ticket_step)
+        .build()
+    )
 
     # Set up orchestrator to run this workflow repeatedly
     runner = pipe_factory.create_simple_sequential_runner(
@@ -184,32 +194,28 @@ async def test_fetch_queue_and_add_note(
     )
 
     # Deploy the configuration
-    builder = base_config_builder
-    builder.add_orchestrator_pipe(runner)
-    config = builder.build()
+    config = base_config_builder.add_orchestrator_pipe(runner).build()
 
     docker_compose_controller.write_config(config)
     docker_compose_controller.restart()
 
-    # Verify: The ticket should receive the note AND be moved to cleanup queue
-    async def ticket_processed() -> bool:
-        """Check if ticket has the note and is in the cleanup queue"""
+    async def tickets_have_note_and_are_moved() -> bool:
         ticket = await otobo_helper.get_ticket(ticket_id)
 
-        # Check if note was added
         articles = ticket.articles or []
         has_note = any(article.subject == note_subject and (note_body in (article.body or "")) for article in articles)
 
-        # Check if ticket was moved to cleanup queue
         in_cleanup_queue = ticket.queue.name == otobo_e2e_config.environment.cleanup_queue
 
         return has_note and in_cleanup_queue
 
     await wait_for_condition(
-        ticket_processed,
+        tickets_have_note_and_are_moved,
         timeout=240.0,
         message=f"Ticket {ticket_id} was not processed (note added and moved to cleanup queue)",
     )
 
-    save_example(config, "basics-minimal", "Basics: Minimal Setup", ["basics"], "Clean minimal config")
-
+    save_example(
+        config,
+        meta=_CONFIG_META_INFO
+    )
