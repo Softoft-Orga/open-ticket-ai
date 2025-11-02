@@ -1,3 +1,4 @@
+from textwrap import dedent
 from uuid import uuid4
 
 import pytest
@@ -24,13 +25,12 @@ async def test_update_ticket_subject(
 ) -> None:
     _CONFIG_META_INFO = OTAIConfigExampleMetaInfo(
         name="Update Ticket Subject",
-        description="""
-            # Update Ticket Subject
-
-            Configures a periodic single-step workflow that sets a specific ticket’s subject in OTOBO/Znuny.
-            Requires: `ticket_id`, `updated_ticket.subject`, `environment.polling_interval`.
-            Pipe: `base:UpdateTicketPipe` with `ticket_system: otobo_znuny`.
-            """,
+        description=dedent("""
+        # Update Ticket Subject
+        Periodic single-step workflow that sets a ticket’s subject in OTOBO/Znuny.
+        Pipe: `base:UpdateTicketPipe` with `ticket_system: otobo_znuny`.
+        Key: `ticket_id`, `updated_ticket.subject`, `environment.polling_interval`.
+        """),
         tags=["basic", "simple-ticket-system"],
     )
     pipe_factory = PipeConfigFactory()
@@ -59,7 +59,6 @@ async def test_update_ticket_subject(
     config = base_config_builder.add_orchestrator_pipe(runner).build()
 
     docker_compose_controller.write_config(config)
-    docker_compose_controller.write_config_to_test_storage(config, "test_update_ticket_subject")
     docker_compose_controller.restart()
 
     async def subject_matches() -> bool:

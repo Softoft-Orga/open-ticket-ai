@@ -4,3 +4,22 @@
   - basics
   description: Clean minimal config
   path: /examples/basics-minimal/config.yml
+- name: Classify Text and Set Ticket Subject
+  description: '
+
+    # Classify Text and Set Ticket Subject
+
+
+    Classifies a fixed text via HF local model and sets the ticket subject to the
+    returned label.
+
+    Pipes: `base:ClassificationPipe`, `base:UpdateTicketPipe`. Injects: `classification_service:
+    hf_local`, `ticket_system: otobo_znuny`.
+
+    '
+  tags:
+  - basic
+  - simple-ai
+  - simple-ticket-system
+  slug: classify-text-and-set-ticket-subject
+  path: /examples/classify-text-and-set-ticket-subject/config.yml

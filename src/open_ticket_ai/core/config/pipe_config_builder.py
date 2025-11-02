@@ -150,11 +150,12 @@ class PipeConfigBuilder:
         return builder
 
     def build(self) -> PipeConfig:
-        composite_params = dict(self._params)
-        composite_params["steps"] = [step.model_dump(mode="json", exclude_none=True) for step in self._steps]
+        params = dict(self._params)
+        if self._steps:
+            params["steps"] = [step.model_dump(mode="json", exclude_none=True) for step in self._steps]
         return self._factory.create_pipe(
             self._pipe_id,
             self._use,
-            params=composite_params,
+            params=params,
             injects=self._injects,
         )
