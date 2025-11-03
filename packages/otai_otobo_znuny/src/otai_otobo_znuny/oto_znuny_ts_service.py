@@ -11,31 +11,32 @@ from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import (
     Article,
     Ticket,
+    TicketCreate,
     TicketSearch,
     TicketUpdate,
 )
 
 from otai_otobo_znuny.models import (
-    RenderedOTOBOZnunyTSServiceParams,
+    OTOBOZnunyTSServiceParams,
     otobo_ticket_to_unified_ticket,
     unified_entity_to_id_name,
 )
 
 
 class OTOBOZnunyTicketSystemService(TicketSystemService):
-    ParamsModel: ClassVar[type[RenderedOTOBOZnunyTSServiceParams]] = RenderedOTOBOZnunyTSServiceParams
+    ParamsModel: ClassVar[type[OTOBOZnunyTSServiceParams]] = OTOBOZnunyTSServiceParams
 
     @inject
     def __init__(
-            self,
-            client: OTOBOZnunyClient | None = None,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        client: OTOBOZnunyClient | None = None,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._client: OTOBOZnunyClient | None = client
         self._logger.debug("🎫 OTOBOZnunyTicketSystemService initializing")
-        self.initialize()
+        self._initialize()
 
     @property
     def client(self) -> OTOBOZnunyClient:
@@ -43,25 +44,6 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
             self._logger.error("❌ Client not initialized")
             raise RuntimeError("Client not initialized. Call initialize() first.")
         return self._client
-
-    def _recreate_client(self) -> OTOBOZnunyClient:
-        self._logger.debug("🔄 Recreating OTOBO client")
-        self._logger.debug(f"Base URL: {self._params.to_client_config().base_url}")
-
-        self._client = OTOBOZnunyClient(config=self._params.to_client_config())
-
-        auth_info = self._params.get_basic_auth().model_dump(with_secrets=True)
-        self._logger.debug(f"Authentication: user={auth_info.get('username', 'N/A')}")
-
-        self._client.login(self._params.get_basic_auth())
-        self._logger.debug("✅ OTOBO client recreated and logged in")
-
-        return self._client
-
-    def initialize(self) -> None:
-        self._logger.debug("⚙️  Initializing OTOBO/Znuny ticket system service")
-        self._recreate_client()
-        self._logger.debug("✅ OTOBO/Znuny ticket system service initialized")
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
         self._logger.debug(f"🔍 Searching tickets with criteria: queue={criteria.queue}, limit={criteria.limit}")
@@ -103,14 +85,33 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
             self._logger.error(f"❌ Failed to get ticket {ticket_id}: {e}", exc_info=True)
             raise
 
+    async def create_ticket(self, ticket: UnifiedTicket) -> str:
+        ticket = TicketCreate(
+            title=ticket.subject,
+            queue=unified_entity_to_id_name(ticket.queue) if ticket.queue else None,
+            priority=unified_entity_to_id_name(ticket.priority) if ticket.priority else None,
+            article=Article(
+                subject=ticket.subject,
+                body=ticket.body or "",
+                content_type="text/plain",
+            ),
+        )
+        ticket_response: Ticket = await self.client.create_ticket(ticket)
+        return str(ticket_response.id)
+
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
         self._logger.info(f"📝 Updating ticket {ticket_id} in OTOBO/Znuny")
         self._logger.debug(f"Updates: {updates.model_dump(exclude_none=True)}")
 
         article = None
         if updates.notes and len(updates.notes) > 0:
+            if len(updates.notes) > 1:
+                self._logger.warning(
+                    f"⚠️  Multiple notes provided for ticket update; only the last one will be added. "
+                    f"Total notes provided: {len(updates.notes)}"
+                )
             self._logger.debug(f"Adding article/note: {updates.notes[-1].subject}")
-            article = Article(subject=updates.notes[-1].subject, body=updates.notes[-1].body, content_type="text/plain")
+            article = Article(subject=updates.notes[0].subject, body=updates.notes[0].body, content_type="text/plain")
 
         ticket = TicketUpdate(
             id=int(ticket_id),
@@ -138,3 +139,22 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
         return await self.update_ticket(
             ticket_id, UnifiedTicket(notes=[UnifiedNote(subject=note.subject, body=note.body)])
         )
+
+    def _recreate_client(self) -> OTOBOZnunyClient:
+        self._logger.debug("🔄 Recreating OTOBO client")
+        self._logger.debug(f"Base URL: {self._params.to_client_config().base_url}")
+
+        self._client = OTOBOZnunyClient(config=self._params.to_client_config())
+
+        auth_info = self._params.get_basic_auth().model_dump(with_secrets=True)
+        self._logger.debug(f"Authentication: user={auth_info.get('username', 'N/A')}")
+
+        self._client.login(self._params.get_basic_auth())
+        self._logger.debug("✅ OTOBO client recreated and logged in")
+
+        return self._client
+
+    def _initialize(self) -> None:
+        self._logger.debug("⚙️  Initializing OTOBO/Znuny ticket system service")
+        self._recreate_client()
+        self._logger.debug("✅ OTOBO/Znuny ticket system service initialized")

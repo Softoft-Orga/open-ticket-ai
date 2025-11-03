@@ -125,6 +125,8 @@ ban-relative-imports = "all"
 "tests/**" = [
     "ANN001", "ANN201", "ANN202", "ANN401", "S101", "S105"
 ]
+"tests/e2e/conftest.py" = ["S603"]
+
 [tool.mypy]
 python_version = "3.14"
 plugins = ["pydantic.mypy"]
@@ -176,6 +178,7 @@ source = [
     "src/open_ticket_ai",
     "packages/otai_hf_local/src",
     "packages/otai_otobo_znuny/src",
+    "packages/otai_base/src",
 ]
 omit = [
     "*model.py",

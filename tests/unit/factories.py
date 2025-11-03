@@ -1,11 +1,6 @@
 from typing import Any
 
-from open_ticket_ai.core.ticket_system_integration import (
-    TicketSearchCriteria,
-    UnifiedEntity,
-    UnifiedNote,
-    UnifiedTicket,
-)
+from open_ticket_ai import TicketSearchCriteria, UnifiedEntity, UnifiedNote, UnifiedTicket
 
 
 class UnifiedTicketFactory:
@@ -13,11 +8,11 @@ class UnifiedTicketFactory:
 
     @staticmethod
     def build(
-            ticket_id: str = "TEST-123",
-            subject: str = "Test Ticket",
-            queue_id: str = "1",
-            queue_name: str = "Support",
-            **kwargs: Any,
+        ticket_id: str = "TEST-123",
+        subject: str = "Test Ticket",
+        queue_id: str = "1",
+        queue_name: str = "Support",
+        **kwargs: Any,
     ) -> UnifiedTicket:
         defaults = {
             "id": ticket_id,
@@ -51,11 +46,11 @@ class TicketSearchCriteriaFactory:
 
     @staticmethod
     def build(
-            queue_id: str = "1",
-            queue_name: str = "Support",
-            limit: int = 25,
-            offset: int = 0,
-            **kwargs: Any,
+        queue_id: str = "1",
+        queue_name: str = "Support",
+        limit: int = 25,
+        offset: int = 0,
+        **kwargs: Any,
     ) -> TicketSearchCriteria:
         defaults = {
             "queue": UnifiedEntity(id=queue_id, name=queue_name),
@@ -72,22 +67,3 @@ class TestPipe:
 
     async def process(self, context):
         return context
-
-
-class PipeConfigFactory:
-    @staticmethod
-    def build(
-            id: str = "test_pipe",
-            pipe_class: str = TestPipe.__module__ + "." + TestPipe.__qualname__,
-            ticket_system_id: str = "test_system",
-            **kwargs: Any,
-    ) -> dict[str, Any]:
-        defaults = {
-            "id": id,
-            "use": pipe_class,
-            "_if": True,
-            "steps": [],
-            "ticket_system_id": ticket_system_id,
-        }
-        defaults.update(kwargs)
-        return defaults

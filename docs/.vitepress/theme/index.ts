@@ -39,6 +39,9 @@ export default {
         app.component('YoutubeVideo', defineAsyncComponent(() => import('../components/YoutubeVideo.vue')))
         app.component('ArchitectureOverview', defineAsyncComponent(() => import('../components/ArchitectureOverview.vue')))
         app.component('PipeSidecar', defineAsyncComponent(() => import('../components/pipe/PipeSidecar.vue')))
+        app.component('ExamplesGallery', defineAsyncComponent(() => import('../components/configExamples/ExamplesGallery.vue')))
+        app.component('ExamplePage', defineAsyncComponent(() => import('../components/configExamples/ExamplePage.vue')))
+        app.component('InlineExample', defineAsyncComponent(() => import('../components/configExamples/InlineExample.vue')))
         app.mixin({
             computed: {
                 lang() {

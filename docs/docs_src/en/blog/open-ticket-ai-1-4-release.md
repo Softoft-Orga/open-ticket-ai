@@ -1,20 +1,59 @@
 ---
-title: Open Ticket AI 1.4.1 Release - The First Major Production Release
-description: "Discover Open Ticket AI 1.4.1, the first production-ready release featuring powerful"
-toast_message: "New Release: Open Ticket AI 1.4.1 — Explore the production-ready platform"
+title: Open Ticket AI 1.4 Release - The First Major Production Release
+description: "Discover Open Ticket AI 1.4, the first production-ready release featuring powerful"
+toast_message: "New Release: Open Ticket AI 1.4 — Explore the production-ready platform"
 image: "https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png"
 show-on-news: true
-date: 2025-10-27
+date: 2025-10-28
 ---
 
-# Open Ticket AI 1.4.X: The First Major Production Release
+# Open Ticket AI 1.4: The First Major Production Release
 
-Open Ticket AI 1.4.X is here, marking the **first major production-ready release**! This version
+Open Ticket AI 1.4 is here, marking the **first major production-ready release**! This version
 brings enterprise-grade features, a mature plugin ecosystem, and the flexibility to automate your
 ticket system workflows like never before. Get the full release
 on [GitHub](https://github.com/Softoft-Orga/open-ticket-ai/releases/tag/v1.4.1).
 
-## What Open Ticket AI 1.4.X Offers
+![https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png](https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png)
+
+## Checkout the Demo!
+
+This Demo shows the OTOBO Ticketsystem with OTAI setup to classify queue and priority based on the
+ticket content. You can login with the following link!
+
+::: warning German Models!
+The Queue and Priority model only work for German tickets as it was trained with German data.
+:::
+
+[OTOBO Queue Priority Demo](https://otobo-demo.open-ticket-ai.com/otobo/customer.pl?Action=Login;User=otai;Password=otai)
+
+Example!
+
+Subject: "DRINGEND! Wohnung in Mainzer Straße 8 Heizung kaputt;"
+Text: "Hallo,
+meine Heizung in der Wohnung in der Mainzer Straße 8 funktioniert nicht. Bitte um schnelle Hilfe!
+dringend!
+Die Heizungsrohre sind kalt und es ist sehr kalt in der Wohnung. Vielen Dank!
+Mit freundlichen Grüßen,
+Max Mustermann
+"
+
+[Queue Priority - Test Ticket](https://otobo-demo.open-ticket-ai.com/otobo/customer.pl?Action=CustomerTicketMessage;Subject=DRINGEND!%20Wohnung%20in%20Mainzer%20Stra%C3%9Fe%208%20Heizung%20kaputt;Body=Hallo,%20meine%20Heizung%20in%20der%20Wohnung%20in%20der%20Mainzer%20Stra%C3%9Fe%208%20funktioniert%20nicht.%20Bitte%20um%20schnelle%20Hilfe!%20dringend!%20Die%20Heizungsrohre%20sind%20kalt%20und%20es%20ist%20sehr%20kalt%20in%20der%20Wohnung.%20Vielen%20Dank!%20Mit%20freundlichen%20Gr%C3%BC%C3%9Fen,%20Max%20Mustermann)
+
+These are just test models. You can use any model you want with Open Ticket AI!
+It works with Huggingface Models
+
+interesting models:
+OpenAlex/bert-base-multilingual-cased-finetuned-openalex-topic-classification-title-abstract
+oliverguhr/german-sentiment-bert
+siebert/sentiment-roberta-large-english
+distilbert/distilbert-base-uncased-finetuned-sst-2-english
+
+Often it is better to train your own models with your own data.
+Then you need to publish this to huggingface_hub change the model and HF_TOKEN in the config.yml and
+restart OTAI.
+
+## What Open Ticket AI 1.4 Offers
 
 ### Powerful Plugin Architecture
 
@@ -59,7 +98,34 @@ Explore [Configuration & Template Rendering](../users/config_rendering.md) for d
 
 ### Easy Installation
 
-Get started in minutes:
+The easiest way to setup Open Ticket AI on your server is using **Docker Compose**:
+
+**1. Create `compose.yml`:**
+
+```yaml
+services:
+    open-ticket-ai:
+        image: openticketai/engine:latest
+        restart: "unless-stopped"
+        environment:
+            OTAI_TS_PASSWORD: "${OTAI_TS_PASSWORD}"
+        volumes:
+            - ./config.yml:/app/config.yml:ro
+```
+
+**2. Create your `config.yml`** (see [Configuration Guide](../users/config_rendering.md))
+
+**3. Start the service:**
+
+```bash
+docker compose up -d
+```
+
+**4. You also need to setup the Ticketsystem**
+
+#### Alternative: Install with pip/uv
+
+For local development or custom deployments:
 
 ::: code-group
 
@@ -93,7 +159,7 @@ options.
 
 ## For Plugin Developers: Build and Monetize
 
-Open Ticket AI 1.4.1 empowers developers to **create and sell commercial plugins** with complete
+Open Ticket AI 1.4 empowers developers to **create and sell commercial plugins** with complete
 licensing freedom. There's no marketplace yet, but the foundation is ready.
 
 ### Plugin Development Freedom
@@ -103,48 +169,6 @@ licensing freedom. There's no marketplace yet, but the foundation is ready.
 - **Full documentation**: Complete guide
   at [Plugin Development](../developers/plugin_development.md)
 - **Community visibility**: Your plugin can be listed on our [Plugins](../users/plugins.md) page
-
-### Monetization Approaches
-
-#### Private PyPI + License Keys
-
-Host your plugin on a private PyPI server (DevPI, Gemfury, AWS CodeArtifact) with authentication
-tokens. Add license validation in your plugin's `__init__` method:
-
-```python
-import os
-from open_ticket_ai.core.plugins.plugin import Plugin
-
-
-class CommercialPlugin(Plugin):
-    def __init__(self, config):
-        license_key = os.getenv('MY_PLUGIN_LICENSE_KEY')
-        if not license_key or not self._validate_license(license_key):
-            raise LicenseError("Valid license key required")
-        super().__init__(config)
-
-    def _validate_license(self, key: str) -> bool:
-        # Your validation logic
-        pass
-```
-
-#### Public PyPI + License Enforcement
-
-Publish freely to PyPI but enforce runtime licensing:
-
-```python
-class PublicCommercialPlugin(Plugin):
-    def _get_all_injectables(self):
-        license_key = os.getenv('MY_PLUGIN_LICENSE_KEY')
-        if not license_key or not self._verify_license(license_key):
-            raise LicenseError(
-                "This plugin requires a valid license. "
-                "Visit https://myplugin.com for licensing."
-            )
-        return [MyPipe, MyService]
-```
-
-Installation remains open, but usage requires purchasing a license key.
 
 ### Future Marketplace
 
@@ -160,7 +184,7 @@ Start building now, and your plugin will be ready when the marketplace launches!
 
 ## Technical Highlights
 
-- **Python 3.13**: Modern type hints, performance improvements
+- **Python 3.14**: Modern type hints, performance improvements
 - **Dependency Injection**: Clean architecture with Injector framework
 - **Entry Point Discovery**: Standard Python packaging for plugin loading
 - **API Compatibility Validation**: Plugins and core versions checked at runtime
@@ -168,6 +192,6 @@ Start building now, and your plugin will be ready when the marketplace launches!
 
 ---
 
-Open Ticket AI 1.4.1 is production-ready, extensible, and built for the future. Install it today,
+Open Ticket AI 1.4 is production-ready, extensible, and built for the future. Install it today,
 automate your workflows, and join the growing plugin ecosystem!
 

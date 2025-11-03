@@ -7,7 +7,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import TicketS
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
-    RenderedOTOBOZnunyTSServiceParams,
+    OTOBOZnunyTSServiceParams,
 )
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.oto_znuny_ts_service import (
     OTOBOZnunyTicketSystemService,
@@ -20,13 +20,14 @@ def mock_client():
     mock.login = MagicMock()
     mock.search_and_get = AsyncMock()
     mock.get_ticket = AsyncMock()
+    mock.create_ticket = AsyncMock()
     mock.update_ticket = AsyncMock()
     return mock
 
 
 @pytest.fixture
 def service_params():
-    return RenderedOTOBOZnunyTSServiceParams(
+    return OTOBOZnunyTSServiceParams(
         base_url="http://test.example.com",
         username="test_user",
         password="test_password",

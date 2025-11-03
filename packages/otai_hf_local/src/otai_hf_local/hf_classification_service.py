@@ -47,12 +47,12 @@ class HFClassificationService(Injectable[HFClassificationServiceParams]):
     ParamsModel: ClassVar[type[BaseModel]] = HFClassificationServiceParams
 
     def __init__(
-            self,
-            config: InjectableConfig,
-            logger_factory: LoggerFactory,
-            get_pipeline: GetPipelineFunc = _get_hf_pipeline,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        config: InjectableConfig,
+        logger_factory: LoggerFactory,
+        get_pipeline: GetPipelineFunc = _get_hf_pipeline,
+        *args: Any,
+        **kwargs: Any,
     ):
         super().__init__(config, logger_factory, *args, **kwargs)
         self._get_pipeline = get_pipeline

@@ -105,7 +105,7 @@ _orchestrations:
                   visibility: internal
               - use: ...RouteTicketPipe
     -   name: Post-Classification Feedback
-        file: examples/orchestrations/post_classification.yml
+        file: configExamples/orchestrations/post_classification.yml
 
 _notes:
     -   en: Visibility must be supported by the backend adapter.

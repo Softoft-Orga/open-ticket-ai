@@ -7,8 +7,11 @@ const {Layout: DefaultLayout} = DefaultTheme
 
 <template>
   <DefaultLayout>
-    <template #layout-top>
+    <template #home-hero-before>
       <RecentNewsToast/>
+    </template>
+    <template #doc-top>
+      <RecentNewsToast class="mb-4"/>
     </template>
   </DefaultLayout>
 </template>

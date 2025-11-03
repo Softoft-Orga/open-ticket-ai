@@ -59,12 +59,18 @@ package "Plugin System" {
     }
 }
 
-abstract class TemplateRenderer {
+abstract class TemplateRenderer extends Injectable {
     +render(obj, scope): Any
 }
 
 abstract class Injectable<T> {
     +get_params_model(): type[T]
+}
+
+abstract class TicketsystemService extends Injectable {
+}
+
+abstract class ClassificationService extends Injectable {
 }
 
 ' Core relationships

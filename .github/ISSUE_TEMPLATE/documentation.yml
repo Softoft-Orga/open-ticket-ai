@@ -7,19 +7,19 @@ body:
     attributes:
       value: |
         ## Documentation Request - Implementation Guide
-        
+
         **How to write documentation:**
         - Write in Markdown format for VitePress
         - Place docs in `docs/vitepress_docs/docs_src/en/` (English)
         - Include YAML config examples with proper syntax highlighting
         - Add links to related documentation and API references
-        
+
         **Documentation structure:**
         - User guides: End-to-end workflows and tutorials
         - Developer docs: Architecture, API, and implementation details
         - Reference docs: Configuration schema, pipe catalog, CLI commands
         - Use VitePress components for callouts, tabs, and code groups
-        
+
         **Quality gates (must pass):**
           KEEP the documentation small and precise, especially dont add long texts! Focus on the core of the software.
           Use Mermaid Diagrams, Tables, and Lists to structure information clearly.
@@ -32,7 +32,7 @@ body:
         - Code examples are tested and working
         - VitePress builds successfully: `cd docs && npm run docs:build`
         - No spelling/grammar issues in English docs
-        
+
         **Issue is DONE when:**
         - Documentation is written and placed in correct location
         - All code examples are tested
@@ -54,7 +54,7 @@ body:
       description: What sections and topics should be covered?
       placeholder: |
         File: docs/ABCD.md
-        
+
         Sections:
         1. Introduction to custom pipes
         2. Pipe class structure and inheritance
@@ -64,10 +64,10 @@ body:
         6. Complete example: Building a custom classification pipe
 
   - type: textarea
-    id: code-examples
+    id: code-configExamples
     attributes:
       label: Code Examples Needed
-      description: What code examples should be included?
+      description: What code configExamples should be included?
 
   - type: textarea
     id: additional-context

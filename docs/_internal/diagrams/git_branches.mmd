@@ -1,0 +1,12 @@
+gitGraph
+    commit id: "c0" tag: "init"
+    branch dev
+    checkout dev
+    commit id: "feat-1"
+    commit id: "feat-2" tag: "v1.4.22"
+    commit id: "feat-3" tag: "v1.4.22"
+    commit id: "feat-4"
+    checkout main
+    commit id: "hotfix-1"
+    merge dev tag: "merge PR"
+    commit id: "release-prep" tag: "v1.4.22"

@@ -14,6 +14,8 @@ expressions** like
 This lets you reuse values, read environment variables, and reference results from other pipes — all
 while keeping configuration clean and declarative.
 
+<InlineExample class="mb-3" slug="fetch-addnote" />
+
 ## Key Concepts
 
 # Injectable Configuration Structure
@@ -196,3 +198,9 @@ result: "{{ fail() }}"
 ```yaml
 userCity: "{{ at_path(user, 'address.city') }}"
 ```
+
+## Full Examples / Templates
+
+See full working examples of config.yml
+
+[Config Examples](../users/config_examples.md).

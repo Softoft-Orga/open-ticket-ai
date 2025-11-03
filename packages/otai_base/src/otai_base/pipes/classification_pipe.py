@@ -23,12 +23,12 @@ class ClassificationPipe(Pipe[ClassificationPipeParams]):
     ParamsModel: ClassVar[type[ClassificationPipeParams]] = ClassificationPipeParams
 
     def __init__(
-            self,
-            config: PipeConfig,
-            logger_factory: LoggerFactory,
-            classification_service: ClassificationService,
-            *args: Any,
-            **kwargs: Any,
+        self,
+        config: PipeConfig,
+        logger_factory: LoggerFactory,
+        classification_service: ClassificationService,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         super().__init__(config, logger_factory, *args, **kwargs)
         self._classification_service = classification_service

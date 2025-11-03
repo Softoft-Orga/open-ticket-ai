@@ -13,7 +13,7 @@ jobs:
   release:
     permissions:
       id-token: write
-    runs-on: ubuntu-latest
+    runs-on: BigSoftoftRunner
     steps:
       - uses: actions/checkout@v4
 
@@ -69,6 +69,23 @@ jobs:
         with:
           driver: docker-container
           install: true
+
+      - name: Build Docker image for testing
+        uses: docker/build-push-action@v6
+        with:
+          context: ./deployment
+          load: true
+          tags: ${{ env.DOCKER_REPOSITORY }}:test
+          provenance: false
+          sbom: false
+
+      - name: Run E2E tests
+        env:
+          OTAI_IMAGE: ${{ env.DOCKER_REPOSITORY }}:test
+          OTAI_E2E_OTOBO_PASSWORD: ${{ secrets.OTAI_E2E_OTOBO_PASSWORD }}
+        run: |
+          uv sync
+          uv run -m pytest -m e2e -v
 
       - uses: docker/build-push-action@v6
         with:

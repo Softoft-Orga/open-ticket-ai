@@ -21,8 +21,8 @@ class PluginConfig(BaseModel):
         default="",
         description="Name of the plugin for identification purposes.",
     )
-    version: str = Field(
-        default="",
+    version: VersionSpecifier = Field(
+        default=">=0.0.0",
         description="Version of the plugin for compatibility management.",
     )
 
@@ -32,7 +32,7 @@ class OpenTicketAIConfig(BaseModel):
         default=">=1.0.0",
         description="API version of the OpenTicketAI application for compatibility and feature management.",
     )
-    plugins: list[str] = Field(
+    plugins: list[PluginConfig] = Field(
         default_factory=list,
         description="List of plugin module paths to load and enable for extending application functionality.",
     )

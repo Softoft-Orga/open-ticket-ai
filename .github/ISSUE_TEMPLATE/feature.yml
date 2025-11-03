@@ -7,14 +7,14 @@ body:
     attributes:
       value: |
         ## Feature Request - Implementation Guide
-        
+
         **How to implement:**
         - Write clean, type-annotated Python 3.13 code using modern typing (PEP 695)
         - Follow composition over inheritance; use dependency injection (Injector)
         - Use Pydantic v2 for data models with explicit type annotations
         - No inline code comments - code should be self-documenting
         - Place code in appropriate package under `src/open_ticket_ai/` or `packages/`
-        
+
         **Testing requirements:**
         - Write unit tests in `packages/<name>/tests/unit/` for package code
         - Write integration tests in `packages/<name>/tests/integration/` if touching I/O or package boundaries
@@ -22,12 +22,12 @@ body:
         - Use existing fixtures from conftest.py - check with `uv run -m pytest --fixtures`
         - Keep tests minimal: ≤5 tests per file, ≤20 lines per test, use parametrize
         - No tests under any `src/` directory
-        
+
         **Quality gates (must pass):**
         - `uv run ruff check .` - no warnings allowed
         - `uv run mypy .` - no errors allowed
         - `uv run -m pytest` - all tests must pass
-        
+
         **Issue is DONE when:**
         - Feature is implemented with proper types and DI
         - Tests are written and passing
@@ -62,7 +62,7 @@ body:
         - Test file change detection
         - Test config reload trigger
         - Test error handling for invalid configs
-        
+
         Integration test in tests/integration/:
         - Test full reload cycle with real config file
 
@@ -70,7 +70,7 @@ body:
     id: additional-context
     attributes:
       label: Additional Context
-      description: Dependencies, config examples, edge cases
+      description: Dependencies, config configExamples, edge cases
       placeholder: |
         Dependencies: Add watchdog to pyproject.toml
         Edge case: Handle config errors during reload gracefully

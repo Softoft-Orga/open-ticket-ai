@@ -47,10 +47,10 @@ def renderer(integration_template_renderer: TemplateRenderer) -> TemplateRendere
 
 @pytest.fixture
 def factory(
-        registry: ComponentRegistry,
-        renderer: TemplateRenderer,
-        integration_logger_factory,
-        otai_with_ticketsvc: OpenTicketAIConfig,
+    registry: ComponentRegistry,
+    renderer: TemplateRenderer,
+    integration_logger_factory,
+    otai_with_ticketsvc: OpenTicketAIConfig,
 ) -> PipeFactory:
     return PipeFactory(
         component_registry=registry,
@@ -122,8 +122,7 @@ async def test_pipes_use_same_ticketsystem_instance(factory: PipeFactory, ctx: P
 @pytest.mark.integration
 @pytest.mark.asyncio
 async def test_flow_fetch_select_highest_priority_and_add_note(
-        factory: PipeFactory, registry: ComponentRegistry, ctx: PipeContext, fetch_cfg, expr_cfg, addnote_cfg,
-        seed_tickets
+    factory: PipeFactory, registry: ComponentRegistry, ctx: PipeContext, fetch_cfg, expr_cfg, addnote_cfg, seed_tickets
 ):
     await seed_tickets(
         [

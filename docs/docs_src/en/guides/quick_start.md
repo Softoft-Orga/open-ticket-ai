@@ -69,7 +69,7 @@ orchestrator:
           search:
             StateType: "Open"
             limit: 10
-        
+
         # Log tickets (for testing)
         - pipe_name: log_tickets
 ```
@@ -111,11 +111,11 @@ orchestrator:
           search:
             StateType: "Open"
             limit: 10
-        
+
         # Add ML classification
         - pipe_name: classify_queue
           model_name: "bert-base-uncased"
-        
+
         # Update tickets
         - pipe_name: update_ticket
           fields:
@@ -127,7 +127,7 @@ orchestrator:
 Check out complete examples:
 
 ```bash
-# List available examples
+# List available configExamples
 ls docs/raw_en_docs/config_examples/
 
 # Try the queue classification example

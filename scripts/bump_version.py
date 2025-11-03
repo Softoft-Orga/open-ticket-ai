@@ -11,6 +11,7 @@ import typer
 App = typer.Typer(add_completion=False)
 
 
+
 def run(cmd: list[str]) -> str:
     return subprocess.check_output(cmd, text=True).strip()
 

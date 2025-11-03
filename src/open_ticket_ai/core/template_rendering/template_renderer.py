@@ -31,7 +31,6 @@ def NoRenderField(**kwargs: Any) -> FieldInfo:
     kwargs["json_schema_extra"] = extra_dict
     return Field(**kwargs)
 
-
 class TemplateRenderer[ParamsT: BaseModel = StrictBaseModel](Injectable[ParamsT], ABC):
     @classmethod
     def _should_render_field(cls, field: FieldInfo) -> bool:
