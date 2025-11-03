@@ -1,15 +1,18 @@
 from __future__ import annotations
 
 from datetime import timedelta
+import logging
 from typing import Any
 
 from open_ticket_ai.core.config.app_config import AppConfig
-from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig
+from open_ticket_ai.core.config.config_models import InfrastructureConfig, OpenTicketAIConfig, PluginConfig
 from open_ticket_ai.core.config.pipe_config_builder import PipeConfigBuilder, PipeConfigFactory
 from open_ticket_ai.core.config.types import VersionSpecifier
 from open_ticket_ai.core.injectables.injectable_models import InjectableConfigBase
 from open_ticket_ai.core.logging.logging_models import LoggingConfig, LogLevel
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
+from otai_base.base_plugin import BasePlugin
+from otai_base.pipes.orchestrators.simple_sequential_orchestrator import SimpleSequentialOrchestrator
 
 
 class ConfigBuilder:
@@ -19,7 +22,7 @@ class ConfigBuilder:
         self._logging_config = LoggingConfig(level="INFO")
         self._services: dict[str, InjectableConfigBase] = {}
         self._orchestrator: PipeConfig | None = None
-        self._plugins: list[str] = []
+        self._plugins: list[PluginConfig] = []
         self._pipe_factory = PipeConfigFactory()
 
     def with_logging(
@@ -35,8 +38,8 @@ class ConfigBuilder:
         )
         return self
 
-    def add_plugin(self, plugin_name: str) -> ConfigBuilder:
-        self._plugins.append(plugin_name)
+    def add_plugin(self, plugin_config: PluginConfig) -> ConfigBuilder:
+        self._plugins.append(plugin_config)
         return self
 
     def add_service(
@@ -71,9 +74,14 @@ class ConfigBuilder:
         injects: dict[str, str] | None = None,
     ) -> ConfigBuilder:
         steps_data = dict(params or {}).pop("steps", None)
-        builder = self._pipe_factory.create_composite_builder(
-            orchestrator_id,
-            params=(dict(params or {})),
+        orchestrator_registry_name = BasePlugin().get_registry_name(SimpleSequentialOrchestrator)
+        print(orchestrator_registry_name)
+        logging.info(f"orchestrator_registry_name: {orchestrator_registry_name}")
+        builder = PipeConfigBuilder(
+            factory=self._pipe_factory,
+            pipe_id=orchestrator_id,
+            use=orchestrator_registry_name,
+            params=params,
             injects=injects,
         )
         if steps_data:
@@ -81,6 +89,8 @@ class ConfigBuilder:
                 step if isinstance(step, PipeConfig) else PipeConfig.model_validate(step) for step in steps_data
             )
         self._orchestrator = builder.build()
+        print(self._orchestrator.use)
+        logging.info(self._orchestrator.use)
         return self
 
     def configure_simple_orchestrator(
@@ -151,6 +161,7 @@ class ConfigBuilder:
         steps = params.pop("steps", [])
         builder = self._pipe_factory.create_composite_builder(
             orchestrator.id,
+            use=BasePlugin().get_registry_name(SimpleSequentialOrchestrator),
             params=params,
             injects=orchestrator.injects,
         )

@@ -9,7 +9,7 @@ from open_ticket_ai.core.plugins.plugin import Plugin
 from tests.unit.conftest import SimpleInjectable
 
 
-class ConcretePlugin(Plugin):
+class TestConcretePlugin(Plugin):
     def __init__(self, app_config: AppConfig, injectables: list[type[SimpleInjectable]] | None = None):
         super().__init__(app_config)
         self._injectables = injectables if injectables is not None else []
@@ -29,7 +29,7 @@ def app_config_for_plugin():
 class TestOnLoad:
     def test_on_load_registers_all_injectables(self, app_config_for_plugin, mock_component_registry):
         injectables = [SimpleInjectable]
-        plugin = ConcretePlugin(app_config_for_plugin, injectables)
+        plugin = TestConcretePlugin(app_config_for_plugin, injectables)
 
         plugin.on_load(mock_component_registry)
 
@@ -40,7 +40,7 @@ class TestOnLoad:
 
     def test_on_load_with_multiple_injectables(self, app_config_for_plugin, mock_component_registry):
         injectables = [SimpleInjectable, SimpleInjectable]
-        plugin = ConcretePlugin(app_config_for_plugin, injectables)
+        plugin = TestConcretePlugin(app_config_for_plugin, injectables)
 
         plugin.on_load(mock_component_registry)
 
@@ -49,7 +49,7 @@ class TestOnLoad:
     def test_on_load_with_empty_injectables_does_not_call_register(
         self, app_config_for_plugin, mock_component_registry
     ):
-        plugin = ConcretePlugin(app_config_for_plugin, [])
+        plugin = TestConcretePlugin(app_config_for_plugin, [])
 
         plugin.on_load(mock_component_registry)
 
@@ -59,7 +59,7 @@ class TestOnLoad:
         mock_registry = MagicMock(spec=ComponentRegistry)
         mock_registry.get_available_injectables.return_value = [SimpleInjectable]
         mock_registry.register.side_effect = RegistryError(mock_registry, "Test error")
-        plugin = ConcretePlugin(app_config_for_plugin, [SimpleInjectable])
+        plugin = TestConcretePlugin(app_config_for_plugin, [SimpleInjectable])
 
         with pytest.raises(RegistryError, match="Test error"):
             plugin.on_load(mock_registry)

@@ -5,13 +5,11 @@ import pytest
 
 from open_ticket_ai.core.config.config_builder import ConfigBuilder
 from open_ticket_ai.core.config.pipe_config_builder import PipeConfigBuilder, PipeConfigFactory
-from tests.e2e.conftest import (
-    DockerComposeController,
-    OtoboE2EConfig,
-    OtoboTestHelper,
-)
+from tests.e2e.test_util.e2e_ticketsystem_helper import E2ETicketsystemHelper
+from tests.e2e.test_util.docker_compose_controller import DockerComposeController
+from tests.e2e.test_util.e2e_ticketsystem_config import OtoboE2EConfig
 from tests.e2e.docs_examples import OTAIConfigExampleMetaInfo, save_example
-from tests.e2e.util import wait_for_condition
+from tests.e2e.test_util.util import wait_for_condition
 
 pytestmark = pytest.mark.e2e
 
@@ -20,13 +18,13 @@ pytestmark = pytest.mark.e2e
 async def test_update_ticket_subject(
     base_config_builder: ConfigBuilder,
     docker_compose_controller: DockerComposeController,
-    otobo_helper: OtoboTestHelper,
+    otobo_helper: E2ETicketsystemHelper,
     otobo_e2e_config: OtoboE2EConfig,
 ) -> None:
     _CONFIG_META_INFO = OTAIConfigExampleMetaInfo(
         name="Update Ticket Subject",
         description=dedent("""
-        # Update Ticket Subject
+        ### Update Ticket Subject
         Periodic single-step workflow that sets a ticket's subject in OTOBO/Znuny.
         Pipe: `base:UpdateTicketPipe` with `ticket_system: otobo_znuny`.
         Key: `ticket_id`, `updated_ticket.subject`, `environment.polling_interval`.
@@ -57,33 +55,33 @@ async def test_update_ticket_subject(
     )
 
     config = base_config_builder.add_orchestrator_pipe(runner).build()
+    save_example(config, meta=_CONFIG_META_INFO)
 
     docker_compose_controller.write_config(config)
-    docker_compose_controller.restart()
+    docker_compose_controller.up()
 
     async def subject_matches() -> bool:
         ticket = await otobo_helper.get_ticket(ticket_id)
         return ticket.title == updated_subject
 
-    await wait_for_condition(subject_matches)
-    save_example(config, meta=_CONFIG_META_INFO)
+    await wait_for_condition(subject_matches, timeout=60.0, message=f"Ticket {ticket_id} subject was not updated")
 
 
 @pytest.mark.asyncio
 async def test_fetch_queue_and_add_note(
     base_config_builder: ConfigBuilder,
     docker_compose_controller: DockerComposeController,
-    otobo_helper: OtoboTestHelper,
+    otobo_helper: E2ETicketsystemHelper,
     otobo_e2e_config: OtoboE2EConfig,
 ) -> None:
     _CONFIG_META_INFO = OTAIConfigExampleMetaInfo(
         name="Fetch Ticket from Queue and Add Note",
-        description="""
-            # Simple Ticket: Fetch → Add Note → Move
+        description=dedent("""
+            ### Simple Ticket: Fetch -> Add Note -> Move
 
             Configures a periodic queue processor for OTOBO/Znuny.
 
-            ## Components
+            #### Components
             - Orchestrator: SimpleSequential with interval trigger (`environment.polling_interval`)
             - Injects: `ticket_system: otobo_znuny`
             - Pipes:
@@ -91,16 +89,16 @@ async def test_fetch_queue_and_add_note(
               2. `base:AddNotePipe` adds an acknowledgment note (`subject`, `body`)
               3. `base:UpdateTicketPipe` moves the ticket to `environment.cleanup_queue`
 
-            ## Key parameters
+            #### Key parameters
             - `environment.monitored_queue`
             - `environment.cleanup_queue`
             - `environment.polling_interval`
             - Note `subject`, `body`
 
-            ## Outcome
+            #### Outcome
             Each cycle processes one ticket: adds the note and moves it to the cleanup queue.
             If the queue is empty, nothing happens.
-        """,
+        """),
         tags=[
             "basic",
             "simple-ticket-system",
@@ -191,9 +189,10 @@ async def test_fetch_queue_and_add_note(
 
     # Deploy the configuration
     config = base_config_builder.add_orchestrator_pipe(runner).build()
+    save_example(config, meta=_CONFIG_META_INFO)
 
     docker_compose_controller.write_config(config)
-    docker_compose_controller.restart()
+    docker_compose_controller.up()
 
     async def tickets_have_note_and_are_moved() -> bool:
         ticket = await otobo_helper.get_ticket(ticket_id)
@@ -207,8 +206,7 @@ async def test_fetch_queue_and_add_note(
 
     await wait_for_condition(
         tickets_have_note_and_are_moved,
-        timeout=240.0,
+        timeout=120.0,
         message=f"Ticket {ticket_id} was not processed (note added and moved to cleanup queue)",
     )
 
-    save_example(config, meta=_CONFIG_META_INFO)

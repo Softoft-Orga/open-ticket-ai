@@ -9,7 +9,6 @@ from otai_base.base_plugin import BasePlugin
 from otai_base.pipes.composite_pipe import CompositePipe
 from otai_base.pipes.interval_trigger_pipe import IntervalTrigger
 from otai_base.pipes.pipe_runners.simple_sequential_runner import SimpleSequentialRunner
-
 from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 
@@ -34,6 +33,7 @@ class PipeConfigFactory:
     def create_composite_builder(
         self,
         pipe_id: str,
+        use: str | None = None,
         *,
         params: dict[str, Any] | None = None,
         injects: dict[str, str] | None = None,
@@ -42,7 +42,7 @@ class PipeConfigFactory:
         builder = PipeConfigBuilder(
             factory=self,
             pipe_id=pipe_id,
-            use=BasePlugin().get_registry_name(CompositePipe),
+            use=use or BasePlugin().get_registry_name(CompositePipe),
             params=params,
             injects=injects,
         )
@@ -111,7 +111,7 @@ class PipeConfigBuilder:
         self._factory = factory or PipeConfigFactory()
 
         self._pipe_id = pipe_id or uuid.uuid4().hex
-        self._use = use or BasePlugin().get_registry_name(CompositePipe)
+        self._use = use
         self._params = dict(params or {})
         self._injects = dict(injects or {})
         self._steps: list[PipeConfig] = []

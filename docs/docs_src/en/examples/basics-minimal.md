@@ -4,4 +4,4 @@ pageClass: full-page
 aside: false
 ---
 
-<ExamplePage slug="basics-minimal" />
+<ExamplePage slug="basics-minimal"></ExamplePage>

@@ -2,11 +2,11 @@
   <section class="space-y-6">
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <TagFilter
-        :selected="selectedTag.value"
-        :tags="allTags.value"
+        :selected="selectedTag"
+        :tags="allTags"
         @update:selected="onTagSelected"
       />
-      <SearchBox :value="query.value" @update:value="value => query.value = value" />
+      <SearchBox :value="query" @update:value="value => query = value" />
     </div>
 
     <div v-if="registry.isLoading.value" class="rounded-lg border border-[color:var(--vp-c-divider)] bg-[color:var(--vp-c-bg-soft)] p-6 text-[color:var(--vp-c-text-2)]">

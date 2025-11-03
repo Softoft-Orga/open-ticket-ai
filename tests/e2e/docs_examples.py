@@ -6,6 +6,7 @@ from typing import Literal
 import yaml
 from pydantic import BaseModel
 
+
 # IDEA: Also report the version the config was tested with
 
 def _slugify(s: str) -> str:
@@ -24,12 +25,13 @@ class OTAIConfigExampleMetaInfo(BaseModel):
     tags: list[Tag]
 
 
-def save_example(config: BaseModel, meta: OTAIConfigExampleMetaInfo, out_dir: str = "docs/examples") -> Path:
+def save_example(config: BaseModel, meta: OTAIConfigExampleMetaInfo,
+    out_dir: str = "docs/docs_src/public/examples") -> Path:
     slug = _slugify(meta.name)
     base = Path(out_dir) / slug
     base.mkdir(parents=True, exist_ok=True)
     (base / "config.yml").write_text(
-        yaml.safe_dump(config.model_dump(mode="json", exclude_none=True), sort_keys=False, allow_unicode=True)
+        yaml.safe_dump(config.model_dump(mode="json", exclude_none=True), sort_keys=False, allow_unicode=True),
     )
     meta_dict = meta.model_dump()
     meta_dict["slug"] = slug

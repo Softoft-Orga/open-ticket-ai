@@ -11,7 +11,8 @@ async def wait_for_condition(
     message: str | None = None,
 ) -> None:
     deadline = time.monotonic() + timeout
-    await asyncio.sleep(min(interval, 0.1))
+
+    interval = max(timeout / 10, interval)
 
     while True:
         if await check():
