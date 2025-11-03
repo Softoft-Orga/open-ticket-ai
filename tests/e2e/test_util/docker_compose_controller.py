@@ -29,10 +29,6 @@ class DockerComposeController:
         logger.info("Config written successfully")
         return self._config_file
 
-    def restart(self) -> None:
-        logger.info("Restarting Docker Compose services")
-        self._run(["restart"])
-
     def up(self) -> None:
         logger.info(f"Starting Docker Compose services from {self._compose_file}")
         self._run(["up", "-d", "--remove-orphans"])

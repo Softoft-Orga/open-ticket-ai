@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-wrap gap-2">
     <Badge
-      v-for="tag in props.tags"
+      v-for="tag in tags"
       :key="tag"
       class="text-xs"
     >
@@ -13,5 +13,5 @@
 <script lang="ts" setup>
 import Badge from '../core/basic/Badge.vue'
 
-const props = defineProps<{ tags: string[] }>()
+const {tags} = defineProps<{ tags: string[] }>()
 </script>

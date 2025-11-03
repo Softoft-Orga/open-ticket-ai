@@ -1,32 +1,28 @@
 <template>
-  <span :class="['px-2 py-1 rounded-full text-sm font-semibold', typeClass]">
-    <slot/>
-  </span>
+  <span :class="[baseClass, variantClass]"><slot/></span>
 </template>
 
 <script lang="ts" setup>
-import {computed} from 'vue'
+import { computed } from 'vue'
 
-interface Props {
-  type?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
-}
+type Kind = 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+const { type = 'secondary' } = defineProps<{ type?: Kind }>()
 
-const props = withDefaults(defineProps<Props>(), {
-  type: 'secondary'
-})
+const baseClass =
+  'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1'
 
-const typeClass = computed(() => {
-  switch (props.type) {
+const variantClass = computed(() => {
+  switch (type) {
     case 'primary':
-      return 'bg-vp-brand-1 text-white'
+      return 'bg-indigo-600 text-white ring-indigo-500'
     case 'success':
-      return 'bg-green-600 text-black'
+      return 'bg-emerald-600 text-white ring-emerald-500'
     case 'warning':
-      return 'bg-yellow-500 text-black'
+      return 'bg-amber-400 text-black ring-amber-300'
     case 'danger':
-      return 'bg-pink-600 text-white'
+      return 'bg-rose-600 text-white ring-rose-500'
     default:
-      return 'bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)]'
+      return 'bg-slate-700 text-slate-200 ring-slate-600'
   }
 })
 </script>

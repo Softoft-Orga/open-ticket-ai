@@ -23,12 +23,12 @@ async def test_update_ticket_subject(
 ) -> None:
     _CONFIG_META_INFO = OTAIConfigExampleMetaInfo(
         name="Update Ticket Subject",
-        description=dedent("""
-        ### Update Ticket Subject
-        Periodic single-step workflow that sets a ticket's subject in OTOBO/Znuny.
-        Pipe: `base:UpdateTicketPipe` with `ticket_system: otobo_znuny`.
-        Key: `ticket_id`, `updated_ticket.subject`, `environment.polling_interval`.
-        """),
+        md_description="Updates the subject of a ticket using a single UpdateTicketPipe.",
+        md_details=dedent("""
+        A minimal workflow that updates the subject of a specific OTOBO/Znuny ticket.
+
+        The runner executes one pipe: `base:UpdateTicketPipe`, using the configured ticket ID and new subject value.
+        """).strip(),
         tags=["basic", "simple-ticket-system"],
     )
     pipe_factory = PipeConfigFactory()
@@ -75,34 +75,14 @@ async def test_fetch_queue_and_add_note(
     otobo_e2e_config: OtoboE2EConfig,
 ) -> None:
     _CONFIG_META_INFO = OTAIConfigExampleMetaInfo(
-        name="Fetch Ticket from Queue and Add Note",
-        description=dedent("""
-            ### Simple Ticket: Fetch -> Add Note -> Move
+        name="Fetch AddNote",
+        md_description="Fetches one ticket and adds a simple note.",
+        md_details=dedent("""
+        Minimal queue-processing workflow for OTOBO/Znuny.
 
-            Configures a periodic queue processor for OTOBO/Znuny.
-
-            #### Components
-            - Orchestrator: SimpleSequential with interval trigger (`environment.polling_interval`)
-            - Injects: `ticket_system: otobo_znuny`
-            - Pipes:
-              1. `base:FetchTicketsPipe` fetches exactly one ticket from `environment.monitored_queue`
-              2. `base:AddNotePipe` adds an acknowledgment note (`subject`, `body`)
-              3. `base:UpdateTicketPipe` moves the ticket to `environment.cleanup_queue`
-
-            #### Key parameters
-            - `environment.monitored_queue`
-            - `environment.cleanup_queue`
-            - `environment.polling_interval`
-            - Note `subject`, `body`
-
-            #### Outcome
-            Each cycle processes one ticket: adds the note and moves it to the cleanup queue.
-            If the queue is empty, nothing happens.
-        """),
-        tags=[
-            "basic",
-            "simple-ticket-system",
-        ],
+        The runner fetches exactly one ticket from the monitored queue, adds a fixed acknowledgment note, and moves the ticket to the cleanup queue. Useful as a basic example of sequential pipes and simple ticket mutations.
+        """).strip(),
+        tags=["basic", "simple-ticket-system"],
     )
 
     pipe_factory = PipeConfigFactory()

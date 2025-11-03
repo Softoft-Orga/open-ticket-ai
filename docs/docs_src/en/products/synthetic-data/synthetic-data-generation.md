@@ -82,7 +82,7 @@ Minimal config ideas (pseudocode):
 ```python
 # config/config.py (example)
 RUN = {
-    "rows": 10_000,  # total examples
+    "rows": 10_000,  # total configExamples
     "batch_size": 50,  # lower for cheap dev runs
     "languages": ["DE", "EN", "FR", "ES", "PT"],
     "timezone": "Europe/Berlin",

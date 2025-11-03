@@ -2,8 +2,9 @@
   <div class="grid gap-6 md:grid-cols-2">
     <ExampleCard
       v-for="example in props.examples"
-      :key="example.slug"
+      :key="example.slug ?? example.name"
       :example="example"
+      :exampleLink="'#' + example.slug ?? example.name"
     />
     <p
       v-if="!props.examples.length"
@@ -16,7 +17,7 @@
 
 <script lang="ts" setup>
 import ExampleCard from './ExampleCard.vue'
-import type {ExampleMeta} from '../../composables/useRegistry'
+import type {ExampleMeta} from '../../composables/useConfigExamplesRegistry'
 
 const props = defineProps<{ examples: ExampleMeta[] }>()
 </script>

@@ -25,13 +25,17 @@ async def test_e2e_classify_sets_ticket_subject(
 ) -> None:
     _CONFIG_META_INFO = OTAIConfigExampleMetaInfo(
         name="Classify Text and Set Ticket Subject",
-        description=dedent("""
-        ### Classify Text and Set Ticket Subject
+        md_description="Classifies text with a local HF model and sets the ticket subject to <LABEL>;<SCORE>.",
+        md_details=dedent("""
+        Classifies a fixed text via HF local model and updates the ticket subject to the predicted label and confidence.
 
-        Classifies a fixed text via HF local model and sets the ticket subject to the returned label.
-        Pipes: `base:ClassificationPipe`, `base:UpdateTicketPipe`.
-        Injects: `classification_service: hf_local`, `ticket_system: otobo_znuny`.
-        """),
+        Components:
+        - Pipes: base:ClassificationPipe -> base:UpdateTicketPipe
+        - Injects: classification_service: hf_local, ticket_system: otobo_znuny
+
+        Notes:
+        - Subject format: <LABEL>;<SCORE> where SCORE is 0–1
+        """).strip(),
         tags=["basic", "simple-ai", "simple-ticket-system"],
     )
 

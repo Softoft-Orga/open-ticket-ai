@@ -1,5 +1,5 @@
 ---
-description: Comprehensive testing guide for Open Ticket AI configurations, pipelines, and custom components with best practices and examples.
+description: Comprehensive testing guide for Open Ticket AI configurations, pipelines, and custom components with best practices and configExamples.
 ---
 
 # Testing Guide
@@ -51,11 +51,11 @@ def test_config_applies_defaults():
 def test_path_with_dots_at_start():
     result = process(".a.b")
     assert result == expected
-    
+
 def test_path_with_dots_at_end():
     result = process("a.b.")
     assert result == expected
-    
+
 def test_path_with_double_dots():
     result = process("a..b")
     assert result == expected
@@ -223,11 +223,11 @@ import inspect
 
 def test_method_signatures():
     adapter = MyCustomAdapter()
-    
+
     # Check fetch_tickets signature
     sig = inspect.signature(adapter.fetch_tickets)
     assert 'criteria' in sig.parameters
-    
+
     # Check return type annotation
     assert sig.return_annotation == List[Ticket]
 ```
@@ -432,20 +432,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.13'
-      
+
       - name: Install dependencies
         run: |
           pip install uv
           uv sync
-      
+
       - name: Run tests
         run: uv run -m pytest
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
 ```
@@ -625,7 +625,7 @@ These fixtures are available to ALL tests across the entire workspace:
 @pytest.fixture
 def tmp_config(tmp_path: Path) -> Path:
     """Create a temporary configuration file for testing.
-    
+
     Available to all tests in workspace.
     Used for testing configuration loading.
     """
@@ -647,7 +647,7 @@ open_ticket_ai:
 @pytest.fixture
 def app_injector(tmp_config: Path) -> Injector:
     """Provide a configured dependency injector for testing.
-    
+
     Uses tmp_config fixture to create a test injector.
     """
     from injector import Injector
@@ -688,7 +688,7 @@ def mock_ticket_system_service() -> MagicMock:
 @pytest.fixture
 def mocked_ticket_system() -> MockedTicketSystem:
     """Stateful mock ticket system with sample data.
-    
+
     Includes pre-populated tickets for testing ticket operations.
     """
     system = MockedTicketSystem()
@@ -805,9 +805,9 @@ def temp_directory(tmp_path):
     """Create temporary directory with files."""
     test_dir = tmp_path / "test_data"
     test_dir.mkdir()
-    
+
     yield test_dir
-    
+
     # Cleanup happens automatically with tmp_path
 ```
 
