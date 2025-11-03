@@ -4,7 +4,6 @@ from collections.abc import Iterable
 from typing import Any, ClassVar
 
 import httpx
-from injector import inject
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -26,8 +25,12 @@ from otai_zammad.models import (
 
 class ZammadTicketsystemService(TicketSystemService):
     ParamsModel: ClassVar[type[RenderedZammadTSServiceParams]] = RenderedZammadTSServiceParams
+    
+    API_TICKETS_SEARCH: ClassVar[str] = "/api/v1/tickets/search"
+    API_TICKETS: ClassVar[str] = "/api/v1/tickets"
+    API_TICKET_BY_ID: ClassVar[str] = "/api/v1/tickets/{ticket_id}"
+    API_TICKET_ARTICLES: ClassVar[str] = "/api/v1/tickets/{ticket_id}/articles"
 
-    @inject
     def __init__(
         self,
         client: httpx.AsyncClient | None = None,
@@ -82,7 +85,7 @@ class ZammadTicketsystemService(TicketSystemService):
         query = "*" if not queue_filter else f'group:"{queue_filter}"'
         params["query"] = query
 
-        response = await self.client.get("/api/v1/tickets/search", params=params)
+        response = await self.client.get(self.API_TICKETS_SEARCH, params=params)
         response.raise_for_status()
         payload = response.json()
         raw_tickets = self._extract_ticket_entries(payload)
@@ -118,7 +121,7 @@ class ZammadTicketsystemService(TicketSystemService):
 
     async def create_ticket(self, ticket: UnifiedTicket) -> str:
         payload = unified_ticket_to_zammad_create(ticket)
-        response = await self.client.post("/api/v1/tickets", json=payload.model_dump(exclude_none=True))
+        response = await self.client.post(self.API_TICKETS, json=payload.model_dump(exclude_none=True))
         response.raise_for_status()
         data = response.json()
         ticket_id = self._extract_ticket_id(data)
@@ -129,7 +132,7 @@ class ZammadTicketsystemService(TicketSystemService):
         payload = unified_ticket_to_zammad_update(updates)
         if payload.has_updates():
             response = await self.client.put(
-                f"/api/v1/tickets/{ticket_id}",
+                self.API_TICKET_BY_ID.format(ticket_id=ticket_id),
                 json=payload.model_dump(exclude_none=True),
             )
             response.raise_for_status()
@@ -145,7 +148,7 @@ class ZammadTicketsystemService(TicketSystemService):
     async def add_note(self, ticket_id: str, note: UnifiedNote) -> bool:
         payload = unified_note_to_zammad_article(note)
         response = await self.client.post(
-            f"/api/v1/tickets/{ticket_id}/articles",
+            self.API_TICKET_ARTICLES.format(ticket_id=ticket_id),
             json=payload.model_dump(exclude_none=True),
         )
         response.raise_for_status()
@@ -170,7 +173,9 @@ class ZammadTicketsystemService(TicketSystemService):
         return ticket
 
     async def _get_ticket(self, ticket_id: int) -> ZammadTicket | None:
-        response = await self.client.get(f"/api/v1/tickets/{ticket_id}", params={"expand": "articles"})
+        response = await self.client.get(
+            self.API_TICKET_BY_ID.format(ticket_id=ticket_id), params={"expand": "articles"}
+        )
         if response.status_code == httpx.codes.NOT_FOUND:
             return None
         response.raise_for_status()
@@ -181,7 +186,7 @@ class ZammadTicketsystemService(TicketSystemService):
         return ticket
 
     async def _fetch_articles(self, ticket_id: int) -> list[ZammadArticle]:
-        response = await self.client.get(f"/api/v1/tickets/{ticket_id}/articles")
+        response = await self.client.get(self.API_TICKET_ARTICLES.format(ticket_id=ticket_id))
         response.raise_for_status()
         data = response.json()
         if isinstance(data, dict):
