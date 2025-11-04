@@ -2,18 +2,17 @@ from __future__ import annotations
 
 from typing import Any
 
+from pydantic import AnyHttpUrl, ConfigDict, Field, SecretStr
+
 from open_ticket_ai import StrictBaseModel
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedEntity,
     UnifiedNote,
     UnifiedTicket,
 )
-from pydantic import AnyHttpUrl, ConfigDict, Field, SecretStr
 
 
-class RenderedZammadTSServiceParams(StrictBaseModel):
-    model_config = ConfigDict(frozen=False, extra="forbid")
-
+class ZammadTSServiceParams(StrictBaseModel):
     base_url: AnyHttpUrl = Field(description="Base URL of the Zammad instance for API requests.")
     access_token: SecretStr = Field(description="Personal access token used for authenticating against Zammad API.")
     timeout: float | None = Field(
@@ -43,7 +42,6 @@ class ZammadArticle(StrictBaseModel):
 
 class ZammadTicket(StrictBaseModel):
     model_config = ConfigDict(extra="ignore")
-
     id: int
     title: str | None = None
     group: str | None = None
@@ -54,8 +52,7 @@ class ZammadTicket(StrictBaseModel):
 
 
 class ZammadArticleCreate(StrictBaseModel):
-    model_config = ConfigDict(extra="forbid")
-
+    ticket_id: int | None = None
     subject: str = ""
     body: str = ""
     type: str = "note"
@@ -64,17 +61,14 @@ class ZammadArticleCreate(StrictBaseModel):
 
 
 class ZammadTicketCreate(StrictBaseModel):
-    model_config = ConfigDict(extra="forbid")
-
     title: str
     group: str | None = None
     priority: str | None = None
     article: ZammadArticleCreate
+    customer: str | None = None
 
 
 class ZammadTicketUpdate(StrictBaseModel):
-    model_config = ConfigDict(extra="forbid")
-
     title: str | None = None
     group: str | None = None
     priority: str | None = None
@@ -118,8 +112,9 @@ def zammad_ticket_to_unified_ticket(ticket: ZammadTicket) -> UnifiedTicket:
     )
 
 
-def unified_note_to_zammad_article(note: UnifiedNote) -> ZammadArticleCreate:
+def unified_note_to_zammad_article(note: UnifiedNote, ticket_id: int | None = None) -> ZammadArticleCreate:
     return ZammadArticleCreate(
+        ticket_id=ticket_id,
         subject=note.subject or "",
         body=note.body or "",
     )
@@ -132,6 +127,7 @@ def unified_ticket_to_zammad_create(ticket: UnifiedTicket) -> ZammadTicketCreate
         group=_value_from_unified_entity(ticket.queue),
         priority=_value_from_unified_entity(ticket.priority),
         article=unified_note_to_zammad_article(article),
+        customer=_value_from_unified_entity(ticket.customer),
     )
 
 

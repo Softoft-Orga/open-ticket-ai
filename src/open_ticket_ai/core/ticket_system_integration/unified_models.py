@@ -40,6 +40,9 @@ class UnifiedTicketBase(StrictBaseModel):
     priority: UnifiedEntity | None = Field(
         default=None, description="Priority level of the ticket indicating urgency and importance for handling."
     )
+    customer: UnifiedEntity | None = Field(
+        default=None, description="Customer or requester associated with this ticket."
+    )
     notes: list[UnifiedNote] | None = Field(
         default=None,
         description="List of notes or comments associated with this ticket providing communication history.",

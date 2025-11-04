@@ -12,7 +12,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 )
 
 from otai_zammad.models import (
-    RenderedZammadTSServiceParams,
+    ZammadTSServiceParams,
     ZammadArticle,
     ZammadTicket,
     merge_ticket_with_articles,
@@ -24,12 +24,13 @@ from otai_zammad.models import (
 
 
 class ZammadTicketsystemService(TicketSystemService):
-    ParamsModel: ClassVar[type[RenderedZammadTSServiceParams]] = RenderedZammadTSServiceParams
-    
+    ParamsModel: ClassVar[type[ZammadTSServiceParams]] = ZammadTSServiceParams
+
     API_TICKETS_SEARCH: ClassVar[str] = "/api/v1/tickets/search"
     API_TICKETS: ClassVar[str] = "/api/v1/tickets"
     API_TICKET_BY_ID: ClassVar[str] = "/api/v1/tickets/{ticket_id}"
-    API_TICKET_ARTICLES: ClassVar[str] = "/api/v1/tickets/{ticket_id}/articles"
+    API_TICKET_ARTICLES_LIST: ClassVar[str] = "/api/v1/ticket_articles/by_ticket/{ticket_id}"
+    API_TICKET_ARTICLES_CREATE: ClassVar[str] = "/api/v1/ticket_articles"
 
     def __init__(
         self,
@@ -40,7 +41,7 @@ class ZammadTicketsystemService(TicketSystemService):
         super().__init__(*args, **kwargs)
         self._owns_client = client is None
         self._client: httpx.AsyncClient | None = client or self._create_client()
-        self._logger.debug("ZammadTicketsystemService initialized with base_url=%s", self._params.base_url)
+        self._logger.debug(f"ZammadTicketsystemService initialized with base_url={self._params.base_url}")
 
     @property
     def client(self) -> httpx.AsyncClient:
@@ -63,7 +64,7 @@ class ZammadTicketsystemService(TicketSystemService):
         if self._params.timeout is not None:
             client_kwargs["timeout"] = self._params.timeout
         loggable_kwargs = {k: v for k, v in client_kwargs.items() if k != "headers"}
-        self._logger.debug("Creating AsyncClient with kwargs: %s", loggable_kwargs)
+        self._logger.debug(f"Creating AsyncClient with kwargs: {loggable_kwargs}")
         return httpx.AsyncClient(**client_kwargs)
 
     async def aclose(self) -> None:
@@ -73,7 +74,7 @@ class ZammadTicketsystemService(TicketSystemService):
         self._client = None
 
     async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
-        self._logger.debug("Searching Zammad tickets with criteria=%s", criteria.model_dump())
+        self._logger.debug(f"Searching Zammad tickets with criteria={criteria.model_dump()}")
         params: dict[str, Any] = {
             "limit": criteria.limit,
             "offset": criteria.offset,
@@ -99,33 +100,35 @@ class ZammadTicketsystemService(TicketSystemService):
                 articles = await self._fetch_articles(ticket.id)
                 ticket = merge_ticket_with_articles(ticket, articles)
             unified.append(zammad_ticket_to_unified_ticket(ticket))
-        self._logger.debug("Zammad search returned %d ticket(s)", len(unified))
+        self._logger.debug(f"Zammad search returned {len(unified)} ticket(s)")
         return unified
 
     async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
         tickets = await self.find_tickets(criteria)
         ticket = tickets[0] if tickets else None
         if ticket:
-            self._logger.debug("Found first ticket with id=%s", ticket.id)
+            self._logger.debug(f"Found first ticket with id={ticket.id}")
         else:
-            self._logger.debug("No tickets found for criteria=%s", criteria.model_dump())
+            self._logger.debug(f"No tickets found for criteria={criteria.model_dump()}")
         return ticket
 
     async def get_ticket(self, ticket_id: str) -> UnifiedTicket | None:
-        self._logger.info("Fetching Zammad ticket id=%s", ticket_id)
+        self._logger.info(f"Fetching Zammad ticket id={ticket_id}")
         ticket = await self._get_ticket(int(ticket_id))
         if ticket is None:
-            self._logger.warning("Ticket id=%s not found", ticket_id)
+            self._logger.warning(f"Ticket id={ticket_id} not found")
             return None
         return zammad_ticket_to_unified_ticket(ticket)
 
     async def create_ticket(self, ticket: UnifiedTicket) -> str:
         payload = unified_ticket_to_zammad_create(ticket)
+        print("payload get: " + str(payload))
         response = await self.client.post(self.API_TICKETS, json=payload.model_dump(exclude_none=True))
         response.raise_for_status()
         data = response.json()
+        print("get response" + str(data))
         ticket_id = self._extract_ticket_id(data)
-        self._logger.info("Created Zammad ticket id=%s", ticket_id)
+        self._logger.info(f"Created Zammad ticket id={ticket_id}")
         return ticket_id
 
     async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
@@ -136,23 +139,23 @@ class ZammadTicketsystemService(TicketSystemService):
                 json=payload.model_dump(exclude_none=True),
             )
             response.raise_for_status()
-            self._logger.debug("Updated ticket fields for id=%s", ticket_id)
+            self._logger.debug(f"Updated ticket fields for id={ticket_id}")
 
         if updates.notes:
             note = updates.notes[-1]
-            self._logger.debug("Appending note to ticket id=%s during update", ticket_id)
+            self._logger.debug(f"Appending note to ticket id={ticket_id} during update")
             await self.add_note(ticket_id, note)
 
         return True
 
     async def add_note(self, ticket_id: str, note: UnifiedNote) -> bool:
-        payload = unified_note_to_zammad_article(note)
+        payload = unified_note_to_zammad_article(note, int(ticket_id))
         response = await self.client.post(
-            self.API_TICKET_ARTICLES.format(ticket_id=ticket_id),
+            self.API_TICKET_ARTICLES_CREATE.format(ticket_id=ticket_id),
             json=payload.model_dump(exclude_none=True),
         )
         response.raise_for_status()
-        self._logger.info("Added note to Zammad ticket id=%s", ticket_id)
+        self._logger.info(f"Added note to Zammad ticket id={ticket_id}")
         return True
 
     async def _coerce_to_ticket(self, payload: Any) -> ZammadTicket | None:
@@ -162,7 +165,7 @@ class ZammadTicketsystemService(TicketSystemService):
             return await self._get_ticket(payload)
         if isinstance(payload, str) and payload.isdigit():
             return await self._get_ticket(int(payload))
-        self._logger.warning("Skipping unsupported ticket payload: %s", payload)
+        self._logger.warning(f"Skipping unsupported ticket payload: {payload}")
         return None
 
     async def _hydrate_ticket(self, payload: dict[str, Any]) -> ZammadTicket:
@@ -173,8 +176,9 @@ class ZammadTicketsystemService(TicketSystemService):
         return ticket
 
     async def _get_ticket(self, ticket_id: int) -> ZammadTicket | None:
+        url = self.API_TICKET_BY_ID.format(ticket_id=ticket_id)
         response = await self.client.get(
-            self.API_TICKET_BY_ID.format(ticket_id=ticket_id), params={"expand": "articles"}
+            url, params={"expand": "articles"}
         )
         if response.status_code == httpx.codes.NOT_FOUND:
             return None
@@ -186,7 +190,7 @@ class ZammadTicketsystemService(TicketSystemService):
         return ticket
 
     async def _fetch_articles(self, ticket_id: int) -> list[ZammadArticle]:
-        response = await self.client.get(self.API_TICKET_ARTICLES.format(ticket_id=ticket_id))
+        response = await self.client.get(self.API_TICKET_ARTICLES_LIST.format(ticket_id=ticket_id))
         response.raise_for_status()
         data = response.json()
         if isinstance(data, dict):
