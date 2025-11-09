@@ -232,3 +232,4 @@ config.schema.json
 /docs/.vitepress/cache/
 
 !/docs/docs_src/public/assets/config.yml
+!/deployment/znuny_demo/config.yml
