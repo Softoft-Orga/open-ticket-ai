@@ -1,0 +1,18 @@
+services:
+  open-ticket-ai:
+    image: openticketai/engine:1.4.19
+    restart: "always"
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - OTAI_HF_TOKEN
+      - OTAI_ZNUNY_PASSWORD
+      - HUGGING_FACE_HUB_TOKEN=${OTAI_HF_TOKEN}
+      - HF_TOKEN=${OTAI_HF_TOKEN}
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"

@@ -81,7 +81,7 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
 
         return result
 
-    async def get_ticket(self, ticket_id: str | int) -> UnifiedTicket | None:
+    async def get_ticket(self, ticket_id: str) -> UnifiedTicket | None:
         self._logger.info(f"🎫 Fetching ticket by ID: {ticket_id}")
 
         try:
@@ -135,7 +135,7 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
             article = Article(
                 subject=latest_note.subject,
                 body=latest_note.body,
-                content_type="text/plain",
+                content_type=latest_note.content_type or "text/plain",
             )
 
         ticket = TicketUpdate(

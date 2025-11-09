@@ -15,6 +15,10 @@ class UnifiedNote(StrictBaseModel):
     body: str = Field(
         default="", description="Full text content of the note containing the detailed message or comment."
     )
+    content_type: str | None = Field(
+        default=None,
+        description="MIME type of the note content indicating the format (e.g., 'text/plain', 'text/html').",
+    )
 
 
 class UnifiedEntity(StrictBaseModel):

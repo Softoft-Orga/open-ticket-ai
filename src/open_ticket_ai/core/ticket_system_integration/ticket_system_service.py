@@ -55,7 +55,6 @@ class TicketSystemService(Injectable):
     async def get_ticket(
         self,
         ticket_id: str,
-        **kwargs: Any,
     ) -> UnifiedTicket | None:  # pragma: no cover - interface contract
         raise NotImplementedError("Ticket system adapters must implement 'get_ticket'.")
 
