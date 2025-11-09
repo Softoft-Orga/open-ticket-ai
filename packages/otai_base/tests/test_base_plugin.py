@@ -4,6 +4,7 @@ from open_ticket_ai import Plugin
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 
 from otai_base.base_plugin import BasePlugin
+from otai_base.storages.sqlite_storage import SqliteStorage
 
 MIN_REGISTERED_COMPONENTS = 2
 
@@ -35,3 +36,15 @@ class TestBasePlugin:
 
         registered_names = [call[0][0] for call in mock_registry.register.call_args_list]
         assert any(name.startswith("base:") for name in registered_names)
+
+    def test_sqlite_storage_registered(self, mock_app_config):
+        mock_app_config.PLUGIN_NAME_PREFIX = "otai-"
+        mock_app_config.REGISTRY_IDENTIFIER_SEPERATOR = ":"
+        mock_registry = MagicMock(spec=ComponentRegistry)
+        base_plugin = BasePlugin(mock_app_config)
+
+        base_plugin.on_load(mock_registry)
+
+        expected_registration = ("base:SqliteStorage", SqliteStorage)
+        registered_entries = [(call_args[0][0], call_args[0][1]) for call_args in mock_registry.register.call_args_list]
+        assert expected_registration in registered_entries
