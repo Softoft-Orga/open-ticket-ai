@@ -1,6 +1,6 @@
 services:
   open-ticket-ai:
-    image: ${OTAI_IMAGE:-openticketai/engine:latest}
+    image: ${OTAI_IMAGE:-openticketai/engine:1.5}
     environment:
       - OTAI_E2E_OTOBO_PASSWORD
     volumes:
