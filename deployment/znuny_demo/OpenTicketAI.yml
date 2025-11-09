@@ -43,6 +43,12 @@ Provider:
           KeyMapDefault:
             MapTo: ''
             MapType: Keep
+          KeyMapExact:
+            UserLogin: UserLogin
+          ValueMap:
+            UserLogin:
+              ValueMapRegEx:
+                .*: open_ticket_ai
           ValueMapDefault:
             MapTo: ''
             MapType: Keep
@@ -65,6 +71,12 @@ Provider:
           KeyMapDefault:
             MapTo: ''
             MapType: Keep
+          KeyMapExact:
+            UserLogin: UserLogin
+          ValueMap:
+            UserLogin:
+              ValueMapRegEx:
+                .*: open_ticket_ai
           ValueMapDefault:
             MapTo: ''
             MapType: Keep
@@ -87,6 +99,12 @@ Provider:
           KeyMapDefault:
             MapTo: ''
             MapType: Keep
+          KeyMapExact:
+            UserLogin: UserLogin
+          ValueMap:
+            UserLogin:
+              ValueMapRegEx:
+                .*: open_ticket_ai
           ValueMapDefault:
             MapTo: ''
             MapType: Keep

@@ -1,7 +1,7 @@
 from typing import Any, Self
 
 from otobo_znuny.clients.otobo_client import OTOBOZnunyClient
-from otobo_znuny.domain_models.ticket_models import TicketCreate, IdName, Article, TicketUpdate, TicketSearch
+from otobo_znuny.domain_models.ticket_models import TicketCreate, IdName, Article, TicketUpdate, TicketSearch, Ticket
 
 from tests.e2e.test_util.docker_compose_controller import logger
 from tests.e2e.test_util.e2e_ticketsystem_config import OtoboE2EConfig
@@ -52,7 +52,7 @@ class E2ETicketsystemHelper:
         )
         logger.debug(f"Ticket {ticket_id} moved to '{queue_name}'")
 
-    async def get_ticket(self, ticket_id: str) -> Any:
+    async def get_ticket(self, ticket_id: str) -> Ticket:
         """Fetch a ticket by ID"""
         logger.debug(f"Fetching ticket {ticket_id}")
         return await self._client.get_ticket(int(ticket_id))

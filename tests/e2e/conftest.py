@@ -66,7 +66,7 @@ def base_config_builder(otobo_e2e_config: OtoboE2EConfig) -> ConfigBuilder:
         params=otobo_e2e_config.service.model_dump(exclude_none=True),
     )
     builder.set_orchestrator(params={
-        "orchestrator_sleep": timedelta(seconds=0.1),
+        "orchestrator_sleep": timedelta(seconds=5),
     })
     logger.info("Config builder ready")
     return builder

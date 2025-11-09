@@ -7,6 +7,203 @@ description: Easy installation guide for Open Ticket AI using Docker Compose - t
 This guide will help you install Open Ticket AI on your server. We recommend using Docker Compose
 for the easiest and most reliable installation.
 
+## Installation Overview
+
+Most users should start with the **Docker Quick Start**. If Docker isn't installed yet, use the **per-OS tabs** below.
+
+---
+## 1) Ticket System Setup (OTOBO / Znuny)
+
+Complete this **before** starting automation:
+
+* Create user **`open_ticket_ai`** and store the password in `.env` as `OTAI_ZNUNY_PASSWORD`
+* Import the provided webservice YAML:
+  `deployment/ticket-systems/ticket_operations.yml`
+* Ensure required Queues & Priorities exist
+* Permissions needed: `ro`, `move_into`, `priority`, `note`
+
+→ **[OTOBO / Znuny Setup Guide](./ticket-systems/otobo-znuny.md)**
+
+
+## 1) Quick Start (Recommended)
+
+→ **[Quick Start Guide](./quick-start.md)**
+→ **[Deploy to `/opt/open_ticket_ai`](./deploy-opt.md)**
+
+What you’ll do:
+- Place `deployment/compose.yml` and `config.yml`
+- Create `.env` with `OTAI_HF_TOKEN` and `OTAI_ZNUNY_PASSWORD`
+- Run `docker compose -f deployment/compose.yml up -d`
+
+---
+
+## 2) Install Docker & Docker Compose (Per-OS Tabs)
+
+::: code-group
+
+```bash [Ubuntu / Debian]
+# Install Docker Engine + Compose plugin
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo apt-get update
+sudo apt-get install -y docker-compose-plugin
+
+# Enable & test
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
+```
+
+```bash [RHEL / CentOS / Rocky / Alma]
+# Prereqs
+sudo dnf -y install dnf-plugins-core
+
+# Docker CE repo
+sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+# Install Engine + Compose plugin
+sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# Enable & test
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
+```
+
+```bash [Fedora]
+# Install Engine + Compose plugin
+sudo dnf -y install dnf-plugins-core
+sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# Enable & test
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
+```
+
+```bash [openSUSE / SLES]
+# Install Docker
+sudo zypper refresh
+sudo zypper install -y docker docker-compose
+
+# Enable & test
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
+```
+
+```bash [Arch Linux]
+# Install Docker + Compose
+sudo pacman -Syu --noconfirm docker docker-compose
+
+# Enable & test
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
+```
+
+```bash [macOS]
+# Option A: Docker Desktop (GUI)
+# Download: https://www.docker.com/products/docker-desktop/
+# Then verify:
+docker --version
+docker compose version
+
+# Option B: Homebrew (installs Desktop app)
+brew install --cask docker
+open -a Docker
+docker --version
+docker compose version
+```
+
+```powershell [Windows 10/11]
+# Option A: Docker Desktop (recommended)
+winget install -e --id Docker.DockerDesktop
+
+# Option B: Ensure WSL2 is enabled (if prompted by Docker Desktop)
+wsl --install
+wsl --set-default-version 2
+
+# Verify in a new PowerShell
+docker --version
+docker compose version
+```
+
+:::
+
+---
+
+## 3) One-Shot Commands to Deploy
+
+Use these if you’re ready to place files under `/opt/open_ticket_ai` (Linux).
+For other paths or OS, see **[Deploy to `/opt/open_ticket_ai`](./deploy-opt.md)**.
+
+::: code-group
+
+```bash [Create directory & permissions]
+sudo mkdir -p /opt/open_ticket_ai/deployment
+sudo chown "$USER":"$USER" /opt/open_ticket_ai -R
+cd /opt/open_ticket_ai
+```
+
+```bash [.env (required)]
+cat > .env <<'EOF'
+OTAI_HF_TOKEN=your_hf_token_here
+OTAI_ZNUNY_PASSWORD=your_secure_password_here
+EOF
+
+# Optional: keep secrets out of git
+echo ".env" >> .gitignore
+```
+
+```bash [Place templates]
+# Put these files exactly here:
+# /opt/open_ticket_ai/config.yml
+# /opt/open_ticket_ai/deployment/compose.yml
+# /opt/open_ticket_ai/deployment/ticket-systems/ticket_operations.yml
+```
+
+```bash [Start / Restart / Logs]
+docker compose -f deployment/compose.yml up -d
+docker compose -f deployment/compose.yml restart
+docker compose -f deployment/compose.yml logs -f open-ticket-ai
+```
+
+:::
+
+---
+
+
+---
+
+## 5) Troubleshooting
+
+Covers ContentType issues for notes (`text/plain` vs `text/html`), container↔host networking, and permissions.
+
+→ **[Troubleshooting](./troubleshooting.md)**
+
+---
+
+## Verification Checklist
+
+* `.env` contains `OTAI_HF_TOKEN` and `OTAI_ZNUNY_PASSWORD`
+* `deployment/compose.yml` uses `image: openticketai/engine:1.4.19`
+* OTOBO/Znuny webservice imported; user `open_ticket_ai` exists
+* Queues & priorities present in the ticket system
+* Run: `docker compose -f deployment/compose.yml up -d`
+* Check logs: `docker compose -f deployment/compose.yml logs -f open-ticket-ai`
+* Optionally: run `open-ticket-ai verify-connection` inside the container (if available)
+
+---
 ## System Requirements
 
 The hardware requirements depend on which AI models you want to run:

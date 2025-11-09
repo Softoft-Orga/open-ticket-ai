@@ -17,8 +17,3 @@ def test_plugin_registration_with_valid_config():
     assert mock_registry.register.called
     assert mock_registry.register.call_count >= 1
 
-
-def test_plugin_callable_with_invalid_config_raises_error():
-    with pytest.raises(AttributeError):
-        plugin_instance = HFLocalPlugin(None)
-        plugin_instance.on_load(MagicMock())

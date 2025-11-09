@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 from injector import Injector
 
+from open_ticket_ai.core.config.config_models import PluginConfig
 from open_ticket_ai.core.dependency_injection.component_registry import ComponentRegistry
 from open_ticket_ai.core.dependency_injection.container import AppModule
 from open_ticket_ai.core.plugins.plugin_loader import PluginLoader
@@ -59,7 +60,11 @@ def test_plugin_loader_discovers_entry_points(integration_config_builder):
 @pytest.mark.integration
 def test_multiple_plugins_load_independently(integration_config_builder):
     """Test that multiple plugins load without conflicts."""
-    config = integration_config_builder.add_plugin("otai_base").add_jinja_renderer().set_orchestrator().build()
+    config = integration_config_builder.add_plugin(PluginConfig(
+        name="otai_base", version=">=1.0.0",
+    )).add_plugin(PluginConfig(
+        name="otai_example_plugin", version=">=1.0.0",
+    )).add_jinja_renderer().set_orchestrator().build()
 
     app_module = AppModule(config)
     registry = app_module.component_registry
