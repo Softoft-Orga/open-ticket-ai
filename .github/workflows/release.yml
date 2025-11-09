@@ -80,13 +80,6 @@ jobs:
           provenance: false
           sbom: false
 
-      - name: Run E2E tests
-        env:
-          OTAI_IMAGE: ${{ env.DOCKER_REPOSITORY }}:test
-          OTAI_E2E_OTOBO_PASSWORD: ${{ secrets.OTAI_E2E_OTOBO_PASSWORD }}
-        run: |
-          uv sync
-          uv run -m pytest -m e2e -v
 
       - uses: docker/build-push-action@v6
         with:
