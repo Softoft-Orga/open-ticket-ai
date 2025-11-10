@@ -17,7 +17,7 @@ class OtoboTestEnvironment(BaseModel):
 
     # Default ticket properties for test ticket creation
     default_state: str = Field(default="new", description="Default state for created test tickets")
-    default_priority: str = Field(default="medium", description="Default priority for created test tickets")
+    default_priority: str = Field(default="low", description="Default priority for created test tickets")
     default_type: str = Field(default="Incident", description="Default type for created test tickets")
     default_customer_user: str = Field(default="otai-demo-user", description="Default customer user for test tickets")
 

@@ -45,6 +45,7 @@ dependencies = [
     "injector>=0.22.0",
     "otai-hf-local",
     "otai-otobo-znuny",
+    "otai-zammad",
     "otai-base",
     "huggingface-hub[hf-xet]>=0.35.3",
     "pydeps>=3.0.1",
@@ -78,6 +79,7 @@ include = ["open_ticket_ai*"]
 members = [
     "packages/otai_hf_local",
     "packages/otai_otobo_znuny",
+    "packages/otai_zammad",
     "packages/otai_base",
 ]
 
@@ -89,6 +91,7 @@ tag_regex = '^v(?P<version>\d+\.\d+\.\d+)$'
 [tool.uv.sources]
 otai-hf-local = { workspace = true }
 otai-otobo-znuny = { workspace = true }
+otai-zammad = { workspace = true }
 otai_base = { workspace = true }
 
 [tool.ruff]
@@ -178,6 +181,7 @@ source = [
     "src/open_ticket_ai",
     "packages/otai_hf_local/src",
     "packages/otai_otobo_znuny/src",
+    "packages/otai_zammad/src",
     "packages/otai_base/src",
 ]
 omit = [
@@ -198,6 +202,7 @@ exclude_lines = [
 
 [dependency-groups]
 dev = [
+    "mdxlate>=1.1.2",
     "mypy~=1.18.1",
     "pytest~=8.4.2",
     "pytest-asyncio~=0.24.0",

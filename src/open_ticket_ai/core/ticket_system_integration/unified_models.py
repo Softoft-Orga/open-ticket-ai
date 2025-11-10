@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from pydantic import Field
+from pydantic import Field, BaseModel, ConfigDict, field_validator
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 
 
-class UnifiedNote(StrictBaseModel):
+class UnifiedNote(BaseModel):
+    model_config = ConfigDict(extra="allow")
     id: str | None = Field(
         default=None, description="Unique identifier for the note if it exists in the ticket system."
     )
@@ -15,6 +16,20 @@ class UnifiedNote(StrictBaseModel):
     body: str = Field(
         default="", description="Full text content of the note containing the detailed message or comment."
     )
+    content_type: str | None = Field(
+        default="text/plain",
+        description="MIME type of the note content indicating the format (e.g., 'text/plain', 'text/html')."
+    )
+
+    @field_validator("content_type", mode="before")
+    @classmethod
+    def _norm_ct(cls, v):
+        if not v:
+            return None
+        s = v.strip()
+        if not s:
+            return None
+        return s.split(";", 1)[0].strip() or None
 
 
 class UnifiedEntity(StrictBaseModel):
@@ -39,6 +54,9 @@ class UnifiedTicketBase(StrictBaseModel):
     )
     priority: UnifiedEntity | None = Field(
         default=None, description="Priority level of the ticket indicating urgency and importance for handling."
+    )
+    customer: UnifiedEntity | None = Field(
+        default=None, description="Customer or requester associated with this ticket."
     )
     notes: list[UnifiedNote] | None = Field(
         default=None,

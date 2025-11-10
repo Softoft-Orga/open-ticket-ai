@@ -7,259 +7,349 @@ description: Easy installation guide for Open Ticket AI using Docker Compose - t
 This guide will help you install Open Ticket AI on your server. We recommend using Docker Compose
 for the easiest and most reliable installation.
 
-## System Requirements
+## Installation Overview
 
-The hardware requirements depend on which AI models you want to run:
+Most users should start with the **Docker Quick Start**. If Docker isn't installed yet, use the *
+*per-OS tabs** below.
 
-- **Minimum (no ML models)**: 512 MB RAM, 1 GB disk space
-- **Recommended (with ML models)**: 4 GB RAM, 5 GB disk space
-- **Operating System**: Linux, Windows, or macOS with Docker installed
+---
 
-## Docker Compose Installation (Recommended)
+## 1) Ticket System Setup (OTOBO / Znuny)
 
-**Docker Compose is the recommended way to install Open Ticket AI.** It's the easiest method and
-comes with all three currently available plugins pre-installed:
+Complete this **before** starting automation:
 
-- **Base Plugin** (`otai-base`): Core functionality
-- **OTOBO/Znuny Plugin** (`otai-otobo-znuny`): Ticket system integration
-- **HuggingFace Local Plugin** (`otai-hf-local`): Local AI model support
+* Create user **`open_ticket_ai`** and store the password in `.env` as `OTAI_ZNUNY_PASSWORD`
+* Import the provided webservice YAML:
+  `deployment/ticket-systems/ticket_operations.yml`
+* Ensure required Queues & Priorities exist
+* Permissions needed: `ro`, `move_into`, `priority`, `note`
 
-### What is Docker and Docker Compose?
+See **[OTOBO/Znuny Plugin Setup](./plugin-otobo-znuny/setup.md)** for details.
 
-**Docker** is a tool that packages software and all its dependencies into a container, so it runs
-the same way on any computer. Think of it like a self-contained box with everything the application
-needs to run.
 
-**Docker Compose** is a tool that makes it easy to run Docker applications with a simple
-configuration file. Instead of typing long commands, you just create one file and run one command.
+## 1) Check Hardware & OS
 
-### Step 1: Install Docker
+Ensure your system meets the minimum requirements:
 
-If you don't have Docker installed yet:
+- **RAM**: Minimum 512 MB (8 GB recommended for ML models)
+- **free Disk Space**: Minimum 20 GB (50 GB recommended for ML models)
+- **OS**: Linux (preferred), Windows 10/11, or macOS
 
-**Linux (Ubuntu/Debian):**
+## 2) Install Docker & Docker Compose
+
+Command to find out your OS:
 
 ```bash
+uname -a
+```
+
+Use the commands for your OS below to install Docker and Docker Compose.
+
+::: code-group
+
+```bash [Ubuntu / Debian]
+# Install Docker Engine + Compose plugin
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
-sudo apt install docker-compose-plugin
+sudo apt-get update
+sudo apt-get install -y docker-compose-plugin
+
+# Enable & test
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
 ```
 
-**Windows/macOS:**
-Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+```bash [RHEL / CentOS / Rocky / Alma]
+# Prereqs
+sudo dnf -y install dnf-plugins-core
 
-### Step 2: Create Configuration Files
+# Docker CE repo
+sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-Create a new folder for Open Ticket AI and create two files inside it:
+# Install Engine + Compose plugin
+sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
-<InlineExample slug="basics-minimal" />
-
-**1. Create `compose.yml`:**
-
-```yaml
-services:
-  open-ticket-ai:
-    image: openticketai/engine:latest
-    restart: "unless-stopped"
-    environment:
-      OTAI_TS_PASSWORD: "${OTAI_TS_PASSWORD}"
-    volumes:
-      - ./config.yml:/app/config.yml:ro
+# Enable & test
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
 ```
 
-**What does this mean?**
+```bash [Fedora]
+# Install Engine + Compose plugin
+sudo dnf -y install dnf-plugins-core
+sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
-- `image: openticketai/engine:latest` - Uses our pre-built image with all plugins
-- `restart: "unless-stopped"` - Automatically restarts if it crashes
-- `environment` - Configuration via environment variables
-- `volumes` - Links your configuration file into the container
+# Enable & test
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
+```
 
-**2. Create `config.yml`:**
+```bash [openSUSE / SLES]
+# Install Docker
+sudo zypper refresh
+sudo zypper install -y docker docker-compose
+
+# Enable & test
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
+```
+
+```bash [Arch Linux]
+# Install Docker + Compose
+sudo pacman -Syu --noconfirm docker docker-compose
+
+# Enable & test
+sudo systemctl enable --now docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker --version
+docker compose version
+```
+
+```bash [macOS]
+# Option A: Docker Desktop (GUI)
+# Download: https://www.docker.com/products/docker-desktop/
+# Then verify:
+docker --version
+docker compose version
+
+# Option B: Homebrew (installs Desktop app)
+brew install --cask docker
+open -a Docker
+docker --version
+docker compose version
+```
+
+```powershell [Windows 10/11]
+# Option A: Docker Desktop (recommended)
+winget install -e --id Docker.DockerDesktop
+
+# Option B: Ensure WSL2 is enabled (if prompted by Docker Desktop)
+wsl --install
+wsl --set-default-version 2
+
+# Verify in a new PowerShell
+docker --version
+docker compose version
+```
+
+:::
+
+---
+
+## 3) Setup `config.yml` & `deployment/compose.yml`
+
+Use these if you’re ready to place files under `/opt/open_ticket_ai` (Linux).
+
+```bash
+sudo mkdir -p /opt/open_ticket_ai
+sudo chown "$USER":"$USER" /opt/open_ticket_ai -R
+cd /opt/open_ticket_ai
+```
+
+
+```bash
+cat > .env <<'EOF'
+OTAI_HF_TOKEN=your_hf_token_here
+OTAI_ZNUNY_PASSWORD=your_secure_password_here
+EOF
+```
+
+````bash
+# Optional: keep secrets out of git
+echo ".env" >> .gitignore
+````
+
+### Create /opt/open-ticket-ai/config.yml
+
+
+::: warning
+This is an example! Adjust according to your ticket system setup, queues, priorities, and
+:::
+
+:::details Example `config.yml`
 
 ```yaml
 open_ticket_ai:
-  api_version: ">=1.0.0"
-  plugins:
-    - otai-base
-    - otai-otobo-znuny
-    - otai-hf-local
+    api_version: ">=1.0.0"
+    infrastructure:
+        logging:
+            level: "INFO"
+            log_to_file: false
+            log_file_path: null
 
-  infrastructure:
-    logging:
-      level: INFO
+    services:
+        jinja_default:
+            use: "base:JinjaRenderer"
 
-  services:
-    otobo_znuny:
-      use: "otobo_znuny:OTOBOZnunyClient"
-      params:
-        base_url: "https://your-ticket-system.com"
-        username: "your-username"
-        password: "${OTAI_TS_PASSWORD}"
+        otobo_znuny:
+            use: "otobo-znuny:OTOBOZnunyTicketSystemService"
+            params:
+                base_url: "http://host.docker.internal/znuny/nph-genericinterface.pl"
+                password: "{{ get_env('OTAI_ZNUNY_PASSWORD') }}"
 
-  orchestrator:
-    id: "main_orchestrator"
-    use: "core:someOrchestrator"
+        hf_local:
+            use: "hf-local:HFClassificationService"
+            params:
+                api_token: "{{ get_env('OTAI_HF_TOKEN') }}"
+
+    orchestrator:
+        use: "base:SimpleSequentialOrchestrator"
+        params:
+            orchestrator_sleep: "PT5S"
+            steps:
+                -   id: runner
+                    use: "base:SimpleSequentialRunner"
+                    params:
+                        on:
+                            id: "interval"
+                            use: "base:IntervalTrigger"
+                            params:
+                                interval: "PT2S"
+                        run:
+                            id: "pipeline"
+                            use: "base:CompositePipe"
+                            params:
+                                steps:
+                                    -   id: fetch
+                                        use: "base:FetchTicketsPipe"
+                                        injects: { ticket_system: "otobo_znuny" }
+                                        params:
+                                            ticket_search_criteria:
+                                                queue: { name: "Anfrage an die IT" }
+                                                limit: 1
+                                    -   id: ticket
+                                        use: "base:ExpressionPipe"
+                                        params:
+                                            expression: "{{ get_pipe_result('fetch','fetched_tickets')[0] if (get_pipe_result('fetch','fetched_tickets')|length)>0 else fail() }}"
+                                    -   id: cls_queue
+                                        use: "base:ClassificationPipe"
+                                        injects: { classification_service: "hf_local" }
+                                        params:
+                                            text: "{{ get_pipe_result('ticket')['subject'] }} {{ get_pipe_result('ticket')['body'] }}"
+                                            model_name: "softoft/EHS_Queue_Prediction"
+                                    -   id: queue_final
+                                        use: "base:ExpressionPipe"
+                                        params:
+                                            expression: "{{ get_pipe_result('cls_queue','label') if get_pipe_result('cls_queue','confidence')>=0.8 else 'Unklassifiziert' }}"
+                                    -   id: update_queue
+                                        use: "base:UpdateTicketPipe"
+                                        injects: { ticket_system: "otobo_znuny" }
+                                        params:
+                                            ticket_id: "{{ get_pipe_result('ticket')['id'] }}"
+                                            updated_ticket:
+                                                queue: { name: "{{ get_pipe_result('queue_final') }}" }
+```
+:::
+
+
+For Testing set log level DEBUG and the interval to 5 seconds in production set interval to 10ms and
+log level to INFO.
+
+* Repo deployment directory:
+  [https://github.com/Softoft-Orga/open-ticket-ai/tree/dev/deployment](https://github.com/Softoft-Orga/open-ticket-ai/tree/dev/deployment)
+* Znuny demo `config.yml`:
+  [https://github.com/Softoft-Orga/open-ticket-ai/blob/dev/deployment/znuny_demo/config.yml](https://github.com/Softoft-Orga/open-ticket-ai/blob/dev/deployment/znuny_demo/config.yml)
+* Znuny demo `compose.yml`:
+  [https://github.com/Softoft-Orga/open-ticket-ai/blob/dev/deployment/znuny_demo/compose.yml](https://github.com/Softoft-Orga/open-ticket-ai/blob/dev/deployment/znuny_demo/compose.yml)
+
+### Create opt/open-ticket-ai/compose.yml
+Check Versions on Github and Dockerhub
+```yaml
+services:
+    open-ticket-ai:
+        image: openticketai/engine:1.4.19
+        restart: "always"
+        volumes:
+            - ./config.yml:/app/config.yml:ro
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        environment:
+            - OTAI_HF_TOKEN
+            - OTAI_ZNUNY_PASSWORD
+            - HUGGING_FACE_HUB_TOKEN=${OTAI_HF_TOKEN}
+            - HF_TOKEN=${OTAI_HF_TOKEN}
+        logging:
+            driver: json-file
+            options:
+                max-size: "50m"
+                max-file: "3"
+```
+
+### Check Configuration
+
+- Environment Vars are set and match compose.yml, config.yml, .env or .bashrc
+- `config.yml` references correct ticket system, queues, priorities, types, services, slas, ...
+- `compose.yml` uses correct image version
+- Correct API Path "/znuny/nph-genericinterface.pl" in `config.yml` or /otobo/nph-genericinterface.pl or zammad ...
+- Ticket system user `open_ticket_ai` exists with correct password
+- Required Queues & Priorities, Types, Services, Users, ... exist in ticket system
+- Permissions for user `open_ticket_ai`
+
+
+
+### Start / Restart / Logs
+
+
+```bash
+docker compose  up -d
+```
+
+```bash
+docker compose  restart
+```
+
+```bash
+docker compose logs -f open-ticket-ai
+```
+
+---
+
+### Extra Info for OTOBO / Znuny Setup
+
+It seems like there are differences in Content Types between OTOBO Znuny Versions!
+You might need to change your COntentType when ContentType invalid errors occur.
+Therefore change the params of AddNotePipe in your config.yml like this:
+
+```yaml
+-   id: add_note
+    use: "base:AddNotePipe"
+    injects: { ticket_system: "otobo_znuny" }
     params:
-      pipes:
-        - id: "fetch_tickets"
-          use: "otobo_znuny:FetchTickets"
-```
+        ticket_id: "{{ get_pipe_result('ticket')['id'] }}"
+        note:
+            subject: "This is a note added by Open Ticket AI."
+            body: "Automated note content."
+            content_type: "text/plain; charset=utf8"
 
-**Important:** Replace `https://your-ticket-system.com` and `your-username` with your actual ticket
-system details.
+---
 
-### Step 3: Start Open Ticket AI
+## Verification Checklist
 
-In the folder where you created the files, run:
-
-```bash
-docker-compose up -d
-```
-
-**What does this do?**
-
-- Downloads the Open Ticket AI image (only needed the first time)
-- Starts the application in the background
-- All three plugins are automatically available
-
-### Step 4: Verify Installation
-
-Check if Open Ticket AI is running:
-
-```bash
-# View running containers
-docker-compose ps
-
-# View logs
-docker-compose logs -f open-ticket-ai
-```
-
-You should see output indicating the application started successfully.
-
-### Step 5: Stop or Update
-
-**Stop the application:**
-
-```bash
-docker-compose down
-```
-
-**Update to the latest version:**
-
-```bash
-docker-compose pull
-docker-compose up -d
-```
-
-## Configuration with Environment Variables
-
-You can configure Open Ticket AI using environment variables in your `docker-compose.yml`:
-
-```yaml
-services:
-  open-ticket-ai:
-    image: openticketai/engine:latest
-    restart: "unless-stopped"
-    environment:
-      # Ticket System Credentials
-      - OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__BASE_URL=https://your-system.com
-      - OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__USERNAME=admin
-      - OTAI_OPEN_TICKET_AI__SERVICES__OTOBO_ZNUNY__PARAMS__PASSWORD=secret
-
-      # Logging Level
-      - OTAI_OPEN_TICKET_AI__INFRASTRUCTURE__LOGGING__LEVEL=INFO
-    volumes:
-      - ./config.yml:/app/config.yml:ro
-```
-
-Environment variables override settings in `config.yml`, which is useful for sensitive information
-like passwords.
-
-## Alternative: Python Installation (Advanced Users)
-
-If you prefer to install without Docker or need a development setup:
-
-### Using pip/uv
-
-```bash
-# Install with all plugins
-pip install open-ticket-ai[all]
-
-# Or install selectively
-pip install open-ticket-ai
-pip install otai-otobo-znuny
-pip install otai-hf-local
-```
-
-**Requirements:**
-
-- Python 3.13 or higher
-- pip or uv package manager
-
-### Using uv (Faster)
-
-```bash
-# Install uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install Open Ticket AI with all plugins
-uv pip install open-ticket-ai[all]
-```
-
-## Troubleshooting
-
-### Docker Issues
-
-**Container won't start:**
-
-```bash
-# Check logs for errors
-docker-compose logs open-ticket-ai
-
-# Restart the container
-docker-compose restart
-```
-
-**Port already in use:**
-If you get a port conflict error, add a port mapping to your `docker-compose.yml`:
-
-```yaml
-services:
-  open-ticket-ai:
-    image: openticketai/engine:latest
-    ports:
-      - "8080:8080"  # Change 8080 to an available port
-    # ...rest of config
-```
-
-**Configuration not loading:**
-Make sure your `config.yml` file is in the same folder as `docker-compose.yml` and has correct YAML
-syntax.
-
-### Connection Issues
-
-**Can't connect to ticket system:**
-
-1. Verify the `base_url` in your config is correct
-2. Check that your ticket system is accessible from the server
-3. Verify username and password are correct
-4. Check firewall settings
-
-**Test connection:**
-
-```bash
-# Test if ticket system is reachable
-curl https://your-ticket-system.com
-
-# Check Open Ticket AI logs
-docker-compose logs -f open-ticket-ai
-```
+* `.env` contains `OTAI_HF_TOKEN` and `OTAI_ZNUNY_PASSWORD`
+* `deployment/compose.yml` uses `image: openticketai/engine:1.4.19`
+* OTOBO/Znuny webservice imported; user `open_ticket_ai` exists
+* Queues & priorities present in the ticket system
+* Run: `docker compose -f deployment/compose.yml up -d`
+* Check logs: `docker compose -f deployment/compose.yml logs -f open-ticket-ai`
+* Optionally: run `open-ticket-ai verify-connection` inside the container (if available)
 
 ### Getting Help
 
 If you encounter issues:
 
-1. Check the logs: `docker-compose logs -f`
+1. Check the logs: `docker compose logs -f`
 2. Verify your configuration file syntax
 3. Review the [Configuration Reference](../details/_config_reference.md)
 4. Visit our [GitHub Issues](https://github.com/Softoft-Orga/open-ticket-ai/issues)

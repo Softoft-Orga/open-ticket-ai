@@ -1,0 +1,90 @@
+[project]
+name = "otai_zammad"
+dynamic = ["version"]
+description = "Zammad ticket system plugin for Open Ticket AI"
+readme = "README.md"
+requires-python = ">=3.14"
+
+authors = [
+    { name = "Open Ticket AI Team", email = "hello@open-ticket-ai.com" },
+]
+
+license = "LGPL-2.1-only"
+
+keywords = ["open-ticket-ai", "plugin", "zammad", "ticket-system", "automation"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Systems Administration",
+]
+
+dependencies = [
+    "open-ticket-ai>=1.0.0,<2.0.0",
+    "httpx>=0.27.2",
+    "injector>=0.22.0",
+    "pydantic>=2.11.7",
+]
+
+[project.urls]
+Homepage = "https://open-ticket-ai.com"
+Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+Documentation = "https://open-ticket-ai.com/en/guide/available-plugins.html"
+Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_zammad/CHANGELOG.md"
+
+[project.entry-points."open_ticket_ai.plugins"]
+zammad = "otai_zammad.zammad_plugin:ZammadPlugin"
+
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=8.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["otai_zammad*"]
+
+[tool.uv.sources]
+open-ticket-ai = { workspace = true }
+
+[tool.setuptools_scm]
+root = "../.."
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+tag_regex = '^v(?P<version>\d+\.\d+\.\d+)$'
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.4.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff",
+    "mypy",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "PL", "PERF", "TRY"]
+ignore = ["TRY003"]
+fixable = ["ALL"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ['pydantic.mypy']
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "unit: schnelle, isolierte Tests",
+    "integration: core + plugin zusammen",
+    "slow: dauert länger",
+]

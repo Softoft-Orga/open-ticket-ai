@@ -1,56 +1,113 @@
 ---
-description: Integrate on-premise Open Ticket AI with Freshdesk for automated ticket
-  classification. Learn to create a custom Python adapter to update tickets via the
-  REST API.
+description: Integrate on-premise Open Ticket AI with Freshdesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Freshdesk tickets via REST.
 ---
-# Freshdesk AI Integration with Open Ticket AI
 
-Open Ticket AI (OTAI) is a local, on-premise **ticket classification** system (also called ATC Community Edition) that automates support ticket categorization and routing. Freshdesk is a popular cloud-based customer support platform with its own AI tools, offering ticketing, workflows and reporting. By writing a custom *TicketSystemAdapter*, you can integrate OTAI with Freshdesk and update Freshdesk tickets automatically via its REST API. This unlocks AI-driven ticket triage within the Freshdesk environment. In the Open Ticket AI pipeline, the final stage is a **TicketSystemAdapter** that applies AI predictions to the ticket system via REST calls. To extend OTAI for Freshdesk, you implement a `FreshdeskAdapter` that subclasses `TicketSystemAdapter` and implements methods to query and update tickets in Freshdesk.
+# Freshdesk Integration for Open Ticket AI
 
-&#x20;*Figure: UML class diagram from the Open Ticket AI architecture. The abstract `TicketSystemAdapter` class provides a base for system-specific adapters (e.g. an OTOBOAdapter) that connect to external ticket systems.* The OTAI architecture is modular: incoming tickets go through NLP classifiers and a **TicketSystemAdapter** then writes the results back to the ticket system. The documentation explains that `TicketSystemAdapter` is an abstract base class “that all concrete ticket system adapters must implement” to interact with different ticket platforms. Subclasses must implement three core async methods: `update_ticket(ticket_id, data)`, `find_tickets(query)`, and `find_first_ticket(query)`. In practice, you would create a new Python class, e.g. `class FreshdeskAdapter(TicketSystemAdapter)`, and override those methods. For example:
+Open Ticket AI (OTAI) runs fully on-premise and classifies support tickets into queues, priorities and custom categories. To integrate OTAI with **Freshdesk**, you create a small plugin that provides a `FreshdeskTicketsystemService`. OTAI loads this service automatically and uses it to read and update tickets through the Freshdesk REST API.
+
+## Architecture
+
+A ticket system integration in OTAI always follows the same pattern:
+
+- separate plugin package (`otai_freshdesk`)
+- a `FreshdeskTicketsystemService` (Injectable)
+- a `FreshdeskPlugin` registering the service
+- configuration in `config.yml`
+- OTAI calls the service at the end of the pipeline and writes AI results back to Freshdesk
+
+This is identical to how `otai_zammad` works.
+
+## Plugin Structure (`otai_freshdesk`)
+
+```
+
+otai_freshdesk/
+src/
+otai_freshdesk/
+freshdesk_ticket_system_service.py
+plugin.py
+pyproject.toml
+
+````
+
+### `freshdesk_ticket_system_service.py`
 
 ```python
+from typing import Any
 import aiohttp
 
-from open_ticket_ai.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai import Injectable
+from open_ticket_ai.core.ticket_system_services import TicketSystemService
 
 
-class FreshdeskAdapter(TicketSystemAdapter):
-    async def update_ticket(self, ticket_id: str, data: dict) -> dict:
-        # Construct Freshdesk API URL for updating a ticket
-        base = f"https://{self.config.freshdesk_domain}.freshdesk.com"
-        url = f"{base}/api/v2/tickets/{ticket_id}"
-        auth = aiohttp.BasicAuth(self.config.freshdesk_api_key, password="X")
+class FreshdeskTicketsystemService(TicketSystemService):
+    async def _request(self, method: str, path: str, **kwargs) -> Any:
+        base = f"https://{self.params.domain}.freshdesk.com/api/v2"
+        auth = aiohttp.BasicAuth(self.params.api_key, "X")
+        url = f"{base}{path}"
         async with aiohttp.ClientSession(auth=auth) as session:
-            async with session.put(url, json=data) as resp:
+            async with session.request(method, url, **kwargs) as resp:
                 return await resp.json()
 
     async def find_tickets(self, query: dict) -> list[dict]:
-        # Use Freshdesk List Tickets or Search API to retrieve tickets matching query
-        base = f"https://{self.config.freshdesk_domain}.freshdesk.com"
-        params = {k: v for k, v in query.items()}
-        url = f"{base}/api/v2/tickets"
-        async with aiohttp.ClientSession(
-                auth=aiohttp.BasicAuth(self.config.freshdesk_api_key, password="X"),
-        ) as session:
-            async with session.get(url, params=params) as resp:
-                data = await resp.json()
-                return data.get('tickets', [])
+        return await self._request("GET", "/tickets", params=query)
 
-    async def find_first_ticket(self, query: dict) -> dict:
+    async def find_first_ticket(self, query: dict) -> dict | None:
         tickets = await self.find_tickets(query)
         return tickets[0] if tickets else None
+
+    async def update_ticket(self, ticket_id: str, data: dict) -> dict:
+        return await self._request("PUT", f"/tickets/{ticket_id}", json=data)
+````
+
+### `plugin.py`
+
+```python
+from open_ticket_ai import Plugin, Injectable
+
+from otai_freshdesk.freshdesk_ticket_system_service import FreshdeskTicketsystemService
+
+
+class FreshdeskPlugin(Plugin):
+    def _get_all_injectables(self) -> list[type[Injectable]]:
+        return [
+            FreshdeskTicketsystemService,
+        ]
 ```
 
-The code above shows a simple **FreshdeskAdapter**. It pulls the Freshdesk domain (the company name) and API key from the OTAI configuration (`self.config`) that is injected at runtime. It then uses Python’s `aiohttp` for async HTTP calls. The `update_ticket` method issues a PUT to `https://<domain>.freshdesk.com/api/v2/tickets/<id>` with the JSON payload of fields to change. The `find_tickets` method uses GET on `/api/v2/tickets` with query params (or you could call `/api/v2/search/tickets` for more complex searches). The Freshdesk API requires basic auth: your API key (from your Freshdesk profile) is used as the username and any password (often just “X”) as the password.
+## Configuration
 
-**Key Steps to Integrate Freshdesk:**
+Add this to your OTAI `config.yml`:
 
-* *Configure API access:* Log into Freshdesk and get your **API key** from the profile (this key is used to authenticate API requests). Also note your Freshdesk domain (the subdomain in your Freshdesk URL).
-* *Implement the Adapter:* Create a class `FreshdeskAdapter` extending `TicketSystemAdapter` and implement `update_ticket`, `find_tickets`, and `find_first_ticket`. In these methods, use Freshdesk’s REST API endpoints (e.g. `GET /api/v2/tickets` and `PUT /api/v2/tickets/{id}`).
-* *Configure OTAI:* Update the OTAI `config.yml` to include the `FreshdeskAdapter` and its settings (such as `freshdesk_domain` and `freshdesk_api_key`). Thanks to OTAI’s dependency-injection setup, the new adapter will be loaded at runtime.
-* *Run Classification:* Start Open Ticket AI (e.g. via `python -m open_ticket_ai.src.ce.main start`). As new tickets are fetched, the pipeline will classify them and then call your `FreshdeskAdapter.update_ticket(...)` to write the predicted queue or priority back into Freshdesk.
+```yaml
+ticket_systems:
+  freshdesk:
+    use: otai_freshdesk:FreshdeskTicketsystemService
+    params:
+      domain: yourcompany
+      api_key: YOUR_FRESHDESK_API_KEY
+```
 
-Using this custom adapter, Freshdesk tickets flow through the OTAI pipeline just like any other ticket system. Once OTAI assigns a queue ID or priority, the `update_ticket` call will push that back to Freshdesk via its API. This allows Freshdesk users to leverage OTAI’s AI models for *automated ticket classification* while still working inside the Freshdesk platform. Freshdesk’s flexible REST API (which supports searching, listing, creating and updating tickets) makes this integration straightforward. By following the OTAI adapter pattern and the Freshdesk API conventions, developers can seamlessly embed AI-driven ticket triage into Freshdesk without relying on proprietary cloud AI – keeping all data local if desired.
+OTAI discovers your plugin automatically through your `pyproject.toml`:
 
-**References:** Open Ticket AI’s documentation explains its adapter architecture and `TicketSystemAdapter` interface. The OTAI architecture overview shows the adapter step in the pipeline. Freshdesk’s API guide and developer blogs document how to authenticate (with an API key) and call ticket endpoints. Together, these sources outline the steps for building a custom Freshdesk integration.
+```toml
+[project.entry-points."otai.plugins"]
+otai_freshdesk = "otai_freshdesk.plugin:FreshdeskPlugin"
+```
+
+## How the Integration Works
+
+1. OTAI fetches tickets from Freshdesk (`find_tickets`)
+2. AI assigns queue, priority, or custom labels
+3. OTAI calls `update_ticket(...)`
+4. Freshdesk updates the ticket instantly through its API
+
+Everything runs on-premise. Freshdesk authentication uses basic auth with your API key.
+
+## Benefits
+
+* full data control (OTAI remains local)
+* seamless use of Freshdesk UI and workflows
+* AI-driven routing without Freshdesk’s proprietary AI
+* clean plugin architecture identical to Zammad / OTOBO / Znuny
