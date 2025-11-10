@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from pydantic import Field, BaseModel
+from pydantic import Field, BaseModel, ConfigDict
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 
 
 class UnifiedNote(BaseModel):
+    model_config = ConfigDict(extra="allow")
     id: str | None = Field(
         default=None, description="Unique identifier for the note if it exists in the ticket system."
     )

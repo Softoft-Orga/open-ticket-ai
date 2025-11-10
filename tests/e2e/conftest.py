@@ -37,6 +37,7 @@ def docker_compose_controller(
 
     controller.down()
     controller.remove_config()
+    controller.pull()
 
     try:
         yield controller

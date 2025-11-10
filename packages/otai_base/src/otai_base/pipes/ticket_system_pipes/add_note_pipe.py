@@ -5,12 +5,13 @@ from typing import Any, ClassVar
 from open_ticket_ai import StrictBaseModel
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedNote
-from pydantic import Field, BaseModel
+from pydantic import Field, BaseModel, ConfigDict
 
 from otai_base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
 
 
 class AddNoteParams(BaseModel):
+    model_config = ConfigDict(extra="allow")
     ticket_id: str | int = Field(
         description=(
             "Identifier of the ticket to which the note should be added, accepting either string or integer format."
