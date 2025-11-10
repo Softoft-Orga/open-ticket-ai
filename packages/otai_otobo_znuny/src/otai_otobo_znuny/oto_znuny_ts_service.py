@@ -107,7 +107,6 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
             article=Article(
                 subject=unified_ticket.subject,
                 body=unified_ticket.body or "",
-                content_type="text/plain",
             ),
         )
         created_ticket: Ticket = await self.client.create_ticket(payload)
