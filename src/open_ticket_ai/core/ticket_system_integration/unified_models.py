@@ -16,7 +16,7 @@ class UnifiedNote(BaseModel):
     body: str = Field(
         default="", description="Full text content of the note containing the detailed message or comment."
     )
-    content_type: str = Field(
+    content_type: str | None = Field(
         default="text/plain",
         description="MIME type of the note content indicating the format (e.g., 'text/plain', 'text/html')."
     )
