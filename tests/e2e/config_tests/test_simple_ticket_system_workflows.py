@@ -134,7 +134,6 @@ async def test_fetch_queue_and_add_note(
                 "note": {
                     "subject": note_subject,
                     "body": note_body,
-                    "content_type": "text/plain",
                 },
             },
         )
