@@ -134,8 +134,7 @@ class OTOBOZnunyTicketSystemService(TicketSystemService):
             self._logger.debug(f"Adding article/note: {latest_note.subject}")
             article = Article(
                 subject=latest_note.subject,
-                body=latest_note.body,
-                content_type=latest_note.content_type or "text/plain",
+                body=latest_note.body
             )
 
         ticket = TicketUpdate(
