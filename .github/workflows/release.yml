@@ -71,15 +71,6 @@ jobs:
           driver: docker-container
           install: true
 
-      - name: Build Docker image for testing
-        uses: docker/build-push-action@v6
-        with:
-          context: ./deployment
-          load: true
-          tags: ${{ env.DOCKER_REPOSITORY }}:test
-          provenance: false
-          sbom: false
-
 
       - uses: docker/build-push-action@v6
         with:
