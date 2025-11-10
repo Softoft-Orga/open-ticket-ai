@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pydantic import Field, BaseModel, ConfigDict
+from pydantic import Field, BaseModel, ConfigDict, field_validator
 
 from open_ticket_ai.core.base_model import StrictBaseModel
 
@@ -20,6 +20,16 @@ class UnifiedNote(BaseModel):
         default="text/plain",
         description="MIME type of the note content indicating the format (e.g., 'text/plain', 'text/html')."
     )
+
+    @field_validator("content_type", mode="before")
+    @classmethod
+    def _norm_ct(cls, v):
+        if not v:
+            return None
+        s = v.strip()
+        if not s:
+            return None
+        return s.split(";", 1)[0].strip() or None
 
 
 class UnifiedEntity(StrictBaseModel):
