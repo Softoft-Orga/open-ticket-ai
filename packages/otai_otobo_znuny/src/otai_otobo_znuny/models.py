@@ -27,7 +27,6 @@ def otobo_article_to_unified_note(article: Article) -> UnifiedNote:
     return UnifiedNote(
         body=article.body or "",
         subject=article.subject,
-        content_type=article.content_type,
     )
 
 
