@@ -1,0 +1,104 @@
+open_ticket_ai:
+  api_version: '>=1.0.0'
+  plugins: []
+  infrastructure:
+    logging:
+      level: DEBUG
+      log_to_file: false
+      format:
+        message_format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        date_format: '%Y-%m-%d %H:%M:%S'
+  services:
+    jinja_default:
+      use: base:JinjaRenderer
+      injects: {}
+      params: {}
+    otobo_znuny:
+      use: otobo-znuny:OTOBOZnunyTicketSystemService
+      injects: {}
+      params:
+        password: '{{ get_env(''OTAI_E2E_OTOBO_PASSWORD'') }}'
+        base_url: http://3.66.72.29/otobo/nph-genericinterface.pl
+        username: open_ticket_ai
+        webservice_name: OpenTicketAI
+        operation_urls:
+          TicketCreate: ticket-create
+          TicketSearch: ticket-search
+          TicketGet: ticket-get
+          TicketUpdate: ticket-update
+    hf_local:
+      use: hf-local:HFClassificationService
+      injects: {}
+      params:
+        api_token: null
+  orchestrator:
+    use: base:SimpleSequentialOrchestrator
+    injects: {}
+    params:
+      orchestrator_sleep: PT5S
+      steps:
+      - use: base:SimpleSequentialRunner
+        injects: {}
+        params:
+          'on':
+            use: base:IntervalTrigger
+            injects: {}
+            params:
+              interval: PT0.1S
+            id: interval_trigger
+          run:
+            use: base:CompositePipe
+            injects: {}
+            params:
+              steps:
+              - use: base:ClassificationPipe
+                injects:
+                  classification_service: hf_local
+                params:
+                  text: 'Kritischer Produktionsausfall seit heute Morgen: Unsere zentrale
+                    Web-Anwendung für Kundenportale liefert 500-Fehler nach dem letzten
+                    Deployment.
+
+                    Betroffen sind Login, Bestellübersicht und Zahlungsfreigaben.
+                    Logs zeigen zahlreiche Timeout- und Datenbank-Verbindungsfehler.
+
+                    CI/CD-Pipeline lief durch, aber nach dem Rollout häufen sich Exceptions
+                    in den Microservices Auth und Orders.
+
+                    Bitte sofortige Analyse durch das Software-Entwicklungsteam, Hotfix
+                    und ggf. Rollback. Hohe Kunden- und Umsatz-Auswirkung.'
+                  model_name: softoft/otai-queue-de-bert-v1
+                id: classify-queue
+              - use: base:ClassificationPipe
+                injects:
+                  classification_service: hf_local
+                params:
+                  text: 'Kritischer Produktionsausfall seit heute Morgen: Unsere zentrale
+                    Web-Anwendung für Kundenportale liefert 500-Fehler nach dem letzten
+                    Deployment.
+
+                    Betroffen sind Login, Bestellübersicht und Zahlungsfreigaben.
+                    Logs zeigen zahlreiche Timeout- und Datenbank-Verbindungsfehler.
+
+                    CI/CD-Pipeline lief durch, aber nach dem Rollout häufen sich Exceptions
+                    in den Microservices Auth und Orders.
+
+                    Bitte sofortige Analyse durch das Software-Entwicklungsteam, Hotfix
+                    und ggf. Rollback. Hohe Kunden- und Umsatz-Auswirkung.'
+                  model_name: softoft/otai-priority-de-bert-v1
+                id: classify-priority
+              - use: base:UpdateTicketPipe
+                injects:
+                  ticket_system: otobo_znuny
+                params:
+                  ticket_id: '1310'
+                  updated_ticket:
+                    queue:
+                      name: '{{ get_pipe_result(''classify-queue'', ''label'') }}'
+                    priority:
+                      name: '{{ get_pipe_result(''classify-priority'', ''label'')
+                        }}'
+                id: apply-classifications
+            id: de-classify-queue-priority-and-update
+        id: runner-de-classify
+    id: orchestrator

@@ -1,0 +1,80 @@
+open_ticket_ai:
+  api_version: '>=1.0.0'
+  plugins: []
+  infrastructure:
+    logging:
+      level: DEBUG
+      log_to_file: false
+      format:
+        message_format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        date_format: '%Y-%m-%d %H:%M:%S'
+  services:
+    jinja_default:
+      use: base:JinjaRenderer
+      injects: {}
+      params: {}
+    otobo_znuny:
+      use: otobo-znuny:OTOBOZnunyTicketSystemService
+      injects: {}
+      params:
+        password: '{{ get_env(''OTAI_E2E_OTOBO_PASSWORD'') }}'
+        base_url: http://3.66.72.29/otobo/nph-genericinterface.pl
+        username: open_ticket_ai
+        webservice_name: OpenTicketAI
+        operation_urls:
+          TicketCreate: ticket-create
+          TicketSearch: ticket-search
+          TicketGet: ticket-get
+          TicketUpdate: ticket-update
+  orchestrator:
+    use: base:SimpleSequentialOrchestrator
+    injects: {}
+    params:
+      orchestrator_sleep: PT5S
+      steps:
+      - use: base:SimpleSequentialRunner
+        injects: {}
+        params:
+          'on':
+            use: base:IntervalTrigger
+            injects: {}
+            params:
+              interval: PT0.1S
+            id: interval_trigger
+          run:
+            use: base:CompositePipe
+            injects: {}
+            params:
+              steps:
+              - use: base:FetchTicketsPipe
+                injects:
+                  ticket_system: otobo_znuny
+                params:
+                  ticket_search_criteria:
+                    queue:
+                      name: ~Test-Queue1
+                    limit: 1
+                id: fetch-next-ticket
+              - use: base:AddNotePipe
+                injects:
+                  ticket_system: otobo_znuny
+                params:
+                  ticket_id: '{{ get_pipe_result(''fetch-next-ticket'', ''fetched_tickets'')[0][''id'']
+                    }}'
+                  note:
+                    subject: E2E Acknowledgment 2aff775c-fc83-4c97-9cfc-939ac78de98e
+                    body: Your ticket has been received and is being processed.
+                id: add-acknowledgment
+              - use: base:UpdateTicketPipe
+                injects:
+                  ticket_system: otobo_znuny
+                params:
+                  ticket_id: '{{ get_pipe_result(''fetch-next-ticket'', ''fetched_tickets'')[0][''id'']
+                    }}'
+                  updated_ticket:
+                    queue:
+                      name: ~Test-Queue2
+                id: move-to-processed
+            id: process-queue-ticket
+        id: queue-processor
+    id: orchestrator

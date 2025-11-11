@@ -1,0 +1,59 @@
+open_ticket_ai:
+  api_version: '>=1.0.0'
+  plugins: []
+  infrastructure:
+    logging:
+      level: DEBUG
+      log_to_file: false
+      format:
+        message_format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        date_format: '%Y-%m-%d %H:%M:%S'
+  services:
+    jinja_default:
+      use: base:JinjaRenderer
+      injects: {}
+      params: {}
+    otobo_znuny:
+      use: otobo-znuny:OTOBOZnunyTicketSystemService
+      injects: {}
+      params:
+        password: '{{ get_env(''OTAI_E2E_OTOBO_PASSWORD'') }}'
+        base_url: http://3.66.72.29/otobo/nph-genericinterface.pl
+        username: open_ticket_ai
+        webservice_name: OpenTicketAI
+        operation_urls:
+          TicketCreate: ticket-create
+          TicketSearch: ticket-search
+          TicketGet: ticket-get
+          TicketUpdate: ticket-update
+  orchestrator:
+    use: base:SimpleSequentialOrchestrator
+    injects: {}
+    params:
+      orchestrator_sleep: PT5S
+      steps:
+      - use: base:SimpleSequentialRunner
+        injects: {}
+        params:
+          'on':
+            use: base:IntervalTrigger
+            injects: {}
+            params:
+              interval: PT0.1S
+            id: interval_trigger
+          run:
+            use: base:CompositePipe
+            injects: {}
+            params:
+              steps:
+              - use: base:UpdateTicketPipe
+                injects:
+                  ticket_system: otobo_znuny
+                params:
+                  ticket_id: '1312'
+                  updated_ticket:
+                    subject: 'E2E Update da65603d-66b2-4776-9674-239ce9023f80 :: updated'
+                id: update-ticket
+            id: update-workflow
+        id: update-runner
+    id: orchestrator
