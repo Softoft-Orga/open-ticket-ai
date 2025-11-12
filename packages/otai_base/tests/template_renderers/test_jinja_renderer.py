@@ -140,6 +140,30 @@ async def test_render_numeric_values(jinja_renderer: JinjaRenderer) -> None:
 
 
 @pytest.mark.asyncio
+async def test_sql_filter_escapes_strings(jinja_renderer: JinjaRenderer) -> None:
+    template = "{{ value | sql }}"
+    context = {"value": "O'Reilly"}
+    result = await jinja_renderer.render(template, context)
+    assert result == "'O''Reilly'"
+
+
+@pytest.mark.asyncio
+async def test_sql_filter_handles_null_and_boolean(jinja_renderer: JinjaRenderer) -> None:
+    template = "{{ none_value | sql }} {{ true_value | sql }} {{ false_value | sql }}"
+    context = {"none_value": None, "true_value": True, "false_value": False}
+    result = await jinja_renderer.render(template, context)
+    assert result == "NULL TRUE FALSE"
+
+
+@pytest.mark.asyncio
+async def test_sql_list_renders_parenthesized_values(jinja_renderer: JinjaRenderer) -> None:
+    template = "{{ values | sql_list }}"
+    context = {"values": ["alpha", "O'Reilly", 7, None, False]}
+    result = await jinja_renderer.render(template, context)
+    assert result == "('alpha', 'O''Reilly', 7, NULL, FALSE)"
+
+
+@pytest.mark.asyncio
 async def test_render_empty_string(jinja_renderer: JinjaRenderer) -> None:
     template = ""
     context: dict[str, str] = {}

@@ -8,6 +8,7 @@ from otai_base.pipes.orchestrators.simple_sequential_orchestrator import SimpleS
 from otai_base.pipes.pipe_runners.simple_sequential_runner import SimpleSequentialRunner
 from otai_base.pipes.ticket_system_pipes import AddNotePipe, FetchTicketsPipe, UpdateTicketPipe
 from otai_base.template_renderers.jinja_renderer import JinjaRenderer
+from otai_base.storages.sqlite_storage import SqliteStorage
 
 
 class BasePlugin(Plugin):
@@ -23,4 +24,5 @@ class BasePlugin(Plugin):
             ExpressionPipe,
             IntervalTrigger,
             JinjaRenderer,
+            SqliteStorage,
         ]
