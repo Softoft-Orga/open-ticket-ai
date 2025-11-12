@@ -1,32 +1,55 @@
 [project]
-name = "otai_otobo_znuny"
+name = "otai-otobo-znuny"
 dynamic = ["version"]
-description = "OTOBO/Znuny ticket system plugin for Open Ticket AI"
+description = "OTOBO and Znuny (OTRS fork) ticket system integration plugin for Open Ticket AI - automated helpdesk workflows"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
 
-license = "LGPL-2.1-only"
+maintainers = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
 
-keywords = ["open-ticket-ai", "plugin", "otobo", "znuny", "otrs", "ticket-system", "automation"]
+license = { text = "LGPL-2.1-only" }
+
+keywords = [
+    "open-ticket-ai",
+    "otai",
+    "otobo",
+    "znuny",
+    "otrs",
+    "plugin",
+    "ticket-system",
+    "helpdesk",
+    "automation",
+    "itsm",
+    "service-desk",
+    "ticketing",
+]
 
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: System :: Systems Administration",
+    "Topic :: Communications",
+    "Framework :: Pydantic",
+    "Framework :: Pydantic :: 2",
 ]
 
 dependencies = [
     "open-ticket-ai>=1.0.0,<2.0.0",
-    "otobo-znuny>=1.4.0",
+    "otobo-znuny==1.4.1",
     "injector>=0.22.0",
     "pydantic>=2.11.7",
 ]
@@ -34,7 +57,9 @@ dependencies = [
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
 Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+"Source Code" = "https://github.com/Softoft-Orga/open-ticket-ai/tree/main/packages/otai_otobo_znuny"
 Documentation = "https://open-ticket-ai.com/en/guide/available-plugins.html"
+"Issue Tracker" = "https://github.com/Softoft-Orga/open-ticket-ai/issues"
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_otobo_znuny/CHANGELOG.md"
 
 [project.entry-points."open_ticket_ai.plugins"]

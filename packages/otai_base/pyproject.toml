@@ -1,26 +1,48 @@
 [project]
-name = "otai_base"
+name = "otai-base"
 dynamic = ["version"]
-description = "Base package with core implementations for Open Ticket AI"
+description = "Base package with core implementations for Open Ticket AI - ticket system automation and AI integration"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
 
-license = "LGPL-2.1-only"
+maintainers = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
 
-keywords = ["ai", "ticket-system", "base", "automation"]
+license = { text = "LGPL-2.1-only" }
+
+keywords = [
+    "open-ticket-ai",
+    "otai",
+    "ticket-system",
+    "helpdesk",
+    "automation",
+    "ai",
+    "machine-learning",
+    "ticketing",
+    "itsm",
+    "service-desk",
+]
 
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Framework :: Pydantic",
+    "Framework :: Pydantic :: 2",
 ]
 
 dependencies = [
@@ -32,8 +54,10 @@ dependencies = [
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
 Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+"Source Code" = "https://github.com/Softoft-Orga/open-ticket-ai/tree/main/packages/otai_base"
 Documentation = "https://open-ticket-ai.com"
-Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/base/CHANGELOG.md"
+"Issue Tracker" = "https://github.com/Softoft-Orga/open-ticket-ai/issues"
+Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_base/CHANGELOG.md"
 
 [project.entry-points."open_ticket_ai.plugins"]
 base = "otai_base.base_plugin:BasePlugin"

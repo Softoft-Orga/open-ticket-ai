@@ -1,27 +1,49 @@
 [project]
-name = "otai_hf_local"
+name = "otai-hf-local"
 dynamic = ["version"]
-description = "Hugging Face local text classification plugin for Open Ticket AI"
+description = "Hugging Face local text classification plugin for Open Ticket AI - on-premise ML ticket categorization"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 
 authors = [
     { name = "Tobias Bück", email = "tab@softoft.de" },
 ]
 
-license = "LGPL-2.1-only"
+maintainers = [
+    { name = "Tobias Bück", email = "tab@softoft.de" },
+]
 
+license = { text = "LGPL-2.1-only" }
+
+keywords = [
+    "open-ticket-ai",
+    "otai",
+    "huggingface",
+    "transformers",
+    "plugin",
+    "text-classification",
+    "machine-learning",
+    "nlp",
+    "ai",
+    "local-inference",
+    "ticket-classification",
+]
 
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Text Processing :: Linguistic",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Framework :: Pydantic",
+    "Framework :: Pydantic :: 2",
 ]
 
 dependencies = [
@@ -33,7 +55,9 @@ dependencies = [
 [project.urls]
 Homepage = "https://open-ticket-ai.com"
 Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
+"Source Code" = "https://github.com/Softoft-Orga/open-ticket-ai/tree/main/packages/otai_hf_local"
 Documentation = "https://open-ticket-ai.com/guide/available-plugins.html#hugging-face-local-text-classification-pipe"
+"Issue Tracker" = "https://github.com/Softoft-Orga/open-ticket-ai/issues"
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_hf_local/CHANGELOG.md"
 
 [project.entry-points."open_ticket_ai.plugins"]
