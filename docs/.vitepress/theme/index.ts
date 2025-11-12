@@ -42,6 +42,7 @@ export default {
         app.component('ExamplesGallery', defineAsyncComponent(() => import('../components/configExamples/ExamplesGallery.vue')))
         app.component('ExamplePage', defineAsyncComponent(() => import('../components/configExamples/ExamplePage.vue')))
         app.component('InlineExample', defineAsyncComponent(() => import('../components/configExamples/InlineExample.vue')))
+        app.component('PluginsMarketplace', defineAsyncComponent(() => import('../components/marketplace/PluginsMarketplace.vue')))
         app.mixin({
             computed: {
                 lang() {

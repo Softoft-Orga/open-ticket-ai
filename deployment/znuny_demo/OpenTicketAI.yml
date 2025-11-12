@@ -1,0 +1,184 @@
+---
+Debugger:
+  DebugThreshold: debug
+  TestMode: '0'
+Description: Wird verwendet für AI Automatisierung. Automatische Queue Zuweisung
+FrameworkVersion: 7.1.7
+Provider:
+  Operation:
+    ticket-create:
+      Description: For Testing
+      IncludeTicketData: '0'
+      MappingInbound:
+        Config:
+          KeyMapDefault:
+            MapTo: ''
+            MapType: Keep
+          KeyMapExact:
+            UserLogin: UserLogin
+          ValueMap:
+            UserLogin:
+              ValueMapRegEx:
+                .*: open_ticket_ai
+          ValueMapDefault:
+            MapTo: ''
+            MapType: Keep
+        Type: Simple
+      MappingOutbound:
+        Config:
+          KeyMapDefault:
+            MapTo: ''
+            MapType: Keep
+          ValueMapDefault:
+            MapTo: ''
+            MapType: Keep
+        Type: Simple
+      Type: Ticket::TicketCreate
+    ticket-get:
+      Description: Is used to get the Ticket Information, to then label this ticket
+        via update
+      IncludeTicketData: '0'
+      MappingInbound:
+        Config:
+          KeyMapDefault:
+            MapTo: ''
+            MapType: Keep
+          KeyMapExact:
+            UserLogin: UserLogin
+          ValueMap:
+            UserLogin:
+              ValueMapRegEx:
+                .*: open_ticket_ai
+          ValueMapDefault:
+            MapTo: ''
+            MapType: Keep
+        Type: Simple
+      MappingOutbound:
+        Config:
+          KeyMapDefault:
+            MapTo: ''
+            MapType: Keep
+          ValueMapDefault:
+            MapTo: ''
+            MapType: Keep
+        Type: Simple
+      Type: Ticket::TicketGet
+    ticket-search:
+      Description: Is Used for filtering for tickets in specific <IncomingQueue>
+      IncludeTicketData: '0'
+      MappingInbound:
+        Config:
+          KeyMapDefault:
+            MapTo: ''
+            MapType: Keep
+          KeyMapExact:
+            UserLogin: UserLogin
+          ValueMap:
+            UserLogin:
+              ValueMapRegEx:
+                .*: open_ticket_ai
+          ValueMapDefault:
+            MapTo: ''
+            MapType: Keep
+        Type: Simple
+      MappingOutbound:
+        Config:
+          KeyMapDefault:
+            MapTo: ''
+            MapType: Keep
+          ValueMapDefault:
+            MapTo: ''
+            MapType: Keep
+        Type: Simple
+      Type: Ticket::TicketSearch
+    ticket-update:
+      Description: Used to Move Ticket into the predicted Queue
+      IncludeTicketData: '1'
+      MappingInbound:
+        Config:
+          KeyMapDefault:
+            MapTo: ''
+            MapType: Keep
+          KeyMapExact:
+            UserLogin: UserLogin
+          ValueMap:
+            UserLogin:
+              ValueMapRegEx:
+                .*: open_ticket_ai
+          ValueMapDefault:
+            MapTo: ''
+            MapType: Keep
+        Type: Simple
+      MappingOutbound:
+        Config:
+          KeyMapDefault:
+            MapTo: ''
+            MapType: Keep
+          ValueMapDefault:
+            MapTo: ''
+            MapType: Keep
+        Type: Simple
+      Type: Ticket::TicketUpdate
+  Transport:
+    Config:
+      AdditionalHeaders: ~
+      KeepAlive: '1'
+      MaxLength: '10000000'
+      RouteOperationMapping:
+        ticket-create:
+          ParserBackend: JSON
+          RequestMethod:
+          - CONNECT
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          - TRACE
+          Route: /ticket-create
+        ticket-get:
+          ParserBackend: JSON
+          RequestMethod:
+          - CONNECT
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          - TRACE
+          Route: /ticket-get
+        ticket-search:
+          ParserBackend: JSON
+          RequestMethod:
+          - CONNECT
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          - TRACE
+          Route: /ticket-search
+        ticket-update:
+          ParserBackend: JSON
+          RequestMethod:
+          - CONNECT
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          - TRACE
+          Route: /ticket-update
+    Type: HTTP::REST
+RemoteSystem: ''
+Requester:
+  Transport:
+    Type: ''

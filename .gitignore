@@ -216,7 +216,6 @@ packages/*/build/
 packages/*/*.egg-info/
 
 # Generated config files
-config.yml
 my_config.yml
 
 # Generated documentation assets

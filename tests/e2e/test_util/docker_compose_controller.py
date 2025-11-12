@@ -7,7 +7,7 @@ import yaml
 from open_ticket_ai import AppConfig
 
 logger = logging.getLogger(__name__)
-SAFE_ARGS = {"up", "down", "restart", "-d", "--remove-orphans", "-f"}
+SAFE_ARGS = {"up", "down", "restart", "pull", "-d", "--remove-orphans", "-f"}
 
 
 class DockerComposeController:
@@ -38,6 +38,11 @@ class DockerComposeController:
         logger.info("Stopping Docker Compose services")
         self._run(["down", "--remove-orphans"])
         logger.info("Docker Compose services stopped")
+
+    def pull(self) -> None:
+        logger.info("Pulling Docker Compose service images")
+        self._run(["pull"])
+        logger.info("Docker Compose service images pulled")
 
     def remove_config(self) -> None:
         if self._config_file.exists():

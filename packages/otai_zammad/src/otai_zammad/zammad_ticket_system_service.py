@@ -12,9 +12,9 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 )
 
 from otai_zammad.models import (
-    ZammadTSServiceParams,
     ZammadArticle,
     ZammadTicket,
+    ZammadTSServiceParams,
     merge_ticket_with_articles,
     unified_note_to_zammad_article,
     unified_ticket_to_zammad_create,
@@ -91,15 +91,7 @@ class ZammadTicketsystemService(TicketSystemService):
         payload = response.json()
         raw_tickets = self._extract_ticket_entries(payload)
 
-        unified: list[UnifiedTicket] = []
-        for raw in raw_tickets:
-            ticket = await self._coerce_to_ticket(raw)
-            if ticket is None:
-                continue
-            if not ticket.articles:
-                articles = await self._fetch_articles(ticket.id)
-                ticket = merge_ticket_with_articles(ticket, articles)
-            unified.append(zammad_ticket_to_unified_ticket(ticket))
+        unified = await self._process_raw_tickets_to_unified(raw_tickets)
         self._logger.debug(f"Zammad search returned {len(unified)} ticket(s)")
         return unified
 
@@ -111,6 +103,19 @@ class ZammadTicketsystemService(TicketSystemService):
         else:
             self._logger.debug(f"No tickets found for criteria={criteria.model_dump()}")
         return ticket
+
+    async def _process_raw_tickets_to_unified(self, raw_tickets: list[Any]) -> list[UnifiedTicket]:
+        unified: list[UnifiedTicket] = []
+        for raw in raw_tickets:
+            ticket = await self._coerce_to_ticket(raw)
+            if ticket is None:
+                continue
+            if not ticket.articles:
+                articles = await self._fetch_articles(ticket.id)
+                ticket = merge_ticket_with_articles(ticket, articles)
+            unified.append(zammad_ticket_to_unified_ticket(ticket))
+        return unified
+
 
     async def get_ticket(self, ticket_id: str) -> UnifiedTicket | None:
         self._logger.info(f"Fetching Zammad ticket id={ticket_id}")

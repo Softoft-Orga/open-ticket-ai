@@ -1,4 +1,6 @@
+import asyncio
 from textwrap import dedent
+import time
 from uuid import uuid4
 
 import pytest
@@ -58,6 +60,9 @@ async def test_update_ticket_subject(
     save_example(config, meta=_CONFIG_META_INFO)
 
     docker_compose_controller.write_config(config)
+    docker_compose_controller.down()
+    time.sleep(2)
+    await asyncio.sleep(2)
     docker_compose_controller.up()
 
     async def subject_matches() -> bool:
@@ -172,6 +177,9 @@ async def test_fetch_queue_and_add_note(
     save_example(config, meta=_CONFIG_META_INFO)
 
     docker_compose_controller.write_config(config)
+    docker_compose_controller.down()
+    time.sleep(2)
+    await asyncio.sleep(2)
     docker_compose_controller.up()
 
     async def tickets_have_note_and_are_moved() -> bool:

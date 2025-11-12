@@ -1,0 +1,91 @@
+@startuml Simple Ticket Sync Architecture
+
+!define INTERFACE_COLOR #E8F5E9
+!define SERVICE_COLOR #FFF3E0
+!define MODEL_COLOR #F3E5F5
+
+package "Core Models" <<Rectangle>> MODEL_COLOR {
+  class UnifiedTicket {
+    +id: str
+    +subject: str
+    +body: str
+    +queue: UnifiedEntity
+    +priority: UnifiedEntity
+    +created_at: datetime
+    +updated_at: datetime
+  }
+
+  class TicketSearchCriteria {
+    +filters: list[FilterCondition]
+    +sorts: list[SortOrder]
+    +limit: int
+    +offset: int
+  }
+}
+
+package "Storage Layer" <<Rectangle>> INTERFACE_COLOR {
+  interface TicketStorage {
+    +{abstract} query_tickets(criteria): list[UnifiedTicket]
+    +{abstract} add_ticket(ticket): None
+    +{abstract} remove_ticket(ticket_id): None
+  }
+
+  class DuckDBStorage {
+    -conn: duckdb.Connection
+    +query_tickets(criteria): list[UnifiedTicket]
+    +add_ticket(ticket): None
+    +remove_ticket(ticket_id): None
+  }
+}
+
+package "Ticket System Integration" <<Rectangle>> SERVICE_COLOR {
+  abstract class TicketSystemIntegrationService {
+    +{abstract} get_tickets(since_last_updated): list[UnifiedTicket]
+    +{abstract} add_ticket(ticket): str
+    +{abstract} update_ticket(ticket_id, updates): bool
+    +{abstract} add_note(ticket_id, note): bool
+  }
+
+  class OTOBOZnunyTicketSystemIntegrationService extends TicketSystemIntegrationService {
+    +get_tickets(since_last_updated): list[UnifiedTicket]
+    +add_ticket(ticket): str
+    +update_ticket(ticket_id, updates): bool
+  }
+}
+
+package "Sync Service" <<Rectangle>> SERVICE_COLOR {
+  class TicketSystemSyncService {
+    -storage: TicketStorage
+    -ticket_system: TicketSystemService
+    +sync_tickets(): int
+    +start_sync(): None
+  }
+}
+
+class TicketSystemService {
+  +find_tickets(query): list[UnifiedTicket]
+  + find_first_ticket(query): UnifiedTicket | None
+  +create_ticket(ticket): str
+  +update_ticket(ticket_id, updates): bool
+}
+
+package "Pipes" as Pipes {
+class SomePipe{
++ process(ticket: UnifiedTicket): UnifiedTicket
+}
+}
+
+SomePipe --|> TicketSystemService : uses
+
+TicketSystemService --> TicketSystemIntegrationService : uses
+TicketSystemService --> TicketStorage : uses
+' Relationships
+TicketStorage <|.. DuckDBStorage
+
+TicketSystemSyncService o--> TicketStorage : uses
+
+TicketSystemSyncService o--> TicketSystemIntegrationService
+TicketStorage ..> UnifiedTicket : stores/returns
+TicketStorage ..> TicketSearchCriteria : accepts
+
+@enduml
