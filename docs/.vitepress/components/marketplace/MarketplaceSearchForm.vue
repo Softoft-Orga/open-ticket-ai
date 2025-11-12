@@ -2,24 +2,12 @@
   <section class="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-slate-900/40">
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <label class="flex flex-col gap-2">
-        <span class="text-sm font-semibold text-slate-200">Search query</span>
+        <span class="text-sm font-semibold text-slate-200">Search loaded plugins</span>
         <input
           v-model="queryModel"
           type="text"
           autocomplete="off"
-          placeholder="otai-"
-          class="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-          @keyup.enter="emit('search')"
-        >
-      </label>
-
-      <label class="flex flex-col gap-2">
-        <span class="text-sm font-semibold text-slate-200">Libraries.io API key</span>
-        <input
-          v-model="apiKeyModel"
-          type="password"
-          autocomplete="off"
-          placeholder="Enter your API key"
+          placeholder="Filter by name or summary"
           class="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
           @keyup.enter="emit('search')"
         >
@@ -94,7 +82,7 @@
         <button
           class="inline-flex items-center justify-center gap-2 rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-500 disabled:cursor-not-allowed disabled:opacity-60"
           type="button"
-          :disabled="!canSearch"
+          :disabled="isLoading"
           @click="emit('search')"
         >
           <span v-if="!isLoading">Search</span>
@@ -123,7 +111,6 @@
 import type { FilterOptions, SortOption } from "./pluginModels";
 
 const queryModel = defineModel<string>("query");
-const apiKeyModel = defineModel<string>("apiKey");
 const perPageModel = defineModel<number>("perPage");
 const sortModel = defineModel<SortOption>("sort");
 
@@ -132,7 +119,6 @@ defineProps<{
   readonly perPageOptions: readonly number[];
   readonly sortOptions: readonly { readonly label: string; readonly value: SortOption }[];
   readonly recentUpdateFilters: readonly { readonly label: string; readonly value: number }[];
-  readonly canSearch: boolean;
   readonly isLoading: boolean;
   readonly filtersApplied: boolean;
 }>();

@@ -231,6 +231,18 @@ export function sortPlugins(plugins: readonly Plugin[], sort: SortOption): reado
   }
 }
 
+export function filterByQuery(plugins: readonly Plugin[], rawQuery: string): readonly Plugin[] {
+  const query = rawQuery.trim().toLowerCase();
+  if (!query) {
+    return plugins;
+  }
+  return plugins.filter((plugin) => {
+    const name = plugin.name.toLowerCase();
+    const summary = plugin.summary.toLowerCase();
+    return name.includes(query) || summary.includes(query);
+  });
+}
+
 export function applyFiltersAndSort(
   plugins: readonly Plugin[],
   filters: FilterOptions,

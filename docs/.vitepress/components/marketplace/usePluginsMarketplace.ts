@@ -11,6 +11,7 @@ import {
 } from "./pluginModels";
 import {
   applyFiltersAndSort,
+  filterByQuery,
   mapLibrariesIoPackage,
   mapPyPIPackage,
   mergePluginData,
@@ -21,10 +22,13 @@ import {
 const LIBRARIES_IO_ENDPOINT = "https://libraries.io/api/search";
 const PYPI_ENDPOINT = "https://pypi.org/pypi";
 const PYPI_CONCURRENCY = 5;
+const LIBRARIES_API_KEY = "18471256fa1f391576e081b21d89598d";
+const LIBRARIES_PAGE_SIZE = 100;
+const SEARCH_PREFIX = "otai-";
+const MAX_LIBRARIES_PAGES = 10;
 
 export function usePluginsMarketplace() {
-  const query = ref("otai-");
-  const apiKey = ref("");
+  const query = ref(SEARCH_PREFIX);
   const perPage = ref<typeof PER_PAGE_OPTIONS[number]>(PER_PAGE_OPTIONS[0]);
   const page = ref(1);
   const sort = ref<SortOption>("relevance");
@@ -37,19 +41,33 @@ export function usePluginsMarketplace() {
   const plugins = ref<Plugin[]>([]);
   const isLoading = ref(false);
   const errorMessage = ref<string | null>(null);
-  const hasSearched = ref(false);
-  const lastPageCount = ref(0);
+  const hasLoaded = ref(false);
 
   const abortController = ref<AbortController | null>(null);
   const pyPiCache = new Map<string, PyPIPluginDetails | null>();
 
-  const filteredPlugins = computed(() => applyFiltersAndSort(plugins.value, filters, sort.value));
+  const filteredPlugins = computed(() =>
+    applyFiltersAndSort(filterByQuery(plugins.value, query.value), filters, sort.value),
+  );
+  const totalResults = computed(() => filteredPlugins.value.length);
+  const totalPages = computed(() => {
+    if (totalResults.value === 0) {
+      return 1;
+    }
+    return Math.max(1, Math.ceil(totalResults.value / perPage.value));
+  });
+  const visiblePlugins = computed(() => {
+    const start = (page.value - 1) * perPage.value;
+    const end = start + perPage.value;
+    return filteredPlugins.value.slice(start, end);
+  });
   const filtersApplied = computed(
     () => filters.hasHomepage || filters.hasRepository || filters.updatedWithinMonths !== null,
   );
-  const hasMoreResults = computed(() => lastPageCount.value === perPage.value);
-  const canSearch = computed(() => Boolean(apiKey.value.trim()) && !isLoading.value);
+  const hasMoreResults = computed(() => page.value < totalPages.value);
   const dateFormatter = computed(() => new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }));
+
+  const isInitializing = ref(true);
 
   function formatDate(iso: string | null): string {
     if (!iso) {
@@ -62,13 +80,13 @@ export function usePluginsMarketplace() {
     return dateFormatter.value.format(date);
   }
 
-  function buildSearchUrl(): string {
+  function buildSearchUrl(currentPage: number): string {
     const url = new URL(LIBRARIES_IO_ENDPOINT);
-    url.searchParams.set("q", query.value.trim() || "otai-");
+    url.searchParams.set("q", SEARCH_PREFIX);
     url.searchParams.set("platforms", "PyPI");
-    url.searchParams.set("per_page", String(perPage.value));
-    url.searchParams.set("page", String(page.value));
-    url.searchParams.set("api_key", apiKey.value.trim());
+    url.searchParams.set("per_page", String(LIBRARIES_PAGE_SIZE));
+    url.searchParams.set("page", String(currentPage));
+    url.searchParams.set("api_key", LIBRARIES_API_KEY);
     return url.toString();
   }
 
@@ -136,77 +154,86 @@ export function usePluginsMarketplace() {
     return results;
   }
 
-  async function executeSearch(): Promise<void> {
-    if (!apiKey.value.trim()) {
-      errorMessage.value = "Please provide a Libraries.io API key.";
-      return;
-    }
-
+  async function fetchAllPlugins(): Promise<void> {
     abortController.value?.abort();
     const controller = new AbortController();
     abortController.value = controller;
 
     isLoading.value = true;
     errorMessage.value = null;
-    hasSearched.value = true;
+    hasLoaded.value = false;
 
     try {
-      const response = await fetch(buildSearchUrl(), {
-        signal: controller.signal,
-        headers: { Accept: "application/json" },
-      });
+      const aggregatedPlugins: Plugin[] = [];
+      const seenNames = new Set<string>();
+      for (let currentPage = 1; currentPage <= MAX_LIBRARIES_PAGES; currentPage += 1) {
+        const response = await fetch(buildSearchUrl(currentPage), {
+          signal: controller.signal,
+          headers: { Accept: "application/json" },
+        });
 
-      if (response.status === 401 || response.status === 403) {
-        plugins.value = [];
-        lastPageCount.value = 0;
-        errorMessage.value = "Libraries.io API key is missing or invalid.";
-        return;
+        if (response.status === 401 || response.status === 403) {
+          plugins.value = [];
+          errorMessage.value = "Libraries.io API request was rejected. Please verify the configured key.";
+          return;
+        }
+
+        if (response.status === 429) {
+          plugins.value = [];
+          errorMessage.value = "Libraries.io rate limit reached. Please wait and try again.";
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error(`Libraries.io request failed with status ${response.status}`);
+        }
+
+        const payload = (await response.json()) as unknown;
+        if (!Array.isArray(payload)) {
+          throw new Error("Unexpected Libraries.io response structure.");
+        }
+
+        const libraryPackages = (payload as LibrariesIoResult[]).map((entry) => mapLibrariesIoPackage(entry));
+
+        if (libraryPackages.length === 0) {
+          break;
+        }
+
+        const pyPiResults = await fetchPyPiDetails(libraryPackages, controller.signal);
+        for (const pkg of libraryPackages) {
+          if (seenNames.has(pkg.name)) {
+            continue;
+          }
+          seenNames.add(pkg.name);
+          aggregatedPlugins.push(mergePluginData(pkg, pyPiResults.get(pkg.name) ?? null));
+        }
+
+        if (libraryPackages.length < LIBRARIES_PAGE_SIZE) {
+          break;
+        }
       }
 
-      if (response.status === 429) {
-        plugins.value = [];
-        lastPageCount.value = 0;
-        errorMessage.value = "Libraries.io rate limit reached. Please wait and try again.";
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error(`Libraries.io request failed with status ${response.status}`);
-      }
-
-      const payload = (await response.json()) as unknown;
-      if (!Array.isArray(payload)) {
-        throw new Error("Unexpected Libraries.io response structure.");
-      }
-
-      const libraryPackages = (payload as LibrariesIoResult[]).map((entry) => mapLibrariesIoPackage(entry));
-      lastPageCount.value = libraryPackages.length;
-
-      if (libraryPackages.length === 0) {
-        plugins.value = [];
-        return;
-      }
-
-      const pyPiResults = await fetchPyPiDetails(libraryPackages, controller.signal);
-      plugins.value = libraryPackages.map((pkg) => mergePluginData(pkg, pyPiResults.get(pkg.name) ?? null));
+      plugins.value = aggregatedPlugins;
+      hasLoaded.value = true;
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {
         return;
       }
       plugins.value = [];
-      lastPageCount.value = 0;
       errorMessage.value =
         error instanceof Error ? error.message : "Something went wrong while fetching plugins.";
     } finally {
       if (abortController.value === controller) {
         isLoading.value = false;
+        if (!errorMessage.value) {
+          hasLoaded.value = true;
+        }
       }
     }
   }
 
   function search(): void {
     page.value = 1;
-    void executeSearch();
   }
 
   function goToPreviousPage(): void {
@@ -214,7 +241,6 @@ export function usePluginsMarketplace() {
       return;
     }
     page.value -= 1;
-    void executeSearch();
   }
 
   function goToNextPage(): void {
@@ -222,17 +248,18 @@ export function usePluginsMarketplace() {
       return;
     }
     page.value += 1;
-    void executeSearch();
   }
 
   function clearFilters(): void {
     filters.hasHomepage = false;
     filters.hasRepository = false;
     filters.updatedWithinMonths = null;
+    page.value = 1;
   }
 
   function updateFilters(partial: Partial<FilterOptions>): void {
     Object.assign(filters, partial);
+    page.value = 1;
   }
 
   function syncToUrl(): void {
@@ -318,17 +345,34 @@ export function usePluginsMarketplace() {
   );
 
   watch(perPage, (current, previous) => {
-    if (current !== previous) {
+    if (current !== previous && !isInitializing.value) {
       page.value = 1;
-      if (hasSearched.value) {
-        void executeSearch();
-      }
+    }
+  });
+
+  watch(query, () => {
+    if (!isInitializing.value) {
+      page.value = 1;
+    }
+  });
+
+  watch(sort, () => {
+    if (!isInitializing.value) {
+      page.value = 1;
+    }
+  });
+
+  watch(filteredPlugins, () => {
+    if (page.value > totalPages.value) {
+      page.value = totalPages.value;
     }
   });
 
   onMounted(() => {
     loadFromUrl();
     syncToUrl();
+    isInitializing.value = false;
+    void fetchAllPlugins();
   });
 
   onBeforeUnmount(() => {
@@ -337,18 +381,19 @@ export function usePluginsMarketplace() {
 
   return {
     query,
-    apiKey,
     perPage,
     page,
     sort,
     filters,
     plugins,
     filteredPlugins,
+    visiblePlugins,
+    totalResults,
+    totalPages,
     isLoading,
     errorMessage,
-    hasSearched,
+    hasLoaded,
     hasMoreResults,
-    canSearch,
     filtersApplied,
     formatDate,
     search,

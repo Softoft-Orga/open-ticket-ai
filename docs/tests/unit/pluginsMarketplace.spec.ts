@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   applyFiltersAndSort,
+  filterByQuery,
   filterPlugins,
   mapLibrariesIoPackage,
   mapPyPIPackage,
@@ -196,5 +197,18 @@ describe("plugin sorting and filtering", () => {
     }, "name");
 
     expect(filtered.map((plugin) => plugin.name)).toEqual(["otai-alpha", "otai-beta"]);
+  });
+
+  it("filters plugins by query against name and summary", () => {
+    const byName = filterByQuery(basePlugins, "beta");
+    expect(byName).toHaveLength(1);
+    expect(byName[0]?.name).toBe("otai-beta");
+
+    const bySummary = filterByQuery(basePlugins, "alpha plugin");
+    expect(bySummary).toHaveLength(1);
+    expect(bySummary[0]?.name).toBe("otai-alpha");
+
+    const empty = filterByQuery(basePlugins, "");
+    expect(empty).toHaveLength(basePlugins.length);
   });
 });

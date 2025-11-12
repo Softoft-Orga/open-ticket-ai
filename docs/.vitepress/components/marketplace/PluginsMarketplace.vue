@@ -2,14 +2,12 @@
   <div class="space-y-6 text-slate-200">
     <MarketplaceSearchForm
       v-model:query="query"
-      v-model:apiKey="apiKey"
       v-model:perPage="perPage"
       v-model:sort="sort"
       :filters="filters"
       :per-page-options="perPageOptions"
       :sort-options="sortOptions"
       :recent-update-filters="recentUpdateFilters"
-      :can-search="canSearch"
       :is-loading="isLoading"
       :filters-applied="filtersApplied"
       @search="search"
@@ -25,22 +23,22 @@
     </section>
 
     <section
-      v-if="!errorMessage && !isLoading && hasSearched && filteredPlugins.length === 0"
+      v-if="!errorMessage && !isLoading && hasLoaded && totalResults === 0"
       class="rounded-xl border border-slate-700/70 bg-slate-900/60 p-6 text-center text-slate-300"
     >
       No plugins found. Try searching for ‘otai-’.
     </section>
 
-    <section v-if="!errorMessage && filteredPlugins.length > 0" class="space-y-4">
+    <section v-if="!errorMessage && totalResults > 0" class="space-y-4">
       <header class="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-300">
         <span>
-          Showing {{ filteredPlugins.length }} plugin{{ filteredPlugins.length === 1 ? '' : 's' }}
-          for “{{ query || 'otai-' }}” on page {{ page }}.
+          Showing {{ visiblePlugins.length }} of {{ totalResults }} plugin{{ totalResults === 1 ? '' : 's' }}
+          for “{{ query || 'otai-' }}” on page {{ page }} of {{ totalPages }}.
         </span>
       </header>
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <PluginCard
-          v-for="plugin in filteredPlugins"
+          v-for="plugin in visiblePlugins"
           :key="plugin.name"
           :plugin="plugin"
           :formatted-date="formatDate(plugin.lastReleaseDate)"
@@ -48,14 +46,15 @@
       </div>
     </section>
 
-    <section v-if="isLoading" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <section v-if="isLoading && !hasLoaded" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       <MarketplaceSkeletonCard v-for="n in perPage" :key="`skeleton-${n}`" />
     </section>
 
     <MarketplacePagination
-      v-if="!errorMessage && hasSearched"
+      v-if="!errorMessage && hasLoaded && totalResults > 0"
       :page="page"
       :has-more-results="hasMoreResults"
+      :total-pages="totalPages"
       :is-loading="isLoading"
       @prev="goToPreviousPage"
       @next="goToNextPage"
@@ -72,17 +71,17 @@ import { usePluginsMarketplace } from "./usePluginsMarketplace";
 
 const {
   query,
-  apiKey,
   perPage,
   page,
   sort,
   filters,
-  filteredPlugins,
+  visiblePlugins,
+  totalResults,
+  totalPages,
   isLoading,
   errorMessage,
-  hasSearched,
+  hasLoaded,
   hasMoreResults,
-  canSearch,
   filtersApplied,
   formatDate,
   search,
