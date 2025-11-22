@@ -8,7 +8,8 @@
       <form
           class="space-y-5 max-w-64 mx-auto"
           name="synthetic-ticket-generator-waitlist"
-          netlify
+          action="https://formspree.io/f/xjkjkzdo"
+          method="POST"
       >
         <div>
           <label class="block text-sm font-medium text-gray-200 mb-1" for="email">

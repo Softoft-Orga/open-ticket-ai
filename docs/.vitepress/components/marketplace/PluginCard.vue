@@ -3,7 +3,7 @@
     <div class="flex items-start justify-between gap-4">
       <div class="space-y-1">
         <h3 class="text-lg font-semibold text-white">{{ plugin.name }}</h3>
-        <p class="text-sm text-slate-300">{{ plugin.summary }}</p>
+        <p class="text-sm text-slate-300 min-h-20">{{ plugin.summary }}</p>
       </div>
       <span class="rounded-full bg-sky-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-sky-200">
         v{{ plugin.version }}
