@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang='ts' setup>
 import type {TagNode} from '../../composables/useYamlTagTree'
 
 const props = defineProps<{
@@ -7,14 +7,20 @@ const props = defineProps<{
 </script>
 
 <template>
-    <li class="tag-node">
-        <div class="tag-node__label">
-            <span class="tag-node__key">{{ node.key }}</span>
-            <span v-if="node.description" class="tag-node__description">
-        – {{ node.description }}
-      </span>
+    <li class="space-y-2">
+        <div class="flex flex-wrap items-center gap-3 text-sm text-slate-100">
+            <span
+                v-if="node.parentIcon || node.icon"
+                class="flex h-7 w-7 items-center justify-center rounded-full bg-slate-800/70 text-lg shadow-inner shadow-black/50"
+            >
+                {{ node.parentIcon || node.icon }}
+            </span>
+            <span class="rounded-md bg-slate-800/70 px-2 py-1 font-mono text-xs font-semibold text-indigo-100 ring-1 ring-slate-700">
+                {{ node.key }}
+            </span>
+            <span v-if="node.description" class="text-slate-300">– {{ node.description }}</span>
         </div>
-        <ul v-if="node.children.length" class="tag-node__children">
+        <ul v-if="node.children.length" class="ml-4 border-l border-dashed border-slate-700 pl-3">
             <TagNode
                 v-for="child in node.children"
                 :key="child.path"
@@ -23,30 +29,3 @@ const props = defineProps<{
         </ul>
     </li>
 </template>
-
-<style scoped>
-.tag-node {
-    margin: 2px 0;
-}
-
-.tag-node__label {
-    font-size: 14px;
-}
-
-.tag-node__key {
-    font-family: var(--vp-font-family-mono), serif;
-    font-weight: 600;
-}
-
-.tag-node__description {
-    margin-left: 4px;
-    color: var(--vp-c-text-2);
-    font-size: 13px;
-}
-
-.tag-node__children {
-    margin-left: 14px;
-    padding-left: 8px;
-    border-left: 1px dashed var(--vp-c-divider);
-}
-</style>
