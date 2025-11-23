@@ -43,7 +43,7 @@ export default {
         app.component('ExamplePage', defineAsyncComponent(() => import('../components/configExamples/ExamplePage.vue')))
         app.component('InlineExample', defineAsyncComponent(() => import('../components/configExamples/InlineExample.vue')))
         app.component('PluginsMarketplace', defineAsyncComponent(() => import('../components/marketplace/PluginsMarketplace.vue')))
-        app.component('TagTree', defineAsyncComponent(() => import('../components/multiTagDemo/TagTree.vue')))
+        app.component('MultiTagPredictionDemo', defineAsyncComponent(() => import('../components/multiTagDemo/MultiTagPredictionDemo.vue')))
         app.mixin({
             computed: {
                 lang() {

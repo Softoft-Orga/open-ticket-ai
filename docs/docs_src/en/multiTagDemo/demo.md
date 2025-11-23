@@ -7,9 +7,5 @@ layout: "page"
 
 # Tags Tree
 
-:::details Tags Tree
-
-<TagTree></TagTree>
-
-:::
+<MultiTagPredictionDemo></MultiTagPredictionDemo>
 
