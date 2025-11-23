@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang='ts' setup>
 import {useYamlTagTree} from '../../composables/useYamlTagTree'
 import TagNode from './TagNode.vue'
 
@@ -10,11 +10,11 @@ const {tree, error} = useYamlTagTree(source)
 </script>
 
 <template>
-    <div class="yaml-tree">
-        <div v-if="error" class="yaml-tree__error">
+    <div class="space-y-3 text-slate-100">
+        <div v-if="error" class="rounded-lg border border-red-800 bg-red-950/70 px-3 py-2 text-sm font-medium text-red-100">
             {{ error }}
         </div>
-        <ul v-else class="yaml-tree__list">
+        <ul v-else class="list-none space-y-2 p-0">
             <TagNode
                 v-for="node in tree"
                 :key="node.path"
@@ -23,24 +23,3 @@ const {tree, error} = useYamlTagTree(source)
         </ul>
     </div>
 </template>
-
-<style scoped>
-.yaml-tree {
-    border: 1px solid var(--vp-c-divider);
-    border-radius: 12px;
-    padding: 12px;
-    background: var(--vp-c-bg-soft);
-}
-
-.yaml-tree__error {
-    color: #ff6b6b;
-    font-family: var(--vp-font-family-mono), serif;
-    font-size: 13px;
-}
-
-.yaml-tree__list {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-}
-</style>

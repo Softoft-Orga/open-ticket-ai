@@ -5,6 +5,7 @@ export type RawTagNode = {
     description?: string
     required?: boolean
     default?: string
+    icon?: string
     children?: Record<string, RawTagNode>
 }
 
@@ -14,6 +15,8 @@ export type TagNode = {
     description?: string
     required?: boolean
     default?: string
+    icon?: string
+    parentIcon?: string
     children: TagNode[]
 }
 
@@ -43,17 +46,21 @@ export function useYamlTagTree(source: string) {
         parse()
     }
 
-    const buildTree = (obj: Record<string, RawTagNode>, prefix = ''): TagNode[] =>
+    const buildTree = (obj: Record<string, RawTagNode>, prefix = '', ancestorIcon?: string): TagNode[] =>
         Object.entries(obj).map(([key, value]) => {
             const path = prefix ? `${prefix}/${key}` : key
             const childrenObj = value.children ?? {}
+            const nodeIcon = value.icon
+            const inheritedIcon = nodeIcon ?? ancestorIcon
             return {
                 key,
                 path,
                 description: value.description,
                 required: value.required,
                 default: value.default,
-                children: buildTree(childrenObj, path),
+                icon: nodeIcon,
+                parentIcon: ancestorIcon,
+                children: buildTree(childrenObj, path, inheritedIcon),
             }
         })
 
