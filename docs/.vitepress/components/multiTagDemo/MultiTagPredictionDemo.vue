@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import {computed, ref} from 'vue'
-import TagTree from "./TagTree.vue";
+import TagMindmap from './TagMindmap.vue'
+import TagTree from './TagTree.vue'
 
 type PredictionExample = {
     name: string
@@ -167,7 +168,21 @@ const setExample = (name: string) => {
                 </div>
             </div>
         </div>
-        <TagTree/>
+
+        <div class="tag-visuals">
+            <div class="card">
+                <div class="card-header">Tag Mindmap</div>
+                <div class="card-body padded">
+                    <TagMindmap />
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">YAML Tree</div>
+                <div class="card-body padded">
+                    <TagTree />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -266,6 +281,10 @@ const setExample = (name: string) => {
     gap: 0.75rem;
 }
 
+.card-body.padded {
+    gap: 1.25rem;
+}
+
 .field-label {
     font-weight: 600;
     margin-bottom: 0.25rem;
@@ -292,6 +311,13 @@ const setExample = (name: string) => {
     color: var(--vp-c-text-1);
     border: 1px solid var(--vp-c-border);
     font-size: 0.95rem;
+}
+
+.tag-visuals {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+    align-items: start;
 }
 
 @media (max-width: 960px) {
