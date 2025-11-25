@@ -170,17 +170,11 @@ const setExample = (name: string) => {
         </div>
 
         <div class="tag-visuals">
-            <div class="card">
-                <div class="card-header">Tag Mindmap</div>
-                <div class="card-body padded">
-                    <TagMindmap />
-                </div>
+            <div class="visual-card">
+                <TagMindmap />
             </div>
-            <div class="card">
-                <div class="card-header">YAML Tree</div>
-                <div class="card-body padded">
-                    <TagTree />
-                </div>
+            <div class="visual-card">
+                <TagTree />
             </div>
         </div>
     </div>
@@ -318,6 +312,14 @@ const setExample = (name: string) => {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1rem;
     align-items: start;
+}
+
+.visual-card {
+    background: var(--vp-c-bg);
+    border: 1px solid var(--vp-c-border);
+    border-radius: 0.9rem;
+    box-shadow: var(--vp-shadow-2);
+    padding: 1rem;
 }
 
 @media (max-width: 960px) {
