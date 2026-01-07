@@ -1,6 +1,6 @@
 ---
 title: Installation Guide
-description: Easy installation guide for Open Ticket AI using Docker Compose - the recommended method for production deployment with all plugins included.
+description: "Easy installation guide for Open Ticket AI using Docker Compose - the recommended method for production deployment with all plugins included."
 ---
 # Installation Guide
 

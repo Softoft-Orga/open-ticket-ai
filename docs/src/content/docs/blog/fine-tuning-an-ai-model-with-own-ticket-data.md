@@ -1,7 +1,6 @@
 ---
 title: How to Fine-Tune an AI Model with Your Own Ticket Data
-description: Fine-tune an AI model on your ticket data for accurate, automated classification.
-  This guide shows how to prepare datasets and train with Hugging Face or a REST API.
+description: "Fine-tune an AI model on your ticket data for accurate, automated classification. This guide shows how to prepare datasets and train with Hugging Face or a REST API."
 ---
 # How to Fine-Tune an AI Model with Your Own Ticket Data
 

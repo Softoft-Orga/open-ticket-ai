@@ -1,8 +1,6 @@
 ---
-title: Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter
-description: 'Learn to evaluate AI ticket classifiers on real, imbalanced data. Discover
-  why accuracy is misleading and focus on metrics that matter: precision, recall &
-  F1-score.'
+title: "Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter"
+description: "Learn to evaluate AI ticket classifiers on real, imbalanced data. Discover why accuracy is misleading and focus on metrics that matter: precision, recall & F1-score."
 ---
 # Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter
 

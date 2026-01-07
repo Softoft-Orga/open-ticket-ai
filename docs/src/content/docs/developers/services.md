@@ -1,6 +1,6 @@
 ---
 title: Core Services
-description: Core services documentation for Open Ticket AI covering ticket system adapters, business logic encapsulation, and dependency injection.
+description: "Core services documentation for Open Ticket AI covering ticket system adapters, business logic encapsulation, and dependency injection."
 ---
 # Core Services
 

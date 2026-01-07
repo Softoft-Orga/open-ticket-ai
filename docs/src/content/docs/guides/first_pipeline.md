@@ -1,6 +1,6 @@
 ---
 title: Creating Your First Pipeline
-description: Step-by-step tutorial for creating your first ticket classification pipeline with Open Ticket AI using the current configuration schema (module-based plugins, service registry, and PipeConfig orchestrator).
+description: "Step-by-step tutorial for creating your first ticket classification pipeline with Open Ticket AI using the current configuration schema (module-based plugins, service registry, and PipeConfig orchestrator)."
 ---
 # Creating Your First Pipeline
 

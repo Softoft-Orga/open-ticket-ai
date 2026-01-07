@@ -1,6 +1,6 @@
 ---
 title: Plugins
-description: Learn about Open Ticket AI's plugin system - what plugins are, how to install them, and which plugins are available for your automation workflows.
+description: "Learn about Open Ticket AI's plugin system - what plugins are, how to install them, and which plugins are available for your automation workflows."
 ---
 # Plugins
 

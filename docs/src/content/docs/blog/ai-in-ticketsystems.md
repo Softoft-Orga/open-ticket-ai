@@ -1,8 +1,6 @@
 ---
-title: **AI Ticketing Systems: Revolutionizing Support**
-description: >
-    AI ticketing systems enhance support with smart ticket automation for faster,
-    personalized service. Learn more about transforming your help desk.
+title: "AI Ticketing Systems: Revolutionizing Support"
+description: "AI ticketing systems enhance support with smart ticket automation for faster, personalized service. Learn more about transforming your help desk."
 ---
 # **AI Ticketing Systems: Revolutionizing Support**
 

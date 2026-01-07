@@ -1,6 +1,6 @@
 ---
 title: Dependency Injection
-description: Learn how Open Ticket AI uses dependency injection to manage services, resolve dependencies, and enable testability with loose coupling.
+description: "Learn how Open Ticket AI uses dependency injection to manage services, resolve dependencies, and enable testability with loose coupling."
 ---
 # Dependency Injection
 

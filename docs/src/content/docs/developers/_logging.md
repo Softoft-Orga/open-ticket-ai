@@ -1,6 +1,6 @@
 ---
 title: Logging System
-description: Open Ticket AI logging system documentation covering the abstract interfaces and current standard-library implementation.
+description: "Open Ticket AI logging system documentation covering the abstract interfaces and current standard-library implementation."
 ---
 # Logging System
 

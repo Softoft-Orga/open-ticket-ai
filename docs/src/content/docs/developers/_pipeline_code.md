@@ -1,6 +1,6 @@
 ---
 title: Pipeline Code Development
-description: Developer guide for implementing custom pipes in Open Ticket AI with the dict[str, Any] pattern for parameter validation.
+description: "Developer guide for implementing custom pipes in Open Ticket AI with the dict[str, Any] pattern for parameter validation."
 ---
 # Pipeline Code Development
 

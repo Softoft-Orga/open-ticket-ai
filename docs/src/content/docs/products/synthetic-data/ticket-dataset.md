@@ -1,7 +1,6 @@
 ---
 title: Multilingual Customer Support Tickets (Synthetic)
-description: Train queue, priority & type models with our synthetic multilingual customer
-  support tickets. Includes rich fields & multiple versions. Available on Kaggle.
+description: "Train queue, priority & type models with our synthetic multilingual customer support tickets. Includes rich fields & multiple versions. Available on Kaggle."
 ---
 # Multilingual Customer Support Tickets (Synthetic)
 

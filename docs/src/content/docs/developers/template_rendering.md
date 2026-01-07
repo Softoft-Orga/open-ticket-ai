@@ -1,6 +1,6 @@
 ---
 title: Template Rendering
-description: Template rendering guide using Jinja2 for dynamic configuration in Open Ticket AI with variables, conditionals, loops, and custom extensions.
+description: "Template rendering guide using Jinja2 for dynamic configuration in Open Ticket AI with variables, conditionals, loops, and custom extensions."
 ---
 # Template Rendering
 

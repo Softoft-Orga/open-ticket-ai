@@ -1,6 +1,6 @@
 ---
 title: Zendesk Integration for Open Ticket AI
-description: Integrate on-premise Open Ticket AI with Zendesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Zendesk tickets via REST.
+description: "Integrate on-premise Open Ticket AI with Zendesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Zendesk tickets via REST."
 ---
 # Zendesk Integration for Open Ticket AI
 

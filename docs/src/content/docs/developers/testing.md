@@ -1,6 +1,6 @@
 ---
 title: Testing Guide
-description: Comprehensive testing guide for Open Ticket AI configurations, pipelines, and custom components with best practices and configExamples.
+description: "Comprehensive testing guide for Open Ticket AI configurations, pipelines, and custom components with best practices and configExamples."
 ---
 # Testing Guide
 

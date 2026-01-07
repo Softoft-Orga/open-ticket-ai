@@ -1,6 +1,6 @@
 ---
 title: Zammad Integration for Open Ticket AI
-description: Integrate Open Ticket AI with Zammad using the built-in OTAI Zammad plugin. The adapter exists but is not fully tested yet.
+description: "Integrate Open Ticket AI with Zammad using the built-in OTAI Zammad plugin. The adapter exists but is not fully tested yet."
 ---
 # Zammad Integration for Open Ticket AI
 

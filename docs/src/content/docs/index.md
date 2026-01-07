@@ -1,6 +1,6 @@
 ---
 title: Open Ticket AI
-description: Boost helpdesk efficiency with Open Ticket AI, the secure, open-source, on-premise solution for automating support ticket classification.
+description: "Boost helpdesk efficiency with Open Ticket AI, the secure, open-source, on-premise solution for automating support ticket classification."
 template: splash
 hero:
   title: Open Ticket AI
@@ -19,7 +19,6 @@ hero:
       icon: document
       variant: secondary
 ---
-
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Features
