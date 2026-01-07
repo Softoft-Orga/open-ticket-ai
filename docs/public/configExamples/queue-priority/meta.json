@@ -1,0 +1,11 @@
+{
+  "name": "Queue Priority",
+  "md_description": "Classifies queue and priority for a German ticket.",
+  "md_details": "Classifies a German ticket text using HF models to predict queue and priority, then updates the ticket.\n\nComponents:\n- Orchestrator: SimpleSequential with interval trigger\n- Injects: classification_service: hf_local, ticket_system: otobo_znuny\n- Pipes:\n  1. base:ClassificationPipe with model softoft/otai-queue-de-bert-v1\n  2. base:ClassificationPipe with model softoft/otai-priority-de-bert-v1\n  3. base:UpdateTicketPipe applying predicted queue and priority",
+  "tags": [
+    "simple-ai",
+    "simple-ticket-system"
+  ],
+  "slug": "queue-priority",
+  "path": "/configExamples/queue-priority/config.yml"
+}

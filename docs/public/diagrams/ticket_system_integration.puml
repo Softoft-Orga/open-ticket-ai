@@ -1,0 +1,87 @@
+@startuml
+' Diagram configuration
+title OpenTicketAI - Unified Integration Model with Notes
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+' =========================================
+' Unified Data Models Package
+' =========================================
+package "Unified Data Models" #LightBlue {
+
+    class UnifiedEntity {
+        + id: Optional[int]
+        + name: Optional[str]
+    }
+
+    class UnifiedUser extends UnifiedEntity {
+      + email: Optional[str]
+    }
+
+    class UnifiedQueue extends UnifiedEntity {}
+    class UnifiedPriority extends UnifiedEntity {}
+    class UnifiedStatus extends UnifiedEntity {}
+
+    class UnifiedNote {
+      + id: Optional[str]
+      + body: str
+      + created_at: datetime
+      + is_internal: bool
+    }
+
+    class UnifiedTicket {
+        + id: str
+        + subject: str
+        + body: str
+        + custom_fields: Dict
+    }
+
+    class SearchCriteria {
+        + id: Optional[str]
+        + subject: Optional[str]
+    }
+}
+
+' =========================================
+' Adapter / Integration Layer Package
+' =========================================
+package "Adapter / Integration Layer" #LightGreen {
+
+    abstract class TicketSystemAdapter {
+        + {abstract} find_tickets(criteria: SearchCriteria): List[UnifiedTicket]
+        + {abstract} find_first_ticket(criteria: SearchCriteria): Optional[UnifiedTicket]
+        + {abstract} create_ticket(ticket_data: UnifiedTicket): UnifiedTicket
+        + {abstract} update_ticket(ticket_id: str, updates: Dict): bool
+        + {abstract} add_note(ticket_id: str, note: UnifiedNote): UnifiedNote
+    }
+    note right of TicketSystemAdapter
+      The Adapter's role is to translate between
+      the rich Unified Models and the specific
+      format required by an external system's API.
+    end note
+}
+
+' =========================================
+' Relationships
+' =========================================
+
+' Ticket Composition Relationships
+UnifiedTicket "1" *---> "0..*" UnifiedNote : has
+UnifiedTicket *---> "1" UnifiedQueue
+UnifiedTicket *---> "1" UnifiedPriority
+UnifiedTicket *---> "1" UnifiedStatus
+UnifiedTicket *---> "1" UnifiedUser : "owner"
+
+' Note Author Relationship
+UnifiedNote *---> "1" UnifiedUser : "author"
+
+' Search Criteria Relationships
+SearchCriteria o--- "1" UnifiedQueue : by queue
+SearchCriteria o--- "1" UnifiedUser : by user
+
+' Adapter Dependencies
+TicketSystemAdapter ...> UnifiedTicket : produces/consumes
+TicketSystemAdapter ...> SearchCriteria : consumes
+TicketSystemAdapter ...> UnifiedNote : consumes
+
+@enduml

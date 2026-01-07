@@ -1,0 +1,11 @@
+{
+  "name": "Fetch AddNote",
+  "md_description": "Fetches one ticket and adds a simple note.",
+  "md_details": "Minimal queue-processing workflow for OTOBO/Znuny.\n\nThe runner fetches exactly one ticket from the monitored queue, adds a fixed acknowledgment note, and moves the ticket to the cleanup queue. Useful as a basic example of sequential pipes and simple ticket mutations.",
+  "tags": [
+    "basic",
+    "simple-ticket-system"
+  ],
+  "slug": "fetch-addnote",
+  "path": "/configExamples/fetch-addnote/config.yml"
+}

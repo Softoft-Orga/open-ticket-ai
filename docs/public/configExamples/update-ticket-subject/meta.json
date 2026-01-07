@@ -1,0 +1,11 @@
+{
+  "name": "Update Ticket Subject",
+  "md_description": "Updates the subject of a ticket using a single UpdateTicketPipe.",
+  "md_details": "A minimal workflow that updates the subject of a specific OTOBO/Znuny ticket.\n\nThe runner executes one pipe: `base:UpdateTicketPipe`, using the configured ticket ID and new subject value.",
+  "tags": [
+    "basic",
+    "simple-ticket-system"
+  ],
+  "slug": "update-ticket-subject",
+  "path": "/configExamples/update-ticket-subject/config.yml"
+}

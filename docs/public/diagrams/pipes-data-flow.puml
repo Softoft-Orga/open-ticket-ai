@@ -1,0 +1,54 @@
+@startuml
+title Pipeline Data Flow for a Single Ticket
+
+start
+
+:Scheduler triggers\n**Orchestrator** for a Pipeline;
+
+partition "**Pipeline Execution**" {
+    :First Pipe (**BasicTicketFetcher**) is called;
+
+    partition "**TicketSystemAdapter**" {
+        :Call `fetch()` method;
+        note right
+            Communicates with
+            External Ticket System
+            REST API
+        end note
+    }
+
+    if (Ticket data returned?) then (yes)
+        :Create and populate **PipelineContext**
+        (contains ticket_id, data);
+
+        :Pass context to **SubjectBodyPreparer**;
+        note right: Data is transformed for AI
+
+        :Pass context to **HFAIInferenceService**;
+        note right: AI prediction is added to context
+
+        :Pass context to **SetFieldFromModelOutput**;
+        note right
+            Prediction is converted to a
+            field update instruction (e.g., `{'Queue': 'Sales'}`)
+        end note
+        :Pass context to last pipe (**GenericTicketUpdater**);
+
+        partition "**TicketSystemAdapter**" {
+            :Call `update()` with data from context;
+            note right
+              Communicates with
+              External Ticket System
+              REST API
+            end note
+        }
+
+        :Pipeline for this ticket is complete;
+
+    else (no)
+        :Pipeline ends;
+    endif
+}
+
+stop
+@enduml
