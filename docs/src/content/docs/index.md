@@ -19,30 +19,26 @@ hero:
       icon: document
       variant: secondary
 ---
-import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Features
 
-<CardGrid>
-  <Card title="Easy Installation" icon="server">
-    Easily install Open Ticket AI on your own server using Docker.
-  </Card>
-  <Card title="Flexible Integration" icon="puzzle">
-    Thanks to its adapter-based architecture, Open Ticket AI can connect to virtually any helpdesk system like OTOBO, Znuny, or OTRS.
-  </Card>
-  <Card title="Pipeline Orchestration" icon="setting">
-    Coordinate complex automation flows with sequential and conditional pipelines to handle every stage of your ticket lifecycle.
-  </Card>
-  <Card title="High Security" icon="shield">
-    As a fully on-premise solution, all your data is processed locally on your infrastructure, ensuring maximum privacy and security.
-  </Card>
-  <Card title="Open Source" icon="github">
-    Open Ticket AI is free and open-source. Benefit from community-driven development and complete transparency.
-  </Card>
-  <Card title="Highly Customizable" icon="setting">
-    Customize the processing pipelines, models, and system connections through a simple yet powerful configuration file.
-  </Card>
-</CardGrid>
+### Easy Installation
+Easily install Open Ticket AI on your own server using Docker.
+
+### Flexible Integration
+Thanks to its adapter-based architecture, Open Ticket AI can connect to virtually any helpdesk system like OTOBO, Znuny, or OTRS.
+
+### Pipeline Orchestration
+Coordinate complex automation flows with sequential and conditional pipelines to handle every stage of your ticket lifecycle.
+
+### High Security
+As a fully on-premise solution, all your data is processed locally on your infrastructure, ensuring maximum privacy and security.
+
+### Open Source
+Open Ticket AI is free and open-source. Benefit from community-driven development and complete transparency.
+
+### Highly Customizable
+Customize the processing pipelines, models, and system connections through a simple yet powerful configuration file.
 
 ## Build Plugins and Grow with Open Ticket AI
 
