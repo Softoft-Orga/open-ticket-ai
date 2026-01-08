@@ -59,10 +59,10 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, defineComponent} from 'vue'
+import {computed, defineComponent, h} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
-import {AcademicCapIcon, LinkIcon, MarkGithubIcon} from '@heroicons/vue/24/outline'
+import {AcademicCapIcon, CodeBracketSquareIcon, LinkIcon} from '@heroicons/vue/24/outline'
 
 interface LinkItem {
   label: string;
@@ -139,7 +139,7 @@ const legalLinks = computed(() => props.links?.legal ?? defaultLinks.value.legal
 const withLocale = (path: string) => `/${langCode.value}${path}`.replace('//', '/')
 
 const social = computed(() => (props.social ?? [
-  {label: 'GitHub', href: 'https://github.com/openticketai', icon: MarkGithubIcon},
+  {label: 'GitHub', href: 'https://github.com/openticketai', icon: CodeBracketSquareIcon},
   {label: 'Hugging Face', href: 'https://huggingface.co/openticketai', icon: AcademicCapIcon},
   {label: 'LinkedIn', href: 'https://www.linkedin.com/company/open-ticket-ai', icon: LinkIcon},
 ]).filter(s => !/instagram/i.test(s.label)))
@@ -148,53 +148,54 @@ const Section = defineComponent<{ title: string }>({
   name: 'FooterSection',
   props: {title: {type: String, required: true}},
   setup(p, {slots}) {
-    return () => (
-        <Disclosure as = "section"
+    const PlusIcon = () =>
+      h(
+        'svg',
+        {
+          class: 'h-4 w-4',
+          viewBox: '0 0 20 20',
+          fill: 'currentColor',
+          'aria-hidden': 'true',
+        },
+        [
+          h('path', {
+            'fill-rule': 'evenodd',
+            d: 'M10 3a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H4a1 1 0 0 1 0-2h5V4a1 1 0 0 1 1-1Z',
+            'clip-rule': 'evenodd',
+          }),
+        ],
+      )
 
-    class
-
-    = "sm:contents" >
-        {()
-  =>
-    (
-        <>
-            <div class = "sm:hidden" >
-        <DisclosureButton class = "w-full flex items-center justify-between rounded-xl bg-slate-900/70 px-4 py-3 text-left font-medium text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400" >
-            <span>{p.title} < /span>
-            < svg
-
-    class
-
-    = "h-4 w-4"
-    viewBox = "0 0 20 20"
-    fill = "currentColor"
-    aria - hidden = "true" > <path fill - rule = "evenodd"
-    d = "M10 3a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H4a1 1 0 0 1 0-2h5V4a1 1 0 0 1 1-1Z"
-    clip - rule = "evenodd" / > </svg>
-        < /DisclosureButton>
-        < DisclosurePanel
-
-    class
-
-    = "px-4 pt-1 pb-4" >
-        {slots.default?.()}
-        < /DisclosurePanel>
-        < /div>
-        < div
-
-    class
-
-    = "hidden sm:block" >
-    <h3 class = "text-sm font-semibold text-slate-200" > {p.title} < /h3>
-    {
-      slots.default?.()
-    }
-    </div>
-    < />
-  )
-  }
-    </Disclosure>
-  )
+    return () =>
+      h(
+        Disclosure,
+        {as: 'section', class: 'sm:contents'},
+        {
+          default: () => [
+            h('div', {class: 'sm:hidden'}, [
+              h(
+                DisclosureButton,
+                {
+                  class:
+                    'w-full flex items-center justify-between rounded-xl bg-slate-900/70 px-4 py-3 text-left font-medium text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400',
+                },
+                {
+                  default: () => [h('span', p.title), h(PlusIcon)],
+                },
+              ),
+              h(
+                DisclosurePanel,
+                {class: 'px-4 pt-1 pb-4'},
+                {default: () => slots.default?.()},
+              ),
+            ]),
+            h('div', {class: 'hidden sm:block'}, [
+              h('h3', {class: 'text-sm font-semibold text-slate-200'}, p.title),
+              slots.default?.(),
+            ]),
+          ],
+        },
+      )
   },
 })
 </script>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Products - Open Ticket AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8b5cf6","primary-hover": "#7c3aed","background-light": "#f5f6fa",
+                        "background-dark": "#05050b","card-dark": "#0f101c","border-dark": "#262740","text-muted": "#b8b9db",},
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>.glow-text {
+            text-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+        }
+        .cyber-border {
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.05);
+        }
+        .cyber-border:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+        }
+    </style>
+</head>
+<body class="font-display antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-b-border-dark px-6 py-4 bg-background-dark/95 backdrop-blur-md">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">Open Ticket AI</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Products</a>
+<a class="text-gray-400 hover:text-white transition-colors text-sm font-medium leading-normal" href="#">Solutions</a>
+<a class="text-gray-400 hover:text-white transition-colors text-sm font-medium leading-normal" href="#">Docs</a>
+<a class="text-gray-400 hover:text-white transition-colors text-sm font-medium leading-normal" href="#">About</a>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary hover:bg-primary-hover transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Get Started</span>
+</button>
+</div>
+</header>
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-12 xl:px-40 flex flex-1 justify-center py-12">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1 gap-8">
+<div class="flex flex-wrap justify-between gap-6 p-4 animate-fade-in-up">
+<div class="flex min-w-72 flex-col gap-3">
+<h1 class="text-white text-5xl font-black leading-tight tracking-[-0.033em] glow-text">Our Technology Stack</h1>
+<p class="text-text-muted text-lg font-normal leading-normal max-w-2xl">
+                        Secure, On-Premise AI for Enterprise Helpdesks built with German Engineering precision.
+                        Designed for strict data privacy and seamless integration.
+                    </p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4">
+<div class="col-span-1 lg:col-span-3">
+<div class="group relative flex flex-col overflow-hidden rounded-xl bg-card-dark cyber-border transition-all duration-300">
+<div class="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/20 blur-[80px]"></div>
+<div class="flex flex-col lg:flex-row items-stretch">
+<div class="flex flex-1 flex-col justify-center gap-6 p-8 lg:p-10 relative z-10">
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20">Coming Soon</span>
+<span class="inline-flex items-center rounded-full bg-slate-800/80 px-3 py-1 text-xs font-medium text-slate-300 ring-1 ring-inset ring-slate-700/50">On-Prem / Private Cloud</span>
+<span class="inline-flex items-center rounded-full bg-slate-800/80 px-3 py-1 text-xs font-medium text-slate-300 ring-1 ring-inset ring-slate-700/50">Multilingual</span>
+</div>
+<div>
+<h2 class="text-white text-3xl font-bold leading-tight tracking-tight mb-2">Tagging AI</h2>
+<p class="text-text-muted text-lg font-normal leading-relaxed">
+                                        Automated classification with military-grade privacy. Deploy local LLMs to categorize tickets instantly without data leaving your perimeter.
+                                    </p>
+</div>
+<div class="flex items-center gap-4 pt-2">
+<button class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary text-white text-sm font-bold leading-normal hover:bg-white hover:text-background-dark transition-colors">
+<span class="truncate">Join Waitlist</span>
+</button>
+<button class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-transparent border border-border-dark hover:border-primary/50 text-white text-sm font-medium leading-normal transition-colors">
+<span class="truncate">Technical Specs</span>
+</button>
+</div>
+</div>
+<div class="relative w-full lg:w-[55%] min-h-[300px] bg-[#0c0d15] border-l border-border-dark/50">
+<div class="absolute inset-0 bg-cover bg-center opacity-70 mix-blend-screen" data-alt="Abstract glowing tree map visualization showing hierarchical ticket categorization data" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAEFEvBpy3_OBpI9W4dfujKm5efP3w2s_-DeRa24gZtS4rDSbFjaDqOXpgjFzafqRY3l8edkQmYrb1vnHVG3dP4FQ3KACRQGD10Jw5-nq4ul4BcUjVoGL71EAl4dM9G6o9zxnAlyLv1EzgHnRe9rMDcpV1ZncVvcY7mOi-rcWCb3LIpzhtfSs0iCs63h_hejOAM4WzUhqB9M3JIQSIC2EAR6R5_UmuMEWacsyyNdKAlEaYOlhdw5s065E8OSkYKHNh3si4uMvCpTd98'); filter: hue-rotate(30deg);">
+</div>
+<div class="absolute inset-0 bg-gradient-to-l from-card-dark via-transparent to-transparent"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2">
+<div class="flex h-full flex-col justify-between overflow-hidden rounded-xl bg-card-dark cyber-border hover:border-primary/30 transition-colors">
+<div class="p-6 md:p-8 flex flex-col h-full">
+<div class="flex flex-col gap-4 mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl">hub</span>
+<h3 class="text-white text-xl font-bold leading-tight">Open Ticket Automation Core</h3>
+</div>
+<p class="text-text-muted text-sm font-normal leading-relaxed">
+                                    The renamed core engine. A secure API gateway that routes tickets between your helpdesk (Znuny/OTOBO) and our AI models. Built for high-throughput environments.
+                                </p>
+</div>
+<div class="w-full aspect-[2/1] rounded-lg bg-[#0c0d15] overflow-hidden relative mb-6 border border-white/5">
+<div class="absolute inset-0 bg-cover bg-center opacity-80" data-alt="Technical flowchart diagram showing data pipes connecting servers in a neon style" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBU6S0unD1vSW_Fup-js39D39cDehrhP2uGmKjxF_HTez1U3l5q9J1KiiOUliuUY7Ml0DNuiAGCVfsdxq6U4sQFipe518W1UmqF0Fk0IG9x-mK1r8HK-hkavUzImyaAIv2cAetRQpSHBFCy-4X6IYeB5HXGCYmwE8DuCJbqO_bin-705SEQ-AmVjWYb5hjHVJvUxfHj3ByU4ugR_jtV1e7sm1x8OjJQVKrksFaqRB6hgacDC3UZ-1jybWn-xsQ0to2LhADvt4hVnh7n'); filter: hue-rotate(20deg);">
+</div>
+</div>
+<div class="mt-auto">
+<button class="group flex w-fit cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-9 px-4 bg-[#1e1e30] hover:bg-[#2d2d48] border border-border-dark/50 text-white text-sm font-medium transition-all">
+<span class="material-symbols-outlined text-[18px]">file_open</span>
+<span class="truncate">View Integration Docs</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-1">
+<div class="flex h-full flex-col justify-between overflow-hidden rounded-xl bg-card-dark cyber-border hover:border-primary/30 transition-colors">
+<div class="p-6 md:p-8 flex flex-col h-full">
+<div class="flex flex-col gap-4">
+<div class="w-fit rounded-md bg-pink-500/10 px-2 py-1 ring-1 ring-inset ring-pink-500/20">
+<p class="text-pink-400 text-xs font-medium uppercase tracking-wider">In Development</p>
+</div>
+<h3 class="text-white text-xl font-bold leading-tight">Synthetic Data Generator</h3>
+<div class="w-full h-32 rounded-lg bg-[#0c0d15] overflow-hidden relative border border-white/5 my-2">
+<div class="absolute inset-0 bg-cover bg-center opacity-60" data-alt="Abstract digital matrix of synthetic data points glowing in dark space" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCn08l6uoot-KKEsTiU4H8IuOSIdm1YO-SDDEN-7_Y9G4i4QLZOlQ-jgR8Zu9oXd9psyAgnerUc7W26gc-semxTjw2Td0mzZos2hDE1givEV2GtLcUVkVn3t90Rksw89pR5vREtbZbweebu4UWP1tVn1HNfRA9imA1nVsZR32hd5b3ItBtIp6wVkQ1xic_nyptq7DS00TVd3M6J0kqpaYS_s0IZfRkDLW7q6bQiD3skgrVLMEDA13h8LEt2lhV7L4Wa5M4YQEhcH4vi'); filter: hue-rotate(45deg);">
+</div>
+</div>
+<p class="text-text-muted text-sm font-normal leading-relaxed">
+                                    Generate privacy-compliant datasets to train your models without using real customer data. Perfect for staging environments.
+                                </p>
+</div>
+<div class="mt-6">
+<button class="group flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-lg h-9 px-4 bg-transparent border border-border-dark hover:border-primary/50 text-white text-sm font-medium transition-all">
+<span class="truncate">Learn More</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="border-t border-border-dark bg-[#030308] py-12 px-10">
+<div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="size-6 text-primary opacity-50">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<span class="text-slate-500 text-sm">© 2023 Open Ticket AI. Engineered in Germany.</span>
+</div>
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-primary transition-colors text-sm" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-sm" href="#">Terms of Service</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-sm" href="#">Security</a>
+</div>
+</div>
+</footer>
+</div>
+
+</body></html>

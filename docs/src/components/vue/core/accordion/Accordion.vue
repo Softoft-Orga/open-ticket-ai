@@ -1,8 +1,8 @@
 <template>
   <div class="divide-y divide-vp-border">
-    <AccordionItem 
-      v-for="(it, i) in items" 
-      :key="i" 
+    <AccordionItem
+      v-for="(it, i) in items"
+      :key="i"
       :title="it.title"
       :default-open="it.defaultOpen || false"
       :is-open="isItemOpen(i)"
@@ -53,7 +53,7 @@ const isItemOpen = (index: number): boolean => {
 
 const handleToggle = (index: number) => {
   const newOpenItems = new Set(openItems.value)
-  
+
   if (newOpenItems.has(index)) {
     newOpenItems.delete(index)
   } else {
@@ -62,7 +62,7 @@ const handleToggle = (index: number) => {
     }
     newOpenItems.add(index)
   }
-  
+
   openItems.value = newOpenItems
   emit('update:modelValue', Array.from(newOpenItems))
 }
