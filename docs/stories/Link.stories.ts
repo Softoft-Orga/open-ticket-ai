@@ -31,7 +31,9 @@ export const Internal: Story = {
         },
         template: '<Link v-bind="args">Internal Documentation Link</Link>'
     }),
-    args: {to: '/docs/'}
+    args: {
+        to: '/docs/'
+    }
 }
 
 export const External: Story = {

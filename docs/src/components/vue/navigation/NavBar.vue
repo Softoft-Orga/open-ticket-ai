@@ -1,155 +1,92 @@
 <template>
-  <nav class="border-b border-slate-800 bg-slate-950/80 backdrop-blur text-slate-200 sticky top-0 z-50">
+  <nav class="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur text-slate-200">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
-        <!-- Brand/Logo -->
+        <!-- Brand / Logo -->
         <div class="flex items-center gap-3">
-          <a 
-            :href="withLocale(brand.href || '/')" 
-            class="flex items-center gap-3 hover:opacity-80 transition-opacity"
-          >
+          <a :href="withLocale('/')" class="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded">
             <img 
               v-if="brand.logoSrc" 
               :alt="brand.name + ' logo'" 
               :src="brand.logoSrc"
               class="h-8 w-8 rounded-xl"
             />
-            <span class="font-semibold text-lg text-slate-100">{{ brand.name }}</span>
+            <div v-if="brand.showName !== false">
+              <p class="font-semibold leading-tight text-slate-100">{{ brand.name }}</p>
+              <p v-if="brand.tagline" class="text-xs text-slate-400 leading-tight">{{ brand.tagline }}</p>
+            </div>
           </a>
         </div>
 
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex md:items-center md:gap-8">
-          <nav v-if="navLinks.length > 0" aria-label="Main navigation" class="flex items-center gap-6">
-            <a
-              v-for="link in navLinks"
-              :key="link.label"
-              :href="withLocale(link.href)"
-              class="text-sm text-slate-300 hover:text-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded px-1 transition-colors"
-            >
-              {{ link.label }}
-            </a>
-          </nav>
-
-          <!-- CTA Button -->
-          <a
-            v-if="ctaButton"
-            :href="withLocale(ctaButton.href)"
-            class="inline-flex items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition-colors"
-          >
-            {{ ctaButton.label }}
-          </a>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <button
-          class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-slate-100 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-          :aria-expanded="mobileMenuOpen"
-          aria-label="Toggle navigation menu"
-          @click="mobileMenuOpen = !mobileMenuOpen"
-        >
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path 
-              v-if="!mobileMenuOpen"
-              stroke-linecap="round" 
-              stroke-linejoin="round" 
-              stroke-width="2" 
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-            <path 
-              v-else
-              stroke-linecap="round" 
-              stroke-linejoin="round" 
-              stroke-width="2" 
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Mobile Menu -->
-      <div 
-        v-if="mobileMenuOpen"
-        class="md:hidden border-t border-slate-800 py-4"
-      >
-        <nav class="flex flex-col gap-3">
+        <!-- Navigation Links -->
+        <div v-if="navLinks.length > 0" class="hidden md:flex items-center gap-1">
           <a
             v-for="link in navLinks"
             :key="link.label"
             :href="withLocale(link.href)"
-            class="text-sm text-slate-300 hover:text-slate-100 px-3 py-2 rounded hover:bg-slate-800 transition-colors"
-            @click="mobileMenuOpen = false"
+            :aria-label="link.label"
+            class="px-3 py-2 text-sm text-slate-300 hover:text-slate-100 hover:bg-slate-900 rounded-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
           >
             {{ link.label }}
           </a>
+        </div>
+
+        <!-- CTA Button -->
+        <div v-if="cta" class="flex items-center gap-2">
           <a
-            v-if="ctaButton"
-            :href="withLocale(ctaButton.href)"
-            class="inline-flex items-center justify-center px-4 py-2 mt-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition-colors"
-            @click="mobileMenuOpen = false"
+            :href="withLocale(cta.href)"
+            :aria-label="cta.label"
+            class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
           >
-            {{ ctaButton.label }}
+            {{ cta.label }}
           </a>
-        </nav>
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
 <script lang="ts" setup>
-import {ref, computed} from 'vue'
+import {computed} from 'vue'
+import {useI18n} from 'vue-i18n'
 
 interface LinkItem {
   label: string
   href: string
 }
 
-interface BrandConfig {
-  name?: string
-  logoSrc?: string | null
-  href?: string
-}
-
-interface CtaButton {
-  label: string
-  href: string
-}
-
 interface Props {
-  brand?: BrandConfig
+  brand?: {
+    name?: string
+    tagline?: string
+    logoSrc?: string | null
+    showName?: boolean
+  }
   links?: LinkItem[]
-  ctaButton?: CtaButton | null
-  locale?: string
+  cta?: LinkItem | null
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  brand: () => ({name: 'Open Ticket AI', logoSrc: null, href: '/'}),
-  links: () => [],
-  ctaButton: null,
-  locale: 'en'
-})
+const props = defineProps<Props>()
 
-const mobileMenuOpen = ref(false)
+const {locale} = useI18n()
+const langCode = computed(() => locale.value.split('-')[0])
 
 const brand = computed(() => ({
   name: 'Open Ticket AI',
+  tagline: null,
   logoSrc: null,
-  href: '/',
+  showName: true,
   ...(props.brand ?? {})
 }))
 
-const navLinks = computed(() => 
-  props.links ?? [
-    {label: 'Documentation', href: '/docs/'},
-    {label: 'Demo', href: '/demo/'},
-    {label: 'Pricing', href: '/pricing/'},
-    {label: 'About', href: '/about/'}
-  ]
-)
+const defaultLinks: LinkItem[] = [
+  {label: 'Documentation', href: '/docs/'},
+  {label: 'Demo', href: '/demo/'},
+  {label: 'Pricing', href: '/pricing/'},
+  {label: 'About', href: '/about/'},
+]
 
-const langCode = computed(() => props.locale.split('-')[0])
+const navLinks = computed(() => props.links ?? defaultLinks)
 
-function withLocale(path: string) {
-  return `/${langCode.value}${path}`.replace('//', '/')
-}
+const withLocale = (path: string) => `/${langCode.value}${path}`.replace('//', '/')
 </script>

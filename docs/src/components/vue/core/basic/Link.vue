@@ -1,9 +1,12 @@
 <template>
   <a 
     :href="href"
-    :target="target"
-    :rel="rel"
-    class="text-blue-400 hover:text-blue-300 transition-colors"
+    :target="computedTarget"
+    :rel="computedRel"
+    :class="[
+      'text-vp-brand hover:text-vp-brand-dark underline-offset-2',
+      underline ? 'underline' : 'hover:underline'
+    ]"
   >
     <slot/>
   </a>
@@ -11,6 +14,7 @@
 
 <script lang="ts" setup>
 import {computed} from 'vue'
+import {useData} from 'vitepress'
 
 interface Props {
   to?: string
@@ -18,33 +22,37 @@ interface Props {
   external?: boolean
   target?: string
   rel?: string
+  underline?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  external: false
+  underline: false
 })
 
+const {lang} = useData()
+
 const href = computed(() => {
-  if (props.href) {
-    return props.href
-  }
+  if (props.href) return props.href
   if (props.to) {
-    return props.to
+    if (props.external || props.to.startsWith('http')) {
+      return props.to
+    }
+    return `/${lang.value}${props.to}`
   }
   return '#'
 })
 
-const target = computed(() => {
-  if (props.target) return props.target
-  if (props.external) return '_blank'
-  return undefined
+const isExternal = computed(() => {
+  return props.external || (typeof props.href === 'string' && props.href.startsWith('http')) || (typeof props.to === 'string' && props.to.startsWith('http'))
 })
 
-const rel = computed(() => {
+const computedTarget = computed(() => {
+  if (props.target) return props.target
+  return isExternal.value ? '_blank' : undefined
+})
+
+const computedRel = computed(() => {
   if (props.rel) return props.rel
-  if (props.external || props.target === '_blank') {
-    return 'noopener noreferrer'
-  }
-  return undefined
+  return isExternal.value ? 'noopener noreferrer' : undefined
 })
 </script>
