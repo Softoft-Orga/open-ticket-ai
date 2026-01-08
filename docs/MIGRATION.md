@@ -163,7 +163,6 @@ Files like `_config_rendering.md` are included but Starlight convention uses und
 - `/docs/src/content/config.ts` - Content collections config
 - `/docs/src/components/Head.astro` - Custom head component for analytics
 - `/docs/src/styles/custom.css` - Custom styles
-- `/docs/remark-vitepress-containers.mjs` - Plugin to convert VitePress containers
 
 ## Files Modified
 
@@ -179,7 +178,7 @@ Files like `_config_rendering.md` are included but Starlight convention uses und
 - [x] Fix YAML frontmatter syntax
 - [x] Configure sidebar navigation
 - [x] Add Mermaid support
-- [x] Add VitePress container conversion
+- [x] Convert VitePress containers manually
 - [x] Integrate Pagefind search
 - [x] Update netlify.toml
 - [x] Add .gitignore entries
