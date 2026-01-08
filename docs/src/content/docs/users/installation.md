@@ -351,7 +351,7 @@ If you encounter issues:
 
 1. Check the logs: `docker compose logs -f`
 2. Verify your configuration file syntax
-3. Review the [Configuration Reference](../details/_config_reference.md)
+3. Review the [Configuration Reference](../details/config_reference.md)
 4. Visit our [GitHub Issues](https://github.com/Softoft-Orga/open-ticket-ai/issues)
 5. Join our community discussions
 
@@ -368,5 +368,5 @@ After installation:
 
 - [Quick Start Guide](quick_start.md) - Get started quickly
 - [First Pipeline](first_pipeline.md) - Create your first automation
-- [Configuration Reference](../details/_config_reference.md) - Complete config documentation
+- [Configuration Reference](../details/config_reference.md) - Complete config documentation
 - [Plugin System](../users/plugins.md) - Understanding plugins
