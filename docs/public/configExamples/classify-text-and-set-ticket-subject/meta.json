@@ -1,0 +1,12 @@
+{
+  "name": "Classify Text and Set Ticket Subject",
+  "md_description": "Classifies text with a local HF model and sets the ticket subject to <LABEL>;<SCORE>.",
+  "md_details": "Classifies a fixed text via HF local model and updates the ticket subject to the predicted label and confidence.\n\nComponents:\n- Pipes: base:ClassificationPipe -> base:UpdateTicketPipe\n- Injects: classification_service: hf_local, ticket_system: otobo_znuny\n\nNotes:\n- Subject format: <LABEL>;<SCORE> where SCORE is 0–1",
+  "tags": [
+    "basic",
+    "simple-ai",
+    "simple-ticket-system"
+  ],
+  "slug": "classify-text-and-set-ticket-subject",
+  "path": "/configExamples/classify-text-and-set-ticket-subject/config.yml"
+}

@@ -1,0 +1,55 @@
+@startuml
+
+interface AIClient {
+  +generate_text(prompt: str): str
+}
+
+class MockAIClient {
+  +generate_text(prompt: str): str
+}
+
+class DocstringGenerator {
+  - ai_client: AIClient
+  - source_dir: str
+  + run(): void
+}
+
+class MarkdownConverter {
+  - source_dir: str
+  - output_dir: str
+  + run(): void
+}
+
+class AIGenerator {
+  - ai_client: AIClient
+  - base_path: str
+  + run(tasks: list): void
+  - _generate_single_file(task: dict): void
+}
+
+class Translator {
+  - ai_client: AIClient
+  - source_lang_dir: str
+  - target_langs: list
+  + run(): void
+  - _translate_file(file_path, target_lang): void
+}
+
+class DocumentationOrchestrator {
+  - version: str
+  - config: dict
+  + run(): void
+}
+
+AIClient <|.. MockAIClient
+DocumentationOrchestrator ..> AIClient : uses
+DocumentationOrchestrator ..> DocstringGenerator : creates & uses
+DocumentationOrchestrator ..> MarkdownConverter : creates & uses
+DocumentationOrchestrator ..> AIGenerator : creates & uses
+DocumentationOrchestrator ..> Translator : creates & uses
+
+DocstringGenerator o-- AIClient
+AIGenerator o-- AIClient
+Translator o-- AIClient
+
+@enduml

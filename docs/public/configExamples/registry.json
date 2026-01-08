@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Update Ticket Subject",
+    "md_description": "Updates the subject of a ticket using a single UpdateTicketPipe.",
+    "md_details": "A minimal workflow that updates the subject of a specific OTOBO/Znuny ticket.\n\nThe runner executes one pipe: `base:UpdateTicketPipe`, using the configured ticket ID and new subject value.",
+    "tags": [
+      "basic",
+      "simple-ticket-system"
+    ],
+    "slug": "update-ticket-subject",
+    "path": "/configExamples/update-ticket-subject/config.yml"
+  },
+  {
+    "name": "Fetch AddNote",
+    "md_description": "Fetches one ticket and adds a simple note.",
+    "md_details": "Minimal queue-processing workflow for OTOBO/Znuny.\n\nThe runner fetches exactly one ticket from the monitored queue, adds a fixed acknowledgment note, and moves the ticket to the cleanup queue. Useful as a basic example of sequential pipes and simple ticket mutations.",
+    "tags": [
+      "basic",
+      "simple-ticket-system"
+    ],
+    "slug": "fetch-addnote",
+    "path": "/configExamples/fetch-addnote/config.yml"
+  },
+  {
+    "name": "Classify Text and Set Ticket Subject",
+    "md_description": "Classifies text with a local HF model and sets the ticket subject to <LABEL>;<SCORE>.",
+    "md_details": "Classifies a fixed text via HF local model and updates the ticket subject to the predicted label and confidence.\n\nComponents:\n- Pipes: base:ClassificationPipe -> base:UpdateTicketPipe\n- Injects: classification_service: hf_local, ticket_system: otobo_znuny\n\nNotes:\n- Subject format: <LABEL>;<SCORE> where SCORE is 0–1",
+    "tags": [
+      "basic",
+      "simple-ai",
+      "simple-ticket-system"
+    ],
+    "slug": "classify-text-and-set-ticket-subject",
+    "path": "/configExamples/classify-text-and-set-ticket-subject/config.yml"
+  },
+  {
+    "name": "Queue Priority",
+    "md_description": "Classifies queue and priority for a German ticket.",
+    "md_details": "Classifies a German ticket text using HF models to predict queue and priority, then updates the ticket.\n\nComponents:\n- Orchestrator: SimpleSequential with interval trigger\n- Injects: classification_service: hf_local, ticket_system: otobo_znuny\n- Pipes:\n  1. base:ClassificationPipe with model softoft/otai-queue-de-bert-v1\n  2. base:ClassificationPipe with model softoft/otai-priority-de-bert-v1\n  3. base:UpdateTicketPipe applying predicted queue and priority",
+    "tags": [
+      "simple-ai",
+      "simple-ticket-system"
+    ],
+    "slug": "queue-priority",
+    "path": "/configExamples/queue-priority/config.yml"
+  }
+]

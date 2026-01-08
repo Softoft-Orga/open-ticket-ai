@@ -1,0 +1,76 @@
+@startuml
+skinparam componentStyle rectangle
+allow_mixing
+
+package "Core" as Core {
+  class DIContainer {
+    + get_pipeline(config): Pipeline
+    + get_instance(id, type): T
+  }
+
+  class Orchestrator {
+    + setup_and_run()
+  }
+
+  class Scheduler
+  Orchestrator o-- Scheduler : manages
+
+  class PipelineContext {
+    + ticket_id: str
+    + data: map
+  }
+
+  interface Pipe {
+    + process(context: PipelineContext): PipelineContext
+  }
+
+  class Pipeline implements Pipe {
+    - pipes: Pipe[]
+    + execute(context: PipelineContext): PipelineContext
+  }
+
+  Pipeline *-- "1..n" Pipe
+  Orchestrator *-- "n" Pipeline : manages
+  Pipeline ..> PipelineContext
+}
+
+package "Integration" as Integration {
+  interface TicketSystemAdapter {
+    + fetch(...)
+    + update(...)
+  }
+  class OTOBOAdapter implements TicketSystemAdapter
+}
+
+package "Concrete Pipes" as ConcretePipes {
+
+  package "FetcherPipes" as FetcherPipes {
+    class BasicTicketFetcher
+    BasicTicketFetcher .up.|> Pipe
+    BasicTicketFetcher ..> TicketSystemAdapter : uses
+  }
+
+  package "DataPreparerPipes" as DataPreparerPipes {
+    class SubjectBodyPreparer
+    class SetFieldFromModelOutput
+    SubjectBodyPreparer .up.|> Pipe
+    SetFieldFromModelOutput .up.|> Pipe
+  }
+
+  package "AIModelPipes" as AIModelPipes {
+    class HFAIInferenceService
+    HFAIInferenceService .up.|> Pipe
+  }
+
+  package "ModifierPipes (Sinks)" as ModifierPipes {
+    class GenericTicketUpdater
+    GenericTicketUpdater .up.|> Pipe
+    GenericTicketUpdater ..> TicketSystemAdapter : uses
+  }
+}
+
+DIContainer --> ConcretePipes : "creates & injects"
+DIContainer --> Integration : "creates & injects"
+Orchestrator ..> DIContainer : "uses"
+
+@enduml
