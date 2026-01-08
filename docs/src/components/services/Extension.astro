@@ -1,0 +1,61 @@
+---
+export interface Props {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+const { icon, title, desc } = Astro.props;
+
+// Map icon names to emoji/unicode symbols as fallback
+const iconMap: Record<string, string> = {
+  'tune': '⚙️',
+  'analytics': '📊',
+  'integration_instructions': '🔧',
+  'update': '🔄',
+};
+---
+
+<style>
+  .extension-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .extension-icon {
+    display: flex;
+    height: 3rem;
+    width: 3rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    background-color: rgba(100, 108, 255, 0.1);
+    color: var(--primary);
+    font-size: 1.5rem;
+  }
+  
+  .extension-content h4 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+  
+  .extension-content p {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+</style>
+
+<div class="extension-container">
+  <div class="extension-icon">
+    <span>{iconMap[icon] || '✨'}</span>
+  </div>
+  <div class="extension-content">
+    <h4>{title}</h4>
+    <p>{desc}</p>
+  </div>
+</div>
