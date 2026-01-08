@@ -28,7 +28,7 @@
 
 <script lang="ts" setup>
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, watch} from 'vue'
-import {useConfigExamplesRegistry} from '../../composables/useConfigExamplesRegistry'
+import {useConfigExamplesRegistry} from '../../../composables/useConfigExamplesRegistry'
 import TagFilter from './TagFilter.vue'
 import SearchBox from './SearchBox.vue'
 import ExampleGrid from './ExampleGrid.vue'

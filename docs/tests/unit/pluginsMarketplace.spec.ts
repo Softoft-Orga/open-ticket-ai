@@ -7,12 +7,12 @@ import {
   mapPyPIPackage,
   mergePluginData,
   sortPlugins,
-} from "../../.vitepress/components/marketplace/pluginUtils";
+} from "../../src/components/vue/marketplace/pluginUtils";
 import type {
   LibrariesIoResult,
   Plugin,
   PyPIResponse,
-} from "../../.vitepress/components/marketplace/pluginModels";
+} from "../../src/components/vue/marketplace/pluginModels";
 
 describe("plugin mapping", () => {
   it("maps Libraries.io packages with fallbacks", () => {

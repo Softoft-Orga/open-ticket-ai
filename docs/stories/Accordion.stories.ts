@@ -1,4 +1,4 @@
-import Accordion from '../.vitepress/components/core/accordion/Accordion.vue'
+import Accordion from '../src/components/vue/core/accordion/Accordion.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof Accordion> = {

@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/vue3'
-import SelectComponent from '../.vitepress/components/core/forms/SelectComponent.vue' // Adjust path if needed
+import SelectComponent from '../src/components/vue/core/forms/SelectComponent.vue' // Adjust path if needed
 
 /**
  * A modern, accessible select component built with Headless UI and Tailwind CSS.

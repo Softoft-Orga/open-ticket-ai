@@ -1,4 +1,4 @@
-import ProductCards from '../.vitepress/components/product/ProductCards.vue'
+import ProductCards from '../src/components/vue/product/ProductCards.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof ProductCards> = {

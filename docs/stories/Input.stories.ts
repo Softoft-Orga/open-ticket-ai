@@ -1,5 +1,5 @@
 // Input.stories.ts
-import TextField from '../.vitepress/components/core/forms/TextField.vue'
+import TextField from '../src/components/vue/core/forms/TextField.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof TextField> = {

@@ -111,7 +111,7 @@
 import {ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useElementVisibility} from '@vueuse/core'
-import {useTicketFlow} from '../../composables/useTicketFlow'
+import {useTicketFlow} from '../../../composables/useTicketFlow'
 
 const {t} = useI18n()
 const svgEl = ref<SVGSVGElement | null>(null)

@@ -1,5 +1,5 @@
 <script lang='ts' setup>
-import {useYamlTagTree} from '../../composables/useYamlTagTree'
+import {useYamlTagTree} from '../../../composables/useYamlTagTree'
 import TagNode from './TagNode.vue'
 
 const {source} = defineProps<{
