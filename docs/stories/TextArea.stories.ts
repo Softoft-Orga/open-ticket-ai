@@ -1,5 +1,5 @@
 // TextArea.stories.ts
-import TextArea from '../.vitepress/components/core/forms/TextArea.vue'
+import TextArea from '../src/components/vue/core/forms/TextArea.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof TextArea> = {

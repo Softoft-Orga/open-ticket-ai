@@ -149,7 +149,7 @@ These sidecars are consumed by:
 ### Loading Sidecars in Vue Components
 
 ```typescript
-import { useSidecars } from '@/.vitepress/composables/useSidecars'
+import { useSidecars } from '@/src/composables/useSidecars'
 
 const { getSidecar, filterByType, filterByCategory } = useSidecars()
 
@@ -190,7 +190,7 @@ If a component is moved or renamed:
 For detailed information about the sidecar schema, see:
 
 - `pipes/sidecar_pipe_schema.yml` - Schema for pipe sidecars
-- `docs/.vitepress/components/pipe/pipeSidecar.types.ts` - TypeScript interface definitions
+- `docs/src/components/vue/pipe/pipeSidecar.types.ts` - TypeScript interface definitions
 
 ## Current Inventory
 

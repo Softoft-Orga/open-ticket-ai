@@ -1,4 +1,4 @@
-import Badge from '../.vitepress/components/core/basic/Badge.vue'
+import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof Badge> = {

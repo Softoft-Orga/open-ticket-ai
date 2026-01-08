@@ -1,4 +1,4 @@
-import Card from '../.vitepress/components/core/basic/Card.vue'
+import Card from '../src/components/vue/core/basic/Card.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof Card> = {
