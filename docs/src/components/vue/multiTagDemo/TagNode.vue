@@ -1,5 +1,5 @@
 <script lang='ts' setup>
-import type {TagNode} from '../../composables/useYamlTagTree'
+import type {TagNode} from '../../../composables/useYamlTagTree'
 
 const props = defineProps<{
     node: TagNode

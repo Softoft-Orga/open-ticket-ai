@@ -25,7 +25,7 @@ import {computed} from 'vue'
 import MarkdownFromString from './MarkdownFromString.vue'
 import TagBadges from './TagBadges.vue'
 import ExampleViewer from './ExampleViewer.vue'
-import {useConfigExamplesRegistry} from '../../composables/useConfigExamplesRegistry'
+import {useConfigExamplesRegistry} from '../../../composables/useConfigExamplesRegistry'
 
 const props = defineProps<{ slug: string }>()
 

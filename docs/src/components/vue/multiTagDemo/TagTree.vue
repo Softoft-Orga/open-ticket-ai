@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import YamlTree from './YamlTree.vue'
 import tagYaml from './tags.yml?raw'
-import { useYamlTagTree, type TagNode } from '../../composables/useYamlTagTree'
+import { useYamlTagTree, type TagNode } from '../../../composables/useYamlTagTree'
 
 const detailsRef = ref<HTMLDetailsElement | null>(null)
 const { tree } = useYamlTagTree(tagYaml)

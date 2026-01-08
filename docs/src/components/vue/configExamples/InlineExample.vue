@@ -26,7 +26,7 @@ import {computed} from 'vue'
 import Card from '../core/basic/Card.vue'
 import MarkdownFromString from './MarkdownFromString.vue'
 import ExampleViewer from './ExampleViewer.vue'
-import {useConfigExamplesRegistry} from '../../composables/useConfigExamplesRegistry'
+import {useConfigExamplesRegistry} from '../../../composables/useConfigExamplesRegistry'
 
 const props = defineProps<{ slug: string }>()
 
