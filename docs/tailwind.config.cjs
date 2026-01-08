@@ -19,7 +19,6 @@ module.exports = {
                 'primary': '#646cff',
                 'primary-light': '#747bff',
                 'text-dim': '#94a3b8',
-            }
             },
             borderRadius: {
                 'xl': '1rem',
