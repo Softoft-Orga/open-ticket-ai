@@ -89,6 +89,7 @@ This document describes the migration of the Open Ticket AI documentation from V
 ```bash
 cd docs
 npm install
+npx playwright install --with-deps chromium  # Required for Mermaid diagram rendering
 npm run docs:dev
 ```
 Visit http://localhost:4321/ (or 4322 if 4321 is in use)
@@ -96,6 +97,8 @@ Visit http://localhost:4321/ (or 4322 if 4321 is in use)
 ### Build for Production
 ```bash
 cd docs
+npm install
+npx playwright install --with-deps chromium  # Required for Mermaid diagram rendering
 npm run docs:build
 ```
 Output: `docs/dist/`
@@ -114,9 +117,16 @@ npm run docs:preview
 - `@astrojs/mdx` (^4.3.13)
 - `sharp` (^0.34.5) - Image optimization
 - `pagefind` (^1.4.0) - Search
-- `rehype-mermaid` - Mermaid diagram support
-- `remark-directive` - Custom directive support
-- `unist-util-visit` - AST traversal for plugins
+- `rehype-mermaid` (^3.0.0) - Mermaid diagram support (requires Playwright)
+- `playwright` (^1.53.2) - Browser automation for Mermaid rendering
+- `remark-directive` (^4.0.0) - Custom directive support
+- `unist-util-visit` (^5.0.0) - AST traversal for plugins
+
+### Build Requirements
+- **Playwright Browsers**: Required for Mermaid diagram rendering
+  - Install with: `npx playwright install --with-deps chromium`
+  - rehype-mermaid uses Playwright to render Mermaid diagrams as SVG at build time
+  - Without this, builds will fail with "Executable doesn't exist" errors
 
 ### Kept (for Storybook)
 - VitePress and Vue dependencies remain for Storybook components
