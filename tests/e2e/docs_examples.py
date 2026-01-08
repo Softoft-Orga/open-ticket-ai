@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field, model_validator
 
 # IDEA: Also report the version the config was tested with
 
-DOCS_DIR = "docs/docs_src/public/configExamples"
+DOCS_DIR = "docs/public/configExamples"
 SRC_TEMPLATES = "src/data/configExamples"
 
 def _slugify(s: str) -> str:
@@ -36,7 +36,7 @@ class OTAIConfigExampleMetaInfo(BaseModel):
 
 
 def save_example(config: BaseModel, meta: OTAIConfigExampleMetaInfo,
-    out_dir: str = "docs/docs_src/public/configExamples") -> Path:
+    out_dir: str = "docs/public/configExamples") -> Path:
     slug = _slugify(meta.name)
     base = Path(out_dir) / slug
     base.mkdir(parents=True, exist_ok=True)

@@ -39,13 +39,13 @@ Fill in:
 
 ### Generate a secure password
 
-::: code-group
+:::code-group
 
-```bash [Linux/macOS]
+```bash title="Linux/macOS"
 openssl rand -base64 32 | cut -c1-16
-````
+```
 
-```powershell [Windows]
+```powershell title="Windows"
 # PowerShell
 -join ((33..126) | Get-Random -Count 16 | ForEach-Object {[char]$_})
 ```

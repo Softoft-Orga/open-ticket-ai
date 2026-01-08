@@ -18,7 +18,7 @@ This document describes the migration of the Open Ticket AI documentation from V
 - Output directory changed from `.vitepress/dist` to `dist`
 
 ### Content Structure
-- Content moved from `docs_src/en/` to `src/content/docs/`
+- Content moved from legacy VitePress docs to `src/content/docs/`
 - All markdown files now require a `title` field in frontmatter (Starlight requirement)
 - VitePress-specific frontmatter fields removed:
   - `layout: "page"` → removed (not supported in Astro 5)
@@ -148,15 +148,10 @@ URLs no longer include the `/en/` language prefix. This is a breaking change for
 
 **Mitigation**: Netlify redirects can be added to netlify.toml to redirect old URLs
 
-### 3. Duplicate ID Warnings
-Build shows warnings about duplicate IDs for some files. This is harmless (files exist in both docs_src and src/content/docs during transition).
-
-**Solution**: Remove docs_src/en/ content after migration is complete
-
-### 4. Code Group Syntax
+### 3. Code Group Syntax
 VitePress code groups (`::: code-group`) need manual conversion to Starlight syntax
 
-### 5. Files Starting with Underscore
+### 4. Files Starting with Underscore
 Files like `_config_rendering.md` are included but Starlight convention uses underscore for draft/unlisted pages.
 
 **Recommendation**: Rename or decide if these should be hidden
@@ -192,14 +187,14 @@ Files like `_config_rendering.md` are included but Starlight convention uses und
 - [x] Remove VitePress-specific frontmatter fields
 - [ ] Convert Vue components to Astro (future work)
 - [ ] Test all internal links
-- [ ] Remove docs_src/en/ after verifying migration
+- [x] Remove legacy VitePress docs after verifying migration
 
 ## Rollback Plan
 
 If needed, rollback involves:
 1. Revert changes to package.json, netlify.toml
 2. Delete src/ directory
-3. VitePress files remain intact in docs_src/
+3. Legacy VitePress files are no longer present in the repository
 
 ## Resources
 

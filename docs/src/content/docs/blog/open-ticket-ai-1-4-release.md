@@ -127,9 +127,9 @@ docker compose up -d
 
 For local development or custom deployments:
 
-::: code-group
+:::code-group
 
-```bash [uv (Recommended)]
+```bash title="uv (Recommended)"
 # Install uv package manager
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
@@ -141,7 +141,7 @@ uv pip install open-ticket-ai
 uv pip install otai-otobo-znuny otai-hf-local
 ```
 
-```bash [pip]
+```bash title="pip"
 # Install Open Ticket AI with all plugins
 pip install open-ticket-ai[all]
 
@@ -194,4 +194,3 @@ Start building now, and your plugin will be ready when the marketplace launches!
 
 Open Ticket AI 1.4 is production-ready, extensible, and built for the future. Install it today,
 automate your workflows, and join the growing plugin ecosystem!
-

@@ -86,7 +86,7 @@ params:
 ---
 
 **Related:
-** [Template Rendering](../details/_template_rendering.md) · [Dependency Injection](../developers/dependency_injection.md)
+** [Template Rendering](../details/template_rendering.md) · [Dependency Injection](../developers/dependency_injection.md)
 
 ## Config Reference
 
