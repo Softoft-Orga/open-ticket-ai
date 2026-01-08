@@ -3,7 +3,6 @@ title: Ticket Automation Planner — Pick Your Best Path
 description: "Plan your ticket automation project. Choose the right path based on\
   \ your data\u2014labeled, unlabeled, or none\u2014for fast training, deployment,\
   \ and support."
-pageClass: full-page
 ---
 # Ticket Automation Planner — Pick Your Best Path
 
