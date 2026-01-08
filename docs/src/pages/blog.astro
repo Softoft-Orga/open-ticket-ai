@@ -99,11 +99,14 @@ const pageDescription = "Latest updates, insights, and news about Open Ticket AI
         <!-- Sidebar -->
         <aside class="w-full lg:w-80 flex-shrink-0 space-y-12">
           <div class="relative">
+            <label for="search-articles" class="sr-only">Search articles</label>
             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-dim">search</span>
             <input 
+              id="search-articles"
               class="block w-full rounded-xl border border-surface-lighter bg-surface-dark py-4 pl-12 pr-4 text-sm text-white placeholder-text-dim focus:border-primary focus:ring-primary transition-all shadow-sm" 
               placeholder="Search articles..." 
-              type="text" 
+              type="text"
+              aria-label="Search articles"
             />
           </div>
           
@@ -125,7 +128,15 @@ const pageDescription = "Latest updates, insights, and news about Open Ticket AI
             <h3 class="mb-3 font-display text-xl font-bold text-white">Stay in the loop</h3>
             <p class="mb-6 text-sm text-text-dim">Get the latest on AI automation and engineering straight to your inbox.</p>
             <form class="space-y-4">
-              <input class="w-full rounded-xl border border-surface-lighter bg-background-dark px-4 py-3 text-sm text-white placeholder-text-dim focus:border-primary" placeholder="work@email.com" type="email"/>
+              <label for="newsletter-email" class="sr-only">Email address</label>
+              <input 
+                id="newsletter-email"
+                class="w-full rounded-xl border border-surface-lighter bg-background-dark px-4 py-3 text-sm text-white placeholder-text-dim focus:border-primary" 
+                placeholder="work@email.com" 
+                type="email"
+                aria-label="Email address for newsletter"
+                required
+              />
               <button type="submit" class="w-full rounded-xl bg-white py-3 text-sm font-bold text-background-dark transition-colors hover:bg-gray-200">
                 Subscribe
               </button>
@@ -138,8 +149,8 @@ const pageDescription = "Latest updates, insights, and news about Open Ticket AI
           <div class="mb-12 flex items-end justify-between border-b border-surface-lighter pb-6">
             <h2 class="font-display text-3xl font-bold text-white">Latest Articles</h2>
             <div class="flex items-center gap-2">
-              <span class="text-sm text-text-dim">Sort by:</span>
-              <select class="rounded border-none bg-transparent py-0 pl-2 pr-10 text-sm font-medium text-white focus:ring-0 cursor-pointer">
+              <label for="sort-select" class="text-sm text-text-dim">Sort by:</label>
+              <select id="sort-select" aria-label="Sort articles by" class="rounded border-none bg-transparent py-0 pl-2 pr-10 text-sm font-medium text-white focus:ring-0 cursor-pointer">
                 <option>Newest First</option>
                 <option>Oldest First</option>
                 <option>Most Popular</option>
@@ -380,6 +391,17 @@ const pageDescription = "Latest updates, insights, and news about Open Ticket AI
     .bg-teal-500\/10 { background-color: rgb(20 184 166 / 0.1); }
     .bg-indigo-500\/10 { background-color: rgb(99 102 241 / 0.1); }
     .placeholder-text-dim::placeholder { color: var(--text-dim); }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
     .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
     .transition-colors { transition-property: color, background-color, border-color; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
     .transition-transform { transition-property: transform; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
