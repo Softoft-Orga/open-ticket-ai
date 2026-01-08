@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, watch} from 'vue'
+import {ref, watch, computed} from 'vue'
 
 interface Props {
   title: string
@@ -58,8 +58,4 @@ function handleToggle() {
   }
   emit('toggle')
 }
-</script>
-
-<script lang="ts">
-import {computed} from 'vue'
 </script>
