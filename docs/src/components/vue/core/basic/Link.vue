@@ -14,7 +14,6 @@
 
 <script lang="ts" setup>
 import {computed} from 'vue'
-import {useData} from 'vitepress'
 
 interface Props {
   to?: string
@@ -29,15 +28,14 @@ const props = withDefaults(defineProps<Props>(), {
   underline: false
 })
 
-const {lang} = useData()
-
 const href = computed(() => {
   if (props.href) return props.href
   if (props.to) {
     if (props.external || props.to.startsWith('http')) {
       return props.to
     }
-    return `/${lang.value}${props.to}`
+    // No language prefix needed anymore
+    return props.to
   }
   return '#'
 })

@@ -74,7 +74,7 @@ Full documentation: https://open-ticket-ai.com
 
 ### Running Documentation Locally
 
-The documentation is built with Astro and Starlight.
+The documentation is built with Astro (custom layouts, no Starlight).
 
 ```bash
 cd docs
@@ -83,7 +83,7 @@ npm run docs:dev  # Start development server at http://localhost:4321
 npm run docs:build # Build for production
 ```
 
-See [docs/MIGRATION.md](docs/MIGRATION.md) for details about the recent migration from VitePress to Astro.
+Note: Starlight has been removed in favor of custom Astro layouts for better control and simplicity.
 
 ## Contributing
 

@@ -1,0 +1,165 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  frontmatter?: {
+    title?: string;
+    description?: string;
+    hero?: {
+      title?: string;
+      tagline?: string;
+      actions?: Array<{
+        text: string;
+        link: string;
+        variant?: string;
+      }>;
+    };
+  };
+}
+
+const { title: propTitle, description: propDescription, frontmatter } = Astro.props;
+const title = frontmatter?.title || propTitle || 'Open Ticket AI';
+const description = frontmatter?.description || propDescription;
+const hero = frontmatter?.hero;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="splash-layout">
+    {hero && (
+      <section class="hero">
+        <h1>{hero.title}</h1>
+        {hero.tagline && <p class="tagline">{hero.tagline}</p>}
+        {hero.actions && (
+          <div class="actions">
+            {hero.actions.map(action => (
+              <a 
+                href={action.link} 
+                class={`button ${action.variant || 'primary'}`}
+              >
+                {action.text}
+              </a>
+            ))}
+          </div>
+        )}
+      </section>
+    )}
+    <main class="content">
+      <slot />
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .splash-layout {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #fff;
+  }
+  
+  .hero h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .tagline {
+    font-size: 1.5rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  
+  .button.primary {
+    background: #7c4dff;
+    color: #fff;
+  }
+  
+  .button.primary:hover {
+    background: #5c2ddf;
+    transform: translateY(-2px);
+  }
+  
+  .button.secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .button.secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    background: #fff;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+    
+    .tagline {
+      font-size: 1.25rem;
+    }
+    
+    .content {
+      padding: 2rem 1rem;
+    }
+  }
+</style>
+
+<style is:global>
+  .splash-layout h2 {
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .splash-layout h3 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #7c4dff;
+  }
+  
+  .splash-layout p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+  
+  .splash-layout a {
+    color: #7c4dff;
+    text-decoration: none;
+  }
+  
+  .splash-layout a:hover {
+    text-decoration: underline;
+  }
+</style>

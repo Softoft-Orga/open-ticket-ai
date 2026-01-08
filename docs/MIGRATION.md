@@ -1,15 +1,36 @@
-# Documentation Migration: VitePress to Astro
+# Documentation Migration History
 
-This document describes the migration of the Open Ticket AI documentation from VitePress to Astro with Starlight theme.
+This document tracks the migration history of the Open Ticket AI documentation.
 
-## Migration Summary
+## Latest: Removed Starlight (January 2026)
 
-- **From**: VitePress 1.6.3
-- **To**: Astro 5.16.7 with Starlight 0.37.2
-- **Date**: January 2026
-- **Status**: ✅ Complete
+**Status**: ✅ Complete
 
-## What Changed
+Starlight has been removed in favor of custom Astro layouts for better control and simpler architecture.
+
+### What Changed
+
+- Removed `@astrojs/starlight` dependency
+- Created custom Astro layouts:
+  - `BaseLayout.astro` - Base HTML with Google Analytics
+  - `DocsLayout.astro` - Documentation pages with sidebar
+  - `SplashLayout.astro` - Homepage with hero section
+- Migrated content from `src/content/docs/` to `src/pages/`
+- Fixed Vue components to work without VitePress dependencies
+- Added vue-i18n global setup for SSR compatibility
+
+### How to Run
+
+```bash
+cd docs
+npm install
+npm run docs:dev   # Development server
+npm run docs:build # Production build
+```
+
+---
+
+## Previous: VitePress to Astro + Starlight (January 2026)
 
 ### Build System
 - Replaced VitePress with Astro + Starlight
