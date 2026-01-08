@@ -1,4 +1,4 @@
-import ServicePackages from '../src/components/vue/ServicePackagesComponent.vue'
+import ServicePackages from '../src/components/vue/product/ServicePackages.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 import {i18n} from './i18nSetup'
 
