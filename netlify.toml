@@ -42,17 +42,5 @@ from = "/assets/*"
 to = "/assets/:splat"
 status = 200
 
-# --- Root language redirects ---
-
-[[redirects]]
-from = "/"
-to = "/en"
-status = 302
-conditions = { Language = ["en"] }
-
-
-# Fallback for other languages -> English
-[[redirects]]
-from = "/"
-to = "/en"
-status = 302
+# --- Root language redirects (removed for Astro migration) ---
+# The new Astro site does not use the /en/ prefix
