@@ -2,7 +2,6 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import vue from '@astrojs/vue';
 import mdx from '@astrojs/mdx';
-import { remarkVitepressContainers } from './remark-vitepress-containers.mjs';
 import rehypeMermaid from 'rehype-mermaid';
 
 export default defineConfig({
@@ -15,7 +14,6 @@ export default defineConfig({
   },
   integrations: [
     vue(),
-    mdx(),
     starlight({
       title: 'Open Ticket AI',
       description: 'Open Ticket AI is an open-source, on-premise solution that auto-classifies support tickets by queue and priority—integrates with OTOBO, Znuny, and OTRS.',
@@ -74,5 +72,6 @@ export default defineConfig({
         themes: ['github-dark'],
       },
     }),
+    mdx(),
   ],
 });
