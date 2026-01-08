@@ -1,6 +1,5 @@
 import {createI18n} from 'vue-i18n'
-import en from '../docs_src/en/messages'
-import de from '../docs_src/de/messages'
+import en from '../src/i18n/en/messages'
 
 export const i18n = createI18n({
     legacy: false,
@@ -8,6 +7,5 @@ export const i18n = createI18n({
     fallbackLocale: 'en',
     messages: {
         en,
-        de,
     },
 })

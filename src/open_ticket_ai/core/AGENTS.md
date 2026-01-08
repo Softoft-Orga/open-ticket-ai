@@ -166,7 +166,7 @@ Core infrastructure tests focus on:
 
 ## Documentation
 
-- Architecture concepts: `docs/vitepress_docs/docs_src/en/docs/concepts/`
-- Code architecture details: `docs/vitepress_docs/docs_src/en/docs/code/`
-- Configuration guides: `docs/vitepress_docs/docs_src/en/docs/configuration/`
+- Guides: `docs/src/content/docs/guides/`
+- Developer reference: `docs/src/content/docs/developers/`
+- Details: `docs/src/content/docs/details/`
 - See [docs/AGENTS.md](../../../docs/AGENTS.md) for documentation structure
