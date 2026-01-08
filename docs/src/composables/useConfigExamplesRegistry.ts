@@ -1,5 +1,4 @@
 import {computed, reactive, readonly, toRefs} from 'vue'
-import {useData} from 'vitepress'
 
 export interface ExampleMeta {
     slug: string
@@ -28,11 +27,12 @@ async function fetchYaml(path: string) {
     if (!path) {
         return ''
     }
-    const {site} = useData()
-
-    const base = site.value?.base ?? '/'
-    const normalizedBase = base.endsWith('/') ? base : `${base}/`
-    const url = path.startsWith('/') ? `${normalizedBase}${path.slice(1)}` : `${normalizedBase}${path}`
+    // During SSR, return empty string
+    if (typeof window === 'undefined') {
+        return ''
+    }
+    // Client-side fetch
+    const url = path.startsWith('/') ? path : `/${path}`
     const response = await fetch(url)
     if (!response.ok) {
         throw new Error(`Failed to load example: ${response.status} ${response.statusText}`)
@@ -71,15 +71,21 @@ async function loadRegistry() {
     }
     hasFetched = true
 
-    const {site} = useData()
-    const base = site.value?.base ?? '/'
-    const normalizedBase = base.endsWith('/') ? base : `${base}/`
-    const url = `${normalizedBase}configExamples/registry.json`
-
     state.isLoading = true
     state.error = null
 
     try {
+        // For SSR, we'll handle this differently
+        // During build time (SSR), we skip loading the registry
+        // It will be loaded on the client side
+        if (typeof window === 'undefined') {
+            // SSR - skip for now, will load on client
+            state.isLoading = false
+            return
+        }
+        
+        // Client-side fetch
+        const url = `/configExamples/registry.json`
         const response = await fetch(url)
         if (!response.ok) {
             throw new Error(`Failed to load registry: ${response.status} ${response.statusText}`)

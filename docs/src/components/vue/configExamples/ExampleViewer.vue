@@ -26,7 +26,6 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useData } from 'vitepress'
 import { codeToHtml } from 'shiki'
 
 const { file } = defineProps<{ file: string }>()
@@ -37,7 +36,6 @@ const loading = ref(false)
 const error = ref<string | null>(null)
 const copied = ref(false)
 
-const { site } = useData()
 const canCopy = computed(() => typeof navigator !== 'undefined' && Boolean(navigator.clipboard))
 
 async function fetchYaml(path: string) {
@@ -45,7 +43,8 @@ async function fetchYaml(path: string) {
   loading.value = true
   error.value = null
   try {
-    const base = site.value?.base ?? '/'
+    // Simple base path for Astro
+    const base = '/'
     const nb = base.endsWith('/') ? base : `${base}/`
     const url = path.startsWith('/') ? `${nb}${path.slice(1)}` : `${nb}${path}`
     const res = await fetch(url)
