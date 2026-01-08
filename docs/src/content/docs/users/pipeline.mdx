@@ -4,6 +4,8 @@ description: "Learn how Open Ticket AI pipes process data through sequential exe
 pageClass: full-page
 aside: false
 ---
+import InlineExample from "../../../components/InlineExample.astro";
+
 # Pipe System
 
 Pipes are the fundamental processing units in Open Ticket AI. Each pipe performs a specific task,
@@ -14,7 +16,7 @@ previous pipes, executes its logic, and passes updated context forward.
 
 A pipeline is a sequence of pipes that execute one after another:
 
-<InlineExample slug="basics-minimal" />
+<InlineExample slug="queue-priority" />
 
 ```mermaid
 flowchart TD

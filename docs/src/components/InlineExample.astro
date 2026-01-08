@@ -1,0 +1,22 @@
+---
+import registry from "../../public/configExamples/registry.json";
+
+const { slug, class: className = "" } = Astro.props;
+const examples = Array.isArray(registry) ? registry : [];
+const example = examples.find((item) => item.slug === slug);
+const containerClass = ["inline-example", className].filter(Boolean).join(" ");
+---
+
+<section class={containerClass}>
+  {example ? (
+    <>
+      <h4>{example.name}</h4>
+      <p>{example.md_description}</p>
+      <p>
+        <a href={example.path}>Download config.yml</a>
+      </p>
+    </>
+  ) : (
+    <p>Example configuration not found.</p>
+  )}
+</section>

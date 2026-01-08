@@ -9,7 +9,7 @@ classification, plus response-assist pretraining.
 Created with our Python **Synthetic Data Generator** and published on **Kaggle**.
 
 * **Kaggle:** [Ticket Dataset](https://www.kaggle.com/datasets/tobiasbueck/multilingual-customer-support-tickets/data)
-* [Synthetic Data Generation](synthetic-data-generation.md) (planned **LGPL**)
+* [Synthetic Data Generation](synthetic-data-generation.mdx) (planned **LGPL**)
 * **Need custom data or the tool?** [sales@softoft.de](mailto:sales@softoft.de)
 
 ---
@@ -131,8 +131,8 @@ This dataset mirrors the labels **Open Ticket AI** predicts on inbound tickets (
 Use it to **bootstrap** training and evaluation; deploy your model with **Open Ticket AI** once you’re happy with
 metrics.
 
-* [Synthetic Data Generator](synthetic-data-generation.md)
-* [Prediction API (hosted)](../prediction-api/overview.md)
+* [Synthetic Data Generator](synthetic-data-generation.mdx)
+* [Prediction API (hosted)](../prediction-api/overview.mdx)
 
 ---
 

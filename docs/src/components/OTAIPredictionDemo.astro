@@ -1,0 +1,21 @@
+---
+const endpoint = "https://open-ticket-ai.com/api/german_prediction/v1/classify";
+const samplePayload = `{
+  "subject": "VPN Verbindungsproblem",
+  "body": "Kann nach dem Update keine Verbindung zum Unternehmens-VPN herstellen. Vor dem letzten Update funktionierte es einwandfrei."
+}`;
+---
+
+<section class="otai-prediction-demo">
+  <h3>Sample request</h3>
+  <p>Send a request to:</p>
+  <p>
+    <code>{endpoint}</code>
+  </p>
+  <pre>
+    <code>{samplePayload}</code>
+  </pre>
+  <p>
+    <a href={endpoint}>Open endpoint</a>
+  </p>
+</section>

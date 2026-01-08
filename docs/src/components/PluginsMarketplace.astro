@@ -1,0 +1,31 @@
+---
+const plugins = [
+  {
+    name: "otai-base",
+    description: "Core pipes and services bundled with Open Ticket AI.",
+    link: "/users/plugins",
+  },
+  {
+    name: "otai-otobo-znuny",
+    description: "OTOBO/Znuny/OTRS ticket system integration.",
+    link: "/users/plugins",
+  },
+  {
+    name: "otai-hf-local",
+    description: "Local HuggingFace inference for classification.",
+    link: "/users/plugins",
+  },
+];
+---
+
+<section class="plugin-marketplace">
+  <p>The marketplace UI is coming soon. Use these packages in the meantime:</p>
+  <ul>
+    {plugins.map((plugin) => (
+      <li>
+        <strong>{plugin.name}</strong> — {plugin.description}{" "}
+        <a href={plugin.link}>Learn more</a>
+      </li>
+    ))}
+  </ul>
+</section>

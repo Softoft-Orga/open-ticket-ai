@@ -1,0 +1,28 @@
+---
+import registry from "../../public/configExamples/registry.json";
+
+const examples = Array.isArray(registry) ? registry : [];
+---
+
+<section class="examples-gallery">
+  <table>
+    <thead>
+      <tr>
+        <th>Example</th>
+        <th>Description</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      {examples.map((example) => (
+        <tr>
+          <td>{example.name}</td>
+          <td>{example.md_description}</td>
+          <td>
+            <a href={example.path}>config.yml</a>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</section>

@@ -369,4 +369,4 @@ After installation:
 - [Quick Start Guide](quick_start.md) - Get started quickly
 - [First Pipeline](first_pipeline.md) - Create your first automation
 - [Configuration Reference](../details/_config_reference.md) - Complete config documentation
-- [Plugin System](../users/plugins.md) - Understanding plugins
+- [Plugin System](../users/plugins.mdx) - Understanding plugins

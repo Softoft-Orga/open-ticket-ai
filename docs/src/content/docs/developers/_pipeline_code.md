@@ -687,7 +687,7 @@ Use the `depends_on` field:
 
 ## Related Documentation
 
-- [Configuration and Template Rendering](../users/config_rendering.md) - Understanding the rendering
+- [Configuration and Template Rendering](../users/config_rendering.mdx) - Understanding the rendering
   flow
 - [Configuration Reference](../details/_config_reference.md) - YAML configuration syntax
 - [Testing Guide](./testing.md) - Testing strategies for pipes

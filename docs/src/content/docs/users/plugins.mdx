@@ -2,6 +2,8 @@
 title: Plugins
 description: "Learn about Open Ticket AI's plugin system - what plugins are, how to install them, and which plugins are available for your automation workflows."
 ---
+import InlineExample from "../../../components/InlineExample.astro";
+
 # Plugins
 
 Plugins extend Open Ticket AI with additional capabilities. Each plugin provides services and pipes
@@ -38,7 +40,7 @@ Plugins provide services and pipes that you reference in your YAML configuration
 
 ### Example: Complete Workflow with Plugins
 
-<InlineExample slug="basics-minimal" />
+<InlineExample slug="queue-priority" />
 
 ```yaml
 # Define services from plugins
@@ -240,7 +242,7 @@ The plugin name is derived from the package name by removing `otai-` prefix.
 
 Want to create your own plugin? Whether free or commercial, you have complete freedom!
 
-See the [Plugin Development Guide](../developers/plugin_development.md) for:
+See the [Plugin Development Guide](../developers/plugin_development.mdx) for:
 
 - How to build custom plugins
 - Publishing to PyPI
@@ -249,7 +251,7 @@ See the [Plugin Development Guide](../developers/plugin_development.md) for:
 
 ## Related Documentation
 
-- [Plugin Development](../developers/plugin_development.md)
+- [Plugin Development](../developers/plugin_development.mdx)
 - [Dependency Injection](../developers/dependency_injection.md)
-- [Pipe System](pipeline.md)
+- [Pipe System](pipeline.mdx)
 - [Configuration](../details/_config_reference.md)

@@ -4,6 +4,8 @@ description: "Understand Open Ticket AI's configuration lifecycle, template rend
 pageClass: full-page
 aside: true
 ---
+import InlineExample from "../../../components/InlineExample.astro";
+
 # Configuration & Template Rendering
 
 Open Ticket AI allows you to create dynamic configurations using **YAML** plus **Jinja2 template
@@ -203,4 +205,4 @@ userCity: "{{ at_path(user, 'address.city') }}"
 
 See full working examples of config.yml
 
-[Config Examples](../users/config_examples.md).
+[Config Examples](../users/config_examples.mdx).

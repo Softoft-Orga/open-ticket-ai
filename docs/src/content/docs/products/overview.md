@@ -11,62 +11,16 @@ Use this page to see what’s available today, what’s hosted by us, and what�
 
 ## At a glance
 
-<Table>
-    <Row>
-      <C header>Product</C>
-      <C header>What it is</C>
-      <C header>Status</C>
-      <C header>Links</C>
-    </Row>
-    <Row>
-      <C><strong>Open Ticket AI (On-Prem/Main Product)</strong></C>
-      <C>Local, open-source ticket classifier (queues & priority) integrated via pipelines/adapters.</C>
-      <C>✅ Available</C>
-      <C><Link to="/">Overview</Link></C>
-    </Row>
-    <Row>
-      <C><strong>Hosted Prediction API (German)</strong></C>
-      <C>HTTP API to classify queue & priority using our public German base model (hosted by us).</C>
-      <C>✅ Free for now</C>
-      <C><Link to="/products/prediction-api/overview">API Docs</Link></C>
-    </Row>
-    <Row>
-      <C><strong>Public Base Models (German)</strong></C>
-      <C>Base models for queue/priority published on Hugging Face for users without their own data.</C>
-      <C>✅ Available</C>
-      <C>See links in <Link to="/products/prediction-api/overview">API Docs</Link></C>
-    </Row>
-    <Row>
-      <C><strong>Synthetic Data Generator</strong></C>
-      <C>Python tool to create multilingual synthetic ticket datasets; planned LGPL.</C>
-      <C>✅ Available</C>
-      <C><Link to="/products/synthetic-data/synthetic-data-generation">Generator</Link></C>
-    </Row>
-    <Row>
-      <C><strong>Ticket Datasets (v5, v4, v3)</strong></C>
-      <C>Synthetic datasets made with our generator (EN/DE focus in v5/v4; more langs in v3).</C>
-      <C>✅ Available</C>
-      <C><Link to="/products/synthetic-data/ticket-dataset">Dataset</Link></C>
-    </Row>
-    <Row>
-      <C><strong>English Prediction Model</strong></C>
-      <C>Base model for EN queue/priority.</C>
-      <C>🚧 Coming soon</C>
-      <C>(will be added here)</C>
-    </Row>
-    <Row>
-      <C><strong>Additional Languages & Attributes</strong></C>
-      <C>Models for other languages; predictions for tags, assignee; optional first-answer.</C>
-      <C>🧭 Exploring</C>
-      <C>(roadmap)</C>
-    </Row>
-    <Row>
-      <C><strong>Web UI for Data Generator</strong></C>
-      <C>Browser UI on top of the generator for non-technical users.</C>
-      <C>🧭 Exploring</C>
-      <C>(roadmap)</C>
-    </Row>
-</Table>
+| Product | What it is | Status | Links |
+| --- | --- | --- | --- |
+| **Open Ticket AI (On-Prem/Main Product)** | Local, open-source ticket classifier (queues & priority) integrated via pipelines/adapters. | ✅ Available | [Overview](../index.md) |
+| **Hosted Prediction API (German)** | HTTP API to classify queue & priority using our public German base model (hosted by us). | ✅ Free for now | [API Docs](./prediction-api/overview.mdx) |
+| **Public Base Models (German)** | Base models for queue/priority published on Hugging Face for users without their own data. | ✅ Available | See links in [API Docs](./prediction-api/overview.mdx) |
+| **Synthetic Data Generator** | Python tool to create multilingual synthetic ticket datasets; planned LGPL. | ✅ Available | [Generator](./synthetic-data/synthetic-data-generation.mdx) |
+| **Ticket Datasets (v5, v4, v3)** | Synthetic datasets made with our generator (EN/DE focus in v5/v4; more langs in v3). | ✅ Available | [Dataset](./synthetic-data/ticket-dataset.md) |
+| **English Prediction Model** | Base model for EN queue/priority. | 🚧 Coming soon | (will be added here) |
+| **Additional Languages & Attributes** | Models for other languages; predictions for tags, assignee; optional first-answer. | 🧭 Exploring | (roadmap) |
+| **Web UI for Data Generator** | Browser UI on top of the generator for non-technical users. | 🧭 Exploring | (roadmap) |
 
 > **Pricing note:** The hosted **German Prediction API** is currently free. If demand drives infra costs too high, we
 > may introduce rate limits or pricing. On-prem **Open Ticket AI** remains open-source and local.
@@ -90,7 +44,7 @@ Use this page to see what’s available today, what’s hosted by us, and what�
 - Use the **German** model via our hosted API (**free for now**).
 - Models are **public on Hugging Face**; you can also self-host or fine-tune.
 
-**Start here:** [Prediction API](./prediction-api/overview.md)
+**Start here:** [Prediction API](./prediction-api/overview.mdx)
 
 ---
 
@@ -100,7 +54,7 @@ Use this page to see what’s available today, what’s hosted by us, and what�
   answer).
 - Planned **LGPL** release; email for access or modifications: **sales@softoft.de**.
 
-**Details:** [Synthetic Data Generation](./synthetic-data/synthetic-data-generation.md)
+**Details:** [Synthetic Data Generation](./synthetic-data/synthetic-data-generation.mdx)
 
 ---
 

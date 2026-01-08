@@ -67,7 +67,7 @@ touching core code.
 
 **How it works:** Plugins are standard Python packages discovered via entry points. Install with
 `uv add otai-otobo-znuny`, reference in your config, and you're ready. Learn more in
-the [Plugin System](../users/plugins.md) documentation.
+the [Plugin System](../users/plugins.mdx) documentation.
 
 ### Flexible Pipeline System
 
@@ -78,7 +78,7 @@ Build sophisticated automation workflows with **sequential pipe execution**:
 - **Composite Pipes**: Nest pipelines for multi-stage orchestration
 
 Each pipe receives context from previous steps, executes its task, and passes results forward. Read
-the complete guide in [Pipe System](../users/pipeline.md).
+the complete guide in [Pipe System](../users/pipeline.mdx).
 
 ### Dynamic Configuration with Template Rendering
 
@@ -94,7 +94,7 @@ Configure everything using **YAML + Jinja2** for maximum flexibility:
 </div>
 
 Services are defined once and reused across multiple pipes via dependency injection.
-Explore [Configuration & Template Rendering](../users/config_rendering.md) for details.
+Explore [Configuration & Template Rendering](../users/config_rendering.mdx) for details.
 
 ### Easy Installation
 
@@ -113,7 +113,7 @@ services:
             - ./config.yml:/app/config.yml:ro
 ```
 
-**2. Create your `config.yml`** (see [Configuration Guide](../users/config_rendering.md))
+**2. Create your `config.yml`** (see [Configuration Guide](../users/config_rendering.mdx))
 
 **3. Start the service:**
 
@@ -167,8 +167,8 @@ licensing freedom. There's no marketplace yet, but the foundation is ready.
 - **No licensing restrictions**: Choose your own license model
 - **Sell commercial plugins**: Monetize your extensions however you like
 - **Full documentation**: Complete guide
-  at [Plugin Development](../developers/plugin_development.md)
-- **Community visibility**: Your plugin can be listed on our [Plugins](../users/plugins.md) page
+  at [Plugin Development](../developers/plugin_development.mdx)
+- **Community visibility**: Your plugin can be listed on our [Plugins](../users/plugins.mdx) page
 
 ### Future Marketplace
 
@@ -194,4 +194,3 @@ Start building now, and your plugin will be ready when the marketplace launches!
 
 Open Ticket AI 1.4 is production-ready, extensible, and built for the future. Install it today,
 automate your workflows, and join the growing plugin ecosystem!
-
