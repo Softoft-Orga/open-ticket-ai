@@ -98,7 +98,6 @@
 
 <script lang="ts" setup>
 import {ref, computed} from 'vue'
-import {useI18n} from 'vue-i18n'
 
 interface LinkItem {
   label: string
@@ -120,15 +119,16 @@ interface Props {
   brand?: BrandConfig
   links?: LinkItem[]
   ctaButton?: CtaButton | null
+  locale?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   brand: () => ({name: 'Open Ticket AI', logoSrc: null, href: '/'}),
   links: () => [],
-  ctaButton: null
+  ctaButton: null,
+  locale: 'en'
 })
 
-const {locale} = useI18n({useScope: 'global'})
 const mobileMenuOpen = ref(false)
 
 const brand = computed(() => ({
@@ -147,7 +147,7 @@ const navLinks = computed(() =>
   ]
 )
 
-const langCode = computed(() => locale.value.split('-')[0])
+const langCode = computed(() => props.locale.split('-')[0])
 
 function withLocale(path: string) {
   return `/${langCode.value}${path}`.replace('//', '/')
