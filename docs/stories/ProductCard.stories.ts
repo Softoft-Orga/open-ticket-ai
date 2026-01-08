@@ -121,22 +121,6 @@ export const Enterprise: Story = {
 }
 
 export const Comparison: Story = {
-    render: (args) => ({
-        components: {ProductCard},
-        setup() {
-            return {args}
-        },
-        template: `
-            <div class="bg-gray-950 p-8">
-                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    <ProductCard :product="basic" />
-                    <ProductCard :product="professional" />
-                    <ProductCard :product="enterprise" />
-                </div>
-            </div>
-        `
-    }),
-    args: {},
     render: () => ({
         components: {ProductCard},
         setup() {
