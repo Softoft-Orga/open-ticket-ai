@@ -96,8 +96,5 @@ from = "/assets/*"
 to = "/assets/:splat"
 status = 200
 
-# --- Redirect old /en/ URLs to new root URLs ---
-[[redirects]]
-from = "/en/*"
-to = "/:splat"
-status = 301
+# --- Root language redirects (removed for Astro migration) ---
+# The new Astro site does not use the /en/ prefix

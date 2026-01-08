@@ -11,7 +11,6 @@ export default defineConfig({
   outDir: './dist',
   trailingSlash: 'always',
   markdown: {
-    remarkPlugins: [remarkVitepressContainers],
     rehypePlugins: [[rehypeMermaid, { strategy: 'img-svg', dark: true }]],
   },
   integrations: [
