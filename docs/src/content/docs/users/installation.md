@@ -174,11 +174,12 @@ echo ".env" >> .gitignore
 ### Create /opt/open-ticket-ai/config.yml
 
 
-::: warning
+:::caution
 This is an example! Adjust according to your ticket system setup, queues, priorities, and
 :::
 
-:::details Example `config.yml`
+<details>
+<summary>Example <code>config.yml</code></summary>
 
 ```yaml
 open_ticket_ai:
@@ -251,7 +252,7 @@ open_ticket_ai:
                                             updated_ticket:
                                                 queue: { name: "{{ get_pipe_result('queue_final') }}" }
 ```
-:::
+</details>
 
 
 For Testing set log level DEBUG and the interval to 5 seconds in production set interval to 10ms and

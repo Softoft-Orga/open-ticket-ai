@@ -11,7 +11,7 @@ This page describes our Python-based **Synthetic Data Generator** and the public
 explains how the generator supports the **Open Ticket AI** training workflow and our commercial data-generation
 services.
 
-::: info
+:::note
 
 - **Purpose:** Generate realistic tickets (subject, body, queue, priority, type, tags, language, and a first AI agent
   reply).
@@ -21,7 +21,7 @@ services.
 - **Controls:** Built-in CLI, dev/prod modes, cost & token tracking with currency summaries.
 - **License:** Planned **LGPL** release.
 - **Need the tool or custom mods?** → **sales@softoft.de**
-  :::
+:::
 
 ## What it generates
 
@@ -149,11 +149,11 @@ We routinely use the generator to:
    If you want us to generate tailored datasets (your domain/queues/priorities/tags, your languages), we offer it as a *
    *service**.
 
-\::: tip Services
+:::tip Services
 Need domain-specific synthetic data for your helpdesk? We’ll design prompts, nodes, and randomization tables for your
 industry, integrate with your data pipeline, and deliver CSV/Parquet ready for training and evaluation.
 **Contact:** [sales@softoft.de](mailto:sales@softoft.de)
-\:::
+:::
 
 ## Licensing & availability
 

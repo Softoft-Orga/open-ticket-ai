@@ -1,6 +1,5 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import { remarkVitepressContainers } from './remark-vitepress-containers.mjs';
 import rehypeMermaid from 'rehype-mermaid';
 
 export default defineConfig({
@@ -9,7 +8,6 @@ export default defineConfig({
   outDir: './dist',
   trailingSlash: 'always',
   markdown: {
-    remarkPlugins: [remarkVitepressContainers],
     rehypePlugins: [[rehypeMermaid, { strategy: 'img-svg', dark: true }]],
   },
   integrations: [
