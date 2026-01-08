@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div 
-      class="flex border-b border-vp-border" 
+    <div
+      class="flex border-b border-border-dark"
       role="tablist"
       aria-label="Tabs"
     >
@@ -10,10 +10,10 @@
           :key="idx"
           :id="`tab-${idx}`"
           :class="[
-          'px-4 py-2 -mb-px focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400',
+          'px-4 py-2 -mb-px focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
           activeIndex === idx
-            ? 'border-b-2 text-vp-brand border-vp-brand font-semibold'
-            : 'text-vp-text-2 hover:text-vp-brand'
+            ? 'border-b-2 text-primary border-primary font-semibold'
+            : 'text-text-dim hover:text-primary'
         ]"
           :aria-selected="activeIndex === idx"
           :tabindex="activeIndex === idx ? 0 : -1"
@@ -24,7 +24,7 @@
         {{ label }}
       </button>
     </div>
-    <div 
+    <div
       class="mt-4"
       :id="`tabpanel-${activeIndex}`"
       role="tabpanel"
@@ -64,7 +64,7 @@ function selectTab(index: number) {
 
 function handleKeydown(event: KeyboardEvent, currentIndex: number) {
   let newIndex = currentIndex
-  
+
   switch (event.key) {
     case 'ArrowLeft':
       event.preventDefault()
@@ -85,9 +85,9 @@ function handleKeydown(event: KeyboardEvent, currentIndex: number) {
     default:
       return
   }
-  
+
   selectTab(newIndex)
-  
+
   const targetTab = document.getElementById(`tab-${newIndex}`)
   targetTab?.focus()
 }
