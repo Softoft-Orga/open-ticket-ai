@@ -4,9 +4,7 @@ import type {Meta, StoryObj} from '@storybook/vue3'
 const meta: Meta<typeof NavBar> = {
     title: 'Navigation/NavBar',
     component: NavBar,
-    parameters: {
-        layout: 'fullscreen',
-    }
+    tags: ['autodocs'],
 }
 export default meta
 
@@ -20,10 +18,9 @@ export const Default: Story = {
         },
         template: '<NavBar v-bind="args" />'
     }),
-    args: {}
 }
 
-export const WithCustomBrand: Story = {
+export const WithLogo: Story = {
     render: (args) => ({
         components: {NavBar},
         setup() {
@@ -33,28 +30,10 @@ export const WithCustomBrand: Story = {
     }),
     args: {
         brand: {
-            name: 'My Product',
-            logoSrc: 'https://via.placeholder.com/32',
-            href: '/'
+            name: 'Open Ticket AI',
+            tagline: 'AI-Powered Ticketing',
+            logoSrc: 'https://via.placeholder.com/32'
         }
-    }
-}
-
-export const WithCustomLinks: Story = {
-    render: (args) => ({
-        components: {NavBar},
-        setup() {
-            return {args}
-        },
-        template: '<NavBar v-bind="args" />'
-    }),
-    args: {
-        links: [
-            {label: 'Home', href: '/'},
-            {label: 'Features', href: '/features/'},
-            {label: 'Docs', href: '/docs/'},
-            {label: 'Contact', href: '/contact/'}
-        ]
     }
 }
 
@@ -67,14 +46,36 @@ export const WithCTA: Story = {
         template: '<NavBar v-bind="args" />'
     }),
     args: {
-        ctaButton: {
+        cta: {
             label: 'Get Started',
             href: '/getting-started/'
         }
     }
 }
 
-export const FullyCustomized: Story = {
+export const CustomLinks: Story = {
+    render: (args) => ({
+        components: {NavBar},
+        setup() {
+            return {args}
+        },
+        template: '<NavBar v-bind="args" />'
+    }),
+    args: {
+        links: [
+            {label: 'Home', href: '/'},
+            {label: 'Features', href: '/features/'},
+            {label: 'Solutions', href: '/solutions/'},
+            {label: 'Contact', href: '/contact/'},
+        ],
+        cta: {
+            label: 'Sign Up',
+            href: '/signup/'
+        }
+    }
+}
+
+export const Full: Story = {
     render: (args) => ({
         components: {NavBar},
         setup() {
@@ -85,18 +86,17 @@ export const FullyCustomized: Story = {
     args: {
         brand: {
             name: 'Open Ticket AI',
-            logoSrc: null,
-            href: '/'
+            tagline: 'Intelligent Support',
+            logoSrc: 'https://via.placeholder.com/32'
         },
         links: [
-            {label: 'Documentation', href: '/docs/'},
-            {label: 'Live Demo', href: '/demo/'},
-            {label: 'Marketplace', href: '/marketplace/'},
+            {label: 'Product', href: '/product/'},
+            {label: 'Solutions', href: '/solutions/'},
+            {label: 'Docs', href: '/docs/'},
             {label: 'Pricing', href: '/pricing/'},
-            {label: 'Blog', href: '/blog/'}
         ],
-        ctaButton: {
-            label: 'Try It Free',
+        cta: {
+            label: 'Try Demo',
             href: '/demo/'
         }
     }

@@ -4,9 +4,9 @@
       v-for="(it, i) in items" 
       :key="i" 
       :title="it.title"
-      :default-open="it.defaultOpen"
-      :is-open="openItems.includes(i)"
-      @toggle="toggleItem(i)"
+      :default-open="it.defaultOpen || false"
+      :is-open="isItemOpen(i)"
+      @toggle="handleToggle(i)"
     >
       <slot :name="`item-${i}`" :item="it">
         {{ it.content }}
@@ -27,13 +27,13 @@ interface Item {
 
 interface Props {
   items?: Item[]
-  allowMultiple?: boolean
+  multiple?: boolean
   modelValue?: number[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
-  allowMultiple: false,
+  multiple: true,
   modelValue: () => []
 })
 
@@ -41,31 +41,29 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: number[]): void
 }>()
 
-const openItems = ref<number[]>(
-  props.modelValue.length > 0 
-    ? props.modelValue 
-    : props.items
-        .map((item, index) => item.defaultOpen ? index : -1)
-        .filter(index => index !== -1)
-)
+const openItems = ref<Set<number>>(new Set(props.modelValue))
 
-watch(() => props.modelValue, (newValue) => {
-  openItems.value = newValue
-})
+watch(() => props.modelValue, (newVal) => {
+  openItems.value = new Set(newVal)
+}, {deep: true})
 
-function toggleItem(index: number) {
-  const isOpen = openItems.value.includes(index)
+const isItemOpen = (index: number): boolean => {
+  return openItems.value.has(index)
+}
+
+const handleToggle = (index: number) => {
+  const newOpenItems = new Set(openItems.value)
   
-  if (props.allowMultiple) {
-    if (isOpen) {
-      openItems.value = openItems.value.filter(i => i !== index)
-    } else {
-      openItems.value = [...openItems.value, index]
-    }
+  if (newOpenItems.has(index)) {
+    newOpenItems.delete(index)
   } else {
-    openItems.value = isOpen ? [] : [index]
+    if (!props.multiple) {
+      newOpenItems.clear()
+    }
+    newOpenItems.add(index)
   }
   
-  emit('update:modelValue', openItems.value)
+  openItems.value = newOpenItems
+  emit('update:modelValue', Array.from(newOpenItems))
 }
 </script>
