@@ -71,24 +71,6 @@ export default defineConfig({
       editLink: {
         baseUrl: 'https://github.com/Softoft-Orga/open-ticket-ai/edit/dev/docs/src/content/docs/',
       },
-      head: [
-        {
-          tag: 'script',
-          attrs: {
-            async: true,
-            src: 'https://www.googletagmanager.com/gtag/js?id=AW-474755810',
-          },
-        },
-        {
-          tag: 'script',
-          content: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'AW-474755810');
-          `,
-        },
-      ],
       expressiveCode: {
         themes: ['github-dark'],
       },
