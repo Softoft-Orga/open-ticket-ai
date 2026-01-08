@@ -19,7 +19,7 @@ A single, streamlined component (228 lines) that uses:
 A new composable `useSidecars` provides centralized access to sidecar data:
 
 ```typescript
-import { useSidecars } from '@/.vitepress/composables/useSidecars'
+import { useSidecars } from '@/src/composables/useSidecars'
 
 const { sidecars, isLoading, error, getSidecar, filterByType, filterByCategory } = useSidecars()
 
@@ -73,8 +73,8 @@ const ticketSystemPipes = filterByCategory('ticket-system')
 
 ```vue
 <script setup>
-import { useSidecars } from '@/.vitepress/composables/useSidecars'
-import PipeSidecar from '@/.vitepress/components/pipe/PipeSidecar.vue'
+import { useSidecars } from '@/src/composables/useSidecars'
+import PipeSidecar from '@/src/components/vue/pipe/PipeSidecar.vue'
 
 const { getSidecar, filterByType, isLoading } = useSidecars()
 

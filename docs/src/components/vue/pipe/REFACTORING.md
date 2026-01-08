@@ -96,15 +96,15 @@ const ticketSystemPipes = filterByCategory('ticket-system')
 
 ### New Files
 
-1. `docs/.vitepress/composables/useSidecars.ts` - Composable for sidecar data management
+1. `docs/src/composables/useSidecars.ts` - Composable for sidecar data management
 
 ### Modified Files
 
-1. `docs/.vitepress/components/pipe/PipeSidecar.vue` (250 → 228 lines)
+1. `docs/src/components/vue/pipe/PipeSidecar.vue` (250 → 228 lines)
     - Simplified to use tables and v-for loops
     - Reuses AccordionItem component
     - Computed properties for data transformation
-2. `docs/.vitepress/components/pipe/README.md` (updated documentation)
+2. `docs/src/components/vue/pipe/README.md` (updated documentation)
 
 ## Testing
 

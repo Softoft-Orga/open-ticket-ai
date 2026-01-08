@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { Transformer } from 'markmap-lib'
 import { Markmap } from 'markmap-view'
-import { useYamlTagTree, type TagNode } from '../../composables/useYamlTagTree'
+import { useYamlTagTree, type TagNode } from '../../../composables/useYamlTagTree'
 import tagYaml from './tags.yml?raw'
 
 const { tree, error } = useYamlTagTree(tagYaml)

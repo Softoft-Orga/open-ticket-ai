@@ -67,7 +67,7 @@ import PluginCard from "./PluginCard.vue";
 import MarketplacePagination from "./MarketplacePagination.vue";
 import MarketplaceSearchForm from "./MarketplaceSearchForm.vue";
 import MarketplaceSkeletonCard from "./MarketplaceSkeletonCard.vue";
-import {usePluginsMarketplace} from "../../composables/usePluginsMarketplace";
+import {usePluginsMarketplace} from "../../../composables/usePluginsMarketplace";
 
 const {
     query,

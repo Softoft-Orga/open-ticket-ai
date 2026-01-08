@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import {useNewsArticles} from '../../composables/useNewsArticles'
+import {useNewsArticles} from '../../../composables/useNewsArticles'
 
 const {newsArticles} = useNewsArticles()
 const articles = computed(() => newsArticles.value)
