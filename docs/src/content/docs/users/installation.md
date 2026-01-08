@@ -45,9 +45,9 @@ uname -a
 
 Use the commands for your OS below to install Docker and Docker Compose.
 
-::: code-group
+:::code-group
 
-```bash [Ubuntu / Debian]
+```bash title="Ubuntu / Debian"
 # Install Docker Engine + Compose plugin
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
@@ -61,7 +61,7 @@ docker --version
 docker compose version
 ```
 
-```bash [RHEL / CentOS / Rocky / Alma]
+```bash title="RHEL / CentOS / Rocky / Alma"
 # Prereqs
 sudo dnf -y install dnf-plugins-core
 
@@ -79,7 +79,7 @@ docker --version
 docker compose version
 ```
 
-```bash [Fedora]
+```bash title="Fedora"
 # Install Engine + Compose plugin
 sudo dnf -y install dnf-plugins-core
 sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
@@ -92,7 +92,7 @@ docker --version
 docker compose version
 ```
 
-```bash [openSUSE / SLES]
+```bash title="openSUSE / SLES"
 # Install Docker
 sudo zypper refresh
 sudo zypper install -y docker docker-compose
@@ -105,7 +105,7 @@ docker --version
 docker compose version
 ```
 
-```bash [Arch Linux]
+```bash title="Arch Linux"
 # Install Docker + Compose
 sudo pacman -Syu --noconfirm docker docker-compose
 
@@ -117,7 +117,7 @@ docker --version
 docker compose version
 ```
 
-```bash [macOS]
+```bash title="macOS"
 # Option A: Docker Desktop (GUI)
 # Download: https://www.docker.com/products/docker-desktop/
 # Then verify:
@@ -131,7 +131,7 @@ docker --version
 docker compose version
 ```
 
-```powershell [Windows 10/11]
+```powershell title="Windows 10/11"
 # Option A: Docker Desktop (recommended)
 winget install -e --id Docker.DockerDesktop
 
