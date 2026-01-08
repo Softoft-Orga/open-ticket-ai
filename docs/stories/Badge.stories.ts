@@ -33,3 +33,36 @@ export const Success: Story = {
     }),
     args: {type: 'success'}
 }
+
+export const Secondary: Story = {
+    render: (args) => ({
+        components: {Badge},
+        setup() {
+            return {args}
+        },
+        template: '<Badge v-bind="args">Secondary</Badge>'
+    }),
+    args: {type: 'secondary'}
+}
+
+export const Warning: Story = {
+    render: (args) => ({
+        components: {Badge},
+        setup() {
+            return {args}
+        },
+        template: '<Badge v-bind="args">Warning</Badge>'
+    }),
+    args: {type: 'warning'}
+}
+
+export const Danger: Story = {
+    render: (args) => ({
+        components: {Badge},
+        setup() {
+            return {args}
+        },
+        template: '<Badge v-bind="args">Danger</Badge>'
+    }),
+    args: {type: 'danger'}
+}

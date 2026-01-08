@@ -27,17 +27,17 @@ const props = withDefaults(defineProps<Props>(), {
 const variantClasses = computed(() => {
   switch (props.variant) {
     case 'secondary':
-      return 'border border-border-dark bg-surface-dark text-text-dim hover:bg-surface-lighter'
+      return 'border border-gray-600 text-gray-200 hover:bg-gray-700'
     case 'info':
-      return 'bg-cyan-glow text-background-dark hover:brightness-110'
+      return 'bg-teal-400 text-white hover:bg-teal-500'
     case 'success':
-      return 'bg-primary-light text-background-dark hover:bg-primary'
+      return 'bg-green-500 text-white hover:bg-green-600'
     case 'warning':
       return 'bg-amber-500 text-white hover:bg-amber-600'
     case 'danger':
       return 'bg-rose-600 text-white hover:bg-rose-700'
     default: // primary
-      return 'bg-primary text-white hover:bg-primary-dark'
+      return 'bg-blue-500 text-white hover:bg-blue-600'
   }
 })
 </script>

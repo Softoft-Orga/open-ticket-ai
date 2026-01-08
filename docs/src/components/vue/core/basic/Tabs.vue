@@ -1,94 +1,101 @@
 <template>
   <div>
-    <div
-      class="flex border-b border-border-dark"
+    <div 
+      class="flex border-b border-vp-border"
       role="tablist"
-      aria-label="Tabs"
+      :aria-label="ariaLabel"
     >
       <button
           v-for="(label, idx) in tabs"
           :key="idx"
-          :id="`tab-${idx}`"
+          :id="`tab-${uid}-${idx}`"
           :class="[
-          'px-4 py-2 -mb-px focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          'px-4 py-2 -mb-px focus:outline-none focus-visible:ring-2 focus-visible:ring-vp-brand',
           activeIndex === idx
-            ? 'border-b-2 text-primary border-primary font-semibold'
-            : 'text-text-dim hover:text-primary'
+            ? 'border-b-2 text-vp-brand border-vp-brand'
+            : 'text-vp-text-2 hover:text-vp-text-1'
         ]"
-          :aria-selected="activeIndex === idx"
-          :tabindex="activeIndex === idx ? 0 : -1"
           role="tab"
+          :aria-selected="activeIndex === idx"
+          :aria-controls="`tabpanel-${uid}-${idx}`"
+          :tabindex="activeIndex === idx ? 0 : -1"
           @click="selectTab(idx)"
           @keydown="handleKeydown($event, idx)"
       >
         {{ label }}
       </button>
     </div>
-    <div
+    <div 
+      v-for="(label, idx) in tabs"
+      :key="`panel-${idx}`"
+      v-show="activeIndex === idx"
+      :id="`tabpanel-${uid}-${idx}`"
       class="mt-4"
-      :id="`tabpanel-${activeIndex}`"
       role="tabpanel"
-      :aria-labelledby="`tab-${activeIndex}`"
+      :aria-labelledby="`tab-${uid}-${idx}`"
+      tabindex="0"
     >
-      <slot :name="`tab-${activeIndex}`"/>
+      <slot :name="`tab-${idx}`"/>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {ref, watch} from 'vue'
+import {ref, computed, watch} from 'vue'
 
 interface Props {
   tabs: string[]
   modelValue?: number
+  ariaLabel?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: 0
+  modelValue: 0,
+  ariaLabel: 'Tabs'
 })
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: number): void
 }>()
 
+const uid = Math.random().toString(36).substr(2, 9)
 const activeIndex = ref(props.modelValue)
 
-watch(() => props.modelValue, (newValue) => {
-  activeIndex.value = newValue
+watch(() => props.modelValue, (newVal) => {
+  activeIndex.value = newVal
 })
 
-function selectTab(index: number) {
-  activeIndex.value = index
-  emit('update:modelValue', index)
+const selectTab = (idx: number) => {
+  activeIndex.value = idx
+  emit('update:modelValue', idx)
 }
 
-function handleKeydown(event: KeyboardEvent, currentIndex: number) {
-  let newIndex = currentIndex
-
+const handleKeydown = (event: KeyboardEvent, currentIdx: number) => {
+  let newIdx = currentIdx
+  
   switch (event.key) {
     case 'ArrowLeft':
       event.preventDefault()
-      newIndex = currentIndex > 0 ? currentIndex - 1 : props.tabs.length - 1
+      newIdx = currentIdx > 0 ? currentIdx - 1 : props.tabs.length - 1
       break
     case 'ArrowRight':
       event.preventDefault()
-      newIndex = currentIndex < props.tabs.length - 1 ? currentIndex + 1 : 0
+      newIdx = currentIdx < props.tabs.length - 1 ? currentIdx + 1 : 0
       break
     case 'Home':
       event.preventDefault()
-      newIndex = 0
+      newIdx = 0
       break
     case 'End':
       event.preventDefault()
-      newIndex = props.tabs.length - 1
+      newIdx = props.tabs.length - 1
       break
     default:
       return
   }
-
-  selectTab(newIndex)
-
-  const targetTab = document.getElementById(`tab-${newIndex}`)
-  targetTab?.focus()
+  
+  selectTab(newIdx)
+  const tabButton = document.getElementById(`tab-${uid}-${newIdx}`)
+  tabButton?.focus()
 }
 </script>

@@ -4,13 +4,7 @@ import type {Meta, StoryObj} from '@storybook/vue3'
 const meta: Meta<typeof Link> = {
     title: 'Core/Link',
     component: Link,
-    argTypes: {
-        to: {control: 'text'},
-        href: {control: 'text'},
-        external: {control: 'boolean'},
-        target: {control: 'text'},
-        rel: {control: 'text'}
-    },
+    tags: ['autodocs'],
 }
 export default meta
 
@@ -24,7 +18,9 @@ export const Internal: Story = {
         },
         template: '<Link v-bind="args">Internal Link</Link>'
     }),
-    args: {to: '/docs/'}
+    args: {
+        to: '/docs/'
+    }
 }
 
 export const External: Story = {
@@ -35,16 +31,35 @@ export const External: Story = {
         },
         template: '<Link v-bind="args">External Link</Link>'
     }),
-    args: {href: 'https://github.com', external: true}
+    args: {
+        href: 'https://github.com/openticketai'
+    }
 }
 
-export const WithCustomTarget: Story = {
+export const WithUnderline: Story = {
     render: (args) => ({
         components: {Link},
         setup() {
             return {args}
         },
-        template: '<Link v-bind="args">Link in New Tab</Link>'
+        template: '<Link v-bind="args">Underlined Link</Link>'
     }),
-    args: {href: 'https://example.com', target: '_blank'}
+    args: {
+        to: '/about/',
+        underline: true
+    }
+}
+
+export const CustomTarget: Story = {
+    render: (args) => ({
+        components: {Link},
+        setup() {
+            return {args}
+        },
+        template: '<Link v-bind="args">Same Tab External</Link>'
+    }),
+    args: {
+        href: 'https://example.com',
+        target: '_self'
+    }
 }
