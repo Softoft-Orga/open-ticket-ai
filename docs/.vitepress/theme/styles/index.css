@@ -95,6 +95,13 @@
         @apply w-full !max-w-screen-xl;
     }
 
+    @media (min-width: 1440px) {
+        .full-page .VPContent.has-sidebar {
+            padding-right: 2rem;
+            padding-left: calc(14rem + var(--vp-sidebar-width));
+        }
+    }
+
     .full-page .VPDoc {
         @apply w-full mx-auto !py-3 !px-6 md:px-8 max-w-screen-2xl;
     }

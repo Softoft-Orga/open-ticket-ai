@@ -168,15 +168,8 @@ const setExample = (name: string) => {
                 </div>
             </div>
         </div>
-
-        <div class="tag-visuals">
-            <div class="visual-card">
-                <TagMindmap />
-            </div>
-            <div class="visual-card">
-                <TagTree />
-            </div>
-        </div>
+        <TagMindmap/>
+        <TagTree/>
     </div>
 </template>
 
@@ -306,22 +299,6 @@ const setExample = (name: string) => {
     border: 1px solid var(--vp-c-border);
     font-size: 0.95rem;
 }
-
-.tag-visuals {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1rem;
-    align-items: start;
-}
-
-.visual-card {
-    background: var(--vp-c-bg);
-    border: 1px solid var(--vp-c-border);
-    border-radius: 0.9rem;
-    box-shadow: var(--vp-shadow-2);
-    padding: 1rem;
-}
-
 @media (max-width: 960px) {
     .demo-grid {
         grid-template-columns: 1fr;

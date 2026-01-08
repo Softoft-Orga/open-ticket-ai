@@ -1,1148 +1,905 @@
 industry:
-  description: "Industry or domain of the customer's business"
-  required: false
-  default: "industry/other"
+  description: Industry or domain of the customer's business
+  icon: 🏭
+  default: industry/other
   children:
     tech_it:
-      description: "Technology, IT and digital infrastructure providers"
+      description: Technology, IT and digital infrastructure providers
       children:
         software:
-          description: "Software vendors and product companies"
+          description: Software vendors and product companies
           children:
             packaged_software:
-              description: "Traditional on-premise or licensed software products"
-              children: { }
+              description: Traditional on-premise or licensed software products
             saas_platform:
-              description: "Subscription-based SaaS products and cloud platforms"
-              children: { }
+              description: Subscription-based SaaS products and cloud platforms
             developer_tools:
-              description: "Developer tooling, IDEs, CI/CD, testing and dev platforms"
-              children: { }
+              description: Developer tooling, IDEs, CI/CD, testing and dev platforms
             vertical_industry_software:
-              description: "Software tailored to a specific industry (e.g. healthcare, finance)"
-              children: { }
+              description: Software tailored to a specific industry (e.g. healthcare, finance)
         it_services:
-          description: "IT services, consulting and project delivery"
+          description: IT services, consulting and project delivery
           children:
             managed_services:
-              description: "Managed services, operations and run-IT for customers"
-              children: { }
+              description: Managed services, operations and run-IT for customers
             system_integration:
-              description: "System integration, rollouts and complex multi-system projects"
-              children: { }
+              description: System integration, rollouts and complex multi-system projects
             it_consulting:
-              description: "IT strategy, architecture and advisory consulting"
-              children: { }
+              description: IT strategy, architecture and advisory consulting
             project_delivery:
-              description: "Implementation projects, customizations and migrations"
-              children: { }
+              description: Implementation projects, customizations and migrations
         infrastructure_cloud_security:
-          description: "Cloud, hosting, infrastructure and security providers"
+          description: Cloud, hosting, infrastructure and security providers
           children:
             cloud_provider:
-              description: "Public cloud or hyperscaler infrastructure services"
-              children: { }
+              description: Public cloud or hyperscaler infrastructure services
             hosting_datacenter:
-              description: "Hosting, colocation and datacenter providers"
-              children: { }
+              description: Hosting, colocation and datacenter providers
             network_infrastructure:
-              description: "Network backbone, WAN, SD-WAN and connectivity infrastructure"
-              children: { }
+              description: Network backbone, WAN, SD-WAN and connectivity infrastructure
             security_vendor:
-              description: "Cybersecurity product vendors and platform providers"
-              children: { }
+              description: Cybersecurity product vendors and platform providers
             security_services:
-              description: "Security operations centers (SOC), MSSP and security services"
-              children: { }
+              description: Security operations centers (SOC), MSSP and security services
         telecommunications:
-          description: "Telecommunications carriers and connectivity providers"
+          description: Telecommunications carriers and connectivity providers
           children:
             mobile_operator:
-              description: "Mobile network operators and MVNOs"
-              children: { }
+              description: Mobile network operators and MVNOs
             fixed_line_operator:
-              description: "Fixed-line telephony and broadband providers"
-              children: { }
+              description: Fixed-line telephony and broadband providers
             isp:
-              description: "Internet service providers and access networks"
-              children: { }
+              description: Internet service providers and access networks
             unified_communications:
-              description: "Unified communications, VoIP and collaboration platforms"
-              children: { }
-
+              description: Unified communications, VoIP and collaboration platforms
     finance_business_services:
-      description: "Financial services, insurance and professional business services"
+      description: Financial services, insurance and professional business services
       children:
         financial_services:
-          description: "Banking, payments and financial platforms"
+          description: Banking, payments and financial platforms
           children:
             retail_banking:
-              description: "Retail banking, cards and consumer banking products"
-              children: { }
+              description: Retail banking, cards and consumer banking products
             corporate_investment_banking:
-              description: "Corporate banking, investment banking and treasury"
-              children: { }
+              description: Corporate banking, investment banking and treasury
             payments_fintech:
-              description: "Payments, PSPs, wallets and fintech payment platforms"
-              children: { }
+              description: Payments, PSPs, wallets and fintech payment platforms
             lending_credit:
-              description: "Lending, credit, leasing and factoring providers"
-              children: { }
+              description: Lending, credit, leasing and factoring providers
             wealth_asset_management:
-              description: "Wealth management, brokerage and asset management"
-              children: { }
+              description: Wealth management, brokerage and asset management
         insurance:
-          description: "Insurance carriers, brokers and insurance platforms"
+          description: Insurance carriers, brokers and insurance platforms
           children:
             life_insurance:
-              description: "Life insurance products and providers"
-              children: { }
+              description: Life insurance products and providers
             p_c_insurance:
-              description: "Property & casualty, liability and general insurance"
-              children: { }
+              description: Property & casualty, liability and general insurance
             health_insurance:
-              description: "Health insurance and health plans"
-              children: { }
+              description: Health insurance and health plans
             insurance_tech:
-              description: "Insurance technology platforms and insurtech vendors"
-              children: { }
+              description: Insurance technology platforms and insurtech vendors
         business_products_services:
-          description: "General B2B products, solutions and services"
+          description: General B2B products, solutions and services
           children:
             office_products:
-              description: "Office supplies, equipment and related products"
-              children: { }
+              description: Office supplies, equipment and related products
             business_software_solutions:
-              description: "Horizontal B2B software (ERP, CRM, HR, finance etc.)"
-              children: { }
+              description: Horizontal B2B software (ERP, CRM, HR, finance etc.)
             outsourcing_services:
-              description: "Business process outsourcing and shared service centers"
-              children: { }
+              description: Business process outsourcing and shared service centers
             facilities_management:
-              description: "Facility management, cleaning and building services"
-              children: { }
+              description: Facility management, cleaning and building services
         advertising_marketing:
-          description: "Advertising, marketing and brand communication"
+          description: Advertising, marketing and brand communication
           children:
             advertising_agency:
-              description: "Full-service or creative advertising agencies"
-              children: { }
+              description: Full-service or creative advertising agencies
             digital_marketing_agency:
-              description: "Performance, SEO/SEA, social and digital marketing agencies"
-              children: { }
+              description: Performance, SEO/SEA, social and digital marketing agencies
             marketing_tech:
-              description: "Marketing technology, automation and campaign tools"
-              children: { }
+              description: Marketing technology, automation and campaign tools
         human_resources:
-          description: "HR services, recruitment and HR technology"
+          description: HR services, recruitment and HR technology
           children:
             recruiting_staffing:
-              description: "Recruitment agencies, staffing and headhunting"
-              children: { }
+              description: Recruitment agencies, staffing and headhunting
             hr_software:
-              description: "HRIS, ATS, payroll and HR software platforms"
-              children: { }
+              description: HRIS, ATS, payroll and HR software platforms
             payroll_services:
-              description: "Payroll, time tracking and workforce administration services"
-              children: { }
+              description: Payroll, time tracking and workforce administration services
         consulting_professional_services:
-          description: "Consulting and other professional services"
+          description: Consulting and other professional services
           children:
             management_consulting:
-              description: "Strategy, management and organizational consulting"
-              children: { }
+              description: Strategy, management and organizational consulting
             it_consulting_services:
-              description: "IT-focused consulting and technology advisory"
-              children: { }
+              description: IT-focused consulting and technology advisory
             legal_tax_advisory:
-              description: "Legal, tax, audit and compliance advisory"
-              children: { }
-
+              description: Legal, tax, audit and compliance advisory
     consumer_retail_hospitality:
-      description: "Consumer brands, retail, e-commerce and hospitality"
+      description: Consumer brands, retail, e-commerce and hospitality
       children:
         retail:
-          description: "Physical retail and store-based businesses"
+          description: Physical retail and store-based businesses
           children:
             grocery_retail:
-              description: "Supermarkets, grocery and food retail chains"
-              children: { }
+              description: Supermarkets, grocery and food retail chains
             fashion_retail:
-              description: "Fashion, apparel and footwear retail"
-              children: { }
+              description: Fashion, apparel and footwear retail
             specialty_retail:
-              description: "Electronics, DIY, furniture and specialty stores"
-              children: { }
+              description: Electronics, DIY, furniture and specialty stores
         ecommerce:
-          description: "Online commerce and digital marketplaces"
+          description: Online commerce and digital marketplaces
           children:
             online_retailer:
-              description: "Pure online retailers and D2C brands"
-              children: { }
+              description: Pure online retailers and D2C brands
             marketplace_platform:
-              description: "Multi-vendor marketplaces and platforms"
-              children: { }
+              description: Multi-vendor marketplaces and platforms
             subscription_commerce:
-              description: "Subscription-based consumer products and boxes"
-              children: { }
+              description: Subscription-based consumer products and boxes
         food_beverage:
-          description: "Food service and packaged food & beverage brands"
+          description: Food service and packaged food & beverage brands
           children:
             restaurants_cafes:
-              description: "Restaurants, cafes, quick service and chains"
-              children: { }
+              description: Restaurants, cafes, quick service and chains
             delivery_platforms:
-              description: "Food delivery platforms and aggregators"
-              children: { }
+              description: Food delivery platforms and aggregators
             packaged_food_beverage:
-              description: "FMCG food & beverage manufacturers and brands"
-              children: { }
+              description: FMCG food & beverage manufacturers and brands
         travel_hospitality:
-          description: "Travel, tourism and hospitality businesses"
+          description: Travel, tourism and hospitality businesses
           children:
             hotels_accommodation:
-              description: "Hotels, hostels and accommodation platforms"
-              children: { }
+              description: Hotels, hostels and accommodation platforms
             airlines_transport_travel:
-              description: "Airlines, rail and travel operators"
-              children: { }
+              description: Airlines, rail and travel operators
             travel_agencies_platforms:
-              description: "Travel agencies, OTAs and booking platforms"
-              children: { }
+              description: Travel agencies, OTAs and booking platforms
         media_entertainment:
-          description: "Media, content and entertainment providers"
+          description: Media, content and entertainment providers
           children:
             publishing_news:
-              description: "Newspapers, magazines and online publishers"
-              children: { }
+              description: Newspapers, magazines and online publishers
             broadcasting_tv_radio:
-              description: "TV and radio broadcasters"
-              children: { }
+              description: TV and radio broadcasters
             streaming_digital_media:
-              description: "Streaming platforms, music and video services"
-              children: { }
-
+              description: Streaming platforms, music and video services
     industrial_logistics_energy:
-      description: "Industrial production, logistics, construction and energy"
+      description: Industrial production, logistics, construction and energy
       children:
         manufacturing:
-          description: "Manufacturing and industrial production"
+          description: Manufacturing and industrial production
           children:
             discrete_manufacturing:
-              description: "Automotive, machinery and other discrete manufacturing"
-              children: { }
+              description: Automotive, machinery and other discrete manufacturing
             process_manufacturing:
-              description: "Chemicals, pharma production, food processing"
-              children: { }
+              description: Chemicals, pharma production, food processing
             industrial_equipment:
-              description: "Industrial equipment and component manufacturers"
-              children: { }
+              description: Industrial equipment and component manufacturers
         construction:
-          description: "Construction, engineering and building projects"
+          description: Construction, engineering and building projects
           children:
             general_construction:
-              description: "General contractors and construction firms"
-              children: { }
+              description: General contractors and construction firms
             civil_engineering:
-              description: "Infrastructure, roads, bridges and public works"
-              children: { }
+              description: Infrastructure, roads, bridges and public works
             specialty_trade:
-              description: "Specialized trades (electrical, plumbing, HVAC, etc.)"
-              children: { }
+              description: Specialized trades (electrical, plumbing, HVAC, etc.)
         logistics_transportation:
-          description: "Logistics, transport and supply chain services"
+          description: Logistics, transport and supply chain services
           children:
             freight_logistics:
-              description: "Freight forwarding, 3PL and logistics providers"
-              children: { }
+              description: Freight forwarding, 3PL and logistics providers
             parcel_delivery:
-              description: "Parcel, courier and last-mile delivery"
-              children: { }
+              description: Parcel, courier and last-mile delivery
             warehousing_fulfillment:
-              description: "Warehousing, fulfillment and distribution centers"
-              children: { }
+              description: Warehousing, fulfillment and distribution centers
         energy_utilities:
-          description: "Energy and utility providers"
+          description: Energy and utility providers
           children:
             power_utilities:
-              description: "Electricity generation and distribution utilities"
-              children: { }
+              description: Electricity generation and distribution utilities
             oil_gas:
-              description: "Oil, gas and related energy companies"
-              children: { }
+              description: Oil, gas and related energy companies
             renewable_energy:
-              description: "Renewable energy, solar, wind and green power"
-              children: { }
+              description: Renewable energy, solar, wind and green power
         environmental_services:
-          description: "Environmental and sustainability-related services"
+          description: Environmental and sustainability-related services
           children:
             waste_management:
-              description: "Waste collection, recycling and disposal"
-              children: { }
+              description: Waste collection, recycling and disposal
             environmental_consulting:
-              description: "Environmental consulting and impact assessments"
-              children: { }
+              description: Environmental consulting and impact assessments
             sustainability_services:
-              description: "Sustainability, ESG and climate-related services"
-              children: { }
-
+              description: Sustainability, ESG and climate-related services
     public_health_education_realestate:
-      description: "Public sector, health, education, real estate and NGOs"
+      description: Public sector, health, education, real estate and NGOs
       children:
         health:
-          description: "Healthcare providers and health-related organizations"
+          description: Healthcare providers and health-related organizations
           children:
             hospitals_clinics:
-              description: "Hospitals, clinics and care providers"
-              children: { }
+              description: Hospitals, clinics and care providers
             health_tech:
-              description: "Digital health platforms and telemedicine"
-              children: { }
+              description: Digital health platforms and telemedicine
             pharma_biotech:
-              description: "Pharmaceutical and biotech companies"
-              children: { }
+              description: Pharmaceutical and biotech companies
         education:
-          description: "Education institutions and education technology"
+          description: Education institutions and education technology
           children:
             schools_k12:
-              description: "Primary and secondary schools"
-              children: { }
+              description: Primary and secondary schools
             higher_education:
-              description: "Universities, colleges and higher education"
-              children: { }
+              description: Universities, colleges and higher education
             training_edtech:
-              description: "Training providers, bootcamps and edtech platforms"
-              children: { }
+              description: Training providers, bootcamps and edtech platforms
         government_services:
-          description: "Government and public administration"
+          description: Government and public administration
           children:
             local_government:
-              description: "Municipal and regional government bodies"
-              children: { }
+              description: Municipal and regional government bodies
             national_government:
-              description: "National or federal authorities and agencies"
-              children: { }
+              description: National or federal authorities and agencies
             public_services:
-              description: "Public services, agencies and citizen services"
-              children: { }
+              description: Public services, agencies and citizen services
         real_estate:
-          description: "Real estate, property and facility management"
+          description: Real estate, property and facility management
           children:
             residential_real_estate:
-              description: "Residential property agencies and developers"
-              children: { }
+              description: Residential property agencies and developers
             commercial_real_estate:
-              description: "Commercial property, offices and retail space"
-              children: { }
+              description: Commercial property, offices and retail space
             property_management:
-              description: "Property and facility management providers"
-              children: { }
+              description: Property and facility management providers
         nonprofit:
-          description: "Nonprofit and non-commercial organizations"
+          description: Nonprofit and non-commercial organizations
           children:
             charities_ngos:
-              description: "Charities, NGOs and foundations"
-              children: { }
+              description: Charities, NGOs and foundations
             membership_organizations:
-              description: "Associations, unions and membership organizations"
-              children: { }
+              description: Associations, unions and membership organizations
             public_benefit_orgs:
-              description: "Public benefit and social impact organizations"
-              children: { }
-
+              description: Public benefit and social impact organizations
     other:
-      description: "Industry that does not fit the other categories or is unknown"
-      children: { }
-
-
+      description: Industry that does not fit the other categories or is unknown
 intent:
-  description: "What the user wants to achieve with this ticket"
-  required: true
-  default: "intent/other"
+  description: What the user wants to achieve with this ticket
+  icon: 🎯
+  default: intent/other
   children:
     incident:
-      description: "Something is broken, unavailable or malfunctioning"
+      description: Something is broken, unavailable or malfunctioning
       children:
         outage_total:
-          description: "Complete outage or service not available at all"
-          children: { }
+          description: Complete outage or service not available at all
         partial_degradation:
-          description: "Service works only partially or with limited functionality"
-          children: { }
+          description: Service works only partially or with limited functionality
         performance_issue:
-          description: "Slow response times or degraded performance"
-          children: { }
+          description: Slow response times or degraded performance
         data_issue:
-          description: "Missing, inconsistent or corrupted data in the system"
-          children: { }
+          description: Missing, inconsistent or corrupted data in the system
         security_incident:
-          description: "Suspected or confirmed security or privacy incident"
-          children: { }
-
+          description: Suspected or confirmed security or privacy incident
     service_request:
-      description: "User requests a new service, access, feature or setup"
+      description: User requests a new service, access, feature or setup
       children:
         access_request:
-          description: "Request for new or changed access, roles or permissions"
-          children: { }
+          description: Request for new or changed access, roles or permissions
         new_service_onboarding:
-          description: "Request to onboard a new service, tenant or customer setup"
-          children: { }
+          description: Request to onboard a new service, tenant or customer setup
         configuration_setup:
-          description: "Request to set up or configure an existing service or feature"
-          children: { }
+          description: Request to set up or configure an existing service or feature
         feature_enablement:
-          description: "Request to enable or unlock an existing feature or module"
-          children: { }
+          description: Request to enable or unlock an existing feature or module
         data_export_import:
-          description: "Request for data export, import, migration or reports"
-          children: { }
-
+          description: Request for data export, import, migration or reports
     question:
-      description: "User asks for information or clarification"
+      description: User asks for information or clarification
       children:
         how_to_usage:
-          description: "How-to, usage questions or best-practice guidance"
-          children: { }
+          description: How-to, usage questions or best-practice guidance
         configuration_question:
-          description: "Questions about configuration options or parameters"
-          children: { }
+          description: Questions about configuration options or parameters
         billing_pricing_question:
-          description: "Questions about invoices, pricing, contracts or renewals"
-          children: { }
+          description: Questions about invoices, pricing, contracts or renewals
         policy_compliance_question:
-          description: "Questions about policies, compliance or legal aspects"
-          children: { }
+          description: Questions about policies, compliance or legal aspects
         roadmap_capabilities:
-          description: "Questions about roadmap, future capabilities or limits"
-          children: { }
-
+          description: Questions about roadmap, future capabilities or limits
     complaint:
-      description: "User complains about quality, delays or behavior"
+      description: User complains about quality, delays or behavior
       children:
         service_quality:
-          description: "Complaints about reliability, stability or quality of service"
-          children: { }
+          description: Complaints about reliability, stability or quality of service
         response_time:
-          description: "Complaints about slow support response or resolution times"
-          children: { }
+          description: Complaints about slow support response or resolution times
         product_usability:
-          description: "Complaints about UX, confusing flows or difficult usage"
-          children: { }
+          description: Complaints about UX, confusing flows or difficult usage
         billing_dispute:
-          description: "Complaints about billing, charges or perceived overcharging"
-          children: { }
+          description: Complaints about billing, charges or perceived overcharging
         staff_behavior:
-          description: "Complaints about behavior or communication of staff"
-          children: { }
-
+          description: Complaints about behavior or communication of staff
     change_request:
-      description: "User wants to change an existing configuration or rule"
+      description: User wants to change an existing configuration or rule
       children:
         config_change:
-          description: "Request to change system configuration, rules or thresholds"
-          children: { }
+          description: Request to change system configuration, rules or thresholds
         workflow_change:
-          description: "Request to adapt business process or workflow in the system"
-          children: { }
+          description: Request to adapt business process or workflow in the system
         permission_model_change:
-          description: "Request to change roles, permission model or approval flows"
-          children: { }
+          description: Request to change roles, permission model or approval flows
         integration_change:
-          description: "Request to change integration behavior between systems"
-          children: { }
+          description: Request to change integration behavior between systems
         contract_terms_change:
-          description: "Request to change contractual terms, SLAs or scope"
-          children: { }
-
+          description: Request to change contractual terms, SLAs or scope
     other:
-      description: "Intent does not clearly match the other categories"
-      children: { }
-
-
+      description: Intent does not clearly match the other categories
 impact:
-  description: "Business impact of the issue if not resolved"
-  required: true
-  default: "impact/low_normal/normal"
+  description: Business impact of the issue if not resolved
+  icon: 📊
+  default: impact/low_normal/normal
+  min_tags: 1
+  max_tags: 1
   children:
     low_normal:
-      description: "Low to moderate business impact, work can continue with minor friction"
+      description: Low to moderate business impact, work can continue with minor friction
       children:
         low:
-          description: "Minor local impact with little or no measurable business effect"
-          children: { }
+          description: Minor local impact with little or no measurable business effect
         normal:
-          description: "Noticeable impact for einzelne User oder Teams, aber kein echter Stillstand"
-          children: { }
+          description: Noticeable impact for einzelne User oder Teams, aber kein echter Stillstand
     high_critical:
-      description: "High or critical impact, relevant for core processes or many users"
+      description: High or critical impact, relevant for core processes or many users
       children:
         high:
-          description: "Starker Impact für wichtige Prozesse oder viele Nutzer, aber Arbeit ist noch eingeschränkt möglich"
-          children: { }
+          description: Starker Impact für wichtige Prozesse oder viele Nutzer, aber Arbeit ist noch eingeschränkt möglich
         critical:
-          description: "Schwerer Impact, Kernservice oder zentrales Business ist blockiert"
-          children: { }
-
+          description: Schwerer Impact, Kernservice oder zentrales Business ist blockiert
 urgency:
-  description: "How quickly the issue needs to be handled"
-  required: true
-  default: "urgency/low_normal/normal"
+  description: How quickly the issue needs to be handled
+  icon: ⏰
+  default: urgency/low_normal/normal
+  min_tags: 1
+  max_tags: 1
   children:
     low_normal:
-      description: "Low to normal urgency, can be planned into regular workload"
+      description: Low to normal urgency, can be planned into regular workload
       children:
         low:
-          description: "Kann später bearbeitet werden, kein Zeitdruck, gut planbar"
-          children: { }
+          description: Kann später bearbeitet werden, kein Zeitdruck, gut planbar
         normal:
-          description: "Sollte zeitnah gelöst werden, aber kein Notfall"
-          children: { }
+          description: Sollte zeitnah gelöst werden, aber kein Notfall
     high_critical:
-      description: "High or critical urgency, strong time pressure"
+      description: High or critical urgency, strong time pressure
       children:
         high:
-          description: "Hohe Dringlichkeit, sollte möglichst heute / innerhalb kurzer Frist erledigt werden"
-          children: { }
+          description: Hohe Dringlichkeit, sollte möglichst heute / innerhalb kurzer Frist erledigt werden
         critical:
-          description: "Akut, unmittelbare Aktion nötig, jede Verzögerung ist kritisch"
-          children: { }
+          description: Akut, unmittelbare Aktion nötig, jede Verzögerung ist kritisch
 asset_kind:
-  description: "Kind of affected asset or product"
-  required: true
-  default: "asset_kind/other"
+  description: Kind of affected asset or product
+  icon: 🧩
+  default: asset_kind/other
   children:
     service:
-      description: "Hosted or business service that the customer uses"
+      description: Hosted or business service that the customer uses
       children:
         business_service:
-          description: "Business-facing service supporting a specific business process"
+          description: Business-facing service supporting a specific business process
           children:
             customer_facing_service:
-              description: "Externally visible service used directly by end customers"
-              children: { }
+              description: Externally visible service used directly by end customers
             internal_business_service:
-              description: "Internal service used by employees or internal teams"
-              children: { }
+              description: Internal service used by employees or internal teams
             backoffice_service:
-              description: "Backoffice or support service (e.g. billing, reporting)"
-              children: { }
+              description: Backoffice or support service (e.g. billing, reporting)
         technical_service:
-          description: "Technical backend or shared platform service"
+          description: Technical backend or shared platform service
           children:
             integration_service:
-              description: "Integration, middleware or API gateway service"
-              children: { }
+              description: Integration, middleware or API gateway service
             background_job_service:
-              description: "Job runners, schedulers and batch-processing services"
-              children: { }
+              description: Job runners, schedulers and batch-processing services
             authentication_service:
-              description: "Identity, SSO or authentication-related services"
-              children: { }
+              description: Identity, SSO or authentication-related services
         external_api:
-          description: "External or third-party API that the product depends on"
+          description: External or third-party API that the product depends on
           children:
             payment_gateway_api:
-              description: "Payment or billing related APIs and gateways"
-              children: { }
+              description: Payment or billing related APIs and gateways
             communication_api:
-              description: "Messaging, email, SMS or notification APIs"
-              children: { }
+              description: Messaging, email, SMS or notification APIs
             data_provider_api:
-              description: "Data, analytics or enrichment provider APIs"
-              children: { }
-
+              description: Data, analytics or enrichment provider APIs
     software:
-      description: "Application, portal or client software"
+      description: Application, portal or client software
       children:
         web_app:
-          description: "Browser-based web application or portal"
+          description: Browser-based web application or portal
           children:
             public_portal:
-              description: "Public portal for customers or external users"
-              children: { }
+              description: Public portal for customers or external users
             authenticated_portal:
-              description: "Portal requiring login for customers or partners"
-              children: { }
+              description: Portal requiring login for customers or partners
             admin_console:
-              description: "Administrative or backoffice web console"
-              children: { }
+              description: Administrative or backoffice web console
         mobile_app:
-          description: "Mobile application running on iOS or Android"
+          description: Mobile application running on iOS or Android
           children:
             mobile_consumer_app:
-              description: "Consumer-facing mobile app from an app store"
-              children: { }
+              description: Consumer-facing mobile app from an app store
             mobile_enterprise_app:
-              description: "Enterprise or internal mobile app for employees"
-              children: { }
+              description: Enterprise or internal mobile app for employees
             mobile_companion_app:
-              description: "Companion app used alongside another primary system"
-              children: { }
+              description: Companion app used alongside another primary system
         desktop_app:
-          description: "Desktop or fat-client application"
+          description: Desktop or fat-client application
           children:
             native_desktop_app:
-              description: "Installed native application for Windows, macOS or Linux"
-              children: { }
+              description: Installed native application for Windows, macOS or Linux
             electron_desktop_app:
-              description: "Desktop client based on web tech (Electron or similar)"
-              children: { }
+              description: Desktop client based on web tech (Electron or similar)
             terminal_client:
-              description: "Thin client, terminal emulator or legacy desktop frontend"
-              children: { }
+              description: Thin client, terminal emulator or legacy desktop frontend
         plugin_addon:
-          description: "Plugin, extension or add-on to another application"
+          description: Plugin, extension or add-on to another application
           children:
             browser_extension:
-              description: "Browser extension or plugin"
-              children: { }
+              description: Browser extension or plugin
             app_plugin:
-              description: "Plugin or module inside an existing software product"
-              children: { }
-
+              description: Plugin or module inside an existing software product
     hardware:
-      description: "Physical devices and equipment"
+      description: Physical devices and equipment
       children:
         workstation:
-          description: "User workstations, PCs and laptops"
+          description: User workstations, PCs and laptops
           children:
             desktop_pc:
-              description: "Stationary desktop computers"
-              children: { }
+              description: Stationary desktop computers
             laptop_notebook:
-              description: "Laptops, notebooks and mobile workstations"
-              children: { }
+              description: Laptops, notebooks and mobile workstations
             thin_client:
-              description: "Thin clients or terminal devices"
-              children: { }
+              description: Thin clients or terminal devices
         pos_terminal:
-          description: "Point-of-sale terminals and in-store devices"
+          description: Point-of-sale terminals and in-store devices
           children:
             fixed_pos:
-              description: "Fixed checkout or cash register terminals"
-              children: { }
+              description: Fixed checkout or cash register terminals
             mobile_pos:
-              description: "Mobile POS devices and handheld scanners"
-              children: { }
+              description: Mobile POS devices and handheld scanners
             kiosk_terminal:
-              description: "Self-service kiosks and ticket machines"
-              children: { }
+              description: Self-service kiosks and ticket machines
         peripheral:
-          description: "Printers, scanners and other peripherals"
+          description: Printers, scanners and other peripherals
           children:
             printer:
-              description: "Printers, label printers and multifunction devices"
-              children: { }
+              description: Printers, label printers and multifunction devices
             scanner:
-              description: "Document and barcode scanners"
-              children: { }
+              description: Document and barcode scanners
             display_signage:
-              description: "External displays, digital signage and info screens"
-              children: { }
+              description: External displays, digital signage and info screens
         specialized_device:
-          description: "Specialized industry-specific devices"
+          description: Specialized industry-specific devices
           children:
             medical_device:
-              description: "Diagnostic, monitoring or lab devices in healthcare"
-              children: { }
+              description: Diagnostic, monitoring or lab devices in healthcare
             industrial_controller:
-              description: "Industrial controllers, PLCs and shopfloor devices"
-              children: { }
+              description: Industrial controllers, PLCs and shopfloor devices
             iot_device:
-              description: "IoT sensors, gateways and smart devices"
-              children: { }
-
+              description: IoT sensors, gateways and smart devices
     infrastructure:
-      description: "Network, servers, storage and core infrastructure"
+      description: Network, servers, storage and core infrastructure
       children:
         network:
-          description: "LAN, WAN, VPN, routing, DNS or connectivity"
+          description: LAN, WAN, VPN, routing, DNS or connectivity
           children:
             campus_lan:
-              description: "Local area network for offices or sites"
-              children: { }
+              description: Local area network for offices or sites
             wifi_wlan:
-              description: "Wireless networks and access points"
-              children: { }
+              description: Wireless networks and access points
             vpn_remote_access:
-              description: "VPN gateways and remote access infrastructure"
-              children: { }
+              description: VPN gateways and remote access infrastructure
             edge_network:
-              description: "Edge locations, branch routers and SD-WAN devices"
-              children: { }
+              description: Edge locations, branch routers and SD-WAN devices
         compute:
-          description: "Servers, virtual machines and container platforms"
+          description: Servers, virtual machines and container platforms
           children:
             physical_server:
-              description: "Bare-metal or physical servers"
-              children: { }
+              description: Bare-metal or physical servers
             virtual_machine:
-              description: "Virtual machines in on-prem or cloud environments"
-              children: { }
+              description: Virtual machines in on-prem or cloud environments
             container_platform:
-              description: "Kubernetes clusters or other container platforms"
-              children: { }
+              description: Kubernetes clusters or other container platforms
             serverless_runtime:
-              description: "Serverless or function-as-a-service runtimes"
-              children: { }
+              description: Serverless or function-as-a-service runtimes
         storage:
-          description: "Storage systems, volumes and file shares"
+          description: Storage systems, volumes and file shares
           children:
             block_storage:
-              description: "Block storage volumes for servers and databases"
-              children: { }
+              description: Block storage volumes for servers and databases
             file_storage:
-              description: "File servers, NAS and shared file systems"
-              children: { }
+              description: File servers, NAS and shared file systems
             object_storage:
-              description: "Object storage (e.g. S3-like) for data and backups"
-              children: { }
+              description: Object storage (e.g. S3-like) for data and backups
             backup_archive:
-              description: "Backup, archiving and long-term data retention systems"
-              children: { }
+              description: Backup, archiving and long-term data retention systems
         platform_infrastructure:
-          description: "Core technical platforms used by applications"
+          description: Core technical platforms used by applications
           children:
             database_platform:
-              description: "Database clusters, data warehouses and DBaaS"
-              children: { }
+              description: Database clusters, data warehouses and DBaaS
             messaging_platform:
-              description: "Message queues, event buses and streaming platforms"
-              children: { }
+              description: Message queues, event buses and streaming platforms
             monitoring_observability:
-              description: "Monitoring, logging and observability platforms"
-              children: { }
+              description: Monitoring, logging and observability platforms
             identity_platform:
-              description: "Central identity, directory and SSO infrastructure"
-              children: { }
-
+              description: Central identity, directory and SSO infrastructure
     other:
-      description: "Asset that does not fit the other categories or is unspecified"
+      description: Asset that does not fit the other categories or is unspecified
       children:
         generic_other:
-          description: "Generic or unspecified asset kind"
-          children: { }
-
-
+          description: Generic or unspecified asset kind
 user_role:
-  description: "Role of the requester or main contact in the ticket"
-  required: false
-  default: "user_role/unknown"
+  description: Role of the requester or main contact in the ticket
+  icon: 🧑‍💼
+  default: user_role/unknown
   children:
     end_user:
-      description: "End users, customers, patients, students or citizens using the service"
+      description: End users, customers, patients, students or citizens using the service
       children:
         consumer_customer:
-          description: "Individual B2C customer, patient, student or citizen"
-          children: { }
+          description: Individual B2C customer, patient, student or citizen
         business_user:
-          description: "Employee of a customer organization using the product for work"
-          children: { }
+          description: Employee of a customer organization using the product for work
         power_end_user:
-          description: "Very active or expert end user without admin rights"
-          children: { }
+          description: Very active or expert end user without admin rights
     it_staff:
-      description: "IT support, admins, engineers, DevOps or similar technical staff"
+      description: IT support, admins, engineers, DevOps or similar technical staff
       children:
         helpdesk_agent:
-          description: "1st level support, service desk or call center agent"
-          children: { }
+          description: 1st level support, service desk or call center agent
         system_engineer:
-          description: "System or infrastructure engineer, on-prem or cloud"
-          children: { }
+          description: System or infrastructure engineer, on-prem or cloud
         devops_engineer:
-          description: "DevOps, platform engineer or SRE"
-          children: { }
+          description: DevOps, platform engineer or SRE
         security_analyst:
-          description: "Security analyst, SOC staff or similar security role"
-          children: { }
+          description: Security analyst, SOC staff or similar security role
     admin:
-      description: "Administrators or power users with elevated rights in the system"
+      description: Administrators or power users with elevated rights in the system
       children:
         tenant_admin:
-          description: "Account, tenant or organization administrator"
-          children: { }
+          description: Account, tenant or organization administrator
         application_admin:
-          description: "Admin for one specific app, module or product"
-          children: { }
+          description: Admin for one specific app, module or product
         key_user:
-          description: "Business key user with extended configuration rights"
-          children: { }
+          description: Business key user with extended configuration rights
     manager:
-      description: "Managers, team leads and decision makers"
+      description: Managers, team leads and decision makers
       children:
         team_lead:
-          description: "Team lead, squad lead or supervisor of a small team"
-          children: { }
+          description: Team lead, squad lead or supervisor of a small team
         department_manager:
-          description: "Department or line manager responsible for a larger area"
-          children: { }
+          description: Department or line manager responsible for a larger area
         executive:
-          description: "Director, VP, C-level or similar senior decision maker"
-          children: { }
+          description: Director, VP, C-level or similar senior decision maker
     external_partner:
-      description: "Suppliers, partners or external service providers"
+      description: Suppliers, partners or external service providers
       children:
         implementation_partner:
-          description: "Consulting or implementation partner working for the customer"
-          children: { }
+          description: Consulting or implementation partner working for the customer
         vendor_representative:
-          description: "Representative of another software or service vendor"
-          children: { }
+          description: Representative of another software or service vendor
         outsourcing_provider:
-          description: "External provider operating services on behalf of the customer"
-          children: { }
+          description: External provider operating services on behalf of the customer
     system_or_automation:
-      description: "Automated systems, bots or technical accounts creating tickets"
+      description: Automated systems, bots or technical accounts creating tickets
       children:
         monitoring_system:
-          description: "Monitoring, alerting or observability system creating tickets"
-          children: { }
+          description: Monitoring, alerting or observability system creating tickets
         integration_system:
-          description: "Integration platform or external system creating tickets"
-          children: { }
+          description: Integration platform or external system creating tickets
         batch_job:
-          description: "Scheduled job or batch process opening tickets automatically"
-          children: { }
+          description: Scheduled job or batch process opening tickets automatically
     other:
-      description: "Role that does not fit the other categories or is unclear"
+      description: Role that does not fit the other categories or is unclear
       children:
         unknown:
-          description: "Role of the requester is not clear from the ticket"
-          children: { }
-
+          description: Role of the requester is not clear from the ticket
 failure_symptom:
-  description: "How the problem manifests for the user"
-  required: false
-  default: ""
+  description: How the problem manifests for the user
+  icon: 🚨
   children:
     availability_performance:
-      description: "Service is not reachable or clearly degraded in speed/quality"
+      description: Service is not reachable or clearly degraded in speed/quality
       children:
         no_response_timeout:
-          description: "Service does not respond, requests time out or host cannot be reached"
+          description: Service does not respond, requests time out or host cannot be reached
           children:
             full_outage:
-              description: "Complete outage, no request succeeds for any user"
-              children: { }
+              description: Complete outage, no request succeeds for any user
             intermittent_outage:
-              description: "Service sometimes works, sometimes fails or times out"
-              children: { }
+              description: Service sometimes works, sometimes fails or times out
         slow_performance:
-          description: "Service reacts much slower than usual or expected"
+          description: Service reacts much slower than usual or expected
           children:
             globally_slow:
-              description: "Most or all actions are slow"
-              children: { }
+              description: Most or all actions are slow
             specific_action_slow:
-              description: "Only specific pages, endpoints or operations are slow"
-              children: { }
+              description: Only specific pages, endpoints or operations are slow
         degraded_quality:
-          description: "Service works but quality is reduced"
+          description: Service works but quality is reduced
           children:
             poor_audio_quality:
-              description: "Echo, noise, distortion or very low audio quality"
-              children: { }
+              description: Echo, noise, distortion or very low audio quality
             poor_video_quality:
-              description: "Low resolution, freezes, pixelation or heavy lag in video"
-              children: { }
+              description: Low resolution, freezes, pixelation or heavy lag in video
             low_recognition_accuracy:
-              description: "Low accuracy for OCR, voice, search or AI-based features"
-              children: { }
-
+              description: Low accuracy for OCR, voice, search or AI-based features
     access_authentication:
-      description: "User cannot access the system or keep access"
+      description: User cannot access the system or keep access
       children:
         cannot_login:
-          description: "User cannot log in at all"
+          description: User cannot log in at all
           children:
             invalid_credentials_loop:
-              description: "User repeatedly gets invalid-credentials or wrong-password errors"
-              children: { }
+              description: User repeatedly gets invalid-credentials or wrong-password errors
             account_locked_or_disabled:
-              description: "Account locked, disabled or blocked by policy"
-              children: { }
+              description: Account locked, disabled or blocked by policy
         sso_or_idp_issue:
-          description: "Problem with SSO, identity provider or MFA"
+          description: Problem with SSO, identity provider or MFA
           children:
             sso_flow_fails:
-              description: "SSO redirect or handshake fails, user cannot complete login"
-              children: { }
+              description: SSO redirect or handshake fails, user cannot complete login
             mfa_problem:
-              description: "Second factor code, app or device does not work"
-              children: { }
+              description: Second factor code, app or device does not work
         session_issue:
-          description: "User can log in but cannot keep a stable session"
+          description: User can log in but cannot keep a stable session
           children:
             login_session_drops:
-              description: "User is logged out unexpectedly or too quickly"
-              children: { }
+              description: User is logged out unexpectedly or too quickly
             permission_denied_unexpected:
-              description: "User logs in but gets unexpected permission/authorization errors"
-              children: { }
-
+              description: User logs in but gets unexpected permission/authorization errors
     behavior_functionality:
-      description: "Service responds but behaves wrong or features do not work"
+      description: Service responds but behaves wrong or features do not work
       children:
         error_message:
-          description: "Explicit error message is shown"
+          description: Explicit error message is shown
           children:
             client_side_error:
-              description: "Error in browser, app or client (UI / JavaScript / local validation)"
-              children: { }
+              description: Error in browser, app or client (UI / JavaScript / local validation)
             server_side_error:
-              description: "Server-side error such as 5xx or generic internal error"
-              children: { }
+              description: Server-side error such as 5xx or generic internal error
             validation_error:
-              description: "Form or input validation error prevents continuing a process"
-              children: { }
+              description: Form or input validation error prevents continuing a process
         feature_problem:
-          description: "Feature or function is missing, blocked or not usable"
+          description: Feature or function is missing, blocked or not usable
           children:
             feature_not_available:
-              description: "User cannot find or use a feature that should exist"
-              children: { }
+              description: User cannot find or use a feature that should exist
             feature_disabled_or_not_in_plan:
-              description: "Feature is intentionally disabled or requires a higher plan"
-              children: { }
+              description: Feature is intentionally disabled or requires a higher plan
             temporarily_disabled:
-              description: "Feature is temporarily disabled due to maintenance or incident"
-              children: { }
+              description: Feature is temporarily disabled due to maintenance or incident
         wrong_or_unexpected_result:
-          description: "Service returns wrong, inconsistent or unexpected results"
+          description: Service returns wrong, inconsistent or unexpected results
           children:
             calculation_error:
-              description: "Totals, prices, balances or calculated values are wrong"
-              children: { }
+              description: Totals, prices, balances or calculated values are wrong
             inconsistent_display:
-              description: "Different screens, reports or exports show conflicting values"
-              children: { }
+              description: Different screens, reports or exports show conflicting values
             business_rule_misapplied:
-              description: "Discounts, eligibility, routing or other business rules are wrong"
-              children: { }
+              description: Discounts, eligibility, routing or other business rules are wrong
         workflow_blocked:
-          description: "User cannot complete a process, even if single steps work"
+          description: User cannot complete a process, even if single steps work
           children:
             cannot_complete_checkout_or_submission:
-              description: "Process stops before final confirmation or payment"
-              children: { }
+              description: Process stops before final confirmation or payment
             step_dependency_broken:
-              description: "A required step or dependency prevents moving to the next step"
-              children: { }
+              description: A required step or dependency prevents moving to the next step
         stability:
-          description: "Client or app becomes unstable or unusable"
+          description: Client or app becomes unstable or unusable
           children:
             crash:
-              description: "App or client crashes or closes unexpectedly"
+              description: App or client crashes or closes unexpectedly
               children:
                 crash_on_startup:
-                  description: "Crash happens directly at startup or login"
-                  children: { }
+                  description: Crash happens directly at startup or login
                 crash_on_action:
-                  description: "Crash is triggered by a specific user action"
-                  children: { }
+                  description: Crash is triggered by a specific user action
             freeze_or_not_responding:
-              description: "UI freezes or becomes unresponsive and must be restarted"
-              children: { }
-
+              description: UI freezes or becomes unresponsive and must be restarted
     data_integrity:
-      description: "Problem with data being missing, wrong or corrupted"
+      description: Problem with data being missing, wrong or corrupted
       children:
         data_loss:
-          description: "Data is missing, deleted or overwritten"
+          description: Data is missing, deleted or overwritten
           children:
             partial_data_loss:
-              description: "Some records, fields or attachments are missing"
-              children: { }
+              description: Some records, fields or attachments are missing
             full_data_loss:
-              description: "Whole objects, accounts or datasets appear deleted"
-              children: { }
+              description: Whole objects, accounts or datasets appear deleted
         data_corruption:
-          description: "Data exists but is damaged, duplicated or inconsistent"
+          description: Data exists but is damaged, duplicated or inconsistent
           children:
             duplicated_records:
-              description: "Unexpected duplicates of objects or entries"
-              children: { }
+              description: Unexpected duplicates of objects or entries
             unreadable_or_invalid_data:
-              description: "Data cannot be opened, parsed or used correctly"
-              children: { }
-
+              description: Data cannot be opened, parsed or used correctly
     other:
-      description: "Symptom that does not fit the other categories or is unclear"
+      description: Symptom that does not fit the other categories or is unclear
       children:
         unclear_symptom:
-          description: "User describes a problem but the symptom is vague or mixed"
-          children: { }
-
-
-
+          description: User describes a problem but the symptom is vague or mixed
 root_cause_hint:
-  description: "Likely or suspected underlying cause (high-level guess)"
+  description: Likely or suspected underlying cause (high-level guess)
+  icon: 🧠
   children:
-    config_change:
-      description: "Issues caused by configuration or recent changes in the system"
-      children:
-        misconfiguration:
-          description: "Wrong or missing configuration, settings or rules"
-          children: { }
-        regression_bug:
-          description: "Issue likely introduced by a recent change, deployment or release"
-          children: { }
-        permissions_missing:
-          description: "Missing roles, rights, entitlements or approvals in the configuration"
-          children: { }
-
-    infra_environment:
-      description: "Capacity, infrastructure or connectivity limitations"
-      children:
-        capacity_limit:
-          description: "Overload, quotas, rate limiting or resource exhaustion"
-          children: { }
-        network_issue:
-          description: "Connectivity, routing, DNS, VPN or firewall problems"
-          children: { }
-        third_party_outage:
-          description: "External provider, upstream API or SaaS service is down or degraded"
-          children: { }
-
-    data_process:
-      description: "Problems caused by data or how it is processed"
-      children:
-        data_quality:
-          description: "Broken, inconsistent, incomplete or invalid data"
-          children: { }
-        user_error:
-          description: "User misunderstood, misused or misconfigured something"
-          children: { }
-
-    planned_change:
-      description: "Known planned work or expected side-effects"
-      children:
-        scheduled_maintenance:
-          description: "Planned maintenance window, migration or change activity"
-          children: { }
-
+    misconfiguration:
+      description: Wrong or missing configuration, settings or rules
+    regression_bug:
+      description: Issue likely introduced by a recent change or release
+    capacity_limit:
+      description: Overload, rate limiting, quotas or capacity issues
+    third_party_outage:
+      description: External provider or upstream system is down
+    network_issue:
+      description: Connectivity, routing, DNS or firewall issues
+    data_quality:
+      description: Broken, inconsistent or invalid data
+    user_error:
+      description: User misunderstood, misused or misconfigured something
+    permissions_missing:
+      description: Missing roles, rights, entitlements or approvals
+    scheduled_maintenance:
+      description: Planned work, maintenance window, migration
     other:
-      description: "Cause that does not fit the other categories or is unknown"
-      children: { }
-
-
+      description: Cause that does not fit the other categories
 sentiment:
-  description: "Overall emotional tone of the ticket text"
-  required: false
-  default: ""
+  description: Emotional tone of the ticket text
+  icon: 🙂
   children:
+    very_negative:
+      description: Strongly negative, frustrated or angry tone
     negative:
-      description: "User expresses dissatisfaction, frustration or worry"
-      children:
-        mildly_negative:
-          description: "Polite but clearly dissatisfied, disappointed or annoyed"
-          children: { }
-        frustrated:
-          description: "Strong frustration, repeated problems, clear emotional tension"
-          children: { }
-        angry:
-          description: "Angry tone, harsh wording, blame directed at support or vendor"
-          children: { }
-        escalated_or_threatening:
-          description: "Mentions escalation, complaints to management, legal or churn threats"
-          children: { }
+      description: Mostly negative or dissatisfied tone
     neutral:
-      description: "Mostly factual, descriptive or procedural tone"
-      children:
-        purely_factual:
-          description: "Short, matter-of-fact description without visible emotion"
-          children: { }
-        mixed_or_unclear:
-          description: "Tone is mixed or too short to clearly classify"
-          children: { }
+      description: Neutral, factual, no strong emotion
     positive:
-      description: "User is satisfied, appreciative or optimistic"
-      children:
-        satisfied:
-          description: "User is generally happy with the service or solution"
-          children: { }
-        grateful:
-          description: "Explicit thanks, appreciation or praise for support or product"
-          children: { }
-        enthusiastic:
-          description: "Very positive, excited or promotional tone"
-          children: { }
-
-
+      description: Mostly positive, appreciative or cooperative tone
+    very_positive:
+      description: Highly positive, enthusiastic or grateful tone
+    mixed:
+      description: Mixture of positive and negative elements
 formality:
-  description: "Degree of formality in the writing style"
-  required: false
-  default: ""
+  description: Degree of formality in the writing style
+  icon: 📝
   children:
-    more_formal:
-      description: "Clearly formal, polite or official tone"
-      children:
-        very_formal:
-          description: "Highly formal, official, legalistic or contract-like language"
-          children: { }
-        formal:
-          description: "Standard polite business language, respectful and structured"
-          children: { }
+    very_formal:
+      description: Highly formal, official or legalistic language
+    formal:
+      description: Standard polite business language
     neutral:
-      description: "Everyday language without strong formal or informal markers"
-      children:
-        neutral_plain:
-          description: "Straightforward, matter-of-fact wording without slang or heavy politeness"
-          children: { }
-    more_informal:
-      description: "Casual or conversational tone"
-      children:
-        informal:
-          description: "Casual language, contractions, light slang or emojis, but still respectful"
-          children: { }
-        very_informal:
-          description: "Very casual, heavy slang or chat-style writing, memes, inside jokes"
-          children: { }
-
-
+      description: Everyday language without strong formal/informal markers
+    informal:
+      description: Casual language, abbreviations, light slang
+    very_informal:
+      description: Very casual, heavy slang or chat-style writing
 addressed_to:
-  description: "Who is explicitly addressed in the message"
-  required: false
-  default: ""
+  description: Who is explicitly addressed in the message
+  icon: 📬
   children:
-    support_ops:
-      description: "Operational support and technical help channels"
-      children:
-        generic_support:
-          description: "Addressed to a generic support, helpdesk or service desk team"
-          children: { }
-        technical_team:
-          description: "Addressed to engineers, IT operations or technical specialists"
-          children: { }
-    business_functions:
-      description: "Commercial, billing and account-related contacts"
-      children:
-        sales_account:
-          description: "Addressed to sales, account management or customer success"
-          children: { }
-        billing_finance:
-          description: "Addressed to billing, invoicing, collections or finance team"
-          children: { }
-    leadership_governance:
-      description: "Leadership, management or formal governance functions"
-      children:
-        management_executive:
-          description: "Addressed to management, leadership, C-level or directors"
-          children: { }
-        legal_compliance:
-          description: "Addressed to legal, compliance, data protection or privacy office"
-          children: { }
-    individual_person:
-      description: "Directly addressed to a specific person rather than a team"
-      children:
-        named_person:
-          description: "Addressed to a specific named individual (e.g. 'Hi Anna', 'Dear Mr. Smith')"
-          children: { }
+    generic_support:
+      description: Addressed to a generic support/helpdesk team
+    technical_team:
+      description: Addressed to engineers, IT or technical specialists
+    sales_account:
+      description: Addressed to sales, account management or CSM
+    billing_finance:
+      description: Addressed to billing, invoicing or finance team
+    management_executive:
+      description: Addressed to management, leadership or executives
+    legal_compliance:
+      description: Addressed to legal, compliance or data protection
+    named_person:
+      description: Directly addressed to a specific named individual
     other:
-      description: "Recipient that does not fit the other categories or is unclear"
-      children:
-        unclear_recipient:
-          description: "Recipient is ambiguous, mixed or cannot be determined from the text"
-          children: { }
+      description: Recipient that does not fit the other categories
+reproducibility:
+  description: How reliably the reported issue can be reproduced
+  icon: 🔁
+  children:
+    always:
+      description: Reporter states it happens on every attempt or retry
+    sometimes:
+      description: Reporter notes it happens occasionally or irregularly
+    cannot_reproduce:
+      description: Explicitly says the issue cannot be reproduced or stopped appearing
+time_sensitivity:
+  description: Explicit deadlines or event-driven timing separate from urgency
+  icon: 📅
+  children:
+    no_deadline:
+      description: Reporter says timing is flexible or no deadline is present
+    deadline_today:
+      description: Due today, immediately, or same-day cut-off noted
+    deadline_specific_date:
+      description: Specific date or short dated window beyond today is provided
+    event_based:
+      description: Needs completion before or for a particular event
+data_sensitivity:
+  description: What type of sensitive or regulated data is referenced
+  icon: 🔒
+  children:
+    personal_data:
+      description: Names, contact details, IDs, or similar personal data mentioned
+    financial_data:
+      description: Credit card, billing, or other financial data referenced
+    health_data:
+      description: Patient information, medical records, or clinical data mentioned
+    none_obvious:
+      description: No obvious sensitive data is described in the text
+change_risk:
+  description: Risk level of implementing the requested change (only for change/service requests)
+  icon: ⚠️
+  children:
+    low:
+      description: Straightforward change unlikely to affect production broadly
+    medium:
+      description: Non-trivial change that needs caution or testing
+    high:
+      description: High-risk change needing thorough review or authorization
+language_quality:
+  description: How clear and usable the text is for automation or routing
+  icon: 🗣️
+  children:
+    clear:
+      description: Plain description with sufficient context to proceed
+    unclear:
+      description: Missing context, contradictory information, or unclear ask
+    very_short:
+      description: One-liner or very short note without details
+expected_outcome:
+  description: Explicit statement of what success looks like for the requester
+  icon: ✅
+  children:
+    fix_issue:
+      description: Direct ask to fix, repair, or restore normal function
+    get_access:
+      description: Request to obtain access, permission, or account setup
+    get_explanation:
+      description: Wants an explanation, guidance, or root cause detail
+    refund_credit:
+      description: Seeks refund, credit, or billing correction
+severity_hint:
+  description: Technical severity signaled by the language in the ticket
+  icon: 🔥
+  children:
+    minor:
+      description: Small problem without major operational impact
+    major:
+      description: Major functionality broken or repeated errors
+    critical:
+      description: Service down, severe failure, or high-severity alarm
+lifecycle_stage:
+  description: Where the user is in the product or service lifecycle
+  icon: 🌱
+  children:
+    onboarding:
+      description: Initial setup, rollout, or training phase
+    active_use:
+      description: Regular day-to-day usage phase
+    upgrade_migration:
+      description: Moving to a new version, platform, or expanded scope
+    offboarding:
+      description: Account closure, data export, or decommissioning
+complexity:
+  description: How difficult or uncertain the resolution is likely to be
+  icon: 🧩
+  children:
+    low:
+      description: Straightforward resolution with clear steps
+    medium:
+      description: Moderate effort requiring investigation or coordination
+    high:
+      description: Complex or ambiguous work with significant uncertainty
