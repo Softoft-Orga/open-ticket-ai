@@ -183,8 +183,9 @@ Files like `_config_rendering.md` are included but Starlight convention uses und
 - [x] Integrate Pagefind search
 - [x] Update netlify.toml
 - [x] Add .gitignore entries
+- [x] Add URL redirects for /en/ prefix
+- [x] Remove VitePress-specific frontmatter fields
 - [ ] Convert Vue components to Astro (future work)
-- [ ] Add URL redirects for /en/ prefix
 - [ ] Test all internal links
 - [x] Remove legacy VitePress docs after verifying migration
 
