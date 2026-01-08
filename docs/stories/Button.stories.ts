@@ -5,7 +5,7 @@ const meta: Meta<typeof Button> = {
     title: 'Core/Button',
     component: Button,
     argTypes: {
-        variant: {control: {type: 'select'}, options: ['primary', 'secondary', 'info', 'success']},
+        variant: {control: {type: 'select'}, options: ['primary', 'secondary', 'info', 'success', 'warning', 'danger']},
         disabled: {control: 'boolean'}
     },
 }
@@ -55,4 +55,26 @@ export const Success: Story = {
         template: '<Button v-bind="args">Success Button</Button>'
     }),
     args: {variant: 'success', disabled: false}
+}
+
+export const Warning: Story = {
+    render: (args) => ({
+        components: {Button},
+        setup() {
+            return {args}
+        },
+        template: '<Button v-bind="args">Warning Button</Button>'
+    }),
+    args: {variant: 'warning', disabled: false}
+}
+
+export const Danger: Story = {
+    render: (args) => ({
+        components: {Button},
+        setup() {
+            return {args}
+        },
+        template: '<Button v-bind="args">Danger Button</Button>'
+    }),
+    args: {variant: 'danger', disabled: false}
 }
