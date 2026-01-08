@@ -1,9 +1,18 @@
 /* Custom styles for Open Ticket AI docs */
 
 :root {
-  --sl-color-accent-low: #7c4dff;
-  --sl-color-accent: #7c4dff;
-  --sl-color-accent-high: #a78bfa;
+  /* Responsive base font size (legacy VitePress) */
+  font-size: clamp(1rem, 1rem + 0.5vw, 1.125rem);
+  
+  /* Layout max-width (legacy VitePress: 1600px) */
+  --sl-content-width: 50rem; /* ~800px default, increased below for wider screens */
+  
+  /* Brand Colors (legacy VitePress palette: #646cff, #747bff, #535bf2) */
+  --sl-color-accent-low: #535bf2;     /* Deeper variant for backgrounds */
+  --sl-color-accent: #646cff;          /* Primary brand color */
+  --sl-color-accent-high: #747bff;     /* Lighter variant for hover/highlights */
+  
+  /* Keep dark theme colors */
   --sl-color-white: #e6e7ea;
   --sl-color-gray-1: #0b1220;
   --sl-color-gray-2: #111827;
@@ -13,11 +22,30 @@
   --sl-color-gray-6: #94a3b8;
 }
 
+/* Increase content width on larger screens to approach 1600px max */
+@media (min-width: 72rem) {
+  :root {
+    --sl-content-width: 60rem; /* ~960px */
+  }
+}
+
+@media (min-width: 90rem) {
+  :root {
+    --sl-content-width: 75rem; /* ~1200px */
+  }
+}
+
+@media (min-width: 110rem) {
+  :root {
+    --sl-content-width: 100rem; /* ~1600px */
+  }
+}
+
 /* Force dark theme */
 :root[data-theme='light'] {
-  --sl-color-accent-low: #7c4dff;
-  --sl-color-accent: #7c4dff;
-  --sl-color-accent-high: #a78bfa;
+  --sl-color-accent-low: #535bf2;
+  --sl-color-accent: #646cff;
+  --sl-color-accent-high: #747bff;
   --sl-color-white: #e6e7ea;
   --sl-color-gray-1: #0b1220;
   --sl-color-gray-2: #111827;
@@ -25,6 +53,38 @@
   --sl-color-gray-4: #374151;
   --sl-color-gray-5: #475569;
   --sl-color-gray-6: #94a3b8;
+}
+
+/* Hero gradient styling (legacy VitePress hero treatment) */
+/* Target Starlight splash template hero title */
+.sl-hero h1,
+.sl-hero__title {
+  background: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+  background: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Hero section background effect */
+.sl-hero {
+  position: relative;
+}
+
+.sl-hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
+  filter: blur(44px);
+  opacity: 0.3;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* Mermaid diagram styling */
