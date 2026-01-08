@@ -21,7 +21,7 @@ on [GitHub](https://github.com/Softoft-Orga/open-ticket-ai/releases/tag/v1.4.1).
 This Demo shows the OTOBO Ticketsystem with OTAI setup to classify queue and priority based on the
 ticket content. You can login with the following link!
 
-::: warning German Models!
+:::caution German Models!
 The Queue and Priority model only work for German tickets as it was trained with German data.
 :::
 

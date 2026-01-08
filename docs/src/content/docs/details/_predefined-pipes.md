@@ -5,7 +5,7 @@ draft: true
 
 # Predefined Pipe Concepts
 
-:::warning Exploratory design
+:::caution Exploratory design
 This page documents an exploratory design for predefined Pipes. The feature is not yet available in production releases and the concepts here may change significantly as we validate the approach with internal prototypes.
 :::
 

@@ -126,7 +126,8 @@ flowchart TB
 
 #### Yaml Example
 
-:::details Composite Pipe Example
+<details>
+<summary>Composite Pipe Example</summary>
 
 ```yaml
 - id: ticket_workflow
@@ -158,7 +159,7 @@ flowchart TB
             name: "{{ get_pipe_result('classify', 'predicted_queue') }}"
 ```
 
-:::
+</details>
 
 #### Characteristics
 
@@ -195,7 +196,8 @@ flowchart TB
 
 #### Yaml Example
 
-:::details SimpleSequentialOrchestrator Example
+<details>
+<summary>SimpleSequentialOrchestrator Example</summary>
 
 ```yaml
 - id: orchestrator
@@ -215,7 +217,7 @@ flowchart TB
           ticket_search_criteria: { queue: { name: "Incoming" }, limit: 1 }
 ```
 
-:::
+</details>
 
 ---
 

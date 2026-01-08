@@ -46,7 +46,8 @@ flowchart TB
     U --> CR["CompositeResult"]
 ```
 
-:::details Composite Pipe Example
+<details>
+<summary>Composite Pipe Example</summary>
 
 ```yaml
 - id: ticket_workflow
@@ -80,7 +81,7 @@ flowchart TB
       depends_on: [ classify ]
 ```
 
-:::
+</details>
 
 **Characteristics:**
 
