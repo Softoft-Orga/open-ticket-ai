@@ -58,3 +58,12 @@ def test_otobo_znuny_params_with_numeric_password():
     )
     assert params.password == "1234567890123456"
     assert isinstance(params.password, str)
+
+
+def test_otobo_znuny_params_with_float_password():
+    params = OTOBOZnunyTSServiceParams(
+        password=123.456,
+        base_url="http://localhost:8081/otrs/nph-genericinterface.pl",
+    )
+    assert params.password == "123.456"
+    assert isinstance(params.password, str)

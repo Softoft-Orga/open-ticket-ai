@@ -1,3 +1,5 @@
+from typing import Any
+
 from open_ticket_ai import StrictBaseModel
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote, UnifiedTicket
 from otobo_znuny.domain_models.basic_auth_model import BasicAuth
@@ -63,7 +65,7 @@ class OTOBOZnunyTSServiceParams(StrictBaseModel):
 
     @field_validator("password", mode="before")
     @classmethod
-    def _convert_password_to_str(cls, v: str | int) -> str:
+    def _convert_password_to_str(cls, v: Any) -> str:
         return str(v)
 
     @property
