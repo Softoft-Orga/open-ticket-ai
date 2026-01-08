@@ -139,7 +139,7 @@ open-ticket-ai run --config config.yml
 
 - [Installation Guide](installation.md) - Detailed installation instructions
 - [First Pipeline Tutorial](first_pipeline.md) - Step-by-step pipeline creation
-- [Configuration Reference](../details/_config_reference.md) - Complete config docs
+- [Configuration Reference](../details/config_reference.md) - Complete config docs
 - [Available Plugins](../plugins/plugin_system.md) - Plugin documentation
 
 ## Common Issues

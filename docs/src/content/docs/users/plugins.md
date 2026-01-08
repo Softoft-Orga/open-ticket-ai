@@ -252,4 +252,4 @@ See the [Plugin Development Guide](../developers/plugin_development.md) for:
 - [Plugin Development](../developers/plugin_development.md)
 - [Dependency Injection](../developers/dependency_injection.md)
 - [Pipe System](pipeline.md)
-- [Configuration](../details/_config_reference.md)
+- [Configuration](../details/config_reference.md)
