@@ -116,4 +116,4 @@ their behavior with test data.
 - [Dependency Injection](dependency_injection.md)
 - [Configuration Reference](../../details/config_reference.md)
 - [Pipeline Architecture](../../concepts/pipeline-architecture.md)
-- [Plugin Development](plugin_development.md)
+- [Plugin Development](plugin_development.mdx)
