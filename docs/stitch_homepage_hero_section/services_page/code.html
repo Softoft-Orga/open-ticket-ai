@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Open Ticket AI - Services</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0db9f2",
+                        "secondary": "#7c3aed",
+                        "background-dark": "#0a1120", // Deep midnight blue
+                        "card-dark": "#111b2d", // Slightly lighter navy for cards
+                        "border-dark": "#1f2937",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "sans": ["Space Grotesk", "sans-serif"],
+                    },
+                    backgroundImage: {
+                        'glow-gradient': 'radial-gradient(circle at center, rgba(13, 185, 242, 0.15) 0%, rgba(10, 17, 32, 0) 70%)',
+                        'cyber-grid': 'linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0a1120;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .cyber-card:hover {
+            box-shadow: 0 0 20px rgba(13, 185, 242, 0.2);
+            border-color: rgba(13, 185, 242, 0.5);
+        }
+        .grid-bg {
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-white min-h-screen flex flex-col antialiased">
+<header class="sticky top-0 z-50 w-full border-b border-white/10 bg-background-dark/80 backdrop-blur-md">
+<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
+<div class="flex items-center gap-3">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-secondary text-white shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">dataset</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-white">Open Ticket AI</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="text-sm font-medium text-primary hover:text-primary transition-colors" href="#">Services</a>
+<a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="#">Pricing</a>
+<a class="text-sm font-medium text-slate-300 hover:text-primary transition-colors" href="#">Company</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden md:flex items-center justify-center rounded-lg px-4 py-2 text-sm font-bold text-white transition hover:text-primary">
+                    Login
+                </button>
+<button class="bg-primary hover:bg-primary/90 text-background-dark text-sm font-bold py-2 px-5 rounded-lg transition-all shadow-[0_0_15px_rgba(13,185,242,0.4)] hover:shadow-[0_0_25px_rgba(13,185,242,0.6)]">
+                    Get Demo
+                </button>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<section class="relative overflow-hidden pt-20 pb-20">
+<div class="absolute inset-0 bg-cyber-grid grid-bg opacity-20 pointer-events-none"></div>
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-glow-gradient pointer-events-none"></div>
+<div class="relative mx-auto max-w-7xl px-6 lg:px-8 text-center">
+<div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-primary backdrop-blur-sm mb-6">
+<span class="flex h-2 w-2 rounded-full bg-green-500"></span>
+                    German Engineering Precision
+                </div>
+<h1 class="mx-auto max-w-4xl text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
+                    We Don't Just Build AI. <br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">We Integrate It.</span>
+</h1>
+<p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
+                    Transparent, fixed-price packages for enterprise-grade helpdesk automation.
+                    From self-hosted AI models to full workflow automation.
+                </p>
+</div>
+</section>
+<section class="py-12 bg-background-dark relative">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="cyber-card rounded-2xl border border-white/10 bg-gradient-to-br from-card-dark to-[#0f1729] p-8 md:p-12 relative overflow-hidden transition-all duration-300">
+<div class="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col md:flex-row gap-12 items-start">
+<div class="md:w-3/5">
+<div class="flex items-center gap-3 mb-4">
+<div class="p-2 rounded bg-primary/10 text-primary">
+<span class="material-symbols-outlined">model_training</span>
+</div>
+<h2 class="text-2xl font-bold text-white">Ticket Tagging AI Model</h2>
+</div>
+<p class="text-slate-300 text-lg mb-6 leading-relaxed">
+                                Our core AI model designed for the automatic classification and tagging of helpdesk tickets.
+                                It processes incoming requests to instantly identify critical metadata before a human even sees the ticket.
+                            </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+<div class="flex items-center gap-3 text-slate-400">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span>Category &amp; Topic</span>
+</div>
+<div class="flex items-center gap-3 text-slate-400">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span>Intent Recognition</span>
+</div>
+<div class="flex items-center gap-3 text-slate-400">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span>Impact, Urgency &amp; Priority</span>
+</div>
+<div class="flex items-center gap-3 text-slate-400">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span>Routing Hints</span>
+</div>
+</div>
+</div>
+<div class="md:w-2/5 w-full bg-black/20 rounded-xl border border-white/5 p-6 backdrop-blur-sm">
+<h3 class="text-white font-semibold mb-4 border-b border-white/10 pb-2">Deployment &amp; Integration</h3>
+<ul class="space-y-4">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-secondary shrink-0">dns</span>
+<div>
+<p class="text-white text-sm font-medium">Self-Hosted</p>
+<p class="text-slate-500 text-xs mt-1">Full on-premise deployment. No data leaves your secure infrastructure.</p>
+</div>
+</li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-secondary shrink-0">sync_saved_locally</span>
+<div>
+<p class="text-white text-sm font-medium">Auto Write-Back</p>
+<p class="text-slate-500 text-xs mt-1">Deep integration with ticket systems to automatically write tags and fields.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 bg-background-dark border-t border-white/5 relative">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mb-12 md:text-center">
+<div class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-4">
+<span class="material-symbols-outlined text-sm">data_object</span> Data Services
+                    </div>
+<h2 class="text-3xl font-bold text-white">Synthetic Data Generation</h2>
+<p class="mt-4 text-slate-400 text-lg max-w-3xl mx-auto">Custom, realistic, multilingual support-ticket datasets for AI training, evaluation, and benchmarking.</p>
+<p class="mt-4 text-slate-400 text-sm max-w-3xl mx-auto leading-relaxed">
+                        We generate high-quality synthetic support-ticket datasets tailored to your ticket system, labels, and machine-learning use case. This service is used to evaluate tagging models, train classifiers, reduce cold-start issues, and build benchmark datasets—without exposing sensitive customer data.
+                    </p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+<div class="cyber-card flex flex-col rounded-2xl border border-white/10 bg-card-dark p-8 transition-all hover:border-primary/50">
+<div class="mb-6">
+<h3 class="text-xl font-bold text-white">Evaluation Dataset</h3>
+<p class="text-sm text-slate-500 mt-1 font-medium">Benchmarking &amp; Testing</p>
+</div>
+<div class="mb-6">
+<span class="text-3xl font-bold text-white">from 3.000 €</span>
+</div>
+<ul class="space-y-3 text-sm text-slate-300 mb-8 flex-grow">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Up to 20.000 synthetic tickets
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Weighted multilingual generation
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Core ticket fields (subject, body, queue)
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Realistic distributions
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                JSONL or CSV delivery
+                            </li>
+</ul>
+<button class="w-full rounded-lg bg-white/5 border border-white/10 py-3 text-sm font-bold text-white hover:bg-white/10 transition">Contact Sales</button>
+</div>
+<div class="cyber-card flex flex-col rounded-2xl border border-secondary/40 bg-gradient-to-b from-card-dark to-[#1a1033] p-8 transition-all relative overflow-hidden shadow-lg shadow-secondary/5">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+<div class="mb-6 relative z-10">
+<h3 class="text-xl font-bold text-white">Training Dataset</h3>
+<p class="text-sm text-secondary mt-1 font-medium">High Volume Training</p>
+</div>
+<div class="mb-6 relative z-10">
+<span class="text-3xl font-bold text-white">from 7.500 €</span>
+</div>
+<ul class="space-y-3 text-sm text-slate-300 mb-8 flex-grow relative z-10">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5">check</span>
+                                50k–100k tickets
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5">check</span>
+                                Custom schema (queues, priorities, SLAs)
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5">check</span>
+                                Controlled label distributions
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5">check</span>
+                                Multilingual expansion
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5">check</span>
+                                Train / validation split, 1 revision round
+                            </li>
+</ul>
+<button class="w-full rounded-lg bg-secondary hover:bg-secondary/90 text-white py-3 text-sm font-bold transition shadow-lg shadow-secondary/20 relative z-10">Get Demo</button>
+</div>
+<div class="cyber-card flex flex-col rounded-2xl border border-white/10 bg-card-dark p-8 transition-all hover:border-primary/50">
+<div class="mb-6">
+<h3 class="text-xl font-bold text-white">Enterprise Dataset</h3>
+<p class="text-sm text-slate-500 mt-1 font-medium">Complex Use Cases</p>
+</div>
+<div class="mb-6">
+<span class="text-3xl font-bold text-white">from 15.000 €</span>
+</div>
+<ul class="space-y-3 text-sm text-slate-300 mb-8 flex-grow">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                100k–500k+ tickets
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Strict balancing &amp; constraints
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Realistic noise (typos, phrasing variance)
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Optional agent replies or conversations
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Train / dev / test splits &amp; documentation
+                            </li>
+</ul>
+<button class="w-full rounded-lg bg-white/5 border border-white/10 py-3 text-sm font-bold text-white hover:bg-white/10 transition">Contact Sales</button>
+</div>
+</div>
+<div class="rounded-2xl border border-white/10 bg-white/[0.02] p-8 md:p-10">
+<h3 class="text-lg font-bold text-white mb-8 flex items-center gap-3">
+<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-slate-300">
+<span class="material-symbols-outlined text-lg">extension</span>
+</span>
+                        Common Extensions <span class="text-sm font-normal text-slate-500 hidden sm:inline-block">(Add-ons)</span>
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div>
+<div class="text-primary mb-3">
+<span class="material-symbols-outlined">tune</span>
+</div>
+<h4 class="text-white font-medium text-sm mb-2">Fine-tuned Model</h4>
+<p class="text-slate-400 text-xs leading-relaxed">Deliver a tagging model specifically fine-tuned on the generated dataset.</p>
+</div>
+<div>
+<div class="text-primary mb-3">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<h4 class="text-white font-medium text-sm mb-2">Evaluation Report</h4>
+<p class="text-slate-400 text-xs leading-relaxed">Comprehensive metrics report on model performance using the dataset.</p>
+</div>
+<div>
+<div class="text-primary mb-3">
+<span class="material-symbols-outlined">integration_instructions</span>
+</div>
+<h4 class="text-white font-medium text-sm mb-2">System Tuning</h4>
+<p class="text-slate-400 text-xs leading-relaxed">Specific format tuning for import into OTOBO, Znuny, or Zammad systems.</p>
+</div>
+<div>
+<div class="text-primary mb-3">
+<span class="material-symbols-outlined">update</span>
+</div>
+<h4 class="text-white font-medium text-sm mb-2">Ongoing Updates</h4>
+<p class="text-slate-400 text-xs leading-relaxed">Periodic dataset refreshes to match evolving business logic or new categories.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 relative">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mb-12 md:text-center">
+<h2 class="text-3xl font-bold text-white">Integration Services</h2>
+<p class="mt-4 text-slate-400">Fixed-price packages to connect Open Ticket AI with your existing ecosystem.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+<div class="cyber-card flex flex-col rounded-2xl border border-white/10 bg-card-dark p-8 transition-all">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="text-xl font-bold text-white">Integration Package</h3>
+<p class="text-sm text-primary mt-1 font-medium">Standard Stack</p>
+</div>
+<div class="text-right">
+<span class="text-3xl font-bold text-white">2.000 €</span>
+<span class="block text-xs text-slate-500">One-time fee</span>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3 mb-6">
+<span class="text-xs uppercase tracking-wider text-slate-500 font-bold">Supported Systems</span>
+<p class="text-white font-medium mt-1">OTOBO, Znuny (OTRS stack), Zammad</p>
+</div>
+<ul class="space-y-3 text-sm text-slate-300 mb-8 flex-grow">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Technical setup of Tagging AI service
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Connection to 1 ticket system instance
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Mapping tags to minimal useful fields
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                One trigger setup (e.g. on creation)
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5">check</span>
+                                Basic logging + handover
+                            </li>
+</ul>
+<button class="w-full rounded-lg bg-white/5 border border-white/10 py-3 text-sm font-bold text-white hover:bg-white/10 transition">Contact Sales</button>
+</div>
+<div class="cyber-card flex flex-col rounded-2xl border border-secondary/30 bg-card-dark p-8 transition-all relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-6 relative z-10">
+<div>
+<h3 class="text-xl font-bold text-white">Integration Package</h3>
+<p class="text-sm text-secondary mt-1 font-medium">Enterprise / Custom</p>
+</div>
+<div class="text-right">
+<span class="text-3xl font-bold text-white">5.000 €</span>
+<span class="block text-xs text-slate-500">One-time fee</span>
+</div>
+</div>
+<div class="bg-white/5 rounded-lg p-3 mb-6 relative z-10">
+<span class="text-xs uppercase tracking-wider text-slate-500 font-bold">Supported Systems</span>
+<p class="text-white font-medium mt-1">Jira Service Management, Zendesk, Freshdesk, ServiceNow, Custom</p>
+</div>
+<ul class="space-y-3 text-sm text-slate-300 mb-8 flex-grow relative z-10">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5">check</span>
+<strong>Everything in Standard Package</strong>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5">check</span>
+                                Additional adapter work for non-standard APIs
+                            </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5">check</span>
+                                Extended testing for proprietary environments
+                            </li>
+</ul>
+<button class="w-full rounded-lg bg-secondary hover:bg-secondary/90 text-white py-3 text-sm font-bold transition shadow-lg shadow-secondary/20 relative z-10">Get Demo</button>
+</div>
+</div>
+<div class="rounded-lg border border-red-500/20 bg-red-500/5 p-4 text-center">
+<p class="text-sm text-slate-400">
+<span class="text-red-400 font-bold">Out of Scope (Billed Hourly):</span> Multi-instance rollouts, complex field transformations, custom UI work, deep customization, and bespoke workflows.
+                    </p>
+</div>
+</div>
+</section>
+<section class="py-16 bg-gradient-to-b from-[#0d1424] to-background-dark border-t border-white/5">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<div class="lg:col-span-1">
+<div class="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-400 mb-4">
+<span class="material-symbols-outlined text-sm">auto_mode</span> Workflow Engine
+                        </div>
+<h2 class="text-3xl font-bold text-white mb-4">Automation Services</h2>
+<h3 class="text-lg font-semibold text-white mb-2">Open Ticket Automation (OTA)</h3>
+<p class="text-slate-400 leading-relaxed mb-6">
+                            OTA is our open-source layer that translates AI tags into concrete actions. It bridges the gap between intelligence and resolution.
+                        </p>
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-sm text-slate-300">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Routing &amp; Assignments
+                            </div>
+<div class="flex items-center gap-2 text-sm text-slate-300">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Priority &amp; SLA Updates
+                            </div>
+<div class="flex items-center gap-2 text-sm text-slate-300">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Auto-replies &amp; Notes
+                            </div>
+<div class="flex items-center gap-2 text-sm text-slate-300">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Triggering Tasks
+                            </div>
+</div>
+</div>
+<div class="lg:col-span-2">
+<div class="cyber-card rounded-2xl border border-white/10 bg-card-dark p-8 mb-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-6 mb-6">
+<div>
+<h3 class="text-xl font-bold text-white">OTA Automation Pack</h3>
+<p class="text-sm text-slate-400">Implementation of 3 core automations</p>
+</div>
+<div class="text-left sm:text-right">
+<span class="text-3xl font-bold text-white">3.000 €</span>
+<span class="block text-xs text-slate-500">One-time</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div>
+<h4 class="text-sm font-bold text-white mb-3">What's Included</h4>
+<ul class="space-y-2 text-sm text-slate-300">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+                                            Config of 3 automations based on your rules
+                                        </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+                                            Testing with real ticket examples
+                                        </li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+                                            Handover documentation
+                                        </li>
+</ul>
+</div>
+<div class="bg-white/5 rounded-lg p-4 flex flex-col justify-center border border-white/5">
+<h4 class="text-sm font-bold text-white mb-1">Need more?</h4>
+<p class="text-xs text-slate-400 mb-3">Add more rules after go-live.</p>
+<div class="flex justify-between items-center">
+<span class="text-sm text-slate-300">Additional Automation</span>
+<span class="text-white font-bold">500 € <span class="text-xs font-normal text-slate-500">/each</span></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 bg-background-dark border-t border-white/5 relative">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="mb-12 md:text-center">
+<div class="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary mb-4">
+<span class="material-symbols-outlined text-sm">psychology</span> Intelligence Layer
+                    </div>
+<h2 class="text-3xl font-bold text-white">Model Development (Custom Tagging Models)</h2>
+<p class="mt-4 text-slate-400">Custom training and architecture for specialized tagging requirements.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+<div class="cyber-card flex flex-col rounded-2xl border border-white/10 bg-card-dark p-8 transition-all hover:border-primary/50 group">
+<div class="mb-6">
+<h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">Custom Tags Model</h3>
+<p class="text-sm text-slate-500 mt-1 font-medium">Synthetic Training Focus</p>
+</div>
+<div class="mb-6">
+<span class="text-3xl font-bold text-white">20.000 €</span>
+<span class="block text-xs text-slate-500 mt-1">Fixed price</span>
+</div>
+<p class="text-sm text-slate-400 mb-8 flex-grow leading-relaxed">
+                            Custom tag definition (or ours + your additions), trained primarily via our synthetic data generator. Can be optionally hybridized with limited customer samples.
+                        </p>
+<button class="w-full rounded-lg bg-white/5 border border-white/10 py-3 text-sm font-bold text-white hover:bg-white/10 transition">Contact Sales</button>
+</div>
+<div class="cyber-card flex flex-col rounded-2xl border border-secondary/40 bg-gradient-to-b from-card-dark to-[#1a1033] p-8 transition-all relative overflow-hidden shadow-lg shadow-secondary/5">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+<div class="mb-6 relative z-10">
+<h3 class="text-xl font-bold text-white">Custom Tag Model</h3>
+<p class="text-sm text-secondary mt-1 font-medium">Own Data Training</p>
+</div>
+<div class="mb-6 relative z-10">
+<span class="text-3xl font-bold text-white">30.000 €</span>
+<span class="block text-xs text-slate-500 mt-1">Fixed price</span>
+</div>
+<p class="text-sm text-slate-300 mb-8 flex-grow leading-relaxed relative z-10">
+                            Training primarily on your historical ticket data (plus optional synthetic augmentation). Includes comprehensive dataset preparation and evaluation.
+                        </p>
+<button class="w-full rounded-lg bg-secondary hover:bg-secondary/90 text-white py-3 text-sm font-bold transition shadow-lg shadow-secondary/20 relative z-10">Get Demo</button>
+</div>
+<div class="cyber-card flex flex-col rounded-2xl border border-white/10 bg-card-dark p-8 transition-all hover:border-primary/50">
+<div class="mb-6">
+<h3 class="text-xl font-bold text-white">Custom Development</h3>
+<p class="text-sm text-slate-500 mt-1 font-medium">Special Requirements</p>
+</div>
+<div class="mb-6">
+<span class="text-2xl font-bold text-white">On Request</span>
+<span class="block text-xs text-slate-500 mt-1">Custom Quote</span>
+</div>
+<p class="text-sm text-slate-400 mb-8 flex-grow leading-relaxed">
+                            Anything beyond tag-model creation: special architectures, constraints, on-prem performance targets, multilingual requirements, advanced evaluation, long-term training programs.
+                        </p>
+<button class="w-full rounded-lg bg-white/5 border border-white/10 py-3 text-sm font-bold text-white hover:bg-white/10 transition">Contact Sales</button>
+</div>
+</div>
+<div class="rounded-2xl border border-white/10 bg-white/[0.02] p-8 md:p-10">
+<h3 class="text-lg font-bold text-white mb-8 flex items-center gap-3">
+<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-slate-300">
+<span class="material-symbols-outlined text-lg">list_alt</span>
+</span>
+                        Typical Scope <span class="text-sm font-normal text-slate-500 hidden sm:inline-block">(Included in fixed-price options)</span>
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div>
+<div class="text-primary mb-3">
+<span class="material-symbols-outlined">category</span>
+</div>
+<h4 class="text-white font-medium text-sm mb-2">Tag Definition</h4>
+<p class="text-slate-400 text-xs leading-relaxed">Taxonomy design, custom tag definitions, or merging your structure with our standard ontology.</p>
+</div>
+<div>
+<div class="text-primary mb-3">
+<span class="material-symbols-outlined">data_check</span>
+</div>
+<h4 class="text-white font-medium text-sm mb-2">Dataset Strategy</h4>
+<p class="text-slate-400 text-xs leading-relaxed">Balancing synthetic vs real data, handling multiple languages, and covering edge-cases.</p>
+</div>
+<div>
+<div class="text-primary mb-3">
+<span class="material-symbols-outlined">model_training</span>
+</div>
+<h4 class="text-white font-medium text-sm mb-2">Training &amp; Evaluation</h4>
+<p class="text-slate-400 text-xs leading-relaxed">Full model training cycles with rigorous acceptance tests and performance validation.</p>
+</div>
+<div>
+<div class="text-primary mb-3">
+<span class="material-symbols-outlined">rocket_launch</span>
+</div>
+<h4 class="text-white font-medium text-sm mb-2">Packaging &amp; Deployment</h4>
+<p class="text-slate-400 text-xs leading-relaxed">Guidance for self-hosted inference setup, containerization, and update strategies.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="cyber-card rounded-2xl border border-white/10 bg-card-dark/50 p-8 flex flex-col">
+<div class="flex items-center gap-3 mb-4">
+<div class="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<h3 class="text-xl font-bold text-white">Hourly Services</h3>
+</div>
+<p class="text-slate-400 text-sm mb-6 flex-grow">
+                            For extra changes beyond package scope, custom features/workflows, troubleshooting, performance tuning, additional systems, or migrations.
+                        </p>
+<div class="border-t border-white/5 pt-6 flex justify-between items-center">
+<span class="text-sm font-medium text-slate-300">Remote Rate</span>
+<span class="text-2xl font-bold text-white">200 € <span class="text-sm font-normal text-slate-500">/hour</span></span>
+</div>
+</div>
+<div class="cyber-card rounded-2xl border border-white/10 bg-card-dark/50 p-8 flex flex-col">
+<div class="flex items-center gap-3 mb-4">
+<div class="p-2 rounded-lg bg-green-500/10 text-green-400">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<h3 class="text-xl font-bold text-white">Ongoing Support</h3>
+</div>
+<p class="text-slate-400 text-sm mb-6 flex-grow">
+                            Best-effort subscription for reliable coverage. Includes async support via ticket/email, minor fixes, maintenance help, and updates.
+                        </p>
+<div class="space-y-3 mb-6">
+<div class="flex items-center gap-2 text-sm text-slate-300">
+<span class="material-symbols-outlined text-green-400 text-sm">timer</span>
+                                Target response: within 2 business days
+                            </div>
+<p class="text-xs text-slate-500 italic">
+                                * Unused time does not roll over. Available for integration/OTA customers.
+                            </p>
+</div>
+<div class="border-t border-white/5 pt-6 flex justify-between items-center">
+<span class="text-sm font-medium text-slate-300">Subscription</span>
+<span class="text-2xl font-bold text-white">400 € <span class="text-sm font-normal text-slate-500">/month</span></span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 relative">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="relative isolate overflow-hidden bg-gradient-to-r from-[#182d34] to-[#101e23] border border-white/10 px-6 py-24 text-center shadow-2xl rounded-3xl sm:px-16">
+<h2 class="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                        Ready to automate your helpdesk?
+                    </h2>
+<p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-300">
+                        Schedule a technical consultation with our German engineering team to discuss your specific infrastructure needs.
+                    </p>
+<div class="mt-10 flex items-center justify-center gap-x-6">
+<button class="bg-primary hover:bg-primary/90 text-background-dark text-base font-bold py-3 px-8 rounded-lg transition-all shadow-[0_0_20px_rgba(13,185,242,0.4)]">
+                            Get Demo
+                        </button>
+<a class="text-sm font-semibold leading-6 text-white hover:text-primary transition-colors flex items-center gap-1" href="#">
+                            Contact Sales <span aria-hidden="true">→</span>
+</a>
+</div>
+<svg aria-hidden="true" class="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-x-1/2 [mask-image:radial-gradient(closest-side,white,transparent)]" viewBox="0 0 1024 1024">
+<circle cx="512" cy="512" fill="url(#gradient-id)" fill-opacity="0.25" r="512"></circle>
+<defs>
+<radialGradient id="gradient-id">
+<stop stop-color="#0db9f2"></stop>
+<stop offset="1" stop-color="#7c3aed"></stop>
+</radialGradient>
+</defs>
+</svg>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-white/10 bg-background-dark pt-16 pb-8">
+<div class="mx-auto max-w-7xl px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-2 mb-4">
+<div class="size-6 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<span class="text-lg font-bold text-white">Open Ticket AI</span>
+</div>
+<p class="text-sm text-slate-500">
+                        Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
+                    </p>
+</div>
+<div>
+<h3 class="text-sm font-semibold text-white mb-4">Product</h3>
+<ul class="space-y-3">
+<li><a class="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Features</a></li>
+<li><a class="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Integrations</a></li>
+<li><a class="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Security</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-sm font-semibold text-white mb-4">Company</h3>
+<ul class="space-y-3">
+<li><a class="text-sm text-slate-400 hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Legal</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-sm font-semibold text-white mb-4">Connect</h3>
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-white transition-colors" href="#">
+<span class="sr-only">LinkedIn</span>
+<svg aria-hidden="true" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path clip-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" fill-rule="evenodd"></path></svg>
+</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">
+<span class="sr-only">Twitter</span>
+<svg aria-hidden="true" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
+</a>
+</div>
+</div>
+</div>
+<div class="border-t border-white/5 pt-8 flex justify-between items-center">
+<p class="text-xs text-slate-600">© 2024 Open Ticket AI GmbH. All rights reserved.</p>
+<div class="flex gap-4">
+<p class="text-xs text-slate-600">Privacy Policy</p>
+<p class="text-xs text-slate-600">Imprint</p>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>
