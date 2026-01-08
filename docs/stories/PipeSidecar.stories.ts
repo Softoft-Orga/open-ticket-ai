@@ -1,6 +1,6 @@
-import PipeSidecar from '../.vitepress/components/pipe/PipeSidecar.vue'
+import PipeSidecar from '../src/components/vue/pipe/PipeSidecar.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import type {PipeSidecar as PipeSidecarType} from '../.vitepress/components/pipe/pipeSidecar.types'
+import type {PipeSidecar as PipeSidecarType} from '../src/components/vue/pipe/pipeSidecar.types'
 
 const meta: Meta<typeof PipeSidecar> = {
     title: 'Components/PipeSidecar',

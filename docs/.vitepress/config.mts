@@ -1,4 +1,4 @@
-import {NavGenerator, NavGeneratorOptions} from "./util/navgen.ts";
+import {NavGenerator, NavGeneratorOptions} from "../src/lib/navgen.ts";
 import viteCompression from 'vite-plugin-compression'
 import {withMermaid} from "vitepress-plugin-mermaid";
 

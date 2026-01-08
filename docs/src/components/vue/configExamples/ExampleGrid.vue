@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import ExampleCard from './ExampleCard.vue'
-import type {ExampleMeta} from '../../composables/useConfigExamplesRegistry'
+import type {ExampleMeta} from '../../../composables/useConfigExamplesRegistry'
 
 const props = defineProps<{ examples: ExampleMeta[] }>()
 </script>

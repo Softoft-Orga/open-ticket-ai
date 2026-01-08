@@ -77,7 +77,7 @@ import SelectComponent from "../core/forms/SelectComponent.vue";
 import TextField from "../core/forms/TextField.vue";
 import TextArea from "../core/forms/TextArea.vue";
 import Callout from "../core/basic/Callout.vue";
-import {useHumanLoadedPage} from "../../composables/useHumanLoadedPage";
+import {useHumanLoadedPage} from "../../../composables/useHumanLoadedPage";
 
 const {apiLink = ''} = defineProps<{
   apiLink?: string

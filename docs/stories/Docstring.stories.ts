@@ -1,4 +1,4 @@
-import Docstring from '../.vitepress/components/autoDocs/Docstring.vue'
+import Docstring from '../src/components/vue/autoDocs/Docstring.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof Docstring> = {

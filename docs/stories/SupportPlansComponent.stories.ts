@@ -1,4 +1,4 @@
-import SupportPlans from '../.vitepress/components/SupportPlansComponent.vue'
+import SupportPlans from '../src/components/vue/SupportPlansComponent.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 import {i18n} from './i18nSetup'
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, onMounted, onUnmounted, ref} from 'vue'
-import {useNewsArticles} from '../composables/useNewsArticles'
+import {useNewsArticles} from '../../composables/useNewsArticles'
 
 const {mostRecentNewsArticle, isMostRecentNewsRecentlyPublished} = useNewsArticles()
 

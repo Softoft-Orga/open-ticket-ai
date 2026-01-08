@@ -31,7 +31,7 @@
 import Card from '../core/basic/Card.vue'
 import MarkdownFromString from './MarkdownFromString.vue'
 import TagBadges from './TagBadges.vue'
-import type { ExampleMeta } from '../../composables/useConfigExamplesRegistry'
+import type { ExampleMeta } from '../../../composables/useConfigExamplesRegistry'
 
 const { example, exampleLink } = defineProps<{ example: ExampleMeta; exampleLink: string }>()
 

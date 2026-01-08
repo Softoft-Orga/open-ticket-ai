@@ -8,7 +8,7 @@ import {
     RECENT_MONTH_FILTERS,
     SORT_OPTIONS,
     type SortOption,
-} from "../components/marketplace/pluginModels";
+} from "../components/vue/marketplace/pluginModels";
 import {
     applyFiltersAndSort,
     filterByQuery,
@@ -17,7 +17,7 @@ import {
     mapPyPIPackage,
     mergePluginData,
     type PyPIPluginDetails,
-} from "../components/marketplace/pluginUtils";
+} from "../components/vue/marketplace/pluginUtils";
 
 const LIBRARIES_IO_ENDPOINT = "https://libraries.io/api/search";
 const PYPI_ENDPOINT = "https://pypi.org/pypi";

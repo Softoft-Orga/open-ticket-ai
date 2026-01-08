@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import DefaultTheme from 'vitepress/theme'
-import RecentNewsToast from '../components/RecentNewsToast.vue'
+import RecentNewsToast from '../../src/components/vue/RecentNewsToast.vue'
 
 const {Layout: DefaultLayout} = DefaultTheme
 </script>

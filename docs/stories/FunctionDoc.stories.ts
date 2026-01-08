@@ -1,6 +1,6 @@
-import FunctionDoc from '../.vitepress/components/autoDocs/FunctionDoc.vue'
+import FunctionDoc from '../src/components/vue/autoDocs/FunctionDoc.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import {FunctionData} from "../.vitepress/composables/useApiDocs";
+import {FunctionData} from "../src/composables/useApiDocs";
 
 const meta: Meta<typeof FunctionDoc> = {
     title: 'Components/FunctionDoc',
