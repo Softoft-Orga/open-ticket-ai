@@ -11,8 +11,15 @@ export default defineConfig({
     markdown: {
         rehypePlugins: [[rehypeMermaid, {strategy: 'img-svg', dark: true}]],
     },
+    vite: {
+        define: {
+            '__VUE_PROD_DEVTOOLS__': 'false',
+        },
+    },
     integrations: [
-        vue(),
+        vue({
+            appEntrypoint: '/src/vue-app.js'
+        }),
         mdx(),
     ],
 });
