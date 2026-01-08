@@ -23,13 +23,13 @@ const props = withDefaults(defineProps<Props>(), {
 const colorClasses = computed(() => {
   switch (props.type) {
     case 'success':
-      return 'bg-green-800/20 border-green-400 text-green-300'
+      return 'bg-primary-light/15 border-primary-light text-primary-light'
     case 'warning':
-      return 'bg-yellow-800/20 border-yellow-500 text-yellow-400'
+      return 'bg-amber-500/15 border-amber-400 text-amber-300'
     case 'danger':
-      return 'bg-pink-800/20 border-pink-500 text-pink-400'
+      return 'bg-rose-500/15 border-rose-500 text-rose-300'
     default:
-      return 'bg-vp-brand/10 border-vp-brand text-vp-brand'
+      return 'bg-primary/10 border-primary text-primary'
   }
 })
 
