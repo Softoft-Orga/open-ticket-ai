@@ -72,6 +72,19 @@ request is merged.
 
 Full documentation: https://open-ticket-ai.com
 
+### Running Documentation Locally
+
+The documentation is built with Astro and Starlight.
+
+```bash
+cd docs
+npm install
+npm run docs:dev  # Start development server at http://localhost:4321
+npm run docs:build # Build for production
+```
+
+See [docs/MIGRATION.md](docs/MIGRATION.md) for details about the recent migration from VitePress to Astro.
+
 ## Contributing
 
 The easiest way to extend Open Ticket AI is by creating a plugin. Explore the developer documentation to learn how to

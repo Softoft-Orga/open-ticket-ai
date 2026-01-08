@@ -1,7 +1,7 @@
 [build]
 base = "docs"
-command = "npm run docs:build"
-publish = ".vitepress/dist"
+command = "npx playwright install --with-deps chromium && npm run docs:build"
+publish = "dist"
 functions = "netlify/functions"
 
 # --- API function (keep above catch-alls) ---
