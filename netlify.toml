@@ -96,17 +96,8 @@ from = "/assets/*"
 to = "/assets/:splat"
 status = 200
 
-# --- Root language redirects ---
-
+# --- Redirect old /en/ URLs to new root URLs ---
 [[redirects]]
-from = "/"
-to = "/en"
-status = 302
-conditions = { Language = ["en"] }
-
-
-# Fallback for other languages -> English
-[[redirects]]
-from = "/"
-to = "/en"
-status = 302
+from = "/en/*"
+to = "/:splat"
+status = 301
