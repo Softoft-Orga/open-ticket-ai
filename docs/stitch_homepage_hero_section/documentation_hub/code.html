@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Documentation - Open Ticket AI</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#0db9f2",
+                "background-light": "#f5f8f8",
+                "background-dark": "#101e22",
+                "card-dark": "#16262c",
+                },
+                fontFamily: {
+                "display": ["Space Grotesk", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                boxShadow: {
+                    "glow": "0 0 20px -5px rgba(13, 185, 242, 0.3)",
+                    "glow-hover": "0 0 30px -5px rgba(13, 185, 242, 0.5)",
+                }
+            },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Space Grotesk", "Noto Sans", sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col text-slate-900 dark:text-slate-100 font-display selection:bg-primary selection:text-white overflow-x-hidden">
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-900/10 rounded-full blur-[120px]"></div>
+<div class="absolute top-[20%] right-[20%] w-[20%] h-[20%] bg-blue-900/10 rounded-full blur-[80px]"></div>
+</div>
+<header class="relative z-20 border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+<span class="material-symbols-outlined !text-[32px]">dataset</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Open Ticket AI</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Products</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Community</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="bg-primary hover:bg-cyan-400 text-background-dark px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-glow hover:shadow-glow-hover flex items-center gap-2">
+<span class="material-symbols-outlined !text-[18px]">login</span>
+<span>Login/Support</span>
+</button>
+</div>
+</div>
+</header>
+<main class="relative z-10 flex-grow flex flex-col items-center justify-start pt-16 pb-24 px-6">
+<div class="text-center max-w-3xl mx-auto mb-12">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-6">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                Docs v2.4 Live
+            </div>
+<h2 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+                Documentation
+            </h2>
+<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                Choose the documentation you need.
+            </p>
+</div>
+<div class="w-full max-w-2xl mb-16 relative group">
+<div class="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
+<div class="relative flex items-center bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden">
+<div class="pl-4 text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full bg-transparent border-none text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-0 h-14 text-base" placeholder="Search documentation (e.g., 'API keys', 'YAML config')..." type="text"/>
+<div class="hidden sm:flex pr-4 text-xs text-slate-400 dark:text-slate-600 font-mono">
+                    CMD + K
+                </div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+<a class="group relative flex flex-col p-8 rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-800 hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-glow" href="/docs/automation/">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
+<div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white mb-6 group-hover:bg-primary group-hover:text-background-dark transition-colors duration-300">
+<span class="material-symbols-outlined !text-[28px]">settings_suggest</span>
+</div>
+<h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-primary transition-colors">Open Ticket Automation Docs</h3>
+<p class="text-slate-600 dark:text-slate-400 text-base leading-relaxed mb-6 flex-grow">
+                    Integration layer for OTOBO, Znuny/OTRS, and Zammad. Setup, connectors, automation rules, API, and troubleshooting.
+                </p>
+<div class="flex items-center text-primary text-sm font-bold uppercase tracking-wide opacity-90 group-hover:opacity-100 transition-all duration-300">
+                    Open Automation Docs <span class="material-symbols-outlined !text-[18px] ml-2 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</a>
+<a class="group relative flex flex-col p-8 rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-800 hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-glow" href="/docs/tagging-ai/">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
+<div class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white mb-6 group-hover:bg-primary group-hover:text-background-dark transition-colors duration-300">
+<span class="material-symbols-outlined !text-[28px]">label_important</span>
+</div>
+<h3 class="text-2xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-primary transition-colors">Tagging AI Docs</h3>
+<p class="text-slate-600 dark:text-slate-400 text-base leading-relaxed mb-6 flex-grow">
+                    On-prem ticket classification. Tag schema, output format, multilingual behavior, backlog tagging, hardware sizing, and evaluation.
+                </p>
+<div class="flex items-center text-primary text-sm font-bold uppercase tracking-wide opacity-90 group-hover:opacity-100 transition-all duration-300">
+                    Open Tagging AI Docs <span class="material-symbols-outlined !text-[18px] ml-2 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</a>
+</div>
+<div class="mt-16 w-full max-w-5xl pt-10 border-t border-slate-200 dark:border-slate-800">
+<h4 class="text-center text-sm font-bold uppercase tracking-wider text-slate-500 mb-8">Quick Resources</h4>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+<a class="group flex flex-col items-center justify-center p-6 rounded-lg bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-800 hover:border-primary/40 dark:hover:border-primary/40 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary mb-2 !text-[28px] transition-colors">rocket_launch</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:text-white transition-colors">Deployment</span>
+</a>
+<a class="group flex flex-col items-center justify-center p-6 rounded-lg bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-800 hover:border-primary/40 dark:hover:border-primary/40 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary mb-2 !text-[28px] transition-colors">verified_user</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:text-white transition-colors">Security &amp; Data Flow</span>
+</a>
+<a class="group flex flex-col items-center justify-center p-6 rounded-lg bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-800 hover:border-primary/40 dark:hover:border-primary/40 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary mb-2 !text-[28px] transition-colors">build_circle</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:text-white transition-colors">Troubleshooting</span>
+</a>
+<a class="group flex flex-col items-center justify-center p-6 rounded-lg bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-800 hover:border-primary/40 dark:hover:border-primary/40 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary mb-2 !text-[28px] transition-colors">history_edu</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:text-white transition-colors">Release Notes</span>
+</a>
+</div>
+</div>
+</main>
+<footer class="relative z-10 border-t border-slate-200 dark:border-slate-800 bg-background-light dark:bg-background-dark py-12 px-6">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="text-center md:text-left">
+<p class="text-slate-500 text-sm">© 2024 Open Ticket AI. German Engineering. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-slate-500 hover:text-primary text-sm transition-colors" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-primary text-sm transition-colors" href="#">Legal</a>
+<a class="text-slate-500 hover:text-primary text-sm transition-colors" href="#">Contact Support</a>
+<a class="text-slate-500 hover:text-primary text-sm transition-colors" href="#">System Status</a>
+</div>
+</div>
+</footer>
+
+</body></html>

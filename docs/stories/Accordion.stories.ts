@@ -1,4 +1,5 @@
 import Accordion from '../src/components/vue/core/accordion/Accordion.vue'
+import {ref} from 'vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 import {ref} from 'vue'
 

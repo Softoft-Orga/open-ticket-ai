@@ -11,7 +11,7 @@
         <h2 class="m-0 text-2xl font-semibold text-[color:var(--vp-c-text-1)]">{{ example.name }}</h2>
       </template>
       <div class="space-y-4">
-        <MarkdownFromString :markdown="example.md_details" />
+        <MarkdownFromString :markdown="example.md_details!" />
         <ExampleViewer :file="example.path" />
       </div>
     </Card>

@@ -14,15 +14,15 @@ const baseClass =
 const variantClass = computed(() => {
   switch (type) {
     case 'primary':
-      return 'bg-indigo-600 text-white ring-indigo-500'
+      return 'bg-primary text-white ring-primary-dark'
     case 'success':
-      return 'bg-emerald-600 text-white ring-emerald-500'
+      return 'bg-primary-light text-background-dark ring-primary'
     case 'warning':
-      return 'bg-amber-400 text-black ring-amber-300'
+      return 'bg-amber-400 text-background-dark ring-amber-300'
     case 'danger':
       return 'bg-rose-600 text-white ring-rose-500'
     default:
-      return 'bg-slate-700 text-slate-200 ring-slate-600'
+      return 'bg-surface-dark text-text-dim ring-border-dark'
   }
 })
 </script>
