@@ -64,7 +64,7 @@ export default defineConfig({
       pagefind: true,
       lastUpdated: true,
       editLink: {
-        baseUrl: 'https://github.com/Softoft-Orga/open-ticket-ai/edit/dev/docs/docs_src/en/',
+        baseUrl: 'https://github.com/Softoft-Orga/open-ticket-ai/edit/dev/docs/src/content/docs/',
       },
       head: [
         {
