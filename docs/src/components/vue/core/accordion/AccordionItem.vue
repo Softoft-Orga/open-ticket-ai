@@ -61,4 +61,3 @@ const handleToggle = () => {
   emit('toggle')
 }
 </script>
-</script>
