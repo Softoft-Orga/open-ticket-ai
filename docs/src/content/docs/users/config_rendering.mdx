@@ -1,8 +1,6 @@
 ---
 title: Configuration & Template Rendering
 description: "Understand Open Ticket AI's configuration lifecycle, template rendering with Jinja2, dependency injection, and how YAML transforms into runtime objects."
-pageClass: full-page
-aside: true
 ---
 # Configuration & Template Rendering
 

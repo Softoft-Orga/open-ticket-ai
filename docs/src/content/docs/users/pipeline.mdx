@@ -1,8 +1,6 @@
 ---
 title: Pipe System
 description: "Learn how Open Ticket AI pipes process data through sequential execution, context sharing, dependencies, and conditional logic."
-pageClass: full-page
-aside: false
 ---
 # Pipe System
 

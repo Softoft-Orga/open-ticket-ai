@@ -9,6 +9,7 @@ export default defineConfig({
   site: 'https://open-ticket-ai.com',
   base: '/',
   outDir: './dist',
+  trailingSlash: 'always',
   markdown: {
     remarkPlugins: [remarkVitepressContainers],
     rehypePlugins: [[rehypeMermaid, { strategy: 'img-svg', dark: true }]],

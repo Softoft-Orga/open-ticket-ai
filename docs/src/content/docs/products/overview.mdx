@@ -2,7 +2,6 @@
 title: Products Overview
 description: 'Discover Open Ticket AI''s suite: an on-prem classifier, hosted API,
   synthetic data generator, and public models to automate your support ticket workflow.'
-pageClass: full-page
 ---
 # Products Overview
 
