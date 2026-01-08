@@ -1,0 +1,150 @@
+---
+export interface Props {
+  title: string;
+  price: string;
+  features: string[];
+  badge: string;
+  highlighted?: boolean;
+}
+
+const { title, price, features, badge, highlighted = false } = Astro.props;
+---
+
+<style>
+  .service-card {
+    border-radius: 1.5rem;
+    border: 1px solid;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s;
+  }
+  
+  .service-card.highlighted {
+    border-color: var(--primary);
+    background-color: rgba(100, 108, 255, 0.05);
+    transform: scale(1.05);
+    box-shadow: 0 25px 50px -12px rgba(100, 108, 255, 0.2);
+  }
+  
+  .service-card:not(.highlighted) {
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(17, 24, 39, 0.5);
+  }
+  
+  .service-card:not(.highlighted):hover {
+    border-color: rgba(100, 108, 255, 0.3);
+  }
+  
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .price-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+  
+  .price {
+    font-size: 3rem;
+    font-weight: 900;
+    color: white;
+  }
+  
+  .price-label {
+    color: #64748b;
+    font-size: 1.125rem;
+  }
+  
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2.5rem 0;
+    flex-grow: 1;
+  }
+  
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: #cbd5e1;
+  }
+  
+  .feature-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--primary);
+    margin-top: 0.125rem;
+    flex-shrink: 0;
+  }
+  
+  .cta-button {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  
+  .cta-button.highlighted {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(100, 108, 255, 0.3);
+    border: none;
+  }
+  
+  .cta-button.highlighted:hover {
+    background-color: rgba(100, 108, 255, 0.9);
+  }
+  
+  .cta-button:not(.highlighted) {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .cta-button:not(.highlighted):hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+</style>
+
+<div class={highlighted ? 'service-card highlighted' : 'service-card'}>
+  <div style="margin-bottom: 1.5rem;">
+    <div class="badge">
+      {badge}
+    </div>
+    <h3 class="price-title">{title}</h3>
+    <div style="display: flex; align-items: baseline; gap: 0.25rem;">
+      <span class="price">{price}</span>
+      <span class="price-label">one-time</span>
+    </div>
+  </div>
+
+  <ul class="feature-list">
+    {features.map((feature) => (
+      <li class="feature-item">
+        <svg class="feature-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <span>{feature}</span>
+      </li>
+    ))}
+  </ul>
+
+  <button class={highlighted ? 'cta-button highlighted' : 'cta-button'}>
+    Get Started
+  </button>
+</div>
