@@ -15,7 +15,7 @@
 import {computed} from 'vue'
 
 interface Props {
-  variant?: 'primary' | 'secondary' | 'info' | 'success'
+  variant?: 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'danger'
   disabled?: boolean
 }
 
@@ -27,16 +27,16 @@ const props = withDefaults(defineProps<Props>(), {
 const variantClasses = computed(() => {
   switch (props.variant) {
     case 'secondary':
-      // The old dark: styles are now the default
       return 'border border-gray-600 text-gray-200 hover:bg-gray-700'
     case 'info':
-      // The old dark: styles are now the default
       return 'bg-teal-400 text-white hover:bg-teal-500'
     case 'success':
-      // The old dark: styles are now the default
       return 'bg-green-500 text-white hover:bg-green-600'
+    case 'warning':
+      return 'bg-amber-500 text-white hover:bg-amber-600'
+    case 'danger':
+      return 'bg-rose-600 text-white hover:bg-rose-700'
     default: // primary
-      // The old dark: styles are now the default
       return 'bg-blue-500 text-white hover:bg-blue-600'
   }
 })
