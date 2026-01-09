@@ -28,6 +28,16 @@ function getProductBadges(slug: string) {
   return badges;
 }
 
+// Helper function to get badge styles
+function getBadgeStyles(label: string) {
+  const isPink = label === 'In Development';
+  return {
+    backgroundColor: isPink ? 'rgba(236, 72, 153, 0.1)' : 'rgba(100, 108, 255, 0.1)',
+    borderColor: isPink ? 'rgba(236, 72, 153, 0.2)' : 'rgba(100, 108, 255, 0.2)',
+    color: isPink ? 'rgb(244, 114, 182)' : 'rgb(165, 180, 252)'
+  };
+}
+
 // Helper function to get placeholder image based on index
 function getPlaceholderImage(index: number) {
   const images = [
@@ -37,6 +47,9 @@ function getPlaceholderImage(index: number) {
   ];
   return images[index % images.length];
 }
+
+// Separate hero and regular products
+const [heroProduct, ...regularProducts] = products;
 ---
 
 <BaseLayout title={title} description={`${title} - Open Ticket AI`}>
@@ -52,57 +65,53 @@ function getPlaceholderImage(index: number) {
       </div>
 
       <div class="grid gap-8">
-        {products.map((product, index) => {
-          const badges = getProductBadges(product.data.slug);
-          const isMainHero = index === 0; // First product gets hero treatment
-          const placeholderImage = getPlaceholderImage(index);
+        {/* Hero Card - First Product */}
+        {heroProduct && (() => {
+          const badges = getProductBadges(heroProduct.data.slug);
+          const placeholderImage = getPlaceholderImage(0);
           
-          if (isMainHero) {
-            // Main Hero Card for first product
-            return (
-              <div class="group relative flex flex-col overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter transition-all duration-500 hover:border-primary/50">
-                <div class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]"></div>
-                <div class="flex flex-col lg:flex-row items-stretch min-h-[500px]">
-                  <div class="flex flex-1 flex-col justify-center gap-8 p-12 lg:p-16 relative z-10">
-                    {badges.length > 0 && (
-                      <div class="flex flex-wrap gap-3">
-                        {badges.map(badge => (
-                          <Badge label={badge.label} color={badge.color} client:load />
-                        ))}
-                      </div>
-                    )}
-                    <div>
-                      <h2 class="text-white text-5xl font-bold tracking-tight mb-4">{product.data.title}</h2>
-                      <p class="text-text-dim text-xl leading-relaxed max-w-xl">
-                        {product.data.description}
-                      </p>
+          return (
+            <div class="group relative flex flex-col overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter transition-all duration-500 hover:border-primary/50">
+              <div class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]"></div>
+              <div class="flex flex-col lg:flex-row items-stretch min-h-[500px]">
+                <div class="flex flex-1 flex-col justify-center gap-8 p-12 lg:p-16 relative z-10">
+                  {badges.length > 0 && (
+                    <div class="flex flex-wrap gap-3">
+                      {badges.map(badge => (
+                        <Badge label={badge.label} color={badge.color} client:load />
+                      ))}
                     </div>
-                    <div class="flex items-center gap-6 pt-4">
-                      <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
-                        Join Waitlist
-                      </button>
-                      <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-transparent border border-surface-lighter hover:border-primary/50 text-white text-lg font-medium transition-all">
-                        Technical Specs
-                      </button>
-                    </div>
+                  )}
+                  <div>
+                    <h2 class="text-white text-5xl font-bold tracking-tight mb-4">{heroProduct.data.title}</h2>
+                    <p class="text-text-dim text-xl leading-relaxed max-w-xl">
+                      {heroProduct.data.description}
+                    </p>
                   </div>
-                  <div class="relative w-full lg:w-[45%] min-h-[400px] bg-[#0c0d15] border-l border-surface-lighter">
-                    <img
-                      src={placeholderImage}
-                      alt={product.data.title}
-                      class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen"
-                    />
-                    <div class="absolute inset-0 bg-gradient-to-l from-surface-dark via-transparent to-transparent"></div>
+                  <div class="flex items-center gap-6 pt-4">
+                    <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
+                      Join Waitlist
+                    </button>
+                    <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-transparent border border-surface-lighter hover:border-primary/50 text-white text-lg font-medium transition-all">
+                      Technical Specs
+                    </button>
                   </div>
                 </div>
+                <div class="relative w-full lg:w-[45%] min-h-[400px] bg-[#0c0d15] border-l border-surface-lighter">
+                  <img
+                    src={placeholderImage}
+                    alt={heroProduct.data.title}
+                    class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-l from-surface-dark via-transparent to-transparent"></div>
+                </div>
               </div>
-            );
-          }
-          return null; // We'll handle other products separately
-        })}
+            </div>
+          );
+        })()}
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {products.slice(1).map((product, index) => {
+          {regularProducts.map((product, index) => {
             const badges = getProductBadges(product.data.slug);
             const placeholderImage = getPlaceholderImage(index + 1);
             const hasIcon = product.data.slug === 'open-ticket-automation-core';
@@ -112,11 +121,14 @@ function getPlaceholderImage(index: number) {
                 <div class="flex flex-col gap-6 mb-10">
                   {badges.length > 0 && (
                     <div class="flex flex-wrap gap-3">
-                      {badges.map(badge => (
-                        <div class="w-fit rounded-lg px-3 py-1 border" style={`background-color: ${badge.color.includes('bg-pink') ? 'rgba(236, 72, 153, 0.1)' : 'rgba(100, 108, 255, 0.1)'}; border-color: ${badge.color.includes('bg-pink') ? 'rgba(236, 72, 153, 0.2)' : 'rgba(100, 108, 255, 0.2)'}`}>
-                          <p class="text-xs font-bold uppercase tracking-widest" style={`color: ${badge.color.includes('bg-pink') ? 'rgb(244, 114, 182)' : 'rgb(165, 180, 252)'}`}>{badge.label}</p>
-                        </div>
-                      ))}
+                      {badges.map(badge => {
+                        const styles = getBadgeStyles(badge.label);
+                        return (
+                          <div class="w-fit rounded-lg px-3 py-1 border" style={`background-color: ${styles.backgroundColor}; border-color: ${styles.borderColor}`}>
+                            <p class="text-xs font-bold uppercase tracking-widest" style={`color: ${styles.color}`}>{badge.label}</p>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                   {hasIcon ? (
