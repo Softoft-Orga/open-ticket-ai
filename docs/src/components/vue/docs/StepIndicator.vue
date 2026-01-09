@@ -17,7 +17,7 @@
                 : 'border-surface-lighter bg-surface-dark text-text-dim'
             ]"
           >
-            <span v-if="currentStep > index" class="material-symbols-outlined text-lg">check</span>
+            <CheckIcon v-if="currentStep > index" class="w-5 h-5" aria-hidden="true" />
             <span v-else>{{ index + 1 }}</span>
           </div>
           <span
@@ -42,6 +42,8 @@
 </template>
 
 <script lang="ts" setup>
+import { CheckIcon } from '@heroicons/vue/24/outline'
+
 interface Props {
   steps: string[]
   currentStep: number

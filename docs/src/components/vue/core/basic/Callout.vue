@@ -1,7 +1,7 @@
 <template>
   <div :class="['my-4 p-4 border-l-4 rounded', colorClasses]">
     <div class="flex items-start gap-2">
-      <span>{{ icon }}</span>
+      <component :is="iconComponent" class="w-5 h-5 flex-shrink-0 mt-0.5" aria-hidden="true" />
       <div class="flex-1">
         <slot/>
       </div>
@@ -11,6 +11,12 @@
 
 <script lang="ts" setup>
 import {computed} from 'vue'
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  XCircleIcon,
+  InformationCircleIcon
+} from '@heroicons/vue/24/outline'
 
 interface Props {
   type?: 'info' | 'success' | 'warning' | 'danger'
@@ -33,16 +39,16 @@ const colorClasses = computed(() => {
   }
 })
 
-const icon = computed(() => {
+const iconComponent = computed(() => {
   switch (props.type) {
     case 'success':
-      return '✔'
+      return CheckCircleIcon
     case 'warning':
-      return '⚠'
+      return ExclamationTriangleIcon
     case 'danger':
-      return '✖'
+      return XCircleIcon
     default:
-      return 'ℹ'
+      return InformationCircleIcon
   }
 })
 </script>

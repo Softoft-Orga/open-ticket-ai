@@ -11,7 +11,7 @@
           class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-text-dim transition-all hover:bg-surface-lighter hover:text-white"
           :class="copied ? 'text-emerald-400' : ''"
         >
-          <span class="material-symbols-outlined text-base">{{ copied ? 'check' : 'content_copy' }}</span>
+          <component :is="copied ? CheckIcon : DocumentDuplicateIcon" class="w-4 h-4" aria-hidden="true" />
           {{ copied ? 'Copied!' : 'Copy' }}
         </button>
       </div>
@@ -22,7 +22,7 @@
           class="absolute right-2 top-2 z-10 flex items-center gap-1.5 rounded-lg bg-surface-dark/90 px-3 py-1.5 text-xs font-medium text-text-dim opacity-0 transition-all group-hover:opacity-100 hover:bg-surface-lighter hover:text-white"
           :class="copied ? 'text-emerald-400 opacity-100' : ''"
         >
-          <span class="material-symbols-outlined text-base">{{ copied ? 'check' : 'content_copy' }}</span>
+          <component :is="copied ? CheckIcon : DocumentDuplicateIcon" class="w-4 h-4" aria-hidden="true" />
           {{ copied ? 'Copied!' : 'Copy' }}
         </button>
         <pre class="overflow-x-auto p-4"><code ref="codeElement" class="text-sm font-mono"><slot /></code></pre>
@@ -33,6 +33,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/vue/24/outline'
 
 interface Props {
   language?: string

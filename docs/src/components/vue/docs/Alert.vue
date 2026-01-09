@@ -2,7 +2,7 @@
   <div :class="['rounded-xl border p-4 shadow-sm', variantClasses]">
     <div class="flex gap-3">
       <div v-if="!hideIcon" class="flex-shrink-0">
-        <span class="material-symbols-outlined text-xl">{{ iconName }}</span>
+        <component :is="iconComponent" class="w-5 h-5" aria-hidden="true" />
       </div>
       <div class="flex-1">
         <h4 v-if="title" class="mb-1 font-semibold">{{ title }}</h4>
@@ -16,6 +16,13 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  XCircleIcon,
+  LightBulbIcon,
+  InformationCircleIcon
+} from '@heroicons/vue/24/outline'
 
 interface Props {
   type?: 'info' | 'success' | 'warning' | 'danger' | 'tip'
@@ -28,18 +35,18 @@ const props = withDefaults(defineProps<Props>(), {
   hideIcon: false
 })
 
-const iconName = computed(() => {
+const iconComponent = computed(() => {
   switch (props.type) {
     case 'success':
-      return 'check_circle'
+      return CheckCircleIcon
     case 'warning':
-      return 'warning'
+      return ExclamationTriangleIcon
     case 'danger':
-      return 'error'
+      return XCircleIcon
     case 'tip':
-      return 'lightbulb'
+      return LightBulbIcon
     default:
-      return 'info'
+      return InformationCircleIcon
   }
 })
 

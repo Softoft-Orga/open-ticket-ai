@@ -1,12 +1,13 @@
 <template>
   <div class="flex items-center gap-2 text-sm text-text-dim">
-    <span class="material-symbols-outlined text-base">schedule</span>
+    <ClockIcon class="w-4 h-4" aria-hidden="true" />
     <span>{{ readingTime }} min read</span>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { ClockIcon } from '@heroicons/vue/24/outline'
 
 interface Props {
   text?: string
