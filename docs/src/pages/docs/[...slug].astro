@@ -11,11 +11,32 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content, headings } = await entry.render();
 const title = entry.data.title;
 const description = entry.data.description;
+
+// Generate breadcrumbs from the slug
+const slugParts = entry.id.replace(/\.(md|mdx)$/, '').split('/');
+const breadcrumbs = [
+  { label: 'Documentation', href: '/docs/' },
+  ...slugParts.slice(0, -1).map((part, index) => ({
+    label: part.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+    href: '/docs/' + slugParts.slice(0, index + 1).join('/') + '/',
+  })),
+  { label: title }
+];
+
+// Extract TOC from headings (h2 and h3 only)
+const toc = headings
+  .filter(h => h.depth === 2 || h.depth === 3)
+  .map(h => ({
+    label: h.text,
+    id: h.slug,
+  }));
 ---
 
-<DocsLayout title={title} description={description} frontmatter={{ title, description }}>
+<DocsLayout title={title} description={description} breadcrumbs={breadcrumbs} toc={toc}>
+  <h1>{title}</h1>
+  {description && <p class="text-xl text-gray-400 leading-relaxed mb-8">{description}</p>}
   <Content />
 </DocsLayout>
