@@ -56,7 +56,3 @@ const supportPlans = computed(() => [
       :title="t('supportPlans.title')"
   />
 </template>
-
-<style scoped>
-
-</style>

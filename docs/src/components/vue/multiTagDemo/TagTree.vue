@@ -16,107 +16,21 @@ const openList = () => {
 </script>
 
 <template>
-    <div class="collapsible">
-        <details ref="detailsRef">
-            <summary class="summary">
-                <div class="summary-text">
-                    <span class="summary-title">Browse all tags</span>
-                    <span class="summary-sub">Full YAML list, collapsed by default</span>
+    <div class="border border-[var(--vp-c-border)] rounded-2xl bg-[var(--vp-c-bg)] shadow-[var(--vp-shadow-2)]">
+        <details ref="detailsRef" class="rounded-2xl overflow-hidden">
+            <summary class="flex items-center justify-between gap-4 p-4 px-5 cursor-pointer bg-[var(--vp-c-bg-soft)] list-none [&::-webkit-details-marker]:hidden max-sm:flex-col max-sm:items-start">
+                <div class="flex flex-col gap-0.5">
+                    <span class="font-extrabold text-[var(--vp-c-text-1)]">Browse all tags</span>
+                    <span class="text-[var(--vp-c-text-2)] text-sm">Full YAML list, collapsed by default</span>
                 </div>
-                <div class="summary-actions">
-                    <span class="count">{{ totalTags }} tags</span>
-                    <button type="button" class="open-button" @click.stop.prevent="openList">Expand</button>
+                <div class="flex items-center gap-3 max-sm:w-full max-sm:justify-between">
+                    <span class="py-1.5 px-2.5 rounded-full bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] font-bold">{{ totalTags }} tags</span>
+                    <button type="button" class="border border-[var(--vp-c-border)] bg-[var(--vp-c-brand-soft)] text-[var(--vp-c-text-1)] rounded-xl py-2 px-3 font-bold cursor-pointer" @click.stop.prevent="openList">Expand</button>
                 </div>
             </summary>
-            <div class="panel">
+            <div class="p-4 px-5 pb-6 bg-[var(--vp-c-bg)]">
                 <YamlTree :source="tagYaml" />
             </div>
         </details>
     </div>
 </template>
-
-<style scoped>
-.collapsible {
-    border: 1px solid var(--vp-c-border);
-    border-radius: 1rem;
-    background: var(--vp-c-bg);
-    box-shadow: var(--vp-shadow-2);
-}
-
-details {
-    border-radius: 1rem;
-    overflow: hidden;
-}
-
-.summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    cursor: pointer;
-    background: var(--vp-c-bg-soft);
-    list-style: none;
-}
-
-.summary::-webkit-details-marker {
-    display: none;
-}
-
-.summary-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-}
-
-.summary-title {
-    font-weight: 800;
-    color: var(--vp-c-text-1);
-}
-
-.summary-sub {
-    color: var(--vp-c-text-2);
-    font-size: 0.9rem;
-}
-
-.summary-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.count {
-    padding: 0.3rem 0.6rem;
-    border-radius: 999px;
-    background: var(--vp-c-bg);
-    border: 1px solid var(--vp-c-border);
-    font-weight: 700;
-}
-
-.open-button {
-    border: 1px solid var(--vp-c-border);
-    background: var(--vp-c-brand-soft);
-    color: var(--vp-c-text-1);
-    border-radius: 0.65rem;
-    padding: 0.45rem 0.8rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.panel {
-    padding: 1rem 1.25rem 1.5rem;
-    background: var(--vp-c-bg);
-}
-
-@media (max-width: 640px) {
-    .summary {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .summary-actions {
-        width: 100%;
-        justify-content: space-between;
-    }
-}
-</style>

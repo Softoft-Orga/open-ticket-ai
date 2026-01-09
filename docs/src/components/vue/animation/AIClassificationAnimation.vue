@@ -8,7 +8,7 @@
       <svg
           ref="svgEl"
           :viewBox="`0 0 ${size.w} ${size.h}`"
-          class="router-svg border rounded-lg border-gray-800"
+          class="w-full h-auto block border rounded-lg border-gray-800"
       >
         <defs>
           <symbol id="envelope" viewBox="-14 -12 28 24">
@@ -144,11 +144,3 @@ watch(visible, v => {
   }
 })
 </script>
-
-<style scoped>
-svg.router-svg {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-</style>

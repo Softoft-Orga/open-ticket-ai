@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import '../styles/homepage.css';
 
 interface Props {
   title: string;
@@ -29,14 +30,14 @@ const hero = frontmatter?.hero;
   <div class="min-h-screen bg-gradient-to-br from-[#667eea] to-[#764ba2]">
     {hero && (
       <section class="text-center py-16 px-8 text-white">
-        <h1 class="text-5xl md:text-6xl font-bold mb-4">{hero.title}</h1>
+        <h1 class="text-6xl font-bold mb-4 md:text-6xl max-md:text-5xl">{hero.title}</h1>
         {hero.tagline && <p class="text-2xl opacity-90 mb-8">{hero.tagline}</p>}
         {hero.actions && (
           <div class="flex gap-4 justify-center flex-wrap">
             {hero.actions.map(action => (
               <a 
                 href={action.link} 
-                class={`inline-block py-3 px-6 rounded-md no-underline font-medium transition-all duration-200 ${
+                class={`inline-block py-3 px-6 rounded-md no-underline font-medium transition-all ${
                   action.variant === 'secondary' 
                     ? 'bg-white/20 text-white border border-white/30 hover:bg-white/30 hover:-translate-y-0.5' 
                     : 'bg-[#7c4dff] text-white hover:bg-[#5c2ddf] hover:-translate-y-0.5'
@@ -49,26 +50,8 @@ const hero = frontmatter?.hero;
         )}
       </section>
     )}
-    <main class="splash-layout max-w-[1200px] mx-auto py-16 px-8 bg-white rounded-t-xl">
+    <main class="max-w-7xl mx-auto py-16 px-8 bg-white rounded-t-xl md:py-16 md:px-8 max-md:py-8 max-md:px-4">
       <slot />
     </main>
   </div>
 </BaseLayout>
-
-<style is:global>
-  .splash-layout h2 {
-    @apply text-3xl mt-8 mb-4;
-  }
-  
-  .splash-layout h3 {
-    @apply text-2xl mt-6 mb-3 text-[#7c4dff];
-  }
-  
-  .splash-layout p {
-    @apply mb-4 leading-relaxed;
-  }
-  
-  .splash-layout a {
-    @apply text-[#7c4dff] no-underline hover:underline;
-  }
-</style>

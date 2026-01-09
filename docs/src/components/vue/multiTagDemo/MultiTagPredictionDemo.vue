@@ -124,47 +124,47 @@ const setExample = (name: string) => {
 </script>
 
 <template>
-    <div class="demo-root">
-        <div class="banner">example only – no HuggingFace endpoint configured yet</div>
-        <div class="demo-grid">
-            <div class="example-list">
-                <div class="list-title">Examples</div>
-                <div class="list-buttons">
+    <div class="flex flex-col gap-4">
+        <div class="bg-[var(--vp-c-warning-2)] text-[var(--vp-c-text-1)] py-3 px-4 rounded-lg font-semibold text-center border border-[var(--vp-c-warning-3)]">example only – no HuggingFace endpoint configured yet</div>
+        <div class="grid grid-cols-[1fr_2fr] gap-4 items-start max-[960px]:grid-cols-1">
+            <div class="bg-[var(--vp-c-bg-soft)] border border-[var(--vp-c-border)] rounded-xl p-4 shadow-[var(--vp-shadow-2)]">
+                <div class="font-semibold mb-3">Examples</div>
+                <div class="flex flex-col gap-2">
                     <button
                         v-for="example in examples"
                         :key="example.name"
                         type="button"
-                        class="list-button"
-                        :class="{ active: example.name === selectedName }"
+                        class="w-full text-left py-2.5 px-3 rounded-lg border border-[var(--vp-c-border)] bg-[var(--vp-c-bg)] text-[var(--vp-c-text-1)] transition-all duration-200 cursor-pointer hover:border-[var(--vp-c-brand-2)]"
+                        :class="{ 'border-[var(--vp-c-brand-1)] bg-[var(--vp-c-brand-soft)]': example.name === selectedName }"
                         @click="setExample(example.name)"
                     >
                         {{ example.name }}
                     </button>
                 </div>
             </div>
-            <div class="example-detail" v-if="selectedExample">
-                <div class="card">
-                    <div class="card-header">Input</div>
-                    <div class="card-body">
-                        <div class="field">
-                            <div class="field-label">Subject</div>
-                            <div class="field-value">{{ selectedExample.subject }}</div>
+            <div class="flex flex-col gap-4" v-if="selectedExample">
+                <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden">
+                    <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">Input</div>
+                    <div class="py-3 px-4 flex flex-col gap-3">
+                        <div>
+                            <div class="font-semibold mb-1">Subject</div>
+                            <div class="whitespace-pre-wrap leading-relaxed">{{ selectedExample.subject }}</div>
                         </div>
-                        <div class="field">
-                            <div class="field-label">Body</div>
-                            <div class="field-value">{{ selectedExample.body }}</div>
+                        <div>
+                            <div class="font-semibold mb-1">Body</div>
+                            <div class="whitespace-pre-wrap leading-relaxed">{{ selectedExample.body }}</div>
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">Predicted Tags</div>
-                    <div class="tag-wrap">
-                        <span class="tag-chip" v-for="tag in selectedExample.predictedTags" :key="tag">{{ tag }}</span>
+                <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden">
+                    <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">Predicted Tags</div>
+                    <div class="flex flex-wrap gap-2 py-3 px-4 pb-4">
+                        <span class="inline-flex items-center py-1.5 px-2.5 rounded-full bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)] border border-[var(--vp-c-border)] text-sm" v-for="tag in selectedExample.predictedTags" :key="tag">{{ tag }}</span>
                     </div>
                 </div>
-                <div class="card muted">
-                    <div class="card-header">Your own text</div>
-                    <div class="card-body">Live prediction coming soon</div>
+                <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden opacity-70">
+                    <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">Your own text</div>
+                    <div class="py-3 px-4">Live prediction coming soon</div>
                 </div>
             </div>
         </div>
@@ -172,136 +172,3 @@ const setExample = (name: string) => {
         <TagTree/>
     </div>
 </template>
-
-<style scoped>
-.demo-root {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.banner {
-    background: var(--vp-c-warning-2);
-    color: var(--vp-c-text-1);
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    text-align: center;
-    border: 1px solid var(--vp-c-warning-3);
-}
-
-.demo-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 1rem;
-    align-items: start;
-}
-
-.example-list {
-    background: var(--vp-c-bg-soft);
-    border: 1px solid var(--vp-c-border);
-    border-radius: 0.75rem;
-    padding: 1rem;
-    box-shadow: var(--vp-shadow-2);
-}
-
-.list-title {
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-}
-
-.list-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.list-button {
-    width: 100%;
-    text-align: left;
-    padding: 0.65rem 0.75rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--vp-c-border);
-    background: var(--vp-c-bg);
-    color: var(--vp-c-text-1);
-    transition: background 0.2s ease, border-color 0.2s ease;
-    cursor: pointer;
-}
-
-.list-button:hover {
-    border-color: var(--vp-c-brand-2);
-}
-
-.list-button.active {
-    border-color: var(--vp-c-brand-1);
-    background: var(--vp-c-brand-soft);
-}
-
-.example-detail {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.card {
-    background: var(--vp-c-bg);
-    border: 1px solid var(--vp-c-border);
-    border-radius: 0.75rem;
-    box-shadow: var(--vp-shadow-2);
-    overflow: hidden;
-}
-
-.card.muted {
-    opacity: 0.7;
-}
-
-.card-header {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--vp-c-border);
-    font-weight: 600;
-}
-
-.card-body {
-    padding: 0.75rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.card-body.padded {
-    gap: 1.25rem;
-}
-
-.field-label {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.field-value {
-    white-space: pre-wrap;
-    line-height: 1.5;
-}
-
-.tag-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem 1rem;
-}
-
-.tag-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 0.65rem;
-    border-radius: 999px;
-    background: var(--vp-c-bg-soft);
-    color: var(--vp-c-text-1);
-    border: 1px solid var(--vp-c-border);
-    font-size: 0.95rem;
-}
-@media (max-width: 960px) {
-    .demo-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>

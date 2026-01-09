@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import '../styles/homepage.css';
 
 interface Props {
   title: string;
@@ -73,17 +74,17 @@ const sidebarSections = [
 
 <BaseLayout title={title} description={description}>
   <div class="flex min-h-screen">
-    <aside class="w-[280px] bg-[#1a1a1a] text-white fixed h-screen overflow-y-auto border-r border-[#333] hidden md:block">
+    <aside class="w-[280px] bg-[#1a1a1a] text-white fixed h-screen overflow-y-auto border-r border-[#333] md:block hidden">
       <div class="p-8 px-6">
         <a href="/" class="block text-2xl font-bold text-[#7c4dff] no-underline mb-8">Open Ticket AI</a>
         <nav>
           {sidebarSections.map(section => (
             <div class="mb-8">
-              <h3 class="text-sm uppercase tracking-wider text-[#999] mb-2">{section.label}</h3>
+              <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-2">{section.label}</h3>
               <ul class="list-none p-0 m-0">
                 {section.items.map(item => (
                   <li class="mb-1">
-                    <a href={item.link} class="block py-2 px-3 text-[#ccc] no-underline rounded transition-all duration-200 hover:bg-[#333] hover:text-white">{item.label}</a>
+                    <a href={item.link} class="block py-2 px-3 text-gray-400 no-underline rounded transition-all hover:bg-[#333] hover:text-white">{item.label}</a>
                   </li>
                 ))}
               </ul>
@@ -92,74 +93,10 @@ const sidebarSections = [
         </nav>
       </div>
     </aside>
-    <main class="flex-1 ml-0 md:ml-[280px] p-8 md:p-16 max-w-[1200px]">
-      <article class="docs-layout bg-white p-8 rounded-lg">
+    <main class="ml-[280px] flex-1 p-8 px-16 max-w-[1200px] md:ml-[280px] md:p-8 md:px-16 max-md:ml-0 max-md:p-4">
+      <article class="bg-white p-8 rounded-lg">
         <slot />
       </article>
     </main>
   </div>
 </BaseLayout>
-
-<style is:global>
-  .docs-layout h1 {
-    @apply text-4xl mt-6 mb-2 leading-tight;
-  }
-  
-  .docs-layout h2 {
-    @apply text-3xl border-b border-gray-200 pb-1 mt-6 mb-2;
-  }
-  
-  .docs-layout h3 {
-    @apply text-2xl mt-6 mb-3;
-  }
-  
-  .docs-layout h4 {
-    @apply text-xl mt-6 mb-3;
-  }
-  
-  .docs-layout p {
-    @apply mb-4;
-  }
-  
-  .docs-layout a {
-    @apply text-[#7c4dff] hover:text-[#5c2ddf];
-  }
-  
-  .docs-layout pre {
-    @apply bg-[#282c34] text-[#abb2bf] p-4 rounded-md overflow-x-auto my-4;
-  }
-  
-  .docs-layout code {
-    @apply font-mono bg-gray-100 px-2 py-1 rounded text-sm;
-  }
-  
-  .docs-layout pre code {
-    @apply bg-transparent p-0;
-  }
-  
-  .docs-layout table {
-    @apply w-full border-collapse my-4;
-  }
-  
-  .docs-layout table th,
-  .docs-layout table td {
-    @apply border border-gray-300 p-3 text-left;
-  }
-  
-  .docs-layout table th {
-    @apply bg-gray-100 font-bold;
-  }
-  
-  .docs-layout ul,
-  .docs-layout ol {
-    @apply ml-8 mb-4;
-  }
-  
-  .docs-layout li {
-    @apply mb-2;
-  }
-  
-  .docs-layout blockquote {
-    @apply border-l-4 border-[#7c4dff] pl-4 my-4 text-gray-600;
-  }
-</style>
