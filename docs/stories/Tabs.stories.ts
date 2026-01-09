@@ -1,7 +1,6 @@
 import Tabs from '../src/components/vue/core/basic/Tabs.vue'
 import {ref} from 'vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import {ref} from 'vue'
 
 const meta: Meta<typeof Tabs> = {
     title: 'Core/Tabs',
