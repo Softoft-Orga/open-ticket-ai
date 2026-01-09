@@ -1,10 +1,38 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import CapabilityCard from '../components/vue/homepage/CapabilityCard.vue';
+import IntegrationLogos from '../components/vue/homepage/IntegrationLogos.vue';
+import FeatureShowcase from '../components/vue/homepage/FeatureShowcase.vue';
+import ServicesGrid from '../components/vue/homepage/ServicesGrid.vue';
 import '../styles/homepage.css';
-import { ArrowRightIcon } from '@heroicons/vue/24/outline';
 
-const pageTitle = 'Open Ticket AI - Automated Ticket Classification';
+const pageTitle = 'Open Ticket AI - Automated Ticket Tagging, On-Premise';
+
+// Get all services from content collection
+const allServices = await getCollection('services');
+const services = allServices
+  .filter(s => !s.data.nav?.hidden)
+  .map(s => ({
+    slug: s.data.slug,
+    title: s.data.title,
+    oneLiner: s.data.oneLiner,
+    description: s.data.description,
+    outcomes: s.data.outcomes,
+    startingPrice: s.data.startingPrice,
+    group: s.data.nav?.group
+  }))
+  .sort((a, b) => {
+    const aOrder = allServices.find(s => s.data.slug === a.slug)?.data.nav?.order || 999;
+    const bOrder = allServices.find(s => s.data.slug === b.slug)?.data.nav?.order || 999;
+    return aOrder - bOrder;
+  })
+  .slice(0, 6); // Show top 6 services
+
+const integrations = [
+  { name: 'OTOBO' },
+  { name: 'Znuny/OTRS' },
+  { name: 'Zammad' }
+];
 ---
 
 <BaseLayout title={pageTitle}>
@@ -13,165 +41,147 @@ const pageTitle = 'Open Ticket AI - Automated Ticket Classification';
   <div class="w-full bg-background-dark text-white antialiased">
     <!-- Hero Section -->
     <section class="relative w-full px-4 md:px-10 lg:px-20 xl:px-40 py-20 flex justify-center bg-glow-radial">
-      <div class="w-full max-w-7xl flex flex-col lg:flex-row gap-16 items-center">
-        <div class="flex flex-col gap-8 lg:w-1/2">
-          <div class="flex items-center gap-2 w-fit px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-            </span>
-            Live Classification Engine v2.0
-          </div>
-          <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight text-white">
-            Automated, Consistent Ticket Classification <br/>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">In Real Time.</span>
-          </h1>
-          <p class="text-gray-400 text-xl leading-relaxed max-w-xl">
-            Analyze incoming tickets and assign structured, hierarchical tags instantly. No rules to maintain. No manual effort. Fully automated.
-          </p>
-          <div class="flex flex-wrap gap-4 pt-4">
-            <button class="h-14 px-10 rounded-lg bg-white text-background-dark text-lg font-bold hover:bg-gray-100 transition-colors">
-              Start Free Trial
-            </button>
-            <button class="h-14 px-10 rounded-lg border border-border-dark hover:border-primary/50 text-white text-lg font-medium transition-colors bg-surface-dark/50">
-              View Demo
-            </button>
-          </div>
+      <div class="w-full max-w-7xl flex flex-col gap-12 items-center text-center">
+        <div class="flex items-center gap-2 w-fit px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+          </span>
+          Tagging AI + classification engine, Open Ticket Automation + integration + workflow logic
         </div>
-
-        <!-- Hero Visual: Processor Mockup -->
-        <div class="w-full lg:w-1/2 relative group">
-          <div class="absolute -inset-1 bg-gradient-to-r from-primary to-cyan-500 rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-          <div class="relative w-full aspect-video bg-surface-dark border border-border-dark rounded-xl overflow-hidden shadow-2xl flex flex-col">
-            <div class="h-10 bg-[#150c19] border-b border-border-dark flex items-center px-4 gap-2">
-              <div class="flex gap-2">
-                <div class="size-3 rounded-full bg-red-500/50"></div>
-                <div class="size-3 rounded-full bg-yellow-500/50"></div>
-                <div class="size-3 rounded-full bg-green-500/50"></div>
-              </div>
-              <div class="ml-4 text-[11px] text-gray-500 font-mono tracking-wider">processor_v2.exe</div>
-            </div>
-            <div class="flex flex-1 overflow-hidden">
-              <div class="w-1/2 border-r border-border-dark p-6 flex flex-col gap-4 bg-[#1a0f20]">
-                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Raw Input</div>
-                <div class="flex flex-col gap-3 font-mono text-[13px] text-gray-400">
-                  <div class="bg-white/5 p-3 rounded">
-                    <span class="text-gray-500">Subject:</span> <span class="text-gray-300">Login failed again?</span>
-                  </div>
-                  <div class="bg-white/5 p-3 rounded flex-1">
-                    <span class="text-gray-500">Body:</span><br/>
-                    <span class="text-gray-300 leading-relaxed block mt-1">
-                      Hi support, I'm trying to access the dashboard but getting error 503. This is blocking the payroll run. Please fix ASAP!
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="w-1/2 p-6 flex flex-col gap-4 bg-[#150c19]">
-                <div class="text-[10px] font-bold text-primary uppercase tracking-widest">AI Structured Output</div>
-                <div class="flex flex-col gap-4 font-mono text-[13px]">
-                  <div class="flex flex-col gap-1.5">
-                    <span class="text-gray-500 text-[11px]">Intent</span>
-                    <span class="px-3 py-1.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 w-fit">access_issue</span>
-                  </div>
-                  <div class="flex flex-col gap-1.5">
-                    <span class="text-gray-500 text-[11px]">System</span>
-                    <span class="px-3 py-1.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 w-fit">dashboard_main</span>
-                  </div>
-                  <div class="flex flex-col gap-1.5">
-                    <span class="text-gray-500 text-[11px]">Urgency</span>
-                    <span class="px-3 py-1.5 rounded bg-red-500/20 text-red-300 border border-red-500/30 w-fit animate-pulse">critical</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        
+        <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight text-white max-w-5xl">
+          Automated Ticket Tagging. <br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">On-Premise.</span>
+        </h1>
+        
+        <p class="text-gray-400 text-xl leading-relaxed max-w-3xl">
+          Tagging AI classifies tickets in real time. Open Ticket Automation integrates with your helpdesk and drives workflows without sending ticket data to the cloud.
+        </p>
+        
+        <div class="flex flex-wrap gap-4 pt-4 justify-center">
+          <button class="h-14 px-10 rounded-lg bg-primary text-white text-lg font-bold hover:bg-primary-dark transition-colors">
+            Get Demo
+          </button>
+          <button class="h-14 px-10 rounded-lg border border-border-dark hover:border-primary/50 text-white text-lg font-medium transition-colors bg-surface-dark/50">
+            Contact Sales
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- Core Capabilities -->
-    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-background-dark relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <!-- Integration Logos -->
+    <IntegrationLogos 
+      client:load
+      :integrations={integrations}
+    />
+
+    <!-- Tagging AI Feature Showcase -->
+    <FeatureShowcase 
+      client:load
+      badge="Core Engine"
+      title="Tagging AI"
+      description="Hierarchical, multilingual ticket classification that stays on your server."
+      :features={[
+        {
+          title: '100% On-Premise Execution',
+          description: 'Ticket data processed locally'
+        },
+        {
+          title: 'Multi-language Support',
+          description: 'EN, DE, FR, etc.'
+        },
+        {
+          title: 'Custom Hierarchical Taxonomies',
+          description: 'Handling complex nested tags and multiple languages with enterprise-grade precision'
+        }
+      ]}
+    />
+
+    <!-- Services Grid -->
+    <ServicesGrid
+      client:load
+      title="Services that get you live fast"
+      subtitle="Integration packages, automation setup, and custom development for your needs"
+      :services={services}
+    />
+
+    <!-- Security & Data Flow Section -->
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-surface-dark/30">
       <div class="w-full max-w-7xl mx-auto">
-        <div class="mb-16">
-          <h2 class="font-display text-4xl font-bold text-white mb-4">Core Capabilities</h2>
-          <p class="text-gray-400 text-lg">Built for enterprise scale and precision.</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <CapabilityCard
-            client:load
-            icon="psychology"
-            title="Fully Automated Classification"
-            desc="Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly on new tickets and historical backlogs without human intervention."
-          />
-          <CapabilityCard
-            client:load
-            icon="account_tree"
-            title="Hierarchical, Not Flat"
-            desc="A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for operational precision. Enables deep, multi-level analytics."
-          />
-          <CapabilityCard
-            client:load
-            icon="hub"
-            title="10 Quadrillion Combinations"
-            desc="Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry."
-          />
-        </div>
-      </div>
-    </section>
-
-    <!-- Terminal Visual -->
-    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-[#160b1b]">
-      <div class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 items-center rounded-3xl bg-[#1d1023] border border-border-dark p-12 relative overflow-hidden shadow-2xl">
-        <div class="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px]"></div>
-
-        <div class="w-full lg:w-3/5 order-2 lg:order-1">
-          <div class="rounded-xl bg-[#0d0710] border border-[#3c2249] p-6 font-mono text-sm shadow-inner relative z-10">
-            <div class="flex items-center justify-between mb-6 border-b border-[#3c2249] pb-3">
-              <div class="text-gray-500 text-xs">bash</div>
-              <div class="flex gap-1.5">
-                <div class="size-2 rounded-full bg-white/10"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <!-- Security & Data Flow -->
+          <div class="flex flex-col gap-6 p-8 bg-surface-dark/50 border border-border-dark rounded-2xl">
+            <h3 class="text-2xl font-bold text-white">Security & Data Flow</h3>
+            <div class="flex flex-col gap-3">
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                  <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <span class="text-gray-300">Ticket data processed locally</span>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                  <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <span class="text-gray-300">No external cloud required</span>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                  <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <span class="text-gray-300">Logging and access control supported</span>
               </div>
             </div>
-            <div class="flex flex-col gap-4">
-              <div class="text-green-400 flex gap-2">
-                <span>$</span>
-                <span class="text-white">query analytics --group-by intent --metric resolution_time</span>
+          </div>
+
+          <!-- Built for Enterprise Helpdesks -->
+          <div class="flex flex-col gap-6 p-8 bg-surface-dark/50 border border-border-dark rounded-2xl">
+            <h3 class="text-2xl font-bold text-white">Built for enterprise helpdesks</h3>
+            <div class="flex flex-col gap-3">
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                  <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <span class="text-gray-300">On-premise / private cloud deployment</span>
               </div>
-              <div class="text-gray-500 italic text-xs">Processing 14,203 tickets...</div>
-              <div class="flex flex-col gap-2 mt-2">
-                <div class="flex justify-between items-center bg-[#2b1834] p-3 rounded border-l-4 border-green-500">
-                  <span class="text-blue-300">intent/service_request/access_request</span>
-                  <span class="text-white font-bold">9 min <span class="text-gray-500 font-normal ml-1">avg</span></span>
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                  <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
                 </div>
-                <div class="flex justify-between items-center bg-[#2b1834] p-3 rounded border-l-4 border-red-500">
-                  <span class="text-blue-300">intent/incident/security_incident</span>
-                  <span class="text-white font-bold">3.1h <span class="text-gray-500 font-normal ml-1">avg</span></span>
-                </div>
-                <div class="flex justify-between items-center bg-[#2b1834] p-3 rounded border-l-4 border-yellow-500">
-                  <span class="text-blue-300">intent/billing/dispute</span>
-                  <span class="text-white font-bold">4.2d <span class="text-gray-500 font-normal ml-1">avg</span></span>
-                </div>
+                <span class="text-gray-300">Multilingual tickets supported</span>
               </div>
-              <div class="text-green-400 mt-4 flex gap-2">
-                <span>$</span>
-                <span class="animate-pulse bg-white w-2 h-5 inline-block"></span>
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                  <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <span class="text-gray-300">Backlog tagging for historical tickets</span>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-1">
+                  <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <span class="text-gray-300">Typical rollout: days to weeks</span>
               </div>
             </div>
           </div>
         </div>
-
-        <div class="w-full lg:w-2/5 flex flex-col gap-6 order-1 lg:order-2 z-10">
-          <h2 class="font-display text-4xl font-bold text-white leading-tight">Actionable Reporting for Management.</h2>
-          <p class="text-gray-400 text-xl leading-relaxed">
-            See exactly where time and risk come from. Detect bottlenecks immediately with granular, AI-assigned tags that reveal the truth behind your support metrics.
-          </p>
-          <div class="flex items-center gap-2 text-primary font-bold text-lg cursor-pointer group hover:text-white transition-colors">
-            <span>Explore Analytics Dashboard</span>
-            <ArrowRightIcon class="w-6 h-6 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-          </div>
-        </div>
       </div>
     </section>
+
   </div>
 </BaseLayout>
