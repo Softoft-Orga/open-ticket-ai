@@ -26,12 +26,11 @@ open-ticket-ai/
 ### Absolute rules
 
 - **Never** place tests under any `src/` path. Forbidden: `src/**/tests`, `src/**/test_*.py`.
-- Unit tests of plugins live **with their package** under `packages/<name>/tests/` Unit Tests of the core in
-  /tests/unit/.
-- Cross-package **integration,e2e** tests live in **root** `tests/`.
+- Unit tests live **with their package** under `packages/<name>/tests/`.
+- Cross-package **integration/e2e** tests live in **root** `tests/`.
 - Keep sample inputs/golden files under a sibling `data/` directory next to the tests that use them.
 - Each package is an editable member of the uv workspace. Do not add ad‑hoc `PYTHONPATH` hacks.
-- Python version: **3.13** only. Use modern typing (PEP 695). No code comments.
+- Python version: **3.13** only. Use modern typing (PEP 695). No inline code comments.
 
 ## Tests Layout (required)
 
@@ -50,7 +49,6 @@ At the repo root:
 
 ```
 tests/
-    unit/
 ├── integration/         # spans multiple packages
 ├── e2e/                 # CLI/app-level
 ├── data/
@@ -67,8 +65,20 @@ tests/
 
 - Check existing fixtures before creating new ones: `uv run -m pytest --fixtures`
 - Follow naming conventions: `mock_*`, `sample_*`, `tmp_*`, `empty_*`, `*_factory`
+- Document fixtures with clear docstrings
+- See [FIXTURE_TEMPLATES.md](./docs/FIXTURE_TEMPLATES.md) for common patterns
 
 ## Pytest configuration (root `pyproject.toml`)
+
+```toml
+[tool.pytest.ini_options]
+python_files = "test_*.py"
+testpaths = [
+    "tests",
+    "packages/*/tests"
+]
+addopts = ["-q"]
+```
 
 ## How to run
 
@@ -83,11 +93,8 @@ tests/
 - Lint: `uv run ruff check .` (no warnings allowed)
 - Types: `uv run mypy .` (no ignores added without justification in PR)
 - Tests: `uv run -m pytest`
+- Test structure: `uv run python scripts/validate_test_structure.py`
 - No test files under `src/**` will be accepted. PRs that create them must be changed.
-
-### Copilot PR Automation
-
-The `.github/workflows/copilot-pr-retry.yml` workflow automatically handles PRs created by `github-copilot[bot]`. When checks fail, it labels the PR with `retry-needed` and `copilot-pr`, comments with failure details, and closes the PR to enable retry. This only affects Copilot bot PRs.
 
 ## Architectural expectations (short)
 
@@ -96,16 +103,11 @@ The `.github/workflows/copilot-pr-retry.yml` workflow automatically handles PRs 
 - No monkey patching; avoid reflection “magic.”
 - Documentation in Markdown (VitePress), not as docstrings or comments in code.
 
-## Documentation Structure
-
-All documentation lives in `/docs` directory:
-
-
 ---
 
 **Checklist for contributors (must pass):**
 
-- [ ] New unit tests added under `packages/<name>/tests` or `tests/unit/`
+- [ ] New unit tests added under `packages/<name>/tests`
 - [ ] No files under any `src/**/tests`
 - [ ] Root-level integration/e2e tests only in `tests/`
 - [ ] No `__init__.py` in any test directories
