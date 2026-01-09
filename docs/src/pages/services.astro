@@ -1,10 +1,46 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceCard from '../components/services/ServiceCard.astro';
 import Extension from '../components/services/Extension.astro';
 
 const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
+
+// Get all services from the content collection
+const allServices = await getCollection('services');
+
+// Filter services by group
+const mainServices = allServices
+  .filter(s => s.data.nav?.group === 'Services')
+  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+
+const extensions = allServices
+  .filter(s => s.data.nav?.group === 'Extensions')
+  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+
+const flexibleServices = allServices
+  .filter(s => s.data.nav?.group === 'Flexible')
+  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+
+// Helper function to format price
+function formatPrice(price: number | undefined): string {
+  if (!price) return 'Custom';
+  return `${price.toLocaleString('de-DE')} €`;
+}
+
+// Helper function to determine if highlighted (middle service)
+function isHighlighted(index: number, total: number): boolean {
+  return total === 3 && index === 1;
+}
+
+// Map icon names for extensions
+const extensionIcons: Record<string, string> = {
+  'fine-tuned-model': 'tune',
+  'evaluation-report': 'analytics',
+  'system-tuning': 'integration_instructions',
+  'ongoing-updates': 'update',
+};
 ---
 
 <BaseLayout title={title} description={description}>
@@ -38,43 +74,15 @@ const description = 'Professional services for Open Ticket AI integration and su
                 </div>
 
                 <div class="services-grid">
-                    <ServiceCard
-                        title="Standard Stack"
-                        price="3.000 €"
-                        features={[
-                            "Up to 20,000 synthetic tickets",
-                            "Weighted multilingual generation",
-                            "Core ticket fields setup",
-                            "Realistic distributions",
-                            "JSONL or CSV delivery"
-                        ]}
-                        badge="Evaluation & Testing"
-                    />
-                    <ServiceCard
-                        title="High Volume Training"
-                        price="7.500 €"
-                        features={[
-                            "50k–100k tickets dataset",
-                            "Custom schema (queues, SLAs)",
-                            "Controlled label distributions",
-                            "Multilingual expansion",
-                            "1 revision round included"
-                        ]}
-                        badge="Production Ready"
-                        highlighted={true}
-                    />
-                    <ServiceCard
-                        title="Complex Use Cases"
-                        price="15.000 €"
-                        features={[
-                            "100k–500k+ tickets dataset",
-                            "Strict balancing & constraints",
-                            "Realistic noise modeling",
-                            "Optional agent replies",
-                            "Full documentation & splits"
-                        ]}
-                        badge="Enterprise Strategy"
-                    />
+                    {mainServices.map((service, index) => (
+                        <ServiceCard
+                            title={service.data.title}
+                            price={formatPrice(service.data.startingPrice)}
+                            features={service.data.outcomes || []}
+                            badge={service.data.oneLiner || ''}
+                            highlighted={isHighlighted(index, mainServices.length)}
+                        />
+                    ))}
                 </div>
             </div>
         </section>
@@ -90,14 +98,13 @@ const description = 'Professional services for Open Ticket AI integration and su
                         Common Extensions
                     </h3>
                     <div class="extensions-grid">
-                        <Extension icon="tune" title="Fine-tuned Model"
-                                   desc="Deliver a tagging model specifically fine-tuned on the generated dataset."/>
-                        <Extension icon="analytics" title="Evaluation Report"
-                                   desc="Comprehensive metrics report on model performance using the dataset."/>
-                        <Extension icon="integration_instructions" title="System Tuning"
-                                   desc="Specific format tuning for import into OTOBO, Znuny, or Zammad systems."/>
-                        <Extension icon="update" title="Ongoing Updates"
-                                   desc="Periodic dataset refreshes to match evolving business logic."/>
+                        {extensions.map((extension) => (
+                            <Extension 
+                                icon={extensionIcons[extension.data.slug] || 'tune'}
+                                title={extension.data.title}
+                                desc={extension.data.description || extension.data.oneLiner || ''}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
@@ -107,39 +114,32 @@ const description = 'Professional services for Open Ticket AI integration and su
         <section class="section">
             <div class="container">
                 <div class="hourly-grid">
-                    <div class="hourly-card">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div class="hourly-icon engineering">
-                                ⏱️
+                    {flexibleServices.map((service) => {
+                        const isEngineering = service.data.slug === 'hourly-engineering';
+                        const icon = isEngineering ? '⏱️' : '🎧';
+                        const cardClass = isEngineering ? '' : 'support';
+                        const iconClass = isEngineering ? 'engineering' : 'support';
+                        const priceUnit = isEngineering ? '/hour' : '/month';
+                        const priceLabel = isEngineering ? 'Remote Rate' : 'Subscription';
+                        
+                        return (
+                            <div class={`hourly-card ${cardClass}`}>
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                                    <div class={`hourly-icon ${iconClass}`}>
+                                        {icon}
+                                    </div>
+                                    <h3 class="hourly-title">{service.data.title}</h3>
+                                </div>
+                                <p class="hourly-desc">
+                                    {service.data.description || service.data.oneLiner}
+                                </p>
+                                <div class="hourly-footer">
+                                    <span class="hourly-label">{priceLabel}</span>
+                                    <span class="hourly-price">{formatPrice(service.data.startingPrice)} <span class="hourly-price-unit">{priceUnit}</span></span>
+                                </div>
                             </div>
-                            <h3 class="hourly-title">Hourly Engineering</h3>
-                        </div>
-                        <p class="hourly-desc">
-                            For extra changes beyond package scope, custom features/workflows, troubleshooting, and
-                            migrations.
-                        </p>
-                        <div class="hourly-footer">
-                            <span class="hourly-label">Remote Rate</span>
-                            <span class="hourly-price">200 € <span class="hourly-price-unit">/hour</span></span>
-                        </div>
-                    </div>
-
-                    <div class="hourly-card support">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div class="hourly-icon support">
-                                🎧
-                            </div>
-                            <h3 class="hourly-title">Ongoing Support</h3>
-                        </div>
-                        <p class="hourly-desc">
-                            Best-effort subscription for reliable coverage. Includes async support via ticket/email and
-                            minor fixes.
-                        </p>
-                        <div class="hourly-footer">
-                            <span class="hourly-label">Subscription</span>
-                            <span class="hourly-price">400 € <span class="hourly-price-unit">/month</span></span>
-                        </div>
-                    </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>
