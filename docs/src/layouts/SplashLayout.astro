@@ -27,7 +27,7 @@ const hero = frontmatter?.hero;
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="min-h-screen bg-gradient-to-br from-[#667eea] to-[#764ba2]">
+  <div class="min-h-screen bg-gradient-to-br from-[#667eea] to-[#764ba2] flex flex-col">
     {hero && (
       <section class="text-center py-16 px-8 text-white">
         <h1 class="text-6xl font-bold mb-4 md:text-6xl max-md:text-5xl">{hero.title}</h1>
@@ -50,7 +50,7 @@ const hero = frontmatter?.hero;
         )}
       </section>
     )}
-    <main class="max-w-7xl mx-auto py-16 px-8 bg-white rounded-t-xl md:py-16 md:px-8 max-md:py-8 max-md:px-4">
+    <main class="max-w-7xl mx-auto py-16 px-8 bg-white rounded-t-xl md:py-16 md:px-8 max-md:py-8 max-md:px-4 flex-1">
       <slot />
     </main>
   </div>

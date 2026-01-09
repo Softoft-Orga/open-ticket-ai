@@ -1,57 +1,57 @@
 <template>
-  <footer class="border-t border-slate-800 bg-slate-950/80 backdrop-blur text-slate-200">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-      <!-- Top: brand + social -->
-      <div
-          class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-10 border-b border-slate-800/70">
-        <div class="flex items-center gap-3">
-          <img v-if="brand.logoSrc" :alt="brand.name + ' logo'" :src="brand.logoSrc"
-               class="h-8 w-8 rounded-xl"/>
-          <div>
-            <p class="font-semibold leading-tight text-slate-100">{{ brand.name }}</p>
-            <p class="text-sm text-slate-400 leading-tight">{{ brand.tagline }}</p>
+  <footer class="border-t border-white/5 bg-background-dark py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <div class="md:col-span-1">
+          <div class="flex items-center gap-2 mb-6">
+            <div class="flex size-8 items-center justify-center rounded bg-primary/20 text-primary">
+              <TicketIcon class="w-5 h-5" />
+            </div>
+            <span class="font-display text-lg font-bold text-white tracking-tight">Open Ticket AI</span>
           </div>
+          <p class="text-slate-500 text-sm leading-relaxed max-w-xs">
+            Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
+          </p>
+        </div>
+        
+        <div>
+          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">Product</h4>
+          <ul class="space-y-4 text-slate-500 text-sm">
+            <li><a href="/products" class="hover:text-primary transition-colors">Features</a></li>
+            <li><a href="/services" class="hover:text-primary transition-colors">Integrations</a></li>
+            <li><a href="/docs" class="hover:text-primary transition-colors">Security</a></li>
+          </ul>
         </div>
 
-        <nav aria-label="Social" class="flex items-center gap-2">
-          <a
-              v-for="s in social"
-              :key="s.label"
-              :aria-label="s.label"
-              :href="s.href"
-              class="inline-flex items-center justify-center rounded-xl p-2 hover:bg-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-              rel="noopener noreferrer"
-              target="_blank"
-          >
-            <component :is="s.icon" class="h-5 w-5 text-slate-300"/>
-          </a>
-        </nav>
-      </div>
-
-      <!-- Links -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-10">
-        <Section v-for="group in linkGroups" :key="group.title" :title="group.title">
-          <ul class="mt-3 space-y-2">
-            <li v-for="item in group.items" :key="item.label">
-              <a
-                  :aria-label="item.label"
-                  :href="withLocale(item.href)"
-                  class="text-sm text-slate-400 hover:text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
-              >
-                {{ item.label }}
-              </a>
-            </li>
+        <div>
+          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">Company</h4>
+          <ul class="space-y-4 text-slate-500 text-sm">
+            <li><a href="#" class="hover:text-primary transition-colors">About Us</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors">Legal</a></li>
           </ul>
-        </Section>
-      </div>
+        </div>
 
-      <!-- Bottom: legal row -->
-      <div
-          class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-slate-800/70 pt-6">
-        <p class="text-xs text-slate-400">© {{ year }} {{ brand.name }} · {{ brand.footerNote }}</p>
-        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-400">
-          <a v-for="l in legalLinks" :key="l.label" :href="withLocale(l.href)"
-             class="hover:text-slate-200">{{ l.label }}</a>
+        <div>
+          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">Connect</h4>
+          <div class="flex gap-4 text-slate-500">
+            <a href="https://github.com/openticketai" class="hover:text-primary transition-colors" aria-label="GitHub">
+              <CodeBracketSquareIcon class="w-6 h-6" />
+            </a>
+            <a href="https://www.linkedin.com/company/open-ticket-ai" class="hover:text-primary transition-colors" aria-label="LinkedIn">
+              <LinkIcon class="w-6 h-6" />
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="text-xs text-slate-600">
+          © {{ year }} Open Ticket AI GmbH. All rights reserved.
+        </div>
+        <div class="flex gap-8 text-xs text-slate-600">
+          <a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
+          <a class="hover:text-white transition-colors" href="#">Imprint</a>
         </div>
       </div>
     </div>
@@ -59,143 +59,8 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, defineComponent, h} from 'vue'
-import {useI18n} from 'vue-i18n'
-import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
-import {AcademicCapIcon, CodeBracketSquareIcon, LinkIcon} from '@heroicons/vue/24/outline'
+import { computed } from 'vue'
+import { TicketIcon, CodeBracketSquareIcon, LinkIcon } from '@heroicons/vue/24/outline'
 
-interface LinkItem {
-  label: string;
-  href: string
-}
-
-interface LinkGroup {
-  title: string;
-  items: LinkItem[]
-}
-
-const props = defineProps<{
-  brand?: { name?: string; tagline?: string; logoSrc?: string | null; footerNote?: string };
-  links?: {
-    product?: LinkItem[];
-    solutions?: LinkItem[];
-    company?: LinkItem[];
-    resources?: LinkItem[];
-    legal?: LinkItem[]
-  };
-  social?: { label: string; href: string; icon?: any }[]
-}>()
-
-const {locale} = useI18n()
-const year = new Date().getFullYear()
-const langCode = computed(() => locale.value.split('-')[0])
-
-const brand = computed(() => ({
-  name: 'Open Ticket AI',
-  tagline: 'AI Ticket Classification · Open Source',
-  logoSrc: null,
-  footerNote: 'Built with ❤️ and Open Source', ...(props.brand ?? {})
-}))
-
-const defaultLinks = computed(() => ({
-  product: [
-    {label: 'Documentation', href: '/docs/'},
-    {label: 'Getting Started', href: '/getting-started/'},
-    {label: 'Live Demo', href: '/demo/'},
-    {label: 'Pricing', href: '/pricing/'},
-  ],
-  solutions: [
-    {label: 'OTOBO / Znuny / OTRS', href: '/solutions/otobo-znuny-otrs/'},
-    {label: 'Model Fine‑Tuning', href: '/services/fine-tuning/'},
-    {label: 'Synthetic Data', href: '/services/synthetic-data/'},
-    {label: 'Installation & Setup', href: '/services/installation/'},
-  ],
-  company: [
-    {label: 'About', href: '/about/'},
-    {label: 'Blog', href: '/blog/'},
-    {label: 'Contact', href: '/contact/'},
-  ],
-  resources: [
-    {label: 'API', href: '/api/'},
-    {label: 'Ticket Dataset', href: '/dataset/'},
-    {label: 'Guides', href: '/guides/'},
-  ],
-  legal: [
-    {label: 'Imprint', href: '/imprint/'},
-    {label: 'Privacy', href: '/privacy/'},
-    {label: 'Cookie Policy', href: '/cookies/'},
-  ],
-}))
-
-const linkGroups = computed<LinkGroup[]>(() => [
-  {title: 'Product', items: props.links?.product ?? defaultLinks.value.product},
-  {title: 'Solutions', items: props.links?.solutions ?? defaultLinks.value.solutions},
-  {title: 'Company', items: props.links?.company ?? defaultLinks.value.company},
-  {title: 'Resources', items: props.links?.resources ?? defaultLinks.value.resources},
-])
-
-const legalLinks = computed(() => props.links?.legal ?? defaultLinks.value.legal)
-
-const withLocale = (path: string) => `/${langCode.value}${path}`.replace('//', '/')
-
-const social = computed(() => (props.social ?? [
-  {label: 'GitHub', href: 'https://github.com/openticketai', icon: CodeBracketSquareIcon},
-  {label: 'Hugging Face', href: 'https://huggingface.co/openticketai', icon: AcademicCapIcon},
-  {label: 'LinkedIn', href: 'https://www.linkedin.com/company/open-ticket-ai', icon: LinkIcon},
-]).filter(s => !/instagram/i.test(s.label)))
-
-const Section = defineComponent<{ title: string }>({
-  name: 'FooterSection',
-  props: {title: {type: String, required: true}},
-  setup(p, {slots}) {
-    const PlusIcon = () =>
-      h(
-        'svg',
-        {
-          class: 'h-4 w-4',
-          viewBox: '0 0 20 20',
-          fill: 'currentColor',
-          'aria-hidden': 'true',
-        },
-        [
-          h('path', {
-            'fill-rule': 'evenodd',
-            d: 'M10 3a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H4a1 1 0 0 1 0-2h5V4a1 1 0 0 1 1-1Z',
-            'clip-rule': 'evenodd',
-          }),
-        ],
-      )
-
-    return () =>
-      h(
-        Disclosure,
-        {as: 'section', class: 'sm:contents'},
-        {
-          default: () => [
-            h('div', {class: 'sm:hidden'}, [
-              h(
-                DisclosureButton,
-                {
-                  class:
-                    'w-full flex items-center justify-between rounded-xl bg-slate-900/70 px-4 py-3 text-left font-medium text-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400',
-                },
-                {
-                  default: () => [h('span', p.title), h(PlusIcon)],
-                },
-              ),
-              h(
-                DisclosurePanel,
-                {class: 'px-4 pt-1 pb-4'},
-                {default: () => slots.default?.()},
-              ),
-            ]),
-            h('div', {class: 'hidden sm:block'}, [
-              h('h3', {class: 'text-sm font-semibold text-slate-200'}, p.title),
-              slots.default?.(),
-            ]),
-          ],
-        },
-      )
-  },
-})
+const year = computed(() => new Date().getFullYear())
 </script>

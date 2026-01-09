@@ -7,6 +7,7 @@ interface Props {
 const { title, description } = Astro.props;
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
 import NavBar from '../components/NavBar.astro';
+import FooterComponent from '../components/vue/navigation/FooterComponent.vue';
 import '../styles/global.css';
 ---
 
@@ -64,5 +65,6 @@ import '../styles/global.css';
   <body class="font-sans">
     <NavBar />
     <slot />
+    <FooterComponent client:load />
   </body>
 </html>

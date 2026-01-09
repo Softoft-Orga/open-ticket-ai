@@ -73,30 +73,32 @@ const sidebarSections = [
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="flex min-h-screen">
-    <aside class="w-[280px] bg-[#1a1a1a] text-white fixed h-screen overflow-y-auto border-r border-[#333] md:block hidden">
-      <div class="p-8 px-6">
-        <a href="/" class="block text-2xl font-bold text-[#7c4dff] no-underline mb-8">Open Ticket AI</a>
-        <nav>
-          {sidebarSections.map(section => (
-            <div class="mb-8">
-              <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-2">{section.label}</h3>
-              <ul class="list-none p-0 m-0">
-                {section.items.map(item => (
-                  <li class="mb-1">
-                    <a href={item.link} class="block py-2 px-3 text-gray-400 no-underline rounded transition-all hover:bg-[#333] hover:text-white">{item.label}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </div>
-    </aside>
-    <main class="ml-[280px] flex-1 p-8 px-16 max-w-[1200px] md:ml-[280px] md:p-8 md:px-16 max-md:ml-0 max-md:p-4">
-      <article class="bg-white p-8 rounded-lg">
-        <slot />
-      </article>
-    </main>
+  <div class="flex min-h-screen flex-col">
+    <div class="flex flex-1">
+      <aside class="w-[280px] bg-[#1a1a1a] text-white fixed h-screen overflow-y-auto border-r border-[#333] md:block hidden">
+        <div class="p-8 px-6">
+          <a href="/" class="block text-2xl font-bold text-[#7c4dff] no-underline mb-8">Open Ticket AI</a>
+          <nav>
+            {sidebarSections.map(section => (
+              <div class="mb-8">
+                <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-2">{section.label}</h3>
+                <ul class="list-none p-0 m-0">
+                  {section.items.map(item => (
+                    <li class="mb-1">
+                      <a href={item.link} class="block py-2 px-3 text-gray-400 no-underline rounded transition-all hover:bg-[#333] hover:text-white">{item.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+        </div>
+      </aside>
+      <main class="ml-[280px] flex-1 p-8 px-16 max-w-[1200px] md:ml-[280px] md:p-8 md:px-16 max-md:ml-0 max-md:p-4">
+        <article class="bg-white p-8 rounded-lg">
+          <slot />
+        </article>
+      </main>
+    </div>
   </div>
 </BaseLayout>
