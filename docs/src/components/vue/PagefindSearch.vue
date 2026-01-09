@@ -3,9 +3,11 @@
     <button
       @click="openModal"
       class="w-full max-w-2xl mx-auto relative group flex items-center bg-card-dark rounded-2xl border border-slate-700 shadow-2xl overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
+      aria-label="Search documentation"
+      aria-haspopup="dialog"
     >
       <div class="pl-6 text-slate-500">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
@@ -21,6 +23,9 @@
       <div
         v-if="isOpen"
         class="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search documentation"
         @click="closeModal"
       >
         <div class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
@@ -36,11 +41,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+
+interface PagefindUIInstance {
+  destroy?: () => void;
+}
 
 const isOpen = ref(false);
 const searchContainer = ref<HTMLElement | null>(null);
-let pagefindUI: any = null;
+let pagefindUI: PagefindUIInstance | null = null;
 
 const openModal = () => {
   isOpen.value = true;
@@ -66,6 +75,12 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeydown);
+  
+  // Cleanup pagefindUI instance
+  if (pagefindUI?.destroy) {
+    pagefindUI.destroy();
+    pagefindUI = null;
+  }
 });
 
 watch(isOpen, async (newValue) => {
@@ -86,11 +101,30 @@ watch(isOpen, async (newValue) => {
         if (!(window as any).PagefindUI) {
           const script = document.createElement('script');
           script.src = '/pagefind/pagefind-ui.js';
-          document.head.appendChild(script);
           
-          // Wait for the script to load
-          await new Promise((resolve) => {
-            script.onload = resolve;
+          // Wait for the script to load, with error handling and timeout
+          await new Promise<void>((resolve, reject) => {
+            const timeoutId = window.setTimeout(() => {
+              script.onload = null;
+              script.onerror = null;
+              reject(new Error('Timed out while loading Pagefind UI script.'));
+            }, 15000);
+
+            script.onload = () => {
+              window.clearTimeout(timeoutId);
+              script.onload = null;
+              script.onerror = null;
+              resolve();
+            };
+
+            script.onerror = () => {
+              window.clearTimeout(timeoutId);
+              script.onload = null;
+              script.onerror = null;
+              reject(new Error('Failed to load Pagefind UI script.'));
+            };
+
+            document.head.appendChild(script);
           });
         }
         
@@ -102,8 +136,22 @@ watch(isOpen, async (newValue) => {
           showImages: false,
           resetStyles: false,
         });
+
+        // Focus the search input after initialization
+        await nextTick();
+        const searchInput = searchContainer.value?.querySelector('.pagefind-ui__search-input') as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+        }
       } catch (error) {
         console.error('Failed to load Pagefind UI:', error);
+      }
+    } else {
+      // If pagefindUI already exists, just focus the search input
+      await nextTick();
+      const searchInput = searchContainer.value?.querySelector('.pagefind-ui__search-input') as HTMLInputElement;
+      if (searchInput) {
+        searchInput.focus();
       }
     }
   }
