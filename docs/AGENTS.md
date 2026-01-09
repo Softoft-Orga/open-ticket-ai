@@ -23,3 +23,4 @@
 ## Misc
 Prefer Tailwind over custom CSS where possible.
 Always try avoiding merge conflicts!
+
