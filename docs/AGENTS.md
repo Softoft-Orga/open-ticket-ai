@@ -5,6 +5,7 @@
 - Styling: Tailwind (see `docs/tailwind.config.cjs`) with the mandated palette (`primary`, `primary-dark`, `primary-light`, `background-dark`, `surface-dark`, `surface-lighter`, `border-dark`, `text-dim`, `cyan-glow`) and gradient helpers (`cyber-gradient`, `glow-radial`).
 - Global UI: `docs/src/styles/global.css` sets the Inter/system font stack and dark background; keep the same font everywhere.
 
+
 ## Design alignment
 - Match the vibe of the **open-ticket-ai-platform-prototype**: deep purple/cyan glow, dark surfaces, soft glassy cards, generous spacing, and pill-shaped badges.
 - Do not copy layouts verbatim—mirror the style and structure: layered surfaces (`surface-dark`/`surface-lighter`), neon accents (`primary`, `cyan-glow`), subtle rings/shadows, and consistent typography.
@@ -18,3 +19,7 @@
 - Use Playwright MCP to visually check UI changes (Astro on :4321, Storybook on :6006) when tweaking design-sensitive components.
 - Prefer MCP-driven Storybook checks/screenshots over manual eyeballing when validating regressions.
 - Whenever components or story configs change, update the corresponding Storybook stories in `docs/stories/**` to reflect new props, variants, and states.
+
+## Misc
+Prefer Tailwind over custom CSS where possible.
+Always try avoiding merge conflicts!
