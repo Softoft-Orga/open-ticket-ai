@@ -794,7 +794,7 @@ requires-dist = [
     { name = "injector", specifier = ">=0.22.0" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "open-ticket-ai", editable = "." },
-    { name = "otobo-znuny", specifier = ">=1.4.0" },
+    { name = "otobo-znuny", specifier = "==1.4.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.0" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24.0" },
@@ -835,7 +835,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "otobo-znuny"
-version = "1.4.0"
+version = "1.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -845,9 +845,9 @@ dependencies = [
     { name = "requests" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/72/aa/7ccffc4cef266bea56b9cd9d150292e1925ca0e62a49c2fd95a5acbd3dfb/otobo_znuny-1.4.0.tar.gz", hash = "sha256:4144491b49ed671dca273f41005a7876882853fb335b6ab40e9eef46bae14822", size = 17356, upload-time = "2025-10-02T11:24:32.187Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/67/c7/cfe76ef913428f54bc31496dffdfadc4a3d0e1c25a8af6b4a9ace1a098eb/otobo_znuny-1.4.1.tar.gz", hash = "sha256:435c05a31925e56886233c1dc19607d3238ae83848ee4ff8b0a72b313542dd90", size = 16746, upload-time = "2025-11-10T08:04:57.936Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/50/30/2792d41f0e2481e775d66fc8170aaadcf8bce04748aba1107ae46795efb8/otobo_znuny-1.4.0-py3-none-any.whl", hash = "sha256:2a1f2433f7770f1a57d287b824cf25396e287f41533ea6b590379030ea8ff82c", size = 24543, upload-time = "2025-10-02T11:24:30.203Z" },
+    { url = "https://files.pythonhosted.org/packages/57/69/61d941c886ae3a2469ebd562e2e6b54ebf3b634ee951ae08d61d6cf52613/otobo_znuny-1.4.1-py3-none-any.whl", hash = "sha256:0f5f18b31f74abaa7b908642fd3f944c2301a9263fa1db55c3815b77d55f5abc", size = 21239, upload-time = "2025-11-10T08:04:57.064Z" },
 ]
 
 [[package]]
