@@ -4,7 +4,7 @@ import mdx from '@astrojs/mdx';
 import rehypeMermaid from 'rehype-mermaid';
 
 export default defineConfig({
-    site: 'https://open-ticket-ai.com',
+    site: 'https://openticketai.com',
     base: '/',
     outDir: './dist',
     trailingSlash: 'always',

@@ -8,11 +8,6 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                'vp-brand': 'var(--vp-c-brand-1)',
-                'vp-brand-1': 'var(--vp-c-brand-1)',
-                'vp-brand-2': 'var(--vp-c-brand-2)',
-                'vp-brand-3': 'var(--vp-c-brand-3)',
-                'vp-brand-soft': 'var(--vp-c-brand-soft)',
                 'background-dark': '#0b1220',
                 'surface-dark': '#111827',
                 'surface-lighter': '#1f2937',

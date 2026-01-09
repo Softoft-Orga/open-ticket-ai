@@ -1,77 +1,67 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/vue/Badge.vue';
 
 const title = "Our Technology Stack";
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title} - Open Ticket AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-    <style is:global>
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
-    </style>
-</head>
-<body class="bg-background-dark">
-    <div class="min-h-screen bg-background-dark py-24">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="mb-20 text-center lg:text-left">
-          <h1 class="font-display text-5xl md:text-7xl font-black text-white glow-text mb-8">Our Technology Stack</h1>
-          <p class="text-xl text-text-dim max-w-2xl leading-relaxed">
-            Secure, On-Premise AI for Enterprise Helpdesks built with German Engineering precision. Designed for strict data privacy and seamless integration.
-          </p>
-        </div>
+<BaseLayout title={title} description={`${title} - Open Ticket AI`}>
+  <div slot="head" />
 
-        <div class="grid gap-8">
-          <!-- Main Hero Card -->
-          <div class="group relative flex flex-col overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter transition-all duration-500 hover:border-primary/50">
-            <div class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]"></div>
-            <div class="flex flex-col lg:flex-row items-stretch min-h-[500px]">
-              <div class="flex flex-1 flex-col justify-center gap-8 p-12 lg:p-16 relative z-10">
-                <div class="flex flex-wrap gap-3">
-                  <Badge label="Coming Soon" color="bg-primary/20 text-primary-light border-primary/20" client:load />
-                  <Badge label="On-Prem / Private Cloud" color="bg-slate-800/80 text-slate-300 border-slate-700/50" client:load />
-                  <Badge label="Multilingual" color="bg-slate-800/80 text-slate-300 border-slate-700/50" client:load />
-                </div>
-                <div>
-                  <h2 class="text-white text-5xl font-bold tracking-tight mb-4">Tagging AI</h2>
-                  <p class="text-text-dim text-xl leading-relaxed max-w-xl">
-                    Automated classification with military-grade privacy. Deploy local LLMs to categorize tickets instantly without data leaving your perimeter.
-                  </p>
-                </div>
-                <div class="flex items-center gap-6 pt-4">
-                  <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
-                    Join Waitlist
-                  </button>
-                  <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-transparent border border-surface-lighter hover:border-primary/50 text-white text-lg font-medium transition-all">
-                    Technical Specs
-                  </button>
-                </div>
+  <div class="min-h-screen bg-background-dark py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mb-20 text-center lg:text-left">
+        <h1 class="font-display text-5xl md:text-7xl font-black text-white glow-text mb-8">Our Technology Stack</h1>
+        <p class="text-xl text-text-dim max-w-2xl leading-relaxed">
+          Secure, On-Premise AI for Enterprise Helpdesks built with German Engineering precision. Designed for strict data privacy and seamless integration.
+        </p>
+      </div>
+
+      <div class="grid gap-8">
+        <!-- Main Hero Card -->
+        <div class="group relative flex flex-col overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter transition-all duration-500 hover:border-primary/50">
+          <div class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]"></div>
+          <div class="flex flex-col lg:flex-row items-stretch min-h-[500px]">
+            <div class="flex flex-1 flex-col justify-center gap-8 p-12 lg:p-16 relative z-10">
+              <div class="flex flex-wrap gap-3">
+                <Badge label="Coming Soon" color="bg-primary/20 text-primary-light border-primary/20" client:load />
+                <Badge label="On-Prem / Private Cloud" color="bg-slate-800/80 text-slate-300 border-slate-700/50" client:load />
+                <Badge label="Multilingual" color="bg-slate-800/80 text-slate-300 border-slate-700/50" client:load />
               </div>
-              <div class="relative w-full lg:w-[45%] min-h-[400px] bg-[#0c0d15] border-l border-surface-lighter">
-                <img 
-                  src="https://picsum.photos/1000/1000?blur=5" 
-                  alt="AI Tree" 
-                  class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen" 
-                />
-                <div class="absolute inset-0 bg-gradient-to-l from-surface-dark via-transparent to-transparent"></div>
+              <div>
+                <h2 class="text-white text-5xl font-bold tracking-tight mb-4">Tagging AI</h2>
+                <p class="text-text-dim text-xl leading-relaxed max-w-xl">
+                  Automated classification with military-grade privacy. Deploy local LLMs to categorize tickets instantly without data leaving your perimeter.
+                </p>
+              </div>
+              <div class="flex items-center gap-6 pt-4">
+                <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
+                  Join Waitlist
+                </button>
+                <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-transparent border border-surface-lighter hover:border-primary/50 text-white text-lg font-medium transition-all">
+                  Technical Specs
+                </button>
               </div>
             </div>
+            <div class="relative w-full lg:w-[45%] min-h-[400px] bg-[#0c0d15] border-l border-surface-lighter">
+              <img
+                src="https://picsum.photos/1000/1000?blur=5"
+                alt="AI Tree"
+                class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen"
+              />
+              <div class="absolute inset-0 bg-gradient-to-l from-surface-dark via-transparent to-transparent"></div>
+            </div>
           </div>
+        </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Core Box -->
-            <div class="flex flex-col justify-between overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter p-10 hover:border-primary/30 transition-all">
-              <div class="flex flex-col gap-6 mb-10">
-                <div class="flex items-center gap-4">
-                  <span class="material-symbols-outlined text-primary text-4xl">hub</span>
-                  <h3 class="text-white text-3xl font-bold tracking-tight">Open Ticket Automation Core</h3>
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Core Box -->
+          <div class="flex flex-col justify-between overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter p-10 hover:border-primary/30 transition-all">
+            <div class="flex flex-col gap-6 mb-10">
+              <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined text-primary text-4xl">hub</span>
+                <h3 class="text-white text-3xl font-bold tracking-tight">Open Ticket Automation Core</h3>
+              </div>
                 <p class="text-text-dim text-lg leading-relaxed">
                   The renamed core engine. A secure API gateway that routes tickets between your helpdesk (Znuny/OTOBO) and our AI models. Built for high-throughput environments.
                 </p>
@@ -107,9 +97,8 @@ const title = "Our Technology Stack";
           </div>
         </div>
       </div>
-    </div>
-</body>
-</html>
+  </div>
+</BaseLayout>
 
 <style>
 .glow-text {

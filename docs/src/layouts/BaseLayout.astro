@@ -6,6 +6,7 @@ interface Props {
 
 const { title, description } = Astro.props;
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
+import NavBar from '../components/NavBar.astro';
 ---
 
 <!DOCTYPE html>
@@ -17,7 +18,8 @@ const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
     {description && <meta name="description" content={description} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    
+    <slot name="head" />
+
     <!-- Google Analytics lazy loading -->
     <script is:inline define:vars={{ gaIds }}>
       (() => {
@@ -58,7 +60,8 @@ const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
       })();
     </script>
   </head>
-  <body>
+  <body class="font-sans">
+    <NavBar />
     <slot />
   </body>
 </html>
