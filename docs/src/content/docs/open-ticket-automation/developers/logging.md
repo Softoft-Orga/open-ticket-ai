@@ -1,6 +1,5 @@
 ---
 title: Logging System
-description: Open Ticket AI logging system documentation
 ---
 
 # Logging System
