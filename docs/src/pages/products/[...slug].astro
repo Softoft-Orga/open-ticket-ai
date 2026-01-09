@@ -1,23 +1,15 @@
 ---
 import DocsLayout from '../../layouts/DocsLayout.astro';
-import { getCollection } from 'astro:content';
+import { getEntry } from 'astro:content';
 
-export async function getStaticPaths() {
-  const docs = await getCollection('docs');
-  const productDocs = docs.filter(doc => doc.id.startsWith('open-ticket-automation/products/'));
-  
-  return productDocs.map(doc => {
-    const parts = doc.id.split('/');
-    const slug = parts.slice(2);
-    
-    return {
-      params: { slug: slug.join('/') },
-      props: { entry: doc },
-    };
-  });
+const slugParam = Astro.params.slug;
+const slugSegments = Array.isArray(slugParam) ? slugParam : [slugParam].filter(Boolean);
+const entryId = ['open-ticket-automation', 'products', ...slugSegments].join('/');
+const entry = slugSegments.length ? await getEntry('docs', entryId) : null;
+
+if (!entry) {
+  throw Astro.redirect('/404');
 }
-
-const { entry } = Astro.props;
 
 const { Content } = await entry.render();
 const title = entry.data.title;
