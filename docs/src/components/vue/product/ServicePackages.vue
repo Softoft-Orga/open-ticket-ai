@@ -63,7 +63,3 @@ const servicePackages = computed(() => [
       :title="t('servicePackages.title')"
   />
 </template>
-
-<style scoped>
-/* Your styles here */
-</style>

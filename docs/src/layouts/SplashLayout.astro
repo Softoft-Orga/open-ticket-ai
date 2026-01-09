@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import '../styles/homepage.css';
 
 interface Props {
   title: string;
@@ -26,17 +27,21 @@ const hero = frontmatter?.hero;
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="splash-layout">
+  <div class="min-h-screen bg-gradient-to-br from-[#667eea] to-[#764ba2]">
     {hero && (
-      <section class="hero">
-        <h1>{hero.title}</h1>
-        {hero.tagline && <p class="tagline">{hero.tagline}</p>}
+      <section class="text-center py-16 px-8 text-white">
+        <h1 class="text-6xl font-bold mb-4 md:text-6xl max-md:text-5xl">{hero.title}</h1>
+        {hero.tagline && <p class="text-2xl opacity-90 mb-8">{hero.tagline}</p>}
         {hero.actions && (
-          <div class="actions">
+          <div class="flex gap-4 justify-center flex-wrap">
             {hero.actions.map(action => (
               <a 
                 href={action.link} 
-                class={`button ${action.variant || 'primary'}`}
+                class={`inline-block py-3 px-6 rounded-md no-underline font-medium transition-all ${
+                  action.variant === 'secondary' 
+                    ? 'bg-white/20 text-white border border-white/30 hover:bg-white/30 hover:-translate-y-0.5' 
+                    : 'bg-[#7c4dff] text-white hover:bg-[#5c2ddf] hover:-translate-y-0.5'
+                }`}
               >
                 {action.text}
               </a>
@@ -45,121 +50,8 @@ const hero = frontmatter?.hero;
         )}
       </section>
     )}
-    <main class="content">
+    <main class="max-w-7xl mx-auto py-16 px-8 bg-white rounded-t-xl md:py-16 md:px-8 max-md:py-8 max-md:px-4">
       <slot />
     </main>
   </div>
 </BaseLayout>
-
-<style>
-  .splash-layout {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-  
-  .hero {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: #fff;
-  }
-  
-  .hero h1 {
-    font-size: 3.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  
-  .tagline {
-    font-size: 1.5rem;
-    opacity: 0.9;
-    margin-bottom: 2rem;
-  }
-  
-  .actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .button {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-  
-  .button.primary {
-    background: #7c4dff;
-    color: #fff;
-  }
-  
-  .button.primary:hover {
-    background: #5c2ddf;
-    transform: translateY(-2px);
-  }
-  
-  .button.secondary {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-  }
-  
-  .button.secondary:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-  }
-  
-  .content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-    background: #fff;
-    border-radius: 12px 12px 0 0;
-  }
-  
-  @media (max-width: 768px) {
-    .hero h1 {
-      font-size: 2.5rem;
-    }
-    
-    .tagline {
-      font-size: 1.25rem;
-    }
-    
-    .content {
-      padding: 2rem 1rem;
-    }
-  }
-</style>
-
-<style is:global>
-  .splash-layout h2 {
-    font-size: 2rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  .splash-layout h3 {
-    font-size: 1.5rem;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: #7c4dff;
-  }
-  
-  .splash-layout p {
-    margin-bottom: 1rem;
-    line-height: 1.8;
-  }
-  
-  .splash-layout a {
-    color: #7c4dff;
-    text-decoration: none;
-  }
-  
-  .splash-layout a:hover {
-    text-decoration: underline;
-  }
-</style>

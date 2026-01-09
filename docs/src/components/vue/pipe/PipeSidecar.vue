@@ -1,5 +1,5 @@
 <template>
-  <div class="pipe-sidecar bg-vp-bg-soft border border-vp-border rounded-lg overflow-hidden">
+  <div class="max-w-full bg-vp-bg-soft border border-vp-border rounded-lg overflow-hidden">
     <!-- Header -->
     <div class="bg-vp-bg p-6 border-b border-vp-border">
       <div class="flex items-start justify-between">
@@ -227,9 +227,3 @@ const getErrorTitle = (type: string): string => {
   }
 }
 </script>
-
-<style scoped>
-.pipe-sidecar {
-  max-width: 100%;
-}
-</style>
