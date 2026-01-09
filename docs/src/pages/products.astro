@@ -14,7 +14,7 @@ const products = allProducts
   .sort((a, b) => (a.data.nav?.order ?? 999) - (b.data.nav?.order ?? 999));
 
 // Helper function to get placeholder image if not set
-function getProductImage(product: any, index: number) {
+function getProductImage(product: typeof products[0], index: number) {
   if (product.data.image) {
     return product.data.image;
   }
