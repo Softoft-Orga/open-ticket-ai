@@ -40,18 +40,18 @@ const Docs: React.FC = () => {
           parts: [{ text: m.content }]
         })),
         config: {
-          systemInstruction: `You are the Open Ticket AI Documentation Expert.
-          Use the following internal documentation to answer user queries.
+          systemInstruction: `You are the Open Ticket AI Documentation Expert. 
+          Use the following internal documentation to answer user queries. 
           If the answer is found in the docs, you MUST cite the source and provide the specific link.
-
+          
           DOCUMENTATION SOURCES:
-          1. [Open Ticket Automation (OTA) Docs] - Focuses on helpdesk connectors (Znuny, OTOBO, Zammad), automation rules for routing, priority updates, and triggering tasks.
+          1. [Open Ticket Automation (OTA) Docs] - Focuses on helpdesk connectors (Znuny, OTOBO, Zammad), automation rules for routing, priority updates, and triggering tasks. 
              Link: #/docs/ota
           2. [Tagging AI Docs] - Covers on-prem ticket classification, hierarchical tag schemas, multilingual support (EN/DE), and hardware sizing for local LLMs.
              Link: #/docs/tagging-ai
           3. [Synthetic Data Generator Docs] - Explains how to generate privacy-compliant support ticket datasets for model evaluation and training.
              Link: #/docs/synthetic-data
-
+          
           RULES:
           - Always mention the source if you use its info.
           - Use Markdown for formatting.
@@ -88,10 +88,10 @@ const Docs: React.FC = () => {
             AI Assistant v2.4 Live
           </div>
           <h2 className="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
-            Documentation
+            Docs Hub
           </h2>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Ask our AI assistant anything about our products or browse the source documentation below.
+            Choose a documentation category or ask our AI assistant for specific technical guidance.
           </p>
         </div>
 
@@ -104,8 +104,8 @@ const Docs: React.FC = () => {
               {messages.map((msg, idx) => (
                 <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[80%] rounded-2xl p-4 text-sm leading-relaxed ${
-                    msg.role === 'user'
-                      ? 'bg-primary text-white rounded-br-none'
+                    msg.role === 'user' 
+                      ? 'bg-primary text-white rounded-br-none' 
                       : 'bg-surface-lighter text-slate-200 rounded-bl-none border border-white/5 shadow-inner'
                   }`}>
                     {msg.role === 'assistant' && (
@@ -146,15 +146,15 @@ const Docs: React.FC = () => {
 
             {/* Input Form */}
             <form onSubmit={handleSendMessage} className="p-4 bg-background-dark border-t border-slate-700 flex gap-3">
-              <input
+              <input 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-1 bg-surface-dark border border-slate-700 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:ring-1 focus:ring-primary focus:border-primary transition-all text-sm"
-                placeholder="Ask e.g. 'How do I integrate with Znuny?' or 'Does Tagging AI support German?'"
-                type="text"
+                className="flex-1 bg-surface-dark border border-slate-700 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:ring-1 focus:ring-primary focus:border-primary transition-all text-sm" 
+                placeholder="Ask e.g. 'How do I integrate with Znuny?'" 
+                type="text" 
                 disabled={isLoading}
               />
-              <button
+              <button 
                 type="submit"
                 disabled={isLoading}
                 className="size-12 rounded-xl bg-primary hover:bg-primary-dark text-white flex items-center justify-center transition-all disabled:opacity-50"
@@ -166,35 +166,36 @@ const Docs: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <DocCard
-            icon="settings_suggest"
-            title="Open Ticket Automation Docs"
-            desc="Integration layer for OTOBO, Znuny/OTRS, and Zammad. Setup, connectors, and automation rules."
-            link="Open Automation Docs"
+          <DocCard 
+            icon="settings_suggest" 
+            title="Automation Engine" 
+            desc="Deep dive into OTA. Rule logic, connector configuration, and helpdesk integration."
+            link="Explore OTA Docs"
             to="/docs/ota"
           />
-          <DocCard
-            icon="label_important"
-            title="Tagging AI Docs"
-            desc="On-prem ticket classification. Tag schema, output format, multilingual behavior, and hardware sizing."
-            link="Open Tagging AI Docs"
+          <DocCard 
+            icon="psychology" 
+            title="Tagging Core" 
+            desc="The classification engine. Taxonomy trees, model training, and GPU requirements."
+            link="Explore Tagging Docs"
+            to="/docs/tagging-ai"
           />
-          <DocCard
-            icon="database"
-            title="Synthetic Data Docs"
-            desc="Privacy-compliant support ticket generation. Schemas, export formats, and data privacy."
-            link="Open Data Docs"
+          <DocCard 
+            icon="database" 
+            title="Privacy & Data" 
+            desc="Synthetic data, air-gapped deployments, and enterprise security standards."
+            link="Explore Data Docs"
             to="/docs/synthetic-data"
           />
         </div>
 
         <div className="mt-24 pt-16 border-t border-slate-800 text-center">
-          <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-slate-500 mb-12">Quick Resources</h4>
+          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-12">Popular Guides</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <QuickLink icon="rocket_launch" label="Deployment" />
-            <QuickLink icon="verified_user" label="Security & Data Flow" />
-            <QuickLink icon="build_circle" label="Troubleshooting" />
-            <QuickLink icon="history_edu" label="Release Notes" />
+            <QuickLink icon="rocket_launch" label="Getting Started" to="/docs/ota/getting-started" />
+            <QuickLink icon="terminal" label="API Reference" to="/docs/api" />
+            <QuickLink icon="cable" label="Connectors" to="/docs/ota/connectors" />
+            <QuickLink icon="verified_user" label="Compliance" to="/docs/compliance" />
           </div>
         </div>
       </div>

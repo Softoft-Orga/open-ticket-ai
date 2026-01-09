@@ -1,9 +1,3 @@
----
-layout: ../../layouts/DocsLayout.astro
-
-title: Logging System
-description: "Open Ticket AI logging system documentation covering the abstract interfaces and current standard-library implementation."
----
 # Logging System
 
 Open Ticket AI uses an abstract logging interface that allows developers to configure logging

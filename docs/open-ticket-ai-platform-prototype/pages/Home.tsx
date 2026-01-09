@@ -92,19 +92,19 @@ const Home: React.FC = () => {
             <p className="text-gray-400 text-lg">Built for enterprise scale and precision.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <CapabilityCard
-              icon="psychology"
-              title="Fully Automated Classification"
+            <CapabilityCard 
+              icon="psychology" 
+              title="Fully Automated Classification" 
               desc="Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly on new tickets and historical backlogs without human intervention."
             />
-            <CapabilityCard
-              icon="account_tree"
-              title="Hierarchical, Not Flat"
+            <CapabilityCard 
+              icon="account_tree" 
+              title="Hierarchical, Not Flat" 
               desc="A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for operational precision. Enables deep, multi-level analytics."
             />
-            <CapabilityCard
-              icon="hub"
-              title="10 Quadrillion Combinations"
+            <CapabilityCard 
+              icon="hub" 
+              title="10 Quadrillion Combinations" 
               desc="Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry."
             />
           </div>
@@ -115,7 +115,7 @@ const Home: React.FC = () => {
       <section className="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-[#160b1b]">
         <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 items-center rounded-3xl bg-[#1d1023] border border-border-dark p-12 relative overflow-hidden shadow-2xl">
           <div className="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px]"></div>
-
+          
           <div className="w-full lg:w-3/5 order-2 lg:order-1">
             <div className="rounded-xl bg-[#0d0710] border border-[#3c2249] p-6 font-mono text-sm shadow-inner relative z-10">
               <div className="flex items-center justify-between mb-6 border-b border-[#3c2249] pb-3">

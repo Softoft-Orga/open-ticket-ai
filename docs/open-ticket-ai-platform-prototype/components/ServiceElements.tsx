@@ -1,12 +1,12 @@
 
 import React from 'react';
 
-export const PricingCard: React.FC<{
-  title: string;
+export const PricingCard: React.FC<{ 
+  title: string; 
   subtitle?: string;
-  price: string;
-  features: string[];
-  badge?: string;
+  price: string; 
+  features: string[]; 
+  badge?: string; 
   highlighted?: boolean;
   buttonText?: string;
   priceSuffix?: string;
@@ -54,7 +54,7 @@ export const IntegrationPackageCard: React.FC<{
         <div className="text-[10px] text-slate-500 uppercase">One-time fee</div>
       </div>
     </div>
-
+    
     <div className="mb-6">
       <div className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-2">Supported Systems</div>
       <div className="text-slate-200 text-sm font-medium">{systems}</div>

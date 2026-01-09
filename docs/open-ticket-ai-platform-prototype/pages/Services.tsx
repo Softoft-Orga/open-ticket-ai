@@ -17,7 +17,7 @@ const Services: React.FC = () => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">We Integrate It.</span>
           </h1>
           <p className="mx-auto max-w-2xl text-xl text-slate-400 leading-relaxed font-medium">
-            Transparent, fixed-price packages for enterprise-grade helpdesk automation.
+            Transparent, fixed-price packages for enterprise-grade helpdesk automation. 
             From self-hosted AI models to full workflow automation.
           </p>
         </div>
@@ -34,7 +34,7 @@ const Services: React.FC = () => {
               <h2 className="text-3xl font-bold text-white">Ticket Tagging AI Model</h2>
             </div>
             <p className="text-slate-400 text-lg mb-10 max-w-2xl leading-relaxed">
-              Our core AI model designed for the automatic classification and tagging of helpdesk tickets.
+              Our core AI model designed for the automatic classification and tagging of helpdesk tickets. 
               It processes incoming requests to instantly identify critical metadata before a human even sees the ticket.
             </p>
             <div className="grid grid-cols-2 gap-6">
@@ -85,13 +85,13 @@ const Services: React.FC = () => {
           </div>
           <h2 className="text-5xl font-black text-white mb-6 tracking-tight">Synthetic Data Generation</h2>
           <p className="text-slate-400 text-lg max-w-3xl mx-auto leading-relaxed">
-            Custom, realistic, multilingual support-ticket datasets for AI training, evaluation, and benchmarking.
+            Custom, realistic, multilingual support-ticket datasets for AI training, evaluation, and benchmarking. 
             No sensitive customer data exposed.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-          <PricingCard
+          <PricingCard 
             title="Evaluation Dataset"
             subtitle="Benchmarking & Testing"
             price="3.000 €"
@@ -103,7 +103,7 @@ const Services: React.FC = () => {
               "JSONL or CSV delivery"
             ]}
           />
-          <PricingCard
+          <PricingCard 
             title="Training Dataset"
             subtitle="High Volume Training"
             price="7.500 €"
@@ -117,7 +117,7 @@ const Services: React.FC = () => {
               "Train / validation split, 1 revision round"
             ]}
           />
-          <PricingCard
+          <PricingCard 
             title="Enterprise Dataset"
             subtitle="Complex Use Cases"
             price="15.000 €"
@@ -154,7 +154,7 @@ const Services: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <IntegrationPackageCard
+          <IntegrationPackageCard 
             title="Integration Package"
             subtitle="Standard Stack"
             price="2.000 €"
@@ -168,7 +168,7 @@ const Services: React.FC = () => {
               "Basic testing + handover"
             ]}
           />
-          <IntegrationPackageCard
+          <IntegrationPackageCard 
             title="Integration Package"
             subtitle="Enterprise / Custom"
             price="5.000 €"
@@ -223,7 +223,7 @@ const Services: React.FC = () => {
                   <div className="text-[10px] text-slate-500 uppercase">One-time</div>
                 </div>
               </div>
-
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div>
                   <div className="text-[10px] text-white uppercase font-black mb-4">What's included</div>
@@ -262,7 +262,7 @@ const Services: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-          <PricingCard
+          <PricingCard 
             title="Custom Tags Model"
             subtitle="Synthetic Training Focus"
             price="20.000 €"
@@ -273,7 +273,7 @@ const Services: React.FC = () => {
               "Can be optionally hybridized with limited customer samples"
             ]}
           />
-          <PricingCard
+          <PricingCard 
             title="Custom Tag Model"
             subtitle="Start Data Training"
             price="30.000 €"
@@ -336,7 +336,7 @@ const Services: React.FC = () => {
             <span className="text-3xl font-bold text-white">200 € <span className="text-base font-normal text-slate-500">/hour</span></span>
           </div>
         </div>
-
+        
         <div className="rounded-3xl border border-white/10 bg-card-dark/50 p-10 flex flex-col hover:border-green-500/40 transition-all">
           <div className="flex items-center gap-4 mb-6">
             <div className="p-3 rounded-2xl bg-green-500/10 text-green-400">

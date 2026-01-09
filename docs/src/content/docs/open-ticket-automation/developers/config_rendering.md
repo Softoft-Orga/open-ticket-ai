@@ -1,6 +1,4 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title:  Config Rendering
 ---
 

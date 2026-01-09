@@ -17,7 +17,7 @@ const Footer: React.FC = () => (
             Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
           </p>
         </div>
-
+        
         <div>
           <h4 className="text-white font-bold text-sm mb-6 uppercase tracking-widest">Product</h4>
           <ul className="space-y-4 text-slate-500 text-sm">
@@ -48,7 +48,7 @@ const Footer: React.FC = () => (
           </div>
         </div>
       </div>
-
+      
       <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-xs text-slate-600">
           © 2024 Open Ticket AI GmbH. All rights reserved.

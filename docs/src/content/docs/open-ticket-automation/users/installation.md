@@ -1,9 +1,3 @@
----
-layout: ../../layouts/DocsLayout.astro
-
-title: Installation Guide
-description: "Easy installation guide for Open Ticket AI using Docker Compose - the recommended method for production deployment with all plugins included."
----
 # Installation Guide
 
 This guide will help you install Open Ticket AI on your server. We recommend using Docker Compose

@@ -109,7 +109,7 @@ const MediaLab: React.FC = () => {
           <div className="lg:col-span-4 space-y-8">
             <div className="bg-surface-dark border border-white/5 rounded-2xl p-6">
               <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-3">Creative Prompt</label>
-              <textarea
+              <textarea 
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 className="w-full bg-background-dark border border-white/10 rounded-xl p-4 text-sm text-white placeholder-slate-700 h-40 focus:ring-1 focus:ring-primary focus:border-primary transition-all resize-none"
@@ -119,13 +119,13 @@ const MediaLab: React.FC = () => {
 
             <div className="bg-surface-dark border border-white/5 rounded-2xl p-6">
               <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Output Configuration</label>
-
+              
               <div className="space-y-6">
                 <div>
                   <div className="text-[10px] text-slate-400 mb-2 font-bold">IMAGE SIZE</div>
                   <div className="grid grid-cols-3 gap-2">
                     {['1K', '2K', '4K'].map((s) => (
-                      <button
+                      <button 
                         key={s}
                         onClick={() => setSize(s as any)}
                         className={`py-2 rounded-lg text-xs font-bold transition-all border ${size === s ? 'bg-primary border-primary text-white shadow-glow' : 'bg-background-dark border-white/10 text-slate-500 hover:border-white/20'}`}
@@ -140,7 +140,7 @@ const MediaLab: React.FC = () => {
                   <div className="text-[10px] text-slate-400 mb-2 font-bold">ASPECT RATIO</div>
                   <div className="grid grid-cols-3 gap-2">
                     {['1:1', '16:9', '4:3'].map((ar) => (
-                      <button
+                      <button 
                         key={ar}
                         onClick={() => setAspectRatio(ar as any)}
                         className={`py-2 rounded-lg text-xs font-bold transition-all border ${aspectRatio === ar ? 'bg-primary border-primary text-white shadow-glow' : 'bg-background-dark border-white/10 text-slate-500 hover:border-white/20'}`}
@@ -153,7 +153,7 @@ const MediaLab: React.FC = () => {
               </div>
             </div>
 
-            <button
+            <button 
               onClick={handleGenerate}
               disabled={isGenerating}
               className="w-full h-14 bg-gradient-to-r from-primary to-purple-600 rounded-2xl text-white font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale"
@@ -172,7 +172,7 @@ const MediaLab: React.FC = () => {
                 {error}
               </div>
             )}
-
+            
             <div className="text-[10px] text-slate-600 italic px-2">
               Requires a <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" className="underline hover:text-primary">billing-enabled</a> API key.
             </div>
@@ -191,8 +191,8 @@ const MediaLab: React.FC = () => {
                 <div className="w-full h-full relative group">
                   <img src={generatedImageUrl} className="w-full h-full object-contain animate-in zoom-in-95 duration-500" alt="Generated visual" />
                   <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                    <a
-                      href={generatedImageUrl}
+                    <a 
+                      href={generatedImageUrl} 
                       download="open-ticket-ai-visual.png"
                       className="inline-flex items-center gap-2 bg-white text-black px-4 py-2 rounded-lg font-bold text-xs"
                     >
