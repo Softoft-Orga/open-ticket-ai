@@ -46,6 +46,10 @@ const productsCollection = defineCollection({
     tier: z.enum(['lite', 'pro', 'enterprise']).optional(),
     lang: z.string().default('en'),
     nav: navSchema,
+    status: z.string().optional(),
+    badges: z.array(z.string()).optional(),
+    image: z.string().optional(),
+    icon: z.string().optional(),
   }),
 });
 
