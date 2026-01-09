@@ -11,7 +11,11 @@ module.exports = {
         return mergeConfig(config, {
             plugins: [vue()],
             resolve: {
-                alias: {'@': path.resolve(__dirname, '../src')}
+                alias: {
+                    '@': path.resolve(__dirname, '../src'),
+                    '../data': path.resolve(__dirname, '../data')
+                },
+                extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
             }
         });
     },
