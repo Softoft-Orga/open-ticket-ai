@@ -1,0 +1,19 @@
+slug: custom-model-training
+title: Custom Model Training
+oneLiner: Train AI models on your specific ticket data
+description: |
+  Get AI models fine-tuned specifically for your organization's ticket patterns, 
+  categories, and workflows. Our data scientists work with your historical data 
+  to create models that understand your unique business context.
+outcomes:
+  - Custom-trained classification models
+  - Improved accuracy for your specific use case
+  - Model performance benchmarking
+  - Regular model updates and retraining
+  - Detailed accuracy reports
+startingPrice: 10000
+lang: en
+nav:
+  group: Services
+  order: 2
+  hidden: false
