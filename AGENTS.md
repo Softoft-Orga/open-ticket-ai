@@ -1,6 +1,9 @@
 # Agent Guidelines for Open Ticket AI
 
 This document is **authoritative**. Follow these rules strictly when adding, moving, or generating files.
+The Astro Website is in the /docs directory!
+So when I am refering to a website Astro or Vue Components to change or Pages to change.
+I am speaking about the content in the /docs folder!
 
 ## Workspace & Repository Layout (uv)
 

@@ -55,6 +55,7 @@
     "@astrojs/vue": "^5.1.4",
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
+    "@inertiajs/vue3": "^2.3.7",
     "@netlify/functions": "^3.1.10",
     "@shikijs/markdown-it": "^3.14.0",
     "animejs": "^4.1.2",

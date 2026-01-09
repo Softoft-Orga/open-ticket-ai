@@ -1,0 +1,100 @@
+
+import React from 'react';
+import { Badge } from '../components/CommonElements';
+
+const Products: React.FC = () => {
+  return (
+    <div className="min-h-screen bg-background-dark py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-20 text-center lg:text-left">
+          <h1 className="font-display text-5xl md:text-7xl font-black text-white glow-text mb-8">Our Technology Stack</h1>
+          <p className="text-xl text-text-dim max-w-2xl leading-relaxed">
+            Secure, On-Premise AI for Enterprise Helpdesks built with German Engineering precision. Designed for strict data privacy and seamless integration.
+          </p>
+        </div>
+
+        <div className="grid gap-8">
+          {/* Main Hero Card */}
+          <div className="group relative flex flex-col overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter transition-all duration-500 hover:border-primary/50">
+            <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]"></div>
+            <div className="flex flex-col lg:flex-row items-stretch min-h-[500px]">
+              <div className="flex flex-1 flex-col justify-center gap-8 p-12 lg:p-16 relative z-10">
+                <div className="flex flex-wrap gap-3">
+                  <Badge label="Coming Soon" color="bg-primary/20 text-primary-light border-primary/20" />
+                  <Badge label="On-Prem / Private Cloud" color="bg-slate-800/80 text-slate-300 border-slate-700/50" />
+                  <Badge label="Multilingual" color="bg-slate-800/80 text-slate-300 border-slate-700/50" />
+                </div>
+                <div>
+                  <h2 className="text-white text-5xl font-bold tracking-tight mb-4">Tagging AI</h2>
+                  <p className="text-text-dim text-xl leading-relaxed max-w-xl">
+                    Automated classification with military-grade privacy. Deploy local LLMs to categorize tickets instantly without data leaving your perimeter.
+                  </p>
+                </div>
+                <div className="flex items-center gap-6 pt-4">
+                  <button className="flex items-center justify-center rounded-xl h-14 px-10 bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
+                    Join Waitlist
+                  </button>
+                  <button className="flex items-center justify-center rounded-xl h-14 px-10 bg-transparent border border-surface-lighter hover:border-primary/50 text-white text-lg font-medium transition-all">
+                    Technical Specs
+                  </button>
+                </div>
+              </div>
+              <div className="relative w-full lg:w-[45%] min-h-[400px] bg-[#0c0d15] border-l border-surface-lighter">
+                <img
+                  src="https://picsum.photos/1000/1000?blur=5"
+                  alt="AI Tree"
+                  className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen"
+                />
+                <div className="absolute inset-0 bg-gradient-to-l from-surface-dark via-transparent to-transparent"></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Core Box */}
+            <div className="flex flex-col justify-between overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter p-10 hover:border-primary/30 transition-all">
+              <div className="flex flex-col gap-6 mb-10">
+                <div className="flex items-center gap-4">
+                  <span className="material-symbols-outlined text-primary text-4xl">hub</span>
+                  <h3 className="text-white text-3xl font-bold tracking-tight">Open Ticket Automation Core</h3>
+                </div>
+                <p className="text-text-dim text-lg leading-relaxed">
+                  The renamed core engine. A secure API gateway that routes tickets between your helpdesk (Znuny/OTOBO) and our AI models. Built for high-throughput environments.
+                </p>
+              </div>
+              <div className="w-full aspect-video rounded-2xl bg-[#0c0d15] overflow-hidden relative border border-white/5 mb-8">
+                 <img src="https://picsum.photos/800/400" className="w-full h-full object-cover opacity-40" />
+              </div>
+              <button className="group flex w-fit items-center gap-3 rounded-xl h-12 px-6 bg-[#1e1e30] hover:bg-[#2d2d48] border border-border-dark text-white text-sm font-bold transition-all">
+                <span className="material-symbols-outlined text-xl">file_open</span>
+                View Integration Docs
+              </button>
+            </div>
+
+            {/* Synthetic Box */}
+            <div className="flex flex-col justify-between overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter p-10 hover:border-primary/30 transition-all">
+              <div className="flex flex-col gap-6">
+                <div className="w-fit rounded-lg bg-pink-500/10 px-3 py-1 border border-pink-500/20">
+                  <p className="text-pink-400 text-xs font-bold uppercase tracking-widest">In Development</p>
+                </div>
+                <h3 className="text-white text-3xl font-bold tracking-tight">Synthetic Data Generator</h3>
+                <p className="text-text-dim text-lg leading-relaxed">
+                  Generate privacy-compliant datasets to train your models without using real customer data. Perfect for staging environments.
+                </p>
+              </div>
+              <div className="w-full h-48 rounded-2xl bg-[#0c0d15] overflow-hidden relative border border-white/5 my-8">
+                 <img src="https://picsum.photos/600/300" className="w-full h-full object-cover opacity-30" />
+              </div>
+              <button className="group flex w-full items-center justify-between rounded-xl h-12 px-6 bg-transparent border border-border-dark hover:border-primary/50 text-white font-bold transition-all">
+                Learn More
+                <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Products;
