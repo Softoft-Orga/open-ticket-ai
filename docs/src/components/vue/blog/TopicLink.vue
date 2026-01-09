@@ -9,7 +9,7 @@
     ]"
   >
     <div class="flex items-center gap-3">
-      <span class="material-symbols-outlined text-xl">{{ icon }}</span>
+      <component :is="heroIcon" class="w-5 h-5" />
       <span>{{ label }}</span>
     </div>
     <span 
@@ -27,6 +27,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { 
+  Squares2X2Icon, 
+  RocketLaunchIcon, 
+  CodeBracketIcon, 
+  LightBulbIcon, 
+  ShieldCheckIcon 
+} from '@heroicons/vue/24/outline';
+
 interface Props {
   icon: string;
   label: string;
@@ -35,8 +44,18 @@ interface Props {
   href?: string;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   active: false,
   href: '#'
 });
+
+const iconMap: Record<string, any> = {
+  'grid_view': Squares2X2Icon,
+  'rocket_launch': RocketLaunchIcon,
+  'code': CodeBracketIcon,
+  'lightbulb': LightBulbIcon,
+  'security': ShieldCheckIcon,
+};
+
+const heroIcon = computed(() => iconMap[props.icon] || Squares2X2Icon);
 </script>

@@ -11,17 +11,20 @@
     </div>
     <div class="flex flex-wrap items-center gap-4 text-xs text-slate-300">
       <span class="flex items-center gap-1">
-        <span aria-hidden="true">⭐</span>
+        <StarIcon class="w-4 h-4" />
         {{ plugin.starCount }}
       </span>
       <span class="flex items-center gap-1">
+        <ClockIcon class="w-4 h-4" />
         Last release: {{ formattedDate }}
       </span>
       <span v-if="plugin.license" class="flex items-center gap-1">
+        <DocumentTextIcon class="w-4 h-4" />
         License: {{ plugin.license }}
       </span>
     </div>
-    <div v-if="plugin.author" class="text-xs text-slate-400">
+    <div v-if="plugin.author" class="text-xs text-slate-400 flex items-center gap-1">
+      <UserIcon class="w-4 h-4" />
       Author: {{ plugin.author }}
     </div>
     <div class="flex flex-wrap gap-2 text-sm">
@@ -31,6 +34,7 @@
         target="_blank"
         rel="noopener"
       >
+        <CubeIcon class="w-4 h-4" />
         PyPI
       </a>
       <a
@@ -40,6 +44,7 @@
         target="_blank"
         rel="noopener"
       >
+        <CodeBracketIcon class="w-4 h-4" />
         Repository
       </a>
       <a
@@ -49,6 +54,7 @@
         target="_blank"
         rel="noopener"
       >
+        <GlobeAltIcon class="w-4 h-4" />
         Homepage
       </a>
     </div>
@@ -61,6 +67,15 @@
 
 <script lang="ts" setup>
 import type { Plugin } from "./pluginModels";
+import { 
+  StarIcon, 
+  ClockIcon, 
+  DocumentTextIcon, 
+  UserIcon,
+  CubeIcon,
+  CodeBracketIcon,
+  GlobeAltIcon 
+} from '@heroicons/vue/24/outline';
 
 defineProps<{
   readonly plugin: Plugin;
