@@ -2,8 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DocCard from '../components/vue/docs/DocCard.vue';
 import QuickLink from '../components/vue/docs/QuickLink.vue';
+import PagefindSearch from '../components/vue/PagefindSearch.vue';
 import '../styles/homepage.css';
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 
 const title = "Documentation | Open Ticket AI";
 const description = "Choose the documentation you need. Explore API references, implementation guides, and best practices.";
@@ -35,18 +35,8 @@ const description = "Choose the documentation you need. Explore API references, 
 
       <div class="w-full max-w-2xl mx-auto mb-24 relative group">
         <div class="absolute -inset-1 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-        <div class="relative flex items-center bg-card-dark rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
-          <div class="pl-6 text-slate-500">
-            <MagnifyingGlassIcon class="w-6 h-6" />
-          </div>
-          <input
-            class="w-full bg-transparent border-none text-white placeholder:text-slate-600 focus:ring-0 h-16 px-4 text-lg outline-none"
-            placeholder="Search documentation (e.g., 'API keys', 'YAML config')..."
-            type="text"
-          />
-          <div class="hidden sm:flex pr-6 text-xs text-slate-600 font-mono tracking-widest">
-            CMD + K
-          </div>
+        <div class="relative">
+          <PagefindSearch client:only="vue" />
         </div>
       </div>
 
