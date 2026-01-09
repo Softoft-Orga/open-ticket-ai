@@ -1,3 +1,8 @@
+---
+title: Installation Guide
+description: Installation guide for Open Ticket AI
+---
+
 # Installation Guide
 
 This guide will help you install Open Ticket AI on your server. We recommend using Docker Compose
