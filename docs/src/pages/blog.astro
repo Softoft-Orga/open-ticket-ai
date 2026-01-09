@@ -33,9 +33,9 @@ const getPlaceholderImage = (index: number) => {
   return `https://picsum.photos/400/250?${index}`;
 };
 
-// Helper function to get blog post URL (strip .md extension from id)
+// Helper function to get blog post URL (strip .md/.mdx extension from id)
 const getBlogUrl = (id: string) => {
-  return `/blog/${id.replace(/\.md$/, '')}`;
+  return `/blog/${id.replace(/\.(md|mdx)$/, '')}/`;
 };
 ---
 
