@@ -1,0 +1,19 @@
+slug: open-ticket-automation-core
+title: Open Ticket Automation Core
+tagline: The core engine for ticket automation
+description: |
+  The renamed core engine. A secure API gateway that routes tickets between 
+  your helpdesk (Znuny/OTOBO) and our AI models. Built for high-throughput 
+  environments.
+features:
+  - Secure API gateway
+  - Routes tickets to AI models
+  - Znuny/OTOBO integration
+  - High-throughput performance
+  - Enterprise-grade reliability
+tier: pro
+lang: en
+nav:
+  group: Products
+  order: 5
+  hidden: false
