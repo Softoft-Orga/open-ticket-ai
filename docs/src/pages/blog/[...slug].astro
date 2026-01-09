@@ -1,0 +1,127 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const blogPosts = await getCollection('blog');
+  return blogPosts.map((post) => ({
+    params: { slug: post.id.replace(/\.md$/, '') },
+    props: { post },
+  }));
+}
+
+type Props = {
+  post: CollectionEntry<'blog'>;
+};
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+};
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <div class="min-h-screen bg-background-dark">
+    <article class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-24">
+      <!-- Article Header -->
+      <header class="mb-12 border-b border-surface-lighter pb-12">
+        <div class="mb-6 flex flex-wrap items-center gap-4">
+          {post.data.category && (
+            <span class="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-bold uppercase tracking-wider text-primary-light">
+              {post.data.category}
+            </span>
+          )}
+          <time datetime={post.data.date.toISOString()} class="flex items-center gap-2 text-sm text-text-dim">
+            <span class="material-symbols-outlined text-lg">calendar_today</span>
+            {formatDate(post.data.date)}
+          </time>
+        </div>
+        
+        <h1 class="font-display text-5xl font-bold leading-tight tracking-tight text-white mb-6">
+          {post.data.title}
+        </h1>
+        
+        {post.data.description && (
+          <p class="text-xl text-gray-400 leading-relaxed">
+            {post.data.description}
+          </p>
+        )}
+
+        {post.data.tags && post.data.tags.length > 0 && (
+          <div class="mt-6 flex flex-wrap gap-2">
+            {post.data.tags.map((tag) => (
+              <span class="inline-block rounded-lg bg-surface-dark px-3 py-1 text-xs font-medium text-gray-400">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <!-- Article Content -->
+      <div class="prose prose-invert prose-lg max-w-none">
+        <Content />
+      </div>
+
+      <!-- Back to Blog -->
+      <footer class="mt-16 pt-12 border-t border-surface-lighter">
+        <a 
+          href="/blog" 
+          class="inline-flex items-center gap-2 text-primary-light hover:text-primary transition-colors"
+        >
+          <span class="material-symbols-outlined">arrow_back</span>
+          Back to all posts
+        </a>
+      </footer>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  :global(.prose) {
+    color: #d1d5db;
+  }
+  
+  :global(.prose h1),
+  :global(.prose h2),
+  :global(.prose h3),
+  :global(.prose h4),
+  :global(.prose h5),
+  :global(.prose h6) {
+    color: #ffffff;
+    font-weight: 700;
+  }
+  
+  :global(.prose a) {
+    color: #818cf8;
+    text-decoration: none;
+  }
+  
+  :global(.prose a:hover) {
+    color: #646cff;
+    text-decoration: underline;
+  }
+  
+  :global(.prose code) {
+    color: #818cf8;
+    background-color: #1a1b26;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+  }
+  
+  :global(.prose pre) {
+    background-color: #1a1b26;
+    border: 1px solid #2d2e3a;
+  }
+  
+  :global(.prose ul),
+  :global(.prose ol) {
+    color: #d1d5db;
+  }
+  
+  :global(.prose strong) {
+    color: #ffffff;
+  }
+</style>
