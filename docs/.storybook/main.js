@@ -13,7 +13,7 @@ module.exports = {
             resolve: {
                 alias: {
                     '@': path.resolve(__dirname, '../src'),
-                    '../data': path.resolve(__dirname, '../data')
+                    '@data': path.resolve(__dirname, '../data')
                 },
                 extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
             }
