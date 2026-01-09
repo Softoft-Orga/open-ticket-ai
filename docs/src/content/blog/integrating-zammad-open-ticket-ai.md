@@ -1,8 +1,14 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Zammad Integration for Open Ticket AI
 description: "Integrate Open Ticket AI with Zammad using the built-in OTAI Zammad plugin. The adapter exists but is not fully tested yet."
+lang: en
+date: 2024-07-25
+tags:
+  - integration
+  - zammad
+  - api
+category: Integration
+draft: false
 ---
 # Zammad Integration for Open Ticket AI
 

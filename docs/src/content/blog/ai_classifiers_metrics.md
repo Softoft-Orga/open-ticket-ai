@@ -1,8 +1,15 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: "Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter"
 description: "Learn to evaluate AI ticket classifiers on real, imbalanced data. Discover why accuracy is misleading and focus on metrics that matter: precision, recall & F1-score."
+lang: en
+date: 2024-11-05
+tags:
+  - ai
+  - machine-learning
+  - metrics
+  - evaluation
+category: Technology
+draft: false
 ---
 # Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter
 

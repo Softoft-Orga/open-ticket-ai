@@ -1,8 +1,14 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Freshdesk Integration for Open Ticket AI
 description: "Integrate on-premise Open Ticket AI with Freshdesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Freshdesk tickets via REST."
+lang: en
+date: 2024-08-10
+tags:
+  - integration
+  - freshdesk
+  - api
+category: Integration
+draft: false
 ---
 # Freshdesk Integration for Open Ticket AI
 

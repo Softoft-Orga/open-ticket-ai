@@ -1,8 +1,15 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: "Labeling 10,000 Tickets Efficiently: Semi-Automated Labeling Strategies"
 description: "Save time labeling thousands of tickets. Learn a semi-automated workflow using GPT for zero-shot pre-labeling and Label Studio for efficient review."
+lang: en
+date: 2024-10-15
+tags:
+  - ai
+  - machine-learning
+  - automation
+  - labeling
+category: Tutorial
+draft: false
 ---
 # Labeling 10,000 Tickets Efficiently: Semi-Automated Labeling Strategies
 
