@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
 import {useNewsArticles} from '../../../composables/useNewsArticles'
+import { ArrowRightIcon } from '@heroicons/vue/24/outline'
 
 const {newsArticles} = useNewsArticles()
 const articles = computed(() => newsArticles.value)
@@ -21,7 +22,10 @@ const articles = computed(() => newsArticles.value)
           <p class="text-sm text-[var(--vp-c-text-2)] tracking-wide uppercase">{{ article.formattedDate }}</p>
           <h3 class="text-xl font-semibold text-[var(--vp-c-text-1)]">{{ article.title }}</h3>
           <p class="text-[var(--vp-c-text-2)] leading-relaxed">{{ article.description }}</p>
-          <a :href="article.link" class="justify-self-start font-semibold text-[var(--vp-c-brand-1)] hover:text-[var(--vp-c-brand-2)]">Read full article</a>
+          <a :href="article.link" class="justify-self-start font-semibold text-[var(--vp-c-brand-1)] hover:text-[var(--vp-c-brand-2)] inline-flex items-center gap-1 group">
+            Read full article
+            <ArrowRightIcon class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </a>
         </div>
       </article>
     </div>

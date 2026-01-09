@@ -24,7 +24,7 @@
               :key="i"
               class="flex items-start !m-0 !px-0 py-2"
           >
-            <i :class="['fas', feature.icon, 'mt-1 mr-2 text-indigo-500']" aria-hidden="true"></i>
+            <component :is="getIcon(feature.icon)" class="w-5 h-5 mt-0.5 mr-2 text-indigo-500 flex-shrink-0" aria-hidden="true" />
             <span class="text-gray-200">{{ feature.text }}</span>
           </li>
         </ul>
@@ -39,7 +39,7 @@
                 :key="i"
                 class="flex items-start !m-0 !px-0 py-2"
             >
-              <i :class="['fas', feature.icon, 'mt-1 mr-2 text-indigo-500']" aria-hidden="true"></i>
+              <component :is="getIcon(feature.icon)" class="w-5 h-5 mt-0.5 mr-2 text-indigo-500 flex-shrink-0" aria-hidden="true" />
               <span class="text-gray-200">{{ feature.text }}</span>
             </li>
           </ul>
@@ -54,10 +54,50 @@ import {computed} from 'vue'
 import Card from '../core/basic/Card.vue'
 import AccordionItem from '../core/accordion/AccordionItem.vue'
 import type {Feature, Product} from './product.types'
+import {
+  RocketLaunchIcon,
+  CpuChipIcon,
+  ArrowTrendingUpIcon,
+  Square3Stack3DIcon,
+  ShareIcon,
+  SparklesIcon,
+  PlusCircleIcon,
+  CodeBracketIcon,
+  ArrowPathIcon,
+  ChartBarIcon,
+  CalendarDaysIcon,
+  ClockIcon,
+  StarIcon,
+  ChartPieIcon,
+  DocumentTextIcon,
+  BellIcon,
+} from '@heroicons/vue/24/outline'
 
 const props = defineProps<{ product: Product }>()
 
 const MAX_CORE = 5
+
+const iconMap: Record<string, any> = {
+  'fa-rocket': RocketLaunchIcon,
+  'fa-brain': CpuChipIcon,
+  'fa-sort-amount-up': ArrowTrendingUpIcon,
+  'fa-sitemap': Square3Stack3DIcon,
+  'fa-project-diagram': ShareIcon,
+  'fa-magic': SparklesIcon,
+  'fa-plus-circle': PlusCircleIcon,
+  'fa-code-branch': CodeBracketIcon,
+  'fa-sync-alt': ArrowPathIcon,
+  'fa-chart-line': ChartBarIcon,
+  'fa-calendar-check': CalendarDaysIcon,
+  'fa-clock': ClockIcon,
+  'fa-star': StarIcon,
+  'fa-tachometer-alt': ChartPieIcon,
+  'fa-file-alt': DocumentTextIcon,
+  'fa-bell': BellIcon,
+  'fa-chart-bar': ChartBarIcon,
+}
+
+const getIcon = (iconName: string) => iconMap[iconName] || StarIcon
 
 const coreFeatures = computed<Feature[]>(() =>
     props.product.features.slice(0, MAX_CORE)

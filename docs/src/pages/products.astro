@@ -8,10 +8,18 @@ const title = "Our Technology Stack";
 // Fetch all products from the content collection
 const allProducts = await getCollection('products');
 
-// Sort products by navigation order
+// Filter to show only specific products matching the prototype design:
+// - Tagging AI (hero)
+// - Open Ticket Automation Core (2-column)
+// - Synthetic Data Generator (1-column)
+const featuredSlugs = ['tagging-ai', 'open-ticket-automation-core', 'synthetic-data-generator'];
 const products = allProducts
-  .filter(product => !product.data.nav?.hidden)
-  .sort((a, b) => (a.data.nav?.order ?? 999) - (b.data.nav?.order ?? 999));
+  .filter(product => featuredSlugs.includes(product.data.slug) && !product.data.nav?.hidden)
+  .sort((a, b) => {
+    // Custom sort: tagging-ai first, then automation-core, then synthetic-data
+    const orderMap = { 'tagging-ai': 0, 'open-ticket-automation-core': 1, 'synthetic-data-generator': 2 };
+    return (orderMap[a.data.slug] ?? 999) - (orderMap[b.data.slug] ?? 999);
+  });
 
 // Helper function to get placeholder image if not set
 function getProductImage(product: typeof products[0], index: number) {
@@ -99,12 +107,13 @@ const [heroProduct, ...regularProducts] = products;
           );
         })()}
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {regularProducts.map((product, index) => {
             const productImage = getProductImage(product, index + 1);
+            const colSpan = index === 0 ? "col-span-1 lg:col-span-2" : "col-span-1";
             
             return (
-              <div class="flex flex-col justify-between overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter p-10 hover:border-primary/30 transition-all">
+              <div class={`flex flex-col justify-between overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter p-10 hover:border-primary/30 transition-all ${colSpan}`}>
                 <div class="flex flex-col gap-6 mb-10">
                   {product.data.badges && product.data.badges.length > 0 && (
                     <div class="flex flex-wrap gap-3">
