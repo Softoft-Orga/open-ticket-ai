@@ -4,6 +4,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PricingCard from '../components/services/PricingCard.astro';
 import IntegrationPackageCard from '../components/services/IntegrationPackageCard.astro';
 import ExtensionItem from '../components/services/ExtensionItem.astro';
+import {
+  CubeTransparentIcon,
+  ServerIcon,
+  ArrowPathRoundedSquareIcon,
+  CircleStackIcon,
+  ArchiveBoxIcon,
+  SparklesIcon,
+  ArrowRightIcon,
+  CheckIcon,
+  CheckCircleIcon,
+  CpuChipIcon,
+  DocumentTextIcon,
+  ClockIcon,
+  UserGroupIcon
+} from '@heroicons/vue/24/outline';
 
 const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
@@ -90,10 +105,6 @@ const typicalScopeItems = [
 ---
 
 <BaseLayout title={title} description={description}>
-  <div slot="head">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  </div>
-
   <div class="min-h-screen bg-background-dark pb-32">
     <!-- Hero -->
     <section class="relative pt-24 pb-20 text-center">
@@ -119,7 +130,7 @@ const typicalScopeItems = [
         <div class="lg:w-2/3">
           <div class="flex items-center gap-3 mb-6">
             <div class="p-2 rounded-lg bg-primary/10 text-primary">
-              <span class="material-symbols-outlined text-3xl">hub</span>
+              <CubeTransparentIcon class="w-8 h-8" aria-hidden="true" />
             </div>
             <h2 class="text-3xl font-bold text-white">Ticket Tagging AI Model</h2>
           </div>
@@ -149,14 +160,14 @@ const typicalScopeItems = [
         <div class="lg:w-1/3 flex flex-col gap-4">
           <div class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Deployment & Integration</div>
           <div class="bg-[#1a101f] border border-white/5 rounded-xl p-4 flex gap-4 items-start">
-            <span class="material-symbols-outlined text-primary">dns</span>
+            <ServerIcon class="w-6 h-6 text-primary flex-shrink-0" aria-hidden="true" />
             <div>
               <h4 class="text-white text-sm font-bold">Self-Hosted</h4>
               <p class="text-slate-500 text-[11px] leading-tight">Full on-premise deployment. No data leaves your secure infrastructure.</p>
             </div>
           </div>
           <div class="bg-[#1a101f] border border-white/5 rounded-xl p-4 flex gap-4 items-start">
-            <span class="material-symbols-outlined text-primary">sync_alt</span>
+            <ArrowPathRoundedSquareIcon class="w-6 h-6 text-primary flex-shrink-0" aria-hidden="true" />
             <div>
               <h4 class="text-white text-sm font-bold">Auto Write-Back</h4>
               <p class="text-slate-500 text-[11px] leading-tight">Deep integration with ticket systems to automatically write back tags and fields.</p>
@@ -170,7 +181,7 @@ const typicalScopeItems = [
     <section class="max-w-7xl mx-auto px-6 mb-32">
       <div class="text-center mb-16">
         <div class="inline-flex items-center gap-2 rounded-full bg-cyan-400/10 border border-cyan-400/20 px-3 py-1 text-[10px] font-black uppercase text-cyan-400 mb-6">
-          <span class="material-symbols-outlined text-xs">database</span>
+          <CircleStackIcon class="w-3 h-3" aria-hidden="true" />
           Data Generation
         </div>
         <h2 class="text-5xl font-black text-white mb-6 tracking-tight">Synthetic Data Generation</h2>
@@ -199,7 +210,7 @@ const typicalScopeItems = [
       <!-- Common Extensions -->
       <div class="bg-[#0a060d] border border-white/5 rounded-2xl p-8">
         <div class="flex items-center gap-3 mb-8">
-          <span class="material-symbols-outlined text-slate-500">inventory_2</span>
+          <ArchiveBoxIcon class="w-6 h-6 text-slate-500" aria-hidden="true" />
           <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">Common Extensions <span class="text-slate-600 font-normal">(Add-ons)</span></h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -249,7 +260,7 @@ const typicalScopeItems = [
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div class="lg:col-span-5">
           <div class="inline-flex items-center gap-2 rounded-lg bg-purple-500/10 border border-purple-500/20 px-3 py-1 text-[10px] font-black uppercase text-purple-400 mb-6">
-            <span class="material-symbols-outlined text-xs">auto_fix</span>
+            <SparklesIcon class="w-3 h-3" aria-hidden="true" />
             Automation Engine
           </div>
           <h2 class="text-5xl font-black text-white mb-6">Automation Services</h2>
@@ -260,7 +271,7 @@ const typicalScopeItems = [
           <ul class="space-y-4">
             {['Routing & Assignments', 'Priority & SLA Updates', 'Auto-replies & Notes', 'Triggering Tasks'].map((item) => (
               <li class="flex items-center gap-3 text-slate-300 font-bold">
-                <span class="material-symbols-outlined text-primary">arrow_forward</span>
+                <ArrowRightIcon class="w-5 h-5 text-primary" aria-hidden="true" />
                 {item}
               </li>
             ))}
@@ -286,7 +297,7 @@ const typicalScopeItems = [
                   <ul class="space-y-3">
                     {(service.data.outcomes || []).map((item) => (
                       <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                        <CheckIcon class="w-4 h-4 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -311,7 +322,7 @@ const typicalScopeItems = [
     <section class="max-w-7xl mx-auto px-6 mb-32">
       <div class="text-center mb-16">
         <div class="inline-flex items-center gap-2 rounded-full bg-purple-500/10 border border-purple-500/20 px-3 py-1 text-[10px] font-black uppercase text-purple-400 mb-6">
-          <span class="material-symbols-outlined text-xs">psychology</span>
+          <CpuChipIcon class="w-3 h-3" aria-hidden="true" />
           Intelligence Layer
         </div>
         <h2 class="text-5xl font-black text-white mb-6">Model Development <span class="text-slate-500 font-medium">(Custom Tagging Models)</span></h2>
@@ -358,7 +369,7 @@ const typicalScopeItems = [
       <!-- Typical Scope -->
       <div class="bg-[#0a060d] border border-white/5 rounded-2xl p-8">
         <div class="flex items-center gap-3 mb-10">
-          <span class="material-symbols-outlined text-slate-500">list_alt</span>
+          <DocumentTextIcon class="w-6 h-6 text-slate-500" aria-hidden="true" />
           <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">Typical Scope <span class="text-slate-600 font-normal">(Included in fixed-price options)</span></h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
@@ -373,7 +384,7 @@ const typicalScopeItems = [
     <section class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 mb-32">
       {flexibleServices.map((service) => {
         const isEngineering = service.data.slug === 'hourly-engineering';
-        const iconName = isEngineering ? 'schedule' : 'support_agent';
+        const IconComponent = isEngineering ? ClockIcon : UserGroupIcon;
         const iconBg = isEngineering ? 'bg-blue-500/10' : 'bg-green-500/10';
         const iconColor = isEngineering ? 'text-blue-400' : 'text-green-400';
         const borderHover = isEngineering ? 'hover:border-primary/40' : 'hover:border-green-500/40';
@@ -384,7 +395,7 @@ const typicalScopeItems = [
           <div class={`rounded-3xl border border-white/10 bg-card-dark/50 p-10 flex flex-col ${borderHover} transition-all`}>
             <div class="flex items-center gap-4 mb-6">
               <div class={`p-3 rounded-2xl ${iconBg} ${iconColor}`}>
-                <span class="material-symbols-outlined text-3xl">{iconName}</span>
+                <IconComponent class="w-8 h-8" aria-hidden="true" />
               </div>
               <h3 class="text-2xl font-bold text-white">{service.data.title}</h3>
             </div>
@@ -394,7 +405,7 @@ const typicalScopeItems = [
             {!isEngineering && (
               <div class="flex flex-col gap-2 mb-10">
                 <div class="flex items-center gap-2 text-xs text-green-400 font-bold">
-                  <span class="material-symbols-outlined text-sm">check_circle</span>
+                  <CheckCircleIcon class="w-4 h-4" aria-hidden="true" />
                   Target response within 2 business days
                 </div>
                 <p class="text-[10px] text-slate-500 italic">* Unused hours/time will not carry over. Available for integration/OSS customers.</p>
@@ -423,7 +434,7 @@ const typicalScopeItems = [
               Get Demo
             </button>
             <button class="h-14 px-10 rounded-lg border border-white/20 text-white font-bold text-lg hover:bg-white/5 transition-colors flex items-center gap-2">
-              Contact Sales <span class="material-symbols-outlined">arrow_forward</span>
+              Contact Sales <ArrowRightIcon class="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
         </div>

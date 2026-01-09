@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/vue/Badge.vue';
 import { getCollection } from 'astro:content';
+import { CubeTransparentIcon, ArrowRightIcon } from '@heroicons/vue/24/outline';
 
 const title = "Our Technology Stack";
 
@@ -45,6 +46,11 @@ function getBadgeColor(label: string) {
     return 'bg-slate-800/80 text-slate-300 border-slate-700/50';
   }
 }
+
+// Map icon names to Heroicon components
+const iconMap: Record<string, any> = {
+  'hub': CubeTransparentIcon,
+};
 
 // Separate hero and regular products
 const [heroProduct, ...regularProducts] = products;
@@ -124,7 +130,10 @@ const [heroProduct, ...regularProducts] = products;
                   )}
                   {product.data.icon ? (
                     <div class="flex items-center gap-4">
-                      <span class="material-symbols-outlined text-primary text-4xl">{product.data.icon}</span>
+                      {(() => {
+                        const IconComponent = iconMap[product.data.icon] || CubeTransparentIcon;
+                        return <IconComponent class="w-10 h-10 text-primary" aria-hidden="true" />;
+                      })()}
                       <h3 class="text-white text-3xl font-bold tracking-tight">{product.data.title}</h3>
                     </div>
                   ) : (
@@ -139,7 +148,7 @@ const [heroProduct, ...regularProducts] = products;
                 </div>
                 <button class="group flex w-full items-center justify-between rounded-xl h-12 px-6 bg-transparent border border-border-dark hover:border-primary/50 text-white font-bold transition-all">
                   Learn More
-                  <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+                  <ArrowRightIcon class="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </button>
               </div>
             );

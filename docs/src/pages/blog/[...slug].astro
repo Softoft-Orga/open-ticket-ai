@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { CalendarIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
 
 export async function getStaticPaths() {
   const blogPosts = await getCollection('blog');
@@ -34,7 +35,7 @@ const formatDate = (date: Date) => {
             </span>
           )}
           <time datetime={post.data.date.toISOString()} class="flex items-center gap-2 text-sm text-text-dim">
-            <span class="material-symbols-outlined text-lg">calendar_today</span>
+            <CalendarIcon class="w-5 h-5" aria-hidden="true" />
             {formatDate(post.data.date)}
           </time>
         </div>
@@ -91,7 +92,7 @@ const formatDate = (date: Date) => {
           href="/blog/" 
           class="inline-flex items-center gap-2 text-primary-light hover:text-primary transition-colors"
         >
-          <span class="material-symbols-outlined">arrow_back</span>
+          <ArrowLeftIcon class="w-5 h-5" aria-hidden="true" />
           Back to all posts
         </a>
       </footer>
