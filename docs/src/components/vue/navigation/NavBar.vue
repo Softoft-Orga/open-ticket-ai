@@ -38,6 +38,7 @@
             :aria-label="cta.label"
             class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
           >
+            <RocketLaunchIcon class="w-4 h-4 mr-2 -ml-1" />
             {{ cta.label }}
           </a>
         </div>
@@ -49,6 +50,7 @@
 <script lang="ts" setup>
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
+import { RocketLaunchIcon } from '@heroicons/vue/24/outline'
 
 interface LinkItem {
   label: string

@@ -23,6 +23,7 @@
             id="email"
             v-model="email"
             placeholder="you@domain.com"
+            :icon="EnvelopeIcon"
         />
       </div>
 
@@ -35,6 +36,7 @@
             v-model="message"
             placeholder="How can we help you?"
             rows="5"
+            :icon="ChatBubbleLeftRightIcon"
         />
       </div>
 
@@ -43,6 +45,7 @@
           type="submit"
           variant="primary"
       >
+        <PaperAirplaneIcon class="w-5 h-5 mr-2 -ml-1" />
         {{ $t('otai_contact_form.submit_text') }}
       </Button>
     </form>
@@ -60,6 +63,7 @@ import {ref} from 'vue'
 import TextField from '../core/forms/TextField.vue'
 import TextArea from '../core/forms/TextArea.vue'
 import Button from '../core/basic/Button.vue'
+import { EnvelopeIcon, ChatBubbleLeftRightIcon, PaperAirplaneIcon } from '@heroicons/vue/24/outline'
 
 const email = ref('')
 const message = ref('')

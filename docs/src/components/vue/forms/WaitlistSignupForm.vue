@@ -22,10 +22,12 @@
               placeholder="you@domain.com"
               required
               type="email"
+              :icon="EnvelopeIcon"
           />
         </div>
 
         <Button class="w-full justify-center">
+          <UserPlusIcon class="w-5 h-5 mr-2 -ml-1" />
           {{ $t('sdg_waitlist.submit_text') }}
         </Button>
 
@@ -44,6 +46,7 @@
 import {ref} from 'vue'
 import TextField from '../core/forms/TextField.vue'
 import Button from '../core/basic/Button.vue'
+import { EnvelopeIcon, UserPlusIcon } from '@heroicons/vue/24/outline'
 
 const email = ref('')
 </script>
