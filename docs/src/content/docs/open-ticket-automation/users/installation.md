@@ -1,8 +1,11 @@
 ---
 title: Installation Guide
-description: Installation guide for Open Ticket AI
+description: "Complete guide for installing Open Ticket AI with Docker, OTOBO/Znuny setup, and configuration."
+lang: en
+nav:
+  group: Users
+  order: 1
 ---
-
 # Installation Guide
 
 This guide will help you install Open Ticket AI on your server. We recommend using Docker Compose

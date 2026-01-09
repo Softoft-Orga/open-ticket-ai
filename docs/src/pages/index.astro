@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CapabilityCard from '../components/vue/homepage/CapabilityCard.vue';
 import '../styles/homepage.css';
+import { ArrowRightIcon } from '@heroicons/vue/24/outline';
 
 const pageTitle = 'Open Ticket AI - Automated Ticket Classification';
 ---
@@ -167,9 +168,7 @@ const pageTitle = 'Open Ticket AI - Automated Ticket Classification';
           </p>
           <div class="flex items-center gap-2 text-primary font-bold text-lg cursor-pointer group hover:text-white transition-colors">
             <span>Explore Analytics Dashboard</span>
-            <svg class="w-6 h-6 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-            </svg>
+            <ArrowRightIcon class="w-6 h-6 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import {computed, readonly} from 'vue'
-import {data as blogPosts} from '../data/blogPosts.data.mts'
+import {data as blogPosts} from '@data/blogPosts.data'
 
 export interface NewsArticle {
     title: string

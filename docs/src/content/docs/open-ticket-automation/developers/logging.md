@@ -1,8 +1,11 @@
 ---
 title: Logging System
-description: Logging configuration for Open Ticket AI
+description: "Developer guide for using the logging system in Open Ticket AI with abstract interfaces and dependency injection."
+lang: en
+nav:
+  group: Developers
+  order: 7
 ---
-
 # Logging System
 
 Open Ticket AI uses an abstract logging interface that allows developers to configure logging

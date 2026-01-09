@@ -1,19 +1,15 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import '../styles/homepage.css';
+import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
-  frontmatter?: {
-    title?: string;
-    description?: string;
-  };
+  breadcrumbs?: { label: string; href?: string }[];
+  toc?: { label: string; id: string }[];
 }
 
-const { title: propTitle, description: propDescription, frontmatter } = Astro.props;
-const title = frontmatter?.title || propTitle || 'Open Ticket AI';
-const description = frontmatter?.description || propDescription;
+const { title, description, breadcrumbs = [], toc = [] } = Astro.props;
 
 const sidebarSections = [
   {
@@ -73,32 +69,113 @@ const sidebarSections = [
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="flex min-h-screen flex-col">
-    <div class="flex flex-1">
-      <aside class="w-[280px] bg-[#1a1a1a] text-white fixed h-screen overflow-y-auto border-r border-[#333] md:block hidden">
-        <div class="p-8 px-6">
-          <a href="/" class="block text-2xl font-bold text-[#7c4dff] no-underline mb-8">Open Ticket AI</a>
-          <nav>
-            {sidebarSections.map(section => (
-              <div class="mb-8">
-                <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-2">{section.label}</h3>
-                <ul class="list-none p-0 m-0">
-                  {section.items.map(item => (
-                    <li class="mb-1">
-                      <a href={item.link} class="block py-2 px-3 text-gray-400 no-underline rounded transition-all hover:bg-[#333] hover:text-white">{item.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+  <div class="min-h-screen bg-background-dark">
+    <!-- Breadcrumbs Header -->
+    {breadcrumbs.length > 0 && (
+      <div class="border-b border-white/5 bg-[#0f0814]/50 sticky top-16 z-40 backdrop-blur-sm shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
+          <div class="flex items-center text-[10px] gap-2 overflow-hidden">
+            {breadcrumbs.map((crumb, i) => (
+              <>
+                {crumb.href ? (
+                  <a href={crumb.href} class="text-slate-500 hover:text-white transition-colors whitespace-nowrap">{crumb.label}</a>
+                ) : (
+                  <span class="text-primary-light font-bold truncate">{crumb.label}</span>
+                )}
+                {i < breadcrumbs.length - 1 && (
+                  <span class="text-xs text-slate-700">›</span>
+                )}
+              </>
+            ))}
+          </div>
+          <div class="hidden sm:flex items-center gap-4">
+            <a href="https://github.com/Softoft-Orga/open-ticket-ai" target="_blank" class="text-slate-500 hover:text-white flex items-center gap-1.5 text-[10px] font-bold">
+              <span class="text-sm">⚡</span>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col lg:flex-row gap-12">
+      <!-- Desktop Sidebar - Left -->
+      <aside class="hidden lg:block w-72 flex-shrink-0 sticky top-32 h-[calc(100vh-160px)] overflow-y-auto pr-4" style="scrollbar-width: thin; scrollbar-color: #374151 transparent;">
+        <nav>
+          {sidebarSections.map(section => (
+            <div class="mb-6">
+              <h3 class="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2 px-3">{section.label}</h3>
+              <ul class="space-y-1">
+                {section.items.map(item => (
+                  <li>
+                    <a 
+                      href={item.link} 
+                      class="block px-3 py-1.5 text-xs text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-all"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 min-w-0">
+        <div class="max-w-4xl mx-auto">
+          <article class="prose prose-invert prose-lg max-w-none 
+            prose-headings:text-white 
+            prose-h1:text-4xl prose-h1:font-bold prose-h1:mb-6 prose-h1:mt-0
+            prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4 
+            prose-h3:text-xl prose-h3:font-bold prose-h3:mt-6 prose-h3:mb-3 
+            prose-p:mb-4 prose-p:leading-relaxed prose-p:text-gray-300 
+            prose-a:text-primary-light prose-a:no-underline hover:prose-a:text-primary hover:prose-a:underline
+            prose-code:bg-surface-lighter prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:text-primary-light
+            prose-pre:bg-surface-lighter prose-pre:border prose-pre:border-white/10 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:mb-4
+            prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-400 prose-blockquote:my-4
+            prose-ul:mb-4 prose-ul:ml-6 prose-ul:space-y-2 prose-ul:list-disc
+            prose-ol:mb-4 prose-ol:ml-6 prose-ol:space-y-2 prose-ol:list-decimal
+            prose-li:leading-relaxed prose-li:text-gray-300
+            prose-strong:text-white prose-strong:font-semibold
+            prose-img:rounded-lg prose-img:my-6
+            prose-table:w-full prose-table:border-collapse prose-table:my-6
+            prose-th:bg-surface-dark prose-th:text-white prose-th:font-semibold prose-th:p-3 prose-th:border prose-th:border-white/10
+            prose-td:text-gray-300 prose-td:p-3 prose-td:border prose-td:border-white/10
+          ">
+            <slot />
+          </article>
+        </div>
+      </main>
+
+      <!-- Table of Contents - Right -->
+      {toc.length > 0 && (
+        <aside class="hidden xl:block w-56 flex-shrink-0 sticky top-32 h-fit">
+          <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-6 px-4">On this page</h4>
+          <nav class="flex flex-col gap-1 border-l border-white/5">
+            {toc.map((item) => (
+              <a
+                href={`#${item.id}`}
+                class="px-4 py-1.5 text-slate-400 hover:text-white border-l-2 border-transparent hover:border-primary transition-all text-[11px] font-medium"
+              >
+                {item.label}
+              </a>
             ))}
           </nav>
-        </div>
-      </aside>
-      <main class="ml-[280px] flex-1 p-8 px-16 max-w-[1200px] md:ml-[280px] md:p-8 md:px-16 max-md:ml-0 max-md:p-4">
-        <article class="bg-white p-8 rounded-lg">
-          <slot />
-        </article>
-      </main>
+          
+          <div class="mt-12 px-4">
+            <div class="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-surface-dark border border-white/5 relative overflow-hidden group">
+              <div class="relative z-10">
+                <span class="text-primary mb-2 text-xl">💬</span>
+                <div class="text-[10px] font-black text-white uppercase mb-1">Support Discord</div>
+                <p class="text-[9px] text-slate-500 leading-tight mb-3">Get help from the community.</p>
+                <button class="w-full py-1.5 bg-white/5 rounded text-[9px] font-bold text-slate-300 hover:bg-white/10 transition-colors">Join Server</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      )}
     </div>
   </div>
 </BaseLayout>
