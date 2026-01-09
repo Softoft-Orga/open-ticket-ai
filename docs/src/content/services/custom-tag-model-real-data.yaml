@@ -1,0 +1,17 @@
+slug: custom-tag-model-real-data
+title: Custom Tag Model
+oneLiner: Real Data Training
+description: |
+  Training primarily on your historical ticket data. Requires 10k-50k+ labeled 
+  examples. Includes comprehensive dataset preparation and evaluation for 
+  maximum accuracy with your specific patterns.
+outcomes:
+  - Training primarily on your historical ticket data
+  - Requires 10k-50k+ labeled examples
+  - Includes comprehensive dataset preparation and evaluation
+startingPrice: 30000
+lang: en
+nav:
+  group: Model Development
+  order: 61
+  hidden: false

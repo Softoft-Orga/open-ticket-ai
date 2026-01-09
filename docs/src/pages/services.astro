@@ -1,8 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ServiceCard from '../components/services/ServiceCard.astro';
-import Extension from '../components/services/Extension.astro';
+import PricingCard from '../components/services/PricingCard.astro';
+import IntegrationPackageCard from '../components/services/IntegrationPackageCard.astro';
+import ExtensionItem from '../components/services/ExtensionItem.astro';
 
 const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
@@ -11,7 +12,7 @@ const description = 'Professional services for Open Ticket AI integration and su
 const allServices = await getCollection('services');
 
 // Filter services by group
-const mainServices = allServices
+const syntheticDataServices = allServices
   .filter(s => s.data.nav?.group === 'Services')
   .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
 
@@ -19,13 +20,25 @@ const extensions = allServices
   .filter(s => s.data.nav?.group === 'Extensions')
   .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
 
+const integrationServices = allServices
+  .filter(s => s.data.nav?.group === 'Integration')
+  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+
+const automationServices = allServices
+  .filter(s => s.data.nav?.group === 'Automation')
+  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+
+const modelDevelopmentServices = allServices
+  .filter(s => s.data.nav?.group === 'Model Development')
+  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+
 const flexibleServices = allServices
   .filter(s => s.data.nav?.group === 'Flexible')
   .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
 
-// Helper function to format price (using German locale to match original formatting)
+// Helper function to format price
 function formatPrice(price: number | undefined): string {
-  if (!price) return 'Custom';
+  if (!price || price === 0) return 'On Request';
   return `${price.toLocaleString('de-DE')} €`;
 }
 
@@ -41,99 +54,352 @@ const extensionIcons: Record<string, string> = {
   'system-tuning': 'integration_instructions',
   'ongoing-updates': 'update',
 };
+
+// Map icon names for typical scope
+const scopeIcons: Record<string, string> = {
+  'Tag Definition': 'psychology',
+  'Dataset Strategy': 'hub',
+  'Training & Evaluation': 'verified',
+  'Packaging & Deployment': 'rocket_launch',
+};
 ---
 
 <BaseLayout title={title} description={description}>
-  <div slot="head" />
+  <div slot="head">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  </div>
 
-  <div class="relative min-h-screen bg-background-dark">
-    <section class="relative overflow-hidden py-20 sm:py-24">
-      <div class="absolute inset-0 opacity-20 bg-cyber-grid pointer-events-none" aria-hidden="true"></div>
-      <div class="absolute inset-0 bg-glow-radial opacity-80" aria-hidden="true"></div>
-      <div class="relative mx-auto flex max-w-6xl flex-col items-center gap-6 px-6 text-center">
-        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-primary">
-          <span class="h-2 w-2 rounded-full bg-cyan-glow" aria-hidden="true"></span>
+  <div class="min-h-screen bg-background-dark pb-32">
+    <!-- Hero -->
+    <section class="relative pt-24 pb-20 text-center">
+      <div class="mx-auto max-w-7xl px-6">
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-bold text-primary mb-8">
+          <span class="flex h-2 w-2 rounded-full bg-green-500"></span>
           German Engineering Precision
         </div>
-        <h1 class="text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-          We Don't Just Build AI. <br />
-          <span class="bg-gradient-to-r from-primary to-cyan-glow bg-clip-text text-transparent">We Integrate It.</span>
+        <h1 class="mx-auto max-w-4xl text-6xl font-black text-white sm:text-7xl lg:text-8xl tracking-tighter mb-8 leading-[0.9]">
+          We Don't Just Build AI. <br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">We Integrate It.</span>
         </h1>
-        <p class="max-w-3xl text-lg leading-relaxed text-slate-300">
-          Transparent, fixed-price packages for enterprise-grade helpdesk automation.
+        <p class="mx-auto max-w-2xl text-xl text-slate-400 leading-relaxed font-medium">
+          Transparent, fixed-price packages for enterprise-grade helpdesk automation. 
           From self-hosted AI models to full workflow automation.
         </p>
       </div>
     </section>
 
-    <section class="border-t border-white/5 py-16 sm:py-20">
-      <div class="mx-auto max-w-6xl px-6">
-        <div class="mb-12 text-center space-y-3">
-          <h2 class="text-3xl font-bold text-white">Integration Services</h2>
-          <p class="text-lg text-slate-300">Choose the package that fits your operational complexity.</p>
+    <!-- Ticket Tagging AI Model Section -->
+    <section class="max-w-7xl mx-auto px-6 mb-32">
+      <div class="bg-[#120818] border border-white/5 rounded-3xl p-10 flex flex-col lg:flex-row gap-16">
+        <div class="lg:w-2/3">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="p-2 rounded-lg bg-primary/10 text-primary">
+              <span class="material-symbols-outlined text-3xl">hub</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white">Ticket Tagging AI Model</h2>
+          </div>
+          <p class="text-slate-400 text-lg mb-10 max-w-2xl leading-relaxed">
+            Our core AI model designed for the automatic classification and tagging of helpdesk tickets. 
+            It processes incoming requests to instantly identify critical metadata before a human even sees the ticket.
+          </p>
+          <div class="grid grid-cols-2 gap-6">
+            <div class="flex items-center gap-3 text-slate-300">
+              <div class="size-2 rounded-full bg-primary"></div>
+              <span class="font-bold">Category & Topic</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-300">
+              <div class="size-2 rounded-full bg-primary"></div>
+              <span class="font-bold">Intent Recognition</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-300">
+              <div class="size-2 rounded-full bg-primary"></div>
+              <span class="font-bold">Impact, Urgency & Priority</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-300">
+              <div class="size-2 rounded-full bg-primary"></div>
+              <span class="font-bold">Routing Hints</span>
+            </div>
+          </div>
         </div>
+        <div class="lg:w-1/3 flex flex-col gap-4">
+          <div class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Deployment & Integration</div>
+          <div class="bg-[#1a101f] border border-white/5 rounded-xl p-4 flex gap-4 items-start">
+            <span class="material-symbols-outlined text-primary">dns</span>
+            <div>
+              <h4 class="text-white text-sm font-bold">Self-Hosted</h4>
+              <p class="text-slate-500 text-[11px] leading-tight">Full on-premise deployment. No data leaves your secure infrastructure.</p>
+            </div>
+          </div>
+          <div class="bg-[#1a101f] border border-white/5 rounded-xl p-4 flex gap-4 items-start">
+            <span class="material-symbols-outlined text-primary">sync_alt</span>
+            <div>
+              <h4 class="text-white text-sm font-bold">Auto Write-Back</h4>
+              <p class="text-slate-500 text-[11px] leading-tight">Deep integration with ticket systems to automatically write back tags and fields.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <div class="grid gap-10 lg:grid-cols-3">
-          {mainServices.map((service, index) => (
-            <ServiceCard
-              title={service.data.title}
-              price={formatPrice(service.data.startingPrice)}
-              features={service.data.outcomes || []}
-              badge={service.data.oneLiner || ''}
-              highlighted={isHighlighted(index, mainServices.length)}
+    <!-- Synthetic Data Generation -->
+    <section class="max-w-7xl mx-auto px-6 mb-32">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 rounded-full bg-cyan-400/10 border border-cyan-400/20 px-3 py-1 text-[10px] font-black uppercase text-cyan-400 mb-6">
+          <span class="material-symbols-outlined text-xs">database</span>
+          Data Generation
+        </div>
+        <h2 class="text-5xl font-black text-white mb-6 tracking-tight">Synthetic Data Generation</h2>
+        <p class="text-slate-400 text-lg max-w-3xl mx-auto leading-relaxed">
+          Custom, realistic, multilingual support-ticket datasets for AI training, evaluation, and benchmarking. 
+          No sensitive customer data exposed.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        {syntheticDataServices.map((service, index) => (
+          <PricingCard 
+            title={service.data.slug === 'standard-stack' ? 'Evaluation Dataset' : 
+                   service.data.slug === 'high-volume-training' ? 'Training Dataset' : 'Enterprise Dataset'}
+            subtitle={service.data.slug === 'standard-stack' ? 'Benchmarking & Testing' : 
+                      service.data.slug === 'high-volume-training' ? 'High Volume Training' : 'Complex Use Cases'}
+            price={formatPrice(service.data.startingPrice)}
+            features={service.data.outcomes || []}
+            highlighted={isHighlighted(index, syntheticDataServices.length)}
+            buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
+          />
+        ))}
+      </div>
+
+      <!-- Common Extensions -->
+      <div class="bg-[#0a060d] border border-white/5 rounded-2xl p-8">
+        <div class="flex items-center gap-3 mb-8">
+          <span class="material-symbols-outlined text-slate-500">inventory_2</span>
+          <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">Common Extensions <span class="text-slate-600 font-normal">(Add-ons)</span></h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          {extensions.map((extension) => (
+            <ExtensionItem 
+              icon={extensionIcons[extension.data.slug] || 'tune'} 
+              title={extension.data.title} 
+              desc={extension.data.description || extension.data.oneLiner || ''} 
             />
           ))}
         </div>
       </div>
     </section>
 
-    <section class="border-t border-white/5 py-16 sm:py-20">
-      <div class="mx-auto max-w-6xl px-6">
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-10 shadow-lg backdrop-blur">
-          <h3 class="mb-10 flex items-center gap-4 text-2xl font-bold text-white">
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-xl text-primary" aria-hidden="true">🧩</span>
-            Common Extensions
-          </h3>
-          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
-            {extensions.map((extension) => (
-              <Extension
-                icon={extensionIcons[extension.data.slug] || 'tune'}
-                title={extension.data.title}
-                desc={extension.data.description || extension.data.oneLiner || ''}
-              />
-            ))}
+    <!-- Integration Services -->
+    <section class="max-w-7xl mx-auto px-6 mb-32">
+      <div class="text-center mb-16">
+        <h2 class="text-5xl font-black text-white mb-6">Integration Services</h2>
+        <p class="text-slate-400 text-lg">Fixed-price packages to connect Open Ticket AI with your existing ecosystem.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {integrationServices.map((service, index) => (
+          <IntegrationPackageCard 
+            title="Integration Package"
+            subtitle={service.data.slug === 'integration-standard-stack' ? 'Standard Stack' : 'Enterprise / Custom'}
+            price={formatPrice(service.data.startingPrice)}
+            systems={service.data.slug === 'integration-standard-stack' ? 
+                     'OTOBO, Znuny (OTRS stack), Zammad' : 
+                     'Jira Service Management, Zendesk, Freshdesk, ServiceNow, Custom'}
+            buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
+            features={service.data.outcomes || []}
+            highlighted={index === 1}
+          />
+        ))}
+      </div>
+      <div class="mt-8 text-center bg-red-500/5 border border-red-500/10 rounded-xl py-3">
+        <p class="text-xs font-bold uppercase tracking-widest text-red-500/60">
+          Out of Scope <span class="text-red-500">(Billed Hourly):</span> Multi-instance rollouts, complex field transformations, custom UI work, deep customization, and bespoke workflows.
+        </p>
+      </div>
+    </section>
+
+    <!-- Automation Services (OTA) -->
+    <section class="max-w-7xl mx-auto px-6 mb-32">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-5">
+          <div class="inline-flex items-center gap-2 rounded-lg bg-purple-500/10 border border-purple-500/20 px-3 py-1 text-[10px] font-black uppercase text-purple-400 mb-6">
+            <span class="material-symbols-outlined text-xs">auto_fix</span>
+            Automation Engine
           </div>
+          <h2 class="text-5xl font-black text-white mb-6">Automation Services</h2>
+          <h3 class="text-xl font-bold text-slate-200 mb-6">Open Ticket Automation (OTA)</h3>
+          <p class="text-slate-400 text-lg leading-relaxed mb-8">
+            OTA is our open-source layer that translates AI tags into concrete actions. It bridges the gap between intelligence and resolution.
+          </p>
+          <ul class="space-y-4">
+            {['Routing & Assignments', 'Priority & SLA Updates', 'Auto-replies & Notes', 'Triggering Tasks'].map((item) => (
+              <li class="flex items-center gap-3 text-slate-300 font-bold">
+                <span class="material-symbols-outlined text-primary">arrow_forward</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="lg:col-span-7">
+          {automationServices.map((service) => (
+            <div class="bg-[#1a101f] border border-primary/20 rounded-2xl p-8">
+              <div class="flex justify-between items-start mb-10 pb-6 border-b border-white/5">
+                <div>
+                  <h4 class="text-white text-xl font-bold">{service.data.title}</h4>
+                  <p class="text-slate-500 text-xs mt-1">{service.data.oneLiner}</p>
+                </div>
+                <div class="text-right">
+                  <div class="text-3xl font-bold text-white">{formatPrice(service.data.startingPrice)}</div>
+                  <div class="text-[10px] text-slate-500 uppercase">One-time</div>
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div>
+                  <div class="text-[10px] text-white uppercase font-black mb-4">What's included</div>
+                  <ul class="space-y-3">
+                    {(service.data.outcomes || []).map((item) => (
+                      <li class="flex items-start gap-2.5 text-xs text-slate-400">
+                        <span class="material-symbols-outlined text-primary text-base">check</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div class="bg-black/20 rounded-xl p-6 border border-white/5">
+                  <div class="text-[10px] text-white uppercase font-black mb-4">Need more?</div>
+                  <p class="text-xs text-slate-400 mb-6">Additional rules after go-live.</p>
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-300">Additional Automation</span>
+                    <span class="font-bold text-white">500 € <span class="text-[10px] text-slate-500 font-normal">/each</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="py-16 sm:py-20">
-      <div class="mx-auto max-w-6xl px-6">
-        <div class="grid gap-10 md:grid-cols-2">
-          {flexibleServices.map((service) => {
-            const isEngineering = service.data.slug === 'hourly-engineering';
-            const icon = isEngineering ? '⏱️' : '🎧';
-            const cardClass = isEngineering ? '' : 'support';
-            const iconClass = isEngineering ? 'engineering' : 'support';
-            const priceUnit = isEngineering ? '/hour' : '/month';
-            const priceLabel = isEngineering ? 'Remote Rate' : 'Subscription';
+    <!-- Model Development -->
+    <section class="max-w-7xl mx-auto px-6 mb-32">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 rounded-full bg-purple-500/10 border border-purple-500/20 px-3 py-1 text-[10px] font-black uppercase text-purple-400 mb-6">
+          <span class="material-symbols-outlined text-xs">psychology</span>
+          Intelligence Layer
+        </div>
+        <h2 class="text-5xl font-black text-white mb-6">Model Development <span class="text-slate-500 font-medium">(Custom Tagging Models)</span></h2>
+        <p class="text-slate-400 text-lg">Custom training and architecture for specialized tagging requirements.</p>
+      </div>
 
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        {modelDevelopmentServices.map((service, index) => {
+          if (service.data.slug === 'custom-development') {
             return (
-              <div class={`hourly-card ${cardClass} rounded-2xl border border-white/10 bg-surface-lighter/60 p-10 shadow-lg backdrop-blur transition hover:border-primary/40`}>
-                <div class="mb-6 flex items-center gap-4">
-                  <div class={`hourly-icon ${iconClass} flex h-12 w-12 items-center justify-center rounded-xl text-2xl ${isEngineering ? 'bg-blue-500/10 text-blue-300' : 'bg-cyan-glow/10 text-cyan-glow'}`}>
-                    {icon}
-                  </div>
-                  <h3 class="text-xl font-semibold text-white">{service.data.title}</h3>
+              <div class="flex flex-col rounded-2xl p-8 bg-[#150c19] border border-white/5 hover:border-white/20 transition-all h-full">
+                <div class="mb-6">
+                  <h4 class="text-white text-xl font-bold font-display">{service.data.title}</h4>
+                  <p class="text-primary text-xs font-bold uppercase mt-1">{service.data.oneLiner}</p>
                 </div>
-                <p class="mb-6 text-base text-slate-300">{service.data.description || service.data.oneLiner}</p>
-                <div class="flex items-center justify-between border-t border-white/10 pt-6">
-                  <span class="text-sm font-medium text-slate-300">{priceLabel}</span>
-                  <span class="text-2xl font-bold text-white">{formatPrice(service.data.startingPrice)} <span class="text-base font-normal text-slate-400">{priceUnit}</span></span>
+                <div class="mb-8">
+                  <div class="text-3xl font-bold text-white font-display">On Request</div>
+                  <div class="text-[10px] text-slate-500 uppercase mt-1">Custom Quote</div>
                 </div>
+                <p class="text-sm text-slate-400 mb-10 flex-grow leading-relaxed">
+                  {service.data.description}
+                </p>
+                <button class="w-full rounded-lg py-3.5 text-sm font-bold border border-white/20 text-white hover:bg-white/5">
+                  Contact Sales
+                </button>
               </div>
             );
-          })}
+          }
+          
+          return (
+            <PricingCard 
+              title={service.data.title}
+              subtitle={service.data.oneLiner}
+              price={formatPrice(service.data.startingPrice)}
+              priceSuffix="Base price"
+              features={service.data.outcomes || []}
+              highlighted={index === 1}
+              buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
+            />
+          );
+        })}
+      </div>
+
+      <!-- Typical Scope -->
+      <div class="bg-[#0a060d] border border-white/5 rounded-2xl p-8">
+        <div class="flex items-center gap-3 mb-10">
+          <span class="material-symbols-outlined text-slate-500">list_alt</span>
+          <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">Typical Scope <span class="text-slate-600 font-normal">(Included in fixed-price options)</span></h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <ExtensionItem icon="psychology" title="Tag Definition" desc="Taxonomy design, custom tag definitions, or mapping your structure with our standard ontology." />
+          <ExtensionItem icon="hub" title="Dataset Strategy" desc="Balancing synthetic vs real data, handling multiple languages, and covering edge cases." />
+          <ExtensionItem icon="verified" title="Training & Evaluation" desc="Full model training cycles with rigorous acceptance tests and performance validation." />
+          <ExtensionItem icon="rocket_launch" title="Packaging & Deployment" desc="Guidance for self-hosted inference setup, containerization, and update strategies." />
+        </div>
+      </div>
+    </section>
+
+    <!-- Hourly / Subscription -->
+    <section class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 mb-32">
+      {flexibleServices.map((service) => {
+        const isEngineering = service.data.slug === 'hourly-engineering';
+        const iconName = isEngineering ? 'schedule' : 'support_agent';
+        const iconBg = isEngineering ? 'bg-blue-500/10' : 'bg-green-500/10';
+        const iconColor = isEngineering ? 'text-blue-400' : 'text-green-400';
+        const borderHover = isEngineering ? 'hover:border-primary/40' : 'hover:border-green-500/40';
+        const priceUnit = isEngineering ? '/hour' : '/month';
+        const priceLabel = isEngineering ? 'Remote Rate' : 'Subscription';
+        
+        return (
+          <div class={`rounded-3xl border border-white/10 bg-card-dark/50 p-10 flex flex-col ${borderHover} transition-all`}>
+            <div class="flex items-center gap-4 mb-6">
+              <div class={`p-3 rounded-2xl ${iconBg} ${iconColor}`}>
+                <span class="material-symbols-outlined text-3xl">{iconName}</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white">{service.data.title}</h3>
+            </div>
+            <p class="text-slate-400 text-lg mb-10 flex-grow">
+              {service.data.description}
+            </p>
+            {!isEngineering && (
+              <div class="flex flex-col gap-2 mb-10">
+                <div class="flex items-center gap-2 text-xs text-green-400 font-bold">
+                  <span class="material-symbols-outlined text-sm">check_circle</span>
+                  Target response within 2 business days
+                </div>
+                <p class="text-[10px] text-slate-500 italic">* Unused hours/time will not carry over. Available for integration/OSS customers.</p>
+              </div>
+            )}
+            <div class="border-t border-white/5 pt-8 flex justify-between items-center">
+              <span class="text-slate-400 font-medium">{priceLabel}</span>
+              <span class="text-3xl font-bold text-white">{formatPrice(service.data.startingPrice)} <span class="text-base font-normal text-slate-500">{priceUnit}</span></span>
+            </div>
+          </div>
+        );
+      })}
+    </section>
+
+    <!-- CTA Section -->
+    <section class="max-w-7xl mx-auto px-6">
+      <div class="bg-gradient-to-r from-[#1a1033] to-[#0f0814] border border-white/10 rounded-3xl p-20 text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-glow-radial opacity-30"></div>
+        <div class="relative z-10">
+          <h2 class="text-5xl font-black text-white mb-6">Ready to automate your helpdesk?</h2>
+          <p class="text-xl text-slate-400 mb-12 max-w-2xl mx-auto">
+            Schedule a technical consultation with our German engineering team to discuss your specific infrastructure needs.
+          </p>
+          <div class="flex flex-wrap justify-center gap-6">
+            <button class="h-14 px-10 rounded-lg bg-cyan-400 text-background-dark font-black text-lg hover:bg-cyan-300 transition-colors shadow-xl shadow-cyan-400/20">
+              Get Demo
+            </button>
+            <button class="h-14 px-10 rounded-lg border border-white/20 text-white font-bold text-lg hover:bg-white/5 transition-colors flex items-center gap-2">
+              Contact Sales <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
         </div>
       </div>
     </section>
