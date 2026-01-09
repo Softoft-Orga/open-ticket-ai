@@ -23,7 +23,7 @@ const flexibleServices = allServices
   .filter(s => s.data.nav?.group === 'Flexible')
   .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
 
-// Helper function to format price
+// Helper function to format price (using German locale to match original formatting)
 function formatPrice(price: number | undefined): string {
   if (!price) return 'Custom';
   return `${price.toLocaleString('de-DE')} €`;
