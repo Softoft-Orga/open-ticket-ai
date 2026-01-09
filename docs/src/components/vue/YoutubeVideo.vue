@@ -27,10 +27,7 @@
       />
       <div class="absolute inset-0 bg-black/40"></div>
       <div class="relative z-10 flex items-center justify-center h-full">
-        <svg class="w-16 h-16 text-white opacity-90" fill="currentColor" viewBox="0 0 24 24"
-             xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
+        <PlayIcon aria-hidden="true" class="w-16 h-16 text-white opacity-90 drop-shadow" />
       </div>
     </button>
 
@@ -49,6 +46,7 @@
 
 <script lang="ts" setup>
 import {ref} from 'vue'
+import { PlayIcon } from '@heroicons/vue/24/solid'
 
 const props = defineProps<{ videoId: string; title?: string }>()
 const loaded = ref(false)

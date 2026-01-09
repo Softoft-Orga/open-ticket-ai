@@ -1,6 +1,4 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Testing Guide
 description: "Comprehensive testing guide for Open Ticket AI configurations, pipelines, and custom components with best practices and configExamples."
 ---

@@ -1,6 +1,4 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Pipeline Code Development
 description: "Developer guide for implementing custom pipes in Open Ticket AI with the dict[str, Any] pattern for parameter validation."
 ---
@@ -666,6 +664,7 @@ Use the `depends_on` field:
   params:
     input: "{{ pipe_result('step1').data.output }}"
 ```
+
 
 ## Best Practices
 

@@ -24,7 +24,7 @@
           {{ category }}
         </span>
         <span class="flex items-center gap-1.5 text-xs text-text-dim">
-          <span class="material-symbols-outlined text-base">calendar_today</span>
+          <CalendarIcon class="w-4 h-4" />
           {{ date }}
         </span>
       </div>
@@ -39,6 +39,8 @@
 </template>
 
 <script setup lang="ts">
+import { CalendarIcon } from '@heroicons/vue/24/outline';
+
 interface Props {
   category: string;
   title: string;
