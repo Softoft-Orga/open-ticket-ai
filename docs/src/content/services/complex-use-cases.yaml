@@ -1,0 +1,19 @@
+slug: complex-use-cases
+title: Complex Use Cases
+oneLiner: Enterprise Strategy
+description: |
+  100k–500k+ tickets dataset with strict balancing & constraints, 
+  realistic noise modeling, and optional agent replies. Includes full 
+  documentation and splits for enterprise-level strategies.
+outcomes:
+  - 100k–500k+ tickets dataset
+  - Strict balancing & constraints
+  - Realistic noise modeling
+  - Optional agent replies
+  - Full documentation & splits
+startingPrice: 15000
+lang: en
+nav:
+  group: Services
+  order: 12
+  hidden: false
