@@ -47,6 +47,31 @@ function isHighlighted(index: number, total: number): boolean {
   return total === 3 && index === 1;
 }
 
+// Helper function to get synthetic data service display info
+function getSyntheticDataServiceInfo(slug: string): { title: string; subtitle: string } {
+  const mapping: Record<string, { title: string; subtitle: string }> = {
+    'standard-stack': { title: 'Evaluation Dataset', subtitle: 'Benchmarking & Testing' },
+    'high-volume-training': { title: 'Training Dataset', subtitle: 'High Volume Training' },
+    'complex-use-cases': { title: 'Enterprise Dataset', subtitle: 'Complex Use Cases' }
+  };
+  return mapping[slug] || { title: 'Dataset', subtitle: '' };
+}
+
+// Helper function to get integration service display info
+function getIntegrationServiceInfo(slug: string): { subtitle: string; systems: string } {
+  const mapping: Record<string, { subtitle: string; systems: string }> = {
+    'integration-standard-stack': {
+      subtitle: 'Standard Stack',
+      systems: 'OTOBO, Znuny (OTRS stack), Zammad'
+    },
+    'integration-enterprise-custom': {
+      subtitle: 'Enterprise / Custom',
+      systems: 'Jira Service Management, Zendesk, Freshdesk, ServiceNow, Custom'
+    }
+  };
+  return mapping[slug] || { subtitle: '', systems: '' };
+}
+
 // Map icon names for extensions
 const extensionIcons: Record<string, string> = {
   'fine-tuned-model': 'tune',
@@ -55,13 +80,13 @@ const extensionIcons: Record<string, string> = {
   'ongoing-updates': 'update',
 };
 
-// Map icon names for typical scope
-const scopeIcons: Record<string, string> = {
-  'Tag Definition': 'psychology',
-  'Dataset Strategy': 'hub',
-  'Training & Evaluation': 'verified',
-  'Packaging & Deployment': 'rocket_launch',
-};
+// Typical scope items for model development
+const typicalScopeItems = [
+  { icon: 'psychology', title: 'Tag Definition', desc: 'Taxonomy design, custom tag definitions, or mapping your structure with our standard ontology.' },
+  { icon: 'hub', title: 'Dataset Strategy', desc: 'Balancing synthetic vs real data, handling multiple languages, and covering edge cases.' },
+  { icon: 'verified', title: 'Training & Evaluation', desc: 'Full model training cycles with rigorous acceptance tests and performance validation.' },
+  { icon: 'rocket_launch', title: 'Packaging & Deployment', desc: 'Guidance for self-hosted inference setup, containerization, and update strategies.' }
+];
 ---
 
 <BaseLayout title={title} description={description}>
@@ -156,18 +181,19 @@ const scopeIcons: Record<string, string> = {
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-        {syntheticDataServices.map((service, index) => (
-          <PricingCard 
-            title={service.data.slug === 'standard-stack' ? 'Evaluation Dataset' : 
-                   service.data.slug === 'high-volume-training' ? 'Training Dataset' : 'Enterprise Dataset'}
-            subtitle={service.data.slug === 'standard-stack' ? 'Benchmarking & Testing' : 
-                      service.data.slug === 'high-volume-training' ? 'High Volume Training' : 'Complex Use Cases'}
-            price={formatPrice(service.data.startingPrice)}
-            features={service.data.outcomes || []}
-            highlighted={isHighlighted(index, syntheticDataServices.length)}
-            buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
-          />
-        ))}
+        {syntheticDataServices.map((service, index) => {
+          const info = getSyntheticDataServiceInfo(service.data.slug);
+          return (
+            <PricingCard 
+              title={info.title}
+              subtitle={info.subtitle}
+              price={formatPrice(service.data.startingPrice)}
+              features={service.data.outcomes || []}
+              highlighted={isHighlighted(index, syntheticDataServices.length)}
+              buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
+            />
+          );
+        })}
       </div>
 
       <!-- Common Extensions -->
@@ -196,19 +222,20 @@ const scopeIcons: Record<string, string> = {
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {integrationServices.map((service, index) => (
-          <IntegrationPackageCard 
-            title="Integration Package"
-            subtitle={service.data.slug === 'integration-standard-stack' ? 'Standard Stack' : 'Enterprise / Custom'}
-            price={formatPrice(service.data.startingPrice)}
-            systems={service.data.slug === 'integration-standard-stack' ? 
-                     'OTOBO, Znuny (OTRS stack), Zammad' : 
-                     'Jira Service Management, Zendesk, Freshdesk, ServiceNow, Custom'}
-            buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
-            features={service.data.outcomes || []}
-            highlighted={index === 1}
-          />
-        ))}
+        {integrationServices.map((service, index) => {
+          const info = getIntegrationServiceInfo(service.data.slug);
+          return (
+            <IntegrationPackageCard 
+              title="Integration Package"
+              subtitle={info.subtitle}
+              price={formatPrice(service.data.startingPrice)}
+              systems={info.systems}
+              buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
+              features={service.data.outcomes || []}
+              highlighted={index === 1}
+            />
+          );
+        })}
       </div>
       <div class="mt-8 text-center bg-red-500/5 border border-red-500/10 rounded-xl py-3">
         <p class="text-xs font-bold uppercase tracking-widest text-red-500/60">
@@ -335,10 +362,9 @@ const scopeIcons: Record<string, string> = {
           <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">Typical Scope <span class="text-slate-600 font-normal">(Included in fixed-price options)</span></h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          <ExtensionItem icon="psychology" title="Tag Definition" desc="Taxonomy design, custom tag definitions, or mapping your structure with our standard ontology." />
-          <ExtensionItem icon="hub" title="Dataset Strategy" desc="Balancing synthetic vs real data, handling multiple languages, and covering edge cases." />
-          <ExtensionItem icon="verified" title="Training & Evaluation" desc="Full model training cycles with rigorous acceptance tests and performance validation." />
-          <ExtensionItem icon="rocket_launch" title="Packaging & Deployment" desc="Guidance for self-hosted inference setup, containerization, and update strategies." />
+          {typicalScopeItems.map((item) => (
+            <ExtensionItem icon={item.icon} title={item.title} desc={item.desc} />
+          ))}
         </div>
       </div>
     </section>
