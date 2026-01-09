@@ -1,8 +1,14 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Zendesk Integration for Open Ticket AI
 description: "Integrate on-premise Open Ticket AI with Zendesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Zendesk tickets via REST."
+lang: en
+date: 2024-08-01
+tags:
+  - integration
+  - zendesk
+  - api
+category: Integration
+draft: false
 ---
 # Zendesk Integration for Open Ticket AI
 

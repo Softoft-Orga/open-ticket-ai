@@ -2,16 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
-  --bg: #0f0814;
-  --text: #e8e1ee;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+@layer base {
+  :root {
+    /* Dark mode background and text */
+    background-color: #0b1220;
+    color: #e6e7ea;
+  }
+
+  body {
+    /* Default body font */
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #0b1220;
+    color: #e6e7ea;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    /* Heading font */
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  a {
+    /* Consistent link styles */
+    color: #646cff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: #747bff;
+    text-decoration: underline;
+  }
 }
 
-body {
-  margin: 0;
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: inherit;
+@layer components {
+  /* Dark surface with border, rounded corners, and card shadow */
+  .surface {
+    background-color: #111827;
+    border: 1px solid #374151;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Subtle border + glow on hover */
+  .surface-hover {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .surface-hover:hover {
+    border-color: #646cff;
+    box-shadow: 0 0 20px rgba(100, 108, 255, 0.4), 0 0 40px rgba(100, 108, 255, 0.2);
+  }
+
+  /* Consistent vertical spacing */
+  .section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  /* Dimmed text color */
+  .muted {
+    color: #94a3b8;
+  }
 }

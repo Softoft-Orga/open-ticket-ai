@@ -1,12 +1,14 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Open Ticket AI 1.4 Release - The First Major Production Release
 description: "Discover Open Ticket AI 1.4, the first production-ready release featuring powerful"
-toast_message: "New Release: Open Ticket AI 1.4 — Explore the production-ready platform"
-image: "https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png"
-show-on-news: true
-date: 2025-10-28
+lang: en
+date: 2024-10-28
+tags:
+  - release
+  - product-update
+  - announcement
+category: Product Update
+draft: false
 ---
 
 # Open Ticket AI 1.4: The First Major Production Release

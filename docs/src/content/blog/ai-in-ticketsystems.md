@@ -1,8 +1,14 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: "AI Ticketing Systems: Revolutionizing Support"
 description: "AI ticketing systems enhance support with smart ticket automation for faster, personalized service. Learn more about transforming your help desk."
+lang: en
+date: 2024-11-20
+tags:
+  - ai
+  - automation
+  - customer-support
+category: Technology
+draft: false
 ---
 # **AI Ticketing Systems: Revolutionizing Support**
 
