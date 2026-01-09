@@ -13,39 +13,29 @@ const products = allProducts
   .filter(product => !product.data.nav?.hidden)
   .sort((a, b) => (a.data.nav?.order ?? 999) - (b.data.nav?.order ?? 999));
 
-// Helper function to determine badge based on product slug
-function getProductBadges(slug: string) {
-  const badges: Array<{ label: string; color: string }> = [];
-  
-  if (slug === 'tagging-ai') {
-    badges.push({ label: 'Coming Soon', color: 'bg-primary/20 text-primary-light border-primary/20' });
-    badges.push({ label: 'On-Prem / Private Cloud', color: 'bg-slate-800/80 text-slate-300 border-slate-700/50' });
-    badges.push({ label: 'Multilingual', color: 'bg-slate-800/80 text-slate-300 border-slate-700/50' });
-  } else if (slug === 'synthetic-data-generator') {
-    badges.push({ label: 'In Development', color: 'bg-pink-500/10 text-pink-400 border-pink-500/20' });
+// Helper function to get placeholder image if not set
+function getProductImage(product: any, index: number) {
+  if (product.data.image) {
+    return product.data.image;
   }
-  
-  return badges;
-}
-
-// Helper function to get badge styles
-function getBadgeStyles(label: string) {
-  const isPink = label === 'In Development';
-  return {
-    backgroundColor: isPink ? 'rgba(236, 72, 153, 0.1)' : 'rgba(100, 108, 255, 0.1)',
-    borderColor: isPink ? 'rgba(236, 72, 153, 0.2)' : 'rgba(100, 108, 255, 0.2)',
-    color: isPink ? 'rgb(244, 114, 182)' : 'rgb(165, 180, 252)'
-  };
-}
-
-// Helper function to get placeholder image based on index
-function getPlaceholderImage(index: number) {
-  const images = [
+  // Fallback placeholder images
+  const placeholders = [
     'https://picsum.photos/1000/1000?blur=5',
     'https://picsum.photos/800/400',
     'https://picsum.photos/600/300'
   ];
-  return images[index % images.length];
+  return placeholders[index % placeholders.length];
+}
+
+// Helper function to get badge color based on badge label
+function getBadgeColor(label: string) {
+  if (label === 'Coming Soon') {
+    return 'bg-primary/20 text-primary-light border-primary/20';
+  } else if (label === 'In Development') {
+    return 'bg-pink-500/10 text-pink-400 border-pink-500/20';
+  } else {
+    return 'bg-slate-800/80 text-slate-300 border-slate-700/50';
+  }
 }
 
 // Separate hero and regular products
@@ -67,18 +57,17 @@ const [heroProduct, ...regularProducts] = products;
       <div class="grid gap-8">
         {/* Hero Card - First Product */}
         {heroProduct && (() => {
-          const badges = getProductBadges(heroProduct.data.slug);
-          const placeholderImage = getPlaceholderImage(0);
+          const productImage = getProductImage(heroProduct, 0);
           
           return (
             <div class="group relative flex flex-col overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter transition-all duration-500 hover:border-primary/50">
               <div class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]"></div>
               <div class="flex flex-col lg:flex-row items-stretch min-h-[500px]">
                 <div class="flex flex-1 flex-col justify-center gap-8 p-12 lg:p-16 relative z-10">
-                  {badges.length > 0 && (
+                  {heroProduct.data.badges && heroProduct.data.badges.length > 0 && (
                     <div class="flex flex-wrap gap-3">
-                      {badges.map(badge => (
-                        <Badge label={badge.label} color={badge.color} client:load />
+                      {heroProduct.data.badges.map(badge => (
+                        <Badge label={badge} color={getBadgeColor(badge)} client:load />
                       ))}
                     </div>
                   )}
@@ -99,7 +88,7 @@ const [heroProduct, ...regularProducts] = products;
                 </div>
                 <div class="relative w-full lg:w-[45%] min-h-[400px] bg-[#0c0d15] border-l border-surface-lighter">
                   <img
-                    src={placeholderImage}
+                    src={productImage}
                     alt={heroProduct.data.title}
                     class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen"
                   />
@@ -112,28 +101,21 @@ const [heroProduct, ...regularProducts] = products;
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {regularProducts.map((product, index) => {
-            const badges = getProductBadges(product.data.slug);
-            const placeholderImage = getPlaceholderImage(index + 1);
-            const hasIcon = product.data.slug === 'open-ticket-automation-core';
+            const productImage = getProductImage(product, index + 1);
             
             return (
               <div class="flex flex-col justify-between overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter p-10 hover:border-primary/30 transition-all">
                 <div class="flex flex-col gap-6 mb-10">
-                  {badges.length > 0 && (
+                  {product.data.badges && product.data.badges.length > 0 && (
                     <div class="flex flex-wrap gap-3">
-                      {badges.map(badge => {
-                        const styles = getBadgeStyles(badge.label);
-                        return (
-                          <div class="w-fit rounded-lg px-3 py-1 border" style={`background-color: ${styles.backgroundColor}; border-color: ${styles.borderColor}`}>
-                            <p class="text-xs font-bold uppercase tracking-widest" style={`color: ${styles.color}`}>{badge.label}</p>
-                          </div>
-                        );
-                      })}
+                      {product.data.badges.map(badge => (
+                        <Badge label={badge} color={getBadgeColor(badge)} client:load />
+                      ))}
                     </div>
                   )}
-                  {hasIcon ? (
+                  {product.data.icon ? (
                     <div class="flex items-center gap-4">
-                      <span class="material-symbols-outlined text-primary text-4xl">hub</span>
+                      <span class="material-symbols-outlined text-primary text-4xl">{product.data.icon}</span>
                       <h3 class="text-white text-3xl font-bold tracking-tight">{product.data.title}</h3>
                     </div>
                   ) : (
@@ -144,7 +126,7 @@ const [heroProduct, ...regularProducts] = products;
                   </p>
                 </div>
                 <div class="w-full aspect-video rounded-2xl bg-[#0c0d15] overflow-hidden relative border border-white/5 mb-8">
-                  <img src={placeholderImage} class="w-full h-full object-cover opacity-40" alt={product.data.title} />
+                  <img src={productImage} class="w-full h-full object-cover opacity-40" alt={product.data.title} />
                 </div>
                 <button class="group flex w-full items-center justify-between rounded-xl h-12 px-6 bg-transparent border border-border-dark hover:border-primary/50 text-white font-bold transition-all">
                   Learn More

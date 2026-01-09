@@ -16,3 +16,7 @@ nav:
   group: Products
   order: 6
   hidden: false
+status: In Development
+badges:
+  - In Development
+image: https://picsum.photos/600/300

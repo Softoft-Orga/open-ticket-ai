@@ -17,3 +17,9 @@ nav:
   group: Products
   order: 4
   hidden: false
+status: Coming Soon
+badges:
+  - Coming Soon
+  - On-Prem / Private Cloud
+  - Multilingual
+image: https://picsum.photos/1000/1000?blur=5

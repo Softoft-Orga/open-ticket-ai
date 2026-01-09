@@ -17,3 +17,5 @@ nav:
   group: Products
   order: 5
   hidden: false
+icon: hub
+image: https://picsum.photos/800/400
