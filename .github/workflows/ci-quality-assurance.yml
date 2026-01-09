@@ -2,8 +2,16 @@ name: CI Quality Assurance
 on:
   push:
     branches: [ dev, main ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'packages/**'
   pull_request:
     types: [ opened, synchronize, reopened ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'packages/**'
 
 jobs:
   ci:
