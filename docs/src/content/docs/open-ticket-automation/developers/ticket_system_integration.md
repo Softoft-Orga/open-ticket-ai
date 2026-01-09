@@ -1,7 +1,6 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
-title: Ticket System Integration
+title: "Ticket System Integration"
+description: "Integration of external ticketing platforms with Open Ticket AI using the TicketSystemService base class."
 ---
 
 # Ticket System Integration
