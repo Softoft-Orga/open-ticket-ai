@@ -1,4 +1,15 @@
 ---
+import {
+  WrenchScrewdriverIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+  ArrowPathIcon,
+  CpuChipIcon,
+  CubeTransparentIcon,
+  CheckBadgeIcon,
+  RocketLaunchIcon
+} from '@heroicons/vue/24/outline';
+
 export interface Props {
   icon: string;
   title: string;
@@ -6,11 +17,25 @@ export interface Props {
 }
 
 const { icon, title, desc } = Astro.props;
+
+// Map material icon names to Heroicons
+const iconMap: Record<string, any> = {
+  'tune': WrenchScrewdriverIcon,
+  'analytics': ChartBarIcon,
+  'integration_instructions': Cog6ToothIcon,
+  'update': ArrowPathIcon,
+  'psychology': CpuChipIcon,
+  'hub': CubeTransparentIcon,
+  'verified': CheckBadgeIcon,
+  'rocket_launch': RocketLaunchIcon,
+};
+
+const IconComponent = iconMap[icon] || WrenchScrewdriverIcon;
 ---
 
 <div class="flex items-start gap-4">
   <div class="text-primary mt-0.5">
-    <span class="material-symbols-outlined text-2xl">{icon}</span>
+    <IconComponent class="w-6 h-6" aria-hidden="true" />
   </div>
   <div>
     <h5 class="text-white text-sm font-bold mb-1">{title}</h5>

@@ -1,4 +1,6 @@
 ---
+import { CheckIcon } from '@heroicons/vue/24/outline';
+
 export interface Props {
   title: string;
   subtitle: string;
@@ -40,7 +42,7 @@ const {
   <ul class="space-y-2.5 mb-8 flex-grow">
     {features.map((f) => (
       <li class="flex items-start gap-2 text-sm text-slate-400">
-        <span class="material-symbols-outlined text-primary text-lg flex-shrink-0">check</span>
+        <CheckIcon class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
         <span>{f}</span>
       </li>
     ))}

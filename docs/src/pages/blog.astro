@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TopicLink from '../components/vue/blog/TopicLink.vue';
 import ArticleCard from '../components/vue/blog/ArticleCard.vue';
+import { ArrowRightIcon, CalendarIcon, MagnifyingGlassIcon, EnvelopeIcon } from '@heroicons/vue/24/outline';
 
 const pageTitle = "Open Ticket AI Blog";
 const pageDescription = "Latest updates, insights, and news about Open Ticket AI and autonomous support automation.";
@@ -61,7 +62,7 @@ const getBlogUrl = (id: string) => {
               <div class="flex flex-wrap gap-4 pt-4">
                 <a href={getBlogUrl(featuredPost.id)} class="group flex h-14 items-center justify-center gap-3 rounded-lg bg-white px-8 text-lg font-bold text-background-dark transition-transform hover:-translate-y-1">
                   Read Article
-                  <span class="material-symbols-outlined text-2xl transition-transform group-hover:translate-x-1">arrow_forward</span>
+                  <ArrowRightIcon class="w-6 h-6 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </a>
               </div>
             </div>
@@ -75,7 +76,7 @@ const getBlogUrl = (id: string) => {
               <div class="absolute bottom-8 left-8 right-8">
                 <div class="flex items-center justify-between text-sm text-gray-300">
                   <span class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-lg">calendar_today</span> {formatDate(featuredPost.data.date)}
+                    <CalendarIcon class="w-5 h-5" aria-hidden="true" /> {formatDate(featuredPost.data.date)}
                   </span>
                 </div>
               </div>
@@ -92,7 +93,7 @@ const getBlogUrl = (id: string) => {
         <aside class="w-full lg:w-80 flex-shrink-0 space-y-12">
           <div class="relative">
             <label for="search-articles" class="sr-only">Search articles</label>
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-dim">search</span>
+            <MagnifyingGlassIcon class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-text-dim" aria-hidden="true" />
             <input
               id="search-articles"
               class="block w-full rounded-xl border border-surface-lighter bg-surface-dark py-4 pl-12 pr-4 text-sm text-white placeholder-text-dim focus:border-primary focus:ring-primary transition-all shadow-sm"
@@ -115,7 +116,7 @@ const getBlogUrl = (id: string) => {
 
           <div class="rounded-2xl border border-surface-lighter bg-surface-dark p-8">
             <div class="mb-6 flex size-12 items-center justify-center rounded-xl bg-primary/20 text-primary">
-              <span class="material-symbols-outlined text-3xl">mail</span>
+              <EnvelopeIcon class="w-7 h-7" aria-hidden="true" />
             </div>
             <h3 class="mb-3 font-display text-xl font-bold text-white">Stay in the loop</h3>
             <p class="mb-6 text-sm text-text-dim">Get the latest on AI automation and engineering straight to your inbox.</p>
