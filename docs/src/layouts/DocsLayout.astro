@@ -72,18 +72,18 @@ const sidebarSections = [
 ---
 
 <BaseLayout title={title} description={description}>
-  <div class="docs-layout">
-    <aside class="sidebar">
-      <div class="sidebar-content">
-        <a href="/" class="site-title">Open Ticket AI</a>
+  <div class="flex min-h-screen">
+    <aside class="w-[280px] bg-[#1a1a1a] text-white fixed h-screen overflow-y-auto border-r border-[#333] hidden md:block">
+      <div class="p-8 px-6">
+        <a href="/" class="block text-2xl font-bold text-[#7c4dff] no-underline mb-8">Open Ticket AI</a>
         <nav>
           {sidebarSections.map(section => (
-            <div class="sidebar-section">
-              <h3>{section.label}</h3>
-              <ul>
+            <div class="mb-8">
+              <h3 class="text-sm uppercase tracking-wider text-[#999] mb-2">{section.label}</h3>
+              <ul class="list-none p-0 m-0">
                 {section.items.map(item => (
-                  <li>
-                    <a href={item.link}>{item.label}</a>
+                  <li class="mb-1">
+                    <a href={item.link} class="block py-2 px-3 text-[#ccc] no-underline rounded transition-all duration-200 hover:bg-[#333] hover:text-white">{item.label}</a>
                   </li>
                 ))}
               </ul>
@@ -92,194 +92,74 @@ const sidebarSections = [
         </nav>
       </div>
     </aside>
-    <main class="content">
-      <article>
+    <main class="flex-1 ml-0 md:ml-[280px] p-8 md:p-16 max-w-[1200px]">
+      <article class="docs-layout bg-white p-8 rounded-lg">
         <slot />
       </article>
     </main>
   </div>
 </BaseLayout>
 
-<style>
-  .docs-layout {
-    display: flex;
-    min-height: 100vh;
-  }
-  
-  .sidebar {
-    width: 280px;
-    background: #1a1a1a;
-    color: #fff;
-    position: fixed;
-    height: 100vh;
-    overflow-y: auto;
-    border-right: 1px solid #333;
-  }
-  
-  .sidebar-content {
-    padding: 2rem 1.5rem;
-  }
-  
-  .site-title {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #7c4dff;
-    text-decoration: none;
-    margin-bottom: 2rem;
-  }
-  
-  .sidebar-section {
-    margin-bottom: 2rem;
-  }
-  
-  .sidebar-section h3 {
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #999;
-    margin-bottom: 0.5rem;
-  }
-  
-  .sidebar-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .sidebar-section li {
-    margin-bottom: 0.25rem;
-  }
-  
-  .sidebar-section a {
-    display: block;
-    padding: 0.5rem 0.75rem;
-    color: #ccc;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.2s;
-  }
-  
-  .sidebar-section a:hover {
-    background: #333;
-    color: #fff;
-  }
-  
-  .content {
-    margin-left: 280px;
-    flex: 1;
-    padding: 2rem 4rem;
-    max-width: 1200px;
-  }
-  
-  article {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-  }
-  
-  @media (max-width: 768px) {
-    .sidebar {
-      display: none;
-    }
-    
-    .content {
-      margin-left: 0;
-      padding: 1rem;
-    }
-  }
-</style>
-
 <style is:global>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  .docs-layout h1 {
+    @apply text-4xl mt-6 mb-2 leading-tight;
   }
   
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    background: #f5f5f5;
-    color: #333;
-    line-height: 1.6;
+  .docs-layout h2 {
+    @apply text-3xl border-b border-gray-200 pb-1 mt-6 mb-2;
   }
   
-  h1, h2, h3, h4, h5, h6 {
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    line-height: 1.3;
+  .docs-layout h3 {
+    @apply text-2xl mt-6 mb-3;
   }
   
-  h1 { font-size: 2.5rem; }
-  h2 { font-size: 2rem; border-bottom: 1px solid #eee; padding-bottom: 0.3em; }
-  h3 { font-size: 1.5rem; }
-  h4 { font-size: 1.25rem; }
-  
-  p {
-    margin-bottom: 1rem;
+  .docs-layout h4 {
+    @apply text-xl mt-6 mb-3;
   }
   
-  a {
-    color: #7c4dff;
+  .docs-layout p {
+    @apply mb-4;
   }
   
-  a:hover {
-    color: #5c2ddf;
+  .docs-layout a {
+    @apply text-[#7c4dff] hover:text-[#5c2ddf];
   }
   
-  pre {
-    background: #282c34;
-    color: #abb2bf;
-    padding: 1rem;
-    border-radius: 6px;
-    overflow-x: auto;
-    margin: 1rem 0;
+  .docs-layout pre {
+    @apply bg-[#282c34] text-[#abb2bf] p-4 rounded-md overflow-x-auto my-4;
   }
   
-  code {
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    background: #f4f4f4;
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-size: 0.9em;
+  .docs-layout code {
+    @apply font-mono bg-gray-100 px-2 py-1 rounded text-sm;
   }
   
-  pre code {
-    background: none;
-    padding: 0;
+  .docs-layout pre code {
+    @apply bg-transparent p-0;
   }
   
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
+  .docs-layout table {
+    @apply w-full border-collapse my-4;
   }
   
-  table th,
-  table td {
-    border: 1px solid #ddd;
-    padding: 0.75rem;
-    text-align: left;
+  .docs-layout table th,
+  .docs-layout table td {
+    @apply border border-gray-300 p-3 text-left;
   }
   
-  table th {
-    background: #f4f4f4;
-    font-weight: bold;
+  .docs-layout table th {
+    @apply bg-gray-100 font-bold;
   }
   
-  ul, ol {
-    margin-left: 2rem;
-    margin-bottom: 1rem;
+  .docs-layout ul,
+  .docs-layout ol {
+    @apply ml-8 mb-4;
   }
   
-  li {
-    margin-bottom: 0.5rem;
+  .docs-layout li {
+    @apply mb-2;
   }
   
-  blockquote {
-    border-left: 4px solid #7c4dff;
-    padding-left: 1rem;
-    margin: 1rem 0;
-    color: #666;
+  .docs-layout blockquote {
+    @apply border-l-4 border-[#7c4dff] pl-4 my-4 text-gray-600;
   }
 </style>
