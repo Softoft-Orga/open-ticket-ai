@@ -1,7 +1,9 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Configuration Reference
+lang: en
+nav:
+  group: Details
+  order: 1
 ---
 
 # Configuration Reference
@@ -206,7 +208,7 @@ details.
 * **Params**: `expression` – literal value or rendered expression result. 【F:
   packages/otai_base/src/otai_base/pipes/expression_pipe.py†L13-L18】
 * **Output**: Returns `PipeResult.success` with `{"value": expression}` unless the expression evaluates to a
-  `FailMarker`, in which case it fails. 【F:packages/otai_base/src/otai_base/pipes/expression_pipe.py†L21-L38】【F:
+  `FailMarker`, in which case it fails. 【F:packages/otai_base/src/otai_base/pipes/expression_pipe†L21-L38】【F:
   src/open_ticket_ai/core/pipes/pipe_models.py†L59-L68】
 
 ### `base:ClassificationPipe`

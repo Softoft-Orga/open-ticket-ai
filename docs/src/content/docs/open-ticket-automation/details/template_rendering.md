@@ -1,7 +1,9 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Template Rendering
+lang: en
+nav:
+  group: Details
+  order: 2
 ---
 
 # Template Rendering

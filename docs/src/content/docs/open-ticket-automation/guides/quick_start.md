@@ -1,8 +1,10 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Quick Start Guide
 description: "Get started with Open Ticket AI in 5 minutes. Quick setup guide for Python 3.13+ with OTOBO, Znuny, or OTRS ticket system integration."
+lang: en
+nav:
+  group: Guides
+  order: 1
 ---
 # Quick Start Guide
 

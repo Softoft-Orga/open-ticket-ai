@@ -11,7 +11,11 @@ const meta: Meta<typeof Badge> = {
             description: 'Badge text content (slot)'
         }
     },
+    args: {
+        type: 'secondary'
+    },
     parameters: {
+        layout: 'centered',
         docs: {
             description: {
                 component: 'Badge component for displaying status, labels, or categories with different color variants.'
@@ -82,7 +86,7 @@ export const AllVariants: Story = {
     render: () => ({
         components: {Badge},
         template: `
-            <div class="flex flex-wrap gap-3 items-center p-4">
+            <div class="flex flex-wrap items-center gap-3 rounded-xl bg-surface-dark p-4">
                 <Badge type="primary">Primary</Badge>
                 <Badge type="secondary">Secondary</Badge>
                 <Badge type="success">Success</Badge>
@@ -97,21 +101,21 @@ export const UseCases: Story = {
     render: () => ({
         components: {Badge},
         template: `
-            <div class="space-y-4 p-4">
+            <div class="space-y-4 rounded-xl bg-surface-dark p-4">
                 <div class="flex items-center gap-2">
-                    <span class="text-sm">Status:</span>
+                    <span class="text-sm text-text-dim">Status:</span>
                     <Badge type="success">Active</Badge>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="text-sm">Priority:</span>
+                    <span class="text-sm text-text-dim">Priority:</span>
                     <Badge type="danger">High</Badge>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="text-sm">Category:</span>
+                    <span class="text-sm text-text-dim">Category:</span>
                     <Badge type="primary">AI/ML</Badge>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="text-sm">Version:</span>
+                    <span class="text-sm text-text-dim">Version:</span>
                     <Badge type="secondary">v2.1.0</Badge>
                 </div>
             </div>

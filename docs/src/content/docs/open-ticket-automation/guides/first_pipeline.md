@@ -1,8 +1,10 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
-title: Creating Your First Pipeline
-description: "Step-by-step tutorial for creating your first ticket classification pipeline with Open Ticket AI using the current configuration schema (module-based plugins, service registry, and PipeConfig orchestrator)."
+title: First Pipeline Tutorial
+description: "Build your first Open Ticket AI pipeline end-to-end with orchestration and classification."
+lang: en
+nav:
+  group: Guides
+  order: 2
 ---
 # Creating Your First Pipeline
 

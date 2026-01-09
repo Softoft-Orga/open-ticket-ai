@@ -1,8 +1,10 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
 title: Predefined Pipe Concepts
 draft: true
+lang: en
+nav:
+  group: Details
+  order: 3
 ---
 
 # Predefined Pipe Concepts

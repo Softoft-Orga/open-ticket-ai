@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Open Ticket AI - Automated Classification</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#a60df2",
+                        "primary-dark": "#7b09b5",
+                        "primary-light": "#d475fd",
+                        "background-dark": "#0f0814",
+                        "surface-dark": "#1d1023",
+                        "surface-lighter": "#2d1b36",
+                        "border-dark": "#3c2249",
+                        "text-dim": "#b790cb",
+                        "cyan-glow": "#00f0ff",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    backgroundImage: {
+                        'cyber-gradient': 'linear-gradient(135deg, rgba(166,13,242,0.1) 0%, rgba(28,16,34,0) 100%)',
+                        'glow-radial': 'radial-gradient(circle at center, rgba(166,13,242,0.15) 0%, rgba(15,8,20,0) 70%)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans', sans-serif; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        .cyber-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .cyber-scrollbar::-webkit-scrollbar-track { background: #0f0814; }
+        .cyber-scrollbar::-webkit-scrollbar-thumb { background: #3c2249; border-radius: 3px; }
+        .cyber-scrollbar::-webkit-scrollbar-thumb:hover { background: #a60df2; }
+        .glow-text { text-shadow: 0 0 15px rgba(166, 13, 242, 0.5); }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.12.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0"
+  }
+}
+</script>
+<link href="/index.css" rel="stylesheet">
+</head>
+<body class="bg-background-dark text-slate-100 antialiased selection:bg-primary selection:text-white">
+    <div id="root"></div>
+<script src="/index.tsx" type="module"></script>
+</body>
+</html>

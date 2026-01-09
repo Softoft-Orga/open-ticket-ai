@@ -1,10 +1,10 @@
 ---
-layout: ../../layouts/DocsLayout.astro
-
-title: Ticket Automation Planner — Pick Your Best Path
-description: "Plan your ticket automation project. Choose the right path based on\
-  \ your data\u2014labeled, unlabeled, or none\u2014for fast training, deployment,\
-  \ and support."
+title: Plan Your Ticket Automation Project
+description: "A practical guide to scoping, prioritizing, and sequencing your ticket automation rollout."
+lang: en
+nav:
+  group: Guides
+  order: 3
 ---
 # Ticket Automation Planner — Pick Your Best Path
 
