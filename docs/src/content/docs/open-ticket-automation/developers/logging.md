@@ -1,5 +1,6 @@
 ---
 title: Logging System
+description: Logging configuration for Open Ticket AI
 ---
 
 # Logging System

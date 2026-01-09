@@ -1,6 +1,6 @@
 ---
-title: "Installation Guide"
-description: "Steps to install Open Ticket AI on your server using Docker Compose."
+title: Installation Guide
+description: Installation guide for Open Ticket AI
 ---
 
 # Installation Guide
