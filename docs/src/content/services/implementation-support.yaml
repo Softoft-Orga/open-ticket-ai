@@ -1,0 +1,19 @@
+slug: implementation-support
+title: Implementation Support
+oneLiner: Get expert help setting up Open Ticket AI
+description: |
+  Our implementation support service helps you deploy and configure Open Ticket AI 
+  for your specific environment. We work with your team to ensure a smooth rollout 
+  and optimal configuration.
+outcomes:
+  - Fully configured Open Ticket AI deployment
+  - Custom pipeline configuration
+  - Team training and onboarding
+  - Integration with existing systems
+  - Best practices documentation
+startingPrice: 5000
+lang: en
+nav:
+  group: Services
+  order: 1
+  hidden: false

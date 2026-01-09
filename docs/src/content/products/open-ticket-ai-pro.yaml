@@ -1,0 +1,20 @@
+slug: open-ticket-ai-pro
+title: Open Ticket AI Pro
+tagline: Advanced AI for growing teams
+description: |
+  Open Ticket AI Pro delivers enterprise-grade AI capabilities for medium to 
+  large support teams. Get advanced analytics, custom model training, and 
+  priority support.
+features:
+  - Everything in Lite
+  - Custom model training
+  - Advanced analytics and reporting
+  - Multi-language support
+  - Priority email support
+  - SLA guarantees
+tier: pro
+lang: en
+nav:
+  group: Products
+  order: 2
+  hidden: false

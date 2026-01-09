@@ -1,0 +1,19 @@
+slug: open-ticket-ai-lite
+title: Open Ticket AI Lite
+tagline: Start automating your tickets with AI
+description: |
+  Open Ticket AI Lite is the perfect entry point for small teams looking to 
+  automate their ticket classification and routing. Deploy on-premises with 
+  full control over your data.
+features:
+  - Automatic ticket classification
+  - Queue assignment
+  - Priority detection
+  - On-premises deployment
+  - Community support
+tier: lite
+lang: en
+nav:
+  group: Products
+  order: 1
+  hidden: false
