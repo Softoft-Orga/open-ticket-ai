@@ -1,4 +1,4 @@
-import FooterComponent from '../src/components/vue/navigation/FooterComponent.vue'
+import FooterComponent from '../src/components/vue/core/navigation/FooterComponent.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof FooterComponent> = {

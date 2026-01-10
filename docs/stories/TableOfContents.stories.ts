@@ -1,4 +1,4 @@
-import TableOfContents from '../src/components/vue/docs/TableOfContents.vue'
+import TableOfContents from '../src/components/vue/core/TableOfContents.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 const meta: Meta<typeof TableOfContents> = {

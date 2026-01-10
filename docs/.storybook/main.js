@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default {
     core: {builder: '@storybook/builder-vite'},
     framework: {name: '@storybook/vue3-vite'},
-    stories: ['../stories/**/*.stories.@(js|ts|mdx)'],
+    stories: ['../stories/**/*.stories.@(js|ts|mdx)', '../stories/**/*.@(mdx)'],
     addons: [
         '@storybook/addon-docs',
         '@storybook/addon-a11y',

@@ -1,4 +1,4 @@
-import NavBar from '../src/components/vue/navigation/NavBar.vue'
+import NavBar from '../src/components/vue/core/navigation/NavBar.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 
 const meta: Meta<typeof NavBar> = {

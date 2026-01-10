@@ -1,4 +1,4 @@
-import CodeBlock from '../src/components/vue/docs/CodeBlock.vue'
+import CodeBlock from '../src/components/vue/core/CodeBlock.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 const meta: Meta<typeof CodeBlock> = {
@@ -43,7 +43,7 @@ export const Python: Story = {
     template: `
       <CodeBlock v-bind="args">def hello_world():
     print("Hello, World!")
-    
+
 hello_world()</CodeBlock>
     `
   }),

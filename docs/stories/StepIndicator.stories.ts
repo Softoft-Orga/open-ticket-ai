@@ -1,4 +1,4 @@
-import StepIndicator from '../src/components/vue/docs/StepIndicator.vue'
+import StepIndicator from '../src/components/vue/core/StepIndicator.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 const meta: Meta<typeof StepIndicator> = {

@@ -1,4 +1,4 @@
-import CodeTabs from '../src/components/vue/docs/CodeTabs.vue'
+import CodeTabs from '../src/components/vue/core/CodeTabs.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 const meta: Meta<typeof CodeTabs> = {
