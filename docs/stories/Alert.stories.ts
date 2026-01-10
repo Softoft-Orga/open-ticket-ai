@@ -9,12 +9,16 @@ const meta: Meta<typeof Alert> = {
     type: {
       control: { type: 'select' },
       options: ['info', 'success', 'warning', 'danger', 'tip']
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['default', 'inline']
     }
   },
   parameters: {
     docs: {
       description: {
-        component: 'Alert component for displaying important information, warnings, tips, and other messages in documentation.'
+        component: 'Alert component for displaying important information, warnings, tips, and other messages in documentation. Supports default and inline variants, with optional footer slot.'
       }
     }
   }
@@ -141,5 +145,120 @@ export const LongContent: Story = {
   args: {
     type: 'info',
     title: 'Detailed Information'
+  }
+}
+
+export const WithFooter: Story = {
+  render: (args) => ({
+    components: { Alert },
+    setup() {
+      return { args }
+    },
+    template: `
+      <Alert v-bind="args">
+        This is an alert with a footer section that can contain actions or additional information.
+        <template #footer>
+          <div class="flex gap-3 text-sm">
+            <button class="text-info hover:text-info/80 font-medium">Learn more</button>
+            <button class="text-gray-400 hover:text-gray-300">Dismiss</button>
+          </div>
+        </template>
+      </Alert>
+    `
+  }),
+  args: {
+    type: 'info',
+    title: 'Alert with Footer'
+  }
+}
+
+export const InlineVariant: Story = {
+  render: (args) => ({
+    components: { Alert },
+    setup() {
+      return { args }
+    },
+    template: '<Alert v-bind="args">This is a subtle inline alert without a border, perfect for less prominent notifications.</Alert>'
+  }),
+  args: {
+    type: 'tip',
+    variant: 'inline',
+    title: 'Inline Alert'
+  }
+}
+
+export const InlineSuccess: Story = {
+  render: (args) => ({
+    components: { Alert },
+    setup() {
+      return { args }
+    },
+    template: '<Alert v-bind="args">Configuration saved successfully!</Alert>'
+  }),
+  args: {
+    type: 'success',
+    variant: 'inline'
+  }
+}
+
+export const InlineWarning: Story = {
+  render: (args) => ({
+    components: { Alert },
+    setup() {
+      return { args }
+    },
+    template: '<Alert v-bind="args">This feature is deprecated and will be removed in the next version.</Alert>'
+  }),
+  args: {
+    type: 'warning',
+    variant: 'inline'
+  }
+}
+
+export const SuccessWithFooter: Story = {
+  render: (args) => ({
+    components: { Alert },
+    setup() {
+      return { args }
+    },
+    template: `
+      <Alert v-bind="args">
+        Your changes have been successfully saved and are now live.
+        <template #footer>
+          <div class="flex gap-3 text-sm">
+            <button class="text-success hover:text-success/80 font-medium">View changes</button>
+            <button class="text-gray-400 hover:text-gray-300">OK</button>
+          </div>
+        </template>
+      </Alert>
+    `
+  }),
+  args: {
+    type: 'success',
+    title: 'Changes Saved'
+  }
+}
+
+export const DangerWithFooter: Story = {
+  render: (args) => ({
+    components: { Alert },
+    setup() {
+      return { args }
+    },
+    template: `
+      <Alert v-bind="args">
+        This action will permanently delete all data and cannot be undone.
+        <template #footer>
+          <div class="flex gap-3 text-sm">
+            <button class="text-danger hover:text-danger/80 font-medium">Delete anyway</button>
+            <button class="text-gray-400 hover:text-gray-300">Cancel</button>
+          </div>
+        </template>
+      </Alert>
+    `
+  }),
+  args: {
+    type: 'danger',
+    title: 'Confirm Deletion'
   }
 }
