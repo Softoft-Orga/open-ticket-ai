@@ -28,28 +28,28 @@ const allServices = await getCollection('services');
 
 // Filter services by group
 const syntheticDataServices = allServices
-  .filter(s => s.data.nav?.group === 'Services')
-  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+  .filter(s => s.data.serviceGroup === 'Synthetic Data Creation')
+  .sort((a, b) => (a.data.serviceOrder || 0) - (b.data.serviceOrder || 0));
 
 const extensions = allServices
-  .filter(s => s.data.nav?.group === 'Extensions')
-  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+  .filter(s => s.data.serviceGroup === 'Extensions')
+  .sort((a, b) => (a.data.serviceOrder || 0) - (b.data.serviceOrder || 0));
 
 const integrationServices = allServices
-  .filter(s => s.data.nav?.group === 'Integration')
-  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+  .filter(s => s.data.serviceGroup === 'Integration')
+  .sort((a, b) => (a.data.serviceOrder || 0) - (b.data.serviceOrder || 0));
 
 const automationServices = allServices
-  .filter(s => s.data.nav?.group === 'Automation')
-  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+  .filter(s => s.data.serviceGroup === 'Automation')
+  .sort((a, b) => (a.data.serviceOrder || 0) - (b.data.serviceOrder || 0));
 
 const modelDevelopmentServices = allServices
-  .filter(s => s.data.nav?.group === 'Model Development')
-  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+  .filter(s => s.data.serviceGroup === 'Model Development')
+  .sort((a, b) => (a.data.serviceOrder || 0) - (b.data.serviceOrder || 0));
 
 const flexibleServices = allServices
-  .filter(s => s.data.nav?.group === 'Flexible')
-  .sort((a, b) => (a.data.nav?.order || 0) - (b.data.nav?.order || 0));
+  .filter(s => s.data.serviceGroup === 'Flexible')
+  .sort((a, b) => (a.data.serviceOrder || 0) - (b.data.serviceOrder || 0));
 
 // Helper function to format price
 function formatPrice(price: number | undefined): string {
@@ -118,7 +118,7 @@ const typicalScopeItems = [
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">We Integrate It.</span>
         </h1>
         <p class="mx-auto max-w-2xl text-xl text-slate-400 leading-relaxed font-medium">
-          Transparent, fixed-price packages for enterprise-grade helpdesk automation. 
+          Transparent, fixed-price packages for enterprise-grade helpdesk automation.
           From self-hosted AI models to full workflow automation.
         </p>
       </div>
@@ -135,7 +135,7 @@ const typicalScopeItems = [
             <h2 class="text-3xl font-bold text-white">Ticket Tagging AI Model</h2>
           </div>
           <p class="text-slate-400 text-lg mb-10 max-w-2xl leading-relaxed">
-            Our core AI model designed for the automatic classification and tagging of helpdesk tickets. 
+            Our core AI model designed for the automatic classification and tagging of helpdesk tickets.
             It processes incoming requests to instantly identify critical metadata before a human even sees the ticket.
           </p>
           <div class="grid grid-cols-2 gap-6">
@@ -186,7 +186,7 @@ const typicalScopeItems = [
         </div>
         <h2 class="text-5xl font-black text-white mb-6 tracking-tight">Synthetic Data Generation</h2>
         <p class="text-slate-400 text-lg max-w-3xl mx-auto leading-relaxed">
-          Custom, realistic, multilingual support-ticket datasets for AI training, evaluation, and benchmarking. 
+          Custom, realistic, multilingual support-ticket datasets for AI training, evaluation, and benchmarking.
           No sensitive customer data exposed.
         </p>
       </div>
@@ -195,7 +195,7 @@ const typicalScopeItems = [
         {syntheticDataServices.map((service, index) => {
           const info = getSyntheticDataServiceInfo(service.data.slug);
           return (
-            <PricingCard 
+            <PricingCard
               title={info.title}
               subtitle={info.subtitle}
               price={formatPrice(service.data.startingPrice)}
@@ -215,10 +215,10 @@ const typicalScopeItems = [
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {extensions.map((extension) => (
-            <ExtensionItem 
-              icon={extensionIcons[extension.data.slug] || 'tune'} 
-              title={extension.data.title} 
-              desc={extension.data.description || extension.data.oneLiner || ''} 
+            <ExtensionItem
+              icon={extensionIcons[extension.data.slug] || 'tune'}
+              title={extension.data.title}
+              desc={extension.data.description || extension.data.oneLiner || ''}
             />
           ))}
         </div>
@@ -236,7 +236,7 @@ const typicalScopeItems = [
         {integrationServices.map((service, index) => {
           const info = getIntegrationServiceInfo(service.data.slug);
           return (
-            <IntegrationPackageCard 
+            <IntegrationPackageCard
               title="Integration Package"
               subtitle={info.subtitle}
               price={formatPrice(service.data.startingPrice)}
@@ -290,7 +290,7 @@ const typicalScopeItems = [
                   <div class="text-[10px] text-slate-500 uppercase">One-time</div>
                 </div>
               </div>
-              
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div>
                   <div class="text-[10px] text-white uppercase font-black mb-4">What's included</div>
@@ -351,9 +351,9 @@ const typicalScopeItems = [
               </div>
             );
           }
-          
+
           return (
-            <PricingCard 
+            <PricingCard
               title={service.data.title}
               subtitle={service.data.oneLiner}
               price={formatPrice(service.data.startingPrice)}
@@ -390,7 +390,7 @@ const typicalScopeItems = [
         const borderHover = isEngineering ? 'hover:border-primary/40' : 'hover:border-green-500/40';
         const priceUnit = isEngineering ? '/hour' : '/month';
         const priceLabel = isEngineering ? 'Remote Rate' : 'Subscription';
-        
+
         return (
           <div class={`rounded-3xl border border-white/10 bg-card-dark/50 p-10 flex flex-col ${borderHover} transition-all`}>
             <div class="flex items-center gap-4 mb-6">

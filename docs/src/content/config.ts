@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import { file } from 'astro/loaders';
 
 // Navigation schema shared across collections
 const navSchema = z.object({
@@ -55,7 +56,7 @@ const productsCollection = defineCollection({
 
 // 4️⃣ services collection - data collection (YAML)
 const servicesCollection = defineCollection({
-  type: 'data',
+  loader: file("src/content/services.yaml"),
   schema: z.object({
     slug: z.string(),
     title: z.string(),
@@ -64,7 +65,9 @@ const servicesCollection = defineCollection({
     outcomes: z.array(z.string()).optional(),
     startingPrice: z.number().optional(),
     lang: z.string().default('en'),
-    nav: navSchema,
+    serviceGroup: z.string(),
+    serviceOrder: z.number().optional(),
+    hidden: z.boolean().optional(),
   }),
 });
 
