@@ -1,12 +1,13 @@
 import Button from '../src/components/vue/core/basic/Button.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
+import { VARIANTS, SIZES } from '../src/components/vue/core/design-system/tokens'
 
 const meta: Meta<typeof Button> = {
     title: 'Core/Button',
     component: Button,
     argTypes: {
-        variant: {control: {type: 'select'}, options: ['primary', 'secondary', 'outline', 'ghost']},
-        size: {control: {type: 'select'}, options: ['sm', 'md', 'lg']},
+        variant: {control: {type: 'select'}, options: VARIANTS},
+        size: {control: {type: 'select'}, options: SIZES},
         disabled: {control: 'boolean'}
     },
     parameters: {
