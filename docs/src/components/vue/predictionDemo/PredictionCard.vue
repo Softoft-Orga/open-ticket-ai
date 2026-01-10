@@ -2,18 +2,20 @@
   <Card>
     <!-- Header -->
     <template #header>
-      <span class="text-sm font-semibold text-text-dim uppercase tracking-wide">
+      <span class="text-lg font-medium text-text-dim">
         {{ heading }}
       </span>
     </template>
 
     <!-- Main content -->
-    <slot/>
+    <div class="min-h-14">
+      <slot/>
+    </div>
 
     <!-- Footer -->
     <template #footer>
-      <div class="flex items-center gap-2 text-sm">
-        <span class="text-text-dim">Confidence:</span>
+      <div class="text-base text-white">
+        Confidence:
         <Badge :type="badgeClass(confidence)">
           {{ asPercent(confidence) }}
         </Badge>
