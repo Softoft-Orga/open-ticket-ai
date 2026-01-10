@@ -2,184 +2,477 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/vue/Badge.vue';
 import { getCollection } from 'astro:content';
-import { CubeTransparentIcon, ArrowRightIcon, CalculatorIcon } from '@heroicons/vue/24/outline';
+import { 
+  CubeTransparentIcon, 
+  ArrowRightIcon, 
+  ServerIcon,
+  ShieldCheckIcon,
+  CpuChipIcon,
+  Squares2X2Icon,
+  RocketLaunchIcon
+} from '@heroicons/vue/24/outline';
 
-const title = "Our Technology Stack";
+const title = "Products - Open Ticket AI";
 
 // Fetch all products from the content collection
 const allProducts = await getCollection('products');
 
-// Filter to show only specific products matching the prototype design:
-// - Tagging AI (hero)
-// - Open Ticket Automation Core (2-column)
-// - Synthetic Data Generator (1-column)
-const featuredSlugs = ['tagging-ai', 'open-ticket-automation-core', 'synthetic-data-generator'];
-const products = allProducts
-  .filter(product => featuredSlugs.includes(product.data.slug) && !product.data.nav?.hidden)
-  .sort((a, b) => {
-    // Custom sort: tagging-ai first, then automation-core, then synthetic-data
-    const orderMap: Record<string, number> = { 'tagging-ai': 0, 'open-ticket-automation-core': 1, 'synthetic-data-generator': 2 };
-    return (orderMap[a.data.slug] ?? 999) - (orderMap[b.data.slug] ?? 999);
-  });
+// Get specific products for different sections
+const taggingAI = allProducts.find(p => p.data.slug === 'tagging-ai');
+const coreProducts = allProducts.filter(p => 
+  ['open-ticket-automation-core', 'synthetic-data-generator'].includes(p.data.slug) && !p.data.nav?.hidden
+);
+const editions = allProducts.filter(p => 
+  ['open-ticket-ai-lite', 'open-ticket-ai-pro'].includes(p.data.slug) && !p.data.nav?.hidden
+);
 
-// Helper function to get placeholder image if not set
-function getProductImage(product: typeof products[0], index: number) {
-  if (product.data.image) {
-    return product.data.image;
-  }
-  // Fallback placeholder images
-  const placeholders = [
-    'https://picsum.photos/1000/1000?blur=5',
-    'https://picsum.photos/800/400',
-    'https://picsum.photos/600/300'
-  ];
-  return placeholders[index % placeholders.length];
-}
-
-// Helper function to get badge color based on badge label
+// Helper function to get badge color
 function getBadgeColor(label: string) {
-  if (label === 'Coming Soon') {
+  if (label === 'Coming Soon' || label?.includes('LIVE')) {
     return 'bg-primary/20 text-primary-light border-primary/20';
-  } else if (label === 'In Development') {
+  } else if (label?.includes('BEST VALUE')) {
+    return 'bg-primary text-white border-primary';
+  } else if (label?.includes('Development')) {
     return 'bg-pink-500/10 text-pink-400 border-pink-500/20';
-  } else {
-    return 'bg-slate-800/80 text-slate-300 border-slate-700/50';
   }
+  return 'bg-surface-dark/80 text-text-dim border-border-dark';
 }
 
-// Map icon names to Heroicon components
-const iconMap: Record<string, any> = {
-  'hub': CubeTransparentIcon,
+// Icon map for capabilities
+const capabilityIcons: Record<string, any> = {
+  'classification': CpuChipIcon,
+  'hierarchical': Squares2X2Icon,
+  'combinations': CubeTransparentIcon,
 };
-
-// Separate hero and regular products
-const [heroProduct, ...regularProducts] = products;
 ---
 
-<BaseLayout title={title} description={`${title} - Open Ticket AI`}>
+<BaseLayout title={title} description="Open Ticket AI Product Suite - Automated Ticket Classification">
   <div slot="head" />
 
-  <div class="min-h-screen bg-background-dark py-24">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-20 text-center lg:text-left">
-        <h1 class="font-display text-5xl md:text-7xl font-black text-white glow-text mb-8">Our Technology Stack</h1>
-        <p class="text-xl text-text-dim max-w-2xl leading-relaxed">
-          Secure, On-Premise AI for Enterprise Helpdesks built with German Engineering precision. Designed for strict data privacy and seamless integration.
-        </p>
-      </div>
-
-      <!-- ROI Calculator CTA -->
-      <a href="/roi-calculator/" class="group block mb-12 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/20 to-surface-dark border border-primary/30 p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(166,13,242,0.3)]">
-        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div class="flex items-center gap-4">
-            <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-primary/20 text-primary">
-              <CalculatorIcon class="w-8 h-8" aria-hidden="true" />
-            </div>
-            <div>
-              <h3 class="text-2xl font-bold text-white mb-1">ROI Calculator</h3>
-              <p class="text-text-dim">Calculate your potential savings with automated ticket tagging</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold transition-all group-hover:bg-white group-hover:text-background-dark">
-            <span>Try Calculator</span>
-            <ArrowRightIcon class="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-          </div>
+  <div class="min-h-screen bg-background-dark">
+    <!-- Hero Section - Live Classification Engine -->
+    <section class="relative w-full px-4 md:px-10 lg:px-20 xl:px-40 py-20 overflow-hidden">
+      <div class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]"></div>
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="mb-8">
+          <Badge label="● LIVE CLASSIFICATION ENGINE v2.0" color={getBadgeColor('LIVE')} client:load />
         </div>
-      </a>
-
-      <div class="grid gap-8">
-        {/* Hero Card - First Product */}
-        {heroProduct && (() => {
-          const productImage = getProductImage(heroProduct, 0);
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <!-- Left Content -->
+          <div class="flex flex-col gap-8">
+            <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
+              Automated,<br/>
+              Consistent Ticket<br/>
+              Classification<br/>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">
+                In Real Time.
+              </span>
+            </h1>
+            
+            <p class="text-gray-400 text-xl leading-relaxed max-w-xl">
+              Analyze incoming tickets and assign structured, hierarchical tags instantly. No rules to maintain. Fully automated.
+            </p>
+            
+            <div class="flex flex-wrap gap-4 pt-4">
+              <button class="h-14 px-10 rounded-lg bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all">
+                Start Free Trial
+              </button>
+              <button class="h-14 px-10 rounded-lg border border-border-dark hover:border-primary/50 text-white text-lg font-medium transition-all bg-surface-dark/50">
+                View Demo
+              </button>
+            </div>
+          </div>
           
-          return (
-            <div class="group relative flex flex-col overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter transition-all duration-500 hover:border-primary/50">
-              <div class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]"></div>
-              <div class="flex flex-col lg:flex-row items-stretch min-h-[500px]">
-                <div class="flex flex-1 flex-col justify-center gap-8 p-12 lg:p-16 relative z-10">
-                  {heroProduct.data.badges && heroProduct.data.badges.length > 0 && (
-                    <div class="flex flex-wrap gap-3">
-                      {heroProduct.data.badges.map(badge => (
-                        <Badge label={badge} color={getBadgeColor(badge)} client:load />
-                      ))}
-                    </div>
-                  )}
-                  <div>
-                    <h2 class="text-white text-5xl font-bold tracking-tight mb-4">{heroProduct.data.title}</h2>
-                    <p class="text-text-dim text-xl leading-relaxed max-w-xl">
-                      {heroProduct.data.description}
+          <!-- Right Side - Terminal Demo -->
+          <div class="relative">
+            <div class="rounded-2xl bg-[#0c0d15] border border-surface-lighter overflow-hidden shadow-2xl">
+              <div class="bg-surface-dark/80 px-4 py-3 flex items-center gap-2 border-b border-surface-lighter">
+                <div class="flex gap-2">
+                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <span class="text-gray-400 text-sm ml-4 font-mono">processor_v2.exe</span>
+              </div>
+              
+              <div class="p-6 space-y-6 font-mono text-sm">
+                <div class="space-y-3">
+                  <div class="text-gray-500">RAW INPUT</div>
+                  <div class="bg-surface-dark/50 rounded-lg p-4 border border-border-dark">
+                    <p class="text-gray-300 mb-2"><span class="text-cyan-400">Subject:</span> Login failed again?</p>
+                    <p class="text-gray-300"><span class="text-cyan-400">Body:</span></p>
+                    <p class="text-gray-400 mt-1 text-xs leading-relaxed">
+                      Hi support, I'm trying to access<br/>
+                      the dashboard but getting error<br/>
+                      503. This is blocking the payroll<br/>
+                      run. Please fix
                     </p>
                   </div>
-                  <div class="flex items-center gap-6 pt-4">
-                    <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
-                      Join Waitlist
-                    </button>
-                    <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-transparent border border-surface-lighter hover:border-primary/50 text-white text-lg font-medium transition-all">
-                      Technical Specs
-                    </button>
-                  </div>
                 </div>
-                <div class="relative w-full lg:w-[45%] min-h-[400px] bg-[#0c0d15] border-l border-surface-lighter">
-                  <img
-                    src={productImage}
-                    alt={heroProduct.data.title}
-                    class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen"
-                  />
-                  <div class="absolute inset-0 bg-gradient-to-l from-surface-dark via-transparent to-transparent"></div>
+                
+                <div class="space-y-3">
+                  <div class="text-primary font-bold">AI STRUCTURED OUTPUT</div>
+                  <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                      <span class="text-gray-500">INTENT:</span>
+                      <span class="px-3 py-1 rounded-md bg-primary/20 text-primary-light border border-primary/30 text-xs">
+                        access_issue
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-gray-500">SYSTEM:</span>
+                      <span class="px-3 py-1 rounded-md bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-xs">
+                        dashboard_main
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-gray-500">URGENCY:</span>
+                      <span class="px-3 py-1 rounded-md bg-red-500/20 text-red-400 border border-red-500/30 text-xs">
+                        critical
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          );
-        })()}
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {regularProducts.map((product, index) => {
-            const productImage = getProductImage(product, index + 1);
-            const colSpan = index === 0 ? "col-span-1 lg:col-span-2" : "col-span-1";
-            
-            return (
-              <div class={`flex flex-col justify-between overflow-hidden rounded-3xl bg-surface-dark border border-surface-lighter p-10 hover:border-primary/30 transition-all ${colSpan}`}>
-                <div class="flex flex-col gap-6 mb-10">
-                  {product.data.badges && product.data.badges.length > 0 && (
-                    <div class="flex flex-wrap gap-3">
-                      {product.data.badges.map(badge => (
-                        <Badge label={badge} color={getBadgeColor(badge)} client:load />
-                      ))}
-                    </div>
-                  )}
-                  {product.data.icon ? (
-                    <div class="flex items-center gap-4">
-                      {(() => {
-                        const IconComponent = iconMap[product.data.icon] || CubeTransparentIcon;
-                        return <IconComponent class="w-10 h-10 text-primary" aria-hidden="true" />;
-                      })()}
-                      <h3 class="text-white text-3xl font-bold tracking-tight">{product.data.title}</h3>
-                    </div>
-                  ) : (
-                    <h3 class="text-white text-3xl font-bold tracking-tight">{product.data.title}</h3>
-                  )}
-                  <p class="text-text-dim text-lg leading-relaxed">
-                    {product.data.description}
-                  </p>
-                </div>
-                <div class="w-full aspect-video rounded-2xl bg-[#0c0d15] overflow-hidden relative border border-white/5 mb-8">
-                  <img src={productImage} class="w-full h-full object-cover opacity-40" alt={product.data.title} />
-                </div>
-                <button class="group flex w-full items-center justify-between rounded-xl h-12 px-6 bg-transparent border border-border-dark hover:border-primary/50 text-white font-bold transition-all">
-                  Learn More
-                  <ArrowRightIcon class="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                </button>
-              </div>
-            );
-          })}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Core Capabilities -->
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-surface-dark/30">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Core Capabilities</h2>
+          <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+            Built for enterprise scale and precision.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Fully Automated Classification -->
+          <div class="flex flex-col gap-4 p-8 bg-surface-dark/50 border border-border-dark rounded-2xl hover:border-primary/50 transition-all duration-300 group">
+            <div class="flex items-center gap-3">
+              <CpuChipIcon class="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
+            </div>
+            <h3 class="text-2xl font-bold text-white">Fully Automated Classification</h3>
+            <p class="text-gray-400 text-base leading-relaxed">
+              Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly on new tickets and historical backlogs without human intervention.
+            </p>
+          </div>
+          
+          <!-- Hierarchical, Not Flat -->
+          <div class="flex flex-col gap-4 p-8 bg-surface-dark/50 border border-border-dark rounded-2xl hover:border-primary/50 transition-all duration-300 group">
+            <div class="flex items-center gap-3">
+              <Squares2X2Icon class="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
+            </div>
+            <h3 class="text-2xl font-bold text-white">Hierarchical, Not Flat</h3>
+            <p class="text-gray-400 text-base leading-relaxed">
+              A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for operational precision. Enables deep, multi-level analytics.
+            </p>
+          </div>
+          
+          <!-- 10 Quadrillion Combinations -->
+          <div class="flex flex-col gap-4 p-8 bg-surface-dark/50 border border-border-dark rounded-2xl hover:border-primary/50 transition-all duration-300 group">
+            <div class="flex items-center gap-3">
+              <CubeTransparentIcon class="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
+            </div>
+            <h3 class="text-2xl font-bold text-white">10 Quadrillion Combinations</h3>
+            <p class="text-gray-400 text-base leading-relaxed">
+              Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Analytics Demo Section -->
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="flex flex-col gap-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-white">Actionable Reporting for Management.</h2>
+            <p class="text-gray-400 text-xl leading-relaxed">
+              See exactly where time and risk come from. Detect bottlenecks immediately with granular, AI-assigned tags that reveal the truth behind your support metrics.
+            </p>
+            <a href="#" class="flex items-center gap-2 text-primary font-bold text-lg group hover:text-primary-light transition-colors">
+              Explore Analytics Dashboard
+              <ArrowRightIcon class="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            </a>
+          </div>
+          
+          <div class="rounded-2xl bg-[#0c0d15] border border-surface-lighter p-6 shadow-2xl">
+            <div class="bg-surface-dark/80 rounded-lg p-4 border border-border-dark font-mono text-sm space-y-3">
+              <div class="text-gray-500 mb-4">bash</div>
+              <div class="text-cyan-400">$ query analytics --group-by intent --metric resolution_time</div>
+              <div class="text-gray-500 text-xs mt-2">Processing 14,281 tickets...</div>
+              
+              <div class="mt-4 space-y-2">
+                <div class="flex justify-between items-center bg-primary/10 rounded px-3 py-2 border border-primary/20">
+                  <span class="text-primary-light">intent/service_request/access_request</span>
+                  <span class="text-white font-bold">9 min <span class="text-gray-500 text-xs">avg</span></span>
+                </div>
+                <div class="flex justify-between items-center bg-primary/10 rounded px-3 py-2 border border-primary/20">
+                  <span class="text-primary-light">intent/incident/security_incident</span>
+                  <span class="text-white font-bold">3.1h <span class="text-gray-500 text-xs">avg</span></span>
+                </div>
+                <div class="flex justify-between items-center bg-primary/10 rounded px-3 py-2 border border-primary/20">
+                  <span class="text-primary-light">intent/billing/dispute</span>
+                  <span class="text-white font-bold">4.2d <span class="text-gray-500 text-xs">avg</span></span>
+                </div>
+              </div>
+              
+              <div class="text-gray-600 mt-4">$</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flexible Editions -->
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-surface-dark/30">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Flexible Editions</h2>
+          <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+            Choose the model complexity that fits your operational needs.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Lite Free -->
+          <div class="flex flex-col rounded-3xl bg-surface-dark border border-surface-lighter p-8 hover:border-primary/30 transition-all">
+            <div class="flex-1">
+              <h3 class="text-2xl font-bold text-white mb-2">Lite Free</h3>
+              <p class="text-gray-500 text-sm mb-6">Evaluation & Testing</p>
+              
+              <div class="mb-8">
+                <div class="text-5xl font-bold text-white mb-2">
+                  0 €
+                  <span class="text-gray-500 text-lg font-normal">/one-time</span>
+                </div>
+              </div>
+              
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-gray-300">Model: 0.5B Parameters</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-gray-300">150+ Tags</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-gray-300">Accuracy: ~0.82</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-gray-300">ROI: from 15 tickets/day</span>
+                </li>
+              </ul>
+              
+              <p class="text-gray-500 text-sm mb-6">Available 18.01</p>
+            </div>
+            
+            <button class="w-full h-12 rounded-xl border border-border-dark hover:border-primary/50 text-white font-bold transition-all">
+              Explore Lite Free
+            </button>
+          </div>
+          
+          <!-- Lite Pro - BEST VALUE -->
+          <div class="flex flex-col rounded-3xl bg-gradient-to-br from-primary/20 to-surface-dark border-2 border-primary p-8 relative transform scale-105 shadow-2xl shadow-primary/20">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+              <Badge label="BEST VALUE" color={getBadgeColor('BEST VALUE')} client:load />
+            </div>
+            
+            <div class="flex-1">
+              <h3 class="text-2xl font-bold text-white mb-2">Lite Pro</h3>
+              <p class="text-primary-light text-sm mb-6">Production Ready</p>
+              
+              <div class="mb-8">
+                <div class="text-5xl font-bold text-white mb-2">
+                  2,500 €
+                  <span class="text-gray-400 text-lg font-normal">/one-time</span>
+                </div>
+              </div>
+              
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-white font-medium">Model: 4B Parameters</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-white font-medium">150+ Tags</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-white font-medium">Accuracy: ~0.90</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-white font-medium">Focus: Routing & Reporting</span>
+                </li>
+              </ul>
+              
+              <p class="text-primary-light text-sm mb-6">Available 18.01</p>
+            </div>
+            
+            <button class="w-full h-12 rounded-xl bg-primary text-white font-bold hover:bg-white hover:text-background-dark transition-all">
+              Explore Lite Pro
+            </button>
+          </div>
+          
+          <!-- Full Pro -->
+          <div class="flex flex-col rounded-3xl bg-surface-dark border border-surface-lighter p-8 hover:border-primary/30 transition-all">
+            <div class="flex-1">
+              <h3 class="text-2xl font-bold text-white mb-2">Full Pro</h3>
+              <p class="text-gray-500 text-sm mb-6">Advanced Enterprise</p>
+              
+              <div class="mb-8">
+                <div class="text-5xl font-bold text-white mb-2">
+                  6,000 €
+                  <span class="text-gray-500 text-lg font-normal">/one-time</span>
+                </div>
+              </div>
+              
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-gray-300">Model: 8B Parameters</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-gray-300">250+ Tags</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-gray-300">Accuracy: ~0.92</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-gray-300">Focus: Maximum Detail</span>
+                </li>
+              </ul>
+              
+              <p class="text-gray-500 text-sm mb-6">IN DEVELOPMENT</p>
+            </div>
+            
+            <button class="w-full h-12 rounded-xl border border-border-dark hover:border-primary/50 text-white font-bold transition-all">
+              Explore Full Pro
+            </button>
+          </div>
+        </div>
+        
+        <!-- ROI Simulator CTA -->
+        <div class="mt-12 text-center">
+          <a href="#" class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-surface-dark border border-primary/50 hover:bg-primary/10 transition-all group">
+            <RocketLaunchIcon class="w-6 h-6 text-primary" />
+            <span class="text-white font-bold text-lg">TRY THE ROI SIMULATOR</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Deployment & Hardware Flexibility -->
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Deployment & Hardware Flexibility</h2>
+          <p class="text-gray-400 text-lg max-w-3xl">
+            Secure by design. Optimized for your infrastructure.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div class="flex items-start gap-3 p-6 bg-surface-dark/50 rounded-xl border border-border-dark">
+            <ServerIcon class="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+            <div>
+              <h4 class="text-white font-bold mb-1">ON-PREMISE OR PRIVATE CLOUD</h4>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3 p-6 bg-surface-dark/50 rounded-xl border border-border-dark">
+            <ShieldCheckIcon class="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+            <div>
+              <h4 class="text-white font-bold mb-1">NO DATA LEAVES INFRASTRUCTURE</h4>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3 p-6 bg-surface-dark/50 rounded-xl border border-border-dark">
+            <CubeTransparentIcon class="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
+            <div>
+              <h4 class="text-white font-bold mb-1">INT8, BF16, FP16 QUANTIZATIONS</h4>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3 p-6 bg-surface-dark/50 rounded-xl border border-border-dark">
+            <CpuChipIcon class="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
+            <div>
+              <h4 class="text-white font-bold mb-1">OPTIMIZED FOR CPU & GPU</h4>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Large CTA -->
+        <div class="relative rounded-3xl bg-gradient-to-br from-primary/10 via-surface-dark to-cyan-500/5 border border-primary/30 p-16 text-center overflow-hidden">
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"></div>
+          
+          <div class="relative z-10">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
+              <RocketLaunchIcon class="w-10 h-10 text-white" />
+            </div>
+            
+            <h2 class="text-4xl md:text-6xl font-bold text-white mb-6">
+              Turn Raw Tickets into<br/>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">
+                Operational Intelligence.
+              </span>
+            </h2>
+            
+            <p class="text-gray-400 text-xl mb-10 max-w-3xl mx-auto">
+              Join forward-thinking support teams automating their workflow today.
+            </p>
+            
+            <div class="flex flex-wrap gap-4 justify-center">
+              <button class="h-14 px-12 rounded-xl bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
+                GET LITE FREE VERSION
+              </button>
+              <button class="h-14 px-12 rounded-xl border border-surface-lighter hover:border-primary/50 bg-surface-dark/50 text-white text-lg font-medium transition-all">
+                View Architecture
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
-<style>
-.glow-text {
-  text-shadow: 0 0 20px rgba(100, 108, 255, 0.3);
-}
-</style>

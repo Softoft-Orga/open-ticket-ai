@@ -13,21 +13,6 @@
   serviceGroup: Synthetic Data Creation
   serviceOrder: 12
   id: complex-use-cases
-- slug: consulting
-  title: AI Consulting Services
-  oneLiner: Strategic guidance for AI-powered support automation
-  description: "Work with our AI experts to develop a comprehensive strategy for automating \nyour support workflows. We help you identify opportunities, design solutions, \nand create a roadmap for AI adoption.\n"
-  outcomes:
-  - AI readiness assessment
-  - Custom automation strategy
-  - ROI analysis and projections
-  - Implementation roadmap
-  - Executive presentation materials
-  startingPrice: 3000
-  lang: en
-  serviceGroup: Synthetic Data Creation
-  serviceOrder: 3
-  id: consulting
 - slug: custom-development
   title: Custom Development
   oneLiner: Special Requirements
@@ -43,21 +28,6 @@
   serviceGroup: Model Development
   serviceOrder: 62
   id: custom-development
-- slug: custom-model-training
-  title: Custom Model Training
-  oneLiner: Train AI models on your specific ticket data
-  description: "Get AI models fine-tuned specifically for your organization's ticket patterns, \ncategories, and workflows. Our data scientists work with your historical data \nto create models that understand your unique business context.\n"
-  outcomes:
-  - Custom-trained classification models
-  - Improved accuracy for your specific use case
-  - Model performance benchmarking
-  - Regular model updates and retraining
-  - Detailed accuracy reports
-  startingPrice: 10000
-  lang: en
-  serviceGroup: Synthetic Data Creation
-  serviceOrder: 2
-  id: custom-model-training
 - slug: custom-tag-model-real-data
   title: Custom Tag Model
   oneLiner: Real Data Training
@@ -142,21 +112,6 @@
   serviceGroup: Flexible
   serviceOrder: 30
   id: hourly-engineering
-- slug: implementation-support
-  title: Implementation Support
-  oneLiner: Get expert help setting up Open Ticket AI
-  description: "Our implementation support service helps you deploy and configure Open Ticket AI \nfor your specific environment. We work with your team to ensure a smooth rollout \nand optimal configuration.\n"
-  outcomes:
-  - Fully configured Open Ticket AI deployment
-  - Custom pipeline configuration
-  - Team training and onboarding
-  - Integration with existing systems
-  - Best practices documentation
-  startingPrice: 5000
-  lang: en
-  serviceGroup: Synthetic Data Creation
-  serviceOrder: 1
-  id: implementation-support
 - slug: integration-enterprise-custom
   title: Integration Package - Enterprise / Custom
   oneLiner: Enterprise / Custom Integration

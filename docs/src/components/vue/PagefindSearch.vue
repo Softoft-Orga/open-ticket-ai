@@ -1,214 +1,133 @@
 <template>
-  <div>
-    <button
-      @click="openModal"
-      class="w-full max-w-2xl mx-auto relative group flex items-center bg-card-dark rounded-2xl border border-slate-700 shadow-2xl overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
-      aria-label="Search documentation"
-      aria-haspopup="dialog"
-    >
-      <div class="pl-6 text-slate-500">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+  <section class="pagefind-wrapper">
+    <div class="pagefind-prompt">
+      <div aria-hidden="true" class="pagefind-icon">
+        <MagnifyingGlassIcon class="w-5 h-5" />
       </div>
-      <div class="w-full bg-transparent border-none text-white placeholder:text-slate-600 h-16 px-4 text-lg flex items-center text-left text-slate-600">
-        Search documentation (e.g., 'API keys', 'YAML config')...
+      <div class="pagefind-hint">
+        <p class="text-sm text-slate-400 font-semibold">Search documentation</p>
+        <p class="text-xs text-slate-500">Try “API keys”, “deployment”, or “YAML config”.</p>
       </div>
-      <div class="hidden sm:flex pr-6 text-xs text-slate-600 font-mono tracking-widest">
-        CMD + K
-      </div>
-    </button>
+      <span class="pagefind-shortcut">CMD ⌘ K</span>
+    </div>
 
-    <Teleport to="body">
-      <div
-        v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Search documentation"
-        @click="closeModal"
-      >
-        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
-        <div
-          class="relative w-full max-w-3xl bg-[#1a1a1a] rounded-2xl shadow-2xl border border-slate-700 overflow-hidden"
-          @click.stop
-        >
-          <div ref="searchContainer" class="pagefind-search"></div>
-        </div>
-      </div>
-    </Teleport>
-  </div>
+    <div ref="searchContainer" class="pagefind-search" />
+
+    <p v-if="error" class="pagefind-error">{{ error }}</p>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 
-interface PagefindUIInstance {
-  destroy?: () => void;
-}
+type PagefindGlobal = {
+  new: (config: { element: HTMLElement; showImages?: boolean; showSubResults?: boolean }) => { destroy?: () => void };
+};
 
-const isOpen = ref(false);
+type PagefindUIInstance = ReturnType<PagefindGlobal['new']> | null;
+
 const searchContainer = ref<HTMLElement | null>(null);
-let pagefindUI: PagefindUIInstance | null = null;
+const error = ref<string | null>(null);
+let pagefindInstance: PagefindUIInstance = null;
 
-const openModal = () => {
-  isOpen.value = true;
-};
-
-const closeModal = () => {
-  isOpen.value = false;
-};
-
-const handleKeydown = (e: KeyboardEvent) => {
-  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-    e.preventDefault();
-    openModal();
+onMounted(async () => {
+  try {
+    await loadPagefindAssets();
+    if (searchContainer.value && (window as any).PagefindUI) {
+      const PagefindUI = (window as any).PagefindUI as PagefindGlobal;
+      pagefindInstance = new PagefindUI({
+        element: searchContainer.value,
+        showImages: false,
+        showSubResults: false,
+      });
+    }
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Unable to load search right now.';
   }
-  if (e.key === 'Escape' && isOpen.value) {
-    closeModal();
-  }
-};
-
-onMounted(() => {
-  window.addEventListener('keydown', handleKeydown);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeydown);
-  
-  // Cleanup pagefindUI instance
-  if (pagefindUI?.destroy) {
-    pagefindUI.destroy();
-    pagefindUI = null;
-  }
+  pagefindInstance?.destroy?.();
+  pagefindInstance = null;
 });
 
-watch(isOpen, async (newValue) => {
-  if (newValue && searchContainer.value) {
-    if (!pagefindUI) {
-      try {
-        // Load the pagefind UI script and CSS
-        const pagefindCss = '/pagefind/pagefind-ui.css';
-        
-        if (!document.querySelector(`link[href="${pagefindCss}"]`)) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = pagefindCss;
-          document.head.appendChild(link);
-        }
-        
-        // Load the pagefind UI script if not already loaded
-        if (!(window as any).PagefindUI) {
-          const script = document.createElement('script');
-          script.src = '/pagefind/pagefind-ui.js';
-          
-          // Wait for the script to load, with error handling and timeout
-          await new Promise<void>((resolve, reject) => {
-            const timeoutId = window.setTimeout(() => {
-              script.onload = null;
-              script.onerror = null;
-              reject(new Error('Timed out while loading Pagefind UI script.'));
-            }, 15000);
+async function loadPagefindAssets() {
+  if ((window as any).PagefindUI) return;
 
-            script.onload = () => {
-              window.clearTimeout(timeoutId);
-              script.onload = null;
-              script.onerror = null;
-              resolve();
-            };
-
-            script.onerror = () => {
-              window.clearTimeout(timeoutId);
-              script.onload = null;
-              script.onerror = null;
-              reject(new Error('Failed to load Pagefind UI script.'));
-            };
-
-            document.head.appendChild(script);
-          });
-        }
-        
-        // Initialize PagefindUI
-        const PagefindUI = (window as any).PagefindUI;
-        pagefindUI = new PagefindUI({
-          element: searchContainer.value,
-          showSubResults: true,
-          showImages: false,
-          resetStyles: false,
-        });
-
-        // Focus the search input after initialization
-        await nextTick();
-        const searchInput = searchContainer.value?.querySelector('.pagefind-ui__search-input') as HTMLInputElement;
-        if (searchInput) {
-          searchInput.focus();
-        }
-      } catch (error) {
-        console.error('Failed to load Pagefind UI:', error);
-      }
-    } else {
-      // If pagefindUI already exists, just focus the search input
-      await nextTick();
-      const searchInput = searchContainer.value?.querySelector('.pagefind-ui__search-input') as HTMLInputElement;
-      if (searchInput) {
-        searchInput.focus();
-      }
-    }
+  const cssHref = '/pagefind/pagefind-ui.css';
+  if (!document.querySelector(`link[href="${cssHref}"]`)) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = cssHref;
+    document.head.appendChild(link);
   }
-});
+
+  await new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = '/pagefind/pagefind-ui.js';
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Could not load Pagefind script.'));
+    document.head.appendChild(script);
+  });
+}
 </script>
 
 <style>
-.pagefind-search {
+.pagefind-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pagefind-prompt {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+}
+
+.pagefind-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: rgba(166, 13, 242, 0.1);
+  color: #a60df2;
+}
+
+.pagefind-shortcut {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+}
+
+.pagefind-error {
+  color: #f87171;
+  font-size: 0.875rem;
+}
+
+:deep(.pagefind-search) {
   --pagefind-ui-scale: 1;
-  --pagefind-ui-primary: #7c4dff;
+  --pagefind-ui-primary: #a60df2;
   --pagefind-ui-text: #ffffff;
-  --pagefind-ui-background: #1a1a1a;
-  --pagefind-ui-border: #333;
-  --pagefind-ui-tag: #333;
+  --pagefind-ui-background: #110616;
+  --pagefind-ui-border: #2d1b36;
   --pagefind-ui-border-width: 1px;
-  --pagefind-ui-border-radius: 8px;
-  --pagefind-ui-image-border-radius: 8px;
-  --pagefind-ui-image-box-ratio: 3 / 2;
-  --pagefind-ui-font: inherit;
-}
-
-:deep(.pagefind-ui__search-input) {
-  background: #2a2a2a;
-  color: white;
-  border: 1px solid #333;
-  padding: 12px 16px;
-  font-size: 16px;
-}
-
-:deep(.pagefind-ui__search-input:focus) {
-  border-color: #7c4dff;
-  outline: none;
+  --pagefind-ui-border-radius: 1rem;
+  --pagefind-ui-font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 :deep(.pagefind-ui__result) {
-  background: #2a2a2a;
-  border: 1px solid #333;
-  padding: 16px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-}
-
-:deep(.pagefind-ui__result:hover) {
-  background: #333;
-  border-color: #7c4dff;
-}
-
-:deep(.pagefind-ui__result-title) {
-  color: #7c4dff;
-  font-weight: 600;
-}
-
-:deep(.pagefind-ui__result-excerpt) {
-  color: #d1d5db;
-}
-
-:deep(.pagefind-ui__message) {
-  color: #9ca3af;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 </style>
