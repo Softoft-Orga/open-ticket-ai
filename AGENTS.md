@@ -104,7 +104,47 @@ The `.github/workflows/copilot-pr-retry.yml` workflow automatically handles PRs 
 
 ## Documentation Structure
 
-All documentation lives in `/docs` directory:
+All documentation lives in `/docs` directory.
+
+## Website/Docs Component System (Astro + Vue)
+
+The customer-facing website lives in `/docs` and uses:
+- **Astro** for static site generation
+- **Vue 3** for interactive components
+- **Storybook** for component development
+- **Tailwind CSS** with custom design tokens
+
+### Transition System
+
+**Location**: `docs/src/components/vue/core/transitions/`
+
+**When to Use**:
+- Dialog/Modal, Menu, Popover, Dropdown, Toast, Slide-over panels (required)
+- Accordion (optional; collapse is tricky, prefer no animation unless needed)
+
+**Choosing Transitions**:
+- **Default**: `UiTransitionFadeScale` with `strength='sm'` for panels/dialogs
+- **Backdrops**: `UiTransitionFade`
+- **Menus**: `UiTransitionSlide direction='down'`
+- **Slide-overs**: `UiTransitionSlide direction='left'` or `'right'`
+- **Toasts**: `UiTransitionSlide direction='up'`
+
+**Usage Example**:
+```vue
+<TransitionRoot :show="isOpen" as="template">
+  <UiTransitionFade>
+    <div class="fixed inset-0 bg-black/80" />
+  </UiTransitionFade>
+  <UiTransitionFadeScale strength="sm">
+    <DialogPanel>...</DialogPanel>
+  </UiTransitionFadeScale>
+</TransitionRoot>
+```
+
+**Rules**:
+- All presets include `motion-reduce` support; never remove these classes
+- Always reuse presets/wrappers; never hand-write transition strings
+- For custom needs, import presets: `import { fadeScaleSm } from './presets'` and use with `v-bind`
 
 ---
 
