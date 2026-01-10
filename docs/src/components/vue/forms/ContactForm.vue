@@ -19,7 +19,7 @@
         <label class="block text-sm font-medium text-gray-200 mb-1" for="email">
           {{ $t('otai_contact_form.email_label') }}
         </label>
-        <TextField
+        <TextInput
             id="email"
             v-model="email"
             placeholder="you@domain.com"
@@ -60,7 +60,7 @@
 
 <script lang="ts" setup>
 import {ref} from 'vue'
-import TextField from '../core/forms/TextField.vue'
+import TextInput from '../core/forms/TextInput.vue'
 import TextArea from '../core/forms/TextArea.vue'
 import Button from '../core/basic/Button.vue'
 import { EnvelopeIcon, ChatBubbleLeftRightIcon, PaperAirplaneIcon } from '@heroicons/vue/24/outline'
