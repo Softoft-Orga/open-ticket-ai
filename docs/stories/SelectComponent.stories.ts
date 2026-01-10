@@ -2,7 +2,14 @@ import type {Meta, StoryObj} from '@storybook/vue3'
 import SelectComponent from '../src/components/vue/core/forms/SelectComponent.vue' // Adjust path if needed
 
 /**
- * A modern, accessible select component built with Headless UI and Tailwind CSS.
+ * A modern, accessible select component built with Headless UI Listbox and Tailwind design tokens.
+ * 
+ * Features:
+ * - Keyboard navigation support
+ * - Focus rings using primary color tokens
+ * - Disabled options support
+ * - Smooth slide-down transitions
+ * - Placeholder and default value behavior
  */
 const meta: Meta<typeof SelectComponent> = {
     title: 'Core/SelectComponent',
@@ -25,7 +32,7 @@ const meta: Meta<typeof SelectComponent> = {
         },
         options: {
             control: 'object',
-            description: 'Array of options. Each must have a `value` and `label`.',
+            description: 'Array of options. Each must have a `value`, `label`, and optional `disabled` property.',
         },
         disabled: {
             control: 'boolean',
@@ -111,5 +118,25 @@ export const Disabled: Story = {
         label: 'Disabled Select',
         modelValue: 'apple',
         disabled: true,
+    },
+}
+
+/**
+ * This story showcases options with disabled state.
+ * The "Grape" option cannot be selected.
+ */
+export const WithDisabledOptions: Story = {
+    ...Default,
+    args: {
+        ...Default.args,
+        label: 'Select with Disabled Options',
+        options: [
+            {value: 'apple', label: 'Apple 🍎'},
+            {value: 'banana', label: 'Banana 🍌'},
+            {value: 'cherry', label: 'Cherry 🍒'},
+            {value: 'grape', label: 'Grape 🍇 (Unavailable)', disabled: true},
+            {value: 'orange', label: 'Orange 🍊', disabled: true},
+            {value: 'strawberry', label: 'Strawberry 🍓'},
+        ],
     },
 }
