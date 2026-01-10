@@ -4,9 +4,9 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
       <div class="mb-12">
         <div class="inline-block mb-6">
-          <span class="px-4 py-2 rounded-full bg-primary/20 text-primary-light border border-primary/30 text-sm font-semibold">
+          <Badge type="primary">
             🔒 ON-PREMISE ONLY (0.5B PARAMETERS)
-          </span>
+          </Badge>
         </div>
         <h1 class="text-5xl md:text-7xl font-black text-white mb-8">
           Tagging AI <span class="text-primary-light">Lite Free.</span>
@@ -22,10 +22,22 @@
 
       <!-- Performance Metrics -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-        <PerformanceMetric label="MODEL SIZE" value="500M Params" />
-        <PerformanceMetric label="VRAM REQUIREMENT" value="<1GB" />
-        <PerformanceMetric label="AVERAGE ACCURACY" value="~82%" />
-        <PerformanceMetric label="LANGUAGE SUPPORT" value="Global / Multilingual" />
+        <Card background="surface-dark" padding="default" hoverable>
+          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">MODEL SIZE</div>
+          <div class="text-2xl font-bold text-white">500M Params</div>
+        </Card>
+        <Card background="surface-dark" padding="default" hoverable>
+          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">VRAM REQUIREMENT</div>
+          <div class="text-2xl font-bold text-white"><1GB</div>
+        </Card>
+        <Card background="surface-dark" padding="default" hoverable>
+          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">AVERAGE ACCURACY</div>
+          <div class="text-2xl font-bold text-white">~82%</div>
+        </Card>
+        <Card background="surface-dark" padding="default" hoverable>
+          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">LANGUAGE SUPPORT</div>
+          <div class="text-2xl font-bold text-white">Global / Multilingual</div>
+        </Card>
       </div>
 
       <!-- Interactive Tags Tree Section -->
@@ -38,31 +50,31 @@
         <div class="grid lg:grid-cols-3 gap-8">
           <!-- Test Examples Sidebar -->
           <div class="lg:col-span-1">
-            <div class="bg-surface-dark border border-surface-lighter rounded-2xl p-6">
-              <h3 class="text-sm font-bold text-text-dim mb-4 uppercase tracking-wider">TEST EXAMPLES</h3>
+            <Card background="surface-dark" padding="default">
+              <template #header>
+                <h3 class="text-sm font-bold text-text-dim uppercase tracking-wider">TEST EXAMPLES</h3>
+              </template>
               <div class="space-y-2">
-                <button
+                <Button
                   v-for="(example, index) in examples"
                   :key="index"
                   @click="activeExample = index"
-                  :class="[
-                    'w-full text-left px-4 py-3 rounded-xl font-medium transition-all',
-                    activeExample === index
-                      ? 'bg-primary text-white'
-                      : 'bg-transparent text-text-dim hover:bg-surface-lighter'
-                  ]"
+                  :variant="activeExample === index ? 'primary' : 'ghost'"
+                  class="w-full !justify-start"
                 >
                   {{ example.name }}
-                </button>
+                </Button>
               </div>
-            </div>
+            </Card>
           </div>
 
           <!-- Helpdesk Input & AI Classification Result -->
           <div class="lg:col-span-2 space-y-6">
             <!-- Helpdesk Input Card -->
-            <div class="bg-surface-dark border border-surface-lighter rounded-2xl p-8">
-              <h3 class="text-sm font-bold text-cyan-glow mb-4 uppercase tracking-wider">HELPDESK INPUT</h3>
+            <Card background="surface-dark" padding="lg">
+              <template #header>
+                <h3 class="text-sm font-bold text-cyan-glow uppercase tracking-wider">HELPDESK INPUT</h3>
+              </template>
               <div class="mb-4">
                 <div class="text-xs text-text-dim mb-2">Subj:</div>
                 <div class="text-white font-medium">{{ examples[activeExample].subject }}</div>
@@ -70,21 +82,24 @@
               <div>
                 <div class="text-white leading-relaxed">{{ examples[activeExample].body }}</div>
               </div>
-            </div>
+            </Card>
 
             <!-- AI Classification Result -->
-            <div class="bg-surface-dark border border-surface-lighter rounded-2xl p-8">
-              <h3 class="text-sm font-bold text-primary-light mb-4 uppercase tracking-wider">AI CLASSIFICATION RESULT</h3>
+            <Card background="surface-dark" padding="lg">
+              <template #header>
+                <h3 class="text-sm font-bold text-primary-light uppercase tracking-wider">AI CLASSIFICATION RESULT</h3>
+              </template>
               <div class="flex flex-wrap gap-2">
-                <span
+                <Badge
                   v-for="tag in examples[activeExample].tags"
                   :key="tag"
-                  class="px-3 py-1.5 rounded-lg bg-primary/20 text-primary-light border border-primary/30 text-sm font-mono"
+                  type="primary"
+                  class="!px-3 !py-1.5 !font-mono"
                 >
                   {{ tag }}
-                </span>
+                </Badge>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </div>
@@ -96,67 +111,133 @@
         </div>
         
         <div class="grid md:grid-cols-3 gap-6">
-          <TaxonomyCard
-            title="INDUSTRY"
-            desc="Domain of the customer's business"
-            :items="[
-              'TECH_IT',
-              'FINANCE_SERVICES',
-              'CONSUMER_RETAIL',
-              'PUBLIC_HEALTH',
-              'INDUSTRIAL'
-            ]"
-          />
-          <TaxonomyCard
-            title="INTENT"
-            desc="What the user wants to achieve"
-            :items="[
-              'INCIDENT',
-              'SERVICE_REQUEST',
-              'QUESTION',
-              'COMPLAINT',
-              'CHANGE_REQUEST'
-            ]"
-          />
-          <TaxonomyCard
-            title="FAILURE SYMPTOM"
-            desc="Manifestation of the problem"
-            :items="[
-              'AVAILABILITY',
-              'PERFORMANCE',
-              'FUNCTIONALITY',
-              'AUTHENTICATION',
-              'INTEGRATION'
-            ]"
-          />
-          <TaxonomyCard
-            title="SENTIMENT"
-            desc="Emotional tone of the text"
-            :items="[
-              'NEGATIVE (FRUSTRATED/ANGRY)',
-              'NEUTRAL (FACTUAL)',
-              'POSITIVE (GRATEFUL)'
-            ]"
-          />
-          <TaxonomyCard
-            title="FORMALITY"
-            desc="Writing style level"
-            :items="[
-              'MORE_FORMAL',
-              'NEUTRAL',
-              'MORE_INFORMAL'
-            ]"
-          />
-          <TaxonomyCard
-            title="ADDRESSED_TO"
-            desc="Explicitly mentioned recipient"
-            :items="[
-              'SUPPORT_OPS',
-              'BUSINESS_FUNCTIONS',
-              'LEADERSHIP',
-              'NAMED_PERSON'
-            ]"
-          />
+          <Card background="surface-dark" padding="lg" hoverable>
+            <template #title>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">INDUSTRY</div>
+            </template>
+            <p class="text-text-dim text-sm mb-6">Domain of the customer's business</p>
+            <ul class="space-y-2">
+              <li
+                v-for="item in [
+                  'TECH_IT',
+                  'FINANCE_SERVICES',
+                  'CONSUMER_RETAIL',
+                  'PUBLIC_HEALTH',
+                  'INDUSTRIAL'
+                ]"
+                :key="item"
+                class="flex items-center gap-3"
+              >
+                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <span class="text-white text-sm font-medium">{{ item }}</span>
+              </li>
+            </ul>
+          </Card>
+          <Card background="surface-dark" padding="lg" hoverable>
+            <template #title>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">INTENT</div>
+            </template>
+            <p class="text-text-dim text-sm mb-6">What the user wants to achieve</p>
+            <ul class="space-y-2">
+              <li
+                v-for="item in [
+                  'INCIDENT',
+                  'SERVICE_REQUEST',
+                  'QUESTION',
+                  'COMPLAINT',
+                  'CHANGE_REQUEST'
+                ]"
+                :key="item"
+                class="flex items-center gap-3"
+              >
+                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <span class="text-white text-sm font-medium">{{ item }}</span>
+              </li>
+            </ul>
+          </Card>
+          <Card background="surface-dark" padding="lg" hoverable>
+            <template #title>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">FAILURE SYMPTOM</div>
+            </template>
+            <p class="text-text-dim text-sm mb-6">Manifestation of the problem</p>
+            <ul class="space-y-2">
+              <li
+                v-for="item in [
+                  'AVAILABILITY',
+                  'PERFORMANCE',
+                  'FUNCTIONALITY',
+                  'AUTHENTICATION',
+                  'INTEGRATION'
+                ]"
+                :key="item"
+                class="flex items-center gap-3"
+              >
+                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <span class="text-white text-sm font-medium">{{ item }}</span>
+              </li>
+            </ul>
+          </Card>
+          <Card background="surface-dark" padding="lg" hoverable>
+            <template #title>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">SENTIMENT</div>
+            </template>
+            <p class="text-text-dim text-sm mb-6">Emotional tone of the text</p>
+            <ul class="space-y-2">
+              <li
+                v-for="item in [
+                  'NEGATIVE (FRUSTRATED/ANGRY)',
+                  'NEUTRAL (FACTUAL)',
+                  'POSITIVE (GRATEFUL)'
+                ]"
+                :key="item"
+                class="flex items-center gap-3"
+              >
+                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <span class="text-white text-sm font-medium">{{ item }}</span>
+              </li>
+            </ul>
+          </Card>
+          <Card background="surface-dark" padding="lg" hoverable>
+            <template #title>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">FORMALITY</div>
+            </template>
+            <p class="text-text-dim text-sm mb-6">Writing style level</p>
+            <ul class="space-y-2">
+              <li
+                v-for="item in [
+                  'MORE_FORMAL',
+                  'NEUTRAL',
+                  'MORE_INFORMAL'
+                ]"
+                :key="item"
+                class="flex items-center gap-3"
+              >
+                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <span class="text-white text-sm font-medium">{{ item }}</span>
+              </li>
+            </ul>
+          </Card>
+          <Card background="surface-dark" padding="lg" hoverable>
+            <template #title>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">ADDRESSED_TO</div>
+            </template>
+            <p class="text-text-dim text-sm mb-6">Explicitly mentioned recipient</p>
+            <ul class="space-y-2">
+              <li
+                v-for="item in [
+                  'SUPPORT_OPS',
+                  'BUSINESS_FUNCTIONS',
+                  'LEADERSHIP',
+                  'NAMED_PERSON'
+                ]"
+                :key="item"
+                class="flex items-center gap-3"
+              >
+                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <span class="text-white text-sm font-medium">{{ item }}</span>
+              </li>
+            </ul>
+          </Card>
         </div>
       </div>
     </div>
@@ -166,8 +247,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Button from '../core/basic/Button.vue';
-import PerformanceMetric from './PerformanceMetric.vue';
-import TaxonomyCard from './TaxonomyCard.vue';
+import Card from '../core/basic/Card.vue';
+import Badge from '../core/basic/Badge.vue';
 
 interface Example {
   name: string;
