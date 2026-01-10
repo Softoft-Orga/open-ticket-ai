@@ -1,35 +1,47 @@
 import Card from '../src/components/vue/core/basic/Card.vue'
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
+import { VARIANTS, TONES, SIZES, RADII, ELEVATIONS } from '../src/components/vue/core/design-system/tokens'
 
 const meta: Meta<typeof Card> = {
     title: 'Core/Card',
     component: Card,
     tags: ['autodocs'],
     argTypes: {
-        background: {
+        variant: {
             control: 'select',
-            options: ['default', 'surface-dark', 'surface-lighter', 'primary', 'gradient', 'transparent', 'custom'],
-            description: 'Background color variant',
+            options: VARIANTS,
+            description: 'Visual style variant',
         },
-        padding: {
+        tone: {
             control: 'select',
-            options: ['none', 'sm', 'default', 'lg'],
-            description: 'Padding size',
+            options: [undefined, ...TONES],
+            description: 'Semantic tone (status color) - overrides variant background',
+        },
+        size: {
+            control: 'select',
+            options: SIZES,
+            description: 'Card size (affects padding)',
+        },
+        radius: {
+            control: 'select',
+            options: RADII,
+            description: 'Border radius',
+        },
+        elevation: {
+            control: 'select',
+            options: ELEVATIONS,
+            description: 'Shadow elevation level',
         },
         hoverable: {
             control: 'boolean',
             description: 'Whether to add hover effect',
         },
-        customBg: {
-            control: 'text',
-            description: 'Custom background class when background is "custom"',
-        },
     },
     parameters: {
         docs: {
             description: {
-                component: 'Flexible card component with multiple slots (image, header, title, default, actions, footer) and customizable background colors. Supports hover effects and various padding options.'
+                component: 'Flexible card component with multiple slots (image, header, title, default, actions, footer). Uses design system tokens for consistent styling. Supports hover effects, various sizes, and semantic tones.'
             }
         }
     }
@@ -40,8 +52,8 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -54,8 +66,8 @@ export const Default: Story = {
 
 export const WithTitle: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -75,8 +87,8 @@ export const WithTitle: Story = {
 
 export const WithHeader: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -96,8 +108,8 @@ export const WithHeader: Story = {
 
 export const WithImage: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -122,8 +134,8 @@ export const WithImage: Story = {
 
 export const WithActions: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -153,8 +165,8 @@ export const WithActions: Story = {
 
 export const WithFooter: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -174,8 +186,8 @@ export const WithFooter: Story = {
 
 export const FullSlots: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -220,11 +232,11 @@ export const FullSlots: Story = {
     }),
 }
 
-// Background Variants
-export const BackgroundDefault: Story = {
+// Variant Stories
+export const VariantPrimary: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -233,17 +245,17 @@ export const BackgroundDefault: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>Default Background</template>
-                <p>Uses the default surface-dark background color.</p>
+                <template #title>Primary Variant</template>
+                <p>Default primary variant with surface-dark background.</p>
             </Card>
         `
     }),
 }
 
-export const BackgroundLighter: Story = {
+export const VariantSecondary: Story = {
     args: {
-        background: 'surface-lighter',
-        padding: 'default',
+        variant: 'secondary',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -252,17 +264,17 @@ export const BackgroundLighter: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>Lighter Background</template>
-                <p>Uses the surface-lighter background color for subtle contrast.</p>
+                <template #title>Secondary Variant</template>
+                <p>Secondary variant with surface-lighter background for subtle contrast.</p>
             </Card>
         `
     }),
 }
 
-export const BackgroundPrimary: Story = {
+export const VariantOutline: Story = {
     args: {
-        background: 'primary',
-        padding: 'default',
+        variant: 'outline',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -271,17 +283,17 @@ export const BackgroundPrimary: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>Primary Tint</template>
-                <p>Uses a subtle primary color tint (10% opacity) for emphasis.</p>
+                <template #title>Outline Variant</template>
+                <p>Outline variant with transparent background and emphasized border.</p>
             </Card>
         `
     }),
 }
 
-export const BackgroundGradient: Story = {
+export const VariantGhost: Story = {
     args: {
-        background: 'gradient',
-        padding: 'default',
+        variant: 'ghost',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -290,39 +302,18 @@ export const BackgroundGradient: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>Gradient Background</template>
-                <p>Uses the cyber-gradient background for a premium feel.</p>
+                <template #title>Ghost Variant</template>
+                <p>Ghost variant with semi-transparent background for layering.</p>
             </Card>
         `
     }),
 }
 
-export const BackgroundTransparent: Story = {
+// Tone Stories
+export const ToneInfo: Story = {
     args: {
-        background: 'transparent',
-        padding: 'default',
-    },
-    render: (args) => ({
-        components: {Card},
-        setup() {
-            return {args}
-        },
-        template: `
-            <div class="bg-surface-lighter p-4">
-                <Card v-bind="args">
-                    <template #title>Transparent Background</template>
-                    <p>Transparent background - useful for layering or custom designs.</p>
-                </Card>
-            </div>
-        `
-    }),
-}
-
-export const BackgroundCustom: Story = {
-    args: {
-        background: 'custom',
-        customBg: 'bg-gradient-to-r from-purple-900/50 to-blue-900/50',
-        padding: 'default',
+        tone: 'info',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -331,18 +322,17 @@ export const BackgroundCustom: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>Custom Background</template>
-                <p>Uses a custom Tailwind class for complete control over the background.</p>
+                <template #title>Info Tone</template>
+                <p>Informational card with info tone styling.</p>
             </Card>
         `
     }),
 }
 
-// Padding Variants
-export const PaddingNone: Story = {
+export const ToneSuccess: Story = {
     args: {
-        background: 'default',
-        padding: 'none',
+        tone: 'success',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -351,17 +341,17 @@ export const PaddingNone: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>No Padding</template>
-                <p>Card with no padding - useful for full-bleed content like images.</p>
+                <template #title>Success Tone</template>
+                <p>Success message with success tone styling.</p>
             </Card>
         `
     }),
 }
 
-export const PaddingSmall: Story = {
+export const ToneWarning: Story = {
     args: {
-        background: 'default',
-        padding: 'sm',
+        tone: 'warning',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -370,17 +360,17 @@ export const PaddingSmall: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>Small Padding</template>
-                <p>Compact card with reduced padding.</p>
+                <template #title>Warning Tone</template>
+                <p>Warning message with warning tone styling.</p>
             </Card>
         `
     }),
 }
 
-export const PaddingLarge: Story = {
+export const ToneDanger: Story = {
     args: {
-        background: 'default',
-        padding: 'lg',
+        tone: 'danger',
+        size: 'md',
     },
     render: (args) => ({
         components: {Card},
@@ -389,8 +379,220 @@ export const PaddingLarge: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>Large Padding</template>
-                <p>Spacious card with extra padding for emphasis.</p>
+                <template #title>Danger Tone</template>
+                <p>Error or danger message with danger tone styling.</p>
+            </Card>
+        `
+    }),
+}
+
+// Size Stories
+export const SizeSmall: Story = {
+    args: {
+        variant: 'primary',
+        size: 'sm',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Small Size</template>
+                <p>Compact card with small padding.</p>
+            </Card>
+        `
+    }),
+}
+
+export const SizeMedium: Story = {
+    args: {
+        variant: 'primary',
+        size: 'md',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Medium Size</template>
+                <p>Default medium-sized card with standard padding.</p>
+            </Card>
+        `
+    }),
+}
+
+export const SizeLarge: Story = {
+    args: {
+        variant: 'primary',
+        size: 'lg',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Large Size</template>
+                <p>Spacious card with large padding for emphasis.</p>
+            </Card>
+        `
+    }),
+}
+
+// Radius Stories
+export const RadiusMedium: Story = {
+    args: {
+        variant: 'primary',
+        radius: 'md',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Medium Radius</template>
+                <p>Card with medium border radius.</p>
+            </Card>
+        `
+    }),
+}
+
+export const RadiusLarge: Story = {
+    args: {
+        variant: 'primary',
+        radius: 'lg',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Large Radius</template>
+                <p>Card with large border radius (default).</p>
+            </Card>
+        `
+    }),
+}
+
+export const RadiusXLarge: Story = {
+    args: {
+        variant: 'primary',
+        radius: 'xl',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Extra Large Radius</template>
+                <p>Card with extra large border radius for a softer look.</p>
+            </Card>
+        `
+    }),
+}
+
+export const Radius2XLarge: Story = {
+    args: {
+        variant: 'primary',
+        radius: '2xl',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>2XL Radius</template>
+                <p>Card with 2XL border radius for maximum roundness.</p>
+            </Card>
+        `
+    }),
+}
+
+// Elevation Stories
+export const ElevationNone: Story = {
+    args: {
+        variant: 'primary',
+        elevation: 'none',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>No Elevation</template>
+                <p>Flat card with no shadow.</p>
+            </Card>
+        `
+    }),
+}
+
+export const ElevationSmall: Story = {
+    args: {
+        variant: 'primary',
+        elevation: 'sm',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Small Elevation</template>
+                <p>Card with subtle shadow (default).</p>
+            </Card>
+        `
+    }),
+}
+
+export const ElevationMedium: Story = {
+    args: {
+        variant: 'primary',
+        elevation: 'md',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Medium Elevation</template>
+                <p>Card with medium shadow for more depth.</p>
+            </Card>
+        `
+    }),
+}
+
+export const ElevationLarge: Story = {
+    args: {
+        variant: 'primary',
+        elevation: 'lg',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Large Elevation</template>
+                <p>Card with large shadow for maximum depth and emphasis.</p>
             </Card>
         `
     }),
@@ -399,8 +601,8 @@ export const PaddingLarge: Story = {
 // Interactive
 export const Hoverable: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
         hoverable: true,
     },
     render: (args) => ({
@@ -420,8 +622,9 @@ export const Hoverable: Story = {
 // Complex Examples
 export const WithRichContent: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
+        elevation: 'md',
     },
     render: (args) => ({
         components: {Card, Badge},
@@ -455,8 +658,9 @@ export const WithRichContent: Story = {
 
 export const ProductCard: Story = {
     args: {
-        background: 'surface-lighter',
-        padding: 'none',
+        variant: 'secondary',
+        size: 'md',
+        radius: 'xl',
         hoverable: true,
     },
     render: (args) => ({
@@ -506,19 +710,19 @@ export const Grid: Story = {
         components: {Card},
         template: `
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <Card background="surface-lighter" hoverable>
+                <Card variant="secondary" size="md" elevation="md" hoverable>
                     <template #title>
                         <h4 class="font-semibold">Accuracy</h4>
                     </template>
                     <p class="text-3xl font-bold text-green-400">95.2%</p>
                 </Card>
-                <Card background="surface-lighter" hoverable>
+                <Card variant="secondary" size="md" elevation="md" hoverable>
                     <template #title>
                         <h4 class="font-semibold">Tickets Processed</h4>
                     </template>
                     <p class="text-3xl font-bold text-blue-400">12,543</p>
                 </Card>
-                <Card background="surface-lighter" hoverable>
+                <Card variant="secondary" size="md" elevation="md" hoverable>
                     <template #title>
                         <h4 class="font-semibold">Avg Response Time</h4>
                     </template>
@@ -531,8 +735,10 @@ export const Grid: Story = {
 
 export const Playground: Story = {
     args: {
-        background: 'default',
-        padding: 'default',
+        variant: 'primary',
+        size: 'md',
+        radius: 'lg',
+        elevation: 'sm',
         hoverable: false,
     },
     render: (args) => ({
@@ -546,7 +752,7 @@ export const Playground: Story = {
                     Interactive Playground
                 </template>
                 <p>Use the controls panel to experiment with different card configurations.</p>
-                <p class="text-sm text-text-dim mt-2">Try changing the background, padding, and hoverable properties to see how they affect the card appearance.</p>
+                <p class="text-sm text-text-dim mt-2">Try changing the variant, tone, size, radius, elevation, and hoverable properties to see how they affect the card appearance.</p>
             </Card>
         `
     }),
