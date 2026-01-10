@@ -24,14 +24,15 @@
       </ul>
     </div>
 
-    <button class="w-full py-3 px-6 rounded-lg border border-border-dark hover:border-primary/50 text-white text-sm font-medium transition-colors bg-surface-lighter/50 hover:bg-surface-lighter">
+    <Button variant="outline" size="sm" class="w-full">
       Contact Sales
-    </button>
+    </Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import Button from '../core/basic/Button.vue';
 import { 
   CpuChipIcon, 
   Cog6ToothIcon, 
