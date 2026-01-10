@@ -77,6 +77,8 @@ changing before making edits and follow the rules for that surface specifically.
 - **serena**: large refactors/symbol edits.
 - **github**: repo/PR/issue operations.
 
+After completing a task, output all MCP Servers used;
+
 ### Updating AGENTS.md ans copilot-instructions.md
 - When important changes have taken place or information in AGENTS.md files or copilot-instructions.md
   files is out of date, please update those files to reflect the current state of the repository.
