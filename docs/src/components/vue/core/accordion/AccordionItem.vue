@@ -1,17 +1,20 @@
 <template>
-  <div :class="containerClasses">
-    <button
-      :id="`accordion-header-${uid}`"
-      type="button"
+  <Disclosure
+    v-slot="{ open }"
+    :default-open="defaultOpen"
+    as="div"
+    :class="containerClasses"
+  >
+    <DisclosureButton
       :class="headerClasses"
-      :aria-expanded="computedOpen"
-      :aria-controls="`accordion-panel-${uid}`"
-      @click="handleToggle"
     >
       <span :class="titleClasses">{{ title }}</span>
       <svg 
-        :class="iconClasses"
-        class="w-5 h-5 transition-transform duration-300"
+        :class="[
+          'w-5 h-5 transition-transform duration-300',
+          open ? 'rotate-180' : 'rotate-0',
+          iconColorClasses
+        ]"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -24,91 +27,45 @@
           d="M19 9l-7 7-7-7"
         />
       </svg>
-    </button>
+    </DisclosureButton>
     <transition
-      name="accordion"
-      @enter="onEnter"
-      @after-enter="onAfterEnter"
-      @leave="onLeave"
+      enter-active-class="transition-all duration-300 ease-out overflow-hidden motion-reduce:transition-none"
+      enter-from-class="opacity-0 max-h-0"
+      enter-to-class="opacity-100 max-h-screen"
+      leave-active-class="transition-all duration-300 ease-in overflow-hidden motion-reduce:transition-none"
+      leave-from-class="opacity-100 max-h-screen"
+      leave-to-class="opacity-0 max-h-0"
     >
-      <div
-        v-show="computedOpen"
-        :id="`accordion-panel-${uid}`"
+      <DisclosurePanel
         :class="contentClasses"
-        role="region"
-        :aria-labelledby="`accordion-header-${uid}`"
       >
         <div :class="contentInnerClasses">
           <slot/>
         </div>
-      </div>
+      </DisclosurePanel>
     </transition>
-  </div>
+  </Disclosure>
 </template>
 
 <script lang="ts" setup>
-import {ref, computed, watch} from 'vue'
+import { computed } from 'vue'
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 
 type Variant = 'default' | 'ghost' | 'bordered' | 'gradient'
 
 interface Props {
   title: string
   defaultOpen?: boolean
-  isOpen?: boolean
   variant?: Variant
 }
 
 const props = withDefaults(defineProps<Props>(), {
   defaultOpen: false,
-  isOpen: undefined,
   variant: 'default'
 })
 
-const emit = defineEmits<{
-  (e: 'toggle'): void
-}>()
 
-const uid = Math.random().toString(36).substr(2, 9)
-const internalOpen = ref(props.defaultOpen)
-
-const computedOpen = computed(() => {
-  return props.isOpen !== undefined ? props.isOpen : internalOpen.value
-})
-
-watch(() => props.isOpen, (newVal) => {
-  if (newVal !== undefined) {
-    internalOpen.value = newVal
-  }
-})
-
-const handleToggle = () => {
-  if (props.isOpen === undefined) {
-    internalOpen.value = !internalOpen.value
-  }
-  emit('toggle')
-}
-
-// Animation handlers
-const onEnter = (el: Element) => {
-  const element = el as HTMLElement
-  element.style.height = '0'
-  element.offsetHeight // Force reflow
-  element.style.height = element.scrollHeight + 'px'
-}
-
-const onAfterEnter = (el: Element) => {
-  const element = el as HTMLElement
-  element.style.height = 'auto'
-}
-
-const onLeave = (el: Element) => {
-  const element = el as HTMLElement
-  element.style.height = element.scrollHeight + 'px'
-  element.offsetHeight // Force reflow
-  element.style.height = '0'
-}
-
-// Variant-based styling
+// Variant-based styling using Tailwind tokens
 const containerClasses = computed(() => {
   const base = 'transition-all duration-200'
   
@@ -148,9 +105,7 @@ const titleClasses = computed(() => {
   return `${base} ${variants[props.variant]}`
 })
 
-const iconClasses = computed(() => {
-  const rotation = computedOpen.value ? 'rotate-180' : 'rotate-0'
-  
+const iconColorClasses = computed(() => {
   const variants = {
     default: 'text-text-dim',
     ghost: 'text-text-dim',
@@ -158,33 +113,21 @@ const iconClasses = computed(() => {
     gradient: 'text-primary'
   }
   
-  return `${rotation} ${variants[props.variant]}`
+  return variants[props.variant]
 })
 
 const contentClasses = computed(() => {
-  return 'overflow-hidden transition-all duration-300 ease-in-out'
+  return 'overflow-hidden'
 })
 
 const contentInnerClasses = computed(() => {
   const variants = {
-    default: 'pt-2 pb-4 px-0 text-gray-400',
-    ghost: 'pt-2 pb-3 px-0 text-gray-400',
-    bordered: 'px-5 pb-4 text-gray-400',
-    gradient: 'px-5 pb-4 text-gray-400'
+    default: 'pt-2 pb-4 px-0 text-text-dim',
+    ghost: 'pt-2 pb-3 px-0 text-text-dim',
+    bordered: 'px-5 pb-4 text-text-dim',
+    gradient: 'px-5 pb-4 text-text-dim'
   }
   
   return variants[props.variant]
 })
 </script>
-
-<style scoped>
-.accordion-enter-active,
-.accordion-leave-active {
-  transition: height 0.3s ease-in-out;
-}
-
-.accordion-enter-from,
-.accordion-leave-to {
-  height: 0;
-}
-</style>
