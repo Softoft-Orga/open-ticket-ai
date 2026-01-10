@@ -141,6 +141,7 @@ const setExample = (name: string) => {
                         :variant="example.name === selectedName ? 'primary' : 'outline'"
                         size="sm"
                         radius="lg"
+                        class="w-full"
                         @click="setExample(example.name)"
                     >
                         {{ example.name }}
