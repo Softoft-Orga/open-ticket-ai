@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import IntegrationLogos from '../components/vue/homepage/IntegrationLogos.vue';
 import FeatureShowcase from '../components/vue/homepage/FeatureShowcase.vue';
 import ServicesGrid from '../components/vue/homepage/ServicesGrid.vue';
+import Button from '../components/vue/core/basic/Button.vue';
 import '../styles/homepage.css';
 
 const pageTitle = 'Open Ticket AI - Automated Ticket Tagging, On-Premise';
@@ -60,12 +61,12 @@ const integrations = [
         </p>
         
         <div class="flex flex-wrap gap-4 pt-4 justify-center">
-          <button class="h-14 px-10 rounded-lg bg-primary text-white text-lg font-bold hover:bg-primary-dark transition-colors">
+          <Button variant="primary" size="lg" client:load>
             Get Demo
-          </button>
-          <button class="h-14 px-10 rounded-lg border border-border-dark hover:border-primary/50 text-white text-lg font-medium transition-colors bg-surface-dark/50">
+          </Button>
+          <Button variant="outline" size="lg" client:load>
             Contact Sales
-          </button>
+          </Button>
         </div>
       </div>
     </section>

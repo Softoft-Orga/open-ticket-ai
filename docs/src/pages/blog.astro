@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TopicLink from '../components/vue/blog/TopicLink.vue';
 import ArticleCard from '../components/vue/blog/ArticleCard.vue';
+import Button from '../components/vue/core/basic/Button.vue';
 import { ArrowRightIcon, CalendarIcon, MagnifyingGlassIcon, EnvelopeIcon } from '@heroicons/vue/24/outline';
 
 const pageTitle = "Open Ticket AI Blog";
@@ -130,9 +131,9 @@ const getBlogUrl = (id: string) => {
                 aria-label="Email address for newsletter"
                 required
               />
-              <button type="submit" class="w-full rounded-xl bg-white py-3 text-sm font-bold text-background-dark transition-colors hover:bg-gray-200">
+              <Button variant="secondary" size="md" type="submit" class="w-full" client:load>
                 Subscribe
-              </button>
+              </Button>
             </form>
           </div>
         </aside>
