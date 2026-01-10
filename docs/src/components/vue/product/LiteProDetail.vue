@@ -9,13 +9,13 @@
 
       <div class="flex flex-col lg:flex-row gap-16 mb-24">
         <div class="flex-1">
-          <div class="mb-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+          <Badge type="primary" class="mb-8">
             <span class="relative flex h-2 w-2">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
             </span>
-            <span class="text-primary text-xs font-black uppercase tracking-widest">Production Ready (4B Parameters)</span>
-          </div>
+            <span class="uppercase tracking-widest">Production Ready (4B Parameters)</span>
+          </Badge>
 
           <h1 class="text-5xl lg:text-7xl font-black text-white mb-6 leading-tight">
             Tagging AI<br />
@@ -37,7 +37,7 @@
         </div>
 
         <div class="flex-1">
-          <div class="bg-surface-dark border border-surface-lighter rounded-3xl p-8 relative overflow-hidden">
+          <Card background="surface-dark" padding="lg" class="rounded-3xl relative overflow-hidden">
             <div class="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 blur-[80px]"></div>
             
             <h3 class="text-white text-lg font-bold mb-8 relative z-10">Enterprise Specifications</h3>
@@ -67,12 +67,12 @@
                 sub="MONTHLY UPDATES"
               />
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-        <div class="bg-surface-dark border border-surface-lighter rounded-2xl p-8 hover:border-primary/30 transition-all">
+        <Card background="surface-dark" hoverable padding="lg" class="rounded-2xl">
           <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-6">
             <ChartBarIcon class="w-6 h-6 text-primary" />
           </div>
@@ -80,9 +80,9 @@
           <p class="text-text-dim text-sm leading-relaxed">
             Hierarchical tags enable deep-dive analysis of root causes and help desk performance trends.
           </p>
-        </div>
+        </Card>
 
-        <div class="bg-surface-dark border border-surface-lighter rounded-2xl p-8 hover:border-primary/30 transition-all">
+        <Card background="surface-dark" hoverable padding="lg" class="rounded-2xl">
           <div class="w-12 h-12 rounded-xl bg-cyan-glow/20 flex items-center justify-center mb-6">
             <BoltIcon class="w-6 h-6 text-cyan-glow" />
           </div>
@@ -90,9 +90,9 @@
           <p class="text-text-dim text-sm leading-relaxed">
             Instantly assign tickets to specialized teams based on fine-grained intent detection.
           </p>
-        </div>
+        </Card>
 
-        <div class="bg-surface-dark border border-surface-lighter rounded-2xl p-8 hover:border-primary/30 transition-all">
+        <Card background="surface-dark" hoverable padding="lg" class="rounded-2xl">
           <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-6">
             <ShieldCheckIcon class="w-6 h-6 text-primary" />
           </div>
@@ -100,10 +100,10 @@
           <p class="text-text-dim text-sm leading-relaxed">
             Designed for banking, healthcare and government use-cases. No cloud needed.
           </p>
-        </div>
+        </Card>
       </div>
 
-      <div class="bg-surface-dark border border-surface-lighter rounded-3xl p-12 mb-24 relative overflow-hidden">
+      <Card background="surface-dark" padding="lg" class="rounded-3xl mb-24 relative overflow-hidden">
         <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-cyan-glow/10 blur-[100px]"></div>
         
         <h2 class="text-4xl font-black text-white mb-12 text-center relative z-10">
@@ -166,7 +166,7 @@
             />
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   </div>
 </template>
@@ -174,6 +174,8 @@
 <script setup lang="ts">
 import { ChartBarIcon, BoltIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
 import Button from '../core/basic/Button.vue';
+import Card from '../core/basic/Card.vue';
+import Badge from '../core/basic/Badge.vue';
 
 const MetricBlock = defineComponent({
   props: {
