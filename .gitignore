@@ -235,3 +235,4 @@ config.schema.json
 /docs/.astro/
 /docs/pagefind/
 
+!/docs/storybook-static/index.json

@@ -128,10 +128,15 @@ addopts = ["-q"]
 - Full marketing/docs site lives in `docs/`.
 - Stack: Astro + Vite with Vue 3 islands and Storybook (`docs/.storybook`) for component review; Tailwind configured via `docs/tailwind.config.cjs`.
 - Styling: use the shared tokens (`primary`, `primary-dark`, `primary-light`, `background-dark`, `surface-dark`, `surface-lighter`, `border-dark`, `text-dim`, `cyan-glow`) and gradient utilities (`bg-cyber-gradient`, `bg-glow-radial`); avoid ad-hoc hex codes. Global typography/theme is defined in `docs/src/styles/global.css` (Inter/system stack, dark background).
-- Components live under `docs/src/components/vue/**` with matching stories in `docs/stories/**`. When changing components, update the Storybook stories accordingly.
+- Components live under `docs/src/components/vue/**` with matching stories in `docs/stories/**`. When changing components, update the Storybook stories accordingly. Always prefer existing components over writing new code! The Information on the Components is here: docs/storybook-static/index.json
 - Design language mirrors `open-ticket-ai-platform-prototype`: deep purple/cyan glow, glassy layered surfaces, generous spacing, pill badges, and neon accents. Don’t copy layouts verbatim—match structure and tone.
 - Workflow: run scripts from `docs/` (`npm run docs:dev`, `docs:build`, `docs:preview`, `storybook`, `build-storybook`). Use Playwright MCP to verify UI (Astro on :4321, Storybook on :6006) and prefer Storybook screenshots for regressions. Always run `npm run docs:build` before handing off.
 - Prefer Tailwind utility classes over custom CSS, keep fonts consistent with global styles, and avoid merge conflicts.
+
+Use our own components instead of writing own code or new component;
+The Information on the components can be found here: docs/storybook-static/index.json
+When Changing Pages or Components always read that file and check if the Components not already exist.
+
 
 ### Testing Contract (Playwright)
 
