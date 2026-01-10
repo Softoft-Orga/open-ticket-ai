@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LiteFreeDetail from '../../components/vue/product/LiteFreeDetail.vue';
+
+const title = "Tagging AI Lite Free";
+const description = "Small-footprint classification. Optimized for edge deployment and privacy-focused evaluation.";
+---
+
+<BaseLayout title={title} description={description}>
+  <LiteFreeDetail client:load />
+</BaseLayout>
