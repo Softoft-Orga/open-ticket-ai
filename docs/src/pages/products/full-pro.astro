@@ -1,0 +1,188 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Badge from '../../components/vue/Badge.vue';
+import FullMetric from '../../components/vue/product/FullMetric.vue';
+import FeatureItem from '../../components/vue/product/FeatureItem.vue';
+import TaxonomyRow from '../../components/vue/product/TaxonomyRow.vue';
+import ComparisonRow from '../../components/vue/product/ComparisonRow.vue';
+import { ArrowLeftIcon, RocketLaunchIcon } from '@heroicons/vue/24/outline';
+
+const title = "Full Pro - Advanced Enterprise Tagging AI";
+const description = "The ultimate classification engine for high-volume enterprise helpdesks. Maximum detail, explained reasoning, and full LoRA-adapter support.";
+---
+
+<BaseLayout title={title} description={description}>
+  <div slot="head" />
+
+  <div class="min-h-screen bg-background-dark">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
+      <div class="mb-8">
+        <a href="/products" class="inline-flex items-center gap-2 text-primary hover:text-primary-light transition-colors group">
+          <ArrowLeftIcon class="w-4 h-4 transition-transform group-hover:-translate-x-1" aria-hidden="true" />
+          <span class="font-medium">PRODUCTS</span>
+        </a>
+        <span class="mx-3 text-border-dark">/</span>
+        <span class="text-white font-bold">FULL PRO</span>
+      </div>
+
+      <div class="mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest mb-6">
+          ⚙️ ADVANCED ENTERPRISE (8B PARAMETERS)
+        </div>
+        <h1 class="font-display text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+          Tagging AI<br />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-glow">Full Pro.</span>
+        </h1>
+        <p class="text-xl text-text-dim max-w-3xl leading-relaxed">
+          {description}
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-4 mb-20">
+        <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
+          PRE-ORDER LICENSE (6.000€)
+        </button>
+        <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-transparent border border-surface-lighter hover:border-primary/50 text-white text-lg font-medium transition-all">
+          ROI Simulation
+        </button>
+      </div>
+
+      <section class="mb-24">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-8 h-8 rounded-lg bg-cyan-glow/20 flex items-center justify-center">
+            <span class="text-cyan-glow">🏗️</span>
+          </div>
+          <h2 class="text-3xl font-bold text-white">Full Pro Specifications</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-10 bg-surface-dark border border-border-dark rounded-3xl">
+          <FullMetric 
+            label="MODEL ARCHITECTURE" 
+            value="8.0B Dense Transformer" 
+            sub="Fine-tuned for helpdesk semantics" 
+            client:load 
+          />
+          <FullMetric 
+            label="VRAM OPTIMIZED" 
+            value="16GB - 24GB" 
+            sub="Supports 4-bit and 8-bit quantization" 
+            client:load 
+          />
+          <FullMetric 
+            label="TAXONOMY DEPTH" 
+            value="250+ Tags (4 Levels)" 
+            sub="Unmatched granularity for reporting" 
+            client:load 
+          />
+          <FullMetric 
+            label="ACCURACY BASELINE" 
+            value="92.4%+" 
+            sub="State-of-the-art benchmarks" 
+            client:load 
+          />
+        </div>
+      </section>
+
+      <section class="mb-24">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-white mb-4 font-display">ENTERPRISE EXCLUSIVES</h2>
+          <div class="w-24 h-1 bg-gradient-to-r from-primary to-cyan-glow mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <FeatureItem 
+            icon="🧠" 
+            title="Reasoning Chain" 
+            desc="LLM provides the logic behind each tag, allowing for human audit and trust-building across teams." 
+            client:load 
+          />
+          <FeatureItem 
+            icon="🎛️" 
+            title="Custom Adapters" 
+            desc="Inject your specific industry jargon via LoRA adapters without re-training the entire model from scratch." 
+            client:load 
+          />
+          <FeatureItem 
+            icon="📦" 
+            title="Batch Processing" 
+            desc="Optimized for massive ticket migrations (backlog tagging) at 100+ tps with zero external dependency on cloud." 
+            client:load 
+          />
+          <FeatureItem 
+            icon="🛡️" 
+            title="Hardware Air-Gap" 
+            desc="Validated for high-security environments with zero external dependency telemetry, runs fully offline." 
+            client:load 
+          />
+        </div>
+      </section>
+
+      <section class="mb-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div class="bg-surface-dark border border-border-dark rounded-3xl p-10">
+            <h3 class="text-2xl font-bold text-white mb-6">Taxonomy Breakdown</h3>
+            <p class="text-text-dim text-sm mb-8">
+              Full Pro supports 4-level hierarchical tags across 250+ categories, giving you unprecedented operational visibility.
+            </p>
+            
+            <div class="space-y-1">
+              <TaxonomyRow level={1} label="intent/" tags={["service_request", "incident", "change"]} active client:load />
+              <TaxonomyRow level={2} label="intent/incident/" tags={["security", "downtime", "performance"]} client:load />
+              <TaxonomyRow level={3} label="intent/incident/security/" tags={["breach", "phishing", "malware"]} client:load />
+              <TaxonomyRow level={4} label="intent/incident/security/phishing/" tags={["email", "sms", "voice"]} client:load />
+            </div>
+          </div>
+
+          <div class="bg-surface-dark border border-border-dark rounded-3xl p-10">
+            <h3 class="text-2xl font-bold text-white mb-6">Lite Pro vs Full Pro</h3>
+            <p class="text-text-dim text-sm mb-8">
+              Both models are production-ready, but Full Pro delivers maximum detail and custom adapter support.
+            </p>
+            
+            <div class="space-y-1">
+              <div class="grid grid-cols-3 gap-4 pb-4 border-b border-primary/30 text-xs font-black uppercase tracking-wider">
+                <div class="text-text-dim">Metric</div>
+                <div class="text-white text-center">Lite Pro</div>
+                <div class="text-primary-light text-center">Full Pro</div>
+              </div>
+              <ComparisonRow label="Model Size" v1="4B Params" v2="8B Params" client:load />
+              <ComparisonRow label="Tags" v1="150+" v2="250+" client:load />
+              <ComparisonRow label="Accuracy" v1="~90%" v2="~92.4%" client:load />
+              <ComparisonRow label="Reasoning" v1="—" v2="✓" client:load />
+              <ComparisonRow label="LoRA Support" v1="—" v2="✓" client:load />
+              <ComparisonRow label="Batch Mode" v1="Basic" v2="Optimized" client:load />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-gradient-to-br from-primary/10 to-cyan-glow/5 border border-primary/20 rounded-3xl p-12 text-center">
+        <div class="flex justify-center mb-6">
+          <div class="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/40">
+            <RocketLaunchIcon class="w-8 h-8 text-white" aria-hidden="true" />
+          </div>
+        </div>
+        <h2 class="text-4xl font-black text-white mb-4 font-display">
+          Turn Raw Tickets into<br />Operational Intelligence.
+        </h2>
+        <p class="text-text-dim text-lg mb-8 max-w-2xl mx-auto">
+          Join forward-thinking support teams automating their workflow with German Engineering precision.
+        </p>
+        <div class="flex flex-wrap justify-center gap-6">
+          <button class="h-14 px-10 bg-primary text-white font-black uppercase tracking-widest rounded-xl hover:bg-primary-dark transition-all shadow-xl shadow-primary/20">
+            Pre-order Full Pro
+          </button>
+          <button class="h-14 px-10 bg-surface-dark border border-border-dark text-white font-bold rounded-xl hover:bg-white/5 transition-all">
+            View Architecture
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+.glow-text {
+  text-shadow: 0 0 20px rgba(100, 108, 255, 0.3);
+}
+</style>

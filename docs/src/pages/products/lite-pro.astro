@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LiteProDetail from '../../components/vue/product/LiteProDetail.vue';
+
+const title = "Tagging AI Lite Pro";
+const description = "Our flagship medium-weight model. Precision-tuned for routing, SLA assignment, and management reporting with professional accuracy.";
+---
+
+<BaseLayout title={title} description={description}>
+  <LiteProDetail client:load />
+</BaseLayout>
