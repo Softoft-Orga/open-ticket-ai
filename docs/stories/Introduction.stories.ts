@@ -1,176 +1,202 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
 
+/**
+ * Introduction Page - Full Component Documentation
+ * 
+ * Note: MDX documentation pages have limited/experimental support in Storybook 10.1 with Vue 3.
+ * This TypeScript-based documentation page is the recommended approach for Vue 3 projects.
+ * 
+ * Reference: https://github.com/storybookjs/storybook/issues/30016
+ */
+
 const meta: Meta = {
     title: 'Documentation/Introduction',
     tags: ['autodocs'],
     parameters: {
         docs: {
             page: () => `
-                <div style="font-family: system-ui, -apple-system, sans-serif; padding: 2rem; max-width: 1200px;">
-                    <h1>Open Ticket AI Component Library</h1>
+                <div style="font-family: system-ui, -apple-system, sans-serif; padding: 2rem; max-width: 1200px; line-height: 1.6;">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #1a1a1a;">Open Ticket AI Component Library</h1>
                     <p style="font-size: 1.125rem; color: #666; margin-bottom: 2rem;">
-                        This is the complete documentation for all components in the Open Ticket AI design system.
+                        Complete documentation for all components in the Open Ticket AI design system.
                     </p>
 
-                    <h2>Component Categories</h2>
+                    <div style="background: #f0f7ff; border-left: 4px solid #0066cc; padding: 1rem 1.5rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <p style="margin: 0; color: #004080;">
+                            <strong>💡 Navigation Tip:</strong> Use the sidebar on the left to browse components by category. 
+                            Click on any component to see its interactive examples, props, and usage guidelines.
+                        </p>
+                    </div>
+
+                    <h2 style="font-size: 2rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #1a1a1a;">Component Categories</h2>
                     
-                    <div style="display: grid; gap: 1.5rem; margin-top: 1rem;">
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Core Components</h3>
-                            <p>Basic building blocks and interactive elements:</p>
-                            <ul style="columns: 2; column-gap: 2rem;">
-                                <li>Accordion - Collapsible content panels</li>
-                                <li>Badge - Status and category labels</li>
-                                <li>Button - Primary interactive element</li>
-                                <li>Callout - Highlighted information boxes</li>
-                                <li>Card - Content grouping container</li>
-                                <li>Input - Text input field</li>
-                                <li>Link - Navigation element</li>
-                                <li>SelectComponent - Dropdown selection</li>
-                                <li>Table - Data presentation</li>
-                                <li>Tabs - Content organization</li>
-                                <li>TextArea - Multi-line input</li>
+                    <div style="display: grid; gap: 1.5rem; margin-top: 1.5rem;">
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Core Components</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Basic building blocks and interactive elements</p>
+                            <ul style="columns: 2; column-gap: 2rem; margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>Accordion</strong> - Collapsible content panels</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Badge</strong> - Status and category labels</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Button</strong> - Primary interactive element</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Callout</strong> - Highlighted information boxes</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Card</strong> - Content grouping container</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Input</strong> - Text input field</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Link</strong> - Navigation element</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>SelectComponent</strong> - Dropdown selection</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Table</strong> - Data presentation</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Tabs</strong> - Content organization</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>TextArea</strong> - Multi-line input</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Documentation Components</h3>
-                            <p>Components for content presentation:</p>
-                            <ul>
-                                <li>Alert - Contextual messages</li>
-                                <li>CodeBlock - Syntax-highlighted code</li>
-                                <li>CodeTabs - Multiple code examples</li>
-                                <li>TableOfContents - Navigation aid</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Documentation Components</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Components for content presentation</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>Alert</strong> - Contextual messages</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>CodeBlock</strong> - Syntax-highlighted code</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>CodeTabs</strong> - Multiple code examples</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>TableOfContents</strong> - Navigation aid</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Layout Components</h3>
-                            <p>Page structure and navigation:</p>
-                            <ul>
-                                <li>NavBar - Main navigation header</li>
-                                <li>FooterComponent - Page footer</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Layout Components</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Page structure and navigation</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>NavBar</strong> - Main navigation header</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>FooterComponent</strong> - Page footer</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Feature Components</h3>
-                            <p>Product features and capabilities:</p>
-                            <ul style="columns: 2; column-gap: 2rem;">
-                                <li>FeatureGrid - Grid layout for features</li>
-                                <li>FeatureItem - Individual feature card</li>
-                                <li>FeatureShowcase - Highlighted feature</li>
-                                <li>IntegrationLogos - Supported integrations</li>
-                                <li>PluginCard - Plugin information</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Feature Components</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Product features and capabilities</p>
+                            <ul style="columns: 2; column-gap: 2rem; margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>FeatureGrid</strong> - Grid layout for features</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>FeatureItem</strong> - Individual feature card</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>FeatureShowcase</strong> - Highlighted feature</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>IntegrationLogos</strong> - Supported integrations</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>PluginCard</strong> - Plugin information</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Product & Service Components</h3>
-                            <p>Products, services, and pricing:</p>
-                            <ul style="columns: 2; column-gap: 2rem;">
-                                <li>ProductCard - Product display</li>
-                                <li>ProductCards - Multiple products</li>
-                                <li>ServiceCard - Service offering</li>
-                                <li>ServicesGrid - Service card grid</li>
-                                <li>ServiceInquiryModal - Inquiry form</li>
-                                <li>ServicePackagesComponent - Package comparison</li>
-                                <li>SupportPlansComponent - Support options</li>
-                                <li>LiteFreeDetail - Free tier details</li>
-                                <li>LiteProDetail - Pro tier details</li>
-                                <li>ComparisonRow - Feature comparison</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Product & Service Components</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Products, services, and pricing</p>
+                            <ul style="columns: 2; column-gap: 2rem; margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>ProductCard</strong> - Product display</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>ProductCards</strong> - Multiple products</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>ServiceCard</strong> - Service offering</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>ServicesGrid</strong> - Service card grid</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>ServiceInquiryModal</strong> - Inquiry form</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>ServicePackagesComponent</strong> - Package comparison</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>SupportPlansComponent</strong> - Support options</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>LiteFreeDetail</strong> - Free tier details</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>LiteProDetail</strong> - Pro tier details</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>ComparisonRow</strong> - Feature comparison</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Form Components</h3>
-                            <p>Interactive forms and inputs:</p>
-                            <ul>
-                                <li>ContactForm - Contact submission</li>
-                                <li>WaitlistSignupForm - Email collection</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Form Components</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Interactive forms and inputs</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>ContactForm</strong> - Contact submission</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>WaitlistSignupForm</strong> - Email collection</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Demo & Prediction Components</h3>
-                            <p>AI capability demonstrations:</p>
-                            <ul>
-                                <li>OTAIPredictionDemo - Single prediction</li>
-                                <li>MultiTagPredictionDemo - Multi-tag showcase</li>
-                                <li>PredictionCard - Prediction results</li>
-                                <li>ResultTable - Tabular results</li>
-                                <li>PipeSidecar - Pipeline visualization</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Demo & Prediction Components</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">AI capability demonstrations</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>OTAIPredictionDemo</strong> - Single prediction</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>MultiTagPredictionDemo</strong> - Multi-tag showcase</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>PredictionCard</strong> - Prediction results</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>ResultTable</strong> - Tabular results</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>PipeSidecar</strong> - Pipeline visualization</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Blog Components</h3>
-                            <p>Blog and article components:</p>
-                            <ul>
-                                <li>AuthorBio - Author information</li>
-                                <li>ReadingTime - Reading time indicator</li>
-                                <li>RelatedPosts - Related content</li>
-                                <li>ShareButtons - Social sharing</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Blog Components</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Blog and article components</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>AuthorBio</strong> - Author information</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>ReadingTime</strong> - Reading time indicator</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>RelatedPosts</strong> - Related content</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>ShareButtons</strong> - Social sharing</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Performance & Metrics</h3>
-                            <p>Performance data display:</p>
-                            <ul>
-                                <li>PerformanceMetric - Performance indicators</li>
-                                <li>FullMetric - Detailed metric card</li>
-                                <li>RoiCalculator - ROI calculation</li>
-                                <li>StepIndicator - Multi-step process</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Performance & Metrics</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Performance data display</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>PerformanceMetric</strong> - Performance indicators</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>FullMetric</strong> - Detailed metric card</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>RoiCalculator</strong> - ROI calculation</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>StepIndicator</strong> - Multi-step process</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Architecture & Taxonomy</h3>
-                            <p>System architecture and taxonomy:</p>
-                            <ul>
-                                <li>ArchitectureOverview - System diagram</li>
-                                <li>TaxonomyCard - Category display</li>
-                                <li>TaxonomyRow - Item row</li>
-                                <li>TagFilter - Tag filtering</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Architecture & Taxonomy</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">System architecture and taxonomy</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>ArchitectureOverview</strong> - System diagram</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>TaxonomyCard</strong> - Category display</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>TaxonomyRow</strong> - Item row</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>TagFilter</strong> - Tag filtering</li>
                             </ul>
                         </section>
 
-                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px;">
-                            <h3 style="margin-top: 0;">Marketplace Components</h3>
-                            <p>Marketplace and plugin ecosystem:</p>
-                            <ul>
-                                <li>MarketplacePagination - Pagination controls</li>
-                                <li>MarketplaceSkeletonCard - Loading placeholder</li>
-                                <li>LatestNews - News and updates</li>
+                        <section style="border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; background: #ffffff;">
+                            <h3 style="margin-top: 0; color: #0066cc; font-size: 1.5rem;">Marketplace Components</h3>
+                            <p style="color: #666; margin-bottom: 1rem;">Marketplace and plugin ecosystem</p>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>MarketplacePagination</strong> - Pagination controls</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>MarketplaceSkeletonCard</strong> - Loading placeholder</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>LatestNews</strong> - News and updates</li>
                             </ul>
                         </section>
                     </div>
 
-                    <h2 style="margin-top: 3rem;">Design System Principles</h2>
-                    <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
-                        <ul style="margin: 0;">
-                            <li><strong>Color Palette:</strong> Deep purple/cyan glow with dark surfaces</li>
-                            <li><strong>Typography:</strong> Inter font family with consistent sizing</li>
-                            <li><strong>Spacing:</strong> Generous spacing for clarity</li>
-                            <li><strong>Accessibility:</strong> WCAG 2.1 AA compliant</li>
-                            <li><strong>Responsiveness:</strong> Mobile-first approach</li>
+                    <div style="margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                        <h2 style="margin-top: 0; font-size: 1.75rem; color: white;">Design System Principles</h2>
+                        <ul style="margin: 1rem 0; padding-left: 1.5rem; line-height: 1.8;">
+                            <li style="margin-bottom: 0.75rem;"><strong>Color Palette:</strong> Deep purple/cyan glow with dark surfaces</li>
+                            <li style="margin-bottom: 0.75rem;"><strong>Typography:</strong> Inter font family with consistent sizing</li>
+                            <li style="margin-bottom: 0.75rem;"><strong>Spacing:</strong> Generous spacing for clarity</li>
+                            <li style="margin-bottom: 0.75rem;"><strong>Accessibility:</strong> WCAG 2.1 AA compliant</li>
+                            <li style="margin-bottom: 0.75rem;"><strong>Responsiveness:</strong> Mobile-first approach</li>
                         </ul>
                     </div>
 
-                    <h2 style="margin-top: 3rem;">How to Use This Documentation</h2>
-                    <p>Navigate through the sidebar to explore individual components. Each component page includes:</p>
-                    <ul>
-                        <li>Interactive examples with all variants</li>
-                        <li>Customizable controls to test different props</li>
-                        <li>Source code snippets</li>
-                        <li>Accessibility information</li>
-                        <li>Usage guidelines</li>
+                    <h2 style="font-size: 2rem; margin-top: 3rem; margin-bottom: 1rem; color: #1a1a1a;">How to Use This Documentation</h2>
+                    <p style="color: #666; margin-bottom: 1rem;">Navigate through the sidebar to explore individual components. Each component page includes:</p>
+                    <ul style="color: #666; padding-left: 1.5rem; line-height: 1.8;">
+                        <li style="margin-bottom: 0.5rem;">✨ Interactive examples with all variants</li>
+                        <li style="margin-bottom: 0.5rem;">🎛️ Customizable controls to test different props</li>
+                        <li style="margin-bottom: 0.5rem;">💻 Source code snippets</li>
+                        <li style="margin-bottom: 0.5rem;">♿ Accessibility information</li>
+                        <li style="margin-bottom: 0.5rem;">📖 Usage guidelines</li>
                     </ul>
 
-                    <div style="margin-top: 2rem; padding: 1.5rem; background: #e3f2fd; border-left: 4px solid #2196f3; border-radius: 4px;">
-                        <strong>Getting Started:</strong> Browse the component categories in the sidebar to find what you need.
-                        Each category groups related components for easy discovery.
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: #e8f5e9; border-left: 4px solid #4caf50; border-radius: 4px;">
+                        <p style="margin: 0; color: #2e7d32;">
+                            <strong>🚀 Getting Started:</strong> Browse the component categories in the sidebar to find what you need. 
+                            Each category groups related components for easy discovery.
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                        <p style="margin: 0; color: #856404; font-size: 0.875rem;">
+                            <strong>📌 Technical Note:</strong> This documentation page uses TypeScript instead of MDX because 
+                            MDX documentation pages have limited/experimental support in Storybook 10.1 with Vue 3. 
+                            See: <a href="https://github.com/storybookjs/storybook/issues/30016" target="_blank" style="color: #856404; text-decoration: underline;">GitHub Issue #30016</a>
+                        </p>
                     </div>
                 </div>
             `,
