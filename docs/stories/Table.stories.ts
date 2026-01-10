@@ -2,6 +2,7 @@ import Table from '../src/components/vue/core/table/Table.vue'
 import Row from '../src/components/vue/core/table/Row.vue'
 import C from '../src/components/vue/core/table/C.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
+import {RADII, ELEVATIONS} from '../src/components/vue/core/design-system/tokens'
 
 const meta: Meta<typeof Table> = {
     title: 'Core/Table',
@@ -25,9 +26,15 @@ const meta: Meta<typeof Table> = {
             options: ['full', 'stretch', 'auto'],
             description: 'Table width behavior: full (100% width), stretch (100% with min-width), auto (content-based width)'
         },
-        borderColor: {
-            control: 'text',
-            description: 'Custom border color class (e.g., "primary", "border-dark", "cyan-glow")'
+        radius: {
+            control: 'select',
+            options: RADII,
+            description: 'Border radius size from design tokens (md, lg, xl, 2xl)'
+        },
+        elevation: {
+            control: 'select',
+            options: ELEVATIONS,
+            description: 'Shadow/elevation level from design tokens (none, sm, md, lg)'
         },
         hoverEffect: {
             control: 'boolean',
@@ -37,7 +44,7 @@ const meta: Meta<typeof Table> = {
     parameters: {
         docs: {
             description: {
-                component: 'Flexible and responsive table component with multiple style variants, configurable borders, width control, and design token integration. Built with Tailwind CSS to match the website design system.'
+                component: 'Flexible and responsive table component with multiple style variants, configurable radius and elevation from design tokens, and strong hover effects. Built with Tailwind CSS to match the dark theme design system.'
             }
         }
     }
@@ -87,7 +94,9 @@ export const Default: Story = {
         striped: true,
         dense: false,
         width: 'full',
-        hoverEffect: true
+        hoverEffect: true,
+        radius: 'xl',
+        elevation: 'sm'
     }
 }
 
@@ -132,7 +141,9 @@ export const Bordered: Story = {
         striped: true,
         dense: false,
         width: 'full',
-        hoverEffect: true
+        hoverEffect: true,
+        radius: 'xl',
+        elevation: 'md'
     }
 }
 
@@ -174,7 +185,9 @@ export const Glassy: Story = {
         striped: true,
         dense: false,
         width: 'full',
-        hoverEffect: true
+        hoverEffect: true,
+        radius: '2xl',
+        elevation: 'md'
     }
 }
 
@@ -214,7 +227,9 @@ export const Borderless: Story = {
         striped: true,
         dense: false,
         width: 'full',
-        hoverEffect: true
+        hoverEffect: true,
+        radius: 'xl',
+        elevation: 'none'
     }
 }
 
@@ -258,7 +273,9 @@ export const Compact: Story = {
         striped: true,
         dense: true,
         width: 'full',
-        hoverEffect: true
+        hoverEffect: true,
+        radius: 'lg',
+        elevation: 'sm'
     }
 }
 
@@ -296,44 +313,9 @@ export const AutoWidth: Story = {
         striped: true,
         dense: false,
         width: 'auto',
-        hoverEffect: true
-    }
-}
-
-export const CustomBorder: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
-            <Table v-bind="args">
-                <Row>
-                    <C header>Feature</C>
-                    <C header align="right">Enabled</C>
-                </Row>
-                <Row>
-                    <C>AI-Powered Routing</C>
-                    <C align="right" class="text-success">✓</C>
-                </Row>
-                <Row>
-                    <C>Smart Categorization</C>
-                    <C align="right" class="text-success">✓</C>
-                </Row>
-                <Row>
-                    <C>Auto-Response</C>
-                    <C align="right" class="text-danger">✗</C>
-                </Row>
-            </Table>
-        `
-    }),
-    args: {
-        variant: 'bordered',
-        striped: false,
-        dense: false,
-        width: 'full',
-        borderColor: 'primary',
-        hoverEffect: true
+        hoverEffect: true,
+        radius: 'xl',
+        elevation: 'sm'
     }
 }
 
@@ -373,6 +355,137 @@ export const NoHover: Story = {
         striped: true,
         dense: false,
         width: 'full',
-        hoverEffect: false
+        hoverEffect: false,
+        radius: 'xl',
+        elevation: 'sm'
+    }
+}
+
+export const LargeRadius: Story = {
+    render: (args) => ({
+        components: {Table, Row, C},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Table v-bind="args">
+                <Row>
+                    <C header>Feature</C>
+                    <C header align="right">Enabled</C>
+                </Row>
+                <Row>
+                    <C>AI-Powered Routing</C>
+                    <C align="right" class="text-success">✓</C>
+                </Row>
+                <Row>
+                    <C>Smart Categorization</C>
+                    <C align="right" class="text-success">✓</C>
+                </Row>
+                <Row>
+                    <C>Auto-Response</C>
+                    <C align="right" class="text-danger">✗</C>
+                </Row>
+            </Table>
+        `
+    }),
+    args: {
+        variant: 'bordered',
+        striped: false,
+        dense: false,
+        width: 'full',
+        hoverEffect: true,
+        radius: '2xl',
+        elevation: 'lg'
+    }
+}
+
+export const HighElevation: Story = {
+    render: (args) => ({
+        components: {Table, Row, C},
+        setup() {
+            return {args}
+        },
+        template: `
+            <div class="bg-gradient-to-br from-background-dark to-surface-dark p-8">
+                <Table v-bind="args">
+                    <Row>
+                        <C header>Priority</C>
+                        <C header>Count</C>
+                        <C header align="right">Percentage</C>
+                    </Row>
+                    <Row>
+                        <C class="text-danger font-semibold">Critical</C>
+                        <C>12</C>
+                        <C align="right">8%</C>
+                    </Row>
+                    <Row>
+                        <C class="text-warning font-semibold">High</C>
+                        <C>45</C>
+                        <C align="right">30%</C>
+                    </Row>
+                    <Row>
+                        <C class="text-info font-semibold">Medium</C>
+                        <C>67</C>
+                        <C align="right">45%</C>
+                    </Row>
+                    <Row>
+                        <C class="text-success font-semibold">Low</C>
+                        <C>26</C>
+                        <C align="right">17%</C>
+                    </Row>
+                </Table>
+            </div>
+        `
+    }),
+    args: {
+        variant: 'default',
+        striped: true,
+        dense: false,
+        width: 'full',
+        hoverEffect: true,
+        radius: 'xl',
+        elevation: 'lg'
+    }
+}
+
+export const MinimalRadius: Story = {
+    render: (args) => ({
+        components: {Table, Row, C},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Table v-bind="args">
+                <Row>
+                    <C header>Service</C>
+                    <C header align="center">Uptime</C>
+                    <C header align="right">Response Time</C>
+                </Row>
+                <Row>
+                    <C>API Gateway</C>
+                    <C align="center" class="text-success">99.9%</C>
+                    <C align="right">23ms</C>
+                </Row>
+                <Row>
+                    <C>Database</C>
+                    <C align="center" class="text-success">99.95%</C>
+                    <C align="right">12ms</C>
+                </Row>
+                <Row>
+                    <C>Cache</C>
+                    <C align="center" class="text-success">99.99%</C>
+                    <C align="right">3ms</C>
+                </Row>
+            </Table>
+        `
+    }),
+    args: {
+        variant: 'compact',
+        striped: true,
+        dense: true,
+        width: 'full',
+        hoverEffect: true,
+        radius: 'md',
+        elevation: 'none'
     }
 }

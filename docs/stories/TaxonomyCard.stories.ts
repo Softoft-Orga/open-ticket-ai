@@ -21,7 +21,7 @@ const meta: Meta<typeof TaxonomyCard> = {
   parameters: {
     docs: {
       description: {
-        component: 'Taxonomy category card displaying a title, description, and list of items.'
+        component: 'Taxonomy category card displaying a title, description, and list of items. Built using the Card component with Tailwind design tokens.'
       }
     },
     backgrounds: { default: 'dark' }

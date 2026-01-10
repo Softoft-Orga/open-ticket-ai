@@ -1,16 +1,16 @@
 import Accordion from '../src/components/vue/core/accordion/Accordion.vue'
 import AccordionItem from '../src/components/vue/core/accordion/AccordionItem.vue'
-import {ref} from 'vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
+
+const VARIANTS = ['default', 'ghost', 'bordered', 'gradient'] as const
 
 const meta: Meta<typeof Accordion> = {
     title: 'Core/Accordion',
     component: Accordion,
     argTypes: {
-        multiple: {control: 'boolean'},
         variant: {
             control: 'select',
-            options: ['default', 'ghost', 'bordered', 'gradient']
+            options: VARIANTS
         }
     }
 }
@@ -47,7 +47,6 @@ export const DefaultVariant: Story = {
     }),
     args: {
         items: sampleItems,
-        multiple: true,
         variant: 'default'
     },
 }
@@ -67,7 +66,6 @@ export const GhostVariant: Story = {
     }),
     args: {
         items: sampleItems,
-        multiple: true,
         variant: 'ghost'
     },
 }
@@ -87,7 +85,6 @@ export const BorderedVariant: Story = {
     }),
     args: {
         items: sampleItems,
-        multiple: true,
         variant: 'bordered'
     },
 }
@@ -107,12 +104,11 @@ export const GradientVariant: Story = {
     }),
     args: {
         items: sampleItems,
-        multiple: true,
         variant: 'gradient'
     },
 }
 
-export const SingleMode: Story = {
+export const MultipleItemsOpen: Story = {
     render: (args) => ({
         components: {Accordion},
         setup() {
@@ -120,14 +116,17 @@ export const SingleMode: Story = {
         },
         template: `
             <div class="bg-surface-dark p-8 rounded-lg">
-                <h3 class="text-white text-xl font-bold mb-4">Single Mode (Only one item open at a time)</h3>
+                <h3 class="text-white text-xl font-bold mb-4">Multiple Items Open</h3>
+                <p class="text-text-dim text-sm mb-4">With HeadlessUI Disclosure, all items can be opened independently</p>
                 <Accordion v-bind="args" />
             </div>
         `,
     }),
     args: {
-        items: sampleItems,
-        multiple: false,
+        items: sampleItems.map((item, i) => ({
+            ...item,
+            defaultOpen: i === 0 || i === 1
+        })),
         variant: 'bordered'
     },
 }
@@ -136,20 +135,21 @@ export const WithVModel: Story = {
     render: (args) => ({
         components: {Accordion},
         setup() {
-            const openItems = ref([0])
-            return {args, openItems}
+            return {args}
         },
         template: `
             <div class="bg-surface-dark p-8 rounded-lg">
-                <h3 class="text-white text-xl font-bold mb-4">Controlled with v-model</h3>
-                <p class="mb-4 text-sm text-gray-400">Open items: {{ openItems }}</p>
-                <Accordion v-bind="args" v-model="openItems" />
+                <h3 class="text-white text-xl font-bold mb-4">Items with Default Open States</h3>
+                <p class="text-text-dim text-sm mb-4">First item is open by default</p>
+                <Accordion v-bind="args" />
             </div>
         `,
     }),
     args: {
-        items: sampleItems,
-        multiple: true,
+        items: sampleItems.map((item, i) => ({
+            ...item,
+            defaultOpen: i === 0
+        })),
         variant: 'gradient'
     },
 }
@@ -200,26 +200,26 @@ export const AllVariantsShowcase: Story = {
             <div class="bg-background-dark p-8 space-y-8">
                 <div class="bg-surface-dark p-8 rounded-lg">
                     <h3 class="text-white text-2xl font-bold mb-2">Default Variant</h3>
-                    <p class="text-gray-400 text-sm mb-6">Clean dividers, minimal styling</p>
-                    <Accordion :items="longSampleItems" variant="default" :multiple="true" />
+                    <p class="text-text-dim text-sm mb-6">Clean dividers, minimal styling</p>
+                    <Accordion :items="longSampleItems" variant="default" />
                 </div>
                 
                 <div class="bg-surface-dark p-8 rounded-lg">
                     <h3 class="text-white text-2xl font-bold mb-2">Ghost Variant</h3>
-                    <p class="text-gray-400 text-sm mb-6">Subtle, minimal spacing</p>
-                    <Accordion :items="longSampleItems" variant="ghost" :multiple="true" />
+                    <p class="text-text-dim text-sm mb-6">Subtle, minimal spacing</p>
+                    <Accordion :items="longSampleItems" variant="ghost" />
                 </div>
                 
                 <div class="bg-surface-dark p-8 rounded-lg">
                     <h3 class="text-white text-2xl font-bold mb-2">Bordered Variant</h3>
-                    <p class="text-gray-400 text-sm mb-6">Individual cards with borders</p>
-                    <Accordion :items="longSampleItems" variant="bordered" :multiple="true" />
+                    <p class="text-text-dim text-sm mb-6">Individual cards with borders</p>
+                    <Accordion :items="longSampleItems" variant="bordered" />
                 </div>
                 
                 <div class="bg-surface-dark p-8 rounded-lg">
                     <h3 class="text-white text-2xl font-bold mb-2">Gradient Variant</h3>
-                    <p class="text-gray-400 text-sm mb-6">Premium look with gradient backgrounds</p>
-                    <Accordion :items="longSampleItems" variant="gradient" :multiple="true" />
+                    <p class="text-text-dim text-sm mb-6">Premium look with gradient backgrounds</p>
+                    <Accordion :items="longSampleItems" variant="gradient" />
                 </div>
             </div>
         `,

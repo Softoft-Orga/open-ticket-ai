@@ -17,7 +17,7 @@ const meta: Meta<typeof PerformanceMetric> = {
   parameters: {
     docs: {
       description: {
-        component: 'Performance metric display card with label and value.'
+        component: 'Performance metric display card with label and value. Uses Card component with subtle hover transitions (border glow + translate-y).'
       }
     },
     backgrounds: { default: 'dark' }
