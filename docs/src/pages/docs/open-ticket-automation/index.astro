@@ -21,8 +21,54 @@ const description = "OTA is the bridge between AI classification and helpdesk ex
     </div>
 
     <div class="max-w-7xl mx-auto px-6 py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Left Sidebar -->
+        <aside class="lg:col-span-2 space-y-8">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Getting Started</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="#" class="text-slate-400 hover:text-white">Documentation Hub</a></li>
+              <li><a href="/guides/quick_start/" class="text-slate-400 hover:text-white">Quick Start Guide</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Ticket Tagging AI</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/docs/ticket-tagging/" class="text-slate-400 hover:text-white">Engine Overview</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-white">Taxonomy Tree</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-white">Privacy &amp; Compliance</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-white">Hardware Sizing</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Open Ticket Automation</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="#" class="text-primary font-medium">OTA Overview</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-white">Connectors</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-white">Automation Rules</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-white">API Reference</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Utilities</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="#" class="text-slate-400 hover:text-white">Synthetic Data</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-white">Privacy Engine</a></li>
+            </ul>
+          </div>
+
+          <div class="bg-card-dark border border-slate-700 rounded-lg p-4">
+            <h4 class="text-sm font-bold text-white mb-2">Enterprise Support</h4>
+            <p class="text-xs text-slate-400 mb-3">Need help with high-volume deployment?</p>
+            <a href="/services/" class="text-xs text-primary hover:text-primary-light font-medium">VIEW SERVICES →</a>
+          </div>
+        </aside>
+
         <!-- Main Content -->
-        <main class="min-w-0">
+        <main class="lg:col-span-10 min-w-0">
           <div class="mb-6">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-6">
               <ExclamationCircleIcon class="w-3 h-3" aria-hidden="true" />
@@ -134,6 +180,7 @@ const description = "OTA is the bridge between AI classification and helpdesk ex
             </div>
           </section>
         </main>
+      </div>
     </div>
   </div>
 </BaseLayout>
