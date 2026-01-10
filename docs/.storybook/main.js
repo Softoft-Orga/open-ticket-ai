@@ -7,6 +7,15 @@ module.exports = {
     core: {builder: '@storybook/builder-vite'},
     framework: '@storybook/vue3-vite',
     stories: ['../stories/**/*.stories.@(js|ts|mdx)'],
+    addons: [
+        '@storybook/addon-docs',
+        '@storybook/addon-a11y',
+        '@storybook/addon-onboarding',
+        '@storybook/addon-vitest'
+    ],
+    docs: {
+        autodocs: 'tag'
+    },
     async viteFinal(config) {
         return mergeConfig(config, {
             plugins: [vue()],

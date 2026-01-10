@@ -1,7 +1,5 @@
 [build]
 base = "docs"
-command = "npx playwright install --with-deps chromium && npm run docs:build"
-publish = "dist"
 functions = "netlify/functions"
 
 # --- API function (keep above catch-alls) ---
