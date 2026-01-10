@@ -1,44 +1,77 @@
 <template>
   <nav class="sticky top-20 space-y-2">
-    <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-400">On This Page</h3>
-    <ul class="space-y-2 border-l-2 border-surface-lighter">
-      <li v-for="heading in headings" :key="heading.id">
-        <a
-          :href="`#${heading.id}`"
-          @click.prevent="scrollToHeading(heading.id)"
-          :class="[
-            'block border-l-2 py-1 text-sm transition-all',
-            activeId === heading.id
-              ? 'border-primary text-primary-light -ml-[2px]'
-              : 'border-transparent text-text-dim hover:text-white -ml-[2px]',
-            heading.level === 3 ? 'pl-4' : 'pl-8'
-          ]"
-        >
-          {{ heading.text }}
-        </a>
-      </li>
+    <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-text-dim">On This Page</h3>
+    <ul :class="['space-y-1', showLine && 'border-l-2 border-border-dark']">
+      <TableOfContentsItem
+        v-for="item in treeStructure"
+        :key="item.id"
+        :item="item"
+        :active-id="activeId"
+        :show-line="showLine"
+        :collapsible="collapsible"
+        :level="0"
+        @navigate="scrollToHeading"
+      />
     </ul>
   </nav>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import TableOfContentsItem from './TableOfContentsItem.vue'
 
-interface Heading {
+export interface Heading {
   id: string
   text: string
   level: number
 }
 
+export interface HeadingNode extends Heading {
+  children?: HeadingNode[]
+}
+
 interface Props {
   headings?: Heading[]
+  showLine?: boolean
+  collapsible?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  headings: () => []
+  headings: () => [],
+  showLine: true,
+  collapsible: false
 })
 
 const activeId = ref<string>('')
+
+// Convert flat heading list to tree structure
+const treeStructure = computed<HeadingNode[]>(() => {
+  const result: HeadingNode[] = []
+  const stack: HeadingNode[] = []
+
+  for (const heading of props.headings) {
+    const node: HeadingNode = { ...heading, children: [] }
+
+    // Find the appropriate parent
+    while (stack.length > 0 && stack[stack.length - 1].level >= heading.level) {
+      stack.pop()
+    }
+
+    if (stack.length === 0) {
+      result.push(node)
+    } else {
+      const parent = stack[stack.length - 1]
+      if (!parent.children) {
+        parent.children = []
+      }
+      parent.children.push(node)
+    }
+
+    stack.push(node)
+  }
+
+  return result
+})
 
 const scrollToHeading = (id: string) => {
   const element = document.getElementById(id)
@@ -48,11 +81,23 @@ const scrollToHeading = (id: string) => {
   }
 }
 
+const getAllHeadingIds = (nodes: HeadingNode[]): string[] => {
+  const ids: string[] = []
+  for (const node of nodes) {
+    ids.push(node.id)
+    if (node.children) {
+      ids.push(...getAllHeadingIds(node.children))
+    }
+  }
+  return ids
+}
+
 const updateActiveId = () => {
-  const headingElements = props.headings
-    .map(h => ({
-      id: h.id,
-      element: document.getElementById(h.id)
+  const allIds = getAllHeadingIds(treeStructure.value)
+  const headingElements = allIds
+    .map(id => ({
+      id,
+      element: document.getElementById(id)
     }))
     .filter(h => h.element)
 
