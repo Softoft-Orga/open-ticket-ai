@@ -18,7 +18,7 @@ const products = allProducts
   .filter(product => featuredSlugs.includes(product.data.slug) && !product.data.nav?.hidden)
   .sort((a, b) => {
     // Custom sort: tagging-ai first, then automation-core, then synthetic-data
-    const orderMap = { 'tagging-ai': 0, 'open-ticket-automation-core': 1, 'synthetic-data-generator': 2 };
+    const orderMap: Record<string, number> = { 'tagging-ai': 0, 'open-ticket-automation-core': 1, 'synthetic-data-generator': 2 };
     return (orderMap[a.data.slug] ?? 999) - (orderMap[b.data.slug] ?? 999);
   });
 
