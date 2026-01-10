@@ -53,6 +53,9 @@ module.exports = {
             },
             spacing: {
                 'section': '4.5rem'
+            },
+            scale: {
+                '102': '1.02',
             }
         }
     },
