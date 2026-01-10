@@ -21,21 +21,20 @@
       </span>
     </div>
     <div class="flex gap-2 flex-wrap justify-end">
-      <span 
+      <Badge 
         v-for="(tag, idx) in tags" 
         :key="idx"
-        class="px-3 py-1 text-xs rounded-full border"
-        :class="active 
-          ? 'bg-primary/20 text-primary-light border-primary/30' 
-          : 'bg-surface-lighter/40 text-text-dim border-border-dark'"
+        :type="active ? 'primary' : 'secondary'"
       >
         {{ tag }}
-      </span>
+      </Badge>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import Badge from '../core/basic/Badge.vue'
+
 defineProps<{
   level: number
   label: string
