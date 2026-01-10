@@ -19,6 +19,7 @@ module.exports = {
                 'border-dark': '#3c2249',
                 'text-dim': '#b790cb',
                 'cyan-glow': '#00f0ff',
+                'secondary': '#1fd5ff',
             },
             backgroundImage: {
                 'cyber-gradient': 'linear-gradient(135deg, rgba(166,13,242,0.1) 0%, rgba(28,16,34,0) 100%)',

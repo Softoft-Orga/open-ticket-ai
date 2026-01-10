@@ -23,19 +23,22 @@
       </li>
     </ul>
 
-    <button 
-      :class="buttonClasses"
+    <Button 
+      :variant="highlighted ? 'primary' : 'outline'"
+      size="md"
+      class="w-full"
       data-service-modal-trigger
       :data-service="serviceKey"
     >
       {{ buttonText }}
-    </button>
+    </Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { CheckIcon } from '@heroicons/vue/24/outline';
+import Button from '../core/basic/Button.vue';
 
 const props = withDefaults(defineProps<{
   title: string;
@@ -57,13 +60,5 @@ const cardClasses = computed(() => {
     return `${base} bg-[#1d1023] border border-primary/30`;
   }
   return `${base} bg-[#120818] border border-white/5`;
-});
-
-const buttonClasses = computed(() => {
-  const base = 'w-full rounded-lg py-3 text-sm font-bold transition-all';
-  if (props.highlighted) {
-    return `${base} bg-primary text-white hover:bg-primary-dark`;
-  }
-  return `${base} bg-transparent border border-white/20 text-white hover:bg-white/5`;
 });
 </script>

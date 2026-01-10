@@ -27,12 +27,12 @@
           </p>
 
           <div class="flex flex-wrap gap-4">
-            <button class="px-10 h-14 bg-primary text-white font-black uppercase tracking-widest rounded-xl hover:bg-primary-dark transition-all shadow-[0_0_30px_rgba(166,13,242,0.4)]">
+            <Button variant="primary" size="lg" class="uppercase tracking-widest">
               Buy License (2.500€)
-            </button>
-            <button class="px-10 h-14 bg-transparent border border-surface-lighter hover:border-primary/50 text-white font-bold rounded-xl transition-all">
+            </Button>
+            <Button variant="outline" size="lg">
               Calculate ROI
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -173,6 +173,7 @@
 
 <script setup lang="ts">
 import { ChartBarIcon, BoltIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
+import Button from '../core/basic/Button.vue';
 
 const MetricBlock = defineComponent({
   props: {

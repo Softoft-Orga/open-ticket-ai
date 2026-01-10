@@ -15,9 +15,9 @@
           Small-footprint classification. Optimized for edge deployment and privacy-focused evaluation. 
           Supports the full OTA taxonomy tree.
         </p>
-        <button class="px-8 py-4 bg-white text-background-dark rounded-xl font-bold text-lg hover:bg-primary hover:text-white transition-all shadow-lg">
+        <Button variant="secondary" size="lg">
           DOWNLOAD CONTAINER
-        </button>
+        </Button>
       </div>
 
       <!-- Performance Metrics -->
@@ -165,6 +165,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import Button from '../core/basic/Button.vue';
 import PerformanceMetric from './PerformanceMetric.vue';
 import TaxonomyCard from './TaxonomyCard.vue';
 
