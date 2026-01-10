@@ -15,30 +15,38 @@
         Choose a Preset Scenario
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <button
+        <Card
           v-for="scenario in scenarios"
           :key="scenario.id"
           @click="applyScenario(scenario.id)"
           :class="[
-            'relative p-6 rounded-xl border-2 transition-all duration-200 text-left',
+            'relative cursor-pointer transition-all duration-300 text-left',
             activeScenario === scenario.id
-              ? 'border-primary bg-surface-dark shadow-glow'
-              : 'border-border-dark bg-surface-dark hover:border-primary/50'
+              ? 'border-primary border-2 !bg-gradient-to-br from-primary/30 via-primary/15 to-surface-dark shadow-[0_0_40px_rgba(166,13,242,0.5)] ring-2 ring-primary/40 scale-[1.02]'
+              : 'border-border-dark hover:border-primary/60 hover:shadow-[0_0_20px_rgba(166,13,242,0.25)] hover:scale-[1.01] hover:bg-surface-lighter'
           ]"
+          background="surface-dark"
         >
+          <!-- Check icon for selected scenario -->
+          <div v-if="activeScenario === scenario.id" class="absolute top-3 right-3">
+            <div class="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+              <component :is="CheckIcon" class="w-4 h-4 text-white" />
+            </div>
+          </div>
+          
           <div class="flex items-start mb-3">
             <component :is="scenario.icon" class="w-6 h-6 mr-3 flex-shrink-0" :class="scenario.iconColor" />
             <h3 class="text-lg font-bold text-white">{{ scenario.name }}</h3>
           </div>
           <p class="text-sm text-gray-400">{{ scenario.description }}</p>
-        </button>
+        </Card>
       </div>
     </div>
 
     <!-- Main Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
       <!-- Left Column: Customer Context -->
-      <div class="bg-surface-dark border border-border-dark rounded-xl p-6">
+      <Card background="surface-dark">
         <div class="flex items-center mb-4">
           <component :is="ChartBarIcon" class="w-5 h-5 mr-2 text-primary" />
           <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">
@@ -51,10 +59,11 @@
             <label class="block text-sm font-medium text-gray-300 mb-2">
               Daily Tickets
             </label>
-            <input
-              v-model.number="tickets"
+            <TextInput
+              v-model="ticketsStr"
               type="number"
-              class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+              variant="primary"
+              size="md"
             />
           </div>
 
@@ -63,22 +72,22 @@
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Manual Cost/Ticket (€)
               </label>
-              <input
-                v-model.number="manualCost"
+              <TextInput
+                v-model="manualCostStr"
                 type="number"
-                step="0.1"
-                class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                variant="primary"
+                size="md"
               />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Cost Per Error (€)
               </label>
-              <input
-                v-model.number="errorCost"
+              <TextInput
+                v-model="errorCostStr"
                 type="number"
-                step="0.1"
-                class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                variant="primary"
+                size="md"
               />
             </div>
           </div>
@@ -88,63 +97,104 @@
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Human Acc (%)
               </label>
-              <input
-                v-model.number="humanAcc"
+              <TextInput
+                v-model="humanAccStr"
                 type="number"
-                min="0"
-                max="100"
-                class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                variant="primary"
+                size="md"
               />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Amortization (Mo)
               </label>
-              <input
-                v-model.number="months"
+              <TextInput
+                v-model="monthsStr"
                 type="number"
-                min="1"
-                class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                variant="primary"
+                size="md"
               />
             </div>
           </div>
         </div>
-      </div>
+      </Card>
 
       <!-- Middle Column: Stats Cards -->
       <div class="space-y-4">
-        <div class="bg-surface-dark border border-border-dark rounded-xl p-6">
-          <div class="text-sm text-gray-400 uppercase tracking-wider mb-1">
-            Manual Base (Inc. Errors)
-          </div>
-          <div class="text-3xl font-bold text-white">{{ formatCurrency(stats.manualTotal) }}</div>
-          <div class="text-xs text-gray-500 mt-1">Monthly Baseline</div>
-        </div>
+        <Transition
+          enter-active-class="transition-all duration-150 ease-out"
+          enter-from-class="opacity-0 scale-95"
+          enter-to-class="opacity-100 scale-100"
+          leave-active-class="transition-all duration-100 ease-in"
+          leave-from-class="opacity-100 scale-100"
+          leave-to-class="opacity-0 scale-95"
+          appear
+        >
+          <Card 
+            key="stat1" 
+            background="surface-dark"
+            class="transition-all duration-300 hover:shadow-[0_0_25px_rgba(166,13,242,0.2)] hover:scale-[1.02]"
+          >
+            <div class="text-sm text-gray-400 uppercase tracking-wider mb-1">
+              Manual Base (Inc. Errors)
+            </div>
+            <div class="text-3xl font-bold text-white">{{ formatCurrency(stats.manualTotal) }}</div>
+            <div class="text-xs text-gray-500 mt-1">Monthly Baseline</div>
+          </Card>
+        </Transition>
 
-        <div class="bg-surface-dark border border-border-dark rounded-xl p-6">
-          <div class="text-sm text-gray-400 uppercase tracking-wider mb-1">
-            Lite Pro TCO
-          </div>
-          <div class="text-3xl font-bold text-primary">{{ formatCurrency(stats.proTotal) }}</div>
-          <div class="text-xs text-gray-500 mt-1">Inc. Fixed HW</div>
-        </div>
+        <Transition
+          enter-active-class="transition-all duration-150 ease-out"
+          enter-from-class="opacity-0 scale-95"
+          enter-to-class="opacity-100 scale-100"
+          leave-active-class="transition-all duration-100 ease-in"
+          leave-from-class="opacity-100 scale-100"
+          leave-to-class="opacity-0 scale-95"
+          appear
+        >
+          <Card 
+            key="stat2" 
+            background="surface-dark"
+            class="transition-all duration-300 hover:shadow-[0_0_30px_rgba(166,13,242,0.4)] hover:scale-[1.02]"
+          >
+            <div class="text-sm text-gray-400 uppercase tracking-wider mb-1">
+              Lite Pro TCO
+            </div>
+            <div class="text-3xl font-bold text-primary">{{ formatCurrency(stats.proTotal) }}</div>
+            <div class="text-xs text-gray-500 mt-1">Inc. Fixed HW</div>
+          </Card>
+        </Transition>
 
-        <div class="bg-surface-dark border border-border-dark rounded-xl p-6">
-          <div class="text-sm text-gray-400 uppercase tracking-wider mb-1">
-            Break-Even
-          </div>
-          <div class="text-3xl font-bold text-cyan-glow">{{ stats.beProFree }}</div>
-          <div class="text-xs text-gray-500 mt-1">Pro vs Free (TIX/Day)</div>
-        </div>
+        <Transition
+          enter-active-class="transition-all duration-150 ease-out"
+          enter-from-class="opacity-0 scale-95"
+          enter-to-class="opacity-100 scale-100"
+          leave-active-class="transition-all duration-100 ease-in"
+          leave-from-class="opacity-100 scale-100"
+          leave-to-class="opacity-0 scale-95"
+          appear
+        >
+          <Card 
+            key="stat3" 
+            background="surface-dark"
+            class="transition-all duration-300 hover:shadow-[0_0_25px_rgba(34,211,238,0.3)] hover:scale-[1.02]"
+          >
+            <div class="text-sm text-gray-400 uppercase tracking-wider mb-1">
+              Break-Even
+            </div>
+            <div class="text-3xl font-bold text-cyan-glow">{{ stats.beProFree }}</div>
+            <div class="text-xs text-gray-500 mt-1">Pro vs Free (TIX/Day)</div>
+          </Card>
+        </Transition>
       </div>
 
       <!-- Right Column: Lite Pro Config -->
-      <div class="bg-surface-dark border border-border-dark rounded-xl p-6">
+      <Card background="surface-dark">
         <div class="mb-4">
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-primary/20 text-primary border border-primary/30">
-            <component :is="SparklesIcon" class="w-4 h-4 mr-1" />
+          <Badge type="primary">
+            <component :is="SparklesIcon" class="w-4 h-4" />
             Lite Pro (4B)
-          </span>
+          </Badge>
           <div class="mt-2 text-sm text-primary font-medium">RECOMMENDED</div>
         </div>
 
@@ -154,22 +204,22 @@
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 License (€)
               </label>
-              <input
-                v-model.number="proLicense"
+              <TextInput
+                v-model="proLicenseStr"
                 type="number"
-                class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                variant="primary"
+                size="md"
               />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 AI Accuracy (%)
               </label>
-              <input
-                v-model.number="proAcc"
+              <TextInput
+                v-model="proAccStr"
                 type="number"
-                min="0"
-                max="100"
-                class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                variant="primary"
+                size="md"
               />
             </div>
           </div>
@@ -179,21 +229,23 @@
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Maint/Mo (€)
               </label>
-              <input
-                v-model.number="proMaint"
+              <TextInput
+                v-model="proMaintStr"
                 type="number"
-                class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                variant="primary"
+                size="md"
               />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Hardware/Mo (€)
               </label>
-              <input
-                v-model.number="proHw"
+              <TextInput
+                :model-value="String(proHw)"
                 type="number"
                 disabled
-                class="w-full px-3 py-2 bg-surface-lighter/50 border border-border-dark rounded-lg text-gray-500 cursor-not-allowed"
+                variant="primary"
+                size="md"
               />
               <span class="text-xs text-gray-500">(Auto)</span>
             </div>
@@ -203,23 +255,24 @@
             <label class="block text-sm font-medium text-gray-300 mb-2">
               Inherent Setup Estimate (€)
             </label>
-            <input
-              v-model.number="proSetup"
+            <TextInput
+              v-model="proSetupStr"
               type="number"
-              class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+              variant="primary"
+              size="md"
             />
           </div>
         </div>
-      </div>
+      </Card>
     </div>
 
     <!-- Lite Free Config -->
-    <div class="bg-surface-dark border border-border-dark rounded-xl p-6 mb-8">
+    <Card background="surface-dark" class="mb-8">
       <div class="mb-4">
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-700 text-gray-300 border border-gray-600">
-          <component :is="BeakerIcon" class="w-4 h-4 mr-1" />
+        <Badge type="secondary">
+          <component :is="BeakerIcon" class="w-4 h-4" />
           Lite Free (0.6B)
-        </span>
+        </Badge>
       </div>
 
       <div class="grid grid-cols-4 gap-4">
@@ -227,53 +280,55 @@
           <label class="block text-sm font-medium text-gray-300 mb-2">
             Inherent Setup (€)
           </label>
-          <input
-            v-model.number="freeSetup"
+          <TextInput
+            v-model="freeSetupStr"
             type="number"
-            class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+            variant="primary"
+            size="md"
           />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">
             Accuracy (%)
           </label>
-          <input
-            v-model.number="freeAcc"
+          <TextInput
+            v-model="freeAccStr"
             type="number"
-            min="0"
-            max="100"
-            class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+            variant="primary"
+            size="md"
           />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">
             Maint/Mo (€)
           </label>
-          <input
-            v-model.number="freeMaint"
+          <TextInput
+            v-model="freeMaintStr"
             type="number"
-            class="w-full px-3 py-2 bg-surface-lighter border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+            variant="primary"
+            size="md"
           />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">
             Hardware/Mo (€)
           </label>
-          <input
-            v-model.number="freeHw"
+          <TextInput
+            :model-value="String(freeHw)"
             type="number"
             disabled
-            class="w-full px-3 py-2 bg-surface-lighter/50 border border-border-dark rounded-lg text-gray-500 cursor-not-allowed"
+            variant="primary"
+            size="md"
           />
           <span class="text-xs text-gray-500">(Auto)</span>
         </div>
       </div>
-    </div>
+    </Card>
 
     <!-- Charts Row -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
       <!-- TCO Projection Chart -->
-      <div class="bg-surface-dark border border-border-dark rounded-xl p-6">
+      <Card background="surface-dark">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold text-white">TCO Projection (Monthly)</h3>
           <div class="flex items-center space-x-3 text-xs">
@@ -294,26 +349,41 @@
         <div class="h-80">
           <canvas ref="tcoChartRef"></canvas>
         </div>
-      </div>
+      </Card>
 
       <!-- Monthly Cost Breakdown Chart -->
-      <div class="bg-surface-dark border border-border-dark rounded-xl p-6">
+      <Card background="surface-dark">
         <h3 class="text-lg font-semibold text-white mb-4">Monthly Cost Breakdown</h3>
         <div class="h-80">
           <canvas ref="roiChartRef"></canvas>
         </div>
-      </div>
+      </Card>
     </div>
 
     <!-- Simulated Savings -->
-    <div class="bg-gradient-to-br from-primary/10 to-surface-dark border border-primary/30 rounded-xl p-8">
-      <h3 class="text-lg font-semibold text-white mb-2">Simulated Savings</h3>
-      <div class="text-5xl font-bold text-primary mb-3">{{ formatCurrency(stats.savings) }}</div>
-      <p class="text-gray-400">
-        By switching from manual classification to Lite Pro, your organization could save approximately
-        <span class="text-primary font-semibold">{{ formatCurrency(stats.savings) }}</span> every month.
-      </p>
-    </div>
+    <Transition
+      enter-active-class="transition-all duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none"
+      enter-from-class="opacity-0 scale-90"
+      enter-to-class="opacity-100 scale-100"
+      leave-active-class="transition-all duration-150 ease-in motion-reduce:transition-none motion-reduce:transform-none"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-90"
+      appear
+    >
+      <Card 
+        key="savings"
+        background="custom"
+        custom-bg="bg-gradient-to-br from-primary/10 to-surface-dark"
+        class="border-primary/30 transition-all duration-500 hover:shadow-[0_0_40px_rgba(166,13,242,0.3)] hover:border-primary/50"
+      >
+        <h3 class="text-lg font-semibold text-white mb-2">Simulated Savings</h3>
+        <div class="text-5xl font-bold text-primary mb-3">{{ formatCurrency(stats.savings) }}</div>
+        <p class="text-gray-400">
+          By switching from manual classification to Lite Pro, your organization could save approximately
+          <span class="text-primary font-semibold">{{ formatCurrency(stats.savings) }}</span> every month.
+        </p>
+      </Card>
+    </Transition>
   </div>
 </template>
 
@@ -326,8 +396,12 @@ import {
   BeakerIcon,
   ServerIcon,
   ChartPieIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  CheckIcon
 } from '@heroicons/vue/24/outline'
+import Card from '../core/basic/Card.vue'
+import Badge from '../core/basic/Badge.vue'
+import TextInput from '../core/forms/TextInput.vue'
 
 Chart.register(...registerables)
 
@@ -391,6 +465,67 @@ const tcoChartRef = ref<HTMLCanvasElement | null>(null)
 const roiChartRef = ref<HTMLCanvasElement | null>(null)
 let tcoInstance: Chart | null = null
 let roiInstance: Chart | null = null
+
+// Computed string properties for TextInput v-model
+const ticketsStr = computed({
+  get: () => String(tickets.value),
+  set: (val) => { tickets.value = Number(val) || 0 }
+})
+
+const manualCostStr = computed({
+  get: () => String(manualCost.value),
+  set: (val) => { manualCost.value = Number(val) || 0 }
+})
+
+const errorCostStr = computed({
+  get: () => String(errorCost.value),
+  set: (val) => { errorCost.value = Number(val) || 0 }
+})
+
+const humanAccStr = computed({
+  get: () => String(humanAcc.value),
+  set: (val) => { humanAcc.value = Number(val) || 0 }
+})
+
+const monthsStr = computed({
+  get: () => String(months.value),
+  set: (val) => { months.value = Number(val) || 0 }
+})
+
+const freeSetupStr = computed({
+  get: () => String(freeSetup.value),
+  set: (val) => { freeSetup.value = Number(val) || 0 }
+})
+
+const freeAccStr = computed({
+  get: () => String(freeAcc.value),
+  set: (val) => { freeAcc.value = Number(val) || 0 }
+})
+
+const freeMaintStr = computed({
+  get: () => String(freeMaint.value),
+  set: (val) => { freeMaint.value = Number(val) || 0 }
+})
+
+const proLicenseStr = computed({
+  get: () => String(proLicense.value),
+  set: (val) => { proLicense.value = Number(val) || 0 }
+})
+
+const proSetupStr = computed({
+  get: () => String(proSetup.value),
+  set: (val) => { proSetup.value = Number(val) || 0 }
+})
+
+const proAccStr = computed({
+  get: () => String(proAcc.value),
+  set: (val) => { proAcc.value = Number(val) || 0 }
+})
+
+const proMaintStr = computed({
+  get: () => String(proMaint.value),
+  set: (val) => { proMaint.value = Number(val) || 0 }
+})
 
 const applyScenario = (scenario: Scenario) => {
   activeScenario.value = scenario
@@ -621,3 +756,7 @@ watch(
   }
 )
 </script>
+
+<style scoped>
+/* Motion reduce support - handled by transition presets */
+</style>
