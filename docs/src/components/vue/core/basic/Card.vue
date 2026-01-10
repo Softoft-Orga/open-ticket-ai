@@ -2,11 +2,15 @@
   <div 
     :class="[
       cardClasses,
-      'border border-border-dark rounded-lg shadow text-text-dim',
-      paddingClass
+      borderClass,
+      radiusClass,
+      elevationClass,
+      sizeClass,
+      'text-text-dim transition-all duration-200 motion-reduce:transition-none',
+      hoverable && 'hover:border-primary/50 hover:shadow-glow cursor-pointer'
     ]"
   >
-    <div v-if="$slots.image" class="overflow-hidden rounded-t-lg -m-6 mb-0">
+    <div v-if="$slots.image" :class="['overflow-hidden -m-6 mb-0', imageRadiusClass]">
       <slot name="image"/>
     </div>
     <div v-if="$slots.header" :class="headerClasses">
@@ -29,24 +33,37 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import type { Variant, Tone, Size, Radius, Elevation } from '../design-system/tokens'
 
 export interface CardProps {
   /**
-   * Background color variant
-   * @default 'default'
+   * Visual style variant
+   * @default 'primary'
    */
-  background?: 'default' | 'surface-dark' | 'surface-lighter' | 'primary' | 'gradient' | 'transparent' | 'custom'
+  variant?: Variant
   
   /**
-   * Custom background class when background is 'custom'
+   * Semantic tone (status color)
    */
-  customBg?: string
+  tone?: Tone
   
   /**
-   * Padding size
-   * @default 'default'
+   * Card size (affects padding)
+   * @default 'md'
    */
-  padding?: 'none' | 'sm' | 'default' | 'lg'
+  size?: Size
+  
+  /**
+   * Border radius
+   * @default 'lg'
+   */
+  radius?: Radius
+  
+  /**
+   * Shadow elevation level
+   * @default 'sm'
+   */
+  elevation?: Elevation
   
   /**
    * Whether to add hover effect
@@ -56,65 +73,136 @@ export interface CardProps {
 }
 
 const props = withDefaults(defineProps<CardProps>(), {
-  background: 'default',
-  customBg: '',
-  padding: 'default',
+  variant: 'primary',
+  size: 'md',
+  radius: 'lg',
+  elevation: 'sm',
   hoverable: false,
 })
 
-const backgroundClasses: Record<string, string> = {
-  'default': 'bg-surface-dark',
-  'surface-dark': 'bg-surface-dark',
-  'surface-lighter': 'bg-surface-lighter',
-  'primary': 'bg-primary/10',
-  'gradient': 'bg-cyber-gradient',
-  'transparent': 'bg-transparent',
-  'custom': props.customBg || 'bg-surface-dark',
-}
-
-const paddingClasses: Record<string, string> = {
-  'none': 'p-0',
-  'sm': 'p-4',
-  'default': 'p-6',
-  'lg': 'p-8',
-}
-
 const cardClasses = computed(() => {
-  const classes = [
-    backgroundClasses[props.background],
-  ]
-  
-  if (props.hoverable) {
-    classes.push('transition-all duration-300 hover:border-primary/50 hover:shadow-glow cursor-pointer')
+  // Tone takes precedence over variant for background
+  if (props.tone) {
+    switch (props.tone) {
+      case 'info':
+        return 'bg-info-faint'
+      case 'success':
+        return 'bg-success-dark/10'
+      case 'warning':
+        return 'bg-warning-dark/10'
+      case 'danger':
+        return 'bg-danger-dark/10'
+    }
   }
   
-  return classes.join(' ')
+  // Variant-based backgrounds
+  switch (props.variant) {
+    case 'secondary':
+      return 'bg-surface-lighter'
+    case 'outline':
+      return 'bg-transparent'
+    case 'ghost':
+      return 'bg-surface-dark/50'
+    default: // primary
+      return 'bg-surface-dark'
+  }
 })
 
-const paddingClass = computed(() => paddingClasses[props.padding])
+const borderClass = computed(() => {
+  if (props.tone) {
+    switch (props.tone) {
+      case 'info':
+        return 'border border-info/30'
+      case 'success':
+        return 'border border-success/30'
+      case 'warning':
+        return 'border border-warning/30'
+      case 'danger':
+        return 'border border-danger/30'
+    }
+  }
+  
+  if (props.variant === 'outline') {
+    return 'border-2 border-border-dark'
+  }
+  
+  return 'border border-border-dark'
+})
+
+const radiusClass = computed(() => {
+  switch (props.radius) {
+    case 'md':
+      return 'rounded-md'
+    case 'xl':
+      return 'rounded-xl'
+    case '2xl':
+      return 'rounded-2xl'
+    default: // lg
+      return 'rounded-lg'
+  }
+})
+
+const imageRadiusClass = computed(() => {
+  // Image should match top radius of card
+  switch (props.radius) {
+    case 'md':
+      return 'rounded-t-md'
+    case 'xl':
+      return 'rounded-t-xl'
+    case '2xl':
+      return 'rounded-t-2xl'
+    default: // lg
+      return 'rounded-t-lg'
+  }
+})
+
+const elevationClass = computed(() => {
+  switch (props.elevation) {
+    case 'none':
+      return ''
+    case 'md':
+      return 'shadow-lg'
+    case 'lg':
+      return 'shadow-xl'
+    default: // sm
+      return 'shadow'
+  }
+})
+
+const sizeClass = computed(() => {
+  switch (props.size) {
+    case 'sm':
+      return 'p-4'
+    case 'lg':
+      return 'p-8'
+    default: // md
+      return 'p-6'
+  }
+})
 
 const headerClasses = computed(() => {
-  const spacing = props.padding === 'none' ? 'px-6 pt-6 pb-4' : 'mb-4'
+  const spacing = props.size === 'sm' ? 'mb-2' : 'mb-4'
   return spacing
 })
 
 const titleClasses = computed(() => {
-  const spacing = props.padding === 'none' ? 'px-6 pb-2' : 'mb-2'
-  return `${spacing} text-lg font-bold text-white`
+  const spacing = props.size === 'sm' ? 'mb-1' : 'mb-2'
+  const fontSize = props.size === 'lg' ? 'text-xl' : 'text-lg'
+  return `${spacing} ${fontSize} font-bold text-white`
 })
 
 const contentClasses = computed(() => {
-  const spacing = props.padding === 'none' ? 'px-6 py-4' : 'mb-4'
+  const spacing = props.size === 'sm' ? 'mb-2' : 'mb-4'
   return `${spacing} text-white`
 })
 
 const actionsClasses = computed(() => {
-  const spacing = props.padding === 'none' ? 'px-6 py-4' : 'mt-4'
+  const spacing = props.size === 'sm' ? 'mt-2' : 'mt-4'
   return spacing
 })
 
 const footerClasses = computed(() => {
-  const spacing = props.padding === 'none' ? 'px-6 pb-6 pt-4' : 'mt-4'
+  const spacing = props.size === 'sm' ? 'mt-2' : 'mt-4'
   return `${spacing} text-text-dim`
 })
 </script>
