@@ -54,9 +54,9 @@
             class="text-white">{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
     </Button>
 
-    <Callout v-if="errorMessage" type="danger">
+    <Alert v-if="errorMessage" type="danger">
       {{ errorMessage }}
-    </Callout>
+    </Alert>
 
     <ResultTable v-if="queueResult && prioResult" :prio-result="prioResult" :queue-result="queueResult"/>
     <p>{{ t('otai_prediction_demo_component.apiText') }}<span v-if="apiLink != ''">:</span> <a v-if="apiLink != ''"
@@ -76,7 +76,7 @@ import ResultTable from "./ResultTable.vue";
 import SelectComponent from "../core/forms/SelectComponent.vue";
 import TextInput from "../core/forms/TextInput.vue";
 import TextArea from "../core/forms/TextArea.vue";
-import Callout from "../core/basic/Callout.vue";
+import Alert from "../core/Alert.vue";
 import {useHumanLoadedPage} from "../../../composables/useHumanLoadedPage";
 
 const {apiLink = ''} = defineProps<{
