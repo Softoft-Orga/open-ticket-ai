@@ -14,6 +14,11 @@
 ## Quick references
 - Components live under `docs/src/components/vue/**` and are showcased via Storybook stories in `docs/stories/**`.
 - Base layout imports `../styles/global.css`; ensure new views/components respect the global palette and font.
+- **Design-system tokens**: Shared prop types defined in `docs/src/components/vue/core/design-system/tokens.ts`:
+  - `Variant`: 'primary' | 'secondary' | 'outline' | 'ghost' (for buttons and UI variants)
+  - `Size`: 'sm' | 'md' | 'lg' (for component sizing)
+  - `Tone`: 'info' | 'success' | 'warning' | 'danger' (for semantic colors/alerts)
+  - Use these types in components and their corresponding arrays (VARIANTS, SIZES, TONES) in Storybook stories for consistency.
 
 ## Workflow expectations
 - Use Playwright MCP to visually check UI changes (Astro on :4321, Storybook on :6006) when tweaking design-sensitive components.
