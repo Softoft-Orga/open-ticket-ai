@@ -1,5 +1,10 @@
 <template>
-  <div class="bg-surface-dark border border-surface-lighter rounded-2xl p-8 hover:border-primary/30 transition-all">
+  <Card 
+    background="surface-dark" 
+    padding="lg" 
+    hoverable
+    class="rounded-2xl"
+  >
     <h3 class="text-white font-bold text-xl mb-2 uppercase tracking-wide">{{ title }}</h3>
     <p class="text-text-dim text-sm mb-6">{{ desc }}</p>
     <ul class="space-y-2">
@@ -12,10 +17,12 @@
         <span class="text-white text-sm font-medium">{{ item }}</span>
       </li>
     </ul>
-  </div>
+  </Card>
 </template>
 
 <script setup lang="ts">
+import Card from '../core/basic/Card.vue';
+
 defineProps<{
   title: string;
   desc: string;
