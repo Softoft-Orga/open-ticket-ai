@@ -2,6 +2,9 @@
 import {computed, ref} from 'vue'
 import TagMindmap from './TagMindmap.vue'
 import TagTree from './TagTree.vue'
+import Card from '../core/basic/Card.vue'
+import Badge from '../core/basic/Badge.vue'
+import Button from '../core/basic/Button.vue'
 
 type PredictionExample = {
     name: string
@@ -125,47 +128,62 @@ const setExample = (name: string) => {
 
 <template>
     <div class="flex flex-col gap-4">
-        <div class="bg-[var(--vp-c-warning-2)] text-[var(--vp-c-text-1)] py-3 px-4 rounded-lg font-semibold text-center border border-[var(--vp-c-warning-3)]">example only – no HuggingFace endpoint configured yet</div>
+        <Card tone="warning" size="sm" radius="lg">
+            <div class="font-semibold text-center text-white">example only – no HuggingFace endpoint configured yet</div>
+        </Card>
         <div class="grid grid-cols-[1fr_2fr] gap-4 items-start max-[960px]:grid-cols-1">
-            <div class="bg-[var(--vp-c-bg-soft)] border border-[var(--vp-c-border)] rounded-xl p-4 shadow-[var(--vp-shadow-2)]">
-                <div class="font-semibold mb-3">Examples</div>
+            <Card variant="secondary" size="sm" radius="xl">
+                <div class="font-semibold mb-3 text-white">Examples</div>
                 <div class="flex flex-col gap-2">
-                    <button
+                    <Button
                         v-for="example in examples"
                         :key="example.name"
-                        type="button"
-                        class="w-full text-left py-2.5 px-3 rounded-lg border border-[var(--vp-c-border)] bg-[var(--vp-c-bg)] text-[var(--vp-c-text-1)] transition-all duration-200 cursor-pointer hover:border-[var(--vp-c-brand-2)]"
-                        :class="{ 'border-[var(--vp-c-brand-1)] bg-[var(--vp-c-brand-soft)]': example.name === selectedName }"
+                        :variant="example.name === selectedName ? 'primary' : 'outline'"
+                        size="sm"
+                        radius="lg"
                         @click="setExample(example.name)"
                     >
                         {{ example.name }}
-                    </button>
+                    </Button>
                 </div>
-            </div>
+            </Card>
             <div class="flex flex-col gap-4" v-if="selectedExample">
-                <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden">
-                    <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">Input</div>
-                    <div class="py-3 px-4 flex flex-col gap-3">
+                <Card variant="primary" size="sm" radius="xl">
+                    <template #header>
+                        <div class="font-semibold text-white border-b border-border-dark pb-3">Input</div>
+                    </template>
+                    <div class="flex flex-col gap-3">
                         <div>
-                            <div class="font-semibold mb-1">Subject</div>
-                            <div class="whitespace-pre-wrap leading-relaxed">{{ selectedExample.subject }}</div>
+                            <div class="font-semibold mb-1 text-white">Subject</div>
+                            <div class="whitespace-pre-wrap leading-relaxed text-slate-200">{{ selectedExample.subject }}</div>
                         </div>
                         <div>
-                            <div class="font-semibold mb-1">Body</div>
-                            <div class="whitespace-pre-wrap leading-relaxed">{{ selectedExample.body }}</div>
+                            <div class="font-semibold mb-1 text-white">Body</div>
+                            <div class="whitespace-pre-wrap leading-relaxed text-slate-200">{{ selectedExample.body }}</div>
                         </div>
                     </div>
-                </div>
-                <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden">
-                    <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">Predicted Tags</div>
-                    <div class="flex flex-wrap gap-2 py-3 px-4 pb-4">
-                        <span class="inline-flex items-center py-1.5 px-2.5 rounded-full bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)] border border-[var(--vp-c-border)] text-sm" v-for="tag in selectedExample.predictedTags" :key="tag">{{ tag }}</span>
+                </Card>
+                <Card variant="primary" size="sm" radius="xl">
+                    <template #header>
+                        <div class="font-semibold text-white border-b border-border-dark pb-3">Predicted Tags</div>
+                    </template>
+                    <div class="flex flex-wrap gap-2 pb-2">
+                        <Badge 
+                            v-for="tag in selectedExample.predictedTags" 
+                            :key="tag"
+                            type="secondary"
+                            size="sm"
+                        >
+                            {{ tag }}
+                        </Badge>
                     </div>
-                </div>
-                <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden opacity-70">
-                    <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">Your own text</div>
-                    <div class="py-3 px-4">Live prediction coming soon</div>
-                </div>
+                </Card>
+                <Card variant="primary" size="sm" radius="xl" class="opacity-70">
+                    <template #header>
+                        <div class="font-semibold text-white border-b border-border-dark pb-3">Your own text</div>
+                    </template>
+                    <div class="text-text-dim">Live prediction coming soon</div>
+                </Card>
             </div>
         </div>
         <TagMindmap/>
