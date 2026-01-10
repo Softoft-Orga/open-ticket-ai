@@ -2,6 +2,7 @@
 import TextInput from '../src/components/vue/core/forms/TextInput.vue'
 import {ref} from 'vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
+import { VARIANTS, SIZES, TONES } from '../src/components/vue/core/design-system/tokens'
 
 const meta: Meta<typeof TextInput> = {
     title: 'Core/TextInput',
@@ -11,13 +12,14 @@ const meta: Meta<typeof TextInput> = {
         placeholder: {control: 'text', description: 'Placeholder text'},
         disabled: {control: 'boolean', description: 'Disabled state'},
         type: {control: 'text', description: 'Input type attribute'},
-        variant: {control: {type: 'select'}, options: ['primary', 'secondary', 'outline', 'ghost']},
-        size: {control: {type: 'select'}, options: ['sm', 'md', 'lg']}
+        variant: {control: {type: 'select'}, options: [...VARIANTS]},
+        size: {control: {type: 'select'}, options: [...SIZES]},
+        tone: {control: {type: 'select'}, options: [undefined, ...TONES], description: 'Semantic tone (overrides variant colors)'}
     },
     parameters: {
         docs: {
             description: {
-                component: 'Text input field component with v-model support, variants, and dark mode styling.'
+                component: 'Text input field component with v-model support, variants, tones, and dark mode styling. Tone affects border/focus/hover colors.'
             }
         },
         backgrounds: {
@@ -257,6 +259,15 @@ export const AllVariants: Story = {
                     </div>
                 </div>
                 <div>
+                    <h3 style="color: #e6e7ea; margin-bottom: 0.5rem; font-size: 0.875rem;">Tones (Semantic Colors)</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <TextInput tone="info" placeholder="Info tone..." />
+                        <TextInput tone="success" placeholder="Success tone..." />
+                        <TextInput tone="warning" placeholder="Warning tone..." />
+                        <TextInput tone="danger" placeholder="Danger tone..." />
+                    </div>
+                </div>
+                <div>
                     <h3 style="color: #e6e7ea; margin-bottom: 0.5rem; font-size: 0.875rem;">Disabled</h3>
                     <TextInput variant="primary" disabled placeholder="Disabled input" modelValue="Cannot edit" />
                 </div>
@@ -282,5 +293,89 @@ export const Interactive: Story = {
             </div>
         `,
     }),
+}
+
+export const InfoTone: Story = {
+    render: (args, {updateArgs}) => ({
+        components: {TextInput},
+        setup() {
+            return {args, updateArgs}
+        },
+        template: `
+            <TextInput
+                v-bind="args"
+                @update:modelValue="value => updateArgs({ modelValue: value })"
+            />
+        `,
+    }),
+    args: {
+        modelValue: '',
+        placeholder: 'Info tone input...',
+        tone: 'info',
+        size: 'md'
+    },
+}
+
+export const SuccessTone: Story = {
+    render: (args, {updateArgs}) => ({
+        components: {TextInput},
+        setup() {
+            return {args, updateArgs}
+        },
+        template: `
+            <TextInput
+                v-bind="args"
+                @update:modelValue="value => updateArgs({ modelValue: value })"
+            />
+        `,
+    }),
+    args: {
+        modelValue: '',
+        placeholder: 'Success tone input...',
+        tone: 'success',
+        size: 'md'
+    },
+}
+
+export const WarningTone: Story = {
+    render: (args, {updateArgs}) => ({
+        components: {TextInput},
+        setup() {
+            return {args, updateArgs}
+        },
+        template: `
+            <TextInput
+                v-bind="args"
+                @update:modelValue="value => updateArgs({ modelValue: value })"
+            />
+        `,
+    }),
+    args: {
+        modelValue: '',
+        placeholder: 'Warning tone input...',
+        tone: 'warning',
+        size: 'md'
+    },
+}
+
+export const DangerTone: Story = {
+    render: (args, {updateArgs}) => ({
+        components: {TextInput},
+        setup() {
+            return {args, updateArgs}
+        },
+        template: `
+            <TextInput
+                v-bind="args"
+                @update:modelValue="value => updateArgs({ modelValue: value })"
+            />
+        `,
+    }),
+    args: {
+        modelValue: '',
+        placeholder: 'Danger tone input...',
+        tone: 'danger',
+        size: 'md'
+    },
 }
 
