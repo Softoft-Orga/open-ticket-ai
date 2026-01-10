@@ -17,9 +17,10 @@ import {
   XCircleIcon,
   InformationCircleIcon
 } from '@heroicons/vue/24/outline'
+import type {Tone} from '../design-system/tokens'
 
 interface Props {
-  type?: 'info' | 'success' | 'warning' | 'danger'
+  type?: Tone
   variant?: 'left-border' | 'bordered' | 'filled'
 }
 

@@ -1,11 +1,15 @@
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
+import { TONES } from '../src/components/vue/core/design-system/tokens'
+
+// Badge supports brand colors (primary, secondary) plus semantic tones
+const BADGE_TYPES = ['primary', 'secondary', ...TONES] as const
 
 const meta: Meta<typeof Badge> = {
     title: 'Core/Badge',
     component: Badge,
     argTypes: {
-        type: {control: {type: 'select'}, options: ['primary', 'secondary', 'success', 'warning', 'danger']},
+        type: {control: {type: 'select'}, options: BADGE_TYPES},
         default: {
             control: 'text',
             description: 'Badge text content (slot)'

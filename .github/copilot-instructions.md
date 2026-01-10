@@ -57,6 +57,10 @@ changing before making edits and follow the rules for that surface specifically.
 - **Location**: Components in `docs/src/components/vue/**`. Stories in `docs/stories/**`.
 - **Reusable First**: Always prefer existing components. Check `docs/storybook-static/index.json` before creating new ones.
 - **Storybook**: Update stories when changing components.
+- **Design-system tokens**: Use shared types from `docs/src/components/vue/core/design-system/tokens.ts`:
+  - `Variant`, `Size`, `Tone` types for consistent component props
+  - Export arrays (`VARIANTS`, `SIZES`, `TONES`) for Storybook controls
+  - Badge uses combined types: `'primary' | 'secondary' | Tone`
 
 ### Development Workflow
 - **Working Directory**: All commands run from `docs/`.
