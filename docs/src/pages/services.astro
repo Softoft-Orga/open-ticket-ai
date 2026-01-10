@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PricingCard from '../components/services/PricingCard.astro';
 import IntegrationPackageCard from '../components/services/IntegrationPackageCard.astro';
 import ExtensionItem from '../components/services/ExtensionItem.astro';
+import ServiceInquiryModal from '../components/vue/forms/ServiceInquiryModal.vue';
 import {
   CubeTransparentIcon,
   ServerIcon,
@@ -105,6 +106,7 @@ const typicalScopeItems = [
 ---
 
 <BaseLayout title={title} description={description}>
+  <ServiceInquiryModal client:load isOpen={false} />
   <div class="min-h-screen bg-background-dark pb-32">
     <!-- Hero -->
     <section class="relative pt-24 pb-20 text-center">
@@ -201,7 +203,8 @@ const typicalScopeItems = [
               price={formatPrice(service.data.startingPrice)}
               features={service.data.outcomes || []}
               highlighted={isHighlighted(index, syntheticDataServices.length)}
-              buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
+              buttonText={index === 1 ? "Get rollout plan" : "Contact Sales"}
+              serviceKey={service.data.title}
             />
           );
         })}
@@ -241,9 +244,10 @@ const typicalScopeItems = [
               subtitle={info.subtitle}
               price={formatPrice(service.data.startingPrice)}
               systems={info.systems}
-              buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
+              buttonText={index === 1 ? "Request proposal" : "Contact Sales"}
               features={service.data.outcomes || []}
               highlighted={index === 1}
+              serviceKey={service.data.title}
             />
           );
         })}
@@ -312,6 +316,15 @@ const typicalScopeItems = [
                   </div>
                 </div>
               </div>
+              <div class="mt-8">
+                <button 
+                  class="w-full rounded-lg py-3 text-sm font-bold bg-transparent border border-white/20 text-white hover:bg-white/5 transition-all"
+                  data-service-modal-trigger
+                  data-service={service.data.title}
+                >
+                  Get rollout plan
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -345,7 +358,11 @@ const typicalScopeItems = [
                 <p class="text-sm text-slate-400 mb-10 flex-grow leading-relaxed">
                   {service.data.description}
                 </p>
-                <button class="w-full rounded-lg py-3.5 text-sm font-bold border border-white/20 text-white hover:bg-white/5">
+                <button 
+                  class="w-full rounded-lg py-3.5 text-sm font-bold border border-white/20 text-white hover:bg-white/5"
+                  data-service-modal-trigger
+                  data-service={service.data.title}
+                >
                   Contact Sales
                 </button>
               </div>
@@ -360,7 +377,8 @@ const typicalScopeItems = [
               priceSuffix="Base price"
               features={service.data.outcomes || []}
               highlighted={index === 1}
-              buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
+              buttonText={index === 1 ? "Get rollout plan" : "Contact Sales"}
+              serviceKey={service.data.title}
             />
           );
         })}
@@ -430,10 +448,18 @@ const typicalScopeItems = [
             Schedule a technical consultation with our German engineering team to discuss your specific infrastructure needs.
           </p>
           <div class="flex flex-wrap justify-center gap-6">
-            <button class="h-14 px-10 rounded-lg bg-cyan-400 text-background-dark font-black text-lg hover:bg-cyan-300 transition-colors shadow-xl shadow-cyan-400/20">
+            <button 
+              class="h-14 px-10 rounded-lg bg-cyan-400 text-background-dark font-black text-lg hover:bg-cyan-300 transition-colors shadow-xl shadow-cyan-400/20"
+              data-service-modal-trigger
+              data-service="General Inquiry"
+            >
               Get Demo
             </button>
-            <button class="h-14 px-10 rounded-lg border border-white/20 text-white font-bold text-lg hover:bg-white/5 transition-colors flex items-center gap-2">
+            <button 
+              class="h-14 px-10 rounded-lg border border-white/20 text-white font-bold text-lg hover:bg-white/5 transition-colors flex items-center gap-2"
+              data-service-modal-trigger
+              data-service="General Inquiry"
+            >
               Contact Sales <ArrowRightIcon class="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
@@ -441,4 +467,22 @@ const typicalScopeItems = [
       </div>
     </section>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const modalTriggers = document.querySelectorAll('[data-service-modal-trigger]');
+      
+      modalTriggers.forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          const service = (e.currentTarget as HTMLElement).dataset.service || '';
+          
+          // Dispatch custom event to open modal
+          window.dispatchEvent(new CustomEvent('open-service-modal', { 
+            detail: { service } 
+          }));
+        });
+      });
+    });
+  </script>
 </BaseLayout>

@@ -9,6 +9,7 @@ export interface Props {
   features: string[];
   buttonText: string;
   highlighted?: boolean;
+  serviceKey?: string;
 }
 
 const { 
@@ -18,7 +19,8 @@ const {
   systems, 
   features, 
   buttonText, 
-  highlighted = false 
+  highlighted = false,
+  serviceKey = ""
 } = Astro.props;
 ---
 
@@ -48,7 +50,11 @@ const {
     ))}
   </ul>
 
-  <button class={`w-full rounded-lg py-3 text-sm font-bold transition-all ${highlighted ? 'bg-primary text-white hover:bg-primary-dark' : 'bg-transparent border border-white/20 text-white hover:bg-white/5'}`}>
+  <button 
+    class={`w-full rounded-lg py-3 text-sm font-bold transition-all ${highlighted ? 'bg-primary text-white hover:bg-primary-dark' : 'bg-transparent border border-white/20 text-white hover:bg-white/5'}`}
+    data-service-modal-trigger
+    data-service={serviceKey}
+  >
     {buttonText}
   </button>
 </div>

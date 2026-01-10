@@ -10,6 +10,7 @@ export interface Props {
   highlighted?: boolean;
   buttonText?: string;
   priceSuffix?: string;
+  serviceKey?: string;
 }
 
 const { 
@@ -20,7 +21,8 @@ const {
   badge, 
   highlighted = false, 
   buttonText = "Contact Sales", 
-  priceSuffix = "" 
+  priceSuffix = "",
+  serviceKey = ""
 } = Astro.props;
 ---
 
@@ -41,7 +43,11 @@ const {
       </li>
     ))}
   </ul>
-  <button class={`w-full rounded-lg py-3.5 text-sm font-bold transition-all ${highlighted ? 'bg-primary hover:bg-primary-dark text-white' : 'bg-transparent border border-white/20 text-white hover:bg-white/5'}`}>
+  <button 
+    class={`w-full rounded-lg py-3.5 text-sm font-bold transition-all ${highlighted ? 'bg-primary hover:bg-primary-dark text-white' : 'bg-transparent border border-white/20 text-white hover:bg-white/5'}`}
+    data-service-modal-trigger
+    data-service={serviceKey}
+  >
     {buttonText}
   </button>
 </div>
