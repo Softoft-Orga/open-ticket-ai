@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/vue/Badge.vue';
+import Button from '../components/vue/core/basic/Button.vue';
 import { getCollection } from 'astro:content';
 import { 
   CubeTransparentIcon, 
@@ -75,12 +76,12 @@ const capabilityIcons: Record<string, any> = {
             </p>
             
             <div class="flex flex-wrap gap-4 pt-4">
-              <button class="h-14 px-10 rounded-lg bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all">
+              <Button variant="primary" size="lg" client:load>
                 Start Free Trial
-              </button>
-              <button class="h-14 px-10 rounded-lg border border-border-dark hover:border-primary/50 text-white text-lg font-medium transition-all bg-surface-dark/50">
+              </Button>
+              <Button variant="outline" size="lg" client:load>
                 View Demo
-              </button>
+              </Button>
             </div>
           </div>
           
@@ -285,9 +286,9 @@ const capabilityIcons: Record<string, any> = {
               <p class="text-gray-500 text-sm mb-6">Available 18.01</p>
             </div>
             
-            <button class="w-full h-12 rounded-xl border border-border-dark hover:border-primary/50 text-white font-bold transition-all">
+            <Button variant="outline" size="md" class="w-full" client:load>
               Explore Lite Free
-            </button>
+            </Button>
           </div>
           
           <!-- Lite Pro - BEST VALUE -->
@@ -337,9 +338,9 @@ const capabilityIcons: Record<string, any> = {
               <p class="text-primary-light text-sm mb-6">Available 18.01</p>
             </div>
             
-            <button class="w-full h-12 rounded-xl bg-primary text-white font-bold hover:bg-white hover:text-background-dark transition-all">
+            <Button variant="primary" size="md" class="w-full" client:load>
               Explore Lite Pro
-            </button>
+            </Button>
           </div>
           
           <!-- Full Pro -->
@@ -385,9 +386,9 @@ const capabilityIcons: Record<string, any> = {
               <p class="text-gray-500 text-sm mb-6">IN DEVELOPMENT</p>
             </div>
             
-            <button class="w-full h-12 rounded-xl border border-border-dark hover:border-primary/50 text-white font-bold transition-all">
+            <Button variant="outline" size="md" class="w-full" client:load>
               Explore Full Pro
-            </button>
+            </Button>
           </div>
         </div>
         
@@ -462,12 +463,12 @@ const capabilityIcons: Record<string, any> = {
             </p>
             
             <div class="flex flex-wrap gap-4 justify-center">
-              <button class="h-14 px-12 rounded-xl bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
+              <Button variant="primary" size="lg" client:load>
                 GET LITE FREE VERSION
-              </button>
-              <button class="h-14 px-12 rounded-xl border border-surface-lighter hover:border-primary/50 bg-surface-dark/50 text-white text-lg font-medium transition-all">
+              </Button>
+              <Button variant="outline" size="lg" client:load>
                 View Architecture
-              </button>
+              </Button>
             </div>
           </div>
         </div>
