@@ -29,11 +29,11 @@ export const WithLogo: Story = {
         template: '<NavBar v-bind="args" />'
     }),
     args: {
-        brand: {
-            name: 'Open Ticket AI',
-            tagline: 'AI-Powered Ticketing',
-            logoSrc: 'https://via.placeholder.com/32'
-        }
+        navItems: [
+            {label: 'Products', href: '/products/'},
+            {label: 'Services', href: '/services/'},
+            {label: 'Docs', href: '/docs/'},
+        ]
     }
 }
 
@@ -46,10 +46,11 @@ export const WithCTA: Story = {
         template: '<NavBar v-bind="args" />'
     }),
     args: {
-        cta: {
-            label: 'Get Started',
-            href: '/getting-started/'
-        }
+        navItems: [
+            {label: 'Products', href: '/products/'},
+            {label: 'Services', href: '/services/'},
+            {label: 'Docs', href: '/docs/'},
+        ]
     }
 }
 
@@ -62,16 +63,12 @@ export const CustomLinks: Story = {
         template: '<NavBar v-bind="args" />'
     }),
     args: {
-        links: [
+        navItems: [
             {label: 'Home', href: '/'},
             {label: 'Features', href: '/features/'},
             {label: 'Solutions', href: '/solutions/'},
             {label: 'Contact', href: '/contact/'},
-        ],
-        cta: {
-            label: 'Sign Up',
-            href: '/signup/'
-        }
+        ]
     }
 }
 
@@ -84,20 +81,28 @@ export const Full: Story = {
         template: '<NavBar v-bind="args" />'
     }),
     args: {
-        brand: {
-            name: 'Open Ticket AI',
-            tagline: 'Intelligent Support',
-            logoSrc: 'https://via.placeholder.com/32'
+        navItems: [
+             {label: 'Product', href: '/product/'},
+             {label: 'Solutions', href: '/solutions/'},
+             {label: 'Docs', href: '/docs/'},
+             {label: 'Pricing', href: '/pricing/'},
+        ]
+    }
+}
+
+export const DocsDropdown: Story = {
+    render: (args) => ({
+        components: {NavBar},
+        setup() {
+            return {args}
         },
-        links: [
-            {label: 'Product', href: '/product/'},
-            {label: 'Solutions', href: '/solutions/'},
-            {label: 'Docs', href: '/docs/'},
-            {label: 'Pricing', href: '/pricing/'},
-        ],
-        cta: {
-            label: 'Try Demo',
-            href: '/demo/'
-        }
+        template: '<div class="bg-slate-900 p-4"><NavBar v-bind="args" /></div>'
+    }),
+    args: {
+        navItems: [
+             {label: 'Home', href: '/'},
+             {label: 'Solutions', href: '/solutions/'},
+             {label: 'Pricing', href: '/pricing/'},
+        ]
     }
 }
