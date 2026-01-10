@@ -29,6 +29,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import type { Variant } from '../design-system/tokens'
 
 export interface CardProps {
   /**
@@ -53,6 +54,13 @@ export interface CardProps {
    * @default false
    */
   hoverable?: boolean
+  
+  /**
+   * Variant style from design system tokens (primary, secondary, outline, ghost)
+   * When provided, overrides background prop with variant-specific styling
+   * @default undefined
+   */
+  variant?: Variant
 }
 
 const props = withDefaults(defineProps<CardProps>(), {
@@ -60,6 +68,7 @@ const props = withDefaults(defineProps<CardProps>(), {
   customBg: '',
   padding: 'default',
   hoverable: false,
+  variant: undefined,
 })
 
 const backgroundClasses: Record<string, string> = {
@@ -72,6 +81,14 @@ const backgroundClasses: Record<string, string> = {
   'custom': props.customBg || 'bg-surface-dark',
 }
 
+// Variant styling using design system tokens
+const variantClasses: Record<Variant, string> = {
+  'primary': 'bg-primary/10 border-primary/30',
+  'secondary': 'bg-surface-dark/40 border-border-dark',
+  'outline': 'bg-transparent border-border-dark',
+  'ghost': 'bg-transparent border-transparent',
+}
+
 const paddingClasses: Record<string, string> = {
   'none': 'p-0',
   'sm': 'p-4',
@@ -80,9 +97,14 @@ const paddingClasses: Record<string, string> = {
 }
 
 const cardClasses = computed(() => {
-  const classes = [
-    backgroundClasses[props.background],
-  ]
+  const classes = []
+  
+  // If variant is provided, use variant styling; otherwise use background prop
+  if (props.variant) {
+    classes.push(variantClasses[props.variant])
+  } else {
+    classes.push(backgroundClasses[props.background])
+  }
   
   if (props.hoverable) {
     classes.push('transition-all duration-300 hover:border-primary/50 hover:shadow-glow cursor-pointer')

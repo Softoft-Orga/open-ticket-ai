@@ -1,6 +1,7 @@
 import Card from '../src/components/vue/core/basic/Card.vue'
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
+import { VARIANTS } from '../src/components/vue/core/design-system/tokens'
 
 const meta: Meta<typeof Card> = {
     title: 'Core/Card',
@@ -25,11 +26,16 @@ const meta: Meta<typeof Card> = {
             control: 'text',
             description: 'Custom background class when background is "custom"',
         },
+        variant: {
+            control: 'select',
+            options: VARIANTS,
+            description: 'Design system variant (primary, secondary, outline, ghost) - overrides background when set',
+        },
     },
     parameters: {
         docs: {
             description: {
-                component: 'Flexible card component with multiple slots (image, header, title, default, actions, footer) and customizable background colors. Supports hover effects and various padding options.'
+                component: 'Flexible card component with multiple slots (image, header, title, default, actions, footer) and customizable background colors. Supports hover effects and various padding options. Can use design system variants for consistent styling.'
             }
         }
     }
@@ -548,6 +554,109 @@ export const Playground: Story = {
                 <p>Use the controls panel to experiment with different card configurations.</p>
                 <p class="text-sm text-text-dim mt-2">Try changing the background, padding, and hoverable properties to see how they affect the card appearance.</p>
             </Card>
+        `
+    }),
+}
+
+// Design System Variant Examples
+export const VariantPrimary: Story = {
+    args: {
+        variant: 'primary',
+        padding: 'default',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Primary Variant</template>
+                <p>Uses the primary design system variant with primary/10 background and primary/30 border.</p>
+            </Card>
+        `
+    }),
+}
+
+export const VariantSecondary: Story = {
+    args: {
+        variant: 'secondary',
+        padding: 'default',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Secondary Variant</template>
+                <p>Uses the secondary design system variant with subtle dark background.</p>
+            </Card>
+        `
+    }),
+}
+
+export const VariantOutline: Story = {
+    args: {
+        variant: 'outline',
+        padding: 'default',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Outline Variant</template>
+                <p>Uses the outline design system variant with transparent background and visible border.</p>
+            </Card>
+        `
+    }),
+}
+
+export const VariantGhost: Story = {
+    args: {
+        variant: 'ghost',
+        padding: 'default',
+    },
+    render: (args) => ({
+        components: {Card},
+        setup() {
+            return {args}
+        },
+        template: `
+            <Card v-bind="args">
+                <template #title>Ghost Variant</template>
+                <p>Uses the ghost design system variant with fully transparent background and border.</p>
+            </Card>
+        `
+    }),
+}
+
+export const AllDesignVariants: Story = {
+    render: () => ({
+        components: {Card},
+        template: `
+            <div class="grid gap-4 md:grid-cols-2 bg-background-dark p-6 rounded-lg">
+                <Card variant="primary" hoverable>
+                    <template #title>Primary</template>
+                    <p>Primary variant with emphasis</p>
+                </Card>
+                <Card variant="secondary" hoverable>
+                    <template #title>Secondary</template>
+                    <p>Secondary variant - default style</p>
+                </Card>
+                <Card variant="outline" hoverable>
+                    <template #title>Outline</template>
+                    <p>Outline variant - minimal style</p>
+                </Card>
+                <Card variant="ghost" hoverable>
+                    <template #title>Ghost</template>
+                    <p>Ghost variant - transparent</p>
+                </Card>
+            </div>
         `
     }),
 }
