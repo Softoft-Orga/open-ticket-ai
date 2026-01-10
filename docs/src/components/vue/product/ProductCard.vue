@@ -32,6 +32,7 @@
         <AccordionItem
             v-if="extraFeatures.length"
             :title="accordionTitle"
+            variant="ghost"
             class="mt-auto">
           <ul class="space-y-2 !m-0 !p-0">
             <li

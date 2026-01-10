@@ -96,7 +96,7 @@
             <span class="font-medium text-vp-text-2">Schema:</span>
             <span class="ml-2 font-mono text-vp-text-1">{{ sidecar._output.payload_schema_ref }}</span>
           </div>
-          <AccordionItem v-if="sidecar._output.examples" title="Output Examples">
+          <AccordionItem v-if="sidecar._output.examples" title="Output Examples" variant="bordered">
             <table class="w-full text-xs">
               <tbody>
               <tr v-for="(example, state) in sidecar._output.examples" :key="state" class="border-b border-vp-border">
@@ -151,7 +151,7 @@
       <!-- Examples -->
       <section>
         <h3 class="text-lg font-semibold text-vp-text-1 mb-3">Usage Examples</h3>
-        <AccordionItem v-for="(example, name) in sidecar._examples" :key="name" :title="name">
+        <AccordionItem v-for="(example, name) in sidecar._examples" :key="name" :title="name" variant="bordered">
           <pre class="text-xs overflow-x-auto bg-vp-bg-soft p-4 rounded border border-vp-border"><code>{{
               example
             }}</code></pre>
