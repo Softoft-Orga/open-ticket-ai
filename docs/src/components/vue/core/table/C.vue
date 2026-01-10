@@ -41,7 +41,7 @@ const cellClasses = computed(() => {
   // Alignment
   classes.push(alignClass.value)
   
-  // Text styling for headers
+  // Text styling for headers - using design tokens
   if (props.header) {
     switch (variant) {
       case 'glassy':
@@ -57,14 +57,8 @@ const cellClasses = computed(() => {
         classes.push('text-slate-200 font-semibold')
     }
   } else {
-    // Regular cell text color
-    switch (variant) {
-      case 'glassy':
-        classes.push('text-slate-300')
-        break
-      default:
-        classes.push('text-slate-300')
-    }
+    // Regular cell text color - using design tokens
+    classes.push('text-text-dim')
   }
   
   return classes
