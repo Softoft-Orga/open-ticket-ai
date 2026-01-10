@@ -11,6 +11,8 @@ module.exports = {
                 'primary': '#a60df2',
                 'primary-dark': '#7b09b5',
                 'primary-light': '#d475fd',
+                'link': '#646cff',
+                'link-hover': '#747bff',
                 'background-dark': '#0f0814',
                 'surface-dark': '#1d1023',
                 'surface-lighter': '#2d1b36',

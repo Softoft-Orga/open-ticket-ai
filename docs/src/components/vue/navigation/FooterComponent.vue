@@ -4,7 +4,7 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
         <div class="md:col-span-1">
           <div class="flex items-center gap-2 mb-6">
-            <div class="flex size-8 items-center justify-center rounded bg-primary/20 text-primary">
+            <div class="flex size-8 items-center justify-center rounded bg-link/20 text-link">
               <TicketIcon class="w-5 h-5" />
             </div>
             <span class="font-display text-lg font-bold text-white tracking-tight">Open Ticket AI</span>
@@ -17,28 +17,28 @@
         <div>
           <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">Product</h4>
           <ul class="space-y-4 text-slate-500 text-sm">
-            <li><a href="/products" class="hover:text-primary transition-colors">Features</a></li>
-            <li><a href="/services" class="hover:text-primary transition-colors">Integrations</a></li>
-            <li><a href="/docs" class="hover:text-primary transition-colors">Security</a></li>
+            <li><a href="/products" class="hover:text-link transition-colors">Features</a></li>
+            <li><a href="/services" class="hover:text-link transition-colors">Integrations</a></li>
+            <li><a href="/docs" class="hover:text-link transition-colors">Security</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">Company</h4>
           <ul class="space-y-4 text-slate-500 text-sm">
-            <li><a href="#" class="hover:text-primary transition-colors">About Us</a></li>
-            <li><a href="#" class="hover:text-primary transition-colors">Careers</a></li>
-            <li><a href="#" class="hover:text-primary transition-colors">Legal</a></li>
+            <li><a href="#" class="hover:text-link transition-colors">About Us</a></li>
+            <li><a href="#" class="hover:text-link transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-link transition-colors">Legal</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">Connect</h4>
           <div class="flex gap-4 text-slate-500">
-            <a href="https://github.com/openticketai" class="hover:text-primary transition-colors" aria-label="GitHub">
+            <a href="https://github.com/openticketai" class="hover:text-link transition-colors" aria-label="GitHub">
               <CodeBracketSquareIcon class="w-6 h-6" />
             </a>
-            <a href="https://www.linkedin.com/company/open-ticket-ai" class="hover:text-primary transition-colors" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/company/open-ticket-ai" class="hover:text-link transition-colors" aria-label="LinkedIn">
               <LinkIcon class="w-6 h-6" />
             </a>
           </div>
