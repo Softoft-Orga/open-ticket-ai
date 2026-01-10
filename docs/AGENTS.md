@@ -19,6 +19,7 @@
   - `Size`: 'sm' | 'md' | 'lg' (for component sizing)
   - `Tone`: 'info' | 'success' | 'warning' | 'danger' (for semantic colors/alerts)
   - Use these types in components and their corresponding arrays (VARIANTS, SIZES, TONES) in Storybook stories for consistency.
+- **Badge component**: Use `Badge` from `docs/src/components/vue/core/basic/Badge.vue` for all tag/label pills. Supports `type` prop with 'primary', 'secondary', and semantic tones. Avoid creating custom badge-like elements with inline Tailwind classes.
 
 ## Workflow expectations
 - Use Playwright MCP to visually check UI changes (Astro on :4321, Storybook on :6006) when tweaking design-sensitive components.
