@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/vue/Badge.vue';
 import { getCollection } from 'astro:content';
-import { CubeTransparentIcon, ArrowRightIcon } from '@heroicons/vue/24/outline';
+import { CubeTransparentIcon, ArrowRightIcon, CalculatorIcon } from '@heroicons/vue/24/outline';
 
 const title = "Our Technology Stack";
 
@@ -18,7 +18,7 @@ const products = allProducts
   .filter(product => featuredSlugs.includes(product.data.slug) && !product.data.nav?.hidden)
   .sort((a, b) => {
     // Custom sort: tagging-ai first, then automation-core, then synthetic-data
-    const orderMap = { 'tagging-ai': 0, 'open-ticket-automation-core': 1, 'synthetic-data-generator': 2 };
+    const orderMap: Record<string, number> = { 'tagging-ai': 0, 'open-ticket-automation-core': 1, 'synthetic-data-generator': 2 };
     return (orderMap[a.data.slug] ?? 999) - (orderMap[b.data.slug] ?? 999);
   });
 
@@ -67,6 +67,25 @@ const [heroProduct, ...regularProducts] = products;
           Secure, On-Premise AI for Enterprise Helpdesks built with German Engineering precision. Designed for strict data privacy and seamless integration.
         </p>
       </div>
+
+      <!-- ROI Calculator CTA -->
+      <a href="/roi-calculator/" class="group block mb-12 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/20 to-surface-dark border border-primary/30 p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(166,13,242,0.3)]">
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex items-center gap-4">
+            <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-primary/20 text-primary">
+              <CalculatorIcon class="w-8 h-8" aria-hidden="true" />
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold text-white mb-1">ROI Calculator</h3>
+              <p class="text-text-dim">Calculate your potential savings with automated ticket tagging</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold transition-all group-hover:bg-white group-hover:text-background-dark">
+            <span>Try Calculator</span>
+            <ArrowRightIcon class="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </div>
+        </div>
+      </a>
 
       <div class="grid gap-8">
         {/* Hero Card - First Product */}

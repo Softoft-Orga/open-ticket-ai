@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RoiCalculatorComponent from '../components/vue/product/RoiCalculator.vue';
+
+const title = "ROI Calculator";
+const description = "Calculate the return on investment for automated ticket tagging in your helpdesk environment.";
+---
+
+<BaseLayout title={title} description={description}>
+  <div slot="head" />
+
+  <div class="min-h-screen bg-background-dark py-12">
+    <RoiCalculatorComponent client:load />
+  </div>
+</BaseLayout>
