@@ -1,101 +1,217 @@
 <template>
-  <div>
-    <div 
-      class="flex border-b border-vp-border"
-      role="tablist"
+  <TabGroup 
+    :selected-index="selectedIndex" 
+    @change="handleChange"
+    :vertical="vertical"
+    as="div"
+    :class="containerClass"
+  >
+    <TabList 
+      :class="tabListClass"
       :aria-label="ariaLabel"
     >
-      <button
-          v-for="(label, idx) in tabs"
-          :key="idx"
-          :id="`tab-${uid}-${idx}`"
-          :class="[
-          'px-4 py-2 -mb-px focus:outline-none focus-visible:ring-2 focus-visible:ring-vp-brand',
-          activeIndex === idx
-            ? 'border-b-2 text-vp-brand border-vp-brand'
-            : 'text-vp-text-2 hover:text-vp-text-1'
-        ]"
-          role="tab"
-          :aria-selected="activeIndex === idx"
-          :aria-controls="`tabpanel-${uid}-${idx}`"
-          :tabindex="activeIndex === idx ? 0 : -1"
-          @click="selectTab(idx)"
-          @keydown="handleKeydown($event, idx)"
+      <Tab
+        v-for="(label, idx) in tabs"
+        :key="idx"
+        v-slot="{ selected }"
+        as="template"
       >
-        {{ label }}
-      </button>
-    </div>
-    <div 
-      v-for="(label, idx) in tabs"
-      :key="`panel-${idx}`"
-      v-show="activeIndex === idx"
-      :id="`tabpanel-${uid}-${idx}`"
-      class="mt-4"
-      role="tabpanel"
-      :aria-labelledby="`tab-${uid}-${idx}`"
-      tabindex="0"
-    >
-      <slot :name="`tab-${idx}`"/>
-    </div>
-  </div>
+        <button
+          :class="getTabButtonClass(selected)"
+        >
+          {{ label }}
+          <div
+            v-if="selected && showIndicator && variant !== 'pills'"
+            :class="indicatorClass"
+          ></div>
+        </button>
+      </Tab>
+    </TabList>
+
+    <TabPanels :class="tabPanelsClass">
+      <TabPanel
+        v-for="(label, idx) in tabs"
+        :key="`panel-${idx}`"
+        :class="tabPanelClass"
+      >
+        <slot :name="`tab-${idx}`" :index="idx" />
+      </TabPanel>
+    </TabPanels>
+  </TabGroup>
 </template>
 
 <script lang="ts" setup>
-import {ref, computed, watch} from 'vue'
+import { ref, computed, watch } from 'vue'
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+
+type TabSize = 'sm' | 'md' | 'lg'
+type TabVariant = 'underline' | 'pills' | 'enclosed' | 'ghost'
+type TabAlignment = 'start' | 'center' | 'end' | 'stretch'
 
 interface Props {
   tabs: string[]
   modelValue?: number
   ariaLabel?: string
+  size?: TabSize
+  variant?: TabVariant
+  alignment?: TabAlignment
+  fullWidth?: boolean
+  vertical?: boolean
+  showIndicator?: boolean
+  glowEffect?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
-  ariaLabel: 'Tabs'
+  ariaLabel: 'Tabs',
+  size: 'md',
+  variant: 'underline',
+  alignment: 'start',
+  fullWidth: false,
+  vertical: false,
+  showIndicator: true,
+  glowEffect: true
 })
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: number): void
+  (e: 'change', value: number): void
 }>()
 
-const uid = Math.random().toString(36).substr(2, 9)
-const activeIndex = ref(props.modelValue)
+const selectedIndex = ref(props.modelValue)
 
 watch(() => props.modelValue, (newVal) => {
-  activeIndex.value = newVal
+  selectedIndex.value = newVal
 })
 
-const selectTab = (idx: number) => {
-  activeIndex.value = idx
-  emit('update:modelValue', idx)
+const handleChange = (index: number) => {
+  selectedIndex.value = index
+  emit('update:modelValue', index)
+  emit('change', index)
 }
 
-const handleKeydown = (event: KeyboardEvent, currentIdx: number) => {
-  let newIdx = currentIdx
+const containerClass = computed(() => {
+  const classes = []
+  if (props.vertical) {
+    classes.push('flex gap-4')
+  }
+  return classes.join(' ')
+})
+
+const tabListClass = computed(() => {
+  const classes = ['flex']
   
-  switch (event.key) {
-    case 'ArrowLeft':
-      event.preventDefault()
-      newIdx = currentIdx > 0 ? currentIdx - 1 : props.tabs.length - 1
-      break
-    case 'ArrowRight':
-      event.preventDefault()
-      newIdx = currentIdx < props.tabs.length - 1 ? currentIdx + 1 : 0
-      break
-    case 'Home':
-      event.preventDefault()
-      newIdx = 0
-      break
-    case 'End':
-      event.preventDefault()
-      newIdx = props.tabs.length - 1
-      break
-    default:
-      return
+  if (props.vertical) {
+    classes.push('flex-col', 'min-w-[200px]')
+  } else {
+    if (props.alignment === 'center') classes.push('justify-center')
+    else if (props.alignment === 'end') classes.push('justify-end')
+    else if (props.alignment === 'stretch') classes.push('justify-stretch')
+    
+    if (props.variant === 'underline' || props.variant === 'ghost') {
+      classes.push('border-b border-border-dark')
+    } else if (props.variant === 'enclosed') {
+      classes.push('border-b border-border-dark bg-surface-dark rounded-t-xl')
+    }
   }
   
-  selectTab(newIdx)
-  const tabButton = document.getElementById(`tab-${uid}-${newIdx}`)
-  tabButton?.focus()
+  if (props.variant === 'pills') {
+    classes.push('gap-2 p-1 bg-surface-dark rounded-xl')
+  } else if (props.variant === 'enclosed') {
+    classes.push('gap-0')
+  } else {
+    classes.push('gap-1')
+  }
+  
+  return classes.join(' ')
+})
+
+const getTabButtonClass = (selected: boolean) => {
+  const classes = ['relative transition-all duration-200 font-medium']
+  
+  const sizeClasses = {
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2 text-base',
+    lg: 'px-6 py-3 text-lg'
+  }
+  classes.push(sizeClasses[props.size])
+  
+  if (props.fullWidth) {
+    classes.push('flex-1')
+  }
+  
+  if (props.variant === 'pills') {
+    classes.push('rounded-lg')
+    if (selected) {
+      classes.push('bg-primary text-white')
+      if (props.glowEffect) {
+        classes.push('shadow-glow')
+      }
+    } else {
+      classes.push('text-text-dim hover:text-white hover:bg-surface-lighter')
+    }
+  } else if (props.variant === 'enclosed') {
+    classes.push('border-x border-t border-transparent')
+    if (selected) {
+      classes.push('bg-background-dark border-border-dark text-white rounded-t-lg -mb-px')
+    } else {
+      classes.push('text-text-dim hover:text-white hover:bg-surface-lighter')
+    }
+  } else if (props.variant === 'ghost') {
+    classes.push('rounded-lg')
+    if (selected) {
+      classes.push('bg-surface-lighter text-white')
+    } else {
+      classes.push('text-text-dim hover:text-white hover:bg-surface-dark')
+    }
+  } else {
+    classes.push('-mb-px')
+    if (selected) {
+      classes.push('text-white')
+    } else {
+      classes.push('text-text-dim hover:text-white')
+    }
+  }
+  
+  classes.push('focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-dark')
+  
+  return classes.join(' ')
 }
+
+const indicatorClass = computed(() => {
+  const classes = ['absolute bottom-0 left-0 right-0 transition-all duration-200']
+  
+  if (props.variant === 'underline') {
+    classes.push('h-0.5 bg-primary')
+    if (props.glowEffect) {
+      classes.push('shadow-[0_0_10px_rgba(166,13,242,0.5)]')
+    }
+  }
+  
+  return classes.join(' ')
+})
+
+const tabPanelsClass = computed(() => {
+  const classes = []
+  
+  if (props.vertical) {
+    classes.push('flex-1')
+  }
+  
+  return classes.join(' ')
+})
+
+const tabPanelClass = computed(() => {
+  const classes = []
+  
+  if (props.variant === 'enclosed') {
+    classes.push('mt-0 p-4 bg-background-dark border border-border-dark rounded-b-xl border-t-0')
+  } else {
+    classes.push('mt-4')
+  }
+  
+  classes.push('focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-dark')
+  
+  return classes.join(' ')
+})
 </script>

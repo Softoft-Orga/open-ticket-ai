@@ -19,7 +19,7 @@
       <label class="block mb-1 font-bold" for="demo-subject">{{
           t('otai_prediction_demo_component.subjectLabel')
         }}</label>
-      <TextField
+      <TextInput
           id="demo-subject"
           v-model="subject"
           :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
@@ -74,7 +74,7 @@ import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
 import ResultTable from "./ResultTable.vue";
 import SelectComponent from "../core/forms/SelectComponent.vue";
-import TextField from "../core/forms/TextField.vue";
+import TextInput from "../core/forms/TextInput.vue";
 import TextArea from "../core/forms/TextArea.vue";
 import Callout from "../core/basic/Callout.vue";
 import {useHumanLoadedPage} from "../../../composables/useHumanLoadedPage";

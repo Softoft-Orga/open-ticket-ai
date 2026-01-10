@@ -15,7 +15,7 @@
           <label class="block text-sm font-medium text-gray-200 mb-1" for="email">
             {{ $t('sdg_waitlist.email_label') }}
           </label>
-          <TextField
+          <TextInput
               id="email"
               v-model="email"
               name="email"
@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import {ref} from 'vue'
-import TextField from '../core/forms/TextField.vue'
+import TextInput from '../core/forms/TextInput.vue'
 import Button from '../core/basic/Button.vue'
 import { EnvelopeIcon, UserPlusIcon } from '@heroicons/vue/24/outline'
 
