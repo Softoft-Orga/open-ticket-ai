@@ -70,6 +70,13 @@ export interface CardProps {
    * @default false
    */
   hoverable?: boolean
+  
+  /**
+   * Variant style from design system tokens (primary, secondary, outline, ghost)
+   * When provided, overrides background prop with variant-specific styling
+   * @default undefined
+   */
+  variant?: Variant
 }
 
 const props = withDefaults(defineProps<CardProps>(), {
@@ -78,6 +85,7 @@ const props = withDefaults(defineProps<CardProps>(), {
   radius: 'lg',
   elevation: 'sm',
   hoverable: false,
+  variant: undefined,
 })
 
 const cardClasses = computed(() => {
