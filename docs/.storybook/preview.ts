@@ -10,10 +10,9 @@ const preview: Preview = {
             },
         },
         a11y: {
-            test: 'todo',
-        },
-        docs: {
-            autodocs: 'tag',
+            config: {
+                rules: [],
+            },
         },
     },
     tags: ['autodocs'],
