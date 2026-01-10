@@ -10,7 +10,7 @@ const meta = {
     backgrounds: { default: 'dark' },
     docs: {
       description: {
-        component: 'Product detail page for Tagging AI Lite Pro showing specifications, features, and comparison table.'
+        component: 'Product detail page for Tagging AI Lite Pro showing specifications, features, and comparison table. Uses shared Card, Badge, and Button components.'
       }
     }
   }
