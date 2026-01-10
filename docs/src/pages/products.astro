@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Badge from '../components/vue/Badge.vue';
+import Badge from '../components/vue/core/basic/Badge.vue';
 import Button from '../components/vue/core/basic/Button.vue';
 import { getCollection } from 'astro:content';
 import { 
@@ -27,18 +27,6 @@ const editions = allProducts.filter(p =>
   ['open-ticket-ai-lite', 'open-ticket-ai-pro'].includes(p.data.slug) && !p.data.nav?.hidden
 );
 
-// Helper function to get badge color
-function getBadgeColor(label: string) {
-  if (label === 'Coming Soon' || label?.includes('LIVE')) {
-    return 'bg-primary/20 text-primary-light border-primary/20';
-  } else if (label?.includes('BEST VALUE')) {
-    return 'bg-primary text-white border-primary';
-  } else if (label?.includes('Development')) {
-    return 'bg-pink-500/10 text-pink-400 border-pink-500/20';
-  }
-  return 'bg-surface-dark/80 text-text-dim border-border-dark';
-}
-
 // Icon map for capabilities
 const capabilityIcons: Record<string, any> = {
   'classification': CpuChipIcon,
@@ -56,7 +44,7 @@ const capabilityIcons: Record<string, any> = {
       <div class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]"></div>
       <div class="w-full max-w-7xl mx-auto">
         <div class="mb-8">
-          <Badge label="● LIVE CLASSIFICATION ENGINE v2.0" color={getBadgeColor('LIVE')} client:load />
+          <Badge type="primary" client:load>● LIVE CLASSIFICATION ENGINE v2.0</Badge>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -294,7 +282,7 @@ const capabilityIcons: Record<string, any> = {
           <!-- Lite Pro - BEST VALUE -->
           <div class="flex flex-col rounded-3xl bg-gradient-to-br from-primary/20 to-surface-dark border-2 border-primary p-8 relative transform scale-105 shadow-2xl shadow-primary/20">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2">
-              <Badge label="BEST VALUE" color={getBadgeColor('BEST VALUE')} client:load />
+              <Badge type="primary" client:load>BEST VALUE</Badge>
             </div>
             
             <div class="flex-1">
