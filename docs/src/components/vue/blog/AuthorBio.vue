@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-xl border border-surface-lighter bg-surface-dark p-6">
+  <Card background="surface-dark" padding="default">
     <div class="flex gap-4">
       <img
         v-if="avatar"
@@ -50,10 +50,11 @@
         </div>
       </div>
     </div>
-  </div>
+  </Card>
 </template>
 
 <script lang="ts" setup>
+import Card from '../core/basic/Card.vue'
 import { UserIcon, CodeBracketIcon, BriefcaseIcon } from '@heroicons/vue/24/outline'
 
 interface Social {
