@@ -4,9 +4,11 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import type { Tone } from '../design-system/tokens'
 
-type Kind = 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
-const { type = 'secondary' } = defineProps<{ type?: Kind }>()
+// Badge supports brand colors (primary, secondary) plus semantic tones
+type BadgeType = 'primary' | 'secondary' | Tone
+const { type = 'secondary' } = defineProps<{ type?: BadgeType }>()
 
 const baseClass =
   'inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold leading-tight ring-1 ring-inset shadow-sm transition-colors duration-150'

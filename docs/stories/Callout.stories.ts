@@ -1,5 +1,6 @@
 import Callout from '../src/components/vue/core/basic/Callout.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
+import { TONES } from '../src/components/vue/core/design-system/tokens'
 
 const meta: Meta<typeof Callout> = {
     title: 'Core/Callout',
@@ -7,7 +8,7 @@ const meta: Meta<typeof Callout> = {
     argTypes: {
         type: {
             control: {type: 'select'},
-            options: ['info', 'success', 'warning', 'danger'],
+            options: TONES,
             description: 'Callout variant type'
         },
         variant: {
