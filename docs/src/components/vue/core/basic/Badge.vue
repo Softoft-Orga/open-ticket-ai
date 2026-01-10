@@ -14,15 +14,15 @@ const baseClass =
 const variantClass = computed(() => {
   switch (type) {
     case 'primary':
-      return 'bg-primary text-white ring-primary/70'
+      return 'bg-primary text-white ring-primary/50 hover:bg-primary-dark'
     case 'success':
-      return 'bg-emerald-500 text-emerald-50 ring-emerald-400'
+      return 'bg-emerald-600 text-white ring-emerald-500/50 hover:bg-emerald-700'
     case 'warning':
-      return 'bg-amber-400 text-amber-950 ring-amber-300'
+      return 'bg-amber-500 text-white ring-amber-400/50 hover:bg-amber-600'
     case 'danger':
-      return 'bg-rose-500 text-white ring-rose-400'
+      return 'bg-rose-600 text-white ring-rose-500/50 hover:bg-rose-700'
     default:
-      return 'bg-surface-lighter text-text-dim ring-white/10'
+      return 'bg-surface-lighter text-white ring-border-dark hover:bg-surface-dark'
   }
 })
 </script>

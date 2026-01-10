@@ -9,12 +9,17 @@ const meta: Meta<typeof Callout> = {
             control: {type: 'select'},
             options: ['info', 'success', 'warning', 'danger'],
             description: 'Callout variant type'
+        },
+        variant: {
+            control: {type: 'select'},
+            options: ['left-border', 'bordered', 'filled'],
+            description: 'Border style variant'
         }
     },
     parameters: {
         docs: {
             description: {
-                component: 'Callout component for displaying important messages with different severity levels. Includes automatic icons based on type.'
+                component: 'Callout component for displaying important messages with different severity levels. Includes automatic icons based on type and customizable border styles.'
             }
         }
     }
@@ -76,6 +81,27 @@ export const AllVariants: Story = {
                 <Callout type="success">Success: The operation was completed successfully.</Callout>
                 <Callout type="warning">Warning: Please review before continuing.</Callout>
                 <Callout type="danger">Danger: A critical error has occurred.</Callout>
+            </div>
+        `
+    })
+}
+
+export const BorderVariants: Story = {
+    render: () => ({
+        components: {Callout},
+        template: `
+            <div class="space-y-4 max-w-2xl">
+                <h3 class="text-lg font-semibold mb-4 text-white">Left Border (Default)</h3>
+                <Callout type="info" variant="left-border">Info with left border accent.</Callout>
+                <Callout type="success" variant="left-border">Success with left border accent.</Callout>
+                
+                <h3 class="text-lg font-semibold mb-4 mt-8 text-white">Full Border</h3>
+                <Callout type="warning" variant="bordered">Warning with full border.</Callout>
+                <Callout type="danger" variant="bordered">Danger with full border.</Callout>
+                
+                <h3 class="text-lg font-semibold mb-4 mt-8 text-white">Filled (No Border)</h3>
+                <Callout type="info" variant="filled">Info without border.</Callout>
+                <Callout type="success" variant="filled">Success without border.</Callout>
             </div>
         `
     })

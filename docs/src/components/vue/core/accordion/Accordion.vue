@@ -1,11 +1,12 @@
 <template>
-  <div class="divide-y divide-vp-border">
+  <div :class="containerClasses">
     <AccordionItem 
       v-for="(it, i) in items" 
       :key="i" 
       :title="it.title"
       :default-open="it.defaultOpen || false"
       :is-open="isItemOpen(i)"
+      :variant="variant"
       @toggle="handleToggle(i)"
     >
       <slot :name="`item-${i}`" :item="it">
@@ -16,8 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, watch} from 'vue'
+import {ref, watch, computed} from 'vue'
 import AccordionItem from './AccordionItem.vue'
+
+type Variant = 'default' | 'ghost' | 'bordered' | 'gradient'
 
 interface Item {
   title: string
@@ -29,12 +32,14 @@ interface Props {
   items?: Item[]
   multiple?: boolean
   modelValue?: number[]
+  variant?: Variant
 }
 
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   multiple: true,
-  modelValue: () => []
+  modelValue: () => [],
+  variant: 'default'
 })
 
 const emit = defineEmits<{
@@ -66,4 +71,15 @@ const handleToggle = (index: number) => {
   openItems.value = newOpenItems
   emit('update:modelValue', Array.from(newOpenItems))
 }
+
+const containerClasses = computed(() => {
+  const variants = {
+    default: 'divide-y divide-border-dark',
+    ghost: 'space-y-1',
+    bordered: '',
+    gradient: ''
+  }
+  
+  return variants[props.variant]
+})
 </script>
