@@ -20,7 +20,14 @@
 - Prefer MCP-driven Storybook checks/screenshots over manual eyeballing when validating regressions.
 - Whenever components or story configs change, update the corresponding Storybook stories in `docs/stories/**` to reflect new props, variants, and states.
 
+## Testing Contract (Playwright)
+- Avoid brittle selectors (IDs, classes, ad-hoc `data-*`). Lean on roles, labels, and visible text.
+- Keep CTA accessible names stable: "Get Demo" and "Contact Sales".
+- Navbar links must expose "Home", "Products", "Services", "Docs" accessible names.
+- Semantic HTML + correct roles/labels are required so tests can target UX copy.
+- Intentional text changes must ship with updated Playwright specs and snapshots in the same PR.
+- Never merge changes that break `npm run test:e2e` (run from `docs/`).
+
 ## Misc
 Prefer Tailwind over custom CSS where possible.
 Always try avoiding merge conflicts!
-

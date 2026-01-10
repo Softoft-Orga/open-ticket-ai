@@ -1,6 +1,9 @@
 # Agent Guidelines for Open Ticket AI
 
 This document is **authoritative**. Follow these rules strictly when adding, moving, or generating files.
+
+> **Important:** The Astro/Vue website and all docs live under the `/docs` directory. Any instructions mentioning "website", "docs", Astro, or Vue components refer to files inside `docs/`.
+
 The Astro Website is in the /docs directory!
 So when I am refering to a website Astro or Vue Components to change or Pages to change.
 I am speaking about the content in the /docs folder!
@@ -102,7 +105,6 @@ The `.github/workflows/copilot-pr-retry.yml` workflow automatically handles PRs 
 ## Documentation Structure
 
 All documentation lives in `/docs` directory:
-
 
 ---
 

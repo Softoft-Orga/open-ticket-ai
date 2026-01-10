@@ -1,8 +1,15 @@
 # Agent Guidelines for Open Ticket AI
 
-This document is **authoritative**. Follow these rules strictly when adding, moving, or generating files.
+This repository hosts **two distinct projects**:
 
-## Workspace & Repository Layout (uv)
+1. The **Open Ticket Automation Python workspace** (uv-based) that powers the back-end packages.
+2. The **customer-facing marketing/docs website** implemented with Astro, Vue, and Storybook under `docs/`.
+
+These projects share a repository but evolve independently. Understand which surface you are changing before making edits and follow the rules for that surface specifically.
+
+## Python Automation Platform (uv workspace)
+
+### Workspace & Repository Layout
 
 The repo is a uv workspace with a root app and multiple packages.
 
@@ -32,7 +39,7 @@ open-ticket-ai/
 - Each package is an editable member of the uv workspace. Do not add ad‑hoc `PYTHONPATH` hacks.
 - Python version: **3.13** only. Use modern typing (PEP 695). No inline code comments.
 
-## Tests Layout (required)
+### Tests Layout (required)
 
 For **each** package:
 
@@ -68,7 +75,7 @@ tests/
 - Document fixtures with clear docstrings
 - See [FIXTURE_TEMPLATES.md](./docs/FIXTURE_TEMPLATES.md) for common patterns
 
-## Pytest configuration (root `pyproject.toml`)
+### Pytest configuration (root `pyproject.toml`)
 
 ```toml
 [tool.pytest.ini_options]
@@ -80,7 +87,7 @@ testpaths = [
 addopts = ["-q"]
 ```
 
-## How to run
+### How to run
 
 - From repo root:
     - `uv sync`
@@ -88,7 +95,7 @@ addopts = ["-q"]
     - `uv run -m pytest packages/<name>/tests` (single package)
 - uv workspaces install members in editable mode; imports resolve without extra config.
 
-## CI / Quality gates
+### CI / Quality gates
 
 - Lint: `uv run ruff check .` (no warnings allowed)
 - Types: `uv run mypy .` (no ignores added without justification in PR)
@@ -96,7 +103,7 @@ addopts = ["-q"]
 - Test structure: `uv run python scripts/validate_test_structure.py`
 - No test files under `src/**` will be accepted. PRs that create them must be changed.
 
-## Architectural expectations (short)
+### Architectural expectations (short)
 
 - Prefer composition and DI (Injector) over inheritance.
 - Pydantic v2 for data models; explicit type annotations everywhere.
@@ -125,3 +132,19 @@ addopts = ["-q"]
 - Design language mirrors `open-ticket-ai-platform-prototype`: deep purple/cyan glow, glassy layered surfaces, generous spacing, pill badges, and neon accents. Don’t copy layouts verbatim—match structure and tone.
 - Workflow: run scripts from `docs/` (`npm run docs:dev`, `docs:build`, `docs:preview`, `storybook`, `build-storybook`). Use Playwright MCP to verify UI (Astro on :4321, Storybook on :6006) and prefer Storybook screenshots for regressions. Always run `npm run docs:build` before handing off.
 - Prefer Tailwind utility classes over custom CSS, keep fonts consistent with global styles, and avoid merge conflicts.
+
+### Testing Contract (Playwright)
+
+- Avoid brittle selectors (IDs, classes, or throwaway `data-*` hooks). Use roles, accessible names, and semantic HTML.
+- Keep CTA accessible names stable: "Get Demo" and "Contact Sales".
+- Navbar links must expose "Home", "Products", "Services", and "Docs" accessible names.
+- Ensure components use proper roles/labels so tests can rely on visible text.
+- When UI copy intentionally changes, update Playwright tests and snapshots in the same PR.
+- Never merge changes that break `npm run test:e2e` (run inside `docs/`).
+
+## MCP tool usage
+- context7: use for "latest / correct API usage" questions (framework/library docs).
+- playwright: use to verify UI behavior in running app/storybook (navigation, forms, a11y tree checks).
+- chrome_devtools: use for performance/debug inspection (network, console, layout investigation).
+- serena: use for large refactors / symbol-level edits across the codebase.
+- github: use only for repo/PR/issues/actions operations.
