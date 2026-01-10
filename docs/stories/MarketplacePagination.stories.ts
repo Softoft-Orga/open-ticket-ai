@@ -42,7 +42,7 @@ export const FirstPage: Story = {
             const handleNext = () => console.log('Next clicked')
             return {args, handlePrev, handleNext}
         },
-        template: '<div class="bg-slate-950 p-4"><MarketplacePagination v-bind="args" @prev="handlePrev" @next="handleNext" /></div>'
+        template: '<div class="bg-background-dark p-4"><MarketplacePagination v-bind="args" @prev="handlePrev" @next="handleNext" /></div>'
     }),
     args: {
         page: 1,
@@ -63,7 +63,7 @@ export const MiddlePage: Story = {
             const handleNext = () => console.log('Next clicked')
             return {args, handlePrev, handleNext}
         },
-        template: '<div class="bg-slate-950 p-4"><MarketplacePagination v-bind="args" @prev="handlePrev" @next="handleNext" /></div>'
+        template: '<div class="bg-background-dark p-4"><MarketplacePagination v-bind="args" @prev="handlePrev" @next="handleNext" /></div>'
     }),
     args: {
         page: 5,
@@ -84,7 +84,7 @@ export const LastPage: Story = {
             const handleNext = () => console.log('Next clicked')
             return {args, handlePrev, handleNext}
         },
-        template: '<div class="bg-slate-950 p-4"><MarketplacePagination v-bind="args" @prev="handlePrev" @next="handleNext" /></div>'
+        template: '<div class="bg-background-dark p-4"><MarketplacePagination v-bind="args" @prev="handlePrev" @next="handleNext" /></div>'
     }),
     args: {
         page: 10,
@@ -105,7 +105,7 @@ export const Loading: Story = {
             const handleNext = () => console.log('Next clicked')
             return {args, handlePrev, handleNext}
         },
-        template: '<div class="bg-slate-950 p-4"><MarketplacePagination v-bind="args" @prev="handlePrev" @next="handleNext" /></div>'
+        template: '<div class="bg-background-dark p-4"><MarketplacePagination v-bind="args" @prev="handlePrev" @next="handleNext" /></div>'
     }),
     args: {
         page: 3,
