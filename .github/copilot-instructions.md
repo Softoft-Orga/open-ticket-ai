@@ -62,6 +62,38 @@ changing before making edits and follow the rules for that surface specifically.
   - Export arrays (`VARIANTS`, `SIZES`, `TONES`) for Storybook controls
   - Badge uses combined types: `'primary' | 'secondary' | Tone`
 
+### Transitions (Animation System)
+- **Location**: `docs/src/components/vue/core/transitions/`
+- **When to Use Transitions**:
+  - **Required for**: Dialog/Modal, Menu, Popover, Dropdown, Toast, Slide-over panels
+  - **Optional for**: Accordion (collapse is tricky; prefer no animation unless needed)
+- **Choosing the Right Transition**:
+  - **Default choice**: `UiTransitionFadeScale` with `strength='sm'` for panels/dialogs
+  - **Backdrops/overlays**: `UiTransitionFade`
+  - **Dropdown menus**: `UiTransitionSlide` with `direction='down'`
+  - **Slide-over panels**: `UiTransitionSlide` with `direction='left'` or `'right'`
+  - **Toasts/notifications**: `UiTransitionSlide` with `direction='up'`
+- **Usage with Headless UI**:
+  ```vue
+  <TransitionRoot :show="isOpen" as="template">
+    <!-- Backdrop -->
+    <UiTransitionFade>
+      <div class="fixed inset-0 bg-black/80" />
+    </UiTransitionFade>
+    
+    <!-- Panel -->
+    <UiTransitionFadeScale strength="sm">
+      <DialogPanel>...</DialogPanel>
+    </UiTransitionFadeScale>
+  </TransitionRoot>
+  ```
+- **Reduced Motion**: All presets include `motion-reduce` support. Never remove these classes.
+- **Direct Preset Usage**: Import presets from `presets.ts` and use with `v-bind` for custom needs:
+  ```vue
+  <TransitionChild v-bind="fadeScaleSm" as="template">
+  ```
+- **Do NOT Duplicate**: Always reuse presets/wrappers. Never hand-write transition class strings in components.
+
 ### Development Workflow
 - **Working Directory**: All commands run from `docs/`.
 - **Scripts**:
