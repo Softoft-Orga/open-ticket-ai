@@ -1,5 +1,5 @@
 <template>
-  <div :class="['my-4 p-4 border-l-4 rounded', colorClasses]">
+  <div :class="['my-4 p-4 rounded', borderClasses, colorClasses]">
     <div class="flex items-start gap-2">
       <component :is="iconComponent" class="w-5 h-5 flex-shrink-0 mt-0.5" aria-hidden="true" />
       <div class="flex-1">
@@ -20,16 +20,29 @@ import {
 
 interface Props {
   type?: 'info' | 'success' | 'warning' | 'danger'
+  variant?: 'left-border' | 'bordered' | 'filled'
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  type: 'info'
+  type: 'info',
+  variant: 'left-border'
+})
+
+const borderClasses = computed(() => {
+  switch (props.variant) {
+    case 'bordered':
+      return 'border-2'
+    case 'filled':
+      return ''
+    default:
+      return 'border-l-4'
+  }
 })
 
 const colorClasses = computed(() => {
   switch (props.type) {
     case 'success':
-      return 'bg-primary-light/15 border-primary-light text-primary-light'
+      return 'bg-emerald-500/15 border-emerald-500 text-emerald-300'
     case 'warning':
       return 'bg-amber-500/15 border-amber-400 text-amber-300'
     case 'danger':

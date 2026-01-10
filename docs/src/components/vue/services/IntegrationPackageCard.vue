@@ -1,0 +1,64 @@
+<template>
+  <div :class="cardClasses">
+    <div class="flex justify-between items-start mb-6">
+      <div>
+        <h4 class="text-white text-xl font-bold">{{ title }}</h4>
+        <p class="text-primary text-xs font-bold uppercase tracking-widest mt-1">{{ subtitle }}</p>
+      </div>
+      <div class="text-right">
+        <div class="text-2xl font-bold text-white">{{ price }}</div>
+        <div class="text-[10px] text-slate-500 uppercase">One-time fee</div>
+      </div>
+    </div>
+    
+    <div class="mb-6">
+      <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-2">Supported Systems</div>
+      <div class="text-slate-200 text-sm font-medium">{{ systems }}</div>
+    </div>
+
+    <ul class="space-y-2.5 mb-8 flex-grow">
+      <li v-for="(feature, index) in features" :key="index" class="flex items-start gap-2 text-sm text-slate-400">
+        <CheckIcon class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+        <span>{{ feature }}</span>
+      </li>
+    </ul>
+
+    <Button 
+      :variant="highlighted ? 'primary' : 'outline'"
+      size="md"
+      class="w-full"
+      data-service-modal-trigger
+      :data-service="serviceKey"
+    >
+      {{ buttonText }}
+    </Button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import { CheckIcon } from '@heroicons/vue/24/outline';
+import Button from '../core/basic/Button.vue';
+
+const props = withDefaults(defineProps<{
+  title: string;
+  subtitle: string;
+  price: string;
+  systems: string;
+  features: string[];
+  buttonText: string;
+  highlighted?: boolean;
+  serviceKey?: string;
+}>(), {
+  highlighted: false,
+  serviceKey: ''
+});
+
+const cardClasses = computed(() => {
+  const base = 'rounded-2xl p-8 flex flex-col h-full';
+  if (props.highlighted) {
+    return `${base} bg-[#1d1023] border border-primary/30`;
+  }
+  return `${base} bg-[#120818] border border-white/5`;
+});
+</script>

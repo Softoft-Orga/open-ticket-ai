@@ -1,9 +1,9 @@
 ---
 import {getCollection} from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PricingCard from '../components/services/PricingCard.astro';
-import IntegrationPackageCard from '../components/services/IntegrationPackageCard.astro';
-import ExtensionItem from '../components/services/ExtensionItem.astro';
+import PricingCard from '../components/vue/services/PricingCard.vue';
+import IntegrationPackageCard from '../components/vue/services/IntegrationPackageCard.vue';
+import ExtensionItem from '../components/vue/services/ExtensionItem.vue';
 import {
     CubeTransparentIcon,
     ServerIcon,
@@ -208,6 +208,7 @@ const typicalScopeItems = [
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
                 {syntheticDataServices.map((service, index) => (
                     <PricingCard
+                        client:load
                         title={service.data.title}
                         subtitle={service.data.oneLiner}
                         price={formatPrice(service.data.startingPrice)}
@@ -228,6 +229,7 @@ const typicalScopeItems = [
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                     {extensions.map((extension) => (
                         <ExtensionItem
+                            client:load
                             icon={extensionIcons[extension.data.slug] || 'tune'}
                             title={extension.data.title}
                             desc={extension.data.description || extension.data.oneLiner || ''}
@@ -250,6 +252,7 @@ const typicalScopeItems = [
                     const info = getIntegrationServiceInfo(service.data.slug);
                     return (
                         <IntegrationPackageCard
+                            client:load
                             title="Integration Package"
                             subtitle={info.subtitle}
                             price={formatPrice(service.data.startingPrice)}

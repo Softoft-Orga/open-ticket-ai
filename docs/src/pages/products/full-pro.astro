@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Badge from '../../components/vue/Badge.vue';
+import Button from '../../components/vue/core/basic/Button.vue';
 import FullMetric from '../../components/vue/product/FullMetric.vue';
 import FeatureItem from '../../components/vue/product/FeatureItem.vue';
 import TaxonomyRow from '../../components/vue/product/TaxonomyRow.vue';
@@ -39,12 +39,12 @@ const description = "The ultimate classification engine for high-volume enterpri
       </div>
 
       <div class="flex flex-wrap gap-4 mb-20">
-        <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-primary text-white text-lg font-bold hover:bg-white hover:text-background-dark transition-all shadow-xl shadow-primary/20">
+        <Button variant="primary" size="lg" client:load>
           PRE-ORDER LICENSE (6.000€)
-        </button>
-        <button class="flex items-center justify-center rounded-xl h-14 px-10 bg-transparent border border-surface-lighter hover:border-primary/50 text-white text-lg font-medium transition-all">
+        </Button>
+        <Button variant="outline" size="lg" client:load>
           ROI Simulation
-        </button>
+        </Button>
       </div>
 
       <section class="mb-24">
@@ -169,12 +169,12 @@ const description = "The ultimate classification engine for high-volume enterpri
           Join forward-thinking support teams automating their workflow with German Engineering precision.
         </p>
         <div class="flex flex-wrap justify-center gap-6">
-          <button class="h-14 px-10 bg-primary text-white font-black uppercase tracking-widest rounded-xl hover:bg-primary-dark transition-all shadow-xl shadow-primary/20">
+          <Button variant="primary" size="lg" class="uppercase tracking-widest" client:load>
             Pre-order Full Pro
-          </button>
-          <button class="h-14 px-10 bg-surface-dark border border-border-dark text-white font-bold rounded-xl hover:bg-white/5 transition-all">
+          </Button>
+          <Button variant="outline" size="lg" client:load>
             View Architecture
-          </button>
+          </Button>
         </div>
       </section>
     </div>
