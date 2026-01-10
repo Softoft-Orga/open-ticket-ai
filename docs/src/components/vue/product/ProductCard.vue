@@ -1,20 +1,22 @@
 <!-- components/ProductCard.vue -->
 <template>
   <Card
-      class="group flex flex-col h-full bg-gray-900 border border-gray-700 rounded-xl overflow-hidden transition duration-200 hover:shadow-xl hover:scale-[1.02]">
+      :hoverable="true"
+      background="surface-dark"
+      class="group flex flex-col h-full overflow-hidden">
     <template #header>
       <div class="text-center px-4 min-h-32">
         <h3 class="!text-xl font-semibold text-white">{{ product.name }}</h3>
         <div class="mt-2">
           <span class="text-2xl font-bold text-white">{{ formattedPrice }}€</span>
-          <span v-if="product.pricePeriod" class="text-sm text-gray-400">/ {{ product.pricePeriod }}</span>
+          <span v-if="product.pricePeriod" class="text-sm text-text-dim">/ {{ product.pricePeriod }}</span>
         </div>
       </div>
     </template>
 
     <template #default>
       <div class="px-5 flex-1 flex flex-col">
-        <p class="text-gray-400 mb-2 leading-relaxed">
+        <p class="text-text-dim mb-2 leading-relaxed">
           {{ product.description }}
         </p>
 
@@ -24,8 +26,8 @@
               :key="i"
               class="flex items-start !m-0 !px-0 py-2"
           >
-            <component :is="getIcon(feature.icon)" class="w-5 h-5 mt-0.5 mr-2 text-indigo-500 flex-shrink-0" aria-hidden="true" />
-            <span class="text-gray-200">{{ feature.text }}</span>
+            <component :is="getIcon(feature.icon)" class="w-5 h-5 mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+            <span class="text-white">{{ feature.text }}</span>
           </li>
         </ul>
 
@@ -40,8 +42,8 @@
                 :key="i"
                 class="flex items-start !m-0 !px-0 py-2"
             >
-              <component :is="getIcon(feature.icon)" class="w-5 h-5 mt-0.5 mr-2 text-indigo-500 flex-shrink-0" aria-hidden="true" />
-              <span class="text-gray-200">{{ feature.text }}</span>
+              <component :is="getIcon(feature.icon)" class="w-5 h-5 mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+              <span class="text-white">{{ feature.text }}</span>
             </li>
           </ul>
         </AccordionItem>
