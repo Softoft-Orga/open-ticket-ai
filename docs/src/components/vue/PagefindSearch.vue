@@ -104,10 +104,17 @@ function ensurePagefindStyles() {
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(29, 16, 35, 0.6);
+  border: 1px solid #3c2249;
   border-radius: 1rem;
   padding: 1rem 1.5rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.pagefind-prompt:hover {
+  border-color: #a60df2;
+  box-shadow: 0 0 20px rgba(166, 13, 242, 0.2);
 }
 
 .pagefind-icon {
@@ -117,8 +124,13 @@ function ensurePagefindStyles() {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 999px;
-  background: rgba(166, 13, 242, 0.1);
-  color: #a60df2;
+  background: linear-gradient(135deg, rgba(166, 13, 242, 0.2), rgba(0, 240, 255, 0.1));
+  color: #d475fd;
+  transition: all 0.3s ease;
+}
+
+.pagefind-prompt:hover .pagefind-icon {
+  box-shadow: 0 0 15px rgba(166, 13, 242, 0.4);
 }
 
 .pagefind-shortcut {
@@ -138,16 +150,66 @@ function ensurePagefindStyles() {
 :deep(.pagefind-search) {
   --pagefind-ui-scale: 1;
   --pagefind-ui-primary: #a60df2;
-  --pagefind-ui-text: #ffffff;
-  --pagefind-ui-background: #110616;
-  --pagefind-ui-border: #2d1b36;
+  --pagefind-ui-text: #e6e7ea;
+  --pagefind-ui-background: rgba(29, 16, 35, 0.6);
+  --pagefind-ui-border: #3c2249;
   --pagefind-ui-border-width: 1px;
   --pagefind-ui-border-radius: 1rem;
   --pagefind-ui-font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 :deep(.pagefind-ui__result) {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(29, 16, 35, 0.4);
+  border: 1px solid rgba(60, 34, 73, 0.5);
+  transition: all 0.3s ease;
+}
+
+:deep(.pagefind-ui__result:hover) {
+  background: rgba(29, 16, 35, 0.7);
+  border-color: #a60df2;
+  box-shadow: 0 0 20px rgba(166, 13, 242, 0.3);
+}
+
+:deep(.pagefind-ui__result-title),
+:deep(.pagefind-ui__result-excerpt) {
+  color: #e6e7ea !important;
+}
+
+:deep(.pagefind-ui__result-link) {
+  color: #e6e7ea !important;
+}
+
+:deep(.pagefind-ui__result-link:hover) {
+  color: #d475fd !important;
+}
+
+:deep(mark) {
+  background: rgba(166, 13, 242, 0.3) !important;
+  color: #d475fd !important;
+  padding: 0.1em 0.2em;
+  border-radius: 0.25rem;
+  font-weight: 600;
+}
+
+:deep(.pagefind-ui__message) {
+  color: #b790cb !important;
+}
+
+:deep(.pagefind-ui__search-input) {
+  background: rgba(29, 16, 35, 0.6) !important;
+  border: 1px solid #3c2249 !important;
+  color: #e6e7ea !important;
+  padding: 0.875rem 1.25rem !important;
+  font-size: 0.95rem !important;
+}
+
+:deep(.pagefind-ui__search-input::placeholder) {
+  color: #b790cb !important;
+}
+
+:deep(.pagefind-ui__search-input:focus) {
+  border-color: #a60df2 !important;
+  box-shadow: 0 0 0 3px rgba(166, 13, 242, 0.1), 0 0 20px rgba(166, 13, 242, 0.2) !important;
+  outline: none !important;
 }
 </style>
