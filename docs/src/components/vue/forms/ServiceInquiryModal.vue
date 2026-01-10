@@ -159,12 +159,14 @@
                   ></textarea>
                 </div>
 
-                <button
+                <Button
                   type="submit"
-                  class="w-full py-3.5 px-6 rounded-lg bg-gradient-to-r from-primary to-purple-600 text-white font-bold text-sm uppercase tracking-widest hover:from-primary-dark hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-lg shadow-primary/20"
+                  variant="primary"
+                  size="md"
+                  class="w-full uppercase tracking-widest"
                 >
                   Submit Inquiry
-                </button>
+                </Button>
               </form>
 
               <div v-else class="text-center py-12">
@@ -175,13 +177,14 @@
                 <p class="text-slate-400 mb-8">
                   We've received your inquiry and will get back to you within 1 business day.
                 </p>
-                <button
+                <Button
                   type="button"
-                  class="px-6 py-2.5 rounded-lg border border-white/20 text-white font-bold hover:bg-white/5 transition-colors"
+                  variant="outline"
+                  size="md"
                   @click="closeModal"
                 >
                   Close
-                </button>
+                </Button>
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -195,6 +198,7 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
 import { XMarkIcon, ChevronDownIcon, CheckCircleIcon } from '@heroicons/vue/24/outline'
+import Button from '../core/basic/Button.vue'
 
 const props = defineProps<{
   isOpen: boolean
