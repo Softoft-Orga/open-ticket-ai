@@ -30,6 +30,10 @@ type PagefindUIInstance = ReturnType<PagefindGlobal['new']> | null;
 const searchContainer = ref<HTMLElement | null>(null);
 const error = ref<string | null>(null);
 let pagefindInstance: PagefindUIInstance = null;
+let pagefindLoadPromise: Promise<void> | null = null;
+
+const PAGEFIND_SCRIPT_ID = 'pagefind-ui-script';
+const PAGEFIND_STYLES_SELECTOR = 'link[data-pagefind-ui="true"]';
 
 onMounted(async () => {
   try {
@@ -54,22 +58,38 @@ onUnmounted(() => {
 
 async function loadPagefindAssets() {
   if ((window as any).PagefindUI) return;
-
-  const cssHref = '/pagefind/pagefind-ui.css';
-  if (!document.querySelector(`link[href="${cssHref}"]`)) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = cssHref;
-    document.head.appendChild(link);
+  if (pagefindLoadPromise) {
+    return pagefindLoadPromise;
   }
 
-  await new Promise<void>((resolve, reject) => {
+  ensurePagefindStyles();
+
+  pagefindLoadPromise = new Promise<void>((resolve, reject) => {
+    const existingScript = document.getElementById(PAGEFIND_SCRIPT_ID) as HTMLScriptElement | null;
+    if (existingScript) {
+      existingScript.addEventListener('load', () => resolve(), { once: true });
+      existingScript.addEventListener('error', () => reject(new Error('Could not load Pagefind script.')), { once: true });
+      return;
+    }
+
     const script = document.createElement('script');
+    script.id = PAGEFIND_SCRIPT_ID;
     script.src = '/pagefind/pagefind-ui.js';
     script.onload = () => resolve();
     script.onerror = () => reject(new Error('Could not load Pagefind script.'));
     document.head.appendChild(script);
   });
+
+  return pagefindLoadPromise;
+}
+
+function ensurePagefindStyles() {
+  if (document.querySelector(PAGEFIND_STYLES_SELECTOR)) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = '/pagefind/pagefind-ui.css';
+  link.dataset.pagefindUi = 'true';
+  document.head.appendChild(link);
 }
 </script>
 
