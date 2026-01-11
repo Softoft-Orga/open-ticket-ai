@@ -82,3 +82,13 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
    borderless' | 'glassy' | 'compact'), `striped`, `dense`, `width` ('stretch' | 'auto' | 'full'),
    `hoverEffect`, `radius` (Radius), `elevation` (Elevation). Slots: default (rows). Story:
    `stories/Table.stories.ts`.
+
+### core/transitions
+
+- **UiTransitionFade.vue** — Fade transition wrapper using HeadlessUI TransitionChild. Props: _none_. 
+   Provides smooth opacity transitions with motion-reduce support. Use for overlays, backdrops, and 
+   simple fade effects. Slots: default (content to transition). Duration: 300ms enter, 200ms leave.
+- **UiTransitionSlide.vue** — Slide transition wrapper using HeadlessUI TransitionChild. Props: 
+   `direction` ('up' | 'down' | 'left' | 'right', default: 'down'). Provides slide + fade transitions 
+   with motion-reduce support. Use for menus, slide-over panels, and directional animations. Slots: 
+   default (content to transition). Duration: 300ms enter, 200ms leave.
