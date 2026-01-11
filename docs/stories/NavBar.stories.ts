@@ -140,7 +140,7 @@ export const KeyboardAccessibility: Story = {
     template: `
       <div class="min-h-screen bg-slate-900">
         <NavBar v-bind="args" />
-        <div class="p-8">
+        <div class="p-8 space-y-3">
           <h1 class="text-white text-2xl">Keyboard Accessibility</h1>
           <p class="text-gray-400 mt-2">The navbar is fully keyboard accessible:</p>
           <ul class="text-gray-400 mt-2 list-disc ml-6 space-y-1">
@@ -148,7 +148,6 @@ export const KeyboardAccessibility: Story = {
             <li><strong class="text-white">Enter/Space</strong>: Activate buttons and links</li>
             <li><strong class="text-white">Escape</strong>: Close mobile menu</li>
           </ul>
-          <p class="text-gray-400 mt-4">All interactive elements have focus-visible rings for accessibility.</p>
         </div>
       </div>
     `

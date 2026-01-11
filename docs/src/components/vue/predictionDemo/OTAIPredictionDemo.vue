@@ -96,7 +96,7 @@ import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
 import ResultTable from "./ResultTable.vue";
 import SelectComponent from "../core/forms/SelectComponent.vue";
-import Alert from "../core/Alert.vue";
+import Alert from "../core/basic/Alert.vue";
 import {useHumanLoadedPage} from "../../../composables/useHumanLoadedPage";
 
 const {apiLink = ''} = defineProps<{
