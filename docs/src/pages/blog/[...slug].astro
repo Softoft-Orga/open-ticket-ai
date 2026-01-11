@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Link from '../../components/Link.astro';
 import { CalendarIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
 
 export async function getStaticPaths() {
@@ -88,13 +89,13 @@ const formatDate = (date: Date) => {
 
       <!-- Back to Blog -->
       <footer class="mt-16 pt-12 border-t border-surface-lighter">
-        <a 
+        <Link 
           href="/blog/" 
           class="inline-flex items-center gap-2 text-primary-light hover:text-primary transition-colors"
         >
           <ArrowLeftIcon class="w-5 h-5" aria-hidden="true" />
           Back to all posts
-        </a>
+        </Link>
       </footer>
     </article>
   </div>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Link from '../../components/Link.astro';
 
 const title = "Tagging AI Lite Pro";
 const description = "Our flagship medium-weight model. Precision-tuned for routing, SLA assignment, and management reporting with professional accuracy.";
@@ -9,7 +10,7 @@ const description = "Our flagship medium-weight model. Precision-tuned for routi
     <div class="min-h-screen bg-background-dark">
         <div class="mx-auto max-w-7xl px-6 lg:px-24 py-20">
             <nav class="mb-12 flex items-center gap-2 text-sm text-text-dim">
-                <a href="/products" class="hover:text-primary transition-colors">PRODUCTS</a>
+                <Link href="/products" class="hover:text-primary transition-colors">PRODUCTS</Link>
                 <span>/</span>
                 <span class="text-white">LITE PRO</span>
             </nav>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Link from '../../../components/Link.astro';
 import { ExclamationCircleIcon, BoltIcon, ClockIcon, RectangleStackIcon, ArrowRightIcon } from '@heroicons/vue/24/outline';
 
 const title = "Open Ticket Automation (OTA)";
@@ -12,9 +13,9 @@ const description = "The high-performance classification engine that powers the 
     <div class="border-b border-slate-800">
       <div class="max-w-7xl mx-auto px-6 py-4">
         <div class="flex items-center gap-4 text-sm text-slate-400">
-          <a href="/" class="hover:text-primary">Documentation</a>
+          <Link href="/" class="hover:text-primary">Documentation</Link>
           <span>›</span>
-          <a href="/docs/" class="hover:text-primary">Open Ticket Automation</a>
+          <Link href="/docs/" class="hover:text-primary">Open Ticket Automation</Link>
         </div>
       </div>
     </div>

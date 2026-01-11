@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Link from '../../components/Link.astro';
 import Button from '../../components/vue/core/basic/Button.vue';
 import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
@@ -15,10 +16,10 @@ const description = "The ultimate classification engine for high-volume enterpri
   <div class="min-h-screen bg-background-dark">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
       <div class="mb-8">
-        <a href="/products" class="inline-flex items-center gap-2 text-primary hover:text-primary-light transition-colors group">
+        <Link href="/products" class="inline-flex items-center gap-2 text-primary hover:text-primary-light transition-colors group">
           <ArrowLeftIcon class="w-4 h-4 transition-transform group-hover:-translate-x-1" aria-hidden="true" />
           <span class="font-medium">PRODUCTS</span>
-        </a>
+        </Link>
         <span class="mx-3 text-border-dark">/</span>
         <span class="text-white font-bold">FULL PRO</span>
       </div>
