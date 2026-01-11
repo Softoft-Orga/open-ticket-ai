@@ -24,7 +24,14 @@
           </span>
         </ListboxButton>
 
-        <UiTransitionSlide direction="down">
+        <transition
+          enter-active-class="transition-all duration-150 ease-out motion-reduce:transition-none motion-reduce:transform-none"
+          enter-from-class="opacity-0 -translate-y-2"
+          enter-to-class="opacity-100 translate-y-0"
+          leave-active-class="transition-all duration-100 ease-in motion-reduce:transition-none motion-reduce:transform-none"
+          leave-from-class="opacity-100 translate-y-0"
+          leave-to-class="opacity-0 -translate-y-2"
+        >
           <ListboxOptions
             class="absolute !pl-0 !ml-0 mt-1 max-h-60 w-full overflow-auto rounded-md bg-surface-lighter shadow-lg ring-1 ring-border-dark focus:outline-none list-none p-1 m-0 z-10"
           >
@@ -63,7 +70,7 @@
               </li>
             </ListboxOption>
           </ListboxOptions>
-        </UiTransitionSlide>
+        </transition>
       </div>
     </Listbox>
   </div>
@@ -73,7 +80,6 @@
 import {computed, ref, watch} from 'vue'
 import {Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions,} from '@headlessui/vue'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
-import UiTransitionSlide from '../transitions/UiTransitionSlide.vue'
 import { input } from '../../../../design-system/recipes/input'
 
 interface Option {
