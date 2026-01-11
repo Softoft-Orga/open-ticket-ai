@@ -28,7 +28,8 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **Button.vue** — Button component using design-system button() recipe. Props: `variant` ('solid' | 'outline' | 'ghost'), `tone` (Tone), `size` (Size), `radius` (Radius), `disabled`, `loading`, `block`, `to`, `href`. Slots: default (button content).
 - **Card.vue** — Card container using design-system card() recipe. Props: `variant` ('surface' | 'outline' | 'subtle'), `tone` (Tone), `size` (Size), `radius` (Radius), `elevation` (Elevation), `hoverable`. Slots: `image`, `header`, `title`, default (content), `actions`, `footer`.
 - **Link.vue** — Simple link component. Props: `to`. Slots: default (link text).
-- **Tabs.vue** — Tab navigation using design-system tabs() recipe. Props: `tabs` (string[]), `variant` ('underline' | 'pill'), `tone` (Tone), `size` (Size), `vertical`, `modelValue`. Slots: `tab-{n}` (tab panel content for index n).
+- **Modal.vue** — Accessible modal dialog. Props: `open` (boolean), `title` (string), `tone` (`neutral` | `primary` | `success` | `warning` | `danger` | `info`), `size` (`sm` | `md` | `lg`), `closeOnOverlay` (boolean, default: true). Emits: `close`. Slots: default (body), `title` (custom header), `footer` (actions).
+- **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot scope).
 
 ### core/forms
 - **RadioGroup.vue** — Grouped radio options. Props: `modelValue`, `options`, `disabled`. Slots: default (option rendering via slot scope).

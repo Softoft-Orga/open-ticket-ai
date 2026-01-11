@@ -171,6 +171,7 @@ import {
 } from '@heroicons/vue/24/outline'
 import { CogIcon, TagIcon } from '@heroicons/vue/24/solid'
 import Button from '../basic/Button.vue'
+import UiTransitionSlide from '../transitions/UiTransitionSlide.vue'
 
 type NavItem = { href: string; label: string }
 
