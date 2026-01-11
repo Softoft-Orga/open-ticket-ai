@@ -21,8 +21,8 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **QuickLink.vue** — Inline link pill. Props: `label`, `href`, `icon`. Slots: _none_.
 
 ### core/accordion
-- **Accordion.vue** — Accordion container. Props: `items` (array), `multiple` (bool). Slots: default (custom items).
-- **AccordionItem.vue** — Single accordion item. Props: `item`, `isOpen`, `disabled`. Slots: `title`, default (body).
+- **Accordion.vue** — Accordion container. Props: `items` (Item[] | optional), `variant` ('default' | 'ghost' | 'bordered' | 'gradient'), `multiple` (boolean, default false), `modelValue` (string[] | string | optional for controlled state). Emits: `update:modelValue`. Slots: `title` (custom title rendering for items mode, receives { item, index, open }), default (custom content rendering, receives { item, index, open }). Supports both items-based rendering and manual composition with AccordionItem children.
+- **AccordionItem.vue** — Single accordion item. Props: `id` (string, required), `title` (string, optional), `defaultOpen` (boolean), `variant` ('default' | 'ghost' | 'bordered' | 'gradient'), `disabled` (boolean). Slots: `title` (receives { open }), default (body, receives { open }).
 
 ### core/basic
 - **Badge.vue** — Pill badge. Props: `label`, `tone`, `size`, `icon`. Slots: default (custom content).
