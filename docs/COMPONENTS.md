@@ -14,20 +14,19 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **MarkdownFromString.vue** — Renders markdown string. Props: `source`. Slots: _none_.
 
 ## core
-- **Alert.vue** — Alert banner with tone. Props: `title`, `tone` (`info` | `success` | `warning` | `danger`), `icon`. Slots: default (body).
-- **DocCard.vue** — Card for documentation links. Props: `title`, `description`, `href`, `icon`. Slots: _none_.
+- **Alert.vue** — Alert/notification component using design-system alert() recipe. Props: `type` ('info' | 'success' | 'warning' | 'danger' | 'tip'), `variant` ('soft' | 'solid' | 'outline'), `title`, `hideIcon`. Slots: default (body), `footer`.
+
 - **HeadlessUiTailwindDemo.vue** — Demonstrates Headless UI ui-open/ui-closed classes. Props: _none_. Slots: _none_.
 - **LoadingComponent.vue** — Loading spinner/placeholder. Props: `label`. Slots: _none_.
-- **QuickLink.vue** — Inline link pill. Props: `label`, `href`, `icon`. Slots: _none_.
 
 ### core/accordion
-- **Accordion.vue** — Accordion container. Props: `items` (array), `multiple` (bool). Slots: default (custom items).
-- **AccordionItem.vue** — Single accordion item. Props: `item`, `isOpen`, `disabled`. Slots: `title`, default (body).
+- **Accordion.vue** — Accordion container. Props: `items` (Item[] | optional), `variant` ('default' | 'ghost' | 'bordered' | 'gradient'), `multiple` (boolean, default false), `modelValue` (string[] | string | optional for controlled state). Emits: `update:modelValue`. Slots: `title` (custom title rendering for items mode, receives { item, index, open }), default (custom content rendering, receives { item, index, open }). Supports both items-based rendering and manual composition with AccordionItem children.
+- **AccordionItem.vue** — Single accordion item. Props: `id` (string, required), `title` (string, optional), `defaultOpen` (boolean), `variant` ('default' | 'ghost' | 'bordered' | 'gradient'), `disabled` (boolean). Slots: `title` (receives { open }), default (body, receives { open }).
 
 ### core/basic
-- **Badge.vue** — Pill badge. Props: `label`, `tone`, `size`, `icon`. Slots: default (custom content).
-- **Button.vue** — Styled button. Props: `label`, `variant`, `size`, `to`, `href`, `icon`, `block`, `loading`, `disabled`. Slots: default (button content).
-- **Card.vue** — Card container. Props: `title`, `description`, `icon`, `link`. Slots: default (content), `footer`.
+- **Badge.vue** — Badge/label component using design-system badge() recipe. Props: `variant` ('solid' | 'soft' | 'outline'), `tone` (Tone), `size` (Size). Slots: default (badge content).
+- **Button.vue** — Button component using design-system button() recipe. Props: `variant` ('solid' | 'outline' | 'ghost'), `tone` (Tone), `size` (Size), `radius` (Radius), `disabled`, `loading`, `block`, `to`, `href`. Slots: default (button content).
+- **Card.vue** — Card container using design-system card() recipe. Props: `variant` ('surface' | 'outline' | 'subtle'), `tone` (Tone), `size` (Size), `radius` (Radius), `elevation` (Elevation), `hoverable`. Slots: `image`, `header`, `title`, default (content), `actions`, `footer`.
 - **Link.vue** — Simple link component. Props: `to`. Slots: default (link text).
 - **Modal.vue** — Accessible modal dialog. Props: `open` (boolean), `title` (string), `tone` (`neutral` | `primary` | `success` | `warning` | `danger` | `info`), `size` (`sm` | `md` | `lg`), `closeOnOverlay` (boolean, default: true). Emits: `close`. Slots: default (body), `title` (custom header), `footer` (actions).
 - **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot scope).
@@ -50,9 +49,6 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **UiTransitionFade.vue** — Fade transition wrapper. Props: `as`, `appear`, `duration`. Slots: default (content).
 - **UiTransitionFadeScale.vue** — Fade + scale transition wrapper. Props: `as`, `appear`, `strength`. Slots: default (content).
 - **UiTransitionSlide.vue** — Slide transition wrapper. Props: `as`, `appear`, `direction`. Slots: default (content).
-
-## forms
-- **ServiceInquiryModal.vue** — Modal for service inquiries. Props: `open`, `onClose`. Slots: default (form body).
 
 ## homepage
 - **ServiceCard.vue** — Service offering card. Props: `title`, `description`, `cta`, `icon`. Slots: `footer`.

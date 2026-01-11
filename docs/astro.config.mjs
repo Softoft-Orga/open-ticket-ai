@@ -8,6 +8,28 @@ export default defineConfig({
     base: '/',
     outDir: './dist',
     trailingSlash: 'always',
+    image: {
+        // Configure image service with Sharp for optimization
+        service: {
+            entrypoint: 'astro/assets/services/sharp',
+            config: {
+                limitInputPixels: false, // Allow processing of large images
+            },
+        },
+        // Authorized domains for remote image optimization
+        domains: ['astro.build', 'doc.otobo.org', 'softoft.sirv.com'],
+        // Remote image patterns for external images
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '**.githubusercontent.com',
+            },
+            {
+                protocol: 'https',
+                hostname: '**.sirv.com',
+            },
+        ],
+    },
     markdown: {
         rehypePlugins: [[rehypeMermaid, {strategy: 'img-svg', dark: true}]],
     },

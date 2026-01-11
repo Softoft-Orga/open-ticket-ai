@@ -1,6 +1,9 @@
 import Tabs from '../src/components/vue/core/basic/Tabs.vue'
 import {ref} from 'vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
+import { TONES, SIZES } from '../src/design-system/tokens'
+
+const TAB_VARIANTS = ['underline', 'pill'] as const
 
 const meta: Meta<typeof Tabs> = {
     title: 'Core/Tabs',
@@ -8,26 +11,17 @@ const meta: Meta<typeof Tabs> = {
     argTypes: {
         variant: {
             control: 'select',
-            options: ['underline', 'pills', 'enclosed', 'ghost']
+            options: TAB_VARIANTS
+        },
+        tone: {
+            control: 'select',
+            options: TONES
         },
         size: {
             control: 'select',
-            options: ['sm', 'md', 'lg']
-        },
-        alignment: {
-            control: 'select',
-            options: ['start', 'center', 'end', 'stretch']
-        },
-        fullWidth: {
-            control: 'boolean'
+            options: SIZES
         },
         vertical: {
-            control: 'boolean'
-        },
-        showIndicator: {
-            control: 'boolean'
-        },
-        glowEffect: {
             control: 'boolean'
         }
     },
@@ -56,7 +50,7 @@ export const Default: Story = {
         <template #tab-0>
           <div class="p-4 text-gray-300">
             <h3 class="text-lg font-semibold mb-2">First Tab Content</h3>
-            <p>This is the content for the first tab. The default variant is underline with a glowing purple indicator.</p>
+            <p>This is the content for the first tab. The default variant is underline with tone-based selection indicator.</p>
           </div>
         </template>
         <template #tab-1>
@@ -75,7 +69,10 @@ export const Default: Story = {
     </div>`
     }),
     args: {
-        tabs: ['Overview', 'Features', 'Documentation']
+        tabs: ['Overview', 'Features', 'Documentation'],
+        variant: 'underline',
+        tone: 'primary',
+        size: 'md'
     }
 }
 
@@ -91,7 +88,7 @@ export const Pills: Story = {
         <template #tab-0>
           <div class="p-4 text-gray-300">
             <h3 class="text-lg font-semibold mb-2">Dashboard</h3>
-            <p>Pill-style tabs with a glowing effect on the active tab.</p>
+            <p>Pill-style tabs with a background container.</p>
           </div>
         </template>
         <template #tab-1>
@@ -103,7 +100,7 @@ export const Pills: Story = {
         <template #tab-2>
           <div class="p-4 text-gray-300">
             <h3 class="text-lg font-semibold mb-2">Reports</h3>
-            <p>The pills variant provides a modern, rounded appearance.</p>
+            <p>The pill variant provides a modern, rounded appearance.</p>
           </div>
         </template>
       </Tabs>
@@ -111,73 +108,9 @@ export const Pills: Story = {
     }),
     args: {
         tabs: ['Dashboard', 'Analytics', 'Reports'],
-        variant: 'pills'
-    }
-}
-
-export const Enclosed: Story = {
-    render: (args) => ({
-        components: {Tabs},
-        setup() {
-            return {args}
-        },
-        template: `
-    <div class="p-8 bg-background-dark min-h-[400px]">
-      <Tabs v-bind="args">
-        <template #tab-0>
-          <div class="text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Settings</h3>
-            <p>The enclosed variant creates a card-like appearance with borders.</p>
-          </div>
-        </template>
-        <template #tab-1>
-          <div class="text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Profile</h3>
-            <p>Content is seamlessly integrated within the bordered container.</p>
-          </div>
-        </template>
-        <template #tab-2>
-          <div class="text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Notifications</h3>
-            <p>Great for forms and structured content areas.</p>
-          </div>
-        </template>
-      </Tabs>
-    </div>`
-    }),
-    args: {
-        tabs: ['Settings', 'Profile', 'Notifications'],
-        variant: 'enclosed'
-    }
-}
-
-export const Ghost: Story = {
-    render: (args) => ({
-        components: {Tabs},
-        setup() {
-            return {args}
-        },
-        template: `
-    <div class="p-8 bg-background-dark min-h-[400px]">
-      <Tabs v-bind="args">
-        <template #tab-0>
-          <div class="p-4 text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Code</h3>
-            <p>Ghost variant provides a subtle, minimal design.</p>
-          </div>
-        </template>
-        <template #tab-1>
-          <div class="p-4 text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Preview</h3>
-            <p>Perfect for code editors or minimalist interfaces.</p>
-          </div>
-        </template>
-      </Tabs>
-    </div>`
-    }),
-    args: {
-        tabs: ['Code', 'Preview'],
-        variant: 'ghost'
+        variant: 'pill',
+        tone: 'primary',
+        size: 'md'
     }
 }
 
@@ -191,7 +124,7 @@ export const Sizes: Story = {
     <div class="p-8 bg-background-dark space-y-8">
       <div>
         <h3 class="text-white mb-4">Small Size</h3>
-        <Tabs :tabs="args.tabs" size="sm" variant="pills">
+        <Tabs :tabs="args.tabs" size="sm" variant="pill" tone="primary">
           <template #tab-0><div class="p-2 text-gray-300">Small tab content</div></template>
           <template #tab-1><div class="p-2 text-gray-300">Small tab content</div></template>
           <template #tab-2><div class="p-2 text-gray-300">Small tab content</div></template>
@@ -199,7 +132,7 @@ export const Sizes: Story = {
       </div>
       <div>
         <h3 class="text-white mb-4">Medium Size (Default)</h3>
-        <Tabs :tabs="args.tabs" size="md" variant="pills">
+        <Tabs :tabs="args.tabs" size="md" variant="pill" tone="primary">
           <template #tab-0><div class="p-4 text-gray-300">Medium tab content</div></template>
           <template #tab-1><div class="p-4 text-gray-300">Medium tab content</div></template>
           <template #tab-2><div class="p-4 text-gray-300">Medium tab content</div></template>
@@ -207,7 +140,7 @@ export const Sizes: Story = {
       </div>
       <div>
         <h3 class="text-white mb-4">Large Size</h3>
-        <Tabs :tabs="args.tabs" size="lg" variant="pills">
+        <Tabs :tabs="args.tabs" size="lg" variant="pill" tone="primary">
           <template #tab-0><div class="p-6 text-gray-300">Large tab content</div></template>
           <template #tab-1><div class="p-6 text-gray-300">Large tab content</div></template>
           <template #tab-2><div class="p-6 text-gray-300">Large tab content</div></template>
@@ -220,77 +153,37 @@ export const Sizes: Story = {
     }
 }
 
-export const Alignments: Story = {
-    render: (args) => ({
+export const Tones: Story = {
+    render: () => ({
         components: {Tabs},
-        setup() {
-            return {args}
-        },
         template: `
     <div class="p-8 bg-background-dark space-y-8">
       <div>
-        <h3 class="text-white mb-4">Start (Default)</h3>
-        <Tabs :tabs="args.tabs" alignment="start">
-          <template #tab-0><div class="p-4 text-gray-300">Content aligned to start</div></template>
-          <template #tab-1><div class="p-4 text-gray-300">Content aligned to start</div></template>
+        <h3 class="text-white mb-4">Primary Tone</h3>
+        <Tabs :tabs="['First', 'Second', 'Third']" variant="pill" tone="primary">
+          <template #tab-0><div class="p-4 text-gray-300">Primary tone selected</div></template>
+          <template #tab-1><div class="p-4 text-gray-300">Content</div></template>
+          <template #tab-2><div class="p-4 text-gray-300">Content</div></template>
         </Tabs>
       </div>
       <div>
-        <h3 class="text-white mb-4">Center</h3>
-        <Tabs :tabs="args.tabs" alignment="center">
-          <template #tab-0><div class="p-4 text-gray-300">Centered content</div></template>
-          <template #tab-1><div class="p-4 text-gray-300">Centered content</div></template>
+        <h3 class="text-white mb-4">Success Tone</h3>
+        <Tabs :tabs="['First', 'Second', 'Third']" variant="pill" tone="success">
+          <template #tab-0><div class="p-4 text-gray-300">Success tone selected</div></template>
+          <template #tab-1><div class="p-4 text-gray-300">Content</div></template>
+          <template #tab-2><div class="p-4 text-gray-300">Content</div></template>
         </Tabs>
       </div>
       <div>
-        <h3 class="text-white mb-4">End</h3>
-        <Tabs :tabs="args.tabs" alignment="end">
-          <template #tab-0><div class="p-4 text-gray-300">Content aligned to end</div></template>
-          <template #tab-1><div class="p-4 text-gray-300">Content aligned to end</div></template>
+        <h3 class="text-white mb-4">Warning Tone</h3>
+        <Tabs :tabs="['First', 'Second', 'Third']" variant="pill" tone="warning">
+          <template #tab-0><div class="p-4 text-gray-300">Warning tone selected</div></template>
+          <template #tab-1><div class="p-4 text-gray-300">Content</div></template>
+          <template #tab-2><div class="p-4 text-gray-300">Content</div></template>
         </Tabs>
       </div>
     </div>`
-    }),
-    args: {
-        tabs: ['First Tab', 'Second Tab']
-    }
-}
-
-export const FullWidth: Story = {
-    render: (args) => ({
-        components: {Tabs},
-        setup() {
-            return {args}
-        },
-        template: `
-    <div class="p-8 bg-background-dark min-h-[400px]">
-      <Tabs v-bind="args">
-        <template #tab-0>
-          <div class="p-4 text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Mobile View</h3>
-            <p>Full-width tabs are perfect for mobile interfaces.</p>
-          </div>
-        </template>
-        <template #tab-1>
-          <div class="p-4 text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Tablet View</h3>
-            <p>Each tab takes equal width for a balanced layout.</p>
-          </div>
-        </template>
-        <template #tab-2>
-          <div class="p-4 text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Desktop View</h3>
-            <p>Great for consistent spacing across devices.</p>
-          </div>
-        </template>
-      </Tabs>
-    </div>`
-    }),
-    args: {
-        tabs: ['Mobile', 'Tablet', 'Desktop'],
-        fullWidth: true,
-        variant: 'pills'
-    }
+    })
 }
 
 export const Vertical: Story = {
@@ -335,7 +228,9 @@ export const Vertical: Story = {
     args: {
         tabs: ['General', 'Security', 'Privacy', 'Notifications'],
         vertical: true,
-        variant: 'pills'
+        variant: 'pill',
+        tone: 'primary',
+        size: 'md'
     }
 }
 
@@ -397,37 +292,8 @@ export const WithVModel: Story = {
     }),
     args: {
         tabs: ['Tab A', 'Tab B', 'Tab C'],
-        variant: 'pills'
-    }
-}
-
-export const NoGlowEffect: Story = {
-    render: (args) => ({
-        components: {Tabs},
-        setup() {
-            return {args}
-        },
-        template: `
-    <div class="p-8 bg-background-dark min-h-[400px]">
-      <Tabs v-bind="args">
-        <template #tab-0>
-          <div class="p-4 text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Without Glow</h3>
-            <p>Tabs without the glow effect for a more subtle appearance.</p>
-          </div>
-        </template>
-        <template #tab-1>
-          <div class="p-4 text-gray-300">
-            <h3 class="text-lg font-semibold mb-2">Minimal Design</h3>
-            <p>Disable glowEffect prop for a cleaner look.</p>
-          </div>
-        </template>
-      </Tabs>
-    </div>`
-    }),
-    args: {
-        tabs: ['First', 'Second'],
-        variant: 'pills',
-        glowEffect: false
+        variant: 'pill',
+        tone: 'primary',
+        size: 'md'
     }
 }
