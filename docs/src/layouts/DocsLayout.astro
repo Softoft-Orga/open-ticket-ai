@@ -1,6 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import { localizeHref, getLocaleFromPath, type Locale } from '../lib/i18nLinks';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 
 interface Props {
   title: string;
@@ -11,62 +11,65 @@ interface Props {
 
 const { title, description, breadcrumbs = [], toc = [] } = Astro.props;
 
-// Get current locale
-const currentLocale = getLocaleFromPath(Astro.url.pathname) as Locale;
+// Get current locale from Astro
+const currentLocale = Astro.currentLocale || 'en';
+
+// Helper to create locale-aware URL
+const getLocaleUrl = (path: string) => getRelativeLocaleUrl(currentLocale, path);
 
 // Localize sidebar section links
 const sidebarSections = [
   {
     label: 'Products',
     items: [
-      { label: 'Overview', link: localizeHref('/products/overview/', currentLocale) },
-      { label: 'Prediction API', link: localizeHref('/products/prediction-api/overview/', currentLocale) },
-      { label: 'Synthetic Data', link: localizeHref('/products/synthetic-data/synthetic-data-generation/', currentLocale) },
+      { label: 'Overview', link: getLocaleUrl('/products/overview/') },
+      { label: 'Prediction API', link: getLocaleUrl('/products/prediction-api/overview/') },
+      { label: 'Synthetic Data', link: getLocaleUrl('/products/synthetic-data/synthetic-data-generation/') },
     ]
   },
   {
     label: 'Guides',
     items: [
-      { label: 'Quick Start', link: localizeHref('/guides/quick_start/', currentLocale) },
-      { label: 'First Pipeline', link: localizeHref('/guides/first_pipeline/', currentLocale) },
-      { label: 'Plan Ticket Automation', link: localizeHref('/guides/plan-ticket-automation-project/', currentLocale) },
+      { label: 'Quick Start', link: getLocaleUrl('/guides/quick_start/') },
+      { label: 'First Pipeline', link: getLocaleUrl('/guides/first_pipeline/') },
+      { label: 'Plan Ticket Automation', link: getLocaleUrl('/guides/plan-ticket-automation-project/') },
     ]
   },
   {
     label: 'Users',
     items: [
-      { label: 'Installation', link: localizeHref('/users/installation/', currentLocale) },
-      { label: 'Plugin Marketplace', link: localizeHref('/users/plugin-marketplace/', currentLocale) },
-      { label: 'Configuration Examples', link: localizeHref('/users/config_examples/', currentLocale) },
-      { label: 'OTOBO/Znuny Setup', link: localizeHref('/users/plugin-otobo-znuny/setup/', currentLocale) },
+      { label: 'Installation', link: getLocaleUrl('/users/installation/') },
+      { label: 'Plugin Marketplace', link: getLocaleUrl('/users/plugin-marketplace/') },
+      { label: 'Configuration Examples', link: getLocaleUrl('/users/config_examples/') },
+      { label: 'OTOBO/Znuny Setup', link: getLocaleUrl('/users/plugin-otobo-znuny/setup/') },
     ]
   },
   {
     label: 'Developers',
     items: [
-      { label: 'Dependency Injection', link: localizeHref('/developers/dependency_injection/', currentLocale) },
-      { label: 'Services', link: localizeHref('/developers/services/', currentLocale) },
-      { label: 'Pipeline Code', link: localizeHref('/developers/pipeline_code/', currentLocale) },
-      { label: 'Config Rendering', link: localizeHref('/developers/config_rendering/', currentLocale) },
-      { label: 'Template Rendering', link: localizeHref('/developers/template_rendering/', currentLocale) },
-      { label: 'Testing', link: localizeHref('/developers/testing/', currentLocale) },
-      { label: 'Logging', link: localizeHref('/developers/logging/', currentLocale) },
-      { label: 'Ticket System Integration', link: localizeHref('/developers/ticket_system_integration/', currentLocale) },
+      { label: 'Dependency Injection', link: getLocaleUrl('/developers/dependency_injection/') },
+      { label: 'Services', link: getLocaleUrl('/developers/services/') },
+      { label: 'Pipeline Code', link: getLocaleUrl('/developers/pipeline_code/') },
+      { label: 'Config Rendering', link: getLocaleUrl('/developers/config_rendering/') },
+      { label: 'Template Rendering', link: getLocaleUrl('/developers/template_rendering/') },
+      { label: 'Testing', link: getLocaleUrl('/developers/testing/') },
+      { label: 'Logging', link: getLocaleUrl('/developers/logging/') },
+      { label: 'Ticket System Integration', link: getLocaleUrl('/developers/ticket_system_integration/') },
     ]
   },
   {
     label: 'Details',
     items: [
-      { label: 'Config Reference', link: localizeHref('/details/config_reference/', currentLocale) },
-      { label: 'Template Rendering', link: localizeHref('/details/template_rendering/', currentLocale) },
+      { label: 'Config Reference', link: getLocaleUrl('/details/config_reference/') },
+      { label: 'Template Rendering', link: getLocaleUrl('/details/template_rendering/') },
     ]
   },
   {
     label: 'Blog',
     items: [
-      { label: 'Open Ticket AI 1.4 Release', link: localizeHref('/blog/open-ticket-ai-1-4-release/', currentLocale) },
-      { label: 'AI in Ticket Systems', link: localizeHref('/blog/ai-in-ticketsystems/', currentLocale) },
-      { label: 'Automatic Ticket Labeling', link: localizeHref('/blog/automatic_ticket_labeling/', currentLocale) },
+      { label: 'Open Ticket AI 1.4 Release', link: getLocaleUrl('/blog/open-ticket-ai-1-4-release/') },
+      { label: 'AI in Ticket Systems', link: getLocaleUrl('/blog/ai-in-ticketsystems/') },
+      { label: 'Automatic Ticket Labeling', link: getLocaleUrl('/blog/automatic_ticket_labeling/') },
     ]
   },
 ];
@@ -74,7 +77,7 @@ const sidebarSections = [
 // Localize breadcrumbs
 const localizedBreadcrumbs = breadcrumbs.map(crumb => ({
   ...crumb,
-  href: crumb.href ? localizeHref(crumb.href, currentLocale) : undefined,
+  href: crumb.href ? getLocaleUrl(crumb.href) : undefined,
 }));
 ---
 

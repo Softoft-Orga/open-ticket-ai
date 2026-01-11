@@ -1,9 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Link from '../components/Link.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 
 const title = "Documentation | Open Ticket AI";
 const description = "Choose the documentation you need. Explore API references, implementation guides, and best practices.";
+
+const currentLocale = Astro.currentLocale || 'en';
+const automationDocsUrl = getRelativeLocaleUrl(currentLocale, '/docs/open-ticket-automation/');
+const taggingDocsUrl = getRelativeLocaleUrl(currentLocale, '/docs/ticket-tagging/');
 ---
 
 <BaseLayout title={title} description={description}>
@@ -34,8 +38,8 @@ const description = "Choose the documentation you need. Explore API references, 
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
         <!-- Open Ticket Automation Docs Card -->
-        <Link
-          href="/docs/open-ticket-automation/"
+        <a
+          href={automationDocsUrl}
           class="group relative block p-8 bg-card-dark rounded-2xl border border-slate-700 hover:border-primary/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-primary/10"
         >
           <div class="absolute -inset-1 bg-gradient-to-r from-primary/0 to-primary/0 group-hover:from-primary/20 group-hover:to-purple-600/20 rounded-2xl blur opacity-0 group-hover:opacity-50 transition duration-500"></div>
@@ -57,11 +61,11 @@ const description = "Choose the documentation you need. Explore API references, 
               </svg>
             </div>
           </div>
-        </Link>
+        </a>
 
         <!-- Tagging AI Docs Card -->
-        <Link
-          href="/docs/ticket-tagging/"
+        <a
+          href={taggingDocsUrl}
           class="group relative block p-8 bg-card-dark rounded-2xl border border-slate-700 hover:border-primary/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-primary/10"
         >
           <div class="absolute -inset-1 bg-gradient-to-r from-primary/0 to-primary/0 group-hover:from-primary/20 group-hover:to-purple-600/20 rounded-2xl blur opacity-0 group-hover:opacity-50 transition duration-500"></div>
@@ -83,7 +87,7 @@ const description = "Choose the documentation you need. Explore API references, 
               </svg>
             </div>
           </div>
-        </Link>
+        </a>
       </div>
 
       <div class="mt-24 pt-16 border-t border-slate-800 text-center">

@@ -1,8 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import NavBar from '../components/vue/core/navigation/NavBar.vue';
 import FooterComponent from '../components/vue/core/navigation/FooterComponent.vue';
-import { localizeHref, getLocaleFromPath, type Locale } from '../lib/i18nLinks';
 import '../styles/global.css';
 
 interface Props {
@@ -13,17 +13,29 @@ interface Props {
 const { title, description } = Astro.props;
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
 
-// Get current locale
-const currentLocale = getLocaleFromPath(Astro.url.pathname) as Locale;
+// Get current locale from Astro
+const currentLocale = Astro.currentLocale || 'en';
 
 // Load site configuration
 const siteEntries = await getCollection('site');
 const siteConfig = siteEntries.find(entry => entry.data.slug === 'main');
 
+// Helper to add trailing slash and localize URL
+const localizeUrl = (url: string) => {
+  // Don't localize external URLs or hash links
+  if (url.startsWith('http') || url.startsWith('#')) {
+    return url;
+  }
+  // Ensure trailing slash for internal links
+  const urlWithSlash = url.endsWith('/') ? url : url + '/';
+  // Use Astro's getRelativeLocaleUrl to create locale-aware URL
+  return getRelativeLocaleUrl(currentLocale, urlWithSlash);
+};
+
 // Localize navigation links
 const navLinks = (siteConfig?.data.nav || []).map(link => ({
   ...link,
-  url: localizeHref(link.url.endsWith('/') ? link.url : link.url + '/', currentLocale),
+  url: localizeUrl(link.url),
 }));
 
 // Localize footer links
@@ -33,12 +45,12 @@ const footerData = siteConfig?.data.footer ? {
     ...section,
     links: section.links.map(link => ({
       ...link,
-      url: localizeHref(link.url.startsWith('/') && !link.url.endsWith('/') ? link.url + '/' : link.url, currentLocale),
+      url: localizeUrl(link.url),
     })),
   })),
   legal: siteConfig.data.footer.legal.map(link => ({
     ...link,
-    url: localizeHref(link.url.startsWith('/') && !link.url.endsWith('/') ? link.url + '/' : link.url, currentLocale),
+    url: localizeUrl(link.url),
   })),
 } : undefined;
 
