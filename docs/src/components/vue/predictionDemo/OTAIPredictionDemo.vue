@@ -43,7 +43,7 @@
         v-model="body"
         :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
         class="w-full py-3 px-4 text-base rounded-xl min-h-40 border bg-surface-dark text-white placeholder-text-dim transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 focus:shadow-[0_0_20px_rgba(166,13,242,0.2)] disabled:opacity-50 disabled:cursor-not-allowed border-border-dark hover:border-primary/30 resize-y"
-      ></textarea>
+      />
     </div>
 
     <Button
@@ -101,10 +101,12 @@
 
           <div class="text-base text-white">
             Confidence:
-            <span :class="[
-              'inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold',
-              getConfidenceBadgeClass(queueResult[0].score)
-            ]">
+            <span
+              :class="[
+                'inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold',
+                getConfidenceBadgeClass(queueResult[0].score)
+              ]"
+            >
               {{ asPercent(queueResult[0].score) }}
             </span>
           </div>
@@ -124,10 +126,12 @@
 
           <div class="text-base text-white">
             Confidence:
-            <span :class="[
-              'inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold',
-              getConfidenceBadgeClass(prioResult[0].score)
-            ]">
+            <span
+              :class="[
+                'inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold',
+                getConfidenceBadgeClass(prioResult[0].score)
+              ]"
+            >
               {{ asPercent(prioResult[0].score) }}
             </span>
           </div>
