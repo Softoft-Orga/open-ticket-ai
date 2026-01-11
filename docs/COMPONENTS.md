@@ -15,10 +15,8 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 
 ## core
 - **Alert.vue** — Alert banner with tone. Props: `title`, `tone` (`info` | `success` | `warning` | `danger`), `icon`. Slots: default (body).
-- **DocCard.vue** — Card for documentation links. Props: `title`, `description`, `href`, `icon`. Slots: _none_.
 - **HeadlessUiTailwindDemo.vue** — Demonstrates Headless UI ui-open/ui-closed classes. Props: _none_. Slots: _none_.
 - **LoadingComponent.vue** — Loading spinner/placeholder. Props: `label`. Slots: _none_.
-- **QuickLink.vue** — Inline link pill. Props: `label`, `href`, `icon`. Slots: _none_.
 
 ### core/accordion
 - **Accordion.vue** — Accordion container. Props: `items` (array), `multiple` (bool). Slots: default (custom items).
@@ -51,7 +49,7 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **UiTransitionSlide.vue** — Slide transition wrapper. Props: `as`, `appear`, `direction`. Slots: default (content).
 
 ## forms
-- **ServiceInquiryModal.vue** — Modal for service inquiries. Props: `open`, `onClose`. Slots: default (form body).
+_No components in this section._
 
 ## homepage
 - **ServiceCard.vue** — Service offering card. Props: `title`, `description`, `cta`, `icon`. Slots: `footer`.
