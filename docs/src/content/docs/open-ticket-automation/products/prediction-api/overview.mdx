@@ -2,8 +2,8 @@
 title: 🇩🇪 German Ticket Classification API (Free)
 description: "Free German API to predict Queue and Priority for support tickets. Easy integration with OTOBO, Znuny, and Zammad. No authentication required."
 ---
-import OTAIPredictionDemo from '../../../../../components/vue/predictionDemo/OTAIPredictionDemo.vue';
 import AccordionItem from '../../../../../components/vue/core/accordion/AccordionItem.vue';
+import Alert from '../../../../../components/vue/core/basic/Alert.vue';
 
 # 🇩🇪 German Ticket Classification API (Free)
 
@@ -15,7 +15,20 @@ This API is **free** to use and ideal for integrations with **OTOBO**, **Znuny**
 
 ## Try it out!
 
-<OTAIPredictionDemo/>
+<Alert type="info" title="Interactive Demo">
+
+Use the code examples below to test the API, or try it directly with curl:
+
+```bash
+curl -X POST "https://open-ticket-ai.com/api/german_prediction/v1/classify" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "subject": "VPN Verbindungsproblem",
+        "body": "Kann nach dem Update keine Verbindung zum Unternehmens-VPN herstellen."
+      }'
+```
+
+</Alert>
 
 ## 📍 Endpoint
 
