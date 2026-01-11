@@ -16,16 +16,11 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **TopicLink.vue** — Link styled for topics. Props: `label`, `href`. Slots: _none_.
 
 ## configExamples
-- **ExampleCard.vue** — Card wrapper for a config example. Props: `example` (ExampleMeta), `linkBase`. Slots: _none_.
-- **ExampleGrid.vue** — Grid layout for example cards. Props: `examples` (ExampleMeta[]). Slots: _none_.
 - **ExamplePage.vue** — Renders a full example page. Props: `example` (ExampleMeta), `renderTOC` (bool). Slots: default (example content).
 - **ExamplesGallery.vue** — Gallery view of examples. Props: `examples` (ExampleMeta[]), `linkBase`. Slots: _none_.
 - **ExampleViewer.vue** — Viewer for selected example content. Props: `example` (ExampleMeta). Slots: default (content).
 - **InlineExample.vue** — Renders inline example from registry. Props: `name`. Slots: _none_.
 - **MarkdownFromString.vue** — Renders markdown string. Props: `source`. Slots: _none_.
-- **SearchBox.vue** — Search input for examples. Props: `placeholder`. Slots: _none_.
-- **TagBadges.vue** — Badge list for tags. Props: `tags`. Slots: _none_.
-- **TagFilter.vue** — Tag filter control. Props: `tags`, `activeTags`. Slots: _none_.
 
 ## core
 - **Alert.vue** — Alert banner with tone. Props: `title`, `tone` (`info` | `success` | `warning` | `danger`), `icon`. Slots: default (body).

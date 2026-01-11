@@ -21,10 +21,18 @@
           {{ example.name }}
         </h1>
         <MarkdownFromString :markdown="example.description" />
-        <TagBadges
+        <div
           v-if="example.tags.length"
-          :tags="example.tags"
-        />
+          class="flex flex-wrap gap-2"
+        >
+          <Badge
+            v-for="tag in example.tags"
+            :key="tag"
+            class="text-xs"
+          >
+            {{ tag }}
+          </Badge>
+        </div>
       </header>
       <ExampleViewer :file="example.path" />
     </div>
@@ -40,7 +48,7 @@
 <script lang="ts" setup>
 import {computed} from 'vue'
 import MarkdownFromString from './MarkdownFromString.vue'
-import TagBadges from './TagBadges.vue'
+import Badge from '../core/basic/Badge.vue'
 import ExampleViewer from './ExampleViewer.vue'
 import {useConfigExamplesRegistry} from '../../../composables/useConfigExamplesRegistry'
 

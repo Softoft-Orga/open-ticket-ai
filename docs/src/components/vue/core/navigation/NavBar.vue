@@ -131,9 +131,9 @@
 
                 <div class="mt-6 pt-6 border-t border-surface-lighter">
                   <Button
-                    variant="primary"
-                    size="md"
                     class="w-full"
+                    size="md"
+                    variant="primary"
                   >
                     {{ ctaLabel }}
                   </Button>
