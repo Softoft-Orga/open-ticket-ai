@@ -54,10 +54,29 @@
       :show="mobileMenuOpen"
       as="template"
     >
-      <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
+      <Dialog
+        as="div"
+        class="relative z-50"
+        @close="closeMobileMenu"
+      >
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
+        </TransitionChild>
 
-      <div class="fixed inset-0 flex items-start justify-end">
-        <DialogPanel class="w-full max-w-sm h-full bg-background-dark border-l border-surface-lighter p-6 shadow-2xl">
+        <div class="fixed inset-0 flex items-start justify-end">
+          <UiTransitionSlide
+            direction="right"
+            as="template"
+          >
+            <DialogPanel class="w-full max-w-sm h-full bg-background-dark border-l border-surface-lighter p-6 shadow-2xl">
           <div class="flex items-center justify-between mb-8">
             <DialogTitle class="text-lg font-bold text-white">
               Menu
@@ -153,14 +172,21 @@ import {
   Dialog,
   DialogPanel,
   DialogTitle,
-  TransitionRoot
+  TransitionRoot,
+  TransitionChild,
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel
 } from '@headlessui/vue'
 import {
   TicketIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  ChevronDownIcon,
+  BookOpenIcon
 } from '@heroicons/vue/24/outline'
 import Button from '../basic/Button.vue'
+import UiTransitionSlide from '../transitions/UiTransitionSlide.vue'
 
 type NavItem = { href: string; label: string }
 
