@@ -1,0 +1,126 @@
+# Vue Components Inventory
+
+Below is an inventory of Vue components in `docs/src/components/vue`, organized by folder. Each entry lists name, brief description, props, and slots. Descriptions are concise; adjust as implementations evolve.
+
+## (root)
+- **ArchitectureOverview.vue** — High-level architecture diagram display. Props: _none_. Slots: _none_.
+- **PagefindSearch.vue** — Pagefind search box integration. Props: `placeholder`, `ariaLabel`. Slots: _none_.
+- **RecentNewsToast.vue** — Toast highlighting the most recent news article. Props: _none_. Slots: _none_.
+- **YoutubeVideo.vue** — Responsive YouTube embed. Props: `videoId`, `title`. Slots: _none_.
+
+## blog
+- **ArticleCard.vue** — Blog article card with title, meta, and excerpt. Props: `title`, `description`, `readingTime`, `publishedAt`, `author`, `tags`, `slug`. Slots: _none_.
+- **AuthorBio.vue** — Author bio block with avatar and socials. Props: `author`, `avatar`, `role`, `website`, `twitter`, `linkedin`, `github`, `dribbble`. Slots: default (bio content).
+- **ReadingTime.vue** — Displays estimated reading time. Props: `minutes`. Slots: _none_.
+- **RelatedPosts.vue** — Grid of related posts. Props: `posts`. Slots: _none_.
+- **ShareButtons.vue** — Social share buttons. Props: `url`, `title`. Slots: _none_.
+- **TagFilter.vue** — Filter pill list for tags. Props: `tags`, `activeTags`, `title`. Slots: _none_.
+- **TopicLink.vue** — Link styled for topics. Props: `label`, `href`. Slots: _none_.
+
+## configExamples
+- **ExampleCard.vue** — Card wrapper for a config example. Props: `example` (ExampleMeta), `linkBase`. Slots: _none_.
+- **ExampleGrid.vue** — Grid layout for example cards. Props: `examples` (ExampleMeta[]). Slots: _none_.
+- **ExamplePage.vue** — Renders a full example page. Props: `example` (ExampleMeta), `renderTOC` (bool). Slots: default (example content).
+- **ExamplesGallery.vue** — Gallery view of examples. Props: `examples` (ExampleMeta[]), `linkBase`. Slots: _none_.
+- **ExampleViewer.vue** — Viewer for selected example content. Props: `example` (ExampleMeta). Slots: default (content).
+- **InlineExample.vue** — Renders inline example from registry. Props: `name`. Slots: _none_.
+- **MarkdownFromString.vue** — Renders markdown string. Props: `source`. Slots: _none_.
+- **SearchBox.vue** — Search input for examples. Props: `placeholder`. Slots: _none_.
+- **TagBadges.vue** — Badge list for tags. Props: `tags`. Slots: _none_.
+- **TagFilter.vue** — Tag filter control. Props: `tags`, `activeTags`. Slots: _none_.
+
+## core
+- **Alert.vue** — Alert banner with tone. Props: `title`, `tone` (`info` | `success` | `warning` | `danger`), `icon`. Slots: default (body).
+- **CodeBlock.vue** — Syntax highlighted code block. Props: `code`, `language`, `filename`, `highlight`. Slots: _none_.
+- **CodeTabs.vue** — Tabbed code samples. Props: `tabs` (array), `initialTab`. Slots: default (tab panels via slot scope).
+- **DocCard.vue** — Card for documentation links. Props: `title`, `description`, `href`, `icon`. Slots: _none_.
+- **HeadlessUiTailwindDemo.vue** — Demonstrates Headless UI ui-open/ui-closed classes. Props: _none_. Slots: _none_.
+- **LoadingComponent.vue** — Loading spinner/placeholder. Props: `label`. Slots: _none_.
+- **QuickLink.vue** — Inline link pill. Props: `label`, `href`, `icon`. Slots: _none_.
+- **StepIndicator.vue** — Step indicator bar. Props: `steps` (array), `activeIndex`. Slots: _none_.
+- **TableOfContents.vue** — Renders TOC for page headings. Props: `items` (array), `activeId`. Slots: _none_.
+- **TableOfContentsItem.vue** — TOC item entry. Props: `item`, `activeId`. Slots: _none_.
+
+### core/accordion
+- **Accordion.vue** — Accordion container. Props: `items` (array), `multiple` (bool). Slots: default (custom items).
+- **AccordionItem.vue** — Single accordion item. Props: `item`, `isOpen`, `disabled`. Slots: `title`, default (body).
+
+### core/basic
+- **Badge.vue** — Pill badge. Props: `label`, `tone`, `size`, `icon`. Slots: default (custom content).
+- **Button.vue** — Styled button. Props: `label`, `variant`, `size`, `to`, `href`, `icon`, `block`, `loading`, `disabled`. Slots: default (button content).
+- **Card.vue** — Card container. Props: `title`, `description`, `icon`, `link`. Slots: default (content), `footer`.
+- **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot scope).
+
+### core/forms
+- **RadioGroup.vue** — Grouped radio options. Props: `modelValue`, `options`, `disabled`. Slots: default (option rendering via slot scope).
+- **RadioGroupOption.vue** — Single radio option. Props: `option`, `modelValue`, `disabled`. Slots: default (option label/body).
+- **SelectComponent.vue** — Styled select. Props: `modelValue`, `options`, `label`, `placeholder`, `error`. Slots: _none_.
+- **TextArea.vue** — Text area input. Props: `modelValue`, `label`, `placeholder`, `rows`, `error`. Slots: _none_.
+- **TextInput.vue** — Text input field. Props: `modelValue`, `label`, `placeholder`, `type`, `error`. Slots: _none_.
+
+### core/navigation
+- **FooterComponent.vue** — Footer navigation sections. Props: `sections`, `locale`. Slots: _none_.
+- **NavBar.vue** — Top navigation bar. Props: `links`, `cta`, `mobileOnlyLinks`. Slots: default (extra actions).
+
+### core/table
+- **C.vue** — Table cell wrapper. Props: `as` (tag), `align`, `width`. Slots: default (cell content).
+- **Row.vue** — Table row wrapper. Props: `as` (tag), `hoverable`. Slots: default (row content).
+- **Table.vue** — Table container. Props: `columns` (array), `striped`, `bordered`. Slots: default (rows), `header`.
+
+### core/transitions
+- **UiTransitionFade.vue** — Fade transition wrapper. Props: `as`, `appear`, `duration`. Slots: default (content).
+- **UiTransitionFadeScale.vue** — Fade + scale transition wrapper. Props: `as`, `appear`, `strength`. Slots: default (content).
+- **UiTransitionSlide.vue** — Slide transition wrapper. Props: `as`, `appear`, `direction`. Slots: default (content).
+
+## forms
+- **ContactForm.vue** — Contact form with name/email/message. Props: _none_ (uses internal state). Slots: _none_.
+- **ServiceInquiryModal.vue** — Modal for service inquiries. Props: `open`, `onClose`. Slots: default (form body).
+- **WaitlistSignupForm.vue** — Waitlist signup form. Props: _none_ (internal). Slots: _none_.
+
+## homepage
+- **CapabilityCard.vue** — Capability highlight card. Props: `title`, `description`, `icon`. Slots: _none_.
+- **FeatureShowcase.vue** — Hero-style feature showcase. Props: `title`, `subtitle`, `cta`, `image`. Slots: default (extra content).
+- **IntegrationLogos.vue** — Logo cloud. Props: `logos` (array). Slots: _none_.
+- **ServiceCard.vue** — Service offering card. Props: `title`, `description`, `cta`, `icon`. Slots: `footer`.
+- **ServicesGrid.vue** — Grid of services. Props: `services` (array). Slots: _none_.
+
+## marketplace
+- **MarketplacePagination.vue** — Pagination control. Props: `page`, `pageSize`, `total`, `onPageChange`. Slots: _none_.
+- **MarketplaceSearchForm.vue** — Search form for marketplace. Props: `query`, `filters`. Slots: _none_.
+- **MarketplaceSkeletonCard.vue** — Skeleton loader for marketplace cards. Props: _none_. Slots: _none_.
+- **PluginCard.vue** — Plugin marketplace card. Props: `plugin` (data), `href`. Slots: _none_.
+- **PluginsMarketplace.vue** — Marketplace layout with filters/list. Props: `plugins`, `isLoading`, `error`. Slots: _none_.
+
+## multiTagDemo
+- **MultiTagPredictionDemo.vue** — Multi-tag prediction demo UI. Props: _none_. Slots: _none_.
+- **TagMindmap.vue** — Visual mindmap of tags. Props: `tagYaml`. Slots: _none_.
+- **TagNode.vue** — Node renderer for tag tree. Props: `node`. Slots: default (node label/body).
+- **TagTree.vue** — Tree view of tags. Props: `tagYaml`. Slots: _none_.
+- **YamlTree.vue** — YAML tree renderer. Props: `source`. Slots: _none_.
+
+## pipe
+- **PipeSidecar.vue** — Renders sidecar data listing. Props: `sidecars`, `selected`, `onSelect`. Slots: _none_.
+
+## predictionDemo
+- **OTAIPredictionDemo.vue** — Prediction demo experience. Props: `initialMessage`, `demoConfig`. Slots: _none_.
+- **PredictionCard.vue** — Card showing prediction result. Props: `title`, `score`, `meta`. Slots: default (detail).
+- **ResultTable.vue** — Table of prediction results. Props: `rows`, `columns`. Slots: _none_.
+
+## product
+- **ComparisonRow.vue** — Feature comparison row. Props: `label`, `values` (array). Slots: _none_.
+- **FeatureItem.vue** — Feature item bullet. Props: `title`, `description`, `icon`. Slots: _none_.
+- **FullMetric.vue** — Metric display. Props: `label`, `value`, `unit`, `trend`. Slots: _none_.
+- **LiteFreeDetail.vue** — Lite free plan details. Props: `plan`. Slots: _none_.
+2- **PerformanceMetric.vue** — Performance metric stat. Props: `label`, `value`, `delta`. Slots: _none_.
+- **ProductCard.vue** — Product card. Props: `product`. Slots: _none_.
+- **ProductCards.vue** — Product cards grid. Props: `products`. Slots: _none_.
+- **RoiCalculator.vue** — ROI calculator widget. Props: `defaults`. Slots: _none_.
+- **ServicePackages.vue** — Service packages section. Props: `packages`. Slots: _none_.
+- **SupportPlans.vue** — Support plans listing. Props: `plans`. Slots: _none_.
+- **TaxonomyCard.vue** — Taxonomy card. Props: `item`. Slots: _none_.
+- **TaxonomyRow.vue** — Taxonomy row. Props: `item`. Slots: _none_.
+
+## services
+- **ExtensionItem.vue** — Extension list item. Props: `extension`. Slots: _none_.
+- **IntegrationPackageCard.vue** — Integration package card. Props: `pkg`. Slots: _none_.
+- **PricingCard.vue** — Pricing card. Props: `title`, `price`, `features`, `cta`. Slots: `footer`.

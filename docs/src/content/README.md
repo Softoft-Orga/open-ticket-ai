@@ -67,7 +67,7 @@ category: News
 
 ### 3. Products Collection (Data)
 - **Type**: `data` (YAML files)
-- **Path**: `src/content/products/*.yaml`
+- **Path**: `src/content/products.yaml` (consolidated list)
 - **Schema**:
   - `slug` (string, required)
   - `title` (string, required)
@@ -80,18 +80,18 @@ category: News
 
 **Example:**
 ```yaml
-slug: open-ticket-ai-lite
-title: Open Ticket AI Lite
-tagline: Start automating your tickets with AI
-features:
-  - Automatic ticket classification
-  - Queue assignment
-tier: lite
+- slug: open-ticket-ai-lite
+  title: Open Ticket AI Lite
+  tagline: Start automating your tickets with AI
+  features:
+    - Automatic ticket classification
+    - Queue assignment
+  tier: lite
 ```
 
 ### 4. Services Collection (Data)
 - **Type**: `data` (YAML files)
-- **Path**: `src/content/services/*.yaml`
+- **Path**: `src/content/services.yaml`
 - **Schema**:
   - `slug` (string, required)
   - `title` (string, required)

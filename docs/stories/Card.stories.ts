@@ -232,82 +232,7 @@ export const FullSlots: Story = {
     }),
 }
 
-// Variant Stories
-export const VariantPrimary: Story = {
-    args: {
-        variant: 'primary',
-        size: 'md',
-    },
-    render: (args) => ({
-        components: {Card},
-        setup() {
-            return {args}
-        },
-        template: `
-            <Card v-bind="args">
-                <template #title>Primary Variant</template>
-                <p>Default primary variant with surface-dark background.</p>
-            </Card>
-        `
-    }),
-}
 
-export const VariantSecondary: Story = {
-    args: {
-        variant: 'secondary',
-        size: 'md',
-    },
-    render: (args) => ({
-        components: {Card},
-        setup() {
-            return {args}
-        },
-        template: `
-            <Card v-bind="args">
-                <template #title>Secondary Variant</template>
-                <p>Secondary variant with surface-lighter background for subtle contrast.</p>
-            </Card>
-        `
-    }),
-}
-
-export const VariantOutline: Story = {
-    args: {
-        variant: 'outline',
-        size: 'md',
-    },
-    render: (args) => ({
-        components: {Card},
-        setup() {
-            return {args}
-        },
-        template: `
-            <Card v-bind="args">
-                <template #title>Outline Variant</template>
-                <p>Outline variant with transparent background and emphasized border.</p>
-            </Card>
-        `
-    }),
-}
-
-export const VariantGhost: Story = {
-    args: {
-        variant: 'ghost',
-        size: 'md',
-    },
-    render: (args) => ({
-        components: {Card},
-        setup() {
-            return {args}
-        },
-        template: `
-            <Card v-bind="args">
-                <template #title>Ghost Variant</template>
-                <p>Ghost variant with semi-transparent background for layering.</p>
-            </Card>
-        `
-    }),
-}
 
 // Tone Stories
 export const ToneInfo: Story = {
@@ -762,7 +687,6 @@ export const Playground: Story = {
 export const VariantPrimary: Story = {
     args: {
         variant: 'primary',
-        padding: 'default',
     },
     render: (args) => ({
         components: {Card},
@@ -781,7 +705,6 @@ export const VariantPrimary: Story = {
 export const VariantSecondary: Story = {
     args: {
         variant: 'secondary',
-        padding: 'default',
     },
     render: (args) => ({
         components: {Card},
@@ -800,7 +723,6 @@ export const VariantSecondary: Story = {
 export const VariantOutline: Story = {
     args: {
         variant: 'outline',
-        padding: 'default',
     },
     render: (args) => ({
         components: {Card},
@@ -819,7 +741,6 @@ export const VariantOutline: Story = {
 export const VariantGhost: Story = {
     args: {
         variant: 'ghost',
-        padding: 'default',
     },
     render: (args) => ({
         components: {Card},

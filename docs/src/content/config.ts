@@ -37,7 +37,7 @@ const blogCollection = defineCollection({
 
 // 3️⃣ products collection - data collection (YAML)
 const productsCollection = defineCollection({
-  type: 'data',
+  loader: file('src/content/products.yaml'),
   schema: z.object({
     slug: z.string(),
     title: z.string(),
