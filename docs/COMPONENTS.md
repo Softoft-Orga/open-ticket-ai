@@ -101,8 +101,3 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 ## product
 - **PerformanceMetric.vue** — Performance metric stat. Props: `label`, `value`, `delta`. Slots: _none_.
 - **ProductCard.vue** — Product card. Props: `product`. Slots: _none_.
-
-## services
-- **ExtensionItem.vue** — Extension list item. Props: `extension`. Slots: _none_.
-- **IntegrationPackageCard.vue** — Integration package card. Props: `pkg`. Slots: _none_.
-- **PricingCard.vue** — Pricing card. Props: `title`, `price`, `features`, `cta`. Slots: `footer`.
