@@ -37,8 +37,8 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **SelectComponent.vue** — Styled select using `input` recipe. Props: `modelValue`, `options`, `label`, `placeholder`, `disabled`, `error`, `size` ('sm' | 'md' | 'lg'). Slots: _none_.
 
 ### core/navigation
-- **FooterComponent.vue** — Footer navigation sections. Props: `sections`, `locale`. Slots: _none_.
-- **NavBar.vue** — Simplified top navigation bar with logo, links, and primary CTA. Props: `navItems` (array of {href, label}), `currentPath` (string), `ctaLabel` (string). Slots: _none_. Uses Headless UI Dialog for mobile menu.
+- **FooterComponent.vue** — Footer navigation sections. Props: `footerData` (optional object with `sections`, `social`, `legal`, `copyright`). Slots: _none_.
+- **NavBar.vue** — Simplified top navigation bar with logo, links, and primary CTA. Props: `links` (optional array of {label, url}), `logoUrl` (optional string). Slots: _none_. Uses Headless UI Dialog for mobile menu.
 
 ### core/table
 - **C.vue** — Table cell wrapper with minimal semantic classes. Props: `header` (bool), `align` ('left' | 'center' | 'right'). Uses Tailwind utilities for alignment and spacing. Slots: default (cell content).
