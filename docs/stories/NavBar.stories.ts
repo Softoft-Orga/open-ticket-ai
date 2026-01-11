@@ -95,8 +95,7 @@ export const DropdownDemo: Story = {
         <NavBar v-bind="args" />
         <div class="p-8">
           <h1 class="text-white text-2xl">Dropdown Menu</h1>
-          <p class="text-gray-400 mt-2">Click on "Docs" in the navbar to see the dropdown menu with resources and product guides.</p>
-          <p class="text-gray-400 mt-2">The dropdown uses Headless UI Menu component with slide-down transition.</p>
+          <p class="text-gray-400 mt-2">Click on "Docs" to see the Headless UI Popover menu with resources and product guides.</p>
         </div>
       </div>
     `
@@ -166,16 +165,15 @@ export const KeyboardNavigation: Story = {
     template: `
       <div class="min-h-screen bg-slate-900">
         <NavBar v-bind="args" />
-        <div class="p-8">
+        <div class="p-8 space-y-3">
           <h1 class="text-white text-2xl">Keyboard Accessibility</h1>
-          <p class="text-gray-400 mt-2">The navbar is fully keyboard accessible:</p>
-          <ul class="text-gray-400 mt-2 list-disc ml-6 space-y-1">
-            <li><strong class="text-white">Tab</strong>: Navigate through all interactive elements</li>
-            <li><strong class="text-white">Enter/Space</strong>: Activate buttons and menu items</li>
-            <li><strong class="text-white">Arrow Keys</strong>: Navigate within dropdown menu</li>
-            <li><strong class="text-white">Escape</strong>: Close dropdown or mobile menu</li>
+          <p class="text-gray-400">The navbar is fully keyboard accessible:</p>
+          <ul class="text-gray-400 list-disc ml-6 space-y-1">
+            <li><strong class="text-white">Tab</strong>: Navigate through links, popover trigger, and buttons</li>
+            <li><strong class="text-white">Enter/Space</strong>: Toggle the Docs popover and mobile menu</li>
+            <li><strong class="text-white">Arrow Keys</strong>: Move focus inside the popover menu (Headless UI manages focus)</li>
+            <li><strong class="text-white">Escape</strong>: Close popover or mobile dialog</li>
           </ul>
-          <p class="text-gray-400 mt-4">All interactive elements have focus-visible rings for accessibility.</p>
         </div>
       </div>
     `
