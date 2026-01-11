@@ -1,4 +1,9 @@
 ---
+import { getCollection } from 'astro:content';
+import NavBar from '../components/vue/core/navigation/NavBar.vue';
+import FooterComponent from '../components/vue/core/navigation/FooterComponent.vue';
+import '../styles/global.css';
+
 interface Props {
   title: string;
   description?: string;
@@ -6,9 +11,15 @@ interface Props {
 
 const { title, description } = Astro.props;
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
-import NavBar from '../components/vue/core/navigation/NavBar.vue';
-import FooterComponent from '../components/vue/core/navigation/FooterComponent.vue';
-import '../styles/global.css';
+
+// Load site configuration
+const siteEntries = await getCollection('site');
+const siteConfig = siteEntries.find(entry => entry.data.slug === 'main');
+const navLinks = siteConfig?.data.nav || [];
+const footerData = siteConfig?.data.footer;
+const logoUrl = siteConfig?.data.meta.logoUrl;
+const ctaLabel = 'Get Started';
+const ctaUrl = '/get-started/';
 ---
 
 <!DOCTYPE html>
@@ -64,8 +75,8 @@ import '../styles/global.css';
     </script>
   </head>
   <body class="font-sans">
-    <NavBar client:load />
+    <NavBar client:load links={navLinks} logoUrl={logoUrl} ctaLabel={ctaLabel} ctaUrl={ctaUrl} />
     <slot />
-    <FooterComponent client:load />
+    <FooterComponent client:load footerData={footerData} />
   </body>
 </html>
