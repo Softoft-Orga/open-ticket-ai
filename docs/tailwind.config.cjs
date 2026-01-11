@@ -1,7 +1,7 @@
 // tailwind.config.cjs
 module.exports = {
     content: [
-        './src/**/*.{astro,js,ts,jsx,tsx,md,mdx}',
+        './src/**/*.{astro,html,js,ts,jsx,tsx,md,mdx,vue}',
         './src/content/docs/**/*.{md,mdx}',
         './stories/**/*.{js,ts,jsx,tsx}',
     ],
