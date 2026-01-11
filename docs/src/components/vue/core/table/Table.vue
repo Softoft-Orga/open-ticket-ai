@@ -3,9 +3,7 @@
   <div
     :class="[
       'overflow-x-auto',
-      roundedClass,
-      elevationClass,
-      wrapperBorderClass,
+      containerClasses,
       widthClass
     ]"
   >
@@ -25,6 +23,7 @@
 
 <script lang="ts" setup>
 import {computed, provide, toRef, withDefaults} from 'vue'
+import { card } from '../../../../design-system/recipes/card'
 import type {Radius, Elevation} from '../design-system/tokens'
 
 export type TableVariant = 'default' | 'bordered' | 'borderless' | 'glassy' | 'compact'
@@ -71,34 +70,25 @@ const tableWidthClass = computed(() => {
   return props.width === 'auto' ? 'w-auto' : 'min-w-full'
 })
 
-// Rounded corners based on variant and radius prop
-const roundedClass = computed(() => {
-  if (props.variant === 'borderless') return ''
-  
-  // Map radius prop to Tailwind classes
-  const radiusMap: Record<Radius, string> = {
-    'md': 'rounded-md',
-    'lg': 'rounded-lg',
-    'xl': 'rounded-xl',
-    '2xl': 'rounded-2xl'
+// Container styling using card recipe
+const containerClasses = computed(() => {
+  if (props.variant === 'borderless') {
+    return ''
   }
   
-  return radiusMap[props.radius]
-})
-
-// Elevation (shadow) based on variant and elevation prop
-const elevationClass = computed(() => {
-  if (props.variant === 'borderless') return ''
-  
-  // Map elevation prop to Tailwind shadow classes
-  const elevationMap: Record<Elevation, string> = {
-    'none': '',
-    'sm': 'shadow-sm',
-    'md': 'shadow-md',
-    'lg': 'shadow-lg'
+  if (props.variant === 'glassy') {
+    return card({
+      variant: 'outline',
+      radius: props.radius,
+      elevation: props.elevation
+    }) + ' backdrop-blur-sm'
   }
   
-  return elevationMap[props.elevation]
+  return card({
+    variant: 'surface',
+    radius: props.radius,
+    elevation: props.elevation
+  })
 })
 
 // Text color based on variant - using design tokens
@@ -110,23 +100,6 @@ const textColorClass = computed(() => {
       return 'text-text-dim'
     default:
       return 'text-text-dim'
-  }
-})
-
-// Wrapper border styling based on variant - using fixed token classes
-const wrapperBorderClass = computed(() => {
-  switch (props.variant) {
-    case 'bordered':
-      return 'border-2 border-border-dark'
-    case 'borderless':
-      return ''
-    case 'glassy':
-      return 'border border-border-dark bg-glass-gradient backdrop-blur-sm'
-    case 'compact':
-      return 'border border-border-dark bg-surface-dark'
-    case 'default':
-    default:
-      return 'border border-border-dark bg-surface-dark'
   }
 })
 

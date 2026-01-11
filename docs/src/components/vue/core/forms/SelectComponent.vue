@@ -13,7 +13,7 @@
 
       <div class="relative">
         <ListboxButton
-          class="w-full rounded-md border border-border-dark bg-surface-dark py-2 pl-3 pr-10 text-left shadow-sm focus:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/50 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          :class="buttonClasses"
         >
           <span class="block truncate">{{ selectedLabel }}</span>
           <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -74,6 +74,7 @@ import {computed, ref, watch} from 'vue'
 import {Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions,} from '@headlessui/vue'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
 import UiTransitionSlide from '../transitions/UiTransitionSlide.vue'
+import { input } from '../../../../design-system/recipes/input'
 
 interface Option {
   value: string | number
@@ -81,21 +82,24 @@ interface Option {
   disabled?: boolean
 }
 
-const props = withDefaults(
-    defineProps<{
-      options: Option[]
-      modelValue?: string | number | null
-      placeholder?: string
-      disabled?: boolean
-      label?: string
-    }>(),
-    {
-      modelValue: null,
-      placeholder: 'Select an option',
-      disabled: false,
-      label: '',
-    }
-)
+interface Props {
+  options: Option[]
+  modelValue?: string | number | null
+  placeholder?: string
+  disabled?: boolean
+  label?: string
+  error?: boolean
+  size?: 'sm' | 'md' | 'lg'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: null,
+  placeholder: 'Select an option',
+  disabled: false,
+  label: '',
+  error: false,
+  size: 'md'
+})
 
 /* eslint-disable no-unused-vars */
 const emit = defineEmits<{
@@ -119,5 +123,14 @@ watch(selected, (newValue) => {
 const selectedLabel = computed(() => {
   const foundOption = props.options.find(opt => opt.value === selected.value)
   return foundOption ? foundOption.label : props.placeholder
+})
+
+const buttonClasses = computed(() => {
+  return input({
+    size: props.size,
+    radius: 'lg',
+    state: props.error ? 'error' : 'default',
+    disabled: props.disabled
+  }) + ' pr-10 text-left'
 })
 </script>

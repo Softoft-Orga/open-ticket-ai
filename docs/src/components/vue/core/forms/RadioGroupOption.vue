@@ -6,10 +6,9 @@
   >
     <div
       :class="[
-        'relative flex cursor-pointer rounded-lg px-5 py-4 transition-all',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-        ringClasses,
-        variantClasses(checked, disabled),
+        'relative flex cursor-pointer px-5 py-4 transition-all',
+        cardClasses(checked, disabled),
+        focusClasses,
         disabled && 'opacity-50 cursor-not-allowed'
       ]"
     >
@@ -52,6 +51,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { RadioGroupOption } from '@headlessui/vue'
+import { card } from '../../../../design-system/recipes/card'
+import { focusRing } from '../../../../design-system/recipes/focus'
 import type { Variant, Tone } from '../design-system/tokens'
 
 interface Props {
@@ -69,78 +70,61 @@ const props = withDefaults(defineProps<Props>(), {
   tone: undefined
 })
 
-const ringClasses = computed(() => {
-  if (props.tone) {
-    switch (props.tone) {
-      case 'info':
-        return 'focus-visible:ring-info focus-visible:ring-offset-background-dark'
-      case 'success':
-        return 'focus-visible:ring-success focus-visible:ring-offset-background-dark'
-      case 'warning':
-        return 'focus-visible:ring-warning focus-visible:ring-offset-background-dark'
-      case 'danger':
-        return 'focus-visible:ring-danger focus-visible:ring-offset-background-dark'
-    }
-  }
-  
-  switch (props.variant) {
-    case 'secondary':
-      return 'focus-visible:ring-secondary focus-visible:ring-offset-background-dark'
-    case 'outline':
-      return 'focus-visible:ring-primary/50 focus-visible:ring-offset-background-dark'
-    case 'ghost':
-      return 'focus-visible:ring-white/50 focus-visible:ring-offset-background-dark'
-    default: // primary
-      return 'focus-visible:ring-primary focus-visible:ring-offset-background-dark'
-  }
+const focusClasses = computed(() => {
+  const tone = props.tone || (props.variant === 'secondary' ? 'neutral' : 'primary')
+  return focusRing({ tone })
 })
 
-const variantClasses = (checked: boolean, disabled: boolean) => {
+const cardClasses = (checked: boolean, disabled: boolean) => {
   if (disabled) {
-    return 'bg-surface-dark border border-border-dark'
+    return card({ variant: 'surface', size: 'sm', radius: 'lg' })
   }
 
-  const toneColor = props.tone ? getToneClasses(checked) : null
-  if (toneColor) return toneColor
+  const tone = props.tone
+  if (tone) {
+    return card({
+      variant: checked ? 'subtle' : 'surface',
+      tone,
+      tint: checked ? 'soft' : 'none',
+      size: 'sm',
+      radius: 'lg',
+      highlighted: checked
+    })
+  }
 
   switch (props.variant) {
     case 'secondary':
-      return checked
-        ? 'bg-secondary/10 border-2 border-secondary shadow-[0_0_15px_rgba(31,213,255,0.2)]'
-        : 'bg-surface-dark border border-border-dark hover:border-secondary/50 hover:bg-secondary/5'
+      return card({
+        variant: checked ? 'subtle' : 'surface',
+        tone: 'neutral',
+        size: 'sm',
+        radius: 'lg',
+        highlighted: checked
+      })
     case 'outline':
-      return checked
-        ? 'bg-primary/5 border-2 border-primary shadow-[0_0_15px_rgba(166,13,242,0.15)]'
-        : 'bg-transparent border border-border-dark hover:border-primary/50 hover:bg-white/5'
+      return card({
+        variant: 'outline',
+        tone: checked ? 'primary' : 'neutral',
+        size: 'sm',
+        radius: 'lg',
+        highlighted: checked
+      })
     case 'ghost':
-      return checked
-        ? 'bg-white/10 border border-white/30'
-        : 'bg-transparent border border-transparent hover:bg-white/5 hover:border-white/10'
-    default: // primary
-      return checked
-        ? 'bg-primary/10 border-2 border-primary shadow-[0_0_15px_rgba(166,13,242,0.2)]'
-        : 'bg-surface-dark border border-border-dark hover:border-primary/50 hover:bg-primary/5'
-  }
-}
-
-const getToneClasses = (checked: boolean) => {
-  switch (props.tone) {
-    case 'info':
-      return checked
-        ? 'bg-info/10 border-2 border-info shadow-[0_0_15px_rgba(60,200,255,0.2)]'
-        : 'bg-surface-dark border border-border-dark hover:border-info/50 hover:bg-info/5'
-    case 'success':
-      return checked
-        ? 'bg-success/10 border-2 border-success shadow-[0_0_15px_rgba(22,219,160,0.2)]'
-        : 'bg-surface-dark border border-border-dark hover:border-success/50 hover:bg-success/5'
-    case 'warning':
-      return checked
-        ? 'bg-warning/10 border-2 border-warning shadow-[0_0_15px_rgba(247,183,51,0.2)]'
-        : 'bg-surface-dark border border-border-dark hover:border-warning/50 hover:bg-warning/5'
-    case 'danger':
-      return checked
-        ? 'bg-danger/10 border-2 border-danger shadow-[0_0_15px_rgba(255,79,109,0.2)]'
-        : 'bg-surface-dark border border-border-dark hover:border-danger/50 hover:bg-danger/5'
+      return card({
+        variant: 'outline',
+        tone: 'neutral',
+        size: 'sm',
+        radius: 'lg'
+      })
+    default:
+      return card({
+        variant: checked ? 'subtle' : 'surface',
+        tone: 'primary',
+        tint: checked ? 'soft' : 'none',
+        size: 'sm',
+        radius: 'lg',
+        highlighted: checked
+      })
   }
 }
 
