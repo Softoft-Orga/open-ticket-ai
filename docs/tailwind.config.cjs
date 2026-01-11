@@ -30,7 +30,13 @@ module.exports = {
                 'warning-dark': '#c47f00',
                 'danger': '#ff4f6d',
                 'danger-dark': '#c5304b',
-                'muted': '#6f5a7c'
+                'muted': '#6f5a7c',
+                'bg-1': '#0f0814',
+                'surface-1': '#1d1023',
+                'surface-2': '#2d1b36',
+                'border-1': '#3c2249',
+                'text-1': '#e6e7ea',
+                'text-2': '#b790cb'
             },
             backgroundImage: {
                 'cyber-gradient': 'linear-gradient(135deg, rgba(166,13,242,0.1) 0%, rgba(28,16,34,0) 100%)',

@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     :class="[
       cardClasses,
       borderClass,
@@ -57,35 +57,36 @@ export interface CardProps {
    * @default 'primary'
    */
   variant?: Variant
-  
+
   /**
    * Semantic tone (status color)
    */
   tone?: Tone
-  
+
   /**
    * Card size (affects padding)
    * @default 'md'
    */
   size?: Size
-  
+
   /**
    * Border radius
    * @default 'lg'
    */
   radius?: Radius
-  
+
   /**
    * Shadow elevation level
    * @default 'sm'
    */
   elevation?: Elevation
-  
+
   /**
    * Whether to add hover effect
    * @default false
    */
   hoverable?: boolean
+
 }
 
 const props = withDefaults(defineProps<CardProps>(), {
@@ -110,7 +111,7 @@ const cardClasses = computed(() => {
         return 'bg-danger-dark/10'
     }
   }
-  
+
   // Variant-based backgrounds
   switch (props.variant) {
     case 'secondary':
@@ -137,11 +138,11 @@ const borderClass = computed(() => {
         return 'border border-danger/30'
     }
   }
-  
+
   if (props.variant === 'outline') {
     return 'border-2 border-border-dark'
   }
-  
+
   return 'border border-border-dark'
 })
 

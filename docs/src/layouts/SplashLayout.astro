@@ -1,6 +1,5 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import '../styles/homepage.css';
 
 interface Props {
   title: string;
@@ -35,11 +34,11 @@ const hero = frontmatter?.hero;
         {hero.actions && (
           <div class="flex gap-4 justify-center flex-wrap">
             {hero.actions.map(action => (
-              <a 
-                href={action.link} 
+              <a
+                href={action.link}
                 class={`inline-block py-3 px-6 rounded-md no-underline font-medium transition-all ${
-                  action.variant === 'secondary' 
-                    ? 'bg-white/20 text-white border border-white/30 hover:bg-white/30 hover:-translate-y-0.5' 
+                  action.variant === 'secondary'
+                    ? 'bg-white/20 text-white border border-white/30 hover:bg-white/30 hover:-translate-y-0.5'
                     : 'bg-[#7c4dff] text-white hover:bg-[#5c2ddf] hover:-translate-y-0.5'
                 }`}
               >

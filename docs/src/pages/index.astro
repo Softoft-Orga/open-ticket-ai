@@ -5,7 +5,6 @@ import IntegrationLogos from '../components/vue/homepage/IntegrationLogos.vue';
 import FeatureShowcase from '../components/vue/homepage/FeatureShowcase.vue';
 import ServicesGrid from '../components/vue/homepage/ServicesGrid.vue';
 import Button from '../components/vue/core/basic/Button.vue';
-import '../styles/homepage.css';
 
 const pageTitle = 'Open Ticket AI - Automated Ticket Tagging, On-Premise';
 
@@ -50,16 +49,16 @@ const integrations = [
           </span>
           Tagging AI + classification engine, Open Ticket Automation + integration + workflow logic
         </div>
-        
+
         <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight text-white max-w-5xl">
           Automated Ticket Tagging. <br/>
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">On-Premise.</span>
         </h1>
-        
+
         <p class="text-gray-400 text-xl leading-relaxed max-w-3xl">
           Tagging AI classifies tickets in real time. Open Ticket Automation integrates with your helpdesk and drives workflows without sending ticket data to the cloud.
         </p>
-        
+
         <div class="flex flex-wrap gap-4 pt-4 justify-center">
           <Button variant="primary" size="lg" client:load>
             Get Demo
@@ -72,13 +71,13 @@ const integrations = [
     </section>
 
     <!-- Integration Logos -->
-    <IntegrationLogos 
+    <IntegrationLogos
       client:load
       integrations={integrations}
     />
 
     <!-- Tagging AI Feature Showcase -->
-    <FeatureShowcase 
+    <FeatureShowcase
       client:load
       badge="Core Engine"
       title="Tagging AI"

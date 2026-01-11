@@ -1,6 +1,5 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import '../styles/global.css';
 
 interface Props {
   title: string;
@@ -108,8 +107,8 @@ const sidebarSections = [
               <ul class="space-y-1">
                 {section.items.map(item => (
                   <li>
-                    <a 
-                      href={item.link} 
+                    <a
+                      href={item.link}
                       class="block px-3 py-1.5 text-xs text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-all"
                     >
                       {item.label}
@@ -125,12 +124,12 @@ const sidebarSections = [
       <!-- Main Content Area -->
       <main class="flex-1 min-w-0">
         <div class="max-w-4xl mx-auto">
-          <article class="prose prose-invert prose-lg max-w-none 
-            prose-headings:text-white 
+          <article class="prose prose-invert prose-lg max-w-none
+            prose-headings:text-white
             prose-h1:text-4xl prose-h1:font-bold prose-h1:mb-6 prose-h1:mt-0
-            prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4 
-            prose-h3:text-xl prose-h3:font-bold prose-h3:mt-6 prose-h3:mb-3 
-            prose-p:mb-4 prose-p:leading-relaxed prose-p:text-gray-300 
+            prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4
+            prose-h3:text-xl prose-h3:font-bold prose-h3:mt-6 prose-h3:mb-3
+            prose-p:mb-4 prose-p:leading-relaxed prose-p:text-gray-300
             prose-a:text-primary-light prose-a:no-underline hover:prose-a:text-primary hover:prose-a:underline
             prose-code:bg-surface-lighter prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-code:text-primary-light
             prose-pre:bg-surface-lighter prose-pre:border prose-pre:border-white/10 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:mb-4
@@ -163,7 +162,7 @@ const sidebarSections = [
               </a>
             ))}
           </nav>
-          
+
           <div class="mt-12 px-4">
             <div class="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-surface-dark border border-white/5 relative overflow-hidden group">
               <div class="relative z-10">
