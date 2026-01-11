@@ -16,8 +16,14 @@ const { href, class: className, ...rest } = Astro.props;
 // Get current locale from URL
 const currentLocale = getLocaleFromPath(Astro.url.pathname) as Locale;
 
+// Ensure href has trailing slash if it's an internal path and doesn't have one
+let normalizedHref = href;
+if (href.startsWith('/') && !href.includes('#') && !href.endsWith('/')) {
+  normalizedHref = href + '/';
+}
+
 // Localize the href
-const localizedHref = localizeHref(href, currentLocale);
+const localizedHref = localizeHref(normalizedHref, currentLocale);
 ---
 
 <a href={localizedHref} class={className} {...rest}>

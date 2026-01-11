@@ -23,7 +23,7 @@ const siteConfig = siteEntries.find(entry => entry.data.slug === 'main');
 // Localize navigation links
 const navLinks = (siteConfig?.data.nav || []).map(link => ({
   ...link,
-  url: localizeHref(link.url, currentLocale),
+  url: localizeHref(link.url.endsWith('/') ? link.url : link.url + '/', currentLocale),
 }));
 
 // Localize footer links
@@ -33,12 +33,12 @@ const footerData = siteConfig?.data.footer ? {
     ...section,
     links: section.links.map(link => ({
       ...link,
-      url: localizeHref(link.url, currentLocale),
+      url: localizeHref(link.url.startsWith('/') && !link.url.endsWith('/') ? link.url + '/' : link.url, currentLocale),
     })),
   })),
   legal: siteConfig.data.footer.legal.map(link => ({
     ...link,
-    url: localizeHref(link.url, currentLocale),
+    url: localizeHref(link.url.startsWith('/') && !link.url.endsWith('/') ? link.url + '/' : link.url, currentLocale),
   })),
 } : undefined;
 
