@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { badge, type BadgeVariants } from '../../../../design-system/recipes'
+import { badge } from '../../../../design-system/recipes'
 import type { Tone, Size } from '../../../../design-system/tokens'
 
 interface Props {

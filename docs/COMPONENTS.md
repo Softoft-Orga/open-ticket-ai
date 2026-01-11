@@ -14,7 +14,7 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **MarkdownFromString.vue** — Renders markdown string. Props: `source`. Slots: _none_.
 
 ## core
-- **Alert.vue** — Alert banner with tone. Props: `title`, `tone` (`info` | `success` | `warning` | `danger`), `icon`. Slots: default (body).
+- **Alert.vue** — Alert/notification component using design-system alert() recipe. Props: `type` ('info' | 'success' | 'warning' | 'danger' | 'tip'), `variant` ('soft' | 'solid' | 'outline'), `title`, `hideIcon`. Slots: default (body), `footer`.
 - **DocCard.vue** — Card for documentation links. Props: `title`, `description`, `href`, `icon`. Slots: _none_.
 - **HeadlessUiTailwindDemo.vue** — Demonstrates Headless UI ui-open/ui-closed classes. Props: _none_. Slots: _none_.
 - **LoadingComponent.vue** — Loading spinner/placeholder. Props: `label`. Slots: _none_.
@@ -25,11 +25,11 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **AccordionItem.vue** — Single accordion item. Props: `item`, `isOpen`, `disabled`. Slots: `title`, default (body).
 
 ### core/basic
-- **Badge.vue** — Pill badge. Props: `label`, `tone`, `size`, `icon`. Slots: default (custom content).
-- **Button.vue** — Styled button. Props: `label`, `variant`, `size`, `to`, `href`, `icon`, `block`, `loading`, `disabled`. Slots: default (button content).
-- **Card.vue** — Card container. Props: `title`, `description`, `icon`, `link`. Slots: default (content), `footer`.
+- **Badge.vue** — Badge/label component using design-system badge() recipe. Props: `variant` ('solid' | 'soft' | 'outline'), `tone` (Tone), `size` (Size). Slots: default (badge content).
+- **Button.vue** — Button component using design-system button() recipe. Props: `variant` ('solid' | 'outline' | 'ghost'), `tone` (Tone), `size` (Size), `radius` (Radius), `disabled`, `loading`, `block`, `to`, `href`. Slots: default (button content).
+- **Card.vue** — Card container using design-system card() recipe. Props: `variant` ('surface' | 'outline' | 'subtle'), `tone` (Tone), `size` (Size), `radius` (Radius), `elevation` (Elevation), `hoverable`. Slots: `image`, `header`, `title`, default (content), `actions`, `footer`.
 - **Link.vue** — Simple link component. Props: `to`. Slots: default (link text).
-- **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot scope).
+- **Tabs.vue** — Tab navigation using design-system tabs() recipe. Props: `tabs` (string[]), `variant` ('underline' | 'pill'), `tone` (Tone), `size` (Size), `vertical`, `modelValue`. Slots: `tab-{n}` (tab panel content for index n).
 
 ### core/forms
 - **RadioGroup.vue** — Grouped radio options. Props: `modelValue`, `options`, `disabled`. Slots: default (option rendering via slot scope).

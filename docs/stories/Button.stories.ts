@@ -1,6 +1,6 @@
 import Button from '../src/components/vue/core/basic/Button.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { SIZES, TONES, RADII, ELEVATIONS } from '../src/design-system/tokens'
+import { SIZES, TONES, RADII } from '../src/design-system/tokens'
 
 const BUTTON_VARIANTS = ['solid', 'outline', 'ghost'] as const
 

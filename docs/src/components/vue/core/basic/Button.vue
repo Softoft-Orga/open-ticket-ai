@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { button, type ButtonVariants } from '../../../../design-system/recipes'
+import { button } from '../../../../design-system/recipes'
 import type { Tone, Size, Radius } from '../../../../design-system/tokens'
 
 interface Props {
@@ -34,7 +34,9 @@ const props = withDefaults(defineProps<Props>(), {
   radius: 'xl',
   disabled: false,
   loading: false,
-  block: false
+  block: false,
+  to: undefined,
+  href: undefined
 })
 
 const componentType = computed(() => {

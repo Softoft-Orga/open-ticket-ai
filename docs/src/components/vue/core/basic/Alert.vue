@@ -40,7 +40,7 @@ import {
   LightBulbIcon,
   InformationCircleIcon
 } from '@heroicons/vue/24/outline'
-import { alert, type AlertVariants } from '../../../../design-system/recipes'
+import { alert } from '../../../../design-system/recipes'
 import type { Tone } from '../../../../design-system/tokens'
 
 type AlertType = 'info' | 'success' | 'warning' | 'danger' | 'tip'
@@ -55,7 +55,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   type: 'info',
   hideIcon: false,
-  variant: 'soft'
+  variant: 'soft',
+  title: undefined
 })
 
 // Map legacy 'tip' type to 'primary' tone

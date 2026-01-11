@@ -43,7 +43,7 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
-import { tabs } from '../../../../design-system/recipes'
+import { tabs as tabsRecipe } from '../../../../design-system/recipes'
 import type { Tone, Size } from '../../../../design-system/tokens'
 
 type TabVariant = 'underline' | 'pill'
@@ -87,7 +87,7 @@ const handleChange = (index: number) => {
 }
 
 const tabsStyles = computed(() => {
-  return tabs({
+  return tabsRecipe({
     variant: props.variant,
     tone: props.tone,
     size: props.size

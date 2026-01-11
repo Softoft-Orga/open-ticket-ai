@@ -1,6 +1,6 @@
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { TONES, SIZES, RADII, ELEVATIONS } from '../src/design-system/tokens'
+import { TONES, SIZES } from '../src/design-system/tokens'
 
 const BADGE_VARIANTS = ['solid', 'soft', 'outline'] as const
 

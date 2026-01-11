@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { card, type CardVariants } from '../../../../design-system/recipes'
+import { card } from '../../../../design-system/recipes'
 import type { Tone, Size, Radius, Elevation } from '../../../../design-system/tokens'
 
 export interface CardProps {
@@ -84,6 +84,7 @@ const props = withDefaults(defineProps<CardProps>(), {
   radius: 'xl',
   elevation: 'none',
   hoverable: false,
+  tone: undefined
 })
 
 const cardClasses = computed(() => {
