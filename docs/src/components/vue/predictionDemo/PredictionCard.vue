@@ -9,7 +9,7 @@
 
     <!-- Main content -->
     <div class="min-h-14">
-      <slot/>
+      <slot />
     </div>
 
     <!-- Footer -->

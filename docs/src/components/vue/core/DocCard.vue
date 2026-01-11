@@ -3,11 +3,14 @@
     :href="link"
     class="group relative block p-8 bg-card-dark rounded-2xl border border-slate-700 hover:border-primary/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-primary/10"
   >
-    <div class="absolute -inset-1 bg-gradient-to-r from-primary/0 to-primary/0 group-hover:from-primary/20 group-hover:to-purple-600/20 rounded-2xl blur opacity-0 group-hover:opacity-50 transition duration-500"></div>
+    <div class="absolute -inset-1 bg-gradient-to-r from-primary/0 to-primary/0 group-hover:from-primary/20 group-hover:to-purple-600/20 rounded-2xl blur opacity-0 group-hover:opacity-50 transition duration-500" />
     <div class="relative">
       <div class="flex items-center gap-4 mb-4">
         <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-          <component :is="getIcon(icon)" class="w-8 h-8 text-primary" />
+          <component
+            :is="getIcon(icon)"
+            class="w-8 h-8 text-primary"
+          />
         </div>
       </div>
       <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors">{{ title }}</h3>
@@ -30,6 +33,8 @@ const props = defineProps<{
   link: string;
   linkText?: string;
 }>();
+
+console.log(props)
 
 const iconMap: Record<string, any> = {
   'cog': CogIcon,

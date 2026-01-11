@@ -4,7 +4,7 @@
       v-for="example in props.examples"
       :key="example.slug ?? example.name"
       :example="example"
-      :exampleLink="'#' + example.slug ?? example.name"
+      :example-link="'#' + example.slug ?? example.name"
     />
     <p
       v-if="!props.examples.length"

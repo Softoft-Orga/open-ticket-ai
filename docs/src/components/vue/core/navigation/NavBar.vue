@@ -1,9 +1,15 @@
 <template>
   <header class="sticky top-0 z-50 w-full border-b border-surface-lighter bg-background-dark/80 backdrop-blur-md">
     <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-      <a class="flex items-center gap-2 text-white group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-lg" href="/docs/public">
+      <a
+        class="flex items-center gap-2 text-white group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-lg"
+        href="/docs/public"
+      >
         <div class="flex size-8 items-center justify-center rounded-lg bg-primary/20 text-primary transition-all group-hover:shadow-[0_0_15px_rgba(166,13,242,0.5)]">
-          <TicketIcon aria-hidden="true" class="w-5 h-5" />
+          <TicketIcon
+            aria-hidden="true"
+            class="w-5 h-5"
+          />
         </div>
         <h2 class="font-display text-lg font-bold tracking-tight">Open Ticket AI</h2>
       </a>
@@ -20,7 +26,11 @@
           {{ item.label }}
         </a>
 
-        <div class="relative" @mouseenter="openDocs" @mouseleave="closeDocs">
+        <div
+          class="relative"
+          @mouseenter="openDocs"
+          @mouseleave="closeDocs"
+        >
           <button
             ref="docsTriggerRef"
             :aria-expanded="docsOpen"
@@ -46,7 +56,9 @@
             >
               <div class="space-y-4">
                 <div>
-                  <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Resources</p>
+                  <p class="text-xs uppercase tracking-[0.2em] text-slate-400">
+                    Resources
+                  </p>
                   <a
                     :href="docsHub.href"
                     class="mt-3 flex gap-3 rounded-xl border border-surface-lighter/60 bg-slate-900/60 px-3 py-2 text-left text-white transition-colors hover:border-surface-lighter hover:bg-surface-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
@@ -61,7 +73,9 @@
                 </div>
 
                 <div>
-                  <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Products & Guides</p>
+                  <p class="text-xs uppercase tracking-[0.2em] text-slate-400">
+                    Products & Guides
+                  </p>
                   <a
                     v-for="link in docsProductLinks"
                     :key="link.href"
@@ -69,7 +83,10 @@
                     class="mt-3 flex gap-3 rounded-xl border border-surface-lighter/60 bg-slate-900/60 px-3 py-2 text-left text-white transition-colors hover:border-surface-lighter hover:bg-surface-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                     role="menuitem"
                   >
-                    <component :is="link.icon" class="mt-1 h-5 w-5 text-cyan-glow" />
+                    <component
+                      :is="link.icon"
+                      class="mt-1 h-5 w-5 text-cyan-glow"
+                    />
                     <div>
                       <p class="text-sm font-semibold">{{ link.label }}</p>
                       <p class="text-xs text-slate-400">{{ link.description }}</p>

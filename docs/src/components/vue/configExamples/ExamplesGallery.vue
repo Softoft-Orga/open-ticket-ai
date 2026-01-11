@@ -1,29 +1,47 @@
 <template>
-    <section class="space-y-6">
-        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <TagFilter :selected="selectedTag" :tags="allTags" @update:selected="onTagSelected"/>
-            <SearchBox :value="query" @update:value="v => query = v"/>
-        </div>
+  <section class="space-y-6">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <TagFilter
+        :selected="selectedTag"
+        :tags="allTags"
+        @update:selected="onTagSelected"
+      />
+      <SearchBox
+        :value="query"
+        @update:value="v => query = v"
+      />
+    </div>
 
-        <div v-if="registry.isLoading.value"
-             class="rounded-lg border border-[color:var(--vp-c-divider)] bg-[color:var(--vp-c-bg-soft)] p-6 text-[color:var(--vp-c-text-2)]">
-            Loading examples…
-        </div>
-        <div v-else-if="registry.error.value"
-             class="rounded-lg border border-[color:var(--vp-c-danger-1,#f87171)] bg-[color:var(--vp-c-bg-soft)] p-6 text-[color:var(--vp-c-danger-1,#f87171)]">
-            {{ registry.error.value?.message ?? 'Unable to load examples' }}
-        </div>
+    <div
+      v-if="registry.isLoading.value"
+      class="rounded-lg border border-[color:var(--vp-c-divider)] bg-[color:var(--vp-c-bg-soft)] p-6 text-[color:var(--vp-c-text-2)]"
+    >
+      Loading examples…
+    </div>
+    <div
+      v-else-if="registry.error.value"
+      class="rounded-lg border border-[color:var(--vp-c-danger-1,#f87171)] bg-[color:var(--vp-c-bg-soft)] p-6 text-[color:var(--vp-c-danger-1,#f87171)]"
+    >
+      {{ registry.error.value?.message ?? 'Unable to load examples' }}
+    </div>
 
-        <div @click.capture="onCardAreaClick">
-            <ExampleGrid :examples="filteredExamples"/>
-        </div>
-    </section>
-    <section class="mt-5 pt-2 border-t border-t-gray-600 border-solid">
-        <h2 class="text-3xl font-semibold leading-tight my-4">Details</h2>
-        <div v-for="example in filteredExamples" :id="example.slug" :key="example.slug || example.name" class="my-2">
-            <InlineExample :slug="example.slug"/>
-        </div>
-    </section>
+    <div @click.capture="onCardAreaClick">
+      <ExampleGrid :examples="filteredExamples" />
+    </div>
+  </section>
+  <section class="mt-5 pt-2 border-t border-t-gray-600 border-solid">
+    <h2 class="text-3xl font-semibold leading-tight my-4">
+      Details
+    </h2>
+    <div
+      v-for="example in filteredExamples"
+      :id="example.slug"
+      :key="example.slug || example.name"
+      class="my-2"
+    >
+      <InlineExample :slug="example.slug" />
+    </div>
+  </section>
 </template>
 
 <script lang="ts" setup>

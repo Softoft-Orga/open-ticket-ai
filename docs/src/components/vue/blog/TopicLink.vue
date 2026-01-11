@@ -9,7 +9,10 @@
     ]"
   >
     <div class="flex items-center gap-3">
-      <component :is="heroIcon" class="w-5 h-5" />
+      <component
+        :is="heroIcon"
+        class="w-5 h-5"
+      />
       <span>{{ label }}</span>
     </div>
     <span 

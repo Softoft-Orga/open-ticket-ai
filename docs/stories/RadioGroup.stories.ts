@@ -2,7 +2,6 @@ import RadioGroup from '../src/components/vue/core/forms/RadioGroup.vue'
 import RadioGroupOption from '../src/components/vue/core/forms/RadioGroupOption.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { ref } from 'vue'
-import { VARIANTS, TONES } from '../src/components/vue/core/design-system/tokens'
 
 const meta: Meta<typeof RadioGroup> = {
   title: 'Core/Forms/RadioGroup',

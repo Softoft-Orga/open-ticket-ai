@@ -1,18 +1,34 @@
 <template>
   <div :class="cardClasses">
     <div class="mb-6">
-      <h4 class="text-white text-xl font-bold font-display">{{ title }}</h4>
-      <p v-if="subtitle" class="text-primary text-xs font-bold uppercase mt-1">{{ subtitle }}</p>
+      <h4 class="text-white text-xl font-bold font-display">
+        {{ title }}
+      </h4>
+      <p
+        v-if="subtitle"
+        class="text-primary text-xs font-bold uppercase mt-1"
+      >
+        {{ subtitle }}
+      </p>
     </div>
     <div class="mb-8">
-      <div class="text-slate-400 text-sm mb-1 uppercase tracking-widest font-bold">from</div>
+      <div class="text-slate-400 text-sm mb-1 uppercase tracking-widest font-bold">
+        from
+      </div>
       <div class="text-3xl font-bold text-white font-display">
         {{ price }} <span class="text-sm font-normal text-slate-500">{{ priceSuffix }}</span>
       </div>
     </div>
     <ul class="space-y-3 mb-10 flex-grow">
-      <li v-for="(feature, index) in features" :key="index" class="flex items-start gap-2.5 text-sm text-slate-300">
-        <CheckIcon class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+      <li
+        v-for="(feature, index) in features"
+        :key="index"
+        class="flex items-start gap-2.5 text-sm text-slate-300"
+      >
+        <CheckIcon
+          class="w-5 h-5 text-primary flex-shrink-0 mt-0.5"
+          aria-hidden="true"
+        />
         <span>{{ feature }}</span>
       </li>
     </ul>

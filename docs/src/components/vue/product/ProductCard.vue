@@ -1,15 +1,21 @@
 <!-- components/ProductCard.vue -->
 <template>
   <Card
-      :hoverable="true"
-      background="surface-dark"
-      class="group flex flex-col h-full overflow-hidden">
+    :hoverable="true"
+    background="surface-dark"
+    class="group flex flex-col h-full overflow-hidden"
+  >
     <template #header>
       <div class="text-center px-4 min-h-32">
-        <h3 class="!text-xl font-semibold text-white">{{ product.name }}</h3>
+        <h3 class="!text-xl font-semibold text-white">
+          {{ product.name }}
+        </h3>
         <div class="mt-2">
           <span class="text-2xl font-bold text-white">{{ formattedPrice }}€</span>
-          <span v-if="product.pricePeriod" class="text-sm text-text-dim">/ {{ product.pricePeriod }}</span>
+          <span
+            v-if="product.pricePeriod"
+            class="text-sm text-text-dim"
+          >/ {{ product.pricePeriod }}</span>
         </div>
       </div>
     </template>
@@ -22,27 +28,36 @@
 
         <ul class="space-y-2 !m-0 !p-0">
           <li
-              v-for="(feature, i) in coreFeatures"
-              :key="i"
-              class="flex items-start !m-0 !px-0 py-2"
+            v-for="(feature, i) in coreFeatures"
+            :key="i"
+            class="flex items-start !m-0 !px-0 py-2"
           >
-            <component :is="getIcon(feature.icon)" class="w-5 h-5 mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+            <component
+              :is="getIcon(feature.icon)"
+              class="w-5 h-5 mt-0.5 mr-2 text-primary flex-shrink-0"
+              aria-hidden="true"
+            />
             <span class="text-white">{{ feature.text }}</span>
           </li>
         </ul>
 
         <AccordionItem
-            v-if="extraFeatures.length"
-            :title="accordionTitle"
-            variant="ghost"
-            class="mt-auto">
+          v-if="extraFeatures.length"
+          :title="accordionTitle"
+          variant="ghost"
+          class="mt-auto"
+        >
           <ul class="space-y-2 !m-0 !p-0">
             <li
-                v-for="(feature, i) in extraFeatures"
-                :key="i"
-                class="flex items-start !m-0 !px-0 py-2"
+              v-for="(feature, i) in extraFeatures"
+              :key="i"
+              class="flex items-start !m-0 !px-0 py-2"
             >
-              <component :is="getIcon(feature.icon)" class="w-5 h-5 mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+              <component
+                :is="getIcon(feature.icon)"
+                class="w-5 h-5 mt-0.5 mr-2 text-primary flex-shrink-0"
+                aria-hidden="true"
+              />
               <span class="text-white">{{ feature.text }}</span>
             </li>
           </ul>

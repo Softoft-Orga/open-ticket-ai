@@ -15,30 +15,74 @@
         </div>
         
         <div>
-          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">Product</h4>
+          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">
+            Product
+          </h4>
           <ul class="space-y-4 text-slate-500 text-sm">
-            <li><a href="/products" class="text-primary hover:text-primary-light transition-colors">Features</a></li>
-            <li><a href="/services" class="text-primary hover:text-primary-light transition-colors">Integrations</a></li>
-            <li><a href="/docs" class="text-primary hover:text-primary-light transition-colors">Security</a></li>
+            <li>
+              <a
+                href="/products"
+                class="text-primary hover:text-primary-light transition-colors"
+              >Features</a>
+            </li>
+            <li>
+              <a
+                href="/services"
+                class="text-primary hover:text-primary-light transition-colors"
+              >Integrations</a>
+            </li>
+            <li>
+              <a
+                href="/docs"
+                class="text-primary hover:text-primary-light transition-colors"
+              >Security</a>
+            </li>
           </ul>
         </div>
 
         <div>
-          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">Company</h4>
+          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">
+            Company
+          </h4>
           <ul class="space-y-4 text-slate-500 text-sm">
-            <li><a href="#" class="text-primary hover:text-primary-light transition-colors">About Us</a></li>
-            <li><a href="#" class="text-primary hover:text-primary-light transition-colors">Careers</a></li>
-            <li><a href="#" class="text-primary hover:text-primary-light transition-colors">Legal</a></li>
+            <li>
+              <a
+                href="#"
+                class="text-primary hover:text-primary-light transition-colors"
+              >About Us</a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-primary hover:text-primary-light transition-colors"
+              >Careers</a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-primary hover:text-primary-light transition-colors"
+              >Legal</a>
+            </li>
           </ul>
         </div>
 
         <div>
-          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">Connect</h4>
+          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">
+            Connect
+          </h4>
           <div class="flex gap-4 text-primary">
-            <a href="https://github.com/openticketai" class="hover:text-primary-light transition-colors" aria-label="GitHub">
+            <a
+              href="https://github.com/openticketai"
+              class="hover:text-primary-light transition-colors"
+              aria-label="GitHub"
+            >
               <CodeBracketSquareIcon class="w-6 h-6" />
             </a>
-            <a href="https://www.linkedin.com/company/open-ticket-ai" class="hover:text-primary-light transition-colors" aria-label="LinkedIn">
+            <a
+              href="https://www.linkedin.com/company/open-ticket-ai"
+              class="hover:text-primary-light transition-colors"
+              aria-label="LinkedIn"
+            >
               <LinkIcon class="w-6 h-6" />
             </a>
           </div>
@@ -50,8 +94,14 @@
           © {{ year }} Open Ticket AI UG. All rights reserved.
         </div>
         <div class="flex gap-8 text-xs text-primary">
-          <a class="hover:text-primary-light transition-colors" href="#">Privacy Policy</a>
-          <a class="hover:text-primary-light transition-colors" href="#">Imprint</a>
+          <a
+            class="hover:text-primary-light transition-colors"
+            href="#"
+          >Privacy Policy</a>
+          <a
+            class="hover:text-primary-light transition-colors"
+            href="#"
+          >Imprint</a>
         </div>
       </div>
     </div>

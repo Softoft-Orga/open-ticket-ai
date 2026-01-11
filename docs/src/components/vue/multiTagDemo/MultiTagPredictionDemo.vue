@@ -124,51 +124,78 @@ const setExample = (name: string) => {
 </script>
 
 <template>
-    <div class="flex flex-col gap-4">
-        <div class="bg-[var(--vp-c-warning-2)] text-[var(--vp-c-text-1)] py-3 px-4 rounded-lg font-semibold text-center border border-[var(--vp-c-warning-3)]">example only – no HuggingFace endpoint configured yet</div>
-        <div class="grid grid-cols-[1fr_2fr] gap-4 items-start max-[960px]:grid-cols-1">
-            <div class="bg-[var(--vp-c-bg-soft)] border border-[var(--vp-c-border)] rounded-xl p-4 shadow-[var(--vp-shadow-2)]">
-                <div class="font-semibold mb-3">Examples</div>
-                <div class="flex flex-col gap-2">
-                    <button
-                        v-for="example in examples"
-                        :key="example.name"
-                        type="button"
-                        class="w-full text-left py-2.5 px-3 rounded-lg border border-[var(--vp-c-border)] bg-[var(--vp-c-bg)] text-[var(--vp-c-text-1)] transition-all duration-200 cursor-pointer hover:border-[var(--vp-c-brand-2)]"
-                        :class="{ 'border-[var(--vp-c-brand-1)] bg-[var(--vp-c-brand-soft)]': example.name === selectedName }"
-                        @click="setExample(example.name)"
-                    >
-                        {{ example.name }}
-                    </button>
-                </div>
-            </div>
-            <div class="flex flex-col gap-4" v-if="selectedExample">
-                <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden">
-                    <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">Input</div>
-                    <div class="py-3 px-4 flex flex-col gap-3">
-                        <div>
-                            <div class="font-semibold mb-1">Subject</div>
-                            <div class="whitespace-pre-wrap leading-relaxed">{{ selectedExample.subject }}</div>
-                        </div>
-                        <div>
-                            <div class="font-semibold mb-1">Body</div>
-                            <div class="whitespace-pre-wrap leading-relaxed">{{ selectedExample.body }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden">
-                    <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">Predicted Tags</div>
-                    <div class="flex flex-wrap gap-2 py-3 px-4 pb-4">
-                        <span class="inline-flex items-center py-1.5 px-2.5 rounded-full bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)] border border-[var(--vp-c-border)] text-sm" v-for="tag in selectedExample.predictedTags" :key="tag">{{ tag }}</span>
-                    </div>
-                </div>
-                <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden opacity-70">
-                    <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">Your own text</div>
-                    <div class="py-3 px-4">Live prediction coming soon</div>
-                </div>
-            </div>
-        </div>
-        <TagMindmap/>
-        <TagTree/>
+  <div class="flex flex-col gap-4">
+    <div class="bg-[var(--vp-c-warning-2)] text-[var(--vp-c-text-1)] py-3 px-4 rounded-lg font-semibold text-center border border-[var(--vp-c-warning-3)]">
+      example only – no HuggingFace endpoint configured yet
     </div>
+    <div class="grid grid-cols-[1fr_2fr] gap-4 items-start max-[960px]:grid-cols-1">
+      <div class="bg-[var(--vp-c-bg-soft)] border border-[var(--vp-c-border)] rounded-xl p-4 shadow-[var(--vp-shadow-2)]">
+        <div class="font-semibold mb-3">
+          Examples
+        </div>
+        <div class="flex flex-col gap-2">
+          <button
+            v-for="example in examples"
+            :key="example.name"
+            type="button"
+            class="w-full text-left py-2.5 px-3 rounded-lg border border-[var(--vp-c-border)] bg-[var(--vp-c-bg)] text-[var(--vp-c-text-1)] transition-all duration-200 cursor-pointer hover:border-[var(--vp-c-brand-2)]"
+            :class="{ 'border-[var(--vp-c-brand-1)] bg-[var(--vp-c-brand-soft)]': example.name === selectedName }"
+            @click="setExample(example.name)"
+          >
+            {{ example.name }}
+          </button>
+        </div>
+      </div>
+      <div
+        v-if="selectedExample"
+        class="flex flex-col gap-4"
+      >
+        <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden">
+          <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">
+            Input
+          </div>
+          <div class="py-3 px-4 flex flex-col gap-3">
+            <div>
+              <div class="font-semibold mb-1">
+                Subject
+              </div>
+              <div class="whitespace-pre-wrap leading-relaxed">
+                {{ selectedExample.subject }}
+              </div>
+            </div>
+            <div>
+              <div class="font-semibold mb-1">
+                Body
+              </div>
+              <div class="whitespace-pre-wrap leading-relaxed">
+                {{ selectedExample.body }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden">
+          <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">
+            Predicted Tags
+          </div>
+          <div class="flex flex-wrap gap-2 py-3 px-4 pb-4">
+            <span
+              v-for="tag in selectedExample.predictedTags"
+              :key="tag"
+              class="inline-flex items-center py-1.5 px-2.5 rounded-full bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)] border border-[var(--vp-c-border)] text-sm"
+            >{{ tag }}</span>
+          </div>
+        </div>
+        <div class="bg-[var(--vp-c-bg)] border border-[var(--vp-c-border)] rounded-xl shadow-[var(--vp-shadow-2)] overflow-hidden opacity-70">
+          <div class="py-3 px-4 border-b border-[var(--vp-c-border)] font-semibold">
+            Your own text
+          </div>
+          <div class="py-3 px-4">
+            Live prediction coming soon
+          </div>
+        </div>
+      </div>
+    </div>
+    <TagMindmap />
+    <TagTree />
+  </div>
 </template>

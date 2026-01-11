@@ -23,38 +23,6 @@ const state = reactive<RegistryState>({
 
 let hasFetched = false
 
-async function fetchYaml(path: string) {
-    if (!path) {
-        return ''
-    }
-    // During SSR, return empty string
-    if (typeof window === 'undefined') {
-        return ''
-    }
-    // Client-side fetch
-    const url = path.startsWith('/') ? path : `/${path}`
-    const response = await fetch(url)
-    if (!response.ok) {
-        throw new Error(`Failed to load example: ${response.status} ${response.statusText}`)
-    }
-    return await response.text()
-}
-
-async function createExampleMarkdownBody(example: ExampleMeta) {
-    const yamlContent = await fetchYaml(example.path)
-    const body = example.md_details && example.md_details.trim().length > 0
-        ? example.md_details
-        : example.md_description
-    return `
-${body}
-::: details Yaml Configuration
-\`\`\`yaml
-${yamlContent}
-\´\´\´
-:::
-`
-}
-
 const uniqueTags = computed(() => {
     const tags = new Set<string>()
     for (const example of state.examples) {

@@ -1,6 +1,6 @@
 <template>
   <button
-      :class="[
+    :class="[
       'inline-flex items-center justify-center font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
       sizeClasses,
       variantClasses,
@@ -9,9 +9,9 @@
       elevationClasses,
       disabled && 'opacity-50 cursor-not-allowed'
     ]"
-      :disabled="disabled"
+    :disabled="disabled"
   >
-    <slot/>
+    <slot />
   </button>
 </template>
 

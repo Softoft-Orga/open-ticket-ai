@@ -4,19 +4,19 @@
       <button
         v-for="(tab, index) in tabs"
         :key="index"
-        @click="activeTab = index"
         :class="[
           'relative px-6 py-3 text-sm font-medium transition-all',
           activeTab === index
             ? 'text-white'
             : 'text-text-dim hover:text-white'
         ]"
+        @click="activeTab = index"
       >
         {{ tab }}
         <div
           v-if="activeTab === index"
           class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
-        ></div>
+        />
       </button>
     </div>
     <div class="p-6">

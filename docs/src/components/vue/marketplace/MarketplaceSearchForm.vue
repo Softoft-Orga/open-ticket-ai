@@ -19,7 +19,11 @@
           v-model.number="perPageModel"
           class="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
         >
-          <option v-for="option in perPageOptions" :key="option" :value="option">
+          <option
+            v-for="option in perPageOptions"
+            :key="option"
+            :value="option"
+          >
             {{ option }}
           </option>
         </select>
@@ -31,7 +35,11 @@
           v-model="sortModel"
           class="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
         >
-          <option v-for="option in sortOptions" :key="option.value" :value="option.value">
+          <option
+            v-for="option in sortOptions"
+            :key="option.value"
+            :value="option.value"
+          >
             {{ option.label }}
           </option>
         </select>
@@ -86,15 +94,24 @@
           @click="emit('search')"
         >
           <span v-if="!isLoading">Search</span>
-          <span v-else class="flex items-center gap-2">
-            <span class="h-4 w-4 animate-spin rounded-full border-2 border-sky-300/40 border-t-sky-100" aria-hidden="true" />
+          <span
+            v-else
+            class="flex items-center gap-2"
+          >
+            <span
+              class="h-4 w-4 animate-spin rounded-full border-2 border-sky-300/40 border-t-sky-100"
+              aria-hidden="true"
+            />
             Searching…
           </span>
         </button>
       </div>
     </div>
 
-    <div v-if="filtersApplied" class="mt-4 flex items-center gap-3 text-sm text-slate-300">
+    <div
+      v-if="filtersApplied"
+      class="mt-4 flex items-center gap-3 text-sm text-slate-300"
+    >
       <span>Active filters applied.</span>
       <button
         class="rounded-full border border-slate-600 px-3 py-1 text-xs font-medium text-slate-200 transition hover:bg-slate-800"
@@ -123,11 +140,13 @@ defineProps<{
   readonly filtersApplied: boolean;
 }>();
 
+/* eslint-disable no-unused-vars */
 const emit = defineEmits<{
   (e: "search"): void;
   (e: "clear-filters"): void;
   (e: "update-filters", value: Partial<FilterOptions>): void;
 }>();
+/* eslint-enable no-unused-vars */
 
 function handleCheckbox(event: Event, key: "hasRepository" | "hasHomepage"): void {
   const target = event.target as HTMLInputElement;

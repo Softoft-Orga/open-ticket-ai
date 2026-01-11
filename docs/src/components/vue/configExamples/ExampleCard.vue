@@ -14,7 +14,10 @@
       <div class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-2">
           <TagBadges :tags="visibleTags" />
-          <span v-if="extraCount>0" class="text-xs text-[color:var(--vp-c-text-3)]">+{{ extraCount }}</span>
+          <span
+            v-if="extraCount>0"
+            class="text-xs text-[color:var(--vp-c-text-3)]"
+          >+{{ extraCount }}</span>
         </div>
         <a
           :href="exampleLink"

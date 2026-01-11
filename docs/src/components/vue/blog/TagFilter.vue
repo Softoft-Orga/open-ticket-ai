@@ -3,13 +3,13 @@
     <button
       v-for="tag in allTags"
       :key="tag"
-      @click="toggleTag(tag)"
       :class="[
         'rounded-full border px-4 py-2 text-sm font-medium transition-all',
         selectedTags.includes(tag)
           ? 'border-primary bg-primary text-white'
           : 'border-surface-lighter bg-surface-dark text-text-dim hover:border-primary/50 hover:text-white'
       ]"
+      @click="toggleTag(tag)"
     >
       {{ tag }}
     </button>

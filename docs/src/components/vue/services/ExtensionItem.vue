@@ -1,11 +1,19 @@
 <template>
   <div class="flex items-start gap-4">
     <div class="text-primary mt-0.5">
-      <component :is="IconComponent" class="w-6 h-6" aria-hidden="true" />
+      <component
+        :is="IconComponent"
+        class="w-6 h-6"
+        aria-hidden="true"
+      />
     </div>
     <div>
-      <h5 class="text-white text-sm font-bold mb-1">{{ title }}</h5>
-      <p class="text-slate-500 text-xs leading-relaxed">{{ desc }}</p>
+      <h5 class="text-white text-sm font-bold mb-1">
+        {{ title }}
+      </h5>
+      <p class="text-slate-500 text-xs leading-relaxed">
+        {{ desc }}
+      </p>
     </div>
   </div>
 </template>

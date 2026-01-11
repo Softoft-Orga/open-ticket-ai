@@ -6,23 +6,26 @@
       </h2>
 
       <form
-          class="space-y-5 max-w-64 mx-auto"
-          name="synthetic-ticket-generator-waitlist"
-          action="https://formspree.io/f/xjkjkzdo"
-          method="POST"
+        class="space-y-5 max-w-64 mx-auto"
+        name="synthetic-ticket-generator-waitlist"
+        action="https://formspree.io/f/xjkjkzdo"
+        method="POST"
       >
         <div>
-          <label class="block text-sm font-medium text-gray-200 mb-1" for="email">
+          <label
+            class="block text-sm font-medium text-gray-200 mb-1"
+            for="email"
+          >
             {{ $t('sdg_waitlist.email_label') }}
           </label>
           <TextInput
-              id="email"
-              v-model="email"
-              name="email"
-              placeholder="you@domain.com"
-              required
-              type="email"
-              :icon="EnvelopeIcon"
+            id="email"
+            v-model="email"
+            name="email"
+            placeholder="you@domain.com"
+            required
+            type="email"
+            :icon="EnvelopeIcon"
           />
         </div>
 
@@ -30,9 +33,7 @@
           <UserPlusIcon class="w-5 h-5 mr-2 -ml-1" />
           {{ $t('sdg_waitlist.submit_text') }}
         </Button>
-
       </form>
-
     </div>
     <p class="w-full text-xs text-center leading-3 text-gray-400">
       {{

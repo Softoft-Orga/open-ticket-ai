@@ -1,27 +1,33 @@
 <template>
-    <div class="relative w-full">
-        <div v-if="icon" :class="iconContainerClasses">
-            <component :is="icon" :class="iconClasses" />
-        </div>
-        <textarea
-            ref="textareaRef"
-            :disabled="disabled"
-            :placeholder="placeholder"
-            :value="modelValue"
-            :class="[
-                'w-full border bg-surface-dark text-white placeholder-text-dim transition-all duration-200',
-                'focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50',
-                'focus:shadow-[0_0_20px_rgba(166,13,242,0.2)]',
-                'disabled:opacity-50 disabled:cursor-not-allowed',
-                'border-border-dark hover:border-primary/30',
-                autoResize ? 'resize-none' : 'resize-y',
-                sizeClasses,
-                icon ? iconPaddingClasses : ''
-            ]"
-            :rows="rows"
-            @input="onInput"
-        />
+  <div class="relative w-full">
+    <div
+      v-if="icon"
+      :class="iconContainerClasses"
+    >
+      <component
+        :is="icon"
+        :class="iconClasses"
+      />
     </div>
+    <textarea
+      ref="textareaRef"
+      :disabled="disabled"
+      :placeholder="placeholder"
+      :value="modelValue"
+      :class="[
+        'w-full border bg-surface-dark text-white placeholder-text-dim transition-all duration-200',
+        'focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50',
+        'focus:shadow-[0_0_20px_rgba(166,13,242,0.2)]',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'border-border-dark hover:border-primary/30',
+        autoResize ? 'resize-none' : 'resize-y',
+        sizeClasses,
+        icon ? iconPaddingClasses : ''
+      ]"
+      :rows="rows"
+      @input="onInput"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -44,9 +50,16 @@ const props = withDefaults(defineProps<{
   autoResize: true,
 })
 
+/* eslint-disable no-unused-vars */
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
+/* eslint-enable no-unused-vars */
+
+
+
+
+
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const rows = computed(() => props.autoResize ? 1 : 4)

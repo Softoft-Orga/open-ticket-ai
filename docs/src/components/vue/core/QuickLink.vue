@@ -4,7 +4,10 @@
     href="#"
   >
     <div class="w-12 h-12 rounded-lg bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-      <component :is="getIcon(icon)" class="w-6 h-6 text-primary" />
+      <component
+        :is="getIcon(icon)"
+        class="w-6 h-6 text-primary"
+      />
     </div>
     <span class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors text-center">{{ label }}</span>
   </a>
@@ -17,6 +20,8 @@ const props = defineProps<{
   icon: string;
   label: string;
 }>();
+
+console.log(props)
 
 const iconMap: Record<string, any> = {
   'rocket': RocketLaunchIcon,

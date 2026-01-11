@@ -10,23 +10,38 @@
       hoverable && 'hover:border-primary/50 hover:shadow-glow cursor-pointer'
     ]"
   >
-    <div v-if="$slots.image" :class="['overflow-hidden -m-6 mb-0', imageRadiusClass]">
-      <slot name="image"/>
+    <div
+      v-if="$slots.image"
+      :class="['overflow-hidden -m-6 mb-0', imageRadiusClass]"
+    >
+      <slot name="image" />
     </div>
-    <div v-if="$slots.header" :class="headerClasses">
-      <slot name="header"/>
+    <div
+      v-if="$slots.header"
+      :class="headerClasses"
+    >
+      <slot name="header" />
     </div>
-    <div v-if="$slots.title" :class="titleClasses">
-      <slot name="title"/>
+    <div
+      v-if="$slots.title"
+      :class="titleClasses"
+    >
+      <slot name="title" />
     </div>
     <div :class="contentClasses">
-      <slot/>
+      <slot />
     </div>
-    <div v-if="$slots.actions" :class="actionsClasses">
-      <slot name="actions"/>
+    <div
+      v-if="$slots.actions"
+      :class="actionsClasses"
+    >
+      <slot name="actions" />
     </div>
-    <div v-if="$slots.footer" :class="footerClasses">
-      <slot name="footer"/>
+    <div
+      v-if="$slots.footer"
+      :class="footerClasses"
+    >
+      <slot name="footer" />
     </div>
   </div>
 </template>
@@ -37,7 +52,8 @@ import type { Variant, Tone, Size, Radius, Elevation } from '../design-system/to
 
 export interface CardProps {
   /**
-   * Visual style variant
+   * Visual style variant from design system tokens
+   * When provided, overrides background prop with variant-specific styling
    * @default 'primary'
    */
   variant?: Variant
@@ -70,13 +86,6 @@ export interface CardProps {
    * @default false
    */
   hoverable?: boolean
-  
-  /**
-   * Variant style from design system tokens (primary, secondary, outline, ghost)
-   * When provided, overrides background prop with variant-specific styling
-   * @default undefined
-   */
-  variant?: Variant
 }
 
 const props = withDefaults(defineProps<CardProps>(), {
@@ -85,7 +94,6 @@ const props = withDefaults(defineProps<CardProps>(), {
   radius: 'lg',
   elevation: 'sm',
   hoverable: false,
-  variant: undefined,
 })
 
 const cardClasses = computed(() => {

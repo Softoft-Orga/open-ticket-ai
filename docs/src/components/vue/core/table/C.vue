@@ -1,8 +1,10 @@
 <!-- Cell.vue -->
 <template>
-  <component :is="tag"
-             :class="cellClasses">
-    <slot/>
+  <component
+    :is="tag"
+    :class="cellClasses"
+  >
+    <slot />
   </component>
 </template>
 

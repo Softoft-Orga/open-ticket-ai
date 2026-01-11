@@ -1,19 +1,23 @@
 <!-- Table.vue -->
 <template>
-  <div :class="[
-    'overflow-x-auto',
-    roundedClass,
-    elevationClass,
-    wrapperBorderClass,
-    widthClass
-  ]">
-    <table :class="[
-      'text-sm !m-0 !p-0',
-      tableWidthClass,
-      textColorClass
-    ]">
+  <div
+    :class="[
+      'overflow-x-auto',
+      roundedClass,
+      elevationClass,
+      wrapperBorderClass,
+      widthClass
+    ]"
+  >
+    <table
+      :class="[
+        'text-sm !m-0 !p-0',
+        tableWidthClass,
+        textColorClass
+      ]"
+    >
       <tbody :class="bodyDividerClass">
-        <slot/>
+        <slot />
       </tbody>
     </table>
   </div>

@@ -32,6 +32,8 @@ const preset = computed(() => {
       return slideLeftSm
     case 'right':
       return slideRightSm
+    default:
+      return slideDownSm
   }
 })
 </script>

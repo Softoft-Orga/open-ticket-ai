@@ -1,7 +1,7 @@
 <!-- Row.vue -->
 <template>
   <tr :class="rowClasses">
-    <slot/>
+    <slot />
   </tr>
 </template>
 

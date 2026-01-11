@@ -4,21 +4,30 @@
     <div class="bg-vp-bg p-6 border-b border-vp-border">
       <div class="flex items-start justify-between">
         <div class="flex-1">
-          <h2 class="text-2xl font-bold text-vp-text-1 mb-2">{{ sidecar._title }}</h2>
-          <p class="text-vp-text-2 mb-3">{{ sidecar._summary }}</p>
+          <h2 class="text-2xl font-bold text-vp-text-1 mb-2">
+            {{ sidecar._title }}
+          </h2>
+          <p class="text-vp-text-2 mb-3">
+            {{ sidecar._summary }}
+          </p>
           <div class="flex flex-wrap gap-2">
-                        <span
-                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-vp-brand text-white">
-                            {{ sidecar._category }}
-                        </span>
             <span
-                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-vp-bg-soft border border-vp-border text-vp-text-2">
-                            {{ sidecar._version }}
-                        </span>
+              class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-vp-brand text-white"
+            >
+              {{ sidecar._category }}
+            </span>
+            <span
+              class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-vp-bg-soft border border-vp-border text-vp-text-2"
+            >
+              {{ sidecar._version }}
+            </span>
           </div>
         </div>
-        <div v-if="$slots.actions" class="ml-4">
-          <slot name="actions"/>
+        <div
+          v-if="$slots.actions"
+          class="ml-4"
+        >
+          <slot name="actions" />
         </div>
       </div>
     </div>
@@ -27,84 +36,143 @@
     <div class="p-6 space-y-6">
       <!-- Metadata Table -->
       <section>
-        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">Metadata</h3>
+        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">
+          Metadata
+        </h3>
         <table class="w-full text-sm">
           <tbody>
-          <tr v-for="item in metadataItems" :key="item.label" class="border-b border-vp-border">
-            <td class="py-2 font-medium text-vp-text-2 w-32">{{ item.label }}</td>
-            <td class="py-2 text-vp-text-1 font-mono text-xs">{{ item.value }}</td>
-          </tr>
+            <tr
+              v-for="item in metadataItems"
+              :key="item.label"
+              class="border-b border-vp-border"
+            >
+              <td class="py-2 font-medium text-vp-text-2 w-32">
+                {{ item.label }}
+              </td>
+              <td class="py-2 text-vp-text-1 font-mono text-xs">
+                {{ item.value }}
+              </td>
+            </tr>
           </tbody>
         </table>
       </section>
 
       <!-- Inputs Table -->
       <section>
-        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">Inputs</h3>
+        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">
+          Inputs
+        </h3>
         <table class="w-full text-sm">
           <tbody>
-          <tr class="border-b border-vp-border">
-            <td class="py-2 font-medium text-vp-text-2 w-32">Placement</td>
-            <td class="py-2 text-vp-text-1">{{ sidecar._inputs.placement }}</td>
-          </tr>
-          <tr v-if="sidecar._inputs.alongside" class="border-b border-vp-border">
-            <td class="py-2 font-medium text-vp-text-2 w-32">Alongside</td>
-            <td class="py-2 text-vp-text-1">{{ sidecar._inputs.alongside.join(', ') }}</td>
-          </tr>
-          <tr v-if="sidecar._inputs.params" class="border-b border-vp-border">
-            <td class="py-2 font-medium text-vp-text-2 w-32 align-top">Parameters</td>
-            <td class="py-2">
-              <div v-for="(desc, param) in sidecar._inputs.params" :key="param" class="flex gap-2 mb-1">
-                <span class="font-mono text-xs text-vp-brand font-semibold">{{ param }}:</span>
-                <span class="text-vp-text-1 text-xs">{{ desc }}</span>
-              </div>
-            </td>
-          </tr>
+            <tr class="border-b border-vp-border">
+              <td class="py-2 font-medium text-vp-text-2 w-32">
+                Placement
+              </td>
+              <td class="py-2 text-vp-text-1">
+                {{ sidecar._inputs.placement }}
+              </td>
+            </tr>
+            <tr
+              v-if="sidecar._inputs.alongside"
+              class="border-b border-vp-border"
+            >
+              <td class="py-2 font-medium text-vp-text-2 w-32">
+                Alongside
+              </td>
+              <td class="py-2 text-vp-text-1">
+                {{ sidecar._inputs.alongside.join(', ') }}
+              </td>
+            </tr>
+            <tr
+              v-if="sidecar._inputs.params"
+              class="border-b border-vp-border"
+            >
+              <td class="py-2 font-medium text-vp-text-2 w-32 align-top">
+                Parameters
+              </td>
+              <td class="py-2">
+                <div
+                  v-for="(desc, param) in sidecar._inputs.params"
+                  :key="param"
+                  class="flex gap-2 mb-1"
+                >
+                  <span class="font-mono text-xs text-vp-brand font-semibold">{{ param }}:</span>
+                  <span class="text-vp-text-1 text-xs">{{ desc }}</span>
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </section>
 
       <!-- Defaults Table -->
       <section v-if="sidecar._defaults && Object.keys(sidecar._defaults).length > 0">
-        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">Defaults</h3>
+        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">
+          Defaults
+        </h3>
         <table class="w-full text-sm">
           <tbody>
-          <tr v-for="(value, key) in sidecar._defaults" :key="key" class="border-b border-vp-border">
-            <td class="py-2 font-mono text-xs text-vp-brand font-semibold w-48">{{ key }}</td>
-            <td class="py-2 text-vp-text-1 text-xs">{{ value }}</td>
-          </tr>
+            <tr
+              v-for="(value, key) in sidecar._defaults"
+              :key="key"
+              class="border-b border-vp-border"
+            >
+              <td class="py-2 font-mono text-xs text-vp-brand font-semibold w-48">
+                {{ key }}
+              </td>
+              <td class="py-2 text-vp-text-1 text-xs">
+                {{ value }}
+              </td>
+            </tr>
           </tbody>
         </table>
       </section>
 
       <!-- Output -->
       <section>
-        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">Output</h3>
+        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">
+          Output
+        </h3>
         <div class="space-y-3">
-          <p class="text-sm text-vp-text-2">{{ sidecar._output.description }}</p>
+          <p class="text-sm text-vp-text-2">
+            {{ sidecar._output.description }}
+          </p>
           <div class="flex flex-wrap gap-2">
-                        <span
-                            v-for="state in sidecar._output.state_enum"
-                            :key="state"
-                            :class="getStateClass(state)"
-                            class="inline-flex items-center px-2 py-1 rounded text-xs font-mono"
-                        >
-                            {{ state }}
-                        </span>
+            <span
+              v-for="state in sidecar._output.state_enum"
+              :key="state"
+              :class="getStateClass(state)"
+              class="inline-flex items-center px-2 py-1 rounded text-xs font-mono"
+            >
+              {{ state }}
+            </span>
           </div>
-          <div v-if="sidecar._output.payload_schema_ref" class="text-xs">
+          <div
+            v-if="sidecar._output.payload_schema_ref"
+            class="text-xs"
+          >
             <span class="font-medium text-vp-text-2">Schema:</span>
             <span class="ml-2 font-mono text-vp-text-1">{{ sidecar._output.payload_schema_ref }}</span>
           </div>
-          <AccordionItem v-if="sidecar._output.examples" title="Output Examples" variant="bordered">
+          <AccordionItem
+            v-if="sidecar._output.examples"
+            title="Output Examples"
+            variant="bordered"
+          >
             <table class="w-full text-xs">
               <tbody>
-              <tr v-for="(example, state) in sidecar._output.examples" :key="state" class="border-b border-vp-border">
-                <td class="py-2 font-semibold w-24">{{ state }}</td>
-                <td class="py-2">
-                  <pre class="text-xs">{{ JSON.stringify(example, null, 2) }}</pre>
-                </td>
-              </tr>
+                <tr
+                  v-for="(example, state) in sidecar._output.examples"
+                  :key="state"
+                  class="border-b border-vp-border"
+                >
+                  <td class="py-2 font-semibold w-24">
+                    {{ state }}
+                  </td>
+                  <td class="py-2">
+                    <pre class="text-xs">{{ JSON.stringify(example, null, 2) }}</pre>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </AccordionItem>
@@ -113,13 +181,25 @@
 
       <!-- Errors -->
       <section>
-        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">Errors</h3>
+        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">
+          Errors
+        </h3>
         <div class="space-y-3">
-          <div v-for="(errors, type) in errorsByType" :key="type" :class="getErrorClass(type)"
-               class="border rounded-lg p-3">
-            <h4 class="font-semibold text-sm mb-2">{{ getErrorTitle(type) }}</h4>
+          <div
+            v-for="(errors, type) in errorsByType"
+            :key="type"
+            :class="getErrorClass(type)"
+            class="border rounded-lg p-3"
+          >
+            <h4 class="font-semibold text-sm mb-2">
+              {{ getErrorTitle(type) }}
+            </h4>
             <ul class="space-y-1">
-              <li v-for="(error, idx) in errors" :key="idx" class="text-xs">
+              <li
+                v-for="(error, idx) in errors"
+                :key="idx"
+                class="text-xs"
+              >
                 <span class="font-mono font-semibold">{{ error.code }}:</span>
                 <span class="ml-2">{{ error.when }}</span>
               </li>
@@ -130,31 +210,46 @@
 
       <!-- Engine Support Table -->
       <section>
-        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">Engine Support</h3>
+        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">
+          Engine Support
+        </h3>
         <table class="w-full text-sm">
           <tbody>
-          <tr v-for="item in engineSupportItems" :key="item.label" class="border-b border-vp-border">
-            <td class="py-2 font-medium text-vp-text-2 w-32">{{ item.label }}</td>
-            <td class="py-2">
-                                <span
-                                    :class="item.supported ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'"
-                                    class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold"
-                                >
-                                    {{ item.supported ? 'Supported' : 'Not Supported' }}
-                                </span>
-            </td>
-          </tr>
+            <tr
+              v-for="item in engineSupportItems"
+              :key="item.label"
+              class="border-b border-vp-border"
+            >
+              <td class="py-2 font-medium text-vp-text-2 w-32">
+                {{ item.label }}
+              </td>
+              <td class="py-2">
+                <span
+                  :class="item.supported ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'"
+                  class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold"
+                >
+                  {{ item.supported ? 'Supported' : 'Not Supported' }}
+                </span>
+              </td>
+            </tr>
           </tbody>
         </table>
       </section>
 
       <!-- Examples -->
       <section>
-        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">Usage Examples</h3>
-        <AccordionItem v-for="(example, name) in sidecar._examples" :key="name" :title="name" variant="bordered">
+        <h3 class="text-lg font-semibold text-vp-text-1 mb-3">
+          Usage Examples
+        </h3>
+        <AccordionItem
+          v-for="(example, name) in sidecar._examples"
+          :key="name"
+          :title="name"
+          variant="bordered"
+        >
           <pre class="text-xs overflow-x-auto bg-vp-bg-soft p-4 rounded border border-vp-border"><code>{{
-              example
-            }}</code></pre>
+            example
+          }}</code></pre>
         </AccordionItem>
       </section>
     </div>

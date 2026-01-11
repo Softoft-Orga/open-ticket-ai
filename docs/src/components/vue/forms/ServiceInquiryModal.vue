@@ -1,6 +1,13 @@
 <template>
-  <TransitionRoot :show="modalOpen" as="template">
-    <Dialog as="div" class="relative z-50" @close="closeModal">
+  <TransitionRoot
+    :show="modalOpen"
+    as="template"
+  >
+    <Dialog
+      as="div"
+      class="relative z-50"
+      @close="closeModal"
+    >
       <TransitionChild
         as="template"
         enter="ease-out duration-300"
@@ -26,7 +33,10 @@
           >
             <DialogPanel class="w-full max-w-2xl transform overflow-hidden rounded-3xl bg-[#1a101f] border border-primary/20 p-8 text-left align-middle shadow-xl transition-all">
               <div class="flex items-start justify-between mb-6">
-                <DialogTitle as="h3" class="text-2xl font-bold text-white">
+                <DialogTitle
+                  as="h3"
+                  class="text-2xl font-bold text-white"
+                >
                   Service Inquiry
                 </DialogTitle>
                 <button
@@ -34,7 +44,10 @@
                   class="rounded-lg p-1 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                   @click="closeModal"
                 >
-                  <XMarkIcon class="w-6 h-6" aria-hidden="true" />
+                  <XMarkIcon
+                    class="w-6 h-6"
+                    aria-hidden="true"
+                  />
                 </button>
               </div>
 
@@ -48,15 +61,25 @@
                 method="POST"
                 data-netlify="true"
                 netlify-honeypot="bot-field"
-                @submit.prevent="handleSubmit"
                 class="space-y-6"
+                @submit.prevent="handleSubmit"
               >
-                <input type="hidden" name="form-name" value="service-inquiry" />
-                <input type="hidden" name="bot-field" />
+                <input
+                  type="hidden"
+                  name="form-name"
+                  value="service-inquiry"
+                >
+                <input
+                  type="hidden"
+                  name="bot-field"
+                >
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label for="fullName" class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2">
+                    <label
+                      for="fullName"
+                      class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2"
+                    >
                       Full Name*
                     </label>
                     <input
@@ -67,11 +90,14 @@
                       required
                       placeholder="Jane Doe"
                       class="w-full px-4 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-colors"
-                    />
+                    >
                   </div>
 
                   <div>
-                    <label for="email" class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2">
+                    <label
+                      for="email"
+                      class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2"
+                    >
                       Email*
                     </label>
                     <input
@@ -82,12 +108,15 @@
                       required
                       placeholder="jane@company.com"
                       class="w-full px-4 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-colors"
-                    />
+                    >
                   </div>
                 </div>
 
                 <div>
-                  <label for="company" class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2">
+                  <label
+                    for="company"
+                    class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2"
+                  >
                     Company
                   </label>
                   <input
@@ -97,11 +126,14 @@
                     name="company"
                     placeholder="Enter company name"
                     class="w-full px-4 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-colors"
-                  />
+                  >
                 </div>
 
                 <div>
-                  <label for="service" class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2">
+                  <label
+                    for="service"
+                    class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2"
+                  >
                     Service*
                   </label>
                   <div class="relative">
@@ -112,26 +144,61 @@
                       required
                       class="w-full px-4 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white appearance-none focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-colors cursor-pointer"
                     >
-                      <option value="" disabled>Select a service</option>
-                      <option value="Evaluation Dataset Generation">Evaluation Dataset Generation</option>
-                      <option value="Training Dataset Generation">Training Dataset Generation</option>
-                      <option value="Enterprise Dataset Generation">Enterprise Dataset Generation</option>
-                      <option value="Integration Package - Standard Stack">Integration Package - Standard Stack</option>
-                      <option value="Integration Package - Enterprise/Custom">Integration Package - Enterprise/Custom</option>
-                      <option value="OTA Automation Pack">OTA Automation Pack</option>
-                      <option value="Custom Tags Model - Synthetic">Custom Tags Model - Synthetic</option>
-                      <option value="Custom Tag Model - Real Data">Custom Tag Model - Real Data</option>
-                      <option value="Custom Development">Custom Development</option>
-                      <option value="Hourly Engineering">Hourly Engineering</option>
-                      <option value="Ongoing Support Subscription">Ongoing Support Subscription</option>
-                      <option value="Other">Other</option>
+                      <option
+                        value=""
+                        disabled
+                      >
+                        Select a service
+                      </option>
+                      <option value="Evaluation Dataset Generation">
+                        Evaluation Dataset Generation
+                      </option>
+                      <option value="Training Dataset Generation">
+                        Training Dataset Generation
+                      </option>
+                      <option value="Enterprise Dataset Generation">
+                        Enterprise Dataset Generation
+                      </option>
+                      <option value="Integration Package - Standard Stack">
+                        Integration Package - Standard Stack
+                      </option>
+                      <option value="Integration Package - Enterprise/Custom">
+                        Integration Package - Enterprise/Custom
+                      </option>
+                      <option value="OTA Automation Pack">
+                        OTA Automation Pack
+                      </option>
+                      <option value="Custom Tags Model - Synthetic">
+                        Custom Tags Model - Synthetic
+                      </option>
+                      <option value="Custom Tag Model - Real Data">
+                        Custom Tag Model - Real Data
+                      </option>
+                      <option value="Custom Development">
+                        Custom Development
+                      </option>
+                      <option value="Hourly Engineering">
+                        Hourly Engineering
+                      </option>
+                      <option value="Ongoing Support Subscription">
+                        Ongoing Support Subscription
+                      </option>
+                      <option value="Other">
+                        Other
+                      </option>
                     </select>
-                    <ChevronDownIcon class="w-5 h-5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
+                    <ChevronDownIcon
+                      class="w-5 h-5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                      aria-hidden="true"
+                    />
                   </div>
                 </div>
 
                 <div>
-                  <label for="ticketSystem" class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2">
+                  <label
+                    for="ticketSystem"
+                    class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2"
+                  >
                     Ticket System
                   </label>
                   <input
@@ -141,11 +208,14 @@
                     name="ticketSystem"
                     placeholder="e.g. OTOBO, Zammad, Zendesk..."
                     class="w-full px-4 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-colors"
-                  />
+                  >
                 </div>
 
                 <div>
-                  <label for="message" class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2">
+                  <label
+                    for="message"
+                    class="block text-xs font-bold text-slate-300 uppercase tracking-widest mb-2"
+                  >
                     Message*
                   </label>
                   <textarea
@@ -156,7 +226,7 @@
                     rows="4"
                     placeholder="How can we help?"
                     class="w-full px-4 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-colors resize-none"
-                  ></textarea>
+                  />
                 </div>
 
                 <Button
@@ -169,11 +239,19 @@
                 </Button>
               </form>
 
-              <div v-else class="text-center py-12">
+              <div
+                v-else
+                class="text-center py-12"
+              >
                 <div class="mx-auto w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mb-6">
-                  <CheckCircleIcon class="w-10 h-10 text-green-400" aria-hidden="true" />
+                  <CheckCircleIcon
+                    class="w-10 h-10 text-green-400"
+                    aria-hidden="true"
+                  />
                 </div>
-                <h3 class="text-2xl font-bold text-white mb-3">Thank you!</h3>
+                <h3 class="text-2xl font-bold text-white mb-3">
+                  Thank you!
+                </h3>
                 <p class="text-slate-400 mb-8">
                   We've received your inquiry and will get back to you within 1 business day.
                 </p>
@@ -205,8 +283,10 @@ const props = defineProps<{
   selectedService?: string
 }>()
 
+/* eslint-disable no-unused-vars */
 const emit = defineEmits<{
   (e: 'close'): void
+/* eslint-enable no-unused-vars */
 }>()
 
 const formData = ref({

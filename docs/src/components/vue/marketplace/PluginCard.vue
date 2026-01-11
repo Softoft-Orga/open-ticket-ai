@@ -1,10 +1,19 @@
 <template>
-  <Card variant="primary" size="md" radius="2xl" elevation="sm">
+  <Card
+    variant="primary"
+    size="md"
+    radius="2xl"
+    elevation="sm"
+  >
     <template #header>
       <div class="flex items-start justify-between gap-4">
         <div class="flex-1 space-y-2">
-          <h3 class="text-lg font-semibold text-white">{{ plugin.name }}</h3>
-          <p class="text-sm text-text-dim min-h-[5rem]">{{ plugin.summary }}</p>
+          <h3 class="text-lg font-semibold text-white">
+            {{ plugin.name }}
+          </h3>
+          <p class="text-sm text-text-dim min-h-[5rem]">
+            {{ plugin.summary }}
+          </p>
         </div>
         <span class="shrink-0 rounded-full bg-info/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-info border border-info/30">
           v{{ plugin.version }}
@@ -22,13 +31,19 @@
           <ClockIcon class="w-4 h-4" />
           Last release: {{ formattedDate }}
         </span>
-        <span v-if="plugin.license" class="flex items-center gap-1.5">
+        <span
+          v-if="plugin.license"
+          class="flex items-center gap-1.5"
+        >
           <DocumentTextIcon class="w-4 h-4" />
           License: {{ plugin.license }}
         </span>
       </div>
       
-      <div v-if="plugin.author" class="text-xs text-text-dim flex items-center gap-1.5">
+      <div
+        v-if="plugin.author"
+        class="text-xs text-text-dim flex items-center gap-1.5"
+      >
         <UserIcon class="w-4 h-4" />
         Author: {{ plugin.author }}
       </div>
@@ -42,7 +57,11 @@
           rel="noopener"
           class="inline-block"
         >
-          <Button variant="outline" size="sm" radius="2xl">
+          <Button
+            variant="outline"
+            size="sm"
+            radius="2xl"
+          >
             <CubeIcon class="w-4 h-4 mr-2" />
             PyPI
           </Button>
@@ -54,7 +73,11 @@
           rel="noopener"
           class="inline-block"
         >
-          <Button variant="outline" size="sm" radius="2xl">
+          <Button
+            variant="outline"
+            size="sm"
+            radius="2xl"
+          >
             <CodeBracketIcon class="w-4 h-4 mr-2" />
             Repository
           </Button>
@@ -66,7 +89,11 @@
           rel="noopener"
           class="inline-block"
         >
-          <Button variant="outline" size="sm" radius="2xl">
+          <Button
+            variant="outline"
+            size="sm"
+            radius="2xl"
+          >
             <GlobeAltIcon class="w-4 h-4 mr-2" />
             Homepage
           </Button>

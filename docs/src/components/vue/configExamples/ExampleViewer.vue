@@ -5,10 +5,23 @@
     </summary>
 
     <div>
-      <div v-if="loading" class="text-[color:var(--vp-c-text-3)]">Loading example…</div>
-      <div v-else-if="error" class="text-[color:var(--vp-c-danger-1,#f87171)]">{{ error }}</div>
+      <div
+        v-if="loading"
+        class="text-[color:var(--vp-c-text-3)]"
+      >
+        Loading example…
+      </div>
+      <div
+        v-else-if="error"
+        class="text-[color:var(--vp-c-danger-1,#f87171)]"
+      >
+        {{ error }}
+      </div>
       <div v-else>
-        <div v-if="canCopy" class="flex items-center justify-end">
+        <div
+          v-if="canCopy"
+          class="flex items-center justify-end"
+        >
           <button
             class="inline-flex items-center rounded-md border border-[color:var(--vp-c-divider)] bg-[color:var(--vp-c-bg)] px-3 py-1 text-xs font-medium text-[color:var(--vp-c-text-2)] transition hover:text-[color:var(--vp-c-text-1)]"
             type="button"
@@ -18,7 +31,10 @@
           </button>
         </div>
 
-        <div class="shiki-wrap" v-html="contentHtml"></div>
+        <div
+          class="shiki-wrap"
+          v-html="contentHtml"
+        />
       </div>
     </div>
   </details>

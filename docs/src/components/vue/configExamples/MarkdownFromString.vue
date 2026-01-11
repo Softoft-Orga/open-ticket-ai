@@ -1,5 +1,8 @@
 <template>
-    <div class="vp-doc" v-html="html"/>
+  <div
+    class="vp-doc"
+    v-html="html"
+  />
 </template>
 
 <script lang="ts" setup>

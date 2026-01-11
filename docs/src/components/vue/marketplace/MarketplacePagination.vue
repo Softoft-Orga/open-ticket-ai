@@ -34,6 +34,7 @@ defineProps<{
   readonly totalPages: number;
 }>();
 
+/* eslint-disable no-unused-vars */
 const emit = defineEmits<{
   (e: "prev"): void;
   (e: "next"): void;
