@@ -100,6 +100,12 @@ changing before making edits and follow the rules for that surface specifically.
     - `npm run docs:dev`: Local development.
     - `npm run docs:build`: Production build (run before handoff).
     - `npm run storybook`: Component development.
+    - `npm run lint`: Check for lint errors.
+    - `npm run lint:fix`: Auto-fix lint issues.
+- **Linting**: ESLint is configured with Flat Config (eslint.config.mjs).
+    - **REQUIRED**: Always run `npm run lint:fix` before finishing tasks that modify .ts, .vue, or .astro files.
+    - **REQUIRED**: Ensure `npm run lint` passes with 0 errors before committing.
+    - Covers TypeScript, Vue 3, and Astro files with recommended rulesets.
 - **Accessing Storybook**:
     - Locally: Run `npm run storybook` and navigate to `http://localhost:6006`.
     - Online: [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-storybook.netlify.app/)
