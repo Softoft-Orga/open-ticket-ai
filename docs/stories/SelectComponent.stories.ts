@@ -1,5 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/vue3'
-import SelectComponent from '../src/components/vue/core/forms/SelectComponent.vue' // Adjust path if needed
+import SelectComponent from '../src/components/vue/core/forms/SelectComponent.vue'
+import { ref } from 'vue'
 
 /**
  * A modern, accessible select component built with Headless UI Listbox and Tailwind design tokens.
@@ -14,11 +15,9 @@ import SelectComponent from '../src/components/vue/core/forms/SelectComponent.vu
  * - Size variants (sm, md, lg)
  */
 const meta: Meta<typeof SelectComponent> = {
-    title: 'Core/SelectComponent',
+    title: 'Core/Forms/SelectComponent',
     component: SelectComponent,
-    // This part is crucial for interacting with the component in Storybook's controls panel
     argTypes: {
-        // Props from the component
         label: {
             control: 'text',
             description: 'The label displayed above the select input.',
@@ -49,14 +48,15 @@ const meta: Meta<typeof SelectComponent> = {
             options: ['sm', 'md', 'lg'],
             description: 'Size variant from input recipe.',
         },
-
-        // Event for v-model
-        'update:modelValue': {
-            action: 'update:modelValue',
-            description: 'Event emitted when the value changes.',
-        },
     },
-    // Default args apply to all stories unless overridden
+    parameters: {
+        backgrounds: {
+            default: 'dark',
+            values: [
+                { name: 'dark', value: '#0f0814' }
+            ]
+        }
+    },
     args: {
         label: 'Select a Fruit',
         placeholder: 'Choose an option...',
@@ -75,31 +75,25 @@ const sampleOptions = [
     {value: 'apple', label: 'Apple 🍎'},
     {value: 'banana', label: 'Banana 🍌'},
     {value: 'cherry', label: 'Cherry 🍒'},
-    {value: 'grape', label: 'Grape 🍇', disabled: true}, // Example of a disabled option
+    {value: 'grape', label: 'Grape 🍇', disabled: true},
     {value: 'strawberry', label: 'Strawberry 🍓'},
 ]
 
 /**
- * The default story is the base for all others. It uses a render function
- * to correctly handle v-model updates in Storybook's interactive environment.
+ * The default story demonstrates basic usage with proper v-model binding.
  */
 export const Default: Story = {
     render: (args) => ({
-        components: {SelectComponent},
+        components: { SelectComponent },
         setup() {
-            // This setup allows the story to be interactive
-            const onUpdate = () => {
-                // This function is provided by Storybook to update the args
-            }
-            return {args, onUpdate}
+            const selected = ref(args.modelValue)
+            return { args, selected }
         },
-        // Add a wrapper for better presentation in the Storybook canvas
         template: `
           <div style="padding: 1rem; min-height: 250px; width: 300px;">
             <SelectComponent
                 v-bind="args"
-                :modelValue="args.modelValue"
-                @update:modelValue="onUpdate"
+                v-model="selected"
             />
           </div>
         `,
@@ -113,21 +107,48 @@ export const Default: Story = {
  * This story demonstrates the component with a pre-selected value.
  */
 export const WithDefaultValue: Story = {
-    ...Default, // Reuses the render function from Default
+    render: (args) => ({
+        components: { SelectComponent },
+        setup() {
+            const selected = ref(args.modelValue)
+            return { args, selected }
+        },
+        template: `
+          <div style="padding: 1rem; min-height: 250px; width: 300px;">
+            <SelectComponent
+                v-bind="args"
+                v-model="selected"
+            />
+          </div>
+        `,
+    }),
     args: {
-        ...Default.args,
+        options: sampleOptions,
         modelValue: 'banana',
     },
 }
 
 /**
  * This story demonstrates the `disabled` state of the component.
- * It is not interactive.
  */
 export const Disabled: Story = {
-    ...Default,
+    render: (args) => ({
+        components: { SelectComponent },
+        setup() {
+            const selected = ref(args.modelValue)
+            return { args, selected }
+        },
+        template: `
+          <div style="padding: 1rem; min-height: 250px; width: 300px;">
+            <SelectComponent
+                v-bind="args"
+                v-model="selected"
+            />
+          </div>
+        `,
+    }),
     args: {
-        ...Default.args,
+        options: sampleOptions,
         label: 'Disabled Select',
         modelValue: 'apple',
         disabled: true,
@@ -138,9 +159,23 @@ export const Disabled: Story = {
  * This story demonstrates error state styling using the input recipe.
  */
 export const ErrorState: Story = {
-    ...Default,
+    render: (args) => ({
+        components: { SelectComponent },
+        setup() {
+            const selected = ref(args.modelValue)
+            return { args, selected }
+        },
+        template: `
+          <div style="padding: 1rem; min-height: 250px; width: 300px;">
+            <SelectComponent
+                v-bind="args"
+                v-model="selected"
+            />
+          </div>
+        `,
+    }),
     args: {
-        ...Default.args,
+        options: sampleOptions,
         label: 'Select with Error',
         error: true,
     },
@@ -148,12 +183,24 @@ export const ErrorState: Story = {
 
 /**
  * This story showcases options with disabled state.
- * The "Grape" option cannot be selected.
  */
 export const WithDisabledOptions: Story = {
-    ...Default,
+    render: (args) => ({
+        components: { SelectComponent },
+        setup() {
+            const selected = ref(args.modelValue)
+            return { args, selected }
+        },
+        template: `
+          <div style="padding: 1rem; min-height: 250px; width: 300px;">
+            <SelectComponent
+                v-bind="args"
+                v-model="selected"
+            />
+          </div>
+        `,
+    }),
     args: {
-        ...Default.args,
         label: 'Select with Disabled Options',
         options: [
             {value: 'apple', label: 'Apple 🍎'},
@@ -170,9 +217,23 @@ export const WithDisabledOptions: Story = {
  * Small size variant using input recipe.
  */
 export const SmallSize: Story = {
-    ...Default,
+    render: (args) => ({
+        components: { SelectComponent },
+        setup() {
+            const selected = ref(args.modelValue)
+            return { args, selected }
+        },
+        template: `
+          <div style="padding: 1rem; min-height: 250px; width: 300px;">
+            <SelectComponent
+                v-bind="args"
+                v-model="selected"
+            />
+          </div>
+        `,
+    }),
     args: {
-        ...Default.args,
+        options: sampleOptions,
         label: 'Small Select',
         size: 'sm',
     },
@@ -182,9 +243,23 @@ export const SmallSize: Story = {
  * Large size variant using input recipe.
  */
 export const LargeSize: Story = {
-    ...Default,
+    render: (args) => ({
+        components: { SelectComponent },
+        setup() {
+            const selected = ref(args.modelValue)
+            return { args, selected }
+        },
+        template: `
+          <div style="padding: 1rem; min-height: 250px; width: 300px;">
+            <SelectComponent
+                v-bind="args"
+                v-model="selected"
+            />
+          </div>
+        `,
+    }),
     args: {
-        ...Default.args,
+        options: sampleOptions,
         label: 'Large Select',
         size: 'lg',
     },
