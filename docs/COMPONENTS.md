@@ -61,9 +61,6 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
 - **RadioGroupOption.vue** — Single radio option with recipe-based styling. Props: `value`, `label`,
    `description`, `variant` (Variant), `tone` (Tone). Uses `card` and `focusRing` recipes for
    consistent styling. Slots: `label`, `description`. Story: `stories/RadioGroup.stories.ts`.
-- **SelectComponent.vue** — Styled select using `input` recipe. Props: `modelValue`, `options`,
-   `label`, `placeholder`, `disabled`, `error`, `size` ('sm' | 'md' | 'lg'). Slots: _none_. Story:
-   `stories/SelectComponent.stories.ts`.
 
 ### core/navigation
 
