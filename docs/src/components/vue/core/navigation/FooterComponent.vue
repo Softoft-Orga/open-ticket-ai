@@ -46,8 +46,14 @@
               :aria-label="socialLink.ariaLabel"
               class="hover:text-primary-light transition-colors"
             >
-              <CodeBracketSquareIcon v-if="socialLink.platform === 'github'" class="w-6 h-6" />
-              <LinkIcon v-else-if="socialLink.platform === 'linkedin'" class="w-6 h-6" />
+              <CodeBracketSquareIcon
+                v-if="socialLink.platform === 'github'"
+                class="w-6 h-6"
+              />
+              <LinkIcon
+                v-else-if="socialLink.platform === 'linkedin'"
+                class="w-6 h-6"
+              />
             </a>
           </div>
         </div>
@@ -57,7 +63,10 @@
         <div class="text-xs text-slate-600">
           © {{ year }} {{ copyright }}
         </div>
-        <div v-if="legal.length > 0" class="flex gap-8 text-xs text-primary">
+        <div
+          v-if="legal.length > 0"
+          class="flex gap-8 text-xs text-primary"
+        >
           <a
             v-for="(legalLink, index) in legal"
             :key="index"
