@@ -10,72 +10,203 @@ const description = "Small-footprint classification. Optimized for edge deployme
 
 <BaseLayout title={title} description={description}>
   <div class="min-h-screen bg-background-dark">
-    <!-- Hero Section -->
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
-      <div class="mb-12">
-        <div class="inline-block mb-6">
-          <Badge client:load type="primary">
-            🔒 ON-PREMISE ONLY (0.5B PARAMETERS)
-          </Badge>
+    <div class="mx-auto max-w-7xl px-6 lg:px-24 py-20">
+      <!-- Breadcrumb Navigation -->
+      <nav class="mb-12 flex items-center gap-2 text-sm text-text-dim">
+        <a href="/products" class="hover:text-primary transition-colors">PRODUCTS</a>
+        <span>/</span>
+        <span class="text-white">LITE FREE</span>
+      </nav>
+
+      <!-- Hero Section -->
+      <div class="flex flex-col lg:flex-row gap-16 mb-24">
+        <div class="flex-1">
+          <div class="inline-flex items-center gap-3 rounded-full bg-surface-dark px-4 py-2 text-xs font-semibold uppercase tracking-widest text-primary ring-1 ring-primary/50 mb-6">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+            </span>
+            <span>🔒 On-Premise Only (0.5B Parameters)</span>
+          </div>
+
+          <h1 class="text-5xl lg:text-7xl font-black text-white mb-6 leading-tight">
+            Tagging AI<br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-glow">Lite Free.</span>
+          </h1>
+
+          <p class="text-text-dim text-xl leading-relaxed mb-10">
+            Small-footprint classification. Optimized for edge deployment and privacy-focused evaluation. 
+            Supports the full OTA taxonomy tree.
+          </p>
+
+          <div class="flex flex-wrap gap-4">
+            <Button variant="primary" size="lg" client:load>
+              DOWNLOAD CONTAINER
+            </Button>
+            <Button variant="outline" size="lg" client:load>
+              View Documentation
+            </Button>
+          </div>
         </div>
-        <h1 class="text-5xl md:text-7xl font-black text-white mb-8">
-          Tagging AI <span class="text-primary-light">Lite Free.</span>
-        </h1>
-        <p class="text-xl text-text-dim max-w-3xl leading-relaxed mb-12">
-          Small-footprint classification. Optimized for edge deployment and privacy-focused evaluation. 
-          Supports the full OTA taxonomy tree.
-        </p>
-        <Button client:load variant="secondary" size="lg">
-          DOWNLOAD CONTAINER
-        </Button>
+
+        <div class="flex-1">
+          <div class="relative overflow-hidden rounded-3xl bg-surface-dark p-8 shadow-card ring-1 ring-border-dark">
+            <div class="absolute -top-20 -right-20 h-64 w-64 bg-success/10 blur-[80px]"></div>
+
+            <h3 class="relative z-10 mb-8 text-lg font-bold text-white">Evaluation Specifications</h3>
+
+            <div class="relative z-10 space-y-6">
+              <div class="border-l-2 border-success/30 pl-4">
+                <div class="mb-1 text-xs font-bold uppercase tracking-wider text-text-dim">MODEL SIZE</div>
+                <div class="mb-1 text-2xl font-black text-white">500M Parameters</div>
+                <div class="text-xs uppercase tracking-wide text-primary-light">COMPACT TRANSFORMER</div>
+              </div>
+
+              <div class="border-l-2 border-success/30 pl-4">
+                <div class="mb-1 text-xs font-bold uppercase tracking-wider text-text-dim">VRAM REQUIREMENT</div>
+                <div class="mb-1 text-2xl font-black text-white">&lt; 1GB</div>
+                <div class="text-xs uppercase tracking-wide text-primary-light">CPU-COMPATIBLE</div>
+              </div>
+
+              <div class="border-l-2 border-success/30 pl-4">
+                <div class="mb-1 text-xs font-bold uppercase tracking-wider text-text-dim">ACCURACY</div>
+                <div class="mb-1 text-2xl font-black text-white">~82%</div>
+                <div class="text-xs uppercase tracking-wide text-primary-light">EVALUATION BASELINE</div>
+              </div>
+
+              <div class="border-l-2 border-success/30 pl-4">
+                <div class="mb-1 text-xs font-bold uppercase tracking-wider text-text-dim">DEPLOYMENT</div>
+                <div class="mb-1 text-2xl font-black text-white">Edge-Ready</div>
+                <div class="text-xs uppercase tracking-wide text-primary-light">GLOBAL / MULTILINGUAL</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Performance Metrics -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-        <Card client:load variant="primary" hoverable>
-          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
-            MODEL SIZE
+      <!-- Features Section -->
+      <div class="mb-24 grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div class="rounded-2xl bg-surface-dark p-6 shadow-card ring-1 ring-border-dark transition hover:bg-surface-dark/80">
+          <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-success/20">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-success">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
           </div>
-          <div class="text-2xl font-bold text-white">
-            500M Params
+          <h3 class="mb-3 text-xl font-bold text-white">Privacy-First Design</h3>
+          <p class="text-sm leading-relaxed text-text-dim">
+            Runs entirely on-premise with zero external dependencies. Perfect for sensitive evaluation environments and air-gapped deployments.
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-surface-dark p-6 shadow-card ring-1 ring-border-dark transition hover:bg-surface-dark/80">
+          <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-glow/20">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-cyan-glow">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+            </svg>
           </div>
-        </Card>
-        <Card client:load variant="primary" hoverable>
-          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
-            VRAM REQUIREMENT
+          <h3 class="mb-3 text-xl font-bold text-white">Minimal Resource Footprint</h3>
+          <p class="text-sm leading-relaxed text-text-dim">
+            Optimized for edge deployment with sub-1GB VRAM requirements. Runs smoothly on CPU-only systems for cost-effective evaluation.
+          </p>
+        </div>
+
+        <div class="rounded-2xl bg-surface-dark p-6 shadow-card ring-1 ring-border-dark transition hover:bg-surface-dark/80">
+          <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-primary">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+            </svg>
           </div>
-          <div class="text-2xl font-bold text-white">
-            &lt;1GB
-          </div>
-        </Card>
-        <Card client:load variant="primary" hoverable>
-          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
-            AVERAGE ACCURACY
-          </div>
-          <div class="text-2xl font-bold text-white">
-            ~82%
-          </div>
-        </Card>
-        <Card client:load variant="primary" hoverable>
-          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
-            LANGUAGE SUPPORT
-          </div>
-          <div class="text-2xl font-bold text-white">
-            Global / Multilingual
-          </div>
-        </Card>
+          <h3 class="mb-3 text-xl font-bold text-white">Full Taxonomy Support</h3>
+          <p class="text-sm leading-relaxed text-text-dim">
+            Supports the complete 150+ tag OTA taxonomy tree. Evaluate classification capabilities across all categories before committing to production.
+          </p>
+        </div>
       </div>
 
-      <!-- Note Section -->
-      <div class="bg-surface-dark border border-border-dark rounded-3xl p-12 text-center mb-20">
-        <h2 class="text-3xl font-bold text-white mb-4">
-          Lightweight & Privacy-First
+      <!-- Comparison Section -->
+      <div class="relative mb-24 overflow-hidden rounded-3xl bg-surface-dark p-8 shadow-card ring-1 ring-border-dark">
+        <div class="absolute -bottom-20 -left-20 h-96 w-96 bg-cyan-glow/10 blur-[100px]"></div>
+
+        <h2 class="relative z-10 mb-12 text-center text-4xl font-black text-white">
+          LITE FREE VS LITE PRO
         </h2>
-        <p class="text-text-dim text-lg max-w-2xl mx-auto">
-          Lite Free runs entirely on-premise with minimal resource requirements, making it ideal for 
-          edge deployments, evaluation environments, and privacy-sensitive use cases.
-        </p>
+
+        <div class="relative z-10">
+          <div class="mb-6 grid grid-cols-3 gap-6 border-b border-surface-lighter pb-6">
+            <div class="text-sm font-bold uppercase tracking-wider text-text-dim"></div>
+            <div class="text-center">
+              <div class="text-lg font-bold text-success">Lite Free</div>
+              <div class="mt-1 text-xs text-text-dim">Evaluation</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-bold text-primary">Lite Pro</div>
+              <div class="mt-1 text-xs text-primary-light">Production</div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
+              <div class="text-sm font-medium text-white">Model Size</div>
+              <div class="text-center text-sm font-medium text-white">0.5B Parameters</div>
+              <div class="text-center text-sm text-text-dim">4.2B Parameters</div>
+            </div>
+            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
+              <div class="text-sm font-medium text-white">Tag Taxonomy</div>
+              <div class="text-center text-sm font-medium text-white">150+ Tags</div>
+              <div class="text-center text-sm text-text-dim">150+ Tags</div>
+            </div>
+            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
+              <div class="text-sm font-medium text-white">Expected Accuracy</div>
+              <div class="text-center text-sm font-medium text-white">~82%</div>
+              <div class="text-center text-sm text-text-dim">~90%</div>
+            </div>
+            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
+              <div class="text-sm font-medium text-white">Inference Speed</div>
+              <div class="text-center text-sm font-medium text-white">~300ms</div>
+              <div class="text-center text-sm text-text-dim">&lt; 150ms</div>
+            </div>
+            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
+              <div class="text-sm font-medium text-white">Hardware Requirements</div>
+              <div class="text-center text-sm font-medium text-white">8GB RAM, CPU-only</div>
+              <div class="text-center text-sm text-text-dim">16GB RAM, GPU recommended</div>
+            </div>
+            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
+              <div class="text-sm font-medium text-white">Use Case</div>
+              <div class="text-center text-sm font-medium text-white">Testing &amp; PoC</div>
+              <div class="text-center text-sm text-text-dim">Production routing &amp; analytics</div>
+            </div>
+            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
+              <div class="text-sm font-medium text-white">Support &amp; Updates</div>
+              <div class="text-center text-sm font-medium text-white">Community</div>
+              <div class="text-center text-sm text-text-dim">Professional (Included)</div>
+            </div>
+            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
+              <div class="text-sm font-medium text-white">Price</div>
+              <div class="text-center text-sm font-medium text-white">0€</div>
+              <div class="text-center text-sm text-text-dim">2,500€ (one-time)</div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- CTA Section -->
+      <section class="bg-gradient-to-br from-success/10 to-cyan-glow/5 border border-success/20 rounded-3xl p-12 text-center">
+        <h2 class="text-4xl font-black text-white mb-4">
+          Start Evaluating Today
+        </h2>
+        <p class="text-text-dim text-lg mb-8 max-w-2xl mx-auto">
+          Download Lite Free and experience the power of on-premise ticket classification. 
+          No commitment, no cloud dependencies, no cost.
+        </p>
+        <div class="flex flex-wrap justify-center gap-6">
+          <Button variant="primary" size="lg" class="uppercase tracking-widest" client:load>
+            Download Now
+          </Button>
+          <Button variant="outline" size="lg" client:load>
+            Compare All Models
+          </Button>
+        </div>
+      </section>
     </div>
   </div>
 </BaseLayout>
