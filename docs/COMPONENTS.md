@@ -82,12 +82,3 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
    borderless' | 'glassy' | 'compact'), `striped`, `dense`, `width` ('stretch' | 'auto' | 'full'),
    `hoverEffect`, `radius` (Radius), `elevation` (Elevation). Slots: default (rows). Story:
    `stories/Table.stories.ts`.
-
-### core/transitions
-
-- **UiTransitionFade.vue** — Fade transition wrapper. Props: `as`, `appear`, `duration`. Slots:
-   default (content). Story: `stories/Transitions.stories.ts`.
-- **UiTransitionFadeScale.vue** — Fade + scale transition wrapper. Props: `as`, `appear`,
-   `strength`. Slots: default (content). Story: `stories/Transitions.stories.ts`.
-- **UiTransitionSlide.vue** — Slide transition wrapper. Props: `as`, `appear`, `direction`. Slots:
-   default (content). Story: `stories/Transitions.stories.ts`.
