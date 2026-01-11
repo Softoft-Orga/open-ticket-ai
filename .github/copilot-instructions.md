@@ -53,6 +53,43 @@ changing before making edits and follow the rules for that surface specifically.
 - **Design System**: Use theme tokens (`primary`, `primary-dark`, etc.) and gradient utilities (`bg-cyber-gradient`). Avoid ad-hoc hex codes. Global typography in `docs/src/styles/global.css`.
 - **Theme**: Deep purple/cyan glow, glassy surfaces, neon accents (mirrors `open-ticket-ai-platform-prototype`).
 
+### Image Handling
+- **Image storage locations**:
+  - **Local assets**: Store in `docs/src/assets/` for imported images that need optimization
+  - **Public images**: Store in `docs/public/assets/` or `docs/public/images/` for static images served as-is
+  - **Subdirectories**: Organize by category (e.g., `public/assets/`, `public/images/`, `public/icons/`)
+- **Image optimization**: Configured in `docs/astro.config.mjs` using Sharp service
+  - Automatically optimizes images from `src/` directory
+  - Authorized domains: `astro.build`, `doc.otobo.org`, `softoft.sirv.com`
+  - Remote patterns allowed: `**.githubusercontent.com`, `**.sirv.com`
+- **Using the `<Image>` component** (from `astro:assets`):
+  - **For local images in `src/assets/`**: Import and use with `<Image>` component
+    ```astro
+    ---
+    import { Image } from 'astro:assets';
+    import myImage from '../assets/my-image.png';
+    ---
+    <Image src={myImage} alt="Description" />
+    ```
+  - **For public folder images**: Use path string with required width/height
+    ```astro
+    ---
+    import { Image } from 'astro:assets';
+    ---
+    <Image src="/assets/my-image.png" alt="Description" width="800" height="600" />
+    ```
+  - **For remote images**: Use full URL with required width/height
+    ```astro
+    ---
+    import { Image } from 'astro:assets';
+    ---
+    <Image src="https://example.com/image.jpg" alt="Description" width="800" height="600" />
+    ```
+  - **Always** include `alt` attribute for accessibility
+  - Local imported images auto-generate width/height; public/remote images require explicit dimensions
+  - The `<Image>` component automatically optimizes formats (WebP, AVIF) and sizes
+- **In Markdown/MDX content**: Use standard markdown syntax `![alt text](/images/file.png)` - Astro will optimize these automatically
+
 ### Component Guidelines
 - **Location**: Components in `docs/src/components/vue/**`. Stories in `docs/stories/**`.
 - **Documentation**: 
