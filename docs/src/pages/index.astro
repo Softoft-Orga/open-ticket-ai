@@ -1,146 +1,295 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Card from '../components/vue/core/basic/Card.vue';
 import Badge from '../components/vue/core/basic/Badge.vue';
 import Button from '../components/vue/core/basic/Button.vue';
 
 const pageTitle = 'Open Ticket AI - Automated Ticket Tagging, On-Premise';
+const pageDescription = 'Enterprise-grade ticket automation with AI-powered tagging. Process tickets locally with our on-premise solution—no cloud dependency, maximum data privacy.';
 
-// Get all services from content collection
-const allServices = await getCollection('services');
-const services = allServices
-  .filter(s => !s.data.hidden)
-  .map(s => ({
-    slug: s.data.slug,
-    title: s.data.title,
-    oneLiner: s.data.oneLiner,
-    description: s.data.description,
-    outcomes: s.data.outcomes,
-    startingPrice: s.data.startingPrice,
-    serviceGroup: s.data.serviceGroup,
-    serviceOrder: s.data.serviceOrder || 999
-  }))
-  .sort((a, b) => a.serviceOrder - b.serviceOrder)
-  .slice(0, 6);
-
-
-
-const features = [
+const taggingFeatures = [
   {
-    title: '100% On-Premise Execution',
-    description: 'Ticket data processed locally'
+    title: 'Real-Time Classification',
+    description: 'Instant ticket categorization as they arrive in your helpdesk',
+    icon: 'lightning'
   },
   {
-    title: 'Multi-language Support',
-    description: 'EN, DE, FR, etc.'
+    title: 'Hierarchical Taxonomies',
+    description: 'Complex nested tag structures with unlimited depth and customization',
+    icon: 'hierarchy'
   },
   {
-    title: 'Custom Hierarchical Taxonomies',
-    description: 'Handling complex nested tags and multiple languages with enterprise-grade precision'
+    title: 'Multi-Language Support',
+    description: 'Classify tickets in English, German, French, and more languages simultaneously',
+    icon: 'globe'
+  },
+  {
+    title: 'Backlog Processing',
+    description: 'Tag historical tickets in bulk to organize your entire ticket database',
+    icon: 'history'
+  },
+  {
+    title: 'Custom Training',
+    description: 'Train on your specific ticket patterns and terminology for superior accuracy',
+    icon: 'brain'
+  },
+  {
+    title: 'Quality Analytics',
+    description: 'Built-in confidence scoring and quality metrics for continuous improvement',
+    icon: 'chart'
   }
 ];
 
-const securityFeatures = [
-  'Ticket data processed locally',
-  'No external cloud required',
-  'Logging and access control supported'
-];
-
-const enterpriseFeatures = [
-  'On-premise / private cloud deployment',
-  'Multilingual tickets supported',
-  'Backlog tagging for historical tickets',
-  'Typical rollout: days to weeks'
+const privacyFeatures = [
+  {
+    title: 'Zero Cloud Dependency',
+    description: 'All ticket processing happens on your infrastructure—nothing leaves your network',
+    highlight: true
+  },
+  {
+    title: 'GDPR Compliant by Design',
+    description: 'Customer data stays within your jurisdiction, meeting strictest privacy regulations'
+  },
+  {
+    title: 'Air-Gap Compatible',
+    description: 'Works in completely isolated environments without internet access'
+  },
+  {
+    title: 'Full Audit Trail',
+    description: 'Complete logging and access control for compliance and security teams'
+  }
 ];
 ---
 
-<BaseLayout title={pageTitle}>
+<BaseLayout title={pageTitle} description={pageDescription}>
   <div slot="head" />
 
   <div class="w-full bg-background-dark text-white antialiased">
     <!-- Hero Section -->
-    <section class="relative w-full px-4 md:px-10 lg:px-20 xl:px-40 py-20 flex justify-center bg-glow-radial">
+    <section class="relative w-full px-4 md:px-10 lg:px-20 xl:px-40 py-20 md:py-28 flex justify-center bg-glow-radial">
       <div class="w-full max-w-7xl flex flex-col gap-12 items-center text-center">
-        <div class="flex items-center gap-2 w-fit px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+        <div class="flex items-center gap-2 w-fit px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
           <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
           </span>
-          Tagging AI + classification engine, Open Ticket Automation + integration + workflow logic
+          On-Premise AI • Zero Cloud Dependency
         </div>
 
         <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight text-white max-w-5xl">
-          Automated Ticket Tagging. <br/>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">On-Premise.</span>
+          Enterprise Ticket Automation.<br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">100% On Your Infrastructure.</span>
         </h1>
 
-        <p class="text-text-dim text-xl leading-relaxed max-w-3xl">
-          Tagging AI classifies tickets in real time. Open Ticket Automation integrates with your helpdesk and drives workflows without sending ticket data to the cloud.
+        <p class="text-text-dim text-xl md:text-2xl leading-relaxed max-w-4xl">
+          We provide AI-powered ticket tagging and workflow automation that runs entirely on-premise. Your ticket data never leaves your network—keeping you in control and compliant.
         </p>
 
         <div class="flex flex-wrap gap-4 pt-4 justify-center">
-          <Button variant="solid" tone="primary" size="lg" client:load>
-            Get Demo
+          <Button variant="solid" tone="primary" size="lg" href="/docs/" client:load>
+            Explore Documentation
           </Button>
-          <Button variant="outline" tone="primary" size="lg" client:load>
-            Contact Sales
+          <Button variant="outline" tone="primary" size="lg" href="/services/" client:load>
+            View Services
           </Button>
         </div>
       </div>
     </section>
 
+    <!-- Company Overview Section -->
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-20 bg-background-dark">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <Badge variant="soft" tone="primary" size="md" client:load>
+            Who We Are
+          </Badge>
+          <h2 class="font-display text-4xl md:text-5xl font-bold text-white mt-6 mb-6">
+            Built for Teams That Value Privacy
+          </h2>
+          <p class="text-text-dim text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+            We specialize in on-premise AI solutions for helpdesk automation. Our mission is to bring enterprise-grade ticket intelligence without compromising data sovereignty.
+          </p>
+        </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Card variant="surface" size="md" hoverable client:load>
+            <div slot="default" class="text-center py-4">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/20 flex items-center justify-center">
+                <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3">Privacy First</h3>
+              <p class="text-text-dim leading-relaxed">
+                No external cloud services. All processing happens on your servers, ensuring complete data privacy and regulatory compliance.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="surface" size="md" hoverable client:load>
+            <div slot="default" class="text-center py-4">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-secondary/20 flex items-center justify-center">
+                <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3">Fast Deployment</h3>
+              <p class="text-text-dim leading-relaxed">
+                Go from installation to production in days, not months. Our streamlined deployment process gets you tagging tickets quickly.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="surface" size="md" hoverable client:load>
+            <div slot="default" class="text-center py-4">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-success/20 flex items-center justify-center">
+                <svg class="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-3">Enterprise Ready</h3>
+              <p class="text-text-dim leading-relaxed">
+                Built for large-scale operations with support for multi-language tickets, complex workflows, and high-volume processing.
+              </p>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </section>
 
     <!-- Tagging AI Feature Showcase -->
-    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-background-dark">
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-surface-dark/30">
       <div class="w-full max-w-7xl mx-auto">
-        <Card variant="surface" size="lg" hoverable client:load class="relative overflow-hidden">
-          <div slot="default" class="flex flex-col lg:flex-row gap-16 items-center">
-            <div class="absolute -right-20 -top-20 w-96 h-96 bg-secondary/10 rounded-full blur-[100px]" />
+        <div class="text-center mb-16">
+          <Badge variant="solid" tone="primary" size="md" client:load>
+            Core Technology
+          </Badge>
+          <h2 class="font-display text-4xl md:text-5xl font-bold text-white mt-6 mb-6">
+            Tagging AI: Smart Classification at Scale
+          </h2>
+          <p class="text-text-dim text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+            Our flagship AI engine automatically categorizes support tickets with enterprise-grade accuracy. Built for complex taxonomies and multi-language environments.
+          </p>
+        </div>
 
-            <!-- Image/Visual Side -->
-            <div class="w-full lg:w-1/2 order-2 lg:order-1 z-10">
-              <div class="relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-1000" />
-                <div class="relative w-full aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center rounded-xl">
-                  <svg class="w-24 h-24 text-primary/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                  </svg>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {taggingFeatures.map((feature) => (
+            <Card variant="surface" size="md" hoverable client:load>
+              <div slot="default" class="flex flex-col gap-4">
+                <div class="flex items-start gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+                    <div class="w-6 h-6 rounded-full bg-primary"></div>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-lg font-bold text-white mb-2">{feature.title}</h3>
+                    <p class="text-text-dim text-sm leading-relaxed">{feature.description}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Card>
+          ))}
+        </div>
 
-            <!-- Content Side -->
-            <div class="w-full lg:w-1/2 flex flex-col gap-6 order-1 lg:order-2 z-10">
-              <Badge variant="solid" tone="primary" size="sm" client:load>
-                Core Engine
-              </Badge>
+        <div class="mt-12 text-center">
+          <Button variant="outline" tone="primary" size="lg" href="/docs/ticket-tagging/" client:load>
+            Learn More About Tagging AI
+          </Button>
+        </div>
+      </div>
+    </section>
 
-              <h2 class="font-display text-4xl font-bold text-white leading-tight">
-                Tagging AI
-              </h2>
+    <!-- Data Privacy & On-Premise Advantage -->
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-background-dark">
+      <div class="w-full max-w-7xl mx-auto">
+        <Card variant="surface" size="lg" client:load class="relative overflow-hidden">
+          <div slot="default" class="relative z-10">
+            <div class="absolute -right-32 -top-32 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
+            <div class="absolute -left-32 -bottom-32 w-96 h-96 bg-secondary/10 rounded-full blur-[120px]" />
+            
+            <div class="relative flex flex-col lg:flex-row gap-12 items-center">
+              <!-- Content Side -->
+              <div class="w-full lg:w-1/2 flex flex-col gap-6">
+                <Badge variant="solid" tone="success" size="md" client:load>
+                  Our Competitive Edge
+                </Badge>
 
-              <p class="text-text-dim text-xl leading-relaxed">
-                Hierarchical, multilingual ticket classification that stays on your server.
-              </p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-white leading-tight">
+                  On-Premise:<br/>Maximum Privacy, Zero Compromise
+                </h2>
 
-              <div class="flex flex-col gap-3 mt-4">
-                {features.map((feature) => (
-                  <div class="flex items-start gap-3 hover:translate-x-1 transition-transform duration-200">
-                    <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                      <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                      </svg>
+                <p class="text-text-dim text-lg leading-relaxed">
+                  Unlike cloud-based competitors, we bring AI directly to your infrastructure. This isn't just a deployment option—it's our core philosophy and what sets us apart.
+                </p>
+
+                <div class="flex flex-col gap-4 mt-4">
+                  {privacyFeatures.map((feature) => (
+                    <div class={`p-4 rounded-xl ${feature.highlight ? 'bg-success/10 border-2 border-success/30' : 'bg-surface-lighter/50'}`}>
+                      <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-success/20 flex items-center justify-center flex-shrink-0 mt-1">
+                          <svg class="w-4 h-4 text-success" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                          </svg>
+                        </div>
+                        <div class="flex-1">
+                          <h3 class="text-white font-bold mb-1">{feature.title}</h3>
+                          <p class="text-text-dim text-sm leading-relaxed">{feature.description}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div class="flex flex-col gap-1">
-                      <span class="text-white font-semibold">{feature.title}</span>
-                      {feature.description && (
-                        <span class="text-text-dim text-sm">{feature.description}</span>
-                      )}
+                  ))}
+                </div>
+              </div>
+
+              <!-- Visual Side -->
+              <div class="w-full lg:w-1/2">
+                <div class="relative group">
+                  <div class="absolute -inset-2 bg-gradient-to-r from-success to-primary rounded-2xl blur-lg opacity-20 group-hover:opacity-30 transition duration-1000" />
+                  <div class="relative p-8 bg-gradient-to-br from-surface-lighter to-surface-dark rounded-2xl border border-border-dark">
+                    <div class="flex flex-col gap-6">
+                      <div class="flex items-center gap-4 p-4 bg-success/10 rounded-xl border border-success/20">
+                        <svg class="w-12 h-12 text-success flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                        </svg>
+                        <div>
+                          <div class="text-white font-bold">Your Infrastructure</div>
+                          <div class="text-text-dim text-sm">Complete control & privacy</div>
+                        </div>
+                      </div>
+                      
+                      <div class="flex justify-center">
+                        <svg class="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                      </div>
+
+                      <div class="flex items-center gap-4 p-4 bg-primary/10 rounded-xl border border-primary/20">
+                        <svg class="w-12 h-12 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        <div>
+                          <div class="text-white font-bold">Tagging AI Processing</div>
+                          <div class="text-text-dim text-sm">All local, zero cloud calls</div>
+                        </div>
+                      </div>
+
+                      <div class="flex justify-center">
+                        <svg class="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                      </div>
+
+                      <div class="flex items-center gap-4 p-4 bg-secondary/10 rounded-xl border border-secondary/20">
+                        <svg class="w-12 h-12 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                        <div>
+                          <div class="text-white font-bold">Tagged Tickets</div>
+                          <div class="text-text-dim text-sm">Ready for automation</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                ))}
+                </div>
               </div>
             </div>
           </div>
@@ -148,104 +297,96 @@ const enterpriseFeatures = [
       </div>
     </section>
 
-    <!-- Services Grid -->
-    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-background-dark">
+    <!-- Services Preview Section -->
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-surface-dark/30">
       <div class="w-full max-w-7xl mx-auto">
-        <div class="mb-16 text-center">
-          <h2 class="font-display text-4xl font-bold text-white mb-4">
-            Services that get you live fast
+        <div class="text-center mb-16">
+          <Badge variant="soft" tone="secondary" size="md" client:load>
+            Professional Services
+          </Badge>
+          <h2 class="font-display text-4xl md:text-5xl font-bold text-white mt-6 mb-6">
+            We Also Offer Implementation Services
           </h2>
-          <p class="text-text-dim text-lg">
-            Integration packages, automation setup, and custom development for your needs
+          <p class="text-text-dim text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+            From initial setup to custom integrations, our team helps you deploy and optimize Open Ticket AI for your specific needs.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => (
-            <Card variant="surface" size="md" hoverable client:load>
-              <div slot="header" class="flex items-start justify-between gap-3">
-                <div>
-                  <h3 class="text-xl font-semibold text-text-1">{service.title}</h3>
-                  {service.oneLiner && <p class="text-text-2 text-sm mt-1">{service.oneLiner}</p>}
-                </div>
-                {service.serviceGroup && (
-                  <Badge variant="soft" tone="primary" size="sm" client:load>
-                    {service.serviceGroup}
-                  </Badge>
-                )}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <Card variant="outline" size="md" hoverable client:load>
+            <div slot="default" class="text-center py-6">
+              <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-primary/20 flex items-center justify-center">
+                <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
               </div>
+              <h3 class="text-lg font-bold text-white mb-2">Integration Packages</h3>
+              <p class="text-text-dim text-sm">
+                Connect with your existing helpdesk and IT infrastructure
+              </p>
+            </div>
+          </Card>
 
-              <div slot="default">
-                {service.description && <p class="text-text-2 text-sm leading-relaxed mb-4">{service.description}</p>}
-
-                {service.outcomes && service.outcomes.length > 0 && (
-                  <ul class="flex flex-col gap-2 text-sm text-text-2">
-                    {service.outcomes.map((item) => (
-                      <li class="flex items-start gap-2">
-                        <span class="mt-1 size-2 rounded-full bg-primary flex-shrink-0" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+          <Card variant="outline" size="md" hoverable client:load>
+            <div slot="default" class="text-center py-6">
+              <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-secondary/20 flex items-center justify-center">
+                <svg class="w-7 h-7 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
               </div>
+              <h3 class="text-lg font-bold text-white mb-2">Custom Configuration</h3>
+              <p class="text-text-dim text-sm">
+                Tailored taxonomy setup and workflow automation design
+              </p>
+            </div>
+          </Card>
 
-              <div slot="footer" class="flex items-center justify-between pt-4 border-t border-border-dark">
-                {typeof service.startingPrice === 'number' && service.startingPrice > 0 ? (
-                  <div class="text-sm text-text-2">
-                    Starting at <span class="text-text-1 font-semibold">${service.startingPrice.toLocaleString()}</span>
-                  </div>
-                ) : (
-                  <div class="text-sm text-text-2">Custom pricing</div>
-                )}
-                <Button variant="outline" tone="primary" size="sm" href="/services/" client:load>
-                  Learn more
-                </Button>
+          <Card variant="outline" size="md" hoverable client:load>
+            <div slot="default" class="text-center py-6">
+              <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-success/20 flex items-center justify-center">
+                <svg class="w-7 h-7 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
               </div>
-            </Card>
-          ))}
+              <h3 class="text-lg font-bold text-white mb-2">Training & Support</h3>
+              <p class="text-text-dim text-sm">
+                Team onboarding and ongoing technical assistance
+              </p>
+            </div>
+          </Card>
+        </div>
+
+        <div class="text-center">
+          <Button variant="outline" tone="secondary" size="lg" href="/services/" client:load>
+            View All Services
+          </Button>
         </div>
       </div>
     </section>
 
-    <!-- Security & Data Flow Section -->
-    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-surface-dark/30">
-      <div class="w-full max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <!-- Security & Data Flow -->
-          <Card variant="surface" size="md" client:load>
-            <h3 slot="title" class="text-2xl font-bold text-white">Security & Data Flow</h3>
-            <div slot="default" class="flex flex-col gap-3">
-              {securityFeatures.map((feature) => (
-                <div class="flex items-start gap-3">
-                  <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                    </svg>
-                  </div>
-                  <span class="text-text-1">{feature}</span>
-                </div>
-              ))}
+    <!-- CTA Section -->
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-background-dark">
+      <div class="w-full max-w-5xl mx-auto">
+        <Card variant="surface" size="lg" client:load class="relative overflow-hidden">
+          <div slot="default" class="relative z-10 text-center py-12">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10" />
+            
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-6 relative">
+              Ready to Keep Your Ticket Data Private?
+            </h2>
+            <p class="text-text-dim text-lg mb-8 max-w-2xl mx-auto relative">
+              Join organizations that trust on-premise AI for their helpdesk automation. Start with our documentation or talk to our team.
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center relative">
+              <Button variant="solid" tone="primary" size="lg" href="/docs/" client:load>
+                Read Documentation
+              </Button>
+              <Button variant="outline" tone="primary" size="lg" href="/services/" client:load>
+                Talk to Sales
+              </Button>
             </div>
-          </Card>
-
-          <!-- Built for Enterprise Helpdesks -->
-          <Card variant="surface" size="md" client:load>
-            <h3 slot="title" class="text-2xl font-bold text-white">Built for enterprise helpdesks</h3>
-            <div slot="default" class="flex flex-col gap-3">
-              {enterpriseFeatures.map((feature) => (
-                <div class="flex items-start gap-3">
-                  <div class="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <svg class="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                    </svg>
-                  </div>
-                  <span class="text-text-1">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+          </div>
+        </Card>
       </div>
     </section>
 
