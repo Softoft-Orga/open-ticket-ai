@@ -2,6 +2,8 @@
 
 Below is an inventory of Vue components in `docs/src/components/vue`, organized by folder. Each entry lists name, brief description, props, and slots. Descriptions are concise; adjust as implementations evolve.
 
+**For detailed component documentation**, including usage examples, prop types, and interactive demos, see the corresponding Storybook stories in `docs/stories/**/*.stories.ts`. View Storybook locally with `npm run storybook` or visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-storybook.netlify.app/).
+
 ## (root)
 - **ArchitectureOverview.vue** — High-level architecture diagram display. Props: _none_. Slots: _none_.
 - **PagefindSearch.vue** — Pagefind search box integration. Props: `placeholder`, `ariaLabel`. Slots: _none_.
