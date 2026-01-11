@@ -1,15 +1,5 @@
 <template>
-  <div
-    :class="[
-      cardClasses,
-      borderClass,
-      radiusClass,
-      elevationClass,
-      sizeClass,
-      'text-text-dim transition-all duration-200 motion-reduce:transition-none',
-      hoverable && 'hover:border-primary/50 hover:shadow-glow cursor-pointer'
-    ]"
-  >
+  <div :class="cardClasses">
     <div
       v-if="$slots.image"
       :class="['overflow-hidden -m-6 mb-0', imageRadiusClass]"
@@ -48,15 +38,15 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { Variant, Tone, Size, Radius, Elevation } from '../design-system/tokens'
+import { card, type CardVariants } from '../../../../design-system/recipes'
+import type { Tone, Size, Radius, Elevation } from '../../../../design-system/tokens'
 
 export interface CardProps {
   /**
    * Visual style variant from design system tokens
-   * When provided, overrides background prop with variant-specific styling
-   * @default 'primary'
+   * @default 'surface'
    */
-  variant?: Variant
+  variant?: 'surface' | 'outline' | 'subtle'
 
   /**
    * Semantic tone (status color)
@@ -71,13 +61,13 @@ export interface CardProps {
 
   /**
    * Border radius
-   * @default 'lg'
+   * @default 'xl'
    */
   radius?: Radius
 
   /**
    * Shadow elevation level
-   * @default 'sm'
+   * @default 'none'
    */
   elevation?: Elevation
 
@@ -86,114 +76,36 @@ export interface CardProps {
    * @default false
    */
   hoverable?: boolean
-
 }
 
 const props = withDefaults(defineProps<CardProps>(), {
-  variant: 'primary',
+  variant: 'surface',
   size: 'md',
-  radius: 'lg',
-  elevation: 'sm',
+  radius: 'xl',
+  elevation: 'none',
   hoverable: false,
 })
 
 const cardClasses = computed(() => {
-  // Tone takes precedence over variant for background
-  if (props.tone) {
-    switch (props.tone) {
-      case 'info':
-        return 'bg-info-faint'
-      case 'success':
-        return 'bg-success-dark/10'
-      case 'warning':
-        return 'bg-warning-dark/10'
-      case 'danger':
-        return 'bg-danger-dark/10'
-    }
-  }
-
-  // Variant-based backgrounds
-  switch (props.variant) {
-    case 'secondary':
-      return 'bg-surface-lighter'
-    case 'outline':
-      return 'bg-transparent'
-    case 'ghost':
-      return 'bg-surface-dark/50'
-    default: // primary
-      return 'bg-surface-dark'
-  }
-})
-
-const borderClass = computed(() => {
-  if (props.tone) {
-    switch (props.tone) {
-      case 'info':
-        return 'border border-info/30'
-      case 'success':
-        return 'border border-success/30'
-      case 'warning':
-        return 'border border-warning/30'
-      case 'danger':
-        return 'border border-danger/30'
-    }
-  }
-
-  if (props.variant === 'outline') {
-    return 'border-2 border-border-dark'
-  }
-
-  return 'border border-border-dark'
-})
-
-const radiusClass = computed(() => {
-  switch (props.radius) {
-    case 'md':
-      return 'rounded-md'
-    case 'xl':
-      return 'rounded-xl'
-    case '2xl':
-      return 'rounded-2xl'
-    default: // lg
-      return 'rounded-lg'
-  }
+  return card({
+    variant: props.variant,
+    tone: props.tone,
+    size: props.size,
+    radius: props.radius,
+    elevation: props.elevation,
+    hoverable: props.hoverable
+  })
 })
 
 const imageRadiusClass = computed(() => {
   // Image should match top radius of card
   switch (props.radius) {
-    case 'md':
-      return 'rounded-t-md'
-    case 'xl':
-      return 'rounded-t-xl'
+    case 'lg':
+      return 'rounded-t-lg'
     case '2xl':
       return 'rounded-t-2xl'
-    default: // lg
-      return 'rounded-t-lg'
-  }
-})
-
-const elevationClass = computed(() => {
-  switch (props.elevation) {
-    case 'none':
-      return ''
-    case 'md':
-      return 'shadow-lg'
-    case 'lg':
-      return 'shadow-xl'
-    default: // sm
-      return 'shadow'
-  }
-})
-
-const sizeClass = computed(() => {
-  switch (props.size) {
-    case 'sm':
-      return 'p-4'
-    case 'lg':
-      return 'p-8'
-    default: // md
-      return 'p-6'
+    default: // xl
+      return 'rounded-t-xl'
   }
 })
 

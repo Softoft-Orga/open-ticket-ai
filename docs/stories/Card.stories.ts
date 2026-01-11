@@ -1,7 +1,7 @@
 import Card from '../src/components/vue/core/basic/Card.vue'
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { VARIANTS, TONES, SIZES, RADII, ELEVATIONS } from '../src/components/vue/core/design-system/tokens'
+import { VARIANTS, TONES, SIZES, RADII, ELEVATIONS } from '../src/design-system/tokens'
 
 const meta: Meta<typeof Card> = {
     title: 'Core/Card',
@@ -52,7 +52,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
     },
     render: (args) => ({
@@ -66,7 +66,7 @@ export const Default: Story = {
 
 export const WithTitle: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
     },
     render: (args) => ({
@@ -87,7 +87,7 @@ export const WithTitle: Story = {
 
 export const WithHeader: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
     },
     render: (args) => ({
@@ -108,7 +108,7 @@ export const WithHeader: Story = {
 
 export const WithImage: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
     },
     render: (args) => ({
@@ -134,7 +134,7 @@ export const WithImage: Story = {
 
 export const WithActions: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
     },
     render: (args) => ({
@@ -165,7 +165,7 @@ export const WithActions: Story = {
 
 export const WithFooter: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
     },
     render: (args) => ({
@@ -186,7 +186,7 @@ export const WithFooter: Story = {
 
 export const FullSlots: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
     },
     render: (args) => ({
@@ -314,7 +314,7 @@ export const ToneDanger: Story = {
 // Size Stories
 export const SizeSmall: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'sm',
     },
     render: (args) => ({
@@ -333,7 +333,7 @@ export const SizeSmall: Story = {
 
 export const SizeMedium: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
     },
     render: (args) => ({
@@ -352,7 +352,7 @@ export const SizeMedium: Story = {
 
 export const SizeLarge: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'lg',
     },
     render: (args) => ({
@@ -372,7 +372,7 @@ export const SizeLarge: Story = {
 // Radius Stories
 export const RadiusMedium: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         radius: 'md',
     },
     render: (args) => ({
@@ -391,7 +391,7 @@ export const RadiusMedium: Story = {
 
 export const RadiusLarge: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         radius: 'lg',
     },
     render: (args) => ({
@@ -410,7 +410,7 @@ export const RadiusLarge: Story = {
 
 export const RadiusXLarge: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         radius: 'xl',
     },
     render: (args) => ({
@@ -429,7 +429,7 @@ export const RadiusXLarge: Story = {
 
 export const Radius2XLarge: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         radius: '2xl',
     },
     render: (args) => ({
@@ -449,7 +449,7 @@ export const Radius2XLarge: Story = {
 // Elevation Stories
 export const ElevationNone: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         elevation: 'none',
     },
     render: (args) => ({
@@ -468,7 +468,7 @@ export const ElevationNone: Story = {
 
 export const ElevationSmall: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         elevation: 'sm',
     },
     render: (args) => ({
@@ -487,7 +487,7 @@ export const ElevationSmall: Story = {
 
 export const ElevationMedium: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         elevation: 'md',
     },
     render: (args) => ({
@@ -506,7 +506,7 @@ export const ElevationMedium: Story = {
 
 export const ElevationLarge: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         elevation: 'lg',
     },
     render: (args) => ({
@@ -526,7 +526,7 @@ export const ElevationLarge: Story = {
 // Interactive
 export const Hoverable: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
         hoverable: true,
     },
@@ -547,7 +547,7 @@ export const Hoverable: Story = {
 // Complex Examples
 export const WithRichContent: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
         elevation: 'md',
     },
@@ -660,7 +660,7 @@ export const Grid: Story = {
 
 export const Playground: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
         size: 'md',
         radius: 'lg',
         elevation: 'sm',
@@ -684,9 +684,9 @@ export const Playground: Story = {
 }
 
 // Design System Variant Examples
-export const VariantPrimary: Story = {
+export const VariantSurface: Story = {
     args: {
-        variant: 'primary',
+        variant: 'surface',
     },
     render: (args) => ({
         components: {Card},
@@ -695,16 +695,16 @@ export const VariantPrimary: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>Primary Variant</template>
-                <p>Uses the primary design system variant with primary/10 background and primary/30 border.</p>
+                <template #title>Surface Variant</template>
+                <p>Uses the surface design system variant with surface-dark background and border.</p>
             </Card>
         `
     }),
 }
 
-export const VariantSecondary: Story = {
+export const VariantSubtle: Story = {
     args: {
-        variant: 'secondary',
+        variant: 'subtle',
     },
     render: (args) => ({
         components: {Card},
@@ -713,8 +713,8 @@ export const VariantSecondary: Story = {
         },
         template: `
             <Card v-bind="args">
-                <template #title>Secondary Variant</template>
-                <p>Uses the secondary design system variant with subtle dark background.</p>
+                <template #title>Subtle Variant</template>
+                <p>Uses the subtle design system variant with lighter surface background.</p>
             </Card>
         `
     }),
@@ -738,44 +738,22 @@ export const VariantOutline: Story = {
     }),
 }
 
-export const VariantGhost: Story = {
-    args: {
-        variant: 'ghost',
-    },
-    render: (args) => ({
-        components: {Card},
-        setup() {
-            return {args}
-        },
-        template: `
-            <Card v-bind="args">
-                <template #title>Ghost Variant</template>
-                <p>Uses the ghost design system variant with fully transparent background and border.</p>
-            </Card>
-        `
-    }),
-}
-
 export const AllDesignVariants: Story = {
     render: () => ({
         components: {Card},
         template: `
             <div class="grid gap-4 md:grid-cols-2 bg-background-dark p-6 rounded-lg">
-                <Card variant="primary" hoverable>
-                    <template #title>Primary</template>
-                    <p>Primary variant with emphasis</p>
+                <Card variant="surface" hoverable>
+                    <template #title>Surface</template>
+                    <p>Surface variant - default style</p>
                 </Card>
-                <Card variant="secondary" hoverable>
-                    <template #title>Secondary</template>
-                    <p>Secondary variant - default style</p>
+                <Card variant="subtle" hoverable>
+                    <template #title>Subtle</template>
+                    <p>Subtle variant with lighter background</p>
                 </Card>
                 <Card variant="outline" hoverable>
                     <template #title>Outline</template>
                     <p>Outline variant - minimal style</p>
-                </Card>
-                <Card variant="ghost" hoverable>
-                    <template #title>Ghost</template>
-                    <p>Ghost variant - transparent</p>
                 </Card>
             </div>
         `
