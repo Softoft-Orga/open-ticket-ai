@@ -6,15 +6,6 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 
 ## (root)
 
-## blog
-- **ArticleCard.vue** — Blog article card with title, meta, and excerpt. Props: `title`, `description`, `readingTime`, `publishedAt`, `author`, `tags`, `slug`. Slots: _none_.
-- **AuthorBio.vue** — Author bio block with avatar and socials. Props: `author`, `avatar`, `role`, `website`, `twitter`, `linkedin`, `github`, `dribbble`. Slots: default (bio content).
-- **ReadingTime.vue** — Displays estimated reading time. Props: `minutes`. Slots: _none_.
-- **RelatedPosts.vue** — Grid of related posts. Props: `posts`. Slots: _none_.
-- **ShareButtons.vue** — Social share buttons. Props: `url`, `title`. Slots: _none_.
-- **TagFilter.vue** — Filter pill list for tags. Props: `tags`, `activeTags`, `title`. Slots: _none_.
-- **TopicLink.vue** — Link styled for topics. Props: `label`, `href`. Slots: _none_.
-
 ## configExamples
 - **ExamplePage.vue** — Renders a full example page. Props: `example` (ExampleMeta), `renderTOC` (bool). Slots: default (example content).
 - **ExamplesGallery.vue** — Gallery view of examples. Props: `examples` (ExampleMeta[]), `linkBase`. Slots: _none_.

@@ -1,10 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import TopicLink from '../components/vue/blog/TopicLink.vue';
-import ArticleCard from '../components/vue/blog/ArticleCard.vue';
 import Button from '../components/vue/core/basic/Button.vue';
-import { ArrowRightIcon, CalendarIcon, MagnifyingGlassIcon, EnvelopeIcon } from '@heroicons/vue/24/outline';
+import { ArrowRightIcon, CalendarIcon, MagnifyingGlassIcon, EnvelopeIcon, Squares2X2Icon, RocketLaunchIcon, CodeBracketIcon, LightBulbIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
 
 const pageTitle = "Open Ticket AI Blog";
 const pageDescription = "Latest updates, insights, and news about Open Ticket AI and autonomous support automation.";
@@ -107,11 +105,39 @@ const getBlogUrl = (id: string) => {
           <div>
             <h3 class="mb-6 font-display text-sm font-bold uppercase tracking-wider text-gray-400">Explore Topics</h3>
             <nav class="space-y-2">
-              <TopicLink client:load icon="grid_view" label="All Posts" count={sortedBlogPosts.length} active />
-              <TopicLink client:load icon="rocket_launch" label="Product Updates" />
-              <TopicLink client:load icon="code" label="Engineering" />
-              <TopicLink client:load icon="lightbulb" label="Use Cases" />
-              <TopicLink client:load icon="security" label="Security" />
+              <a href="#" class="group flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium transition-all bg-primary/20 text-primary-light border border-primary/30">
+                <div class="flex items-center gap-3">
+                  <Squares2X2Icon class="w-5 h-5" />
+                  <span>All Posts</span>
+                </div>
+                <span class="rounded-full px-2.5 py-0.5 text-xs font-bold bg-primary/30 text-primary-light">
+                  {sortedBlogPosts.length}
+                </span>
+              </a>
+              <a href="#" class="group flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium transition-all text-gray-400 hover:bg-surface-lighter hover:text-white border border-transparent">
+                <div class="flex items-center gap-3">
+                  <RocketLaunchIcon class="w-5 h-5" />
+                  <span>Product Updates</span>
+                </div>
+              </a>
+              <a href="#" class="group flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium transition-all text-gray-400 hover:bg-surface-lighter hover:text-white border border-transparent">
+                <div class="flex items-center gap-3">
+                  <CodeBracketIcon class="w-5 h-5" />
+                  <span>Engineering</span>
+                </div>
+              </a>
+              <a href="#" class="group flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium transition-all text-gray-400 hover:bg-surface-lighter hover:text-white border border-transparent">
+                <div class="flex items-center gap-3">
+                  <LightBulbIcon class="w-5 h-5" />
+                  <span>Use Cases</span>
+                </div>
+              </a>
+              <a href="#" class="group flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium transition-all text-gray-400 hover:bg-surface-lighter hover:text-white border border-transparent">
+                <div class="flex items-center gap-3">
+                  <ShieldCheckIcon class="w-5 h-5" />
+                  <span>Security</span>
+                </div>
+              </a>
             </nav>
           </div>
 
@@ -154,15 +180,37 @@ const getBlogUrl = (id: string) => {
 
           <div class="grid gap-8 md:grid-cols-2">
             {gridPosts.map((post, index) => (
-              <ArticleCard
-                client:load
-                category={post.data.category || 'Article'}
-                title={post.data.title}
-                date={formatDate(post.data.date)}
-                img={getPlaceholderImage(index + 1)}
-                desc={post.data.description || ''}
+              <a 
                 href={getBlogUrl(post.id)}
-              />
+                class="group block overflow-hidden rounded-2xl border border-surface-lighter bg-surface-dark transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-2xl"
+              >
+                <div class="relative aspect-[16/10] w-full overflow-hidden bg-surface-lighter">
+                  <img 
+                    src={getPlaceholderImage(index + 1)}
+                    alt={post.data.title}
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent" />
+                </div>
+                <div class="p-6">
+                  <div class="mb-3 flex items-center justify-between">
+                    <span class="inline-block rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-light bg-primary/10">
+                      {post.data.category || 'Article'}
+                    </span>
+                    <span class="flex items-center gap-1.5 text-xs text-text-dim">
+                      <CalendarIcon class="w-4 h-4" />
+                      {formatDate(post.data.date)}
+                    </span>
+                  </div>
+                  <h3 class="mb-3 font-display text-xl font-bold leading-snug text-white transition-colors group-hover:text-primary-light">
+                    {post.data.title}
+                  </h3>
+                  <p class="text-sm leading-relaxed text-gray-400">
+                    {post.data.description || ''}
+                  </p>
+                </div>
+              </a>
             ))}
           </div>
         </div>
