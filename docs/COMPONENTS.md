@@ -14,34 +14,36 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **MarkdownFromString.vue** — Renders markdown string. Props: `source`. Slots: _none_.
 
 ## core
-- **Alert.vue** — Alert banner with tone. Props: `title`, `tone` (`info` | `success` | `warning` | `danger`), `icon`. Slots: default (body).
+- **Alert.vue** — Alert/notification component using design-system alert() recipe. Props: `type` ('info' | 'success' | 'warning' | 'danger' | 'tip'), `variant` ('soft' | 'solid' | 'outline'), `title`, `hideIcon`. Slots: default (body), `footer`.
+
 - **HeadlessUiTailwindDemo.vue** — Demonstrates Headless UI ui-open/ui-closed classes. Props: _none_. Slots: _none_.
 - **LoadingComponent.vue** — Loading spinner/placeholder. Props: `label`. Slots: _none_.
 
 ### core/accordion
-- **Accordion.vue** — Accordion container. Props: `items` (array), `multiple` (bool). Slots: default (custom items).
-- **AccordionItem.vue** — Single accordion item. Props: `item`, `isOpen`, `disabled`. Slots: `title`, default (body).
+- **Accordion.vue** — Accordion container. Props: `items` (Item[] | optional), `variant` ('default' | 'ghost' | 'bordered' | 'gradient'), `multiple` (boolean, default false), `modelValue` (string[] | string | optional for controlled state). Emits: `update:modelValue`. Slots: `title` (custom title rendering for items mode, receives { item, index, open }), default (custom content rendering, receives { item, index, open }). Supports both items-based rendering and manual composition with AccordionItem children.
+- **AccordionItem.vue** — Single accordion item. Props: `id` (string, required), `title` (string, optional), `defaultOpen` (boolean), `variant` ('default' | 'ghost' | 'bordered' | 'gradient'), `disabled` (boolean). Slots: `title` (receives { open }), default (body, receives { open }).
 
 ### core/basic
-- **Badge.vue** — Pill badge. Props: `label`, `tone`, `size`, `icon`. Slots: default (custom content).
-- **Button.vue** — Styled button. Props: `label`, `variant`, `size`, `to`, `href`, `icon`, `block`, `loading`, `disabled`. Slots: default (button content).
-- **Card.vue** — Card container. Props: `title`, `description`, `icon`, `link`. Slots: default (content), `footer`.
+- **Badge.vue** — Badge/label component using design-system badge() recipe. Props: `variant` ('solid' | 'soft' | 'outline'), `tone` (Tone), `size` (Size). Slots: default (badge content).
+- **Button.vue** — Button component using design-system button() recipe. Props: `variant` ('solid' | 'outline' | 'ghost'), `tone` (Tone), `size` (Size), `radius` (Radius), `disabled`, `loading`, `block`, `to`, `href`. Slots: default (button content).
+- **Card.vue** — Card container using design-system card() recipe. Props: `variant` ('surface' | 'outline' | 'subtle'), `tone` (Tone), `size` (Size), `radius` (Radius), `elevation` (Elevation), `hoverable`. Slots: `image`, `header`, `title`, default (content), `actions`, `footer`.
 - **Link.vue** — Simple link component. Props: `to`. Slots: default (link text).
+- **Modal.vue** — Accessible modal dialog. Props: `open` (boolean), `title` (string), `tone` (`neutral` | `primary` | `success` | `warning` | `danger` | `info`), `size` (`sm` | `md` | `lg`), `closeOnOverlay` (boolean, default: true). Emits: `close`. Slots: default (body), `title` (custom header), `footer` (actions).
 - **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot scope).
 
 ### core/forms
-- **RadioGroup.vue** — Grouped radio options. Props: `modelValue`, `options`, `disabled`. Slots: default (option rendering via slot scope).
-- **RadioGroupOption.vue** — Single radio option. Props: `option`, `modelValue`, `disabled`. Slots: default (option label/body).
-- **SelectComponent.vue** — Styled select. Props: `modelValue`, `options`, `label`, `placeholder`, `error`. Slots: _none_.
+- **RadioGroup.vue** — Grouped radio options. Props: `modelValue`, `label`, `disabled`. Slots: `description`, default (RadioGroupOption children).
+- **RadioGroupOption.vue** — Single radio option with recipe-based styling. Props: `value`, `label`, `description`, `variant` (Variant), `tone` (Tone). Uses `card` and `focusRing` recipes for consistent styling. Slots: `label`, `description`.
+- **SelectComponent.vue** — Styled select using `input` recipe. Props: `modelValue`, `options`, `label`, `placeholder`, `disabled`, `error`, `size` ('sm' | 'md' | 'lg'). Slots: _none_.
 
 ### core/navigation
 - **FooterComponent.vue** — Footer navigation sections. Props: `sections`, `locale`. Slots: _none_.
 - **NavBar.vue** — Simplified top navigation bar with logo, links, and primary CTA. Props: `navItems` (array of {href, label}), `currentPath` (string), `ctaLabel` (string). Slots: _none_. Uses Headless UI Dialog for mobile menu.
 
 ### core/table
-- **C.vue** — Table cell wrapper. Props: `as` (tag), `align`, `width`. Slots: default (cell content).
-- **Row.vue** — Table row wrapper. Props: `as` (tag), `hoverable`. Slots: default (row content).
-- **Table.vue** — Table container. Props: `columns` (array), `striped`, `bordered`. Slots: default (rows), `header`.
+- **C.vue** — Table cell wrapper with minimal semantic classes. Props: `header` (bool), `align` ('left' | 'center' | 'right'). Uses Tailwind utilities for alignment and spacing. Slots: default (cell content).
+- **Row.vue** — Table row wrapper with recipe-based hover effects. Props: _none_. Uses Tailwind utilities for striped backgrounds and hover states. Slots: default (row content).
+- **Table.vue** — Table container using `card` recipe. Props: `variant` ('default' | 'bordered' | 'borderless' | 'glassy' | 'compact'), `striped`, `dense`, `width` ('stretch' | 'auto' | 'full'), `hoverEffect`, `radius` (Radius), `elevation` (Elevation). Slots: default (rows).
 
 ### core/transitions
 - **UiTransitionFade.vue** — Fade transition wrapper. Props: `as`, `appear`, `duration`. Slots: default (content).

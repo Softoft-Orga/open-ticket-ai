@@ -1,17 +1,20 @@
 import Button from '../src/components/vue/core/basic/Button.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { VARIANTS, SIZES, TONES, RADII, ELEVATIONS } from '../src/components/vue/core/design-system/tokens'
+import { SIZES, TONES, RADII } from '../src/design-system/tokens'
+
+const BUTTON_VARIANTS = ['solid', 'outline', 'ghost'] as const
 
 const meta: Meta<typeof Button> = {
     title: 'Core/Button',
     component: Button,
     argTypes: {
-        variant: {control: {type: 'select'}, options: VARIANTS},
+        variant: {control: {type: 'select'}, options: BUTTON_VARIANTS},
         size: {control: {type: 'select'}, options: SIZES},
         tone: {control: {type: 'select'}, options: [undefined, ...TONES]},
         radius: {control: {type: 'select'}, options: RADII},
-        elevation: {control: {type: 'select'}, options: ELEVATIONS},
-        disabled: {control: 'boolean'}
+        disabled: {control: 'boolean'},
+        loading: {control: 'boolean'},
+        block: {control: 'boolean'}
     },
     parameters: {
         backgrounds: {
@@ -34,18 +37,18 @@ export const Primary: Story = {
         },
         template: '<Button v-bind="args">Get Demo</Button>'
     }),
-    args: {variant: 'primary', size: 'md', radius: 'xl', elevation: 'none', disabled: false}
+    args: {variant: 'solid', tone: 'primary', size: 'md', radius: 'xl', disabled: false}
 }
 
-export const Secondary: Story = {
+export const Solid: Story = {
     render: (args) => ({
         components: {Button},
         setup() {
             return {args}
         },
-        template: '<Button v-bind="args">Get Lite Free</Button>'
+        template: '<Button v-bind="args">Solid Button</Button>'
     }),
-    args: {variant: 'secondary', size: 'md', radius: 'xl', elevation: 'none', disabled: false}
+    args: {variant: 'solid', tone: 'primary', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const Outline: Story = {
@@ -56,7 +59,7 @@ export const Outline: Story = {
         },
         template: '<Button v-bind="args">Contact Sales</Button>'
     }),
-    args: {variant: 'outline', size: 'md', radius: 'xl', elevation: 'none', disabled: false}
+    args: {variant: 'outline', tone: 'primary', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const Ghost: Story = {
@@ -67,7 +70,7 @@ export const Ghost: Story = {
         },
         template: '<Button v-bind="args">Learn More</Button>'
     }),
-    args: {variant: 'ghost', size: 'md', radius: 'xl', elevation: 'none', disabled: false}
+    args: {variant: 'ghost', tone: 'primary', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const SmallSize: Story = {
@@ -78,7 +81,7 @@ export const SmallSize: Story = {
         },
         template: '<Button v-bind="args">Small Button</Button>'
     }),
-    args: {variant: 'primary', size: 'sm', radius: 'xl', elevation: 'none', disabled: false}
+    args: {variant: 'solid', tone: 'primary', size: 'sm', radius: 'xl', disabled: false}
 }
 
 export const LargeSize: Story = {
@@ -89,7 +92,7 @@ export const LargeSize: Story = {
         },
         template: '<Button v-bind="args">Large Button</Button>'
     }),
-    args: {variant: 'primary', size: 'lg', radius: 'xl', elevation: 'none', disabled: false}
+    args: {variant: 'solid', tone: 'primary', size: 'lg', radius: 'xl', disabled: false}
 }
 
 export const Disabled: Story = {
@@ -100,7 +103,29 @@ export const Disabled: Story = {
         },
         template: '<Button v-bind="args">Disabled Button</Button>'
     }),
-    args: {variant: 'primary', size: 'md', radius: 'xl', elevation: 'none', disabled: true}
+    args: {variant: 'solid', tone: 'primary', size: 'md', radius: 'xl', disabled: true}
+}
+
+export const Loading: Story = {
+    render: (args) => ({
+        components: {Button},
+        setup() {
+            return {args}
+        },
+        template: '<Button v-bind="args">Loading...</Button>'
+    }),
+    args: {variant: 'solid', tone: 'primary', size: 'md', radius: 'xl', loading: true}
+}
+
+export const Block: Story = {
+    render: (args) => ({
+        components: {Button},
+        setup() {
+            return {args}
+        },
+        template: '<Button v-bind="args">Block Button</Button>'
+    }),
+    args: {variant: 'solid', tone: 'primary', size: 'md', radius: 'xl', block: true}
 }
 
 export const ToneInfo: Story = {
@@ -111,7 +136,7 @@ export const ToneInfo: Story = {
         },
         template: '<Button v-bind="args">Info Button</Button>'
     }),
-    args: {tone: 'info', size: 'md', radius: 'xl', elevation: 'none', disabled: false}
+    args: {variant: 'solid', tone: 'info', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const ToneSuccess: Story = {
@@ -122,7 +147,7 @@ export const ToneSuccess: Story = {
         },
         template: '<Button v-bind="args">Success Button</Button>'
     }),
-    args: {tone: 'success', size: 'md', radius: 'xl', elevation: 'none', disabled: false}
+    args: {variant: 'solid', tone: 'success', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const ToneWarning: Story = {
@@ -133,7 +158,7 @@ export const ToneWarning: Story = {
         },
         template: '<Button v-bind="args">Warning Button</Button>'
     }),
-    args: {tone: 'warning', size: 'md', radius: 'xl', elevation: 'none', disabled: false}
+    args: {variant: 'solid', tone: 'warning', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const ToneDanger: Story = {
@@ -144,29 +169,7 @@ export const ToneDanger: Story = {
         },
         template: '<Button v-bind="args">Danger Button</Button>'
     }),
-    args: {tone: 'danger', size: 'md', radius: 'xl', elevation: 'none', disabled: false}
-}
-
-export const WithElevation: Story = {
-    render: (args) => ({
-        components: {Button},
-        setup() {
-            return {args}
-        },
-        template: '<Button v-bind="args">Elevated Button</Button>'
-    }),
-    args: {variant: 'primary', size: 'md', radius: 'xl', elevation: 'lg', disabled: false}
-}
-
-export const CustomRadius: Story = {
-    render: (args) => ({
-        components: {Button},
-        setup() {
-            return {args}
-        },
-        template: '<Button v-bind="args">Rounded Button</Button>'
-    }),
-    args: {variant: 'primary', size: 'md', radius: '2xl', elevation: 'none', disabled: false}
+    args: {variant: 'solid', tone: 'danger', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const AllVariants: Story = {
@@ -175,37 +178,25 @@ export const AllVariants: Story = {
         template: `
             <div style="display: flex; flex-direction: column; gap: 1rem; padding: 2rem;">
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <Button variant="primary">Primary</Button>
-                    <Button variant="secondary">Secondary</Button>
-                    <Button variant="outline">Outline</Button>
-                    <Button variant="ghost">Ghost</Button>
+                    <Button variant="solid" tone="primary">Solid</Button>
+                    <Button variant="outline" tone="primary">Outline</Button>
+                    <Button variant="ghost" tone="primary">Ghost</Button>
                 </div>
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <Button tone="info">Info</Button>
-                    <Button tone="success">Success</Button>
-                    <Button tone="warning">Warning</Button>
-                    <Button tone="danger">Danger</Button>
+                    <Button variant="solid" tone="neutral">Neutral</Button>
+                    <Button variant="solid" tone="info">Info</Button>
+                    <Button variant="solid" tone="success">Success</Button>
+                    <Button variant="solid" tone="warning">Warning</Button>
+                    <Button variant="solid" tone="danger">Danger</Button>
                 </div>
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <Button variant="primary" size="sm">Small</Button>
-                    <Button variant="primary" size="md">Medium</Button>
-                    <Button variant="primary" size="lg">Large</Button>
+                    <Button variant="solid" tone="primary" size="sm">Small</Button>
+                    <Button variant="solid" tone="primary" size="md">Medium</Button>
+                    <Button variant="solid" tone="primary" size="lg">Large</Button>
                 </div>
                 <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <Button variant="primary" radius="md">MD Radius</Button>
-                    <Button variant="primary" radius="lg">LG Radius</Button>
-                    <Button variant="primary" radius="xl">XL Radius</Button>
-                    <Button variant="primary" radius="2xl">2XL Radius</Button>
-                </div>
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <Button variant="primary" elevation="none">No Shadow</Button>
-                    <Button variant="primary" elevation="sm">Small Shadow</Button>
-                    <Button variant="primary" elevation="md">Medium Shadow</Button>
-                    <Button variant="primary" elevation="lg">Large Shadow</Button>
-                </div>
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <Button variant="primary" disabled>Disabled</Button>
-                    <Button variant="outline" disabled>Disabled Outline</Button>
+                    <Button variant="solid" tone="primary" disabled>Disabled</Button>
+                    <Button variant="solid" tone="primary" loading>Loading</Button>
                 </div>
             </div>
         `

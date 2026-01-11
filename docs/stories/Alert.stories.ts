@@ -1,6 +1,8 @@
 import Alert from '../src/components/vue/core/basic/Alert.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
+const ALERT_VARIANTS = ['soft', 'solid', 'outline'] as const
+
 const meta: Meta<typeof Alert> = {
   title: 'Docs/Alert',
   component: Alert,
@@ -12,13 +14,13 @@ const meta: Meta<typeof Alert> = {
     },
     variant: {
       control: { type: 'select' },
-      options: ['default', 'inline']
+      options: ALERT_VARIANTS
     }
   },
   parameters: {
     docs: {
       description: {
-        component: 'Alert component for displaying important information, warnings, tips, and other messages in documentation. Supports default and inline variants, with optional footer slot.'
+        component: 'Alert component for displaying important information, warnings, tips, and other messages in documentation. Supports soft, solid, and outline variants, with optional footer slot.'
       }
     }
   }
@@ -37,7 +39,8 @@ export const Info: Story = {
   }),
   args: {
     type: 'info',
-    title: 'Information'
+    title: 'Information',
+    variant: 'soft'
   }
 }
 
@@ -51,7 +54,8 @@ export const Success: Story = {
   }),
   args: {
     type: 'success',
-    title: 'Success'
+    title: 'Success',
+    variant: 'soft'
   }
 }
 
@@ -65,7 +69,8 @@ export const Warning: Story = {
   }),
   args: {
     type: 'warning',
-    title: 'Warning'
+    title: 'Warning',
+    variant: 'soft'
   }
 }
 
@@ -79,7 +84,8 @@ export const Danger: Story = {
   }),
   args: {
     type: 'danger',
-    title: 'Danger'
+    title: 'Danger',
+    variant: 'soft'
   }
 }
 
@@ -93,7 +99,38 @@ export const Tip: Story = {
   }),
   args: {
     type: 'tip',
-    title: 'Pro Tip'
+    title: 'Pro Tip',
+    variant: 'soft'
+  }
+}
+
+export const SolidVariant: Story = {
+  render: (args) => ({
+    components: { Alert },
+    setup() {
+      return { args }
+    },
+    template: '<Alert v-bind="args">This is a solid alert with full background color.</Alert>'
+  }),
+  args: {
+    type: 'info',
+    title: 'Solid Style',
+    variant: 'solid'
+  }
+}
+
+export const OutlineVariant: Story = {
+  render: (args) => ({
+    components: { Alert },
+    setup() {
+      return { args }
+    },
+    template: '<Alert v-bind="args">This is an outline alert with transparent background.</Alert>'
+  }),
+  args: {
+    type: 'info',
+    title: 'Outline Style',
+    variant: 'outline'
   }
 }
 
@@ -107,7 +144,8 @@ export const WithoutIcon: Story = {
   }),
   args: {
     type: 'info',
-    hideIcon: true
+    hideIcon: true,
+    variant: 'soft'
   }
 }
 
@@ -120,7 +158,8 @@ export const WithoutTitle: Story = {
     template: '<Alert v-bind="args">This is an alert without a title, just the content.</Alert>'
   }),
   args: {
-    type: 'tip'
+    type: 'tip',
+    variant: 'soft'
   }
 }
 
@@ -144,7 +183,8 @@ export const LongContent: Story = {
   }),
   args: {
     type: 'info',
-    title: 'Detailed Information'
+    title: 'Detailed Information',
+    variant: 'soft'
   }
 }
 
@@ -168,97 +208,7 @@ export const WithFooter: Story = {
   }),
   args: {
     type: 'info',
-    title: 'Alert with Footer'
-  }
-}
-
-export const InlineVariant: Story = {
-  render: (args) => ({
-    components: { Alert },
-    setup() {
-      return { args }
-    },
-    template: '<Alert v-bind="args">This is a subtle inline alert without a border, perfect for less prominent notifications.</Alert>'
-  }),
-  args: {
-    type: 'tip',
-    variant: 'inline',
-    title: 'Inline Alert'
-  }
-}
-
-export const InlineSuccess: Story = {
-  render: (args) => ({
-    components: { Alert },
-    setup() {
-      return { args }
-    },
-    template: '<Alert v-bind="args">Configuration saved successfully!</Alert>'
-  }),
-  args: {
-    type: 'success',
-    variant: 'inline'
-  }
-}
-
-export const InlineWarning: Story = {
-  render: (args) => ({
-    components: { Alert },
-    setup() {
-      return { args }
-    },
-    template: '<Alert v-bind="args">This feature is deprecated and will be removed in the next version.</Alert>'
-  }),
-  args: {
-    type: 'warning',
-    variant: 'inline'
-  }
-}
-
-export const SuccessWithFooter: Story = {
-  render: (args) => ({
-    components: { Alert },
-    setup() {
-      return { args }
-    },
-    template: `
-      <Alert v-bind="args">
-        Your changes have been successfully saved and are now live.
-        <template #footer>
-          <div class="flex gap-3 text-sm">
-            <button class="text-success hover:text-success/80 font-medium">View changes</button>
-            <button class="text-gray-400 hover:text-gray-300">OK</button>
-          </div>
-        </template>
-      </Alert>
-    `
-  }),
-  args: {
-    type: 'success',
-    title: 'Changes Saved'
-  }
-}
-
-export const DangerWithFooter: Story = {
-  render: (args) => ({
-    components: { Alert },
-    setup() {
-      return { args }
-    },
-    template: `
-      <Alert v-bind="args">
-        This action will permanently delete all data and cannot be undone.
-        <template #footer>
-          <div class="flex gap-3 text-sm">
-            <button class="text-danger hover:text-danger/80 font-medium">Delete anyway</button>
-            <button class="text-gray-400 hover:text-gray-300">Cancel</button>
-          </div>
-        </template>
-      </Alert>
-    `
-  }),
-  args: {
-    type: 'danger',
-    title: 'Confirm Deletion'
+    title: 'Alert with Footer',
+    variant: 'soft'
   }
 }

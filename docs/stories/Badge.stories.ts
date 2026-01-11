@@ -1,34 +1,31 @@
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { TONES, SIZES, RADII, ELEVATIONS } from '../src/components/vue/core/design-system/tokens'
+import { TONES, SIZES } from '../src/design-system/tokens'
 
-// Badge supports brand colors (primary, secondary) plus semantic tones
-const BADGE_TYPES = ['primary', 'secondary', ...TONES] as const
+const BADGE_VARIANTS = ['solid', 'soft', 'outline'] as const
 
 const meta: Meta<typeof Badge> = {
     title: 'Core/Badge',
     component: Badge,
     argTypes: {
-        type: {control: {type: 'select'}, options: BADGE_TYPES},
+        variant: {control: {type: 'select'}, options: BADGE_VARIANTS},
+        tone: {control: {type: 'select'}, options: TONES},
         size: {control: {type: 'select'}, options: SIZES},
-        radius: {control: {type: 'select'}, options: RADII},
-        elevation: {control: {type: 'select'}, options: ELEVATIONS},
         default: {
             control: 'text',
             description: 'Badge text content (slot)'
         }
     },
     args: {
-        type: 'secondary',
-        size: 'md',
-        radius: 'xl',
-        elevation: 'sm'
+        variant: 'solid',
+        tone: 'primary',
+        size: 'md'
     },
     parameters: {
         layout: 'centered',
         docs: {
             description: {
-                component: 'Badge component for displaying status, labels, or categories with different color variants, sizes, border radius, and elevation levels.'
+                component: 'Badge component for displaying status, labels, or categories with different variants, tones, and sizes.'
             }
         }
     }
@@ -45,18 +42,7 @@ export const Primary: Story = {
         },
         template: '<Badge v-bind="args">Primary</Badge>'
     }),
-    args: {type: 'primary'}
-}
-
-export const Secondary: Story = {
-    render: (args) => ({
-        components: {Badge},
-        setup() {
-            return {args}
-        },
-        template: '<Badge v-bind="args">Secondary</Badge>'
-    }),
-    args: {type: 'secondary'}
+    args: {variant: 'solid', tone: 'primary'}
 }
 
 export const Info: Story = {
@@ -67,7 +53,7 @@ export const Info: Story = {
         },
         template: '<Badge v-bind="args">Info</Badge>'
     }),
-    args: {type: 'info'}
+    args: {variant: 'solid', tone: 'info'}
 }
 
 export const Success: Story = {
@@ -78,7 +64,7 @@ export const Success: Story = {
         },
         template: '<Badge v-bind="args">Success</Badge>'
     }),
-    args: {type: 'success'}
+    args: {variant: 'solid', tone: 'success'}
 }
 
 export const Warning: Story = {
@@ -89,7 +75,7 @@ export const Warning: Story = {
         },
         template: '<Badge v-bind="args">Warning</Badge>'
     }),
-    args: {type: 'warning'}
+    args: {variant: 'solid', tone: 'warning'}
 }
 
 export const Danger: Story = {
@@ -100,7 +86,23 @@ export const Danger: Story = {
         },
         template: '<Badge v-bind="args">Danger</Badge>'
     }),
-    args: {type: 'danger'}
+    args: {variant: 'solid', tone: 'danger'}
+}
+
+export const AllTones: Story = {
+    render: () => ({
+        components: {Badge},
+        template: `
+            <div class="flex flex-wrap items-center gap-3 rounded-xl bg-surface-dark p-4">
+                <Badge tone="neutral">Neutral</Badge>
+                <Badge tone="primary">Primary</Badge>
+                <Badge tone="info">Info</Badge>
+                <Badge tone="success">Success</Badge>
+                <Badge tone="warning">Warning</Badge>
+                <Badge tone="danger">Danger</Badge>
+            </div>
+        `
+    })
 }
 
 export const AllVariants: Story = {
@@ -108,12 +110,9 @@ export const AllVariants: Story = {
         components: {Badge},
         template: `
             <div class="flex flex-wrap items-center gap-3 rounded-xl bg-surface-dark p-4">
-                <Badge type="primary">Primary</Badge>
-                <Badge type="secondary">Secondary</Badge>
-                <Badge type="info">Info</Badge>
-                <Badge type="success">Success</Badge>
-                <Badge type="warning">Warning</Badge>
-                <Badge type="danger">Danger</Badge>
+                <Badge variant="solid" tone="primary">Solid</Badge>
+                <Badge variant="soft" tone="primary">Soft</Badge>
+                <Badge variant="outline" tone="primary">Outline</Badge>
             </div>
         `
     })
@@ -126,19 +125,19 @@ export const UseCases: Story = {
             <div class="space-y-4 rounded-xl bg-surface-dark p-4">
                 <div class="flex items-center gap-2">
                     <span class="text-sm text-text-dim">Status:</span>
-                    <Badge type="success">Active</Badge>
+                    <Badge tone="success">Active</Badge>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-sm text-text-dim">Priority:</span>
-                    <Badge type="danger">High</Badge>
+                    <Badge tone="danger">High</Badge>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-sm text-text-dim">Category:</span>
-                    <Badge type="primary">AI/ML</Badge>
+                    <Badge tone="primary">AI/ML</Badge>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-sm text-text-dim">Version:</span>
-                    <Badge type="secondary">v2.1.0</Badge>
+                    <Badge tone="neutral">v2.1.0</Badge>
                 </div>
             </div>
         `
@@ -150,54 +149,40 @@ export const Sizes: Story = {
         components: {Badge},
         template: `
             <div class="flex flex-wrap items-center gap-3 rounded-xl bg-surface-dark p-4">
-                <Badge type="primary" size="sm">Small</Badge>
-                <Badge type="primary" size="md">Medium</Badge>
-                <Badge type="primary" size="lg">Large</Badge>
+                <Badge tone="primary" size="sm">Small</Badge>
+                <Badge tone="primary" size="md">Medium</Badge>
             </div>
         `
     })
 }
 
-export const BorderRadius: Story = {
+export const SoftVariant: Story = {
     render: () => ({
         components: {Badge},
         template: `
             <div class="flex flex-wrap items-center gap-3 rounded-xl bg-surface-dark p-4">
-                <Badge type="success" radius="md">Medium Radius</Badge>
-                <Badge type="success" radius="lg">Large Radius</Badge>
-                <Badge type="success" radius="xl">XL Radius</Badge>
-                <Badge type="success" radius="2xl">2XL Radius</Badge>
+                <Badge variant="soft" tone="neutral">Neutral</Badge>
+                <Badge variant="soft" tone="primary">Primary</Badge>
+                <Badge variant="soft" tone="info">Info</Badge>
+                <Badge variant="soft" tone="success">Success</Badge>
+                <Badge variant="soft" tone="warning">Warning</Badge>
+                <Badge variant="soft" tone="danger">Danger</Badge>
             </div>
         `
     })
 }
 
-export const Elevations: Story = {
+export const OutlineVariant: Story = {
     render: () => ({
         components: {Badge},
         template: `
             <div class="flex flex-wrap items-center gap-3 rounded-xl bg-surface-dark p-4">
-                <Badge type="warning" elevation="none">No Shadow</Badge>
-                <Badge type="warning" elevation="sm">Small Shadow</Badge>
-                <Badge type="warning" elevation="md">Medium Shadow</Badge>
-                <Badge type="warning" elevation="lg">Large Shadow</Badge>
-            </div>
-        `
-    })
-}
-
-export const HoverEffects: Story = {
-    render: () => ({
-        components: {Badge},
-        template: `
-            <div class="flex flex-wrap items-center gap-3 rounded-xl bg-surface-dark p-4">
-                <p class="w-full text-sm text-text-dim mb-2">Hover over badges to see the subtle effect:</p>
-                <Badge type="primary">Primary Hover</Badge>
-                <Badge type="secondary">Secondary Hover</Badge>
-                <Badge type="info">Info Hover</Badge>
-                <Badge type="success">Success Hover</Badge>
-                <Badge type="warning">Warning Hover</Badge>
-                <Badge type="danger">Danger Hover</Badge>
+                <Badge variant="outline" tone="neutral">Neutral</Badge>
+                <Badge variant="outline" tone="primary">Primary</Badge>
+                <Badge variant="outline" tone="info">Info</Badge>
+                <Badge variant="outline" tone="success">Success</Badge>
+                <Badge variant="outline" tone="warning">Warning</Badge>
+                <Badge variant="outline" tone="danger">Danger</Badge>
             </div>
         `
     })

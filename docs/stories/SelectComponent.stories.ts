@@ -10,6 +10,8 @@ import SelectComponent from '../src/components/vue/core/forms/SelectComponent.vu
  * - Disabled options support
  * - Smooth slide-down transitions
  * - Placeholder and default value behavior
+ * - Error state with input recipe
+ * - Size variants (sm, md, lg)
  */
 const meta: Meta<typeof SelectComponent> = {
     title: 'Core/SelectComponent',
@@ -38,6 +40,15 @@ const meta: Meta<typeof SelectComponent> = {
             control: 'boolean',
             description: 'Disables the select input.',
         },
+        error: {
+            control: 'boolean',
+            description: 'Shows error state styling.',
+        },
+        size: {
+            control: 'select',
+            options: ['sm', 'md', 'lg'],
+            description: 'Size variant from input recipe.',
+        },
 
         // Event for v-model
         'update:modelValue': {
@@ -51,6 +62,8 @@ const meta: Meta<typeof SelectComponent> = {
         placeholder: 'Choose an option...',
         modelValue: null,
         disabled: false,
+        error: false,
+        size: 'md'
     },
 }
 
@@ -122,6 +135,18 @@ export const Disabled: Story = {
 }
 
 /**
+ * This story demonstrates error state styling using the input recipe.
+ */
+export const ErrorState: Story = {
+    ...Default,
+    args: {
+        ...Default.args,
+        label: 'Select with Error',
+        error: true,
+    },
+}
+
+/**
  * This story showcases options with disabled state.
  * The "Grape" option cannot be selected.
  */
@@ -138,5 +163,29 @@ export const WithDisabledOptions: Story = {
             {value: 'orange', label: 'Orange 🍊', disabled: true},
             {value: 'strawberry', label: 'Strawberry 🍓'},
         ],
+    },
+}
+
+/**
+ * Small size variant using input recipe.
+ */
+export const SmallSize: Story = {
+    ...Default,
+    args: {
+        ...Default.args,
+        label: 'Small Select',
+        size: 'sm',
+    },
+}
+
+/**
+ * Large size variant using input recipe.
+ */
+export const LargeSize: Story = {
+    ...Default,
+    args: {
+        ...Default.args,
+        label: 'Large Select',
+        size: 'lg',
     },
 }
