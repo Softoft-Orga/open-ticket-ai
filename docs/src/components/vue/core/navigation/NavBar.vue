@@ -93,28 +93,48 @@
                     </div>
                   </a>
                 </div>
-              </MenuItems>
-            </UiTransitionSlide>
-          </TransitionRoot>
-        </Menu>
+                </MenuItems>
+                </UiTransitionSlide>
+                </TransitionRoot>
+                </Menu>
+              </div>
+            </div>
+          </transition>
+        </div>
       </nav>
 
       <div class="hidden md:flex items-center gap-3">
-        <Button variant="secondary" size="sm">Contact Sales</Button>
-        <Button variant="primary" size="sm">See Demo</Button>
+        <Button
+          variant="secondary"
+          size="sm"
+        >
+          Contact Sales
+        </Button>
+        <Button
+          variant="primary"
+          size="sm"
+        >
+          See Demo
+        </Button>
       </div>
 
       <button
         class="md:hidden flex items-center justify-center p-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-lg"
-        @click="openMobileMenu"
         aria-label="Open menu"
+        @click="openMobileMenu"
       >
         <Bars3Icon class="h-6 w-6" />
       </button>
     </div>
 
-    <TransitionRoot :show="mobileMenuOpen" as="template">
-      <Dialog @close="closeMobileMenu" class="relative z-50 md:hidden">
+    <TransitionRoot
+      :show="mobileMenuOpen"
+      as="template"
+    >
+      <Dialog
+        class="relative z-50 md:hidden"
+        @close="closeMobileMenu"
+      >
         <UiTransitionFade>
           <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
         </UiTransitionFade>
@@ -123,11 +143,13 @@
           <UiTransitionSlide direction="right">
             <DialogPanel class="w-full max-w-sm h-full bg-background-dark border-l border-surface-lighter p-6 shadow-2xl">
               <div class="flex items-center justify-between mb-8">
-                <DialogTitle class="text-lg font-bold text-white">Menu</DialogTitle>
+                <DialogTitle class="text-lg font-bold text-white">
+                  Menu
+                </DialogTitle>
                 <button
-                  @click="closeMobileMenu"
                   class="p-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-lg"
                   aria-label="Close menu"
+                  @click="closeMobileMenu"
                 >
                   <XMarkIcon class="h-6 w-6" />
                 </button>
@@ -181,7 +203,10 @@
                           class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white bg-slate-900/60 border border-surface-lighter/60 hover:bg-surface-dark hover:border-surface-lighter transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                           @click="closeMobileMenu"
                         >
-                          <component :is="link.icon" class="h-5 w-5 text-cyan-glow" />
+                          <component
+                            :is="link.icon"
+                            class="h-5 w-5 text-cyan-glow"
+                          />
                           <div>
                             <p class="font-semibold">{{ link.label }}</p>
                             <p class="text-xs text-slate-400">{{ link.description }}</p>
@@ -193,8 +218,20 @@
                 </Disclosure>
 
                 <div class="mt-6 pt-6 border-t border-surface-lighter space-y-3">
-                  <Button variant="secondary" size="md" class="w-full">Contact Sales</Button>
-                  <Button variant="primary" size="md" class="w-full">See Demo</Button>
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    class="w-full"
+                  >
+                    Contact Sales
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="md"
+                    class="w-full"
+                  >
+                    See Demo
+                  </Button>
                 </div>
               </nav>
             </DialogPanel>
