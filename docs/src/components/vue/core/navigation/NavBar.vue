@@ -51,13 +51,19 @@
       as="template"
     >
       <div class="md:hidden">
-        <UiTransitionFade>
+        <TransitionChild
+          v-bind="fade"
+          as="template"
+        >
           <div
             class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm"
             @click="closeMobileMenu"
           />
-        </UiTransitionFade>
-        <UiTransitionSlide direction="right">
+        </TransitionChild>
+        <TransitionChild
+          v-bind="slideLeft"
+          as="template"
+        >
           <div class="fixed inset-y-0 right-0 flex w-full max-w-sm">
             <div class="h-full w-full border-l border-border-dark bg-surface-dark p-6 shadow-2xl">
               <div class="mb-8 flex items-center justify-between">
@@ -106,7 +112,7 @@
               </div>
             </div>
           </div>
-        </UiTransitionSlide>
+        </TransitionChild>
       </div>
     </TransitionRoot>
   </header>
@@ -115,10 +121,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { TransitionRoot } from '@headlessui/vue'
+import { TransitionRoot, TransitionChild } from '@headlessui/vue'
 import Button from '../basic/Button.vue'
-import UiTransitionFade from '../transitions/UiTransitionFade.vue'
-import UiTransitionSlide from '../transitions/UiTransitionSlide.vue'
+import { fade, slideLeft } from '../transitions/presets'
 
 type NavLink = { label: string; url: string }
 
