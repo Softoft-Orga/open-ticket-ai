@@ -9,8 +9,8 @@
         :alt="title" 
         class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         loading="lazy"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent"></div>
+      >
+      <div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent" />
     </div>
     <div class="p-6">
       <div class="mb-3 flex items-center justify-between">

@@ -1,19 +1,34 @@
 <template>
   <section class="pagefind-wrapper">
     <div class="pagefind-prompt">
-      <div aria-hidden="true" class="pagefind-icon">
+      <div
+        aria-hidden="true"
+        class="pagefind-icon"
+      >
         <MagnifyingGlassIcon class="w-5 h-5" />
       </div>
       <div class="pagefind-hint">
-        <p class="text-sm text-slate-400 font-semibold">Search documentation</p>
-        <p class="text-xs text-slate-500">Try “API keys”, “deployment”, or “YAML config”.</p>
+        <p class="text-sm text-slate-400 font-semibold">
+          Search documentation
+        </p>
+        <p class="text-xs text-slate-500">
+          Try “API keys”, “deployment”, or “YAML config”.
+        </p>
       </div>
       <span class="pagefind-shortcut">CMD ⌘ K</span>
     </div>
 
-    <div ref="searchContainer" class="pagefind-search" />
+    <div
+      ref="searchContainer"
+      class="pagefind-search"
+    />
 
-    <p v-if="error" class="pagefind-error">{{ error }}</p>
+    <p
+      v-if="error"
+      class="pagefind-error"
+    >
+      {{ error }}
+    </p>
   </section>
 </template>
 
@@ -22,7 +37,9 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 
 type PagefindGlobal = {
+  /* eslint-disable no-unused-vars */
   new: (config: { element: HTMLElement; showImages?: boolean; showSubResults?: boolean }) => { destroy?: () => void };
+  /* eslint-enable no-unused-vars */
 };
 
 type PagefindUIInstance = ReturnType<PagefindGlobal['new']> | null;

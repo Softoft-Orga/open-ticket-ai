@@ -12,7 +12,7 @@
           level === 3 ? 'bg-purple-400 ml-12' : '',
           level === 4 ? 'bg-pink-400 ml-16' : ''
         ]"
-      ></div>
+      />
       <span 
         class="font-mono text-sm"
         :class="active ? 'text-white font-bold' : 'text-text-dim'"

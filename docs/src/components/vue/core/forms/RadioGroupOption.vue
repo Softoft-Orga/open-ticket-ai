@@ -1,7 +1,7 @@
 <template>
   <RadioGroupOption 
-    :value="value" 
     v-slot="{ checked, disabled }" 
+    :value="value" 
     as="template"
   >
     <div
@@ -21,7 +21,10 @@
                 {{ label }}
               </slot>
             </div>
-            <div v-if="description || $slots.description" class="text-text-dim mt-1">
+            <div
+              v-if="description || $slots.description"
+              class="text-text-dim mt-1"
+            >
               <slot name="description">
                 {{ description }}
               </slot>
@@ -152,6 +155,8 @@ const checkedTextClass = computed(() => {
         return 'text-warning'
       case 'danger':
         return 'text-danger'
+      default:
+        break
     }
   }
   
@@ -163,6 +168,8 @@ const checkedTextClass = computed(() => {
       return 'text-primary-light'
     case 'ghost':
       return 'text-white'
+    default:
+      return 'text-primary-light'
   }
 })
 
@@ -177,6 +184,8 @@ const checkedRadioClasses = computed(() => {
         return 'border-warning text-warning'
       case 'danger':
         return 'border-danger text-danger'
+      default:
+        break
     }
   }
   
@@ -188,6 +197,8 @@ const checkedRadioClasses = computed(() => {
       return 'border-primary text-primary'
     case 'ghost':
       return 'border-white text-white'
+    default:
+      return 'border-primary text-primary'
   }
 })
 

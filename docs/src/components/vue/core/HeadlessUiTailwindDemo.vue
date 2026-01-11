@@ -3,7 +3,11 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 </script>
 
 <template>
-  <Disclosure v-slot="{ open }" as="div" class="w-[320px]">
+  <Disclosure
+    v-slot="{ open }"
+    as="div"
+    class="w-[320px]"
+  >
     <DisclosureButton
       class="flex w-full items-center justify-between rounded-xl bg-surface-lighter px-4 py-3 text-left text-white shadow-card ring-1 ring-border-dark transition ui-open:bg-primary ui-open:ring-primary-dark ui-open:shadow-neon-cyan hover:bg-surface-lighter/80 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background-dark"
     >

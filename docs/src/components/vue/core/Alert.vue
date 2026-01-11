@@ -1,15 +1,31 @@
 <template>
   <div :class="['rounded-xl p-4', containerClasses]">
     <div class="flex gap-3">
-      <div v-if="!hideIcon" class="flex-shrink-0 mt-0.5">
-        <component :is="iconComponent" :class="iconClasses" aria-hidden="true" />
+      <div
+        v-if="!hideIcon"
+        class="flex-shrink-0 mt-0.5"
+      >
+        <component
+          :is="iconComponent"
+          :class="iconClasses"
+          aria-hidden="true"
+        />
       </div>
       <div class="flex-1">
-        <h4 v-if="title" class="mb-1 font-semibold">{{ title }}</h4>
+        <h4
+          v-if="title"
+          class="mb-1 font-semibold"
+        >
+          {{ title }}
+        </h4>
         <div class="text-sm">
           <slot />
         </div>
-        <div v-if="$slots.footer" class="mt-3 pt-3 border-t" :class="footerBorderClasses">
+        <div
+          v-if="$slots.footer"
+          class="mt-3 pt-3 border-t"
+          :class="footerBorderClasses"
+        >
           <slot name="footer" />
         </div>
       </div>

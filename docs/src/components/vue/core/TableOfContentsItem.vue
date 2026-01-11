@@ -4,13 +4,13 @@
       <!-- Collapse button (only if collapsible and has children) -->
       <button
         v-if="collapsible && hasChildren"
-        @click="toggleExpanded"
         :class="[
           'flex-shrink-0 w-4 h-4 mr-1 mt-1.5 text-text-dim hover:text-primary transition-colors',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded'
         ]"
         :aria-expanded="isExpanded"
         type="button"
+        @click="toggleExpanded"
       >
         <svg
           :class="['w-full h-full transition-transform duration-200', isExpanded ? 'rotate-90' : '']"
@@ -18,17 +18,25 @@
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
         </svg>
       </button>
       <!-- Spacer when no collapse button -->
-      <span v-else-if="collapsible" class="flex-shrink-0 w-4 mr-1"></span>
+      <span
+        v-else-if="collapsible"
+        class="flex-shrink-0 w-4 mr-1"
+      />
       
       <!-- Link -->
       <a
         :href="`#${item.id}`"
-        @click.prevent="handleNavigate"
         :class="linkClasses"
+        @click.prevent="handleNavigate"
       >
         {{ item.text }}
       </a>
@@ -74,9 +82,11 @@ interface Props {
 
 const props = defineProps<Props>()
 
+/* eslint-disable no-unused-vars */
 const emit = defineEmits<{
   (e: 'navigate', id: string): void
 }>()
+/* eslint-enable no-unused-vars */
 
 const isExpanded = ref(true)
 

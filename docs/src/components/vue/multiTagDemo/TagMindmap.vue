@@ -88,7 +88,10 @@ onBeforeUnmount(() => {
       {{ error }}
     </div>
 
-    <div v-else class="flex flex-col gap-4">
+    <div
+      v-else
+      class="flex flex-col gap-4"
+    >
       <div class="rounded-2xl border border-slate-700 bg-slate-900/70 p-4 text-sm text-slate-100 shadow">
         <div class="mb-2 text-sm font-semibold text-slate-50">
           How to explore

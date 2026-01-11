@@ -1,6 +1,8 @@
 <template>
   <nav class="sticky top-20 space-y-2">
-    <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-text-dim">On This Page</h3>
+    <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-text-dim">
+      On This Page
+    </h3>
     <ul :class="['space-y-1', showLine && 'border-l-2 border-border-dark']">
       <TableOfContentsItem
         v-for="item in treeStructure"

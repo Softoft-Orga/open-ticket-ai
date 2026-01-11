@@ -15,52 +15,96 @@
           Small-footprint classification. Optimized for edge deployment and privacy-focused evaluation. 
           Supports the full OTA taxonomy tree.
         </p>
-        <Button variant="secondary" size="lg">
+        <Button
+          variant="secondary"
+          size="lg"
+        >
           DOWNLOAD CONTAINER
         </Button>
       </div>
 
       <!-- Performance Metrics -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-        <Card background="surface-dark" padding="default" hoverable>
-          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">MODEL SIZE</div>
-          <div class="text-2xl font-bold text-white">500M Params</div>
+        <Card
+          background="surface-dark"
+          padding="default"
+          hoverable
+        >
+          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
+            MODEL SIZE
+          </div>
+          <div class="text-2xl font-bold text-white">
+            500M Params
+          </div>
         </Card>
-        <Card background="surface-dark" padding="default" hoverable>
-          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">VRAM REQUIREMENT</div>
-          <div class="text-2xl font-bold text-white"><1GB</div>
+        <Card
+          background="surface-dark"
+          padding="default"
+          hoverable
+        >
+          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
+            VRAM REQUIREMENT
+          </div>
+          <div class="text-2xl font-bold text-white">
+            &lt;1GB
+          </div>
         </Card>
-        <Card background="surface-dark" padding="default" hoverable>
-          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">AVERAGE ACCURACY</div>
-          <div class="text-2xl font-bold text-white">~82%</div>
+        <Card
+          background="surface-dark"
+          padding="default"
+          hoverable
+        >
+          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
+            AVERAGE ACCURACY
+          </div>
+          <div class="text-2xl font-bold text-white">
+            ~82%
+          </div>
         </Card>
-        <Card background="surface-dark" padding="default" hoverable>
-          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">LANGUAGE SUPPORT</div>
-          <div class="text-2xl font-bold text-white">Global / Multilingual</div>
+        <Card
+          background="surface-dark"
+          padding="default"
+          hoverable
+        >
+          <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
+            LANGUAGE SUPPORT
+          </div>
+          <div class="text-2xl font-bold text-white">
+            Global / Multilingual
+          </div>
         </Card>
       </div>
 
       <!-- Interactive Tags Tree Section -->
       <div class="mb-20">
         <div class="text-center mb-12">
-          <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">INTERACTIVE TAGS TREE</h2>
-          <p class="text-text-dim text-lg italic">example predictions - full model deployment coming soon</p>
+          <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            INTERACTIVE TAGS TREE
+          </h2>
+          <p class="text-text-dim text-lg italic">
+            example predictions - full model deployment coming soon
+          </p>
         </div>
 
         <div class="grid lg:grid-cols-3 gap-8">
           <!-- Test Examples Sidebar -->
           <div class="lg:col-span-1">
-            <Card background="surface-dark" padding="default">
+            <Card
+              background="surface-dark"
+              padding="default"
+            >
               <template #header>
-                <h3 class="text-sm font-bold text-text-dim uppercase tracking-wider">TEST EXAMPLES</h3>
+                <h3 class="text-sm font-bold text-text-dim uppercase tracking-wider">
+                  TEST EXAMPLES
+                </h3>
               </template>
               <div class="space-y-2">
                 <Button
                   v-for="(example, index) in examples"
                   :key="index"
-                  @click="activeExample = index"
                   :variant="activeExample === index ? 'primary' : 'ghost'"
                   class="w-full !justify-start"
+                  @click="activeExample = index"
                 >
                   {{ example.name }}
                 </Button>
@@ -71,23 +115,39 @@
           <!-- Helpdesk Input & AI Classification Result -->
           <div class="lg:col-span-2 space-y-6">
             <!-- Helpdesk Input Card -->
-            <Card background="surface-dark" padding="lg">
+            <Card
+              background="surface-dark"
+              padding="lg"
+            >
               <template #header>
-                <h3 class="text-sm font-bold text-cyan-glow uppercase tracking-wider">HELPDESK INPUT</h3>
+                <h3 class="text-sm font-bold text-cyan-glow uppercase tracking-wider">
+                  HELPDESK INPUT
+                </h3>
               </template>
               <div class="mb-4">
-                <div class="text-xs text-text-dim mb-2">Subj:</div>
-                <div class="text-white font-medium">{{ examples[activeExample].subject }}</div>
+                <div class="text-xs text-text-dim mb-2">
+                  Subj:
+                </div>
+                <div class="text-white font-medium">
+                  {{ examples[activeExample].subject }}
+                </div>
               </div>
               <div>
-                <div class="text-white leading-relaxed">{{ examples[activeExample].body }}</div>
+                <div class="text-white leading-relaxed">
+                  {{ examples[activeExample].body }}
+                </div>
               </div>
             </Card>
 
             <!-- AI Classification Result -->
-            <Card background="surface-dark" padding="lg">
+            <Card
+              background="surface-dark"
+              padding="lg"
+            >
               <template #header>
-                <h3 class="text-sm font-bold text-primary-light uppercase tracking-wider">AI CLASSIFICATION RESULT</h3>
+                <h3 class="text-sm font-bold text-primary-light uppercase tracking-wider">
+                  AI CLASSIFICATION RESULT
+                </h3>
               </template>
               <div class="flex flex-wrap gap-2">
                 <Badge
@@ -107,15 +167,25 @@
       <!-- Engine Taxonomy Section -->
       <div>
         <div class="text-center mb-12">
-          <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">ENGINE TAXONOMY</h2>
+          <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            ENGINE TAXONOMY
+          </h2>
         </div>
         
         <div class="grid md:grid-cols-3 gap-6">
-          <Card background="surface-dark" padding="lg" hoverable>
+          <Card
+            background="surface-dark"
+            padding="lg"
+            hoverable
+          >
             <template #title>
-              <div class="text-white font-bold text-xl uppercase tracking-wide">INDUSTRY</div>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">
+                INDUSTRY
+              </div>
             </template>
-            <p class="text-text-dim text-sm mb-6">Domain of the customer's business</p>
+            <p class="text-text-dim text-sm mb-6">
+              Domain of the customer's business
+            </p>
             <ul class="space-y-2">
               <li
                 v-for="item in [
@@ -128,16 +198,24 @@
                 :key="item"
                 class="flex items-center gap-3"
               >
-                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <div class="w-2 h-2 rounded-full bg-primary-light" />
                 <span class="text-white text-sm font-medium">{{ item }}</span>
               </li>
             </ul>
           </Card>
-          <Card background="surface-dark" padding="lg" hoverable>
+          <Card
+            background="surface-dark"
+            padding="lg"
+            hoverable
+          >
             <template #title>
-              <div class="text-white font-bold text-xl uppercase tracking-wide">INTENT</div>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">
+                INTENT
+              </div>
             </template>
-            <p class="text-text-dim text-sm mb-6">What the user wants to achieve</p>
+            <p class="text-text-dim text-sm mb-6">
+              What the user wants to achieve
+            </p>
             <ul class="space-y-2">
               <li
                 v-for="item in [
@@ -150,16 +228,24 @@
                 :key="item"
                 class="flex items-center gap-3"
               >
-                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <div class="w-2 h-2 rounded-full bg-primary-light" />
                 <span class="text-white text-sm font-medium">{{ item }}</span>
               </li>
             </ul>
           </Card>
-          <Card background="surface-dark" padding="lg" hoverable>
+          <Card
+            background="surface-dark"
+            padding="lg"
+            hoverable
+          >
             <template #title>
-              <div class="text-white font-bold text-xl uppercase tracking-wide">FAILURE SYMPTOM</div>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">
+                FAILURE SYMPTOM
+              </div>
             </template>
-            <p class="text-text-dim text-sm mb-6">Manifestation of the problem</p>
+            <p class="text-text-dim text-sm mb-6">
+              Manifestation of the problem
+            </p>
             <ul class="space-y-2">
               <li
                 v-for="item in [
@@ -172,16 +258,24 @@
                 :key="item"
                 class="flex items-center gap-3"
               >
-                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <div class="w-2 h-2 rounded-full bg-primary-light" />
                 <span class="text-white text-sm font-medium">{{ item }}</span>
               </li>
             </ul>
           </Card>
-          <Card background="surface-dark" padding="lg" hoverable>
+          <Card
+            background="surface-dark"
+            padding="lg"
+            hoverable
+          >
             <template #title>
-              <div class="text-white font-bold text-xl uppercase tracking-wide">SENTIMENT</div>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">
+                SENTIMENT
+              </div>
             </template>
-            <p class="text-text-dim text-sm mb-6">Emotional tone of the text</p>
+            <p class="text-text-dim text-sm mb-6">
+              Emotional tone of the text
+            </p>
             <ul class="space-y-2">
               <li
                 v-for="item in [
@@ -192,16 +286,24 @@
                 :key="item"
                 class="flex items-center gap-3"
               >
-                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <div class="w-2 h-2 rounded-full bg-primary-light" />
                 <span class="text-white text-sm font-medium">{{ item }}</span>
               </li>
             </ul>
           </Card>
-          <Card background="surface-dark" padding="lg" hoverable>
+          <Card
+            background="surface-dark"
+            padding="lg"
+            hoverable
+          >
             <template #title>
-              <div class="text-white font-bold text-xl uppercase tracking-wide">FORMALITY</div>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">
+                FORMALITY
+              </div>
             </template>
-            <p class="text-text-dim text-sm mb-6">Writing style level</p>
+            <p class="text-text-dim text-sm mb-6">
+              Writing style level
+            </p>
             <ul class="space-y-2">
               <li
                 v-for="item in [
@@ -212,16 +314,24 @@
                 :key="item"
                 class="flex items-center gap-3"
               >
-                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <div class="w-2 h-2 rounded-full bg-primary-light" />
                 <span class="text-white text-sm font-medium">{{ item }}</span>
               </li>
             </ul>
           </Card>
-          <Card background="surface-dark" padding="lg" hoverable>
+          <Card
+            background="surface-dark"
+            padding="lg"
+            hoverable
+          >
             <template #title>
-              <div class="text-white font-bold text-xl uppercase tracking-wide">ADDRESSED_TO</div>
+              <div class="text-white font-bold text-xl uppercase tracking-wide">
+                ADDRESSED_TO
+              </div>
             </template>
-            <p class="text-text-dim text-sm mb-6">Explicitly mentioned recipient</p>
+            <p class="text-text-dim text-sm mb-6">
+              Explicitly mentioned recipient
+            </p>
             <ul class="space-y-2">
               <li
                 v-for="item in [
@@ -233,7 +343,7 @@
                 :key="item"
                 class="flex items-center gap-3"
               >
-                <div class="w-2 h-2 rounded-full bg-primary-light"></div>
+                <div class="w-2 h-2 rounded-full bg-primary-light" />
                 <span class="text-white text-sm font-medium">{{ item }}</span>
               </li>
             </ul>

@@ -34,9 +34,11 @@ import '../styles/global.css';
           s.async = true;
           document.head.appendChild(s);
           window.dataLayer = window.dataLayer || [];
-          function gtag() {
-            dataLayer.push(arguments);
+          /* eslint-disable @typescript-eslint/no-explicit-any */
+          function gtag(...args: any[]) {
+            dataLayer.push(...args);
           }
+          /* eslint-enable @typescript-eslint/no-explicit-any */
           gtag('js', new Date());
           gaIds.forEach((id) => {
             gtag('config', id, { send_page_view: false });

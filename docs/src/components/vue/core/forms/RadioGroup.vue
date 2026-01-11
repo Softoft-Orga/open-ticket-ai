@@ -1,10 +1,19 @@
 <template>
-  <RadioGroupRoot v-model="selected" :disabled="disabled">
-    <RadioGroupLabel v-if="label" class="block text-sm font-medium text-gray-300 mb-3">
+  <RadioGroupRoot
+    v-model="selected"
+    :disabled="disabled"
+  >
+    <RadioGroupLabel
+      v-if="label"
+      class="block text-sm font-medium text-gray-300 mb-3"
+    >
       {{ label }}
     </RadioGroupLabel>
     
-    <div v-if="$slots.description" class="text-sm text-text-dim mb-3">
+    <div
+      v-if="$slots.description"
+      class="text-sm text-text-dim mb-3"
+    >
       <slot name="description" />
     </div>
     
@@ -30,9 +39,11 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false
 })
 
+/* eslint-disable no-unused-vars */
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | number | null): void
 }>()
+/* eslint-enable no-unused-vars */
 
 const selected = ref(props.modelValue)
 

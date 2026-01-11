@@ -7,7 +7,10 @@
       :default-open="it.defaultOpen || false"
       :variant="variant"
     >
-      <slot :name="`item-${i}`" :item="it">
+      <slot
+        :name="`item-${i}`"
+        :item="it"
+      >
         {{ it.content }}
       </slot>
     </AccordionItem>

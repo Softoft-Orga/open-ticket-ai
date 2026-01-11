@@ -34,9 +34,9 @@ export function useYamlTagTree(source: string) {
             } else {
                 raw.value = null
             }
-        } catch (e: any) {
+        } catch (e: unknown) {
             raw.value = null
-            error.value = e?.message ?? 'Invalid YAML'
+            error.value = (e as Error)?.message ?? 'Invalid YAML'
         }
     }
 

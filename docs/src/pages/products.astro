@@ -2,37 +2,17 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/vue/core/basic/Badge.vue';
 import Button from '../components/vue/core/basic/Button.vue';
-import { getCollection } from 'astro:content';
 import { 
   CubeTransparentIcon, 
-  ArrowRightIcon, 
+  ArrowRightIcon,
+  RocketLaunchIcon,
   ServerIcon,
   ShieldCheckIcon,
   CpuChipIcon,
-  Squares2X2Icon,
-  RocketLaunchIcon
+  Squares2X2Icon
 } from '@heroicons/vue/24/outline';
 
 const title = "Products - Open Ticket AI";
-
-// Fetch all products from the content collection
-const allProducts = await getCollection('products');
-
-// Get specific products for different sections
-const taggingAI = allProducts.find(p => p.data.slug === 'tagging-ai');
-const coreProducts = allProducts.filter(p => 
-  ['open-ticket-automation-core', 'synthetic-data-generator'].includes(p.data.slug) && !p.data.nav?.hidden
-);
-const editions = allProducts.filter(p => 
-  ['open-ticket-ai-lite', 'open-ticket-ai-pro'].includes(p.data.slug) && !p.data.nav?.hidden
-);
-
-// Icon map for capabilities
-const capabilityIcons: Record<string, any> = {
-  'classification': CpuChipIcon,
-  'hierarchical': Squares2X2Icon,
-  'combinations': CubeTransparentIcon,
-};
 ---
 
 <BaseLayout title={title} description="Open Ticket AI Product Suite - Automated Ticket Classification">

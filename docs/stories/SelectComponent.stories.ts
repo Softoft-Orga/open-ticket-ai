@@ -71,11 +71,11 @@ const sampleOptions = [
  * to correctly handle v-model updates in Storybook's interactive environment.
  */
 export const Default: Story = {
-    render: (args, {updateArgs}) => ({
+    render: (args) => ({
         components: {SelectComponent},
         setup() {
             // This setup allows the story to be interactive
-            const onUpdate = (value: string | number | null) => {
+            const onUpdate = () => {
                 // This function is provided by Storybook to update the args
             }
             return {args, onUpdate}

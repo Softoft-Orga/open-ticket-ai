@@ -1,5 +1,5 @@
 <template>
-  <span :class="[baseClass, variantClass, sizeClass, radiusClass, elevationClass]"><slot/></span>
+  <span :class="[baseClass, variantClass, sizeClass, radiusClass, elevationClass]"><slot /></span>
 </template>
 
 <script lang="ts" setup>

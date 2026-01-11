@@ -1,6 +1,9 @@
 <template>
   <div class="flex items-center gap-2 text-sm text-text-dim">
-    <ClockIcon class="w-4 h-4" aria-hidden="true" />
+    <ClockIcon
+      class="w-4 h-4"
+      aria-hidden="true"
+    />
     <span>{{ readingTime }} min read</span>
   </div>
 </template>

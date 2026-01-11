@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-var __VUE_PROD_DEVTOOLS__ = false
-
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import ProductCards from './ProductCards.vue' // Assuming ProductCards component is in the same directory
@@ -51,8 +49,8 @@ const supportPlans = computed(() => [
 
 <template>
   <ProductCards
-      :buttonText="t('supportPlans.buttonText')"
-      :products="supportPlans"
-      :title="t('supportPlans.title')"
+    :button-text="t('supportPlans.buttonText')"
+    :products="supportPlans"
+    :title="t('supportPlans.title')"
   />
 </template>

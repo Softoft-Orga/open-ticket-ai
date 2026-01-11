@@ -6,7 +6,7 @@ export interface PipeSidecarInput {
 
 export interface PipeSidecarOutputExample {
     state: string
-    payload?: any
+    payload?: unknown
     error?: string
 }
 
@@ -41,7 +41,7 @@ export interface PipeSidecar {
     _summary: string
     _category: string
     _inputs: PipeSidecarInput
-    _defaults?: Record<string, any>
+    _defaults?: Record<string, unknown>
     _output: PipeSidecarOutput
     _errors: PipeSidecarErrors
     _engine_support: PipeSidecarEngineSupport

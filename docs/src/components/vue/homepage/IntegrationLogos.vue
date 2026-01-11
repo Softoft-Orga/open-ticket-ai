@@ -2,7 +2,9 @@
   <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-16 bg-surface-dark/30">
     <div class="w-full max-w-7xl mx-auto">
       <div class="flex flex-col items-center gap-8">
-        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">{{ title }}</h3>
+        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">
+          {{ title }}
+        </h3>
         <div class="flex flex-wrap items-center justify-center gap-12 md:gap-16">
           <div
             v-for="integration in integrations"
@@ -15,7 +17,12 @@
             <span class="text-gray-300 font-medium">{{ integration.name }}</span>
           </div>
         </div>
-        <p v-if="moreText" class="text-gray-500 text-sm">{{ moreText }}</p>
+        <p
+          v-if="moreText"
+          class="text-gray-500 text-sm"
+        >
+          {{ moreText }}
+        </p>
       </div>
     </div>
   </section>

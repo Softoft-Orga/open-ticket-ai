@@ -1,10 +1,10 @@
 <template>
   <TabGroup 
     :selected-index="selectedIndex" 
-    @change="handleChange"
     :vertical="vertical"
     as="div"
     :class="containerClass"
+    @change="handleChange"
   >
     <TabList 
       :class="tabListClass"
@@ -23,7 +23,7 @@
           <div
             v-if="selected && showIndicator && variant !== 'pills'"
             :class="indicatorClass"
-          ></div>
+          />
         </button>
       </Tab>
     </TabList>
@@ -34,7 +34,10 @@
         :key="`panel-${idx}`"
         :class="tabPanelClass"
       >
-        <slot :name="`tab-${idx}`" :index="idx" />
+        <slot
+          :name="`tab-${idx}`"
+          :index="idx"
+        />
       </TabPanel>
     </TabPanels>
   </TabGroup>
@@ -73,10 +76,12 @@ const props = withDefaults(defineProps<Props>(), {
   glowEffect: true
 })
 
+/* eslint-disable no-unused-vars */
 const emit = defineEmits<{
   (e: 'update:modelValue', value: number): void
   (e: 'change', value: number): void
 }>()
+/* eslint-enable no-unused-vars */
 
 const selectedIndex = ref(props.modelValue)
 

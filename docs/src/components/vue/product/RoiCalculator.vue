@@ -2,7 +2,9 @@
   <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-4xl font-bold text-white mb-4">Pricing Simulator.</h1>
+      <h1 class="text-4xl font-bold text-white mb-4">
+        Pricing Simulator.
+      </h1>
       <p class="text-gray-400 text-lg">
         Select a predefined scenario or customize values to see how automated
         tagging scales for your specific helpdesk environment.
@@ -18,7 +20,6 @@
         <Card
           v-for="scenario in scenarios"
           :key="scenario.id"
-          @click="applyScenario(scenario.id)"
           :class="[
             'relative cursor-pointer transition-all duration-300 text-left',
             activeScenario === scenario.id
@@ -26,19 +27,34 @@
               : 'border-border-dark hover:border-primary/60 hover:shadow-[0_0_20px_rgba(166,13,242,0.25)] hover:scale-[1.01] hover:bg-surface-lighter'
           ]"
           background="surface-dark"
+          @click="applyScenario(scenario.id)"
         >
           <!-- Check icon for selected scenario -->
-          <div v-if="activeScenario === scenario.id" class="absolute top-3 right-3">
+          <div
+            v-if="activeScenario === scenario.id"
+            class="absolute top-3 right-3"
+          >
             <div class="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-              <component :is="CheckIcon" class="w-4 h-4 text-white" />
+              <component
+                :is="CheckIcon"
+                class="w-4 h-4 text-white"
+              />
             </div>
           </div>
           
           <div class="flex items-start mb-3">
-            <component :is="scenario.icon" class="w-6 h-6 mr-3 flex-shrink-0" :class="scenario.iconColor" />
-            <h3 class="text-lg font-bold text-white">{{ scenario.name }}</h3>
+            <component
+              :is="scenario.icon"
+              class="w-6 h-6 mr-3 flex-shrink-0"
+              :class="scenario.iconColor"
+            />
+            <h3 class="text-lg font-bold text-white">
+              {{ scenario.name }}
+            </h3>
           </div>
-          <p class="text-sm text-gray-400">{{ scenario.description }}</p>
+          <p class="text-sm text-gray-400">
+            {{ scenario.description }}
+          </p>
         </Card>
       </div>
     </div>
@@ -48,7 +64,10 @@
       <!-- Left Column: Customer Context -->
       <Card background="surface-dark">
         <div class="flex items-center mb-4">
-          <component :is="ChartBarIcon" class="w-5 h-5 mr-2 text-primary" />
+          <component
+            :is="ChartBarIcon"
+            class="w-5 h-5 mr-2 text-primary"
+          />
           <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">
             Customer Context
           </h3>
@@ -138,8 +157,12 @@
             <div class="text-sm text-gray-400 uppercase tracking-wider mb-1">
               Manual Base (Inc. Errors)
             </div>
-            <div class="text-3xl font-bold text-white">{{ formatCurrency(stats.manualTotal) }}</div>
-            <div class="text-xs text-gray-500 mt-1">Monthly Baseline</div>
+            <div class="text-3xl font-bold text-white">
+              {{ formatCurrency(stats.manualTotal) }}
+            </div>
+            <div class="text-xs text-gray-500 mt-1">
+              Monthly Baseline
+            </div>
           </Card>
         </Transition>
 
@@ -160,8 +183,12 @@
             <div class="text-sm text-gray-400 uppercase tracking-wider mb-1">
               Lite Pro TCO
             </div>
-            <div class="text-3xl font-bold text-primary">{{ formatCurrency(stats.proTotal) }}</div>
-            <div class="text-xs text-gray-500 mt-1">Inc. Fixed HW</div>
+            <div class="text-3xl font-bold text-primary">
+              {{ formatCurrency(stats.proTotal) }}
+            </div>
+            <div class="text-xs text-gray-500 mt-1">
+              Inc. Fixed HW
+            </div>
           </Card>
         </Transition>
 
@@ -182,8 +209,12 @@
             <div class="text-sm text-gray-400 uppercase tracking-wider mb-1">
               Break-Even
             </div>
-            <div class="text-3xl font-bold text-cyan-glow">{{ stats.beProFree }}</div>
-            <div class="text-xs text-gray-500 mt-1">Pro vs Free (TIX/Day)</div>
+            <div class="text-3xl font-bold text-cyan-glow">
+              {{ stats.beProFree }}
+            </div>
+            <div class="text-xs text-gray-500 mt-1">
+              Pro vs Free (TIX/Day)
+            </div>
           </Card>
         </Transition>
       </div>
@@ -192,10 +223,15 @@
       <Card background="surface-dark">
         <div class="mb-4">
           <Badge type="primary">
-            <component :is="SparklesIcon" class="w-4 h-4" />
+            <component
+              :is="SparklesIcon"
+              class="w-4 h-4"
+            />
             Lite Pro (4B)
           </Badge>
-          <div class="mt-2 text-sm text-primary font-medium">RECOMMENDED</div>
+          <div class="mt-2 text-sm text-primary font-medium">
+            RECOMMENDED
+          </div>
         </div>
 
         <div class="space-y-4">
@@ -267,10 +303,16 @@
     </div>
 
     <!-- Lite Free Config -->
-    <Card background="surface-dark" class="mb-8">
+    <Card
+      background="surface-dark"
+      class="mb-8"
+    >
       <div class="mb-4">
         <Badge type="secondary">
-          <component :is="BeakerIcon" class="w-4 h-4" />
+          <component
+            :is="BeakerIcon"
+            class="w-4 h-4"
+          />
           Lite Free (0.6B)
         </Badge>
       </div>
@@ -330,32 +372,36 @@
       <!-- TCO Projection Chart -->
       <Card background="surface-dark">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-white">TCO Projection (Monthly)</h3>
+          <h3 class="text-lg font-semibold text-white">
+            TCO Projection (Monthly)
+          </h3>
           <div class="flex items-center space-x-3 text-xs">
             <div class="flex items-center">
-              <div class="w-3 h-0.5 bg-red-500 mr-2"></div>
+              <div class="w-3 h-0.5 bg-red-500 mr-2" />
               <span class="text-gray-400">Manual</span>
             </div>
             <div class="flex items-center">
-              <div class="w-3 h-0.5 border-t-2 border-dashed border-gray-400 mr-2"></div>
+              <div class="w-3 h-0.5 border-t-2 border-dashed border-gray-400 mr-2" />
               <span class="text-gray-400">Free</span>
             </div>
             <div class="flex items-center">
-              <div class="w-3 h-0.5 bg-primary mr-2"></div>
+              <div class="w-3 h-0.5 bg-primary mr-2" />
               <span class="text-gray-400">Pro</span>
             </div>
           </div>
         </div>
         <div class="h-80">
-          <canvas ref="tcoChartRef"></canvas>
+          <canvas ref="tcoChartRef" />
         </div>
       </Card>
 
       <!-- Monthly Cost Breakdown Chart -->
       <Card background="surface-dark">
-        <h3 class="text-lg font-semibold text-white mb-4">Monthly Cost Breakdown</h3>
+        <h3 class="text-lg font-semibold text-white mb-4">
+          Monthly Cost Breakdown
+        </h3>
         <div class="h-80">
-          <canvas ref="roiChartRef"></canvas>
+          <canvas ref="roiChartRef" />
         </div>
       </Card>
     </div>
@@ -376,8 +422,12 @@
         custom-bg="bg-gradient-to-br from-primary/10 to-surface-dark"
         class="border-primary/30 transition-all duration-500 hover:shadow-[0_0_40px_rgba(166,13,242,0.3)] hover:border-primary/50"
       >
-        <h3 class="text-lg font-semibold text-white mb-2">Simulated Savings</h3>
-        <div class="text-5xl font-bold text-primary mb-3">{{ formatCurrency(stats.savings) }}</div>
+        <h3 class="text-lg font-semibold text-white mb-2">
+          Simulated Savings
+        </h3>
+        <div class="text-5xl font-bold text-primary mb-3">
+          {{ formatCurrency(stats.savings) }}
+        </div>
         <p class="text-gray-400">
           By switching from manual classification to Lite Pro, your organization could save approximately
           <span class="text-primary font-semibold">{{ formatCurrency(stats.savings) }}</span> every month.

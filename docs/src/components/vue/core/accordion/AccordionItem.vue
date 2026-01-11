@@ -40,7 +40,7 @@
         :class="contentClasses"
       >
         <div :class="contentInnerClasses">
-          <slot/>
+          <slot />
         </div>
       </DisclosurePanel>
     </transition>

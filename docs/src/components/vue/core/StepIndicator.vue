@@ -13,11 +13,15 @@
               currentStep > index
                 ? 'border-emerald-500 bg-emerald-500 text-white'
                 : currentStep === index
-                ? 'border-primary bg-primary text-white'
-                : 'border-surface-lighter bg-surface-dark text-text-dim'
+                  ? 'border-primary bg-primary text-white'
+                  : 'border-surface-lighter bg-surface-dark text-text-dim'
             ]"
           >
-            <CheckIcon v-if="currentStep > index" class="w-5 h-5" aria-hidden="true" />
+            <CheckIcon
+              v-if="currentStep > index"
+              class="w-5 h-5"
+              aria-hidden="true"
+            />
             <span v-else>{{ index + 1 }}</span>
           </div>
           <span
@@ -35,7 +39,7 @@
             'h-0.5 flex-1 transition-all',
             currentStep > index ? 'bg-emerald-500' : 'bg-surface-lighter'
           ]"
-        ></div>
+        />
       </div>
     </div>
   </div>

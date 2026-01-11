@@ -1,68 +1,89 @@
 <template>
-
   <section class="w-100 pt-1 pb-5 lg:pb-10 px-5 lg:px-14 bg-gray-900 rounded-lg">
-    <h2 class="!mt-1 !mb-6 w-full text-center text-vp-text border-0 !border-t-0">{{
+    <h2 class="!mt-1 !mb-6 w-full text-center text-vp-text border-0 !border-t-0">
+      {{
         t('otai_prediction_demo_component.title')
-      }}</h2>
+      }}
+    </h2>
     <div class="mb-3">
       <SelectComponent
-          v-model="selected"
-          :label="t('otai_prediction_demo_component.pickExampleText')"
-          :options="exampleOptions"
-          :placeholder="t('otai_prediction_demo_component.exampleSelectDefault')"
-          @update:modelValue="applyExample"
-      >
-      </SelectComponent>
-    </div>
-
-    <div class="mb-3">
-      <label class="block mb-1 font-bold" for="demo-subject">{{
-          t('otai_prediction_demo_component.subjectLabel')
-        }}</label>
-      <TextInput
-          id="demo-subject"
-          v-model="subject"
-          :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
-          type="text"
+        v-model="selected"
+        :label="t('otai_prediction_demo_component.pickExampleText')"
+        :options="exampleOptions"
+        :placeholder="t('otai_prediction_demo_component.exampleSelectDefault')"
+        @update:model-value="applyExample"
       />
     </div>
 
     <div class="mb-3">
-      <label class="block mb-1 font-bold" for="demo-body">{{
-          t('otai_prediction_demo_component.messageLabel')
-        }}</label>
+      <label
+        class="block mb-1 font-bold"
+        for="demo-subject"
+      >{{
+        t('otai_prediction_demo_component.subjectLabel')
+      }}</label>
+      <TextInput
+        id="demo-subject"
+        v-model="subject"
+        :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
+        type="text"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label
+        class="block mb-1 font-bold"
+        for="demo-body"
+      >{{
+        t('otai_prediction_demo_component.messageLabel')
+      }}</label>
       <TextArea
-          id="demo-body"
-          v-model="body"
-          :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
-          class="min-h-40"
-      ></TextArea>
+        id="demo-body"
+        v-model="body"
+        :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
+        class="min-h-40"
+      />
     </div>
 
     <Button
-        :disabled="loading"
-        class="px-4 py-2 mt-1 mb-4 bg-vp-brand-1 text-white hover:bg-vp-brand-light disabled:opacity-50"
-        @click="predict"
+      :disabled="loading"
+      class="px-4 py-2 mt-1 mb-4 bg-vp-brand-1 text-white hover:bg-vp-brand-light disabled:opacity-50"
+      @click="predict"
     >
-                    <span v-if="loading" aria-hidden="true"
-                          class="animate-spin h-4 w-4 mr-1 border-2 border-white border-t-transparent rounded-full">
-
-                    </span>
-      <span v-if="loading"
-            role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
-      <span v-else
-            class="text-white">{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
+      <span
+        v-if="loading"
+        aria-hidden="true"
+        class="animate-spin h-4 w-4 mr-1 border-2 border-white border-t-transparent rounded-full"
+      />
+      <span
+        v-if="loading"
+        role="status"
+      >{{ t('otai_prediction_demo_component.loadingText') }}</span>
+      <span
+        v-else
+        class="text-white"
+      >{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
     </Button>
 
-    <Alert v-if="errorMessage" type="danger">
+    <Alert
+      v-if="errorMessage"
+      type="danger"
+    >
       {{ errorMessage }}
     </Alert>
 
-    <ResultTable v-if="queueResult && prioResult" :prio-result="prioResult" :queue-result="queueResult"/>
-    <p>{{ t('otai_prediction_demo_component.apiText') }}<span v-if="apiLink != ''">:</span> <a v-if="apiLink != ''"
-                                                                                               :href="apiLink">German
-      Ticket Classification API</a></p>
-
+    <ResultTable
+      v-if="queueResult && prioResult"
+      :prio-result="prioResult"
+      :queue-result="queueResult"
+    />
+    <p>
+      {{ t('otai_prediction_demo_component.apiText') }}<span v-if="apiLink != ''">:</span> <a
+        v-if="apiLink != ''"
+        :href="apiLink"
+      >German
+        Ticket Classification API</a>
+    </p>
   </section>
 </template>
 
