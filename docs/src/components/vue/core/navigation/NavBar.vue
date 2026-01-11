@@ -54,10 +54,15 @@
       :show="mobileMenuOpen"
       as="template"
     >
-      <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
+      <Dialog
+        as="div"
+        class="relative z-50"
+        @close="closeMobileMenu"
+      >
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
 
-      <div class="fixed inset-0 flex items-start justify-end">
-        <DialogPanel class="w-full max-w-sm h-full bg-background-dark border-l border-surface-lighter p-6 shadow-2xl">
+        <div class="fixed inset-0 flex items-start justify-end">
+          <DialogPanel class="w-full max-w-sm h-full bg-background-dark border-l border-surface-lighter p-6 shadow-2xl">
           <div class="flex items-center justify-between mb-8">
             <DialogTitle class="text-lg font-bold text-white">
               Menu
@@ -140,10 +145,9 @@
                 </div>
               </nav>
             </DialogPanel>
-          </UiTransitionSlide>
-        </div>
-      </Dialog>
-    </TransitionRoot>
+          </div>
+        </Dialog>
+      </TransitionRoot>
   </header>
 </template>
 
