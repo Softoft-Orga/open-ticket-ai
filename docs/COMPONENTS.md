@@ -48,9 +48,6 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **UiTransitionFadeScale.vue** — Fade + scale transition wrapper. Props: `as`, `appear`, `strength`. Slots: default (content).
 - **UiTransitionSlide.vue** — Slide transition wrapper. Props: `as`, `appear`, `direction`. Slots: default (content).
 
-## forms
-_No components in this section._
-
 ## homepage
 - **ServiceCard.vue** — Service offering card. Props: `title`, `description`, `cta`, `icon`. Slots: `footer`.
 
