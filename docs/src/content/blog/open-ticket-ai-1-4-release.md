@@ -18,7 +18,7 @@ brings enterprise-grade features, a mature plugin ecosystem, and the flexibility
 ticket system workflows like never before. Get the full release
 on [GitHub](https://github.com/Softoft-Orga/open-ticket-ai/releases/tag/v1.4.1).
 
-![https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png](https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png)
+<img src="https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png" alt="Open Ticket AI Release Version 1" width="800" />
 
 ## Checkout the Demo!
 
