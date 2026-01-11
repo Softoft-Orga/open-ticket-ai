@@ -5,10 +5,6 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 **For detailed component documentation**, including usage examples, prop types, and interactive demos, see the corresponding Storybook stories in `docs/stories/**/*.stories.ts`. View Storybook locally with `npm run storybook` or visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-storybook.netlify.app/).
 
 ## (root)
-- **ArchitectureOverview.vue** — High-level architecture diagram display. Props: _none_. Slots: _none_.
-- **PagefindSearch.vue** — Pagefind search box integration. Props: `placeholder`, `ariaLabel`. Slots: _none_.
-- **RecentNewsToast.vue** — Toast highlighting the most recent news article. Props: _none_. Slots: _none_.
-- **YoutubeVideo.vue** — Responsive YouTube embed. Props: `videoId`, `title`. Slots: _none_.
 
 ## blog
 - **ArticleCard.vue** — Blog article card with title, meta, and excerpt. Props: `title`, `description`, `readingTime`, `publishedAt`, `author`, `tags`, `slug`. Slots: _none_.
@@ -33,15 +29,10 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 
 ## core
 - **Alert.vue** — Alert banner with tone. Props: `title`, `tone` (`info` | `success` | `warning` | `danger`), `icon`. Slots: default (body).
-- **CodeBlock.vue** — Syntax highlighted code block. Props: `code`, `language`, `filename`, `highlight`. Slots: _none_.
-- **CodeTabs.vue** — Tabbed code samples. Props: `tabs` (array), `initialTab`. Slots: default (tab panels via slot scope).
 - **DocCard.vue** — Card for documentation links. Props: `title`, `description`, `href`, `icon`. Slots: _none_.
 - **HeadlessUiTailwindDemo.vue** — Demonstrates Headless UI ui-open/ui-closed classes. Props: _none_. Slots: _none_.
 - **LoadingComponent.vue** — Loading spinner/placeholder. Props: `label`. Slots: _none_.
 - **QuickLink.vue** — Inline link pill. Props: `label`, `href`, `icon`. Slots: _none_.
-- **StepIndicator.vue** — Step indicator bar. Props: `steps` (array), `activeIndex`. Slots: _none_.
-- **TableOfContents.vue** — Renders TOC for page headings. Props: `items` (array), `activeId`. Slots: _none_.
-- **TableOfContentsItem.vue** — TOC item entry. Props: `item`, `activeId`. Slots: _none_.
 
 ### core/accordion
 - **Accordion.vue** — Accordion container. Props: `items` (array), `multiple` (bool). Slots: default (custom items).
@@ -51,14 +42,13 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **Badge.vue** — Pill badge. Props: `label`, `tone`, `size`, `icon`. Slots: default (custom content).
 - **Button.vue** — Styled button. Props: `label`, `variant`, `size`, `to`, `href`, `icon`, `block`, `loading`, `disabled`. Slots: default (button content).
 - **Card.vue** — Card container. Props: `title`, `description`, `icon`, `link`. Slots: default (content), `footer`.
+- **Link.vue** — Simple link component. Props: `to`. Slots: default (link text).
 - **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot scope).
 
 ### core/forms
 - **RadioGroup.vue** — Grouped radio options. Props: `modelValue`, `options`, `disabled`. Slots: default (option rendering via slot scope).
 - **RadioGroupOption.vue** — Single radio option. Props: `option`, `modelValue`, `disabled`. Slots: default (option label/body).
 - **SelectComponent.vue** — Styled select. Props: `modelValue`, `options`, `label`, `placeholder`, `error`. Slots: _none_.
-- **TextArea.vue** — Text area input. Props: `modelValue`, `label`, `placeholder`, `rows`, `error`. Slots: _none_.
-- **TextInput.vue** — Text input field. Props: `modelValue`, `label`, `placeholder`, `type`, `error`. Slots: _none_.
 
 ### core/navigation
 - **FooterComponent.vue** — Footer navigation sections. Props: `sections`, `locale`. Slots: _none_.
@@ -109,15 +99,5 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **ResultTable.vue** — Table of prediction results. Props: `rows`, `columns`. Slots: _none_.
 
 ## product
-- **ComparisonRow.vue** — Feature comparison row. Props: `label`, `values` (array). Slots: _none_.
-- **FeatureItem.vue** — Feature item bullet. Props: `title`, `description`, `icon`. Slots: _none_.
-- **FullMetric.vue** — Metric display. Props: `label`, `value`, `unit`, `trend`. Slots: _none_.
-- **LiteFreeDetail.vue** — Lite free plan details. Props: `plan`. Slots: _none_.
-2- **PerformanceMetric.vue** — Performance metric stat. Props: `label`, `value`, `delta`. Slots: _none_.
+- **PerformanceMetric.vue** — Performance metric stat. Props: `label`, `value`, `delta`. Slots: _none_.
 - **ProductCard.vue** — Product card. Props: `product`. Slots: _none_.
-- **ProductCards.vue** — Product cards grid. Props: `products`. Slots: _none_.
-- **RoiCalculator.vue** — ROI calculator widget. Props: `defaults`. Slots: _none_.
-- **ServicePackages.vue** — Service packages section. Props: `packages`. Slots: _none_.
-- **SupportPlans.vue** — Support plans listing. Props: `plans`. Slots: _none_.
-- **TaxonomyCard.vue** — Taxonomy card. Props: `item`. Slots: _none_.
-- **TaxonomyRow.vue** — Taxonomy row. Props: `item`. Slots: _none_.

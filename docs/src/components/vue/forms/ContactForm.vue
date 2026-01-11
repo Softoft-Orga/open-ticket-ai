@@ -32,12 +32,18 @@
         >
           {{ $t('otai_contact_form.email_label') }}
         </label>
-        <TextInput
-          id="email"
-          v-model="email"
-          placeholder="you@domain.com"
-          :icon="EnvelopeIcon"
-        />
+        <div class="relative w-full">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <EnvelopeIcon class="w-5 h-5 text-text-dim" />
+          </div>
+          <input
+            id="email"
+            v-model="email"
+            class="w-full h-12 px-4 pl-10 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+            placeholder="you@domain.com"
+            type="email"
+          >
+        </div>
       </div>
 
       <div>
@@ -47,13 +53,18 @@
         >
           {{ $t('otai_contact_form.message_label') }}
         </label>
-        <TextArea
-          id="message"
-          v-model="message"
-          placeholder="How can we help you?"
-          rows="5"
-          :icon="ChatBubbleLeftRightIcon"
-        />
+        <div class="relative w-full">
+          <div class="absolute top-3 left-4 pointer-events-none z-10">
+            <ChatBubbleLeftRightIcon class="w-5 h-5 text-text-dim" />
+          </div>
+          <textarea
+            id="message"
+            v-model="message"
+            class="w-full py-3 px-4 pl-11 pr-4 text-base rounded-xl min-h-[100px] border bg-surface-dark text-white placeholder-text-dim transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 focus:shadow-[0_0_20px_rgba(166,13,242,0.2)] disabled:opacity-50 disabled:cursor-not-allowed border-border-dark hover:border-primary/30 resize-y"
+            placeholder="How can we help you?"
+            rows="5"
+          ></textarea>
+        </div>
       </div>
 
       <Button
@@ -79,8 +90,6 @@
 
 <script lang="ts" setup>
 import {ref} from 'vue'
-import TextInput from '../core/forms/TextInput.vue'
-import TextArea from '../core/forms/TextArea.vue'
 import Button from '../core/basic/Button.vue'
 import { EnvelopeIcon, ChatBubbleLeftRightIcon, PaperAirplaneIcon } from '@heroicons/vue/24/outline'
 
