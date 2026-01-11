@@ -355,7 +355,7 @@ Services are organized by `serviceGroup`:
 **How It Works**:
 1. Page calls `getCollection('services')` to fetch all service data
 2. Services are filtered by `serviceGroup` and sorted by `serviceOrder`
-3. Data is passed to Vue components (e.g., `PricingCard.vue`, `IntegrationPackageCard.vue`)
+3. Data is rendered directly in the services page using inline Astro markup and Tailwind classes
 
 **URL Pattern**: `/services/` (single page with all services grouped)
 

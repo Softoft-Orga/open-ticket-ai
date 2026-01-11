@@ -22,12 +22,13 @@
       >{{
         t('otai_prediction_demo_component.subjectLabel')
       }}</label>
-      <TextInput
+      <input
         id="demo-subject"
         v-model="subject"
-        :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
         type="text"
-      />
+        :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
+        class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+      >
     </div>
 
     <div class="mb-3">
@@ -37,12 +38,12 @@
       >{{
         t('otai_prediction_demo_component.messageLabel')
       }}</label>
-      <TextArea
+      <textarea
         id="demo-body"
         v-model="body"
         :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
-        class="min-h-40"
-      />
+        class="w-full py-3 px-4 text-base rounded-xl min-h-40 border bg-surface-dark text-white placeholder-text-dim transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 focus:shadow-[0_0_20px_rgba(166,13,242,0.2)] disabled:opacity-50 disabled:cursor-not-allowed border-border-dark hover:border-primary/30 resize-y"
+      ></textarea>
     </div>
 
     <Button
@@ -95,8 +96,6 @@ import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
 import ResultTable from "./ResultTable.vue";
 import SelectComponent from "../core/forms/SelectComponent.vue";
-import TextInput from "../core/forms/TextInput.vue";
-import TextArea from "../core/forms/TextArea.vue";
 import Alert from "../core/Alert.vue";
 import {useHumanLoadedPage} from "../../../composables/useHumanLoadedPage";
 

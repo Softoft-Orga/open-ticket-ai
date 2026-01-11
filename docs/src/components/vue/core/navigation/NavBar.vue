@@ -93,13 +93,9 @@
                     </div>
                   </a>
                 </div>
-                </MenuItems>
-                </UiTransitionSlide>
-                </TransitionRoot>
-                </Menu>
               </div>
             </div>
-          </transition>
+          </Transition>
         </div>
       </nav>
 
@@ -245,10 +241,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import {
-  Menu,
-  MenuButton,
-  MenuItems,
-  MenuItem,
   Dialog,
   DialogPanel,
   DialogTitle,

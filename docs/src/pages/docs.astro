@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DocCard from '../components/vue/core/DocCard.vue';
 import QuickLink from '../components/vue/core/QuickLink.vue';
-import PagefindSearch from '../components/vue/PagefindSearch.vue';
 
 const title = "Documentation | Open Ticket AI";
 const description = "Choose the documentation you need. Explore API references, implementation guides, and best practices.";
@@ -32,12 +31,7 @@ const description = "Choose the documentation you need. Explore API references, 
         </p>
       </div>
 
-      <div class="w-full max-w-2xl mx-auto mb-24 relative group">
-        <div class="absolute -inset-1 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-        <div class="relative">
-          <PagefindSearch client:only="vue" />
-        </div>
-      </div>
+
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
         <DocCard

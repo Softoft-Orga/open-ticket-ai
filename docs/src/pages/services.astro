@@ -1,9 +1,7 @@
 ---
 import {getCollection} from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PricingCard from '../components/vue/services/PricingCard.vue';
-import IntegrationPackageCard from '../components/vue/services/IntegrationPackageCard.vue';
-import ExtensionItem from '../components/vue/services/ExtensionItem.vue';
+import Button from '../components/vue/core/basic/Button.vue';
 import {
     CubeTransparentIcon,
     ServerIcon,
@@ -13,7 +11,15 @@ import {
     SparklesIcon,
     ArrowRightIcon,
     CheckIcon,
-    CpuChipIcon
+    CpuChipIcon,
+    WrenchScrewdriverIcon,
+    ChartBarIcon,
+    Cog6ToothIcon,
+    ArrowPathIcon,
+    CpuChipIcon as CpuIcon,
+    CubeTransparentIcon as CubeIcon,
+    CheckBadgeIcon,
+    RocketLaunchIcon
 } from '@heroicons/vue/24/outline';
 
 const title = 'Services - Open Ticket AI';
@@ -73,7 +79,18 @@ function getIntegrationServiceInfo(slug: string): { subtitle: string; systems: s
     return mapping[slug] || {subtitle: '', systems: ''};
 }
 
-// Map icon names for extensions
+// Map icon names for extensions to Heroicon components
+const iconComponentMap: Record<string, any> = {
+    'tune': WrenchScrewdriverIcon,
+    'analytics': ChartBarIcon,
+    'integration_instructions': Cog6ToothIcon,
+    'update': ArrowPathIcon,
+    'psychology': CpuIcon,
+    'hub': CubeIcon,
+    'verified': CheckBadgeIcon,
+    'rocket_launch': RocketLaunchIcon,
+};
+
 const extensionIcons: Record<string, string> = {
     'fine-tuned-model': 'tune',
     'evaluation-report': 'analytics',
@@ -202,17 +219,52 @@ const typicalScopeItems = [
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                {syntheticDataServices.map((service, index) => (
-                    <PricingCard
-                        client:load
-                        title={service.data.title}
-                        subtitle={service.data.oneLiner}
-                        price={formatPrice(service.data.startingPrice)}
-                        features={service.data.outcomes || []}
-                        highlighted={isHighlighted(index, syntheticDataServices.length)}
-                        buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
-                    />
-                ))}
+                {syntheticDataServices.map((service, index) => {
+                    const highlighted = isHighlighted(index, syntheticDataServices.length);
+                    const cardClasses = highlighted
+                        ? 'flex flex-col rounded-2xl p-8 transition-all h-full bg-[#1a1033] border-2 border-primary shadow-[0_0_30px_rgba(166,13,242,0.2)]'
+                        : 'flex flex-col rounded-2xl p-8 transition-all h-full bg-[#150c19] border border-white/5 hover:border-white/20';
+                    return (
+                        <div class={cardClasses}>
+                            <div class="mb-6">
+                                <h4 class="text-white text-xl font-bold font-display">
+                                    {service.data.title}
+                                </h4>
+                                {service.data.oneLiner && (
+                                    <p class="text-primary text-xs font-bold uppercase mt-1">
+                                        {service.data.oneLiner}
+                                    </p>
+                                )}
+                            </div>
+                            <div class="mb-8">
+                                <div class="text-slate-400 text-sm mb-1 uppercase tracking-widest font-bold">
+                                    from
+                                </div>
+                                <div class="text-3xl font-bold text-white font-display">
+                                    {formatPrice(service.data.startingPrice)}
+                                </div>
+                            </div>
+                            <ul class="space-y-3 mb-10 flex-grow">
+                                {(service.data.outcomes || []).map((feature) => (
+                                    <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                                        <CheckIcon class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+                                        <span>{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <Button 
+                                variant={highlighted ? 'primary' : 'outline'}
+                                size="md"
+                                class="w-full"
+                                data-service-modal-trigger
+                                data-service=""
+                                client:load
+                            >
+                                {index === 1 ? "Get Demo" : "Contact Sales"}
+                            </Button>
+                        </div>
+                    );
+                })}
             </div>
 
             <!-- Common Extensions -->
@@ -223,14 +275,25 @@ const typicalScopeItems = [
                         class="text-slate-600 font-normal">(Add-ons)</span></h3>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                    {extensions.map((extension) => (
-                        <ExtensionItem
-                            client:load
-                            icon={extensionIcons[extension.data.slug] || 'tune'}
-                            title={extension.data.title}
-                            desc={extension.data.description || extension.data.oneLiner || ''}
-                        />
-                    ))}
+                    {extensions.map((extension) => {
+                        const iconName = extensionIcons[extension.data.slug] || 'tune';
+                        const IconComponent = iconComponentMap[iconName] || WrenchScrewdriverIcon;
+                        return (
+                            <div class="flex items-start gap-4">
+                                <div class="text-primary mt-0.5">
+                                    <IconComponent class="w-6 h-6" aria-hidden="true" />
+                                </div>
+                                <div>
+                                    <h5 class="text-white text-sm font-bold mb-1">
+                                        {extension.data.title}
+                                    </h5>
+                                    <p class="text-slate-500 text-xs leading-relaxed">
+                                        {extension.data.description || extension.data.oneLiner || ''}
+                                    </p>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>
@@ -246,17 +309,60 @@ const typicalScopeItems = [
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {integrationServices.map((service, index) => {
                     const info = getIntegrationServiceInfo(service.data.slug);
+                    const highlighted = index === 1;
+                    const cardClasses = highlighted
+                        ? 'rounded-2xl p-8 flex flex-col h-full bg-[#1d1023] border border-primary/30'
+                        : 'rounded-2xl p-8 flex flex-col h-full bg-[#120818] border border-white/5';
                     return (
-                        <IntegrationPackageCard
-                            client:load
-                            title="Integration Package"
-                            subtitle={info.subtitle}
-                            price={formatPrice(service.data.startingPrice)}
-                            systems={info.systems}
-                            buttonText={index === 1 ? "Get Demo" : "Contact Sales"}
-                            features={service.data.outcomes || []}
-                            highlighted={index === 1}
-                        />
+                        <div class={cardClasses}>
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <h4 class="text-white text-xl font-bold">
+                                        Integration Package
+                                    </h4>
+                                    <p class="text-primary text-xs font-bold uppercase tracking-widest mt-1">
+                                        {info.subtitle}
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-white">
+                                        {formatPrice(service.data.startingPrice)}
+                                    </div>
+                                    <div class="text-[10px] text-slate-500 uppercase">
+                                        One-time fee
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-2">
+                                    Supported Systems
+                                </div>
+                                <div class="text-slate-200 text-sm font-medium">
+                                    {info.systems}
+                                </div>
+                            </div>
+
+                            <ul class="space-y-2.5 mb-8 flex-grow">
+                                {(service.data.outcomes || []).map((feature) => (
+                                    <li class="flex items-start gap-2 text-sm text-slate-400">
+                                        <CheckIcon class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+                                        <span>{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <Button 
+                                variant={highlighted ? 'primary' : 'outline'}
+                                size="md"
+                                class="w-full"
+                                data-service-modal-trigger
+                                data-service=""
+                                client:load
+                            >
+                                {index === 1 ? "Get Demo" : "Contact Sales"}
+                            </Button>
+                        </div>
                     );
                 })}
             </div>
