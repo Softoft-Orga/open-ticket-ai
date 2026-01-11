@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import IntegrationLogos from '../components/vue/homepage/IntegrationLogos.vue';
-import FeatureShowcase from '../components/vue/homepage/FeatureShowcase.vue';
-import ServicesGrid from '../components/vue/homepage/ServicesGrid.vue';
+import ServiceCard from '../components/vue/homepage/ServiceCard.vue';
+import Card from '../components/vue/core/basic/Card.vue';
+import Badge from '../components/vue/core/basic/Badge.vue';
 import Button from '../components/vue/core/basic/Button.vue';
 
 const pageTitle = 'Open Ticket AI - Automated Ticket Tagging, On-Premise';
@@ -32,6 +32,21 @@ const integrations = [
   { name: 'OTOBO' },
   { name: 'Znuny/OTRS' },
   { name: 'Zammad' }
+];
+
+const features = [
+  {
+    title: '100% On-Premise Execution',
+    description: 'Ticket data processed locally'
+  },
+  {
+    title: 'Multi-language Support',
+    description: 'EN, DE, FR, etc.'
+  },
+  {
+    title: 'Custom Hierarchical Taxonomies',
+    description: 'Handling complex nested tags and multiple languages with enterprise-grade precision'
+  }
 ];
 ---
 
@@ -71,40 +86,115 @@ const integrations = [
     </section>
 
     <!-- Integration Logos -->
-    <IntegrationLogos
-      client:load
-      integrations={integrations}
-    />
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-16 bg-surface-dark/30">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="flex flex-col items-center gap-8">
+          <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider">
+            WORKS WITH
+          </h3>
+          <div class="flex flex-wrap items-center justify-center gap-12 md:gap-16">
+            {integrations.map((integration) => (
+              <div class="flex items-center gap-3 px-4 py-2 rounded-lg bg-surface-dark/50 border border-border-dark hover:border-primary/30 transition-colors">
+                <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 font-medium">{integration.name}</span>
+              </div>
+            ))}
+          </div>
+          <p class="text-gray-500 text-sm">
+            More on request
+          </p>
+        </div>
+      </div>
+    </section>
 
     <!-- Tagging AI Feature Showcase -->
-    <FeatureShowcase
-      client:load
-      badge="Core Engine"
-      title="Tagging AI"
-      description="Hierarchical, multilingual ticket classification that stays on your server."
-      features={[
-        {
-          title: '100% On-Premise Execution',
-          description: 'Ticket data processed locally'
-        },
-        {
-          title: 'Multi-language Support',
-          description: 'EN, DE, FR, etc.'
-        },
-        {
-          title: 'Custom Hierarchical Taxonomies',
-          description: 'Handling complex nested tags and multiple languages with enterprise-grade precision'
-        }
-      ]}
-    />
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-background-dark">
+      <div class="w-full max-w-7xl mx-auto">
+        <Card background="surface-dark" padding="lg" hoverable client:load class="relative overflow-hidden">
+          <!-- Decorative glow effect -->
+          <div class="absolute -right-20 -top-20 w-96 h-96 bg-secondary/10 rounded-full blur-[100px]" />
+
+          <div class="flex flex-col lg:flex-row gap-16 items-center">
+            <!-- Image/Visual Side -->
+            <div class="w-full lg:w-1/2 order-2 lg:order-1 z-10">
+              <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-1000" />
+                <div class="relative w-full aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center rounded-xl">
+                  <svg class="w-24 h-24 text-primary/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content Side -->
+            <div class="w-full lg:w-1/2 flex flex-col gap-6 order-1 lg:order-2 z-10">
+              <Badge type="primary" client:load class="w-fit uppercase tracking-wider">
+                Core Engine
+              </Badge>
+              
+              <h2 class="font-display text-4xl font-bold text-white leading-tight">
+                Tagging AI
+              </h2>
+              
+              <p class="text-text-dim text-xl leading-relaxed">
+                Hierarchical, multilingual ticket classification that stays on your server.
+              </p>
+
+              <div class="flex flex-col gap-3 mt-4">
+                {features.map((feature) => (
+                  <div class="flex items-start gap-3 hover:translate-x-1 transition-transform duration-200">
+                    <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <span class="text-white font-semibold">{feature.title}</span>
+                      {feature.description && (
+                        <span class="text-text-dim text-sm">{feature.description}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </section>
 
     <!-- Services Grid -->
-    <ServicesGrid
-      client:load
-      title="Services that get you live fast"
-      subtitle="Integration packages, automation setup, and custom development for your needs"
-      services={services}
-    />
+    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-background-dark">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="mb-16 text-center">
+          <h2 class="font-display text-4xl font-bold text-white mb-4">
+            Services that get you live fast
+          </h2>
+          <p class="text-gray-400 text-lg">
+            Integration packages, automation setup, and custom development for your needs
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service) => (
+            <ServiceCard
+              client:load
+              title={service.title}
+              one-liner={service.oneLiner}
+              description={service.description}
+              outcomes={service.outcomes}
+              starting-price={service.startingPrice}
+              group={service.group}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
 
     <!-- Security & Data Flow Section -->
     <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-surface-dark/30">
