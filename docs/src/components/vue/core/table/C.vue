@@ -24,42 +24,28 @@ const variant = inject('tableVariant', 'default') as TableVariant
 
 const tag = computed(() => (props.header ? 'th' : 'td'))
 
-const alignClass = computed(() => {
-  if (props.align === 'center') return 'text-center'
-  if (props.align === 'right') return 'text-right'
-  return 'text-left'
-})
-
 const cellClasses = computed(() => {
   const classes: string[] = []
   
-  // Padding based on variant and density
+  // Padding - simplified to semantic sizes
   if (variant === 'compact' || dense) {
     classes.push('px-3 py-2')
   } else {
     classes.push('px-4 py-3')
   }
   
-  // Alignment
-  classes.push(alignClass.value)
+  // Alignment - semantic utility classes
+  if (props.align === 'center') classes.push('text-center')
+  else if (props.align === 'right') classes.push('text-right')
+  else classes.push('text-left')
   
-  // Text styling for headers - using design tokens
+  // Text styling - simplified, relies on parent context
   if (props.header) {
-    switch (variant) {
-      case 'glassy':
-        classes.push('text-white font-bold tracking-wide')
-        break
-      case 'bordered':
-        classes.push('text-primary-light font-semibold')
-        break
-      case 'compact':
-        classes.push('text-slate-200 font-semibold text-xs uppercase tracking-wider')
-        break
-      default:
-        classes.push('text-slate-200 font-semibold')
+    classes.push('text-slate-200 font-semibold')
+    if (variant === 'compact') {
+      classes.push('text-xs uppercase tracking-wider')
     }
   } else {
-    // Regular cell text color - using design tokens
     classes.push('text-text-dim')
   }
   

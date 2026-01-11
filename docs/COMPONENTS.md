@@ -32,18 +32,18 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot scope).
 
 ### core/forms
-- **RadioGroup.vue** — Grouped radio options. Props: `modelValue`, `options`, `disabled`. Slots: default (option rendering via slot scope).
-- **RadioGroupOption.vue** — Single radio option. Props: `option`, `modelValue`, `disabled`. Slots: default (option label/body).
-- **SelectComponent.vue** — Styled select. Props: `modelValue`, `options`, `label`, `placeholder`, `error`. Slots: _none_.
+- **RadioGroup.vue** — Grouped radio options. Props: `modelValue`, `label`, `disabled`. Slots: `description`, default (RadioGroupOption children).
+- **RadioGroupOption.vue** — Single radio option with recipe-based styling. Props: `value`, `label`, `description`, `variant` (Variant), `tone` (Tone). Uses `card` and `focusRing` recipes for consistent styling. Slots: `label`, `description`.
+- **SelectComponent.vue** — Styled select using `input` recipe. Props: `modelValue`, `options`, `label`, `placeholder`, `disabled`, `error`, `size` ('sm' | 'md' | 'lg'). Slots: _none_.
 
 ### core/navigation
 - **FooterComponent.vue** — Footer navigation sections. Props: `sections`, `locale`. Slots: _none_.
 - **NavBar.vue** — Simplified top navigation bar with logo, links, and primary CTA. Props: `navItems` (array of {href, label}), `currentPath` (string), `ctaLabel` (string). Slots: _none_. Uses Headless UI Dialog for mobile menu.
 
 ### core/table
-- **C.vue** — Table cell wrapper. Props: `as` (tag), `align`, `width`. Slots: default (cell content).
-- **Row.vue** — Table row wrapper. Props: `as` (tag), `hoverable`. Slots: default (row content).
-- **Table.vue** — Table container. Props: `columns` (array), `striped`, `bordered`. Slots: default (rows), `header`.
+- **C.vue** — Table cell wrapper with minimal semantic classes. Props: `header` (bool), `align` ('left' | 'center' | 'right'). Uses Tailwind utilities for alignment and spacing. Slots: default (cell content).
+- **Row.vue** — Table row wrapper with recipe-based hover effects. Props: _none_. Uses Tailwind utilities for striped backgrounds and hover states. Slots: default (row content).
+- **Table.vue** — Table container using `card` recipe. Props: `variant` ('default' | 'bordered' | 'borderless' | 'glassy' | 'compact'), `striped`, `dense`, `width` ('stretch' | 'auto' | 'full'), `hoverEffect`, `radius` (Radius), `elevation` (Elevation). Slots: default (rows).
 
 ### core/transitions
 - **UiTransitionFade.vue** — Fade transition wrapper. Props: `as`, `appear`, `duration`. Slots: default (content).

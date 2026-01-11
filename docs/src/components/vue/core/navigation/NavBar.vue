@@ -129,19 +129,19 @@
               </DisclosurePanel>
             </Disclosure>
 
-                <div class="mt-6 pt-6 border-t border-surface-lighter">
-                  <Button
-                    class="w-full"
-                    size="md"
-                    variant="primary"
-                  >
-                    {{ ctaLabel }}
-                  </Button>
-                </div>
-              </nav>
-            </DialogPanel>
-          </UiTransitionSlide>
-        </div>
+            <div class="mt-6 pt-6 border-t border-surface-lighter">
+              <Button
+                class="w-full"
+                size="md"
+                variant="primary"
+              >
+                {{ ctaLabel }}
+              </Button>
+            </div>
+          </nav>
+        </DialogPanel>
+        </UiTransitionSlide>
+      </div>
       </Dialog>
     </TransitionRoot>
   </header>
