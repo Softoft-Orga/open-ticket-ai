@@ -61,9 +61,6 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
 - **RadioGroupOption.vue** — Single radio option with recipe-based styling. Props: `value`, `label`,
    `description`, `variant` (Variant), `tone` (Tone). Uses `card` and `focusRing` recipes for
    consistent styling. Slots: `label`, `description`. Story: `stories/RadioGroup.stories.ts`.
-- **SelectComponent.vue** — Styled select using `input` recipe. Props: `modelValue`, `options`,
-   `label`, `placeholder`, `disabled`, `error`, `size` ('sm' | 'md' | 'lg'). Slots: _none_. Story:
-   `stories/SelectComponent.stories.ts`.
 
 ### core/navigation
 
@@ -85,12 +82,3 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
    borderless' | 'glassy' | 'compact'), `striped`, `dense`, `width` ('stretch' | 'auto' | 'full'),
    `hoverEffect`, `radius` (Radius), `elevation` (Elevation). Slots: default (rows). Story:
    `stories/Table.stories.ts`.
-
-### core/transitions
-
-- **UiTransitionFade.vue** — Fade transition wrapper. Props: `as`, `appear`, `duration`. Slots:
-   default (content). Story: `stories/Transitions.stories.ts`.
-- **UiTransitionFadeScale.vue** — Fade + scale transition wrapper. Props: `as`, `appear`,
-   `strength`. Slots: default (content). Story: `stories/Transitions.stories.ts`.
-- **UiTransitionSlide.vue** — Slide transition wrapper. Props: `as`, `appear`, `direction`. Slots:
-   default (content). Story: `stories/Transitions.stories.ts`.
