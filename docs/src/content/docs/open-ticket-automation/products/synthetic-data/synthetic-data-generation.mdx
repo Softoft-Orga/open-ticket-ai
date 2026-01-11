@@ -3,11 +3,48 @@ title: Synthetic Data Generation for Support Tickets
 description: "Generate multilingual synthetic customer-support ticket datasets with our Python tool. Features a graph pipes, AI assistants, rich fields & cost tracking."
 ---
 
-import WaitlistSignupForm from '../../../../../components/vue/forms/WaitlistSignupForm.vue';
-
 # Synthetic Data Generation for Support Tickets
 
-<WaitlistSignupForm />
+<div class="w-100 pt-3 bg-gray-900 rounded-lg">
+  <div class="mx-auto max-w-screen-lg pb-5">
+    <h2 class="!mt-1 !mb-6 w-full text-center text-vp-text border-0 !border-t-0">
+      Join the Waitlist
+    </h2>
+
+    <form
+      class="space-y-5 max-w-64 mx-auto"
+      name="synthetic-ticket-generator-waitlist"
+      action="https://formspree.io/f/xjkjkzdo"
+      method="POST"
+    >
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-200 mb-1"
+          for="email"
+        >
+          Email
+        </label>
+        <div class="relative w-full">
+          <input
+            id="email"
+            class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+            name="email"
+            placeholder="you@domain.com"
+            required
+            type="email"
+          />
+        </div>
+      </div>
+
+      <button type="submit" class="w-full justify-center px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors">
+        Join Waitlist
+      </button>
+    </form>
+  </div>
+  <p class="w-full text-xs text-center leading-3 text-gray-400 pb-3">
+    We respect your privacy. Your email will only be used for this waitlist.
+  </p>
+</div>
 
 Create high-quality, multilingual support-ticket datasets for classification, routing, and response automation.
 This page describes our Python-based **Synthetic Data Generator** and the public dataset we created with it. It also

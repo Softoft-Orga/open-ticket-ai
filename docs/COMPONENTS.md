@@ -47,7 +47,7 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 
 ### core/navigation
 - **FooterComponent.vue** — Footer navigation sections. Props: `sections`, `locale`. Slots: _none_.
-- **NavBar.vue** — Top navigation bar using Headless UI Popover (docs menu), Dialog (mobile menu), and Disclosure (mobile docs). Props: `links` (nav items), `cta` (buttons), `mobileOnlyLinks`. Slots: default (extra actions).
+- **NavBar.vue** — Simplified top navigation bar with logo, links, and primary CTA. Props: `navItems` (array of {href, label}), `currentPath` (string), `ctaLabel` (string). Slots: _none_. Uses Headless UI Dialog for mobile menu.
 
 ### core/table
 - **C.vue** — Table cell wrapper. Props: `as` (tag), `align`, `width`. Slots: default (cell content).
@@ -60,16 +60,10 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **UiTransitionSlide.vue** — Slide transition wrapper. Props: `as`, `appear`, `direction`. Slots: default (content).
 
 ## forms
-- **ContactForm.vue** — Contact form with name/email/message. Props: _none_ (uses internal state). Slots: _none_.
 - **ServiceInquiryModal.vue** — Modal for service inquiries. Props: `open`, `onClose`. Slots: default (form body).
-- **WaitlistSignupForm.vue** — Waitlist signup form. Props: _none_ (internal). Slots: _none_.
 
 ## homepage
-- **CapabilityCard.vue** — Capability highlight card. Props: `title`, `description`, `icon`. Slots: _none_.
-- **FeatureShowcase.vue** — Hero-style feature showcase. Props: `title`, `subtitle`, `cta`, `image`. Slots: default (extra content).
-- **IntegrationLogos.vue** — Logo cloud. Props: `logos` (array). Slots: _none_.
 - **ServiceCard.vue** — Service offering card. Props: `title`, `description`, `cta`, `icon`. Slots: `footer`.
-- **ServicesGrid.vue** — Grid of services. Props: `services` (array). Slots: _none_.
 
 ## marketplace
 - **MarketplacePagination.vue** — Pagination control. Props: `page`, `pageSize`, `total`, `onPageChange`. Slots: _none_.
@@ -90,9 +84,3 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 
 ## predictionDemo
 - **OTAIPredictionDemo.vue** — Prediction demo experience. Props: `initialMessage`, `demoConfig`. Slots: _none_.
-- **PredictionCard.vue** — Card showing prediction result. Props: `title`, `score`, `meta`. Slots: default (detail).
-- **ResultTable.vue** — Table of prediction results. Props: `rows`, `columns`. Slots: _none_.
-
-## product
-- **PerformanceMetric.vue** — Performance metric stat. Props: `label`, `value`, `delta`. Slots: _none_.
-- **ProductCard.vue** — Product card. Props: `product`. Slots: _none_.
