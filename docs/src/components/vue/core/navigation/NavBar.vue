@@ -93,10 +93,10 @@
                     </div>
                   </a>
                 </div>
-              </MenuItems>
-            </UiTransitionSlide>
-          </TransitionRoot>
-        </Menu>
+              </div>
+            </div>
+          </Transition>
+        </div>
       </nav>
 
       <div class="hidden md:flex items-center gap-3">
