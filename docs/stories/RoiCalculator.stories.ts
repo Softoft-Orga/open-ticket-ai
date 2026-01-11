@@ -16,7 +16,7 @@ const meta = {
 - Enhanced hover effects on preset cards and stat cards with scale and glow
 - Smooth fade/scale transitions using classes inspired by the design system presets
 - Chart.js visualizations for TCO projection and cost breakdown
-- Shared components (Card, Badge, TextInput) with Tailwind tokens only
+- Shared components (Card, Badge) with Tailwind tokens only
 - Real-time calculations with Chart updates
 - Accessibility support with motion-reduce
 

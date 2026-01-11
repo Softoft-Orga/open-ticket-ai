@@ -78,12 +78,11 @@
             <label class="block text-sm font-medium text-gray-300 mb-2">
               Daily Tickets
             </label>
-            <TextInput
+            <input
               v-model="ticketsStr"
               type="number"
-              variant="primary"
-              size="md"
-            />
+              class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+            >
           </div>
 
           <div class="grid grid-cols-2 gap-3">
@@ -91,23 +90,21 @@
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Manual Cost/Ticket (€)
               </label>
-              <TextInput
+              <input
                 v-model="manualCostStr"
                 type="number"
-                variant="primary"
-                size="md"
-              />
+                class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+              >
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Cost Per Error (€)
               </label>
-              <TextInput
+              <input
                 v-model="errorCostStr"
                 type="number"
-                variant="primary"
-                size="md"
-              />
+                class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+              >
             </div>
           </div>
 
@@ -116,23 +113,21 @@
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Human Acc (%)
               </label>
-              <TextInput
+              <input
                 v-model="humanAccStr"
                 type="number"
-                variant="primary"
-                size="md"
-              />
+                class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+              >
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Amortization (Mo)
               </label>
-              <TextInput
+              <input
                 v-model="monthsStr"
                 type="number"
-                variant="primary"
-                size="md"
-              />
+                class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+              >
             </div>
           </div>
         </div>
@@ -240,23 +235,21 @@
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 License (€)
               </label>
-              <TextInput
+              <input
                 v-model="proLicenseStr"
                 type="number"
-                variant="primary"
-                size="md"
-              />
+                class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+              >
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 AI Accuracy (%)
               </label>
-              <TextInput
+              <input
                 v-model="proAccStr"
                 type="number"
-                variant="primary"
-                size="md"
-              />
+                class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+              >
             </div>
           </div>
 
@@ -265,24 +258,22 @@
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Maint/Mo (€)
               </label>
-              <TextInput
+              <input
                 v-model="proMaintStr"
                 type="number"
-                variant="primary"
-                size="md"
-              />
+                class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+              >
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">
                 Hardware/Mo (€)
               </label>
-              <TextInput
-                :model-value="String(proHw)"
+              <input
+                :value="String(proHw)"
                 type="number"
                 disabled
-                variant="primary"
-                size="md"
-              />
+                class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
               <span class="text-xs text-gray-500">(Auto)</span>
             </div>
           </div>
@@ -291,12 +282,11 @@
             <label class="block text-sm font-medium text-gray-300 mb-2">
               Inherent Setup Estimate (€)
             </label>
-            <TextInput
+            <input
               v-model="proSetupStr"
               type="number"
-              variant="primary"
-              size="md"
-            />
+              class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+            >
           </div>
         </div>
       </Card>
@@ -322,46 +312,42 @@
           <label class="block text-sm font-medium text-gray-300 mb-2">
             Inherent Setup (€)
           </label>
-          <TextInput
+          <input
             v-model="freeSetupStr"
             type="number"
-            variant="primary"
-            size="md"
-          />
+            class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+          >
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">
             Accuracy (%)
           </label>
-          <TextInput
+          <input
             v-model="freeAccStr"
             type="number"
-            variant="primary"
-            size="md"
-          />
+            class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+          >
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">
             Maint/Mo (€)
           </label>
-          <TextInput
+          <input
             v-model="freeMaintStr"
             type="number"
-            variant="primary"
-            size="md"
-          />
+            class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200"
+          >
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">
             Hardware/Mo (€)
           </label>
-          <TextInput
-            :model-value="String(freeHw)"
+          <input
+            :value="String(freeHw)"
             type="number"
             disabled
-            variant="primary"
-            size="md"
-          />
+            class="w-full h-12 px-4 text-base rounded-xl bg-surface-dark border border-primary/40 text-white placeholder:text-text-dim hover:border-primary/60 hover:shadow-[0_0_15px_rgba(166,13,242,0.2)] focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none active:border-primary active:ring-primary/60 shadow-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
           <span class="text-xs text-gray-500">(Auto)</span>
         </div>
       </div>
@@ -451,7 +437,6 @@ import {
 } from '@heroicons/vue/24/outline'
 import Card from '../core/basic/Card.vue'
 import Badge from '../core/basic/Badge.vue'
-import TextInput from '../core/forms/TextInput.vue'
 
 Chart.register(...registerables)
 
@@ -516,7 +501,7 @@ const roiChartRef = ref<HTMLCanvasElement | null>(null)
 let tcoInstance: Chart | null = null
 let roiInstance: Chart | null = null
 
-// Computed string properties for TextInput v-model
+// Computed string properties for input v-model bindings
 const ticketsStr = computed({
   get: () => String(tickets.value),
   set: (val) => { tickets.value = Number(val) || 0 }
