@@ -25,6 +25,18 @@
         </a>
       </nav>
 
+      <div class="hidden md:flex items-center gap-4">
+        <Button
+          v-if="ctaLabel"
+          :href="ctaUrl"
+          variant="solid"
+          tone="primary"
+          size="md"
+        >
+          {{ ctaLabel }}
+        </Button>
+      </div>
+
       <button
         class="md:hidden flex items-center justify-center rounded-lg p-2 text-text-2 transition-colors hover:text-text-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         aria-label="Open menu"
@@ -34,60 +46,87 @@
       </button>
     </div>
 
-    <div
-      v-if="mobileMenuOpen"
-      class="md:hidden"
+    <TransitionRoot
+      :show="mobileMenuOpen"
+      as="template"
     >
-      <div
-        class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm"
-        @click="closeMobileMenu"
-      />
-      <div class="fixed inset-0 flex justify-end">
-        <div class="h-full w-full max-w-sm border-l border-border-dark bg-surface-dark p-6 shadow-2xl">
-          <div class="mb-8 flex items-center justify-between">
-            <p class="text-lg font-bold text-text-1">
-              Menu
-            </p>
-            <button
-              class="rounded-lg p-2 text-text-2 transition-colors hover:text-text-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-              aria-label="Close menu"
-              @click="closeMobileMenu"
-            >
-              <XMarkIcon class="h-6 w-6" />
-            </button>
-          </div>
+      <div class="md:hidden">
+        <UiTransitionFade>
+          <div
+            class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm"
+            @click="closeMobileMenu"
+          />
+        </UiTransitionFade>
+        <UiTransitionSlide direction="right">
+          <div class="fixed inset-y-0 right-0 flex w-full max-w-sm">
+            <div class="h-full w-full border-l border-border-dark bg-surface-dark p-6 shadow-2xl">
+              <div class="mb-8 flex items-center justify-between">
+                <p class="text-lg font-bold text-text-1">
+                  Menu
+                </p>
+                <button
+                  class="rounded-lg p-2 text-text-2 transition-colors hover:text-text-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                  aria-label="Close menu"
+                  @click="closeMobileMenu"
+                >
+                  <XMarkIcon class="h-6 w-6" />
+                </button>
+              </div>
 
-          <nav class="flex flex-col gap-3">
-            <a
-              v-for="link in navLinks"
-              :key="link.url"
-              :class="[
-                'rounded-xl px-4 py-3 text-base font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
-                isActive(link.url)
-                  ? 'border border-primary/40 bg-primary/20 text-text-1'
-                  : 'text-text-2 hover:bg-surface-lighter'
-              ]"
-              :href="link.url"
-              @click="closeMobileMenu"
-            >
-              {{ link.label }}
-            </a>
-          </nav>
-        </div>
+              <nav class="flex flex-col gap-3">
+                <a
+                  v-for="link in navLinks"
+                  :key="link.url"
+                  :class="[
+                    'rounded-xl px-4 py-3 text-base font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+                    isActive(link.url)
+                      ? 'border border-primary/40 bg-primary/20 text-text-1'
+                      : 'text-text-2 hover:bg-surface-lighter'
+                  ]"
+                  :href="link.url"
+                  @click="closeMobileMenu"
+                >
+                  {{ link.label }}
+                </a>
+              </nav>
+
+              <div
+                v-if="ctaLabel"
+                class="mt-8 pt-6 border-t border-border-dark"
+              >
+                <Button
+                  :href="ctaUrl"
+                  variant="solid"
+                  tone="primary"
+                  size="md"
+                  block
+                >
+                  {{ ctaLabel }}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </UiTransitionSlide>
       </div>
-    </div>
+    </TransitionRoot>
   </header>
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { TransitionRoot } from '@headlessui/vue'
+import Button from '../basic/Button.vue'
+import UiTransitionFade from '../transitions/UiTransitionFade.vue'
+import UiTransitionSlide from '../transitions/UiTransitionSlide.vue'
 
 type NavLink = { label: string; url: string }
 
 type Props = {
   logoUrl?: string
   links?: NavLink[]
+  ctaLabel?: string
+  ctaUrl?: string
 }
 
 const props = defineProps<Props>()

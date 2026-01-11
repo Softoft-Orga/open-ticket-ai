@@ -18,6 +18,8 @@ const siteConfig = siteEntries.find(entry => entry.data.slug === 'main');
 const navLinks = siteConfig?.data.nav || [];
 const footerData = siteConfig?.data.footer;
 const logoUrl = siteConfig?.data.meta.logoUrl;
+const ctaLabel = 'Get Started';
+const ctaUrl = '/get-started/';
 ---
 
 <!DOCTYPE html>
@@ -74,7 +76,7 @@ const logoUrl = siteConfig?.data.meta.logoUrl;
     </script>
   </head>
   <body class="font-sans">
-    <NavBar client:load links={navLinks} logoUrl={logoUrl} />
+    <NavBar client:load links={navLinks} logoUrl={logoUrl} ctaLabel={ctaLabel} ctaUrl={ctaUrl} />
     <slot />
     <FooterComponent client:load footerData={footerData} />
   </body>

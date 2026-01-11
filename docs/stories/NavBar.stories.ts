@@ -19,13 +19,17 @@ const meta: Meta<typeof NavBar> = {
       control: 'text',
       description: 'Label for the primary CTA button',
     },
-    currentPath: {
+    ctaUrl: {
       control: 'text',
-      description: 'Current active path for highlighting navigation items',
+      description: 'URL for the primary CTA button',
     },
-    navItems: {
+    links: {
       control: 'object',
-      description: 'Array of navigation items with href and label',
+      description: 'Array of navigation items with url and label',
+    },
+    logoUrl: {
+      control: 'text',
+      description: 'URL for the logo image',
     },
   },
 }
@@ -44,12 +48,21 @@ export const Default: Story = {
         <NavBar v-bind="args" />
         <div class="p-8">
           <h1 class="text-white text-2xl">Default Navbar</h1>
-          <p class="text-gray-400 mt-2">Simple navbar with logo, navigation links, and a primary CTA button.</p>
-          <p class="text-gray-400 mt-2">Desktop view shows all items inline. Mobile view uses a slide-over menu.</p>
+          <p class="text-gray-400 mt-2">Navbar with centered navigation links and a primary CTA button at the end.</p>
+          <p class="text-gray-400 mt-2">Desktop view shows all items inline. Mobile view uses a slide-in dropdown menu.</p>
         </div>
       </div>
     `
   }),
+  args: {
+    links: [
+      { label: 'Products', url: '/products/' },
+      { label: 'Services', url: '/services/' },
+      { label: 'Pricing', url: '/pricing/' },
+    ],
+    ctaLabel: 'Get Started',
+    ctaUrl: '/get-started/',
+  }
 }
 
 export const CustomNavItems: Story = {
@@ -69,17 +82,18 @@ export const CustomNavItems: Story = {
     `
   }),
   args: {
-    navItems: [
-      { label: 'Home', href: '/' },
-      { label: 'Features', href: '/features/' },
-      { label: 'Solutions', href: '/solutions/' },
-      { label: 'Contact', href: '/contact/' },
+    links: [
+      { label: 'Home', url: '/' },
+      { label: 'Features', url: '/features/' },
+      { label: 'Solutions', url: '/solutions/' },
+      { label: 'Contact', url: '/contact/' },
     ],
-    ctaLabel: 'Try Demo'
+    ctaLabel: 'Try Demo',
+    ctaUrl: '/demo/',
   }
 }
 
-export const WithActiveLink: Story = {
+export const WithoutCTA: Story = {
   render: (args) => ({
     components: { NavBar },
     setup() {
@@ -89,14 +103,18 @@ export const WithActiveLink: Story = {
       <div class="min-h-screen bg-slate-900">
         <NavBar v-bind="args" />
         <div class="p-8">
-          <h1 class="text-white text-2xl">Active Link State</h1>
-          <p class="text-gray-400 mt-2">The "Products" link is highlighted as active.</p>
+          <h1 class="text-white text-2xl">Navbar Without CTA</h1>
+          <p class="text-gray-400 mt-2">Navigation bar without a CTA button.</p>
         </div>
       </div>
     `
   }),
   args: {
-    currentPath: '/products/'
+    links: [
+      { label: 'Products', url: '/products/' },
+      { label: 'Services', url: '/services/' },
+      { label: 'Pricing', url: '/pricing/' },
+    ],
   }
 }
 
@@ -111,19 +129,27 @@ export const MobileView: Story = {
         <NavBar v-bind="args" />
         <div class="p-8">
           <h1 class="text-white text-2xl">Mobile Menu</h1>
-          <p class="text-gray-400 mt-2">Click the hamburger menu to see the mobile slide-over panel.</p>
+          <p class="text-gray-400 mt-2">Click the hamburger menu to see the mobile dropdown menu.</p>
           <p class="text-gray-400 mt-2">Features:</p>
           <ul class="text-gray-400 mt-2 list-disc ml-6 space-y-1">
-            <li>Headless UI Dialog component for accessibility</li>
             <li>Slide-in transition from the right</li>
             <li>Navigation links with active state</li>
             <li>Primary CTA button at the bottom</li>
-            <li>Focus trap and backdrop overlay</li>
+            <li>Backdrop overlay with blur effect</li>
           </ul>
         </div>
       </div>
     `
   }),
+  args: {
+    links: [
+      { label: 'Products', url: '/products/' },
+      { label: 'Services', url: '/services/' },
+      { label: 'Pricing', url: '/pricing/' },
+    ],
+    ctaLabel: 'Get Started',
+    ctaUrl: '/get-started/',
+  },
   parameters: {
     viewport: {
       defaultViewport: 'mobile1'
@@ -152,4 +178,13 @@ export const KeyboardAccessibility: Story = {
       </div>
     `
   }),
+  args: {
+    links: [
+      { label: 'Products', url: '/products/' },
+      { label: 'Services', url: '/services/' },
+      { label: 'Pricing', url: '/pricing/' },
+    ],
+    ctaLabel: 'Get Started',
+    ctaUrl: '/get-started/',
+  }
 }
