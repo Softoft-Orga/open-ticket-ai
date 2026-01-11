@@ -8,7 +8,7 @@ tags:
   - product-update
   - announcement
 category: Product Update
-draft: false
+draft: true
 ---
 
 # Open Ticket AI 1.4: The First Major Production Release
@@ -18,7 +18,7 @@ brings enterprise-grade features, a mature plugin ecosystem, and the flexibility
 ticket system workflows like never before. Get the full release
 on [GitHub](https://github.com/Softoft-Orga/open-ticket-ai/releases/tag/v1.4.1).
 
-![https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png](https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png)
+![Open Ticket AI 1.4 Release](https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.png)
 
 ## Checkout the Demo!
 

@@ -4,7 +4,12 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
 
 export async function getStaticPaths() {
   const docsEntries = await getCollection('docs');
-  return docsEntries.map(entry => ({
+  // Exclude open-ticket-automation docs (they have their own route)
+  const filteredDocs = docsEntries.filter(entry => 
+    !entry.id.startsWith('open-ticket-automation/')
+  );
+  
+  return filteredDocs.map(entry => ({
     params: { slug: entry.id.replace(/\.(md|mdx)$/, '') },
     props: { entry },
   }));
