@@ -52,7 +52,7 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 
 ### core/navigation
 - **FooterComponent.vue** — Footer navigation sections. Props: `sections`, `locale`. Slots: _none_.
-- **NavBar.vue** — Top navigation bar. Props: `links`, `cta`, `mobileOnlyLinks`. Slots: default (extra actions).
+- **NavBar.vue** — Simplified top navigation bar with logo, links, and primary CTA. Props: `navItems` (array of {href, label}), `currentPath` (string), `ctaLabel` (string). Slots: _none_. Uses Headless UI Dialog for mobile menu.
 
 ### core/table
 - **C.vue** — Table cell wrapper. Props: `as` (tag), `align`, `width`. Slots: default (cell content).
