@@ -14,76 +14,40 @@
           </p>
         </div>
         
-        <div>
+        <div
+          v-for="(section, index) in sections"
+          :key="index"
+        >
           <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">
-            Product
+            {{ section.title }}
           </h4>
           <ul class="space-y-4 text-slate-500 text-sm">
-            <li>
+            <li
+              v-for="(link, linkIndex) in section.links"
+              :key="linkIndex"
+            >
               <a
-                href="/products"
+                :href="link.url"
                 class="text-primary hover:text-primary-light transition-colors"
-              >Features</a>
-            </li>
-            <li>
-              <a
-                href="/services"
-                class="text-primary hover:text-primary-light transition-colors"
-              >Integrations</a>
-            </li>
-            <li>
-              <a
-                href="/docs"
-                class="text-primary hover:text-primary-light transition-colors"
-              >Security</a>
+              >{{ link.label }}</a>
             </li>
           </ul>
         </div>
 
-        <div>
-          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">
-            Company
-          </h4>
-          <ul class="space-y-4 text-slate-500 text-sm">
-            <li>
-              <a
-                href="#"
-                class="text-primary hover:text-primary-light transition-colors"
-              >About Us</a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="text-primary hover:text-primary-light transition-colors"
-              >Careers</a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="text-primary hover:text-primary-light transition-colors"
-              >Legal</a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
+        <div v-if="social.length > 0">
           <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">
             Connect
           </h4>
           <div class="flex gap-4 text-primary">
             <a
-              href="https://github.com/openticketai"
+              v-for="(socialLink, index) in social"
+              :key="index"
+              :href="socialLink.url"
+              :aria-label="socialLink.ariaLabel"
               class="hover:text-primary-light transition-colors"
-              aria-label="GitHub"
             >
-              <CodeBracketSquareIcon class="w-6 h-6" />
-            </a>
-            <a
-              href="https://www.linkedin.com/company/open-ticket-ai"
-              class="hover:text-primary-light transition-colors"
-              aria-label="LinkedIn"
-            >
-              <LinkIcon class="w-6 h-6" />
+              <CodeBracketSquareIcon v-if="socialLink.platform === 'github'" class="w-6 h-6" />
+              <LinkIcon v-else-if="socialLink.platform === 'linkedin'" class="w-6 h-6" />
             </a>
           </div>
         </div>
@@ -91,17 +55,15 @@
       
       <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="text-xs text-slate-600">
-          © {{ year }} Open Ticket AI UG. All rights reserved.
+          © {{ year }} {{ copyright }}
         </div>
-        <div class="flex gap-8 text-xs text-primary">
+        <div v-if="legal.length > 0" class="flex gap-8 text-xs text-primary">
           <a
+            v-for="(legalLink, index) in legal"
+            :key="index"
+            :href="legalLink.url"
             class="hover:text-primary-light transition-colors"
-            href="#"
-          >Privacy Policy</a>
-          <a
-            class="hover:text-primary-light transition-colors"
-            href="#"
-          >Imprint</a>
+          >{{ legalLink.label }}</a>
         </div>
       </div>
     </div>
@@ -112,5 +74,38 @@
 import { computed } from 'vue'
 import { TicketIcon, CodeBracketSquareIcon, LinkIcon } from '@heroicons/vue/24/outline'
 
+type FooterLink = {
+  label: string
+  url: string
+}
+
+type FooterSection = {
+  title: string
+  links: FooterLink[]
+}
+
+type SocialLink = {
+  platform: string
+  url: string
+  ariaLabel: string
+}
+
+type FooterData = {
+  sections: FooterSection[]
+  social: SocialLink[]
+  legal: FooterLink[]
+  copyright: string
+}
+
+type Props = {
+  footerData?: FooterData
+}
+
+const props = defineProps<Props>()
+
+const sections = computed(() => props.footerData?.sections || [])
+const social = computed(() => props.footerData?.social || [])
+const legal = computed(() => props.footerData?.legal || [])
+const copyright = computed(() => props.footerData?.copyright || 'Open Ticket AI UG. All rights reserved.')
 const year = computed(() => new Date().getFullYear())
 </script>

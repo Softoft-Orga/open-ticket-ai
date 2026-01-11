@@ -71,10 +71,47 @@ const servicesCollection = defineCollection({
   }),
 });
 
+// 5️⃣ site collection - data collection (YAML)
+const siteCollection = defineCollection({
+  loader: file("src/content/site/site.yml"),
+  schema: z.object({
+    slug: z.string(),
+    meta: z.object({
+      siteName: z.string(),
+      tagline: z.string().optional(),
+      logoUrl: z.string().optional(),
+    }),
+    nav: z.array(z.object({
+      label: z.string(),
+      url: z.string(),
+    })),
+    footer: z.object({
+      sections: z.array(z.object({
+        title: z.string(),
+        links: z.array(z.object({
+          label: z.string(),
+          url: z.string(),
+        })),
+      })),
+      social: z.array(z.object({
+        platform: z.string(),
+        url: z.string(),
+        ariaLabel: z.string(),
+      })),
+      legal: z.array(z.object({
+        label: z.string(),
+        url: z.string(),
+      })),
+      copyright: z.string(),
+    }),
+  }),
+});
+
 // Export collections
 export const collections = {
   docs: docsCollection,
   blog: blogCollection,
   products: productsCollection,
   services: servicesCollection,
+  site: siteCollection,
 };

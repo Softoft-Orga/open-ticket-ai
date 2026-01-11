@@ -92,13 +92,7 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const fallbackLinks: NavLink[] = [
-  { label: 'Products', url: '/products/' },
-  { label: 'Services', url: '/services/' },
-  { label: 'Pricing', url: '/pricing/' }
-]
-
-const navLinks = computed(() => (props.links?.length ? props.links : fallbackLinks))
+const navLinks = computed(() => props.links || [])
 const logoSrc = computed(() => props.logoUrl ?? '/public/open-ticket-logo.png')
 
 const activePath = ref('/')

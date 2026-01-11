@@ -4,12 +4,13 @@ This document describes all content collections used in the Open Ticket AI websi
 
 ## Overview
 
-The website uses four content collections:
+The website uses five content collections:
 
 1. **docs** - Documentation pages (Markdown/MDX)
 2. **blog** - Blog articles (Markdown/MDX)
 3. **products** - Product listings (YAML data)
 4. **services** - Service offerings (YAML data)
+5. **site** - Site configuration (nav, footer, meta) (YAML data)
 
 ## 1. Docs Collection
 
@@ -395,6 +396,115 @@ Services are organized by `serviceGroup`:
 - **Service order**: Use `serviceOrder` to control positioning; defaults to 0 if omitted
 - **Price field**: `startingPrice` must be a number, not a string
 - **Hidden services**: Set `hidden: true` to remove from display (useful for WIP entries)
+
+---
+
+## 5. Site Collection
+
+**Purpose**: Global site configuration including navigation links, footer sections, and site metadata.
+
+**Type**: Data collection (YAML file with Astro loader)
+
+**Location**: `src/content/site/site.yml` (single YAML file)
+
+**Schema Source**: `src/content/config.ts` → `siteCollection`
+
+### Required Fields
+
+```yaml
+- slug: string                   # REQUIRED - Unique identifier (use "main" for primary config)
+  meta:                          # REQUIRED - Site metadata
+    siteName: string             # Site name
+    tagline: string              # optional - Site tagline
+    logoUrl: string              # optional - Path to logo image
+  nav: NavLink[]                 # REQUIRED - Navigation links array
+    - label: string              # Link label text
+      url: string                # Link URL
+  footer:                        # REQUIRED - Footer configuration
+    sections: FooterSection[]    # Footer link sections
+      - title: string            # Section title
+        links: FooterLink[]      # Links in this section
+          - label: string        # Link label
+            url: string          # Link URL
+    social: SocialLink[]         # Social media links
+      - platform: string         # Platform identifier (e.g., "github", "linkedin")
+        url: string              # Social media URL
+        ariaLabel: string        # Accessibility label
+    legal: FooterLink[]          # Legal links (Privacy, Terms, etc.)
+      - label: string            # Link label
+        url: string              # Link URL
+    copyright: string            # Copyright text
+```
+
+### Usage
+
+The site collection is loaded in `BaseLayout.astro` and its data is passed to the `NavBar` and `FooterComponent` components:
+
+```astro
+---
+import { getCollection } from 'astro:content';
+
+const siteEntries = await getCollection('site');
+const siteConfig = siteEntries.find(entry => entry.data.slug === 'main');
+const navLinks = siteConfig?.data.nav || [];
+const footerData = siteConfig?.data.footer;
+const logoUrl = siteConfig?.data.meta.logoUrl;
+---
+
+<NavBar client:load links={navLinks} logoUrl={logoUrl} />
+<FooterComponent client:load footerData={footerData} />
+```
+
+### How to Update Site Configuration
+
+1. Open `src/content/site/site.yml`
+2. Modify the navigation links, footer sections, or metadata as needed
+3. Save the file
+4. The changes will automatically be reflected across all pages using `BaseLayout`
+
+**Example**:
+```yaml
+- slug: main
+  meta:
+    siteName: Open Ticket AI
+    tagline: Intelligent automation for OTRS, Znuny, and Zammad
+    logoUrl: /public/open-ticket-logo.png
+  nav:
+    - label: Products
+      url: /products/
+    - label: Services
+      url: /services/
+    - label: Pricing
+      url: /pricing/
+  footer:
+    sections:
+      - title: Product
+        links:
+          - label: Features
+            url: /products
+          - label: Integrations
+            url: /services
+      - title: Company
+        links:
+          - label: About Us
+            url: /about
+    social:
+      - platform: github
+        url: https://github.com/openticketai
+        ariaLabel: GitHub
+    legal:
+      - label: Privacy Policy
+        url: /privacy
+    copyright: Open Ticket AI UG. All rights reserved.
+```
+
+### Common Pitfalls
+
+- **YAML syntax errors**: Indentation matters! Use 2 spaces, not tabs
+- **Missing required fields**: `slug`, `meta`, `nav`, and `footer` are all required
+- **Array syntax**: Use `- item` format for arrays
+- **Platform identifiers**: The `platform` field in social links is used to determine which icon to show. Currently supports "github" and "linkedin"
+- **Copyright text**: Will be prefixed with © and the current year automatically
 
 ---
 
