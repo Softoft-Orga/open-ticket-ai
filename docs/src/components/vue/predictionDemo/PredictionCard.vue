@@ -2,7 +2,7 @@
   <Card>
     <!-- Header -->
     <template #header>
-      <span class="text-lg font-medium text-gray-500 dark:text-gray-400">
+      <span class="text-lg font-medium text-text-dim">
         {{ heading }}
       </span>
     </template>
@@ -14,7 +14,7 @@
 
     <!-- Footer -->
     <template #footer>
-      <div class="text-md text-gray-900 dark:text-gray-100">
+      <div class="text-base text-white">
         Confidence:
         <Badge :type="badgeClass(confidence)">
           {{ asPercent(confidence) }}

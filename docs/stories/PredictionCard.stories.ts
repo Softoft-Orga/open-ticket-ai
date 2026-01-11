@@ -35,7 +35,7 @@ export const HighConfidence: Story = {
         template: `
             <div class="max-w-md">
                 <PredictionCard v-bind="args">
-                    <p class="text-gray-700 dark:text-gray-300">This ticket is about billing issues with payment processing.</p>
+                    <p>This ticket is about billing issues with payment processing.</p>
                 </PredictionCard>
             </div>
         `
@@ -55,7 +55,7 @@ export const MediumConfidence: Story = {
         template: `
             <div class="max-w-md">
                 <PredictionCard v-bind="args">
-                    <p class="text-gray-700 dark:text-gray-300">The ticket might be related to technical support or product inquiries.</p>
+                    <p>The ticket might be related to technical support or product inquiries.</p>
                 </PredictionCard>
             </div>
         `
@@ -75,7 +75,7 @@ export const LowConfidence: Story = {
         template: `
             <div class="max-w-md">
                 <PredictionCard v-bind="args">
-                    <p class="text-gray-700 dark:text-gray-300">Uncertain classification - may need manual review.</p>
+                    <p>Uncertain classification - may need manual review.</p>
                 </PredictionCard>
             </div>
         `
@@ -95,7 +95,7 @@ export const VeryLowConfidence: Story = {
         template: `
             <div class="max-w-md">
                 <PredictionCard v-bind="args">
-                    <p class="text-gray-700 dark:text-gray-300">Very uncertain - manual classification recommended.</p>
+                    <p>Very uncertain - manual classification recommended.</p>
                 </PredictionCard>
             </div>
         `
@@ -114,9 +114,9 @@ export const Interactive: Story = {
         },
         template: `
             <div class="space-y-4 max-w-md">
-                <p class="text-sm text-gray-600 dark:text-gray-400">Adjust the confidence slider in Controls to see badge color changes</p>
+                <p class="text-sm text-text-dim">Adjust the confidence slider in Controls to see badge color changes</p>
                 <PredictionCard v-bind="args">
-                    <p class="text-gray-700 dark:text-gray-300">Sample prediction content</p>
+                    <p>Sample prediction content</p>
                 </PredictionCard>
             </div>
         `
