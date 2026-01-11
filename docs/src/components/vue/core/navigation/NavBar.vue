@@ -27,7 +27,7 @@
           </MenuButton>
 
           <TransitionRoot>
-            <TransitionChild v-bind="slideDownSm" as="template">
+            <UiTransitionSlide direction="down">
               <MenuItems class="absolute left-1/2 -translate-x-1/2 mt-3 w-72 rounded-2xl border border-surface-lighter bg-[#11011c] shadow-2xl backdrop-blur-xl p-4 focus:outline-none">
                 <div class="space-y-4">
                   <div>
@@ -69,7 +69,7 @@
                   </div>
                 </div>
               </MenuItems>
-            </TransitionChild>
+            </UiTransitionSlide>
           </TransitionRoot>
         </Menu>
       </nav>
@@ -90,12 +90,12 @@
 
     <TransitionRoot :show="mobileMenuOpen" as="template">
       <Dialog @close="closeMobileMenu" class="relative z-50 md:hidden">
-        <TransitionChild v-bind="fade" as="template">
+        <UiTransitionFade>
           <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
-        </TransitionChild>
+        </UiTransitionFade>
 
         <div class="fixed inset-0 flex items-start justify-end">
-          <TransitionChild v-bind="slideRightSm" as="template">
+          <UiTransitionSlide direction="right">
             <DialogPanel class="w-full max-w-sm h-full bg-background-dark border-l border-surface-lighter p-6 shadow-2xl">
               <div class="flex items-center justify-between mb-8">
                 <DialogTitle class="text-lg font-bold text-white">Menu</DialogTitle>
@@ -136,7 +136,7 @@
                   </DisclosureButton>
                   
                   <TransitionRoot>
-                    <TransitionChild v-bind="slideDownSm" as="template">
+                    <UiTransitionSlide direction="down">
                       <DisclosurePanel class="mt-2 ml-4 space-y-2">
                         <a
                           :href="docsHub.href"
@@ -163,7 +163,7 @@
                           </div>
                         </a>
                       </DisclosurePanel>
-                    </TransitionChild>
+                    </UiTransitionSlide>
                   </TransitionRoot>
                 </Disclosure>
 
@@ -173,7 +173,7 @@
                 </div>
               </nav>
             </DialogPanel>
-          </TransitionChild>
+          </UiTransitionSlide>
         </div>
       </Dialog>
     </TransitionRoot>
@@ -193,8 +193,7 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-  TransitionRoot,
-  TransitionChild
+  TransitionRoot
 } from '@headlessui/vue'
 import {
   TicketIcon,
@@ -206,7 +205,8 @@ import {
   XMarkIcon
 } from '@heroicons/vue/24/outline'
 import Button from '../basic/Button.vue'
-import { fade, slideDownSm, slideRightSm } from '../transitions/presets'
+import UiTransitionFade from '../transitions/UiTransitionFade.vue'
+import UiTransitionSlide from '../transitions/UiTransitionSlide.vue'
 
 type NavItem = { href: string; label: string }
 
