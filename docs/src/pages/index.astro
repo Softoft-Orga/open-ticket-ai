@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ServiceCard from '../components/vue/homepage/ServiceCard.vue';
 import Card from '../components/vue/core/basic/Card.vue';
 import Badge from '../components/vue/core/basic/Badge.vue';
 import Button from '../components/vue/core/basic/Button.vue';
@@ -136,11 +135,11 @@ const features = [
               <Badge type="primary" client:load class="w-fit uppercase tracking-wider">
                 Core Engine
               </Badge>
-              
+
               <h2 class="font-display text-4xl font-bold text-white leading-tight">
                 Tagging AI
               </h2>
-              
+
               <p class="text-text-dim text-xl leading-relaxed">
                 Hierarchical, multilingual ticket classification that stays on your server.
               </p>
@@ -179,18 +178,47 @@ const features = [
             Integration packages, automation setup, and custom development for your needs
           </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
-            <ServiceCard
-              client:load
-              title={service.title}
-              one-liner={service.oneLiner}
-              description={service.description}
-              outcomes={service.outcomes}
-              starting-price={service.startingPrice}
-              group={service.group}
-            />
+            <div class="flex h-full flex-col gap-4 rounded-2xl border border-border-dark bg-surface-dark p-6 shadow-card">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h3 class="text-xl font-semibold text-text-1">{service.title}</h3>
+                  {service.oneLiner && <p class="text-text-2 text-sm mt-1">{service.oneLiner}</p>}
+                </div>
+                <span class="rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary">{service.group}</span>
+              </div>
+
+              {service.description && <p class="text-text-2 text-sm leading-relaxed">{service.description}</p>}
+
+              {service.outcomes?.length && (
+                <ul class="flex flex-col gap-2 text-sm text-text-2">
+                  {service.outcomes.map((item) => (
+                    <li class="flex items-start gap-2">
+                      <span class="mt-1 size-2 rounded-full bg-primary" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <div class="mt-auto flex items-center justify-between">
+                {typeof service.startingPrice === 'number' ? (
+                  <div class="text-sm text-text-2">
+                    Starting at <span class="text-text-1 font-semibold">${service.startingPrice}</span>
+                  </div>
+                ) : (
+                  <div class="text-sm text-text-2">Custom pricing</div>
+                )}
+                <a
+                  class="rounded-lg border border-primary/60 bg-primary/15 px-4 py-2 text-sm font-semibold text-text-1 transition-colors hover:bg-primary/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                  href="/services/"
+                >
+                  Learn more
+                </a>
+              </div>
+            </div>
           ))}
         </div>
       </div>

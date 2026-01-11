@@ -2,7 +2,7 @@ import Table from '../src/components/vue/core/table/Table.vue'
 import Row from '../src/components/vue/core/table/Row.vue'
 import C from '../src/components/vue/core/table/C.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import {RADII, ELEVATIONS} from '../src/components/vue/core/design-system/tokens'
+import {ELEVATIONS, RADII} from "../src/design-system/tokens.ts";
 
 const meta: Meta<typeof Table> = {
     title: 'Core/Table',
@@ -47,6 +47,15 @@ const meta: Meta<typeof Table> = {
                 component: 'Flexible and responsive table component with multiple style variants, configurable radius and elevation from design tokens, and strong hover effects. Built with Tailwind CSS to match the dark theme design system.'
             }
         }
+    },
+    args: {
+        variant: 'default',
+        striped: true,
+        dense: false,
+        width: 'full',
+        hoverEffect: true,
+        radius: 'xl',
+        elevation: 'sm'
     }
 }
 export default meta
@@ -316,6 +325,44 @@ export const AutoWidth: Story = {
         hoverEffect: true,
         radius: 'xl',
         elevation: 'sm'
+    }
+}
+
+export const StretchWidth: Story = {
+    render: (args) => ({
+        components: {Table, Row, C},
+        setup() {
+            return {args}
+        },
+        template: `
+            <div class="max-w-5xl">
+                <Table v-bind="args">
+                    <Row>
+                        <C header>Region</C>
+                        <C header>Tickets</C>
+                        <C header align="right">SLA Met</C>
+                    </Row>
+                    <Row>
+                        <C>North America</C>
+                        <C>5,432</C>
+                        <C align="right" class="text-success">98.4%</C>
+                    </Row>
+                    <Row>
+                        <C>Europe</C>
+                        <C>4,118</C>
+                        <C align="right" class="text-success">97.6%</C>
+                    </Row>
+                    <Row>
+                        <C>APAC</C>
+                        <C>3,905</C>
+                        <C align="right" class="text-warning">94.1%</C>
+                    </Row>
+                </Table>
+            </div>
+        `
+    }),
+    args: {
+        width: 'stretch'
     }
 }
 
