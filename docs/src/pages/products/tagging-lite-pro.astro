@@ -2,201 +2,227 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/vue/core/basic/Button.vue';
 import Card from '../../components/vue/core/basic/Card.vue';
-import Badge from '../../components/vue/core/basic/Badge.vue';
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 
 const title = "Tagging AI Lite Pro";
 const description = "Our flagship medium-weight model. Precision-tuned for routing, SLA assignment, and management reporting with professional accuracy.";
 ---
 
 <BaseLayout title={title} description={description}>
+  <div slot="head" />
+
   <div class="min-h-screen bg-background-dark">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
-      <!-- Breadcrumb -->
       <div class="mb-8">
-        <a href="/products" class="text-primary hover:text-primary-light transition-colors font-medium">PRODUCTS</a>
+        <a href="/products" class="inline-flex items-center gap-2 text-primary hover:text-primary-light transition-colors group">
+          <ArrowLeftIcon class="w-4 h-4 transition-transform group-hover:-translate-x-1" aria-hidden="true" />
+          <span class="font-medium">PRODUCTS</span>
+        </a>
         <span class="mx-3 text-border-dark">/</span>
         <span class="text-white font-bold">LITE PRO</span>
       </div>
 
-      <!-- Hero Section -->
-      <div class="flex flex-col lg:flex-row gap-16 mb-24">
-        <div class="flex-1">
-          <div class="inline-block mb-6">
-            <Badge client:load type="primary">
-              <span class="relative flex h-2 w-2 mr-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              PRODUCTION READY (4B PARAMETERS)
-            </Badge>
+      <div class="mb-16">
+        <div class="inline-flex items-center gap-3 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest mb-6">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+          </span>
+          PRODUCTION READY (4B PARAMETERS)
+        </div>
+        <h1 class="font-display text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+          Tagging AI<br />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-glow">Lite Pro.</span>
+        </h1>
+        <p class="text-xl text-text-dim max-w-3xl leading-relaxed">
+          {description}
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-4 mb-20">
+        <Button variant="primary" size="lg" client:load>
+          BUY LICENSE (2.500€)
+        </Button>
+        <Button variant="outline" size="lg" client:load>
+          Calculate ROI
+        </Button>
+      </div>
+
+      <section class="mb-24">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-8 h-8 rounded-lg bg-cyan-glow/20 flex items-center justify-center">
+            <span class="text-cyan-glow">⚙️</span>
           </div>
-
-          <h1 class="text-5xl lg:text-7xl font-black text-white mb-6 leading-tight">
-            Tagging AI<br/>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-glow">Lite Pro.</span>
-          </h1>
-
-          <p class="text-text-dim text-xl leading-relaxed mb-10">
-            Our flagship medium-weight model. Precision-tuned for routing, SLA assignment, and management
-            reporting with professional accuracy.
-          </p>
-
-          <div class="flex flex-wrap gap-4">
-            <Button client:load variant="solid" size="lg" tone="primary">
-              BUY LICENSE (2.500€)
-            </Button>
-            <Button client:load variant="outline" size="lg" tone="primary">
-              CALCULATE ROI
-            </Button>
+          <h2 class="text-3xl font-bold text-white">Enterprise Specifications</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-10 bg-surface-dark border border-border-dark rounded-3xl">
+          <div class="flex flex-col gap-2">
+            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+              MODEL COMPLEXITY
+            </div>
+            <div class="text-3xl font-black text-white">
+              4.2B Parameters
+            </div>
+            <div class="text-sm text-cyan-glow italic">
+              Large Transformer
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+              INFERENCE SPEED
+            </div>
+            <div class="text-3xl font-black text-white">
+              &lt; 150ms
+            </div>
+            <div class="text-sm text-cyan-glow italic">
+              On Tesla P100
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+              ACCURACY TARGET
+            </div>
+            <div class="text-3xl font-black text-white">
+              ~90.2%
+            </div>
+            <div class="text-sm text-cyan-glow italic">
+              Verified on SME datasets
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+              MAINTENANCE
+            </div>
+            <div class="text-3xl font-black text-white">
+              Included
+            </div>
+            <div class="text-sm text-cyan-glow italic">
+              Monthly updates
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Specifications Card -->
-        <div class="flex-1">
-          <Card client:load variant="surface" hoverable class="relative overflow-hidden rounded-3xl p-8">
-            <div class="absolute -top-20 -right-20 h-64 w-64 bg-primary/10 blur-[80px]"></div>
+      <section class="mb-24">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-white mb-4 font-display">KEY FEATURES</h2>
+          <div class="w-24 h-1 bg-gradient-to-r from-primary to-cyan-glow mx-auto rounded-full"></div>
+        </div>
 
-            <h3 class="relative z-10 mb-8 text-lg font-bold text-white">Enterprise Specifications</h3>
-
-            <div class="relative z-10 space-y-6">
-              <div class="border-l-2 border-primary/30 pl-4">
-                <div class="mb-1 text-xs font-bold uppercase tracking-wider text-text-dim">MODEL COMPLEXITY</div>
-                <div class="mb-1 text-2xl font-black text-white">4.2B Parameters</div>
-                <div class="text-xs uppercase tracking-wide text-primary-light">LARGE TRANSFORMER</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card client:load variant="primary" hoverable class="rounded-2xl">
+            <div class="flex flex-col gap-4">
+              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="text-2xl">📊</span>
               </div>
-
-              <div class="border-l-2 border-primary/30 pl-4">
-                <div class="mb-1 text-xs font-bold uppercase tracking-wider text-text-dim">INFERENCE SPEED</div>
-                <div class="mb-1 text-2xl font-black text-white">&lt; 150ms</div>
-                <div class="text-xs uppercase tracking-wide text-primary-light">ON TESLA P100</div>
+              <h3 class="text-xl font-bold text-white">
+                Management Reporting
+              </h3>
+              <p class="text-text-dim text-sm leading-relaxed">
+                Hierarchical tags enable deep-dive analysis of root causes and help desk performance trends.
+              </p>
+            </div>
+          </Card>
+          <Card client:load variant="primary" hoverable class="rounded-2xl">
+            <div class="flex flex-col gap-4">
+              <div class="w-12 h-12 rounded-xl bg-cyan-glow/20 flex items-center justify-center">
+                <span class="text-2xl">🎯</span>
               </div>
-
-              <div class="border-l-2 border-primary/30 pl-4">
-                <div class="mb-1 text-xs font-bold uppercase tracking-wider text-text-dim">ACCURACY TARGET</div>
-                <div class="mb-1 text-2xl font-black text-white">~90.2%</div>
-                <div class="text-xs uppercase tracking-wide text-primary-light">VERIFIED ON SME DATASETS</div>
+              <h3 class="text-xl font-bold text-white">
+                Intelligent Routing
+              </h3>
+              <p class="text-text-dim text-sm leading-relaxed">
+                Instantly assign tickets to specialized teams based on fine-grained intent detection.
+              </p>
+            </div>
+          </Card>
+          <Card client:load variant="primary" hoverable class="rounded-2xl">
+            <div class="flex flex-col gap-4">
+              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="text-2xl">🛡️</span>
               </div>
-
-              <div class="border-l-2 border-primary/30 pl-4">
-                <div class="mb-1 text-xs font-bold uppercase tracking-wider text-text-dim">MAINTENANCE</div>
-                <div class="mb-1 text-2xl font-black text-white">Included</div>
-                <div class="text-xs uppercase tracking-wide text-primary-light">MONTHLY UPDATES</div>
-              </div>
+              <h3 class="text-xl font-bold text-white">
+                Air-Gapped Privacy
+              </h3>
+              <p class="text-text-dim text-sm leading-relaxed">
+                Designed for banking, healthcare and government use-cases. No cloud needed.
+              </p>
             </div>
           </Card>
         </div>
-      </div>
+      </section>
 
-      <!-- Feature Cards -->
-      <div class="mb-24 grid grid-cols-1 gap-8 md:grid-cols-3">
-        <Card client:load variant="surface" hoverable>
-          <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor" class="h-6 w-6 text-primary">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3 3v1.5M3 21v-1.5M21 3v1.5M21 21v-1.5M5.25 5.25l1.5 1.5M17.25 17.25l1.5 1.5M17.25 6.75l1.5-1.5M5.25 18.75l1.5-1.5M9 6h.008v.008H9V6Zm0 4h.008v.008H9V10Zm0 4h.008v.008H9V14Zm4-8h.008v.008H13V6Zm0 4h.008v.008H13V10Zm0 4h.008v.008H13V14Zm4-8h.008v.008H17V6Zm0 4h.008v.008H17V10Zm0 4h.008v.008H17V14Z"/>
-            </svg>
-          </div>
-          <h3 class="mb-3 text-xl font-bold text-white">Management Reporting</h3>
-          <p class="text-sm leading-relaxed text-text-dim">
-            Hierarchical tags enable deep-dive analysis of root causes and help desk performance trends.
-          </p>
-        </Card>
+      <section class="mb-24">
+        <div class="bg-surface-dark border border-border-dark rounded-3xl p-10">
+          <h2 class="text-center text-4xl font-black text-white mb-12">LITE VS PRO</h2>
 
-        <Card client:load variant="surface" hoverable>
-          <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-glow/20">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor" class="h-6 w-6 text-cyan-glow">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 3v2.25m0 13.5V21m8.25-9H21M3 12h2.25m13.5 0H21m-9 9v2.25m0-18.75V3m0 9h9m-9 0H3m9 0V3m0 9v9"/>
-            </svg>
-          </div>
-          <h3 class="mb-3 text-xl font-bold text-white">Intelligent Routing</h3>
-          <p class="text-sm leading-relaxed text-text-dim">
-            Instantly assign tickets to specialized teams based on fine-grained intent detection.
-          </p>
-        </Card>
-
-        <Card client:load variant="surface" hoverable>
-          <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor" class="h-6 w-6 text-primary">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M9 12h6m-6 3h6m-3 6a9 9 0 100-18 9 9 0 000 18z"/>
-            </svg>
-          </div>
-          <h3 class="mb-3 text-xl font-bold text-white">Air-Gapped Privacy</h3>
-          <p class="text-sm leading-relaxed text-text-dim">
-            Designed for banking, healthcare and government use-cases. No cloud needed.
-          </p>
-        </Card>
-      </div>
-
-      <!-- Comparison Table -->
-      <Card client:load variant="surface" class="relative mb-24 overflow-hidden rounded-3xl p-8">
-        <div class="absolute -bottom-20 -left-20 h-96 w-96 bg-cyan-glow/10 blur-[100px]"></div>
-
-        <h2 class="relative z-10 mb-12 text-center text-4xl font-black text-white">
-          LITE VS PRO
-        </h2>
-
-        <div class="relative z-10">
-          <div class="mb-6 grid grid-cols-3 gap-6 border-b border-surface-lighter pb-6">
-            <div class="text-sm font-bold uppercase tracking-wider text-text-dim"></div>
-            <div class="text-center">
-              <div class="text-lg font-bold text-white">Lite Free</div>
-              <div class="mt-1 text-xs text-text-dim">Evaluation</div>
+          <div class="space-y-1">
+            <div class="grid grid-cols-3 gap-6 pb-6 border-b border-primary/30 text-xs font-black uppercase tracking-wider">
+              <div class="text-text-dim">Feature</div>
+              <div class="text-white text-center">Lite Free</div>
+              <div class="text-primary-light text-center">Lite Pro</div>
             </div>
-            <div class="text-center">
-              <div class="text-lg font-bold text-primary">Lite Pro</div>
-              <div class="mt-1 text-xs text-primary-light">Production</div>
+            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
+              <div class="text-text-dim font-medium">Model Size</div>
+              <div class="text-white text-center">0.5B Parameters</div>
+              <div class="text-white text-center font-bold">4.2B Parameters</div>
             </div>
-          </div>
-
-          <div class="space-y-3">
-            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
-              <div class="text-sm font-medium text-white">Model Size</div>
-              <div class="text-center text-sm text-text-dim">0.5B Parameters</div>
-              <div class="text-center text-sm font-medium text-white">4.2B Parameters</div>
+            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
+              <div class="text-text-dim font-medium">Tag Taxonomy</div>
+              <div class="text-white text-center">150+ Tags</div>
+              <div class="text-white text-center font-bold">150+ Tags</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
-              <div class="text-sm font-medium text-white">Tag Taxonomy</div>
-              <div class="text-center text-sm text-text-dim">150+ Tags</div>
-              <div class="text-center text-sm font-medium text-white">150+ Tags</div>
+            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
+              <div class="text-text-dim font-medium">Expected Accuracy</div>
+              <div class="text-white text-center">~82%</div>
+              <div class="text-white text-center font-bold">~90%</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
-              <div class="text-sm font-medium text-white">Expected Accuracy</div>
-              <div class="text-center text-sm text-text-dim">~82%</div>
-              <div class="text-center text-sm font-medium text-white">~90%</div>
+            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
+              <div class="text-text-dim font-medium">Inference Speed</div>
+              <div class="text-white text-center">~300ms</div>
+              <div class="text-white text-center font-bold">&lt; 150ms</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
-              <div class="text-sm font-medium text-white">Inference Speed</div>
-              <div class="text-center text-sm text-text-dim">~300ms</div>
-              <div class="text-center text-sm font-medium text-white">&lt; 150ms</div>
+            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
+              <div class="text-text-dim font-medium">Hardware Requirements</div>
+              <div class="text-white text-center">8GB RAM, CPU-only</div>
+              <div class="text-white text-center font-bold">16GB RAM, GPU recommended</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
-              <div class="text-sm font-medium text-white">Hardware Requirements</div>
-              <div class="text-center text-sm text-text-dim">8GB RAM, CPU-only</div>
-              <div class="text-center text-sm font-medium text-white">16GB RAM, GPU recommended</div>
+            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
+              <div class="text-text-dim font-medium">Use Case</div>
+              <div class="text-white text-center">Testing &amp; PoC</div>
+              <div class="text-white text-center font-bold">Production routing &amp; analytics</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
-              <div class="text-sm font-medium text-white">Use Case</div>
-              <div class="text-center text-sm text-text-dim">Testing &amp; PoC</div>
-              <div class="text-center text-sm font-medium text-white">Production routing &amp; analytics</div>
+            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
+              <div class="text-text-dim font-medium">Support &amp; Updates</div>
+              <div class="text-white text-center">Community</div>
+              <div class="text-white text-center font-bold">Professional (Included)</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
-              <div class="text-sm font-medium text-white">Support &amp; Updates</div>
-              <div class="text-center text-sm text-text-dim">Community</div>
-              <div class="text-center text-sm font-medium text-white">Professional (Included)</div>
-            </div>
-            <div class="grid grid-cols-3 gap-6 rounded-lg border-b border-surface-lighter/30 px-4 py-4 transition-colors hover:bg-surface-lighter/20">
-              <div class="text-sm font-medium text-white">Price</div>
-              <div class="text-center text-sm text-text-dim">0€</div>
-              <div class="text-center text-sm font-medium text-white">2,500€ (one-time)</div>
+            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
+              <div class="text-text-dim font-medium">Price</div>
+              <div class="text-white text-center">0€</div>
+              <div class="text-white text-center font-bold">2,500€ (one-time)</div>
             </div>
           </div>
         </div>
-      </Card>
+      </section>
+
+      <section class="bg-gradient-to-br from-primary/10 to-cyan-glow/5 border border-primary/20 rounded-3xl p-12 text-center">
+        <h2 class="text-4xl font-black text-white mb-4 font-display">
+          Professional Tagging.<br />Production Ready.
+        </h2>
+        <p class="text-text-dim text-lg mb-8 max-w-2xl mx-auto">
+          Join forward-thinking support teams automating their workflow with German Engineering precision.
+        </p>
+        <div class="flex flex-wrap justify-center gap-6">
+          <Button variant="primary" size="lg" class="uppercase tracking-widest" client:load>
+            Buy Lite Pro
+          </Button>
+          <Button variant="outline" size="lg" client:load>
+            View Documentation
+          </Button>
+        </div>
+      </section>
     </div>
   </div>
 </BaseLayout>
