@@ -43,7 +43,7 @@
         v-model="body"
         :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
         class="w-full py-3 px-4 text-base rounded-xl min-h-40 border bg-surface-dark text-white placeholder-text-dim transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 focus:shadow-[0_0_20px_rgba(166,13,242,0.2)] disabled:opacity-50 disabled:cursor-not-allowed border-border-dark hover:border-primary/30 resize-y"
-      ></textarea>
+      />
     </div>
 
     <Button
@@ -73,11 +73,71 @@
       {{ errorMessage }}
     </Alert>
 
-    <ResultTable
+    <!-- Results -->
+    <div
       v-if="queueResult && prioResult"
-      :prio-result="prioResult"
-      :queue-result="queueResult"
-    />
+      class="mt-6"
+    >
+      <span class="text-2xl font-semibold text-center text-vp-text my-6 block">
+        {{ t('otai_prediction_demo_component.resultTitle') }}
+      </span>
+
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 mt-5">
+        <!-- Queue Card -->
+        <div class="flex flex-col gap-4 p-6 bg-surface-dark border border-border-dark rounded-xl">
+          <span class="text-lg font-medium text-text-dim">
+            {{ t('otai_prediction_demo_component.queueRowHeader') }}
+          </span>
+          
+          <div class="min-h-14">
+            <span class="flex-1 text-xl font-bold text-gray-900 dark:text-gray-100 mb-1 block">
+              {{ mainQueue }}
+            </span>
+            <br>
+            <span class="flex-1 text-md font-bold text-gray-900 dark:text-gray-100 mb-4 block">
+              > {{ subQueue }}
+            </span>
+          </div>
+
+          <div class="text-base text-white">
+            Confidence:
+            <span
+              :class="[
+                'inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold',
+                getConfidenceBadgeClass(queueResult[0].score)
+              ]"
+            >
+              {{ asPercent(queueResult[0].score) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Priority Card -->
+        <div class="flex flex-col gap-4 p-6 bg-surface-dark border border-border-dark rounded-xl">
+          <span class="text-lg font-medium text-text-dim">
+            {{ t('otai_prediction_demo_component.priorityRowHeader') }}
+          </span>
+          
+          <div class="min-h-14">
+            <span class="flex-1 text-xl font-bold text-gray-900 dark:text-gray-100 mb-1 block">
+              {{ prioResult[0].label }}
+            </span>
+          </div>
+
+          <div class="text-base text-white">
+            Confidence:
+            <span
+              :class="[
+                'inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold',
+                getConfidenceBadgeClass(prioResult[0].score)
+              ]"
+            >
+              {{ asPercent(prioResult[0].score) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
     <p>
       {{ t('otai_prediction_demo_component.apiText') }}<span v-if="apiLink != ''">:</span> <a
         v-if="apiLink != ''"
@@ -90,11 +150,10 @@
 
 <script lang="ts" setup>
 
-import {onMounted, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import Button from '../core/basic/Button.vue'
 import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
-import ResultTable from "./ResultTable.vue";
 import SelectComponent from "../core/forms/SelectComponent.vue";
 import Alert from "../core/basic/Alert.vue";
 import {useHumanLoadedPage} from "../../../composables/useHumanLoadedPage";
@@ -219,6 +278,31 @@ onMounted(() => {
     })
   })
 })
+
+// Computed properties for queue display
+const mainQueue = computed(() => {
+  if (!queueResult.value || queueResult.value.length === 0) return null
+  return queueResult.value[0].label.split('/')[0]
+})
+
+const subQueue = computed(() => {
+  if (!queueResult.value || queueResult.value.length === 0) return null
+  const parts = queueResult.value[0].label.split('/')
+  return parts.length > 1 ? parts.slice(1).join('/') : null
+})
+
+// Helper functions for badge display
+function asPercent(s: number) {
+  return `${(s * 100).toFixed(1)}%`
+}
+
+function getConfidenceBadgeClass(s: number) {
+  const p = s * 100
+  if (p > 90) return 'bg-green-500/20 text-green-400'
+  if (p > 80) return 'bg-blue-500/20 text-blue-400'
+  if (p > 50) return 'bg-yellow-500/20 text-yellow-400'
+  return 'bg-red-500/20 text-red-400'
+}
 
 
 </script>
