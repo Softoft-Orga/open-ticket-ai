@@ -21,7 +21,7 @@
           :aria-current="isActive(item.href) ? 'page' : undefined"
           :class="isActive(item.href) ? 'text-white' : 'text-gray-400 hover:text-white'"
           :href="item.href"
-          class="transition-colors"
+          class="transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-lg px-2 py-1"
         >
           {{ item.label }}
         </a>
@@ -93,27 +93,145 @@
                     </div>
                   </a>
                 </div>
-              </div>
-            </div>
-          </Transition>
-        </div>
+              </MenuItems>
+            </UiTransitionSlide>
+          </TransitionRoot>
+        </Menu>
       </nav>
 
-      <div class="flex items-center gap-4">
-        <button class="hidden sm:flex h-9 items-center justify-center rounded-lg bg-surface-lighter px-4 text-sm font-bold text-white transition-colors hover:bg-surface-lighter/80 border border-primary/20">
-          Login
-        </button>
-        <button class="flex h-9 items-center justify-center rounded-lg bg-primary px-4 text-sm font-bold text-white shadow-[0_0_15px_rgba(166,13,242,0.3)] transition-all hover:bg-primary-dark">
-          Get Demo
-        </button>
+      <div class="hidden md:flex items-center gap-3">
+        <Button variant="secondary" size="sm">Contact Sales</Button>
+        <Button variant="primary" size="sm">See Demo</Button>
       </div>
+
+      <button
+        class="md:hidden flex items-center justify-center p-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-lg"
+        @click="openMobileMenu"
+        aria-label="Open menu"
+      >
+        <Bars3Icon class="h-6 w-6" />
+      </button>
     </div>
+
+    <TransitionRoot :show="mobileMenuOpen" as="template">
+      <Dialog @close="closeMobileMenu" class="relative z-50 md:hidden">
+        <UiTransitionFade>
+          <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
+        </UiTransitionFade>
+
+        <div class="fixed inset-0 flex items-start justify-end">
+          <UiTransitionSlide direction="right">
+            <DialogPanel class="w-full max-w-sm h-full bg-background-dark border-l border-surface-lighter p-6 shadow-2xl">
+              <div class="flex items-center justify-between mb-8">
+                <DialogTitle class="text-lg font-bold text-white">Menu</DialogTitle>
+                <button
+                  @click="closeMobileMenu"
+                  class="p-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-lg"
+                  aria-label="Close menu"
+                >
+                  <XMarkIcon class="h-6 w-6" />
+                </button>
+              </div>
+
+              <nav class="flex flex-col gap-4">
+                <a
+                  v-for="item in navItems"
+                  :key="item.href"
+                  :href="item.href"
+                  :class="[
+                    'px-4 py-3 rounded-xl text-base font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+                    isActive(item.href) 
+                      ? 'bg-primary/20 text-white border border-primary/40' 
+                      : 'text-gray-400 hover:text-white hover:bg-surface-lighter'
+                  ]"
+                  @click="closeMobileMenu"
+                >
+                  {{ item.label }}
+                </a>
+
+                <Disclosure v-slot="{ open }">
+                  <DisclosureButton
+                    :class="[
+                      'flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+                      open ? 'bg-primary/20 text-white border border-primary/40' : 'text-gray-400 hover:text-white hover:bg-surface-lighter'
+                    ]"
+                  >
+                    <span>Docs</span>
+                    <ChevronDownIcon :class="['h-5 w-5 transition-transform', open && 'rotate-180']" />
+                  </DisclosureButton>
+                  
+                  <TransitionRoot>
+                    <UiTransitionSlide direction="down">
+                      <DisclosurePanel class="mt-2 ml-4 space-y-2">
+                        <a
+                          :href="docsHub.href"
+                          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white bg-slate-900/60 border border-surface-lighter/60 hover:bg-surface-dark hover:border-surface-lighter transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                          @click="closeMobileMenu"
+                        >
+                          <BookOpenIcon class="h-5 w-5 text-primary" />
+                          <div>
+                            <p class="font-semibold">{{ docsHub.label }}</p>
+                            <p class="text-xs text-slate-400">Documentation Home</p>
+                          </div>
+                        </a>
+                        <a
+                          v-for="link in docsProductLinks"
+                          :key="link.href"
+                          :href="link.href"
+                          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white bg-slate-900/60 border border-surface-lighter/60 hover:bg-surface-dark hover:border-surface-lighter transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                          @click="closeMobileMenu"
+                        >
+                          <component :is="link.icon" class="h-5 w-5 text-cyan-glow" />
+                          <div>
+                            <p class="font-semibold">{{ link.label }}</p>
+                            <p class="text-xs text-slate-400">{{ link.description }}</p>
+                          </div>
+                        </a>
+                      </DisclosurePanel>
+                    </UiTransitionSlide>
+                  </TransitionRoot>
+                </Disclosure>
+
+                <div class="mt-6 pt-6 border-t border-surface-lighter space-y-3">
+                  <Button variant="secondary" size="md" class="w-full">Contact Sales</Button>
+                  <Button variant="primary" size="md" class="w-full">See Demo</Button>
+                </div>
+              </nav>
+            </DialogPanel>
+          </UiTransitionSlide>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </header>
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { TicketIcon, ChevronDownIcon, BookOpenIcon, SparklesIcon, AdjustmentsHorizontalIcon } from '@heroicons/vue/24/outline'
+import { computed, onMounted, ref } from 'vue'
+import {
+  Menu,
+  MenuButton,
+  MenuItems,
+  MenuItem,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  TransitionRoot
+} from '@headlessui/vue'
+import {
+  TicketIcon,
+  ChevronDownIcon,
+  BookOpenIcon,
+  SparklesIcon,
+  AdjustmentsHorizontalIcon,
+  Bars3Icon,
+  XMarkIcon
+} from '@heroicons/vue/24/outline'
+import Button from '../basic/Button.vue'
+import UiTransitionFade from '../transitions/UiTransitionFade.vue'
+import UiTransitionSlide from '../transitions/UiTransitionSlide.vue'
 
 type NavItem = { href: string; label: string }
 
@@ -141,11 +259,6 @@ const updateActivePath = () => {
 
 onMounted(() => {
   updateActivePath()
-  document.addEventListener('click', handleGlobalClick, true)
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleGlobalClick, true)
 })
 
 const docsHub = { href: '/docs/', label: 'Docs Hub' }
@@ -154,38 +267,13 @@ const docsProductLinks = [
   { href: '/docs/open-ticket-automation/', label: 'Open Ticket Automation', description: 'Workflow Layer', icon: SparklesIcon }
 ]
 
-const docsOpen = ref(false)
-const docsTriggerRef = ref<HTMLElement | null>(null)
-const docsMenuRef = ref<HTMLElement | null>(null)
-
-const toggleDocs = () => (docsOpen.value = !docsOpen.value)
-const openDocs = () => (docsOpen.value = true)
-const closeDocs = () => (docsOpen.value = false)
-
-const handleGlobalClick = (event: MouseEvent) => {
-  if (!docsOpen.value) return
-  const target = event.target as Node | null
-  if (!target) return
-  if (docsMenuRef.value?.contains(target) || docsTriggerRef.value?.contains(target)) return
-  closeDocs()
+const mobileMenuOpen = ref(false)
+const openMobileMenu = () => {
+  mobileMenuOpen.value = true
+}
+const closeMobileMenu = () => {
+  mobileMenuOpen.value = false
 }
 
 const isActive = (href: string) => activePath.value === href || activePath.value.startsWith(href)
 </script>
-
-<style scoped>
-.fade-scale-enter-active,
-.fade-scale-leave-active {
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-.fade-scale-enter-from,
-.fade-scale-leave-to {
-  opacity: 0;
-  transform: translateY(-4px) scale(0.98);
-}
-.fade-scale-enter-to,
-.fade-scale-leave-from {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-</style>

@@ -2,6 +2,9 @@
 import {computed, ref} from 'vue'
 import TagMindmap from './TagMindmap.vue'
 import TagTree from './TagTree.vue'
+import Card from '../core/basic/Card.vue'
+import Badge from '../core/basic/Badge.vue'
+import Button from '../core/basic/Button.vue'
 
 type PredictionExample = {
     name: string
