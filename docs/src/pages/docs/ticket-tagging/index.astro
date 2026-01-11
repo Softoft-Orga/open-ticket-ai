@@ -9,9 +9,9 @@ const description = "The high-performance classification engine that powers the 
 <BaseLayout title={title} description={description}>
   <div class="min-h-screen bg-background-dark">
     <!-- Header/Navigation Area -->
-    <div class="border-b border-slate-800">
+    <div class="border-b border-surface-lighter">
       <div class="max-w-7xl mx-auto px-6 py-4">
-        <div class="flex items-center gap-4 text-sm text-slate-400">
+        <div class="flex items-center gap-4 text-sm text-text-dim">
           <a href="/" class="hover:text-primary">Documentation</a>
           <span>›</span>
           <a href="/docs/" class="hover:text-primary">Open Ticket Automation</a>
@@ -24,44 +24,44 @@ const description = "The high-performance classification engine that powers the 
         <!-- Left Sidebar -->
         <aside class="lg:col-span-2 space-y-8">
           <div>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Getting Started</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-4">Getting Started</h3>
             <ul class="space-y-2 text-sm">
-              <li><a href="#" class="text-slate-400 hover:text-white">Documentation Hub</a></li>
-              <li><a href="/guides/quick_start/" class="text-slate-400 hover:text-white">Quick Start Guide</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Documentation Hub</a></li>
+              <li><a href="/guides/quick_start/" class="text-text-dim hover:text-white">Quick Start Guide</a></li>
             </ul>
           </div>
 
           <div>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Ticket Tagging AI</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-4">Ticket Tagging AI</h3>
             <ul class="space-y-2 text-sm">
-              <li><a href="/docs/ticket-tagging/" class="text-slate-400 hover:text-white">Engine Overview</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">Taxonomy Tree</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">Privacy &amp; Compliance</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">Hardware Sizing</a></li>
+              <li><a href="/docs/ticket-tagging/" class="text-text-dim hover:text-white">Engine Overview</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Taxonomy Tree</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Privacy &amp; Compliance</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Hardware Sizing</a></li>
             </ul>
           </div>
 
           <div>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Open Ticket Automation</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-4">Open Ticket Automation</h3>
             <ul class="space-y-2 text-sm">
               <li><a href="#" class="text-primary font-medium">OTA Overview</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">Connectors</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">Automation Rules</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">API Reference</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Connectors</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Automation Rules</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">API Reference</a></li>
             </ul>
           </div>
 
           <div>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">Utilities</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-4">Utilities</h3>
             <ul class="space-y-2 text-sm">
-              <li><a href="#" class="text-slate-400 hover:text-white">Synthetic Data</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">Privacy Engine</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Synthetic Data</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Privacy Engine</a></li>
             </ul>
           </div>
 
-          <div class="bg-card-dark border border-slate-700 rounded-lg p-4">
+          <div class="bg-surface-dark border border-border-dark rounded-lg p-4">
             <h4 class="text-sm font-bold text-white mb-2">Enterprise Support</h4>
-            <p class="text-xs text-slate-400 mb-3">Need help with high-volume deployment?</p>
+            <p class="text-xs text-text-dim mb-3">Need help with high-volume deployment?</p>
             <a href="/services/" class="text-xs text-primary hover:text-primary-light font-medium">VIEW SERVICES →</a>
           </div>
         </aside>
@@ -74,33 +74,33 @@ const description = "The high-performance classification engine that powers the 
               CORE INTELLIGENCE LAYER
             </div>
             <h1 class="text-4xl md:text-5xl font-black text-white mb-4">{title}</h1>
-            <p class="text-xl text-slate-400 leading-relaxed max-w-3xl">{description}</p>
+            <p class="text-xl text-text-dim leading-relaxed max-w-3xl">{description}</p>
           </div>
 
           <!-- Feature Cards -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            <div class="bg-card-dark border border-slate-700 rounded-xl p-6 hover:border-primary/50 transition-colors">
+            <div class="bg-surface-dark border border-border-dark rounded-xl p-6 hover:border-primary/50 transition-colors">
               <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                 <BoltIcon class="w-6 h-6 text-primary" aria-hidden="true" />
               </div>
               <h3 class="text-lg font-bold text-white mb-2">Actionable Routing</h3>
-              <p class="text-slate-400 text-sm leading-relaxed">Automatically move tickets to the correct team/queue based on AI intent detection.</p>
+              <p class="text-text-dim text-sm leading-relaxed">Automatically move tickets to the correct team/queue based on AI intent detection.</p>
             </div>
 
-            <div class="bg-card-dark border border-slate-700 rounded-xl p-6 hover:border-primary/50 transition-colors">
+            <div class="bg-surface-dark border border-border-dark rounded-xl p-6 hover:border-primary/50 transition-colors">
               <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                 <ClockIcon class="w-6 h-6 text-primary" aria-hidden="true" />
               </div>
               <h3 class="text-lg font-bold text-white mb-2">Dynamic Priority</h3>
-              <p class="text-slate-400 text-sm leading-relaxed">Update SLAs and Priority fields instantly if AI detects critical sentiment or high impact.</p>
+              <p class="text-text-dim text-sm leading-relaxed">Update SLAs and Priority fields instantly if AI detects critical sentiment or high impact.</p>
             </div>
           </div>
 
           <!-- Getting Started Section -->
           <section class="mb-12">
             <h2 class="text-2xl font-bold text-white mb-6">Getting Started</h2>
-            <p class="text-slate-400 mb-6">New to OTA? Follow our detailed step-by-step guide to deploy your first automation pipeline in under 15 minutes.</p>
-            <a href="/guides/quick_start/" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-background-dark font-semibold rounded-lg hover:bg-slate-100 transition-colors">
+            <p class="text-text-dim mb-6">New to OTA? Follow our detailed step-by-step guide to deploy your first automation pipeline in under 15 minutes.</p>
+            <a href="/guides/quick_start/" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-background-dark font-semibold rounded-lg hover:bg-text-1 transition-colors">
               START THE TUTORIAL
               <ArrowRightIcon class="w-4 h-4" aria-hidden="true" />
             </a>
@@ -109,48 +109,48 @@ const description = "The high-performance classification engine that powers the 
           <!-- System Connectors Section -->
           <section class="mb-12">
             <h2 class="text-2xl font-bold text-white mb-6">System Connectors</h2>
-            <p class="text-slate-400 mb-6">Connect to your existing infrastructure using our pre-built adapters.</p>
+            <p class="text-text-dim mb-6">Connect to your existing infrastructure using our pre-built adapters.</p>
 
             <div class="space-y-4">
-              <div class="bg-card-dark border border-slate-700 rounded-lg p-6 hover:border-primary/30 transition-colors group cursor-pointer">
+              <div class="bg-surface-dark border border-border-dark rounded-lg p-6 hover:border-primary/30 transition-colors group cursor-pointer">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded bg-slate-800 flex items-center justify-center">
-                      <RectangleStackIcon class="w-6 h-6 text-slate-400" aria-hidden="true" />
+                    <div class="w-10 h-10 rounded bg-surface-lighter flex items-center justify-center">
+                      <RectangleStackIcon class="w-6 h-6 text-text-dim" aria-hidden="true" />
                     </div>
                     <div>
                       <h3 class="text-white font-bold group-hover:text-primary transition-colors">OTOBO / Znuny (OTRS)</h3>
                     </div>
                   </div>
-                  <ArrowRightIcon class="w-5 h-5 text-slate-600 group-hover:text-primary transition-colors" aria-hidden="true" />
+                  <ArrowRightIcon class="w-5 h-5 text-muted group-hover:text-primary transition-colors" aria-hidden="true" />
                 </div>
               </div>
 
-              <div class="bg-card-dark border border-slate-700 rounded-lg p-6 hover:border-primary/30 transition-colors group cursor-pointer">
+              <div class="bg-surface-dark border border-border-dark rounded-lg p-6 hover:border-primary/30 transition-colors group cursor-pointer">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded bg-slate-800 flex items-center justify-center">
-                      <RectangleStackIcon class="w-6 h-6 text-slate-400" aria-hidden="true" />
+                    <div class="w-10 h-10 rounded bg-surface-lighter flex items-center justify-center">
+                      <RectangleStackIcon class="w-6 h-6 text-text-dim" aria-hidden="true" />
                     </div>
                     <div>
                       <h3 class="text-white font-bold group-hover:text-primary transition-colors">Zammad</h3>
                     </div>
                   </div>
-                  <ArrowRightIcon class="w-5 h-5 text-slate-600 group-hover:text-primary transition-colors" aria-hidden="true" />
+                  <ArrowRightIcon class="w-5 h-5 text-muted group-hover:text-primary transition-colors" aria-hidden="true" />
                 </div>
               </div>
 
-              <div class="bg-card-dark border border-slate-700 rounded-lg p-6 hover:border-primary/30 transition-colors group cursor-pointer">
+              <div class="bg-surface-dark border border-border-dark rounded-lg p-6 hover:border-primary/30 transition-colors group cursor-pointer">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded bg-slate-800 flex items-center justify-center">
-                      <RectangleStackIcon class="w-6 h-6 text-slate-400" aria-hidden="true" />
+                    <div class="w-10 h-10 rounded bg-surface-lighter flex items-center justify-center">
+                      <RectangleStackIcon class="w-6 h-6 text-text-dim" aria-hidden="true" />
                     </div>
                     <div>
                       <h3 class="text-white font-bold group-hover:text-primary transition-colors">Generic Webhook</h3>
                     </div>
                   </div>
-                  <ArrowRightIcon class="w-5 h-5 text-slate-600 group-hover:text-primary transition-colors" aria-hidden="true" />
+                  <ArrowRightIcon class="w-5 h-5 text-muted group-hover:text-primary transition-colors" aria-hidden="true" />
                 </div>
               </div>
             </div>
@@ -160,21 +160,21 @@ const description = "The high-performance classification engine that powers the 
           <section class="mb-12">
             <h2 class="text-2xl font-bold text-white mb-6">Additional Resources</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <a href="/developers/pipeline_code/" class="bg-card-dark border border-slate-700 rounded-lg p-6 hover:border-primary/50 transition-colors group">
+              <a href="/developers/pipeline_code/" class="bg-surface-dark border border-border-dark rounded-lg p-6 hover:border-primary/50 transition-colors group">
                 <h3 class="text-white font-bold mb-2 group-hover:text-primary transition-colors">Pipeline Code</h3>
-                <p class="text-slate-400 text-sm">Understanding pipeline architecture</p>
+                <p class="text-text-dim text-sm">Understanding pipeline architecture</p>
               </a>
-              <a href="/developers/services/" class="bg-card-dark border border-slate-700 rounded-lg p-6 hover:border-primary/50 transition-colors group">
+              <a href="/developers/services/" class="bg-surface-dark border border-border-dark rounded-lg p-6 hover:border-primary/50 transition-colors group">
                 <h3 class="text-white font-bold mb-2 group-hover:text-primary transition-colors">Services</h3>
-                <p class="text-slate-400 text-sm">Core service implementations</p>
+                <p class="text-text-dim text-sm">Core service implementations</p>
               </a>
-              <a href="/details/config_reference/" class="bg-card-dark border border-slate-700 rounded-lg p-6 hover:border-primary/50 transition-colors group">
+              <a href="/details/config_reference/" class="bg-surface-dark border border-border-dark rounded-lg p-6 hover:border-primary/50 transition-colors group">
                 <h3 class="text-white font-bold mb-2 group-hover:text-primary transition-colors">Configuration Reference</h3>
-                <p class="text-slate-400 text-sm">Complete YAML configuration guide</p>
+                <p class="text-text-dim text-sm">Complete YAML configuration guide</p>
               </a>
-              <a href="/users/config_examples/" class="bg-card-dark border border-slate-700 rounded-lg p-6 hover:border-primary/50 transition-colors group">
+              <a href="/users/config_examples/" class="bg-surface-dark border border-border-dark rounded-lg p-6 hover:border-primary/50 transition-colors group">
                 <h3 class="text-white font-bold mb-2 group-hover:text-primary transition-colors">Configuration Examples</h3>
-                <p class="text-slate-400 text-sm">Ready-to-use examples</p>
+                <p class="text-text-dim text-sm">Ready-to-use examples</p>
               </a>
             </div>
           </section>
@@ -183,18 +183,18 @@ const description = "The high-performance classification engine that powers the 
         <!-- Right Sidebar - On This Page -->
         <aside class="lg:col-span-2 hidden lg:block">
           <div class="sticky top-8">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">On This Page</h3>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-muted mb-4">On This Page</h3>
             <ul class="space-y-2 text-sm">
-              <li><a href="#" class="text-slate-400 hover:text-white">Introduction</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Introduction</a></li>
               <li><a href="#" class="text-primary">Getting Started</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">System Connectors</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">Automation Rules</a></li>
-              <li><a href="#" class="text-slate-400 hover:text-white">API Reference</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">System Connectors</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">Automation Rules</a></li>
+              <li><a href="#" class="text-text-dim hover:text-white">API Reference</a></li>
             </ul>
 
-            <div class="mt-8 p-4 bg-card-dark border border-slate-700 rounded-lg">
+            <div class="mt-8 p-4 bg-surface-dark border border-border-dark rounded-lg">
               <h4 class="text-xs font-bold text-white mb-2">MEDIA LAB</h4>
-              <p class="text-xs text-slate-400">Generate assets for your docs.</p>
+              <p class="text-xs text-text-dim">Generate assets for your docs.</p>
             </div>
           </div>
         </aside>
