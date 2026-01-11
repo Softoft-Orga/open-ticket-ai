@@ -121,8 +121,3 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **SupportPlans.vue** — Support plans listing. Props: `plans`. Slots: _none_.
 - **TaxonomyCard.vue** — Taxonomy card. Props: `item`. Slots: _none_.
 - **TaxonomyRow.vue** — Taxonomy row. Props: `item`. Slots: _none_.
-
-## services
-- **ExtensionItem.vue** — Extension list item. Props: `extension`. Slots: _none_.
-- **IntegrationPackageCard.vue** — Integration package card. Props: `pkg`. Slots: _none_.
-- **PricingCard.vue** — Pricing card. Props: `title`, `price`, `features`, `cta`. Slots: `footer`.
