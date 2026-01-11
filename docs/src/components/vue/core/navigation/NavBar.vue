@@ -1,47 +1,32 @@
 <template>
-  <header class="sticky top-0 z-50 w-full border-b border-surface-lighter bg-background-dark/80 backdrop-blur-md">
+  <header class="sticky top-0 z-50 w-full border-b border-border-dark bg-background-dark/80 backdrop-blur-md">
     <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-      <!-- Logo -->
       <a
-        class="flex items-center gap-2 text-white group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 rounded-lg"
+        class="flex items-center gap-3 rounded-lg text-text-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
         href="/"
       >
-        <div class="flex size-8 items-center justify-center rounded-lg bg-primary/20 text-primary transition-all group-hover:shadow-[0_0_15px_rgba(166,13,242,0.5)]">
-          <TicketIcon
-            aria-hidden="true"
-            class="w-5 h-5"
-          />
-        </div>
-        <h2 class="font-display text-lg font-bold tracking-tight">Open Ticket AI</h2>
+        <img
+          :src="logoSrc"
+          alt="Company logo"
+          class="size-10 rounded-lg border border-border-dark object-cover"
+        >
+        <span class="font-display text-lg font-bold tracking-tight">Open Ticket AI</span>
       </a>
 
-      <!-- Desktop Navigation -->
       <nav class="hidden md:flex flex-1 justify-center gap-8 text-sm font-medium">
         <a
-          v-for="item in navItems"
-          :key="item.href"
-          :aria-current="isActive(item.href) ? 'page' : undefined"
-          :class="isActive(item.href) ? 'text-white' : 'text-gray-400 hover:text-white'"
-          :href="item.href"
-          class="transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-lg px-2 py-1"
+          v-for="link in navLinks"
+          :key="link.url"
+          :class="isActive(link.url) ? 'text-text-1' : 'text-text-2 hover:text-text-1'"
+          :href="link.url"
+          class="rounded-lg px-2 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         >
-          {{ item.label }}
+          {{ link.label }}
         </a>
       </nav>
 
-      <!-- Desktop Primary Button -->
-      <div class="hidden md:flex items-center">
-        <Button
-          variant="primary"
-          size="sm"
-        >
-          {{ ctaLabel }}
-        </Button>
-      </div>
-
-      <!-- Mobile Menu Button -->
       <button
-        class="md:hidden flex items-center justify-center p-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-lg"
+        class="md:hidden flex items-center justify-center rounded-lg p-2 text-text-2 transition-colors hover:text-text-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
         aria-label="Open menu"
         @click="openMobileMenu"
       >
@@ -49,149 +34,81 @@
       </button>
     </div>
 
-    <!-- Mobile Menu Dialog -->
-    <TransitionRoot
-      :show="mobileMenuOpen"
-      as="template"
+    <div
+      v-if="mobileMenuOpen"
+      class="md:hidden"
     >
-      <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
-
-      <div class="fixed inset-0 flex items-start justify-end">
-        <DialogPanel class="w-full max-w-sm h-full bg-background-dark border-l border-surface-lighter p-6 shadow-2xl">
-          <div class="flex items-center justify-between mb-8">
-            <DialogTitle class="text-lg font-bold text-white">
+      <div
+        class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm"
+        @click="closeMobileMenu"
+      />
+      <div class="fixed inset-0 flex justify-end">
+        <div class="h-full w-full max-w-sm border-l border-border-dark bg-surface-dark p-6 shadow-2xl">
+          <div class="mb-8 flex items-center justify-between">
+            <p class="text-lg font-bold text-text-1">
               Menu
-            </DialogTitle>
+            </p>
             <button
+              class="rounded-lg p-2 text-text-2 transition-colors hover:text-text-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
               aria-label="Close menu"
-              class="p-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded-lg"
               @click="closeMobileMenu"
             >
               <XMarkIcon class="h-6 w-6" />
             </button>
           </div>
 
-          <nav class="flex flex-col gap-4">
+          <nav class="flex flex-col gap-3">
             <a
-              v-for="item in navItems"
-              :key="item.href"
+              v-for="link in navLinks"
+              :key="link.url"
               :class="[
-                'px-4 py-3 rounded-xl text-base font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
-                isActive(item.href)
-                  ? 'bg-primary/20 text-white border border-primary/40'
-                  : 'text-gray-400 hover:text-white hover:bg-surface-lighter'
+                'rounded-xl px-4 py-3 text-base font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+                isActive(link.url)
+                  ? 'border border-primary/40 bg-primary/20 text-text-1'
+                  : 'text-text-2 hover:bg-surface-lighter'
               ]"
-              :href="item.href"
+              :href="link.url"
               @click="closeMobileMenu"
             >
-              {{ item.label }}
+              {{ link.label }}
             </a>
-
-            <Disclosure v-slot="{ open }">
-              <DisclosureButton
-                :class="[
-                  'flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
-                  open ? 'bg-primary/20 text-white border border-primary/40' : 'text-gray-400 hover:text-white hover:bg-surface-lighter'
-                ]"
-              >
-                <span>Docs</span>
-                <ChevronDownIcon :class="['h-5 w-5 transition-transform', open && 'rotate-180']" />
-              </DisclosureButton>
-
-              <DisclosurePanel class="mt-2 ml-4 space-y-2">
-                <a
-                  :href="docsHub.href"
-                  class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white bg-slate-900/60 border border-surface-lighter/60 hover:bg-surface-dark hover:border-surface-lighter transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                  @click="closeMobileMenu"
-                >
-                  <BookOpenIcon class="h-5 w-5 text-primary" />
-                  <div>
-                    <p class="font-semibold">{{ docsHub.label }}</p>
-                    <p class="text-xs text-slate-400">Documentation Home</p>
-                  </div>
-                </a>
-                <a
-                  v-for="link in docsProductLinks"
-                  :key="link.href"
-                  :href="link.href"
-                  class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-white bg-slate-900/60 border border-surface-lighter/60 hover:bg-surface-dark hover:border-surface-lighter transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                  @click="closeMobileMenu"
-                >
-                  <component
-                    :is="link.icon"
-                    class="h-5 w-5 text-cyan-glow"
-                  />
-                  <div>
-                    <p class="font-semibold">{{ link.label }}</p>
-                    <p class="text-xs text-slate-400">{{ link.description }}</p>
-                  </div>
-                </a>
-              </DisclosurePanel>
-            </Disclosure>
-
-                <div class="mt-6 pt-6 border-t border-surface-lighter">
-                  <Button
-                    class="w-full"
-                    size="md"
-                    variant="primary"
-                  >
-                    {{ ctaLabel }}
-                  </Button>
-                </div>
-              </nav>
-            </DialogPanel>
-          </UiTransitionSlide>
+          </nav>
         </div>
-      </Dialog>
-    </TransitionRoot>
+      </div>
+    </div>
   </header>
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  TransitionRoot
-} from '@headlessui/vue'
-import {
-  TicketIcon,
-  Bars3Icon,
-  XMarkIcon
-} from '@heroicons/vue/24/outline'
-import Button from '../basic/Button.vue'
+import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 
-type NavItem = { href: string; label: string }
+type NavLink = { label: string; url: string }
 
 type Props = {
-  navItems?: NavItem[]
-  currentPath?: string
-  ctaLabel?: string
+  logoUrl?: string
+  links?: NavLink[]
 }
 
 const props = defineProps<Props>()
 
-const defaultNavItems: NavItem[] = [
-  { href: '/products/', label: 'Products' },
-  { href: '/services/', label: 'Services' },
-  { href: '/pricing/', label: 'Pricing' },
-  { href: '/docs/', label: 'Docs' }
+const fallbackLinks: NavLink[] = [
+  { label: 'Products', url: '/products/' },
+  { label: 'Services', url: '/services/' },
+  { label: 'Pricing', url: '/pricing/' }
 ]
 
-const navItems = computed(() => props.navItems ?? defaultNavItems)
-const ctaLabel = computed(() => props.ctaLabel ?? 'Get Started')
+const navLinks = computed(() => (props.links?.length ? props.links : fallbackLinks))
+const logoSrc = computed(() => props.logoUrl ?? '/public/open-ticket-logo.png')
 
-const activePath = ref(props.currentPath ?? '/')
-const updateActivePath = () => {
+const activePath = ref('/')
+const syncActivePath = () => {
   if (typeof window !== 'undefined') {
-    activePath.value = props.currentPath ?? window.location.pathname
+    activePath.value = window.location.pathname
   }
 }
 
-onMounted(() => {
-  updateActivePath()
-})
+onMounted(syncActivePath)
 
 const mobileMenuOpen = ref(false)
 const openMobileMenu = () => {
@@ -201,5 +118,5 @@ const closeMobileMenu = () => {
   mobileMenuOpen.value = false
 }
 
-const isActive = (href: string) => activePath.value === href || activePath.value.startsWith(href)
+const isActive = (url: string) => activePath.value === url || activePath.value.startsWith(url)
 </script>

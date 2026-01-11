@@ -34,3 +34,4 @@ When Components have changed always update the storybook stories.
 Update AGENTS.md and copilot-instructions.md files when important changes occur or information
 becomes outdated.
 
+Add a list of the MCP Servers you have used at the end of your response.
