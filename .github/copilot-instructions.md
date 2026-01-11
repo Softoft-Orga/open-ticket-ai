@@ -55,7 +55,10 @@ changing before making edits and follow the rules for that surface specifically.
 
 ### Component Guidelines
 - **Location**: Components in `docs/src/components/vue/**`. Stories in `docs/stories/**`.
-- **Reusable First**: Always prefer existing components. Check `docs/storybook-static/index.json` before creating new ones.
+- **Documentation**: 
+  - Quick reference: `docs/COMPONENTS.md` lists all components with brief descriptions
+  - Detailed usage: Storybook stories in `docs/stories/**/*.stories.ts`
+- **Reusable First**: Always prefer existing components. Check `docs/COMPONENTS.md` or Storybook before creating new ones.
 - **Storybook**: Update stories when changing components.
 - **Design-system tokens**: Use shared types from `docs/src/components/vue/core/design-system/tokens.ts`:
   - `Variant`, `Size`, `Tone` types for consistent component props
@@ -111,6 +114,21 @@ changing before making edits and follow the rules for that surface specifically.
     - Online: [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-storybook.netlify.app/)
 - **Verification**: Use Playwright MCP for UI, Chrome DevTools for debugging.
 
+### Content Collections (Astro 5)
+- **Definition**: All collections defined in `docs/src/content/config.ts`
+- **Documentation**: See `docs/CONTENT_COLLECTIONS.md` for complete reference
+- **Collections**:
+  - `docs` - Documentation pages (MD/MDX in `docs/src/content/docs/`)
+  - `blog` - Blog articles (MD/MDX in `docs/src/content/blog/`)
+  - `products` - Product listings (YAML in `docs/src/content/products.yaml`)
+  - `services` - Service offerings (YAML in `docs/src/content/services.yaml`)
+- **Usage**: Pages use `getCollection('name')` to fetch entries
+- **Routing**: 
+  - Docs: `docs/src/pages/docs/[...slug].astro`
+  - Blog: `docs/src/pages/blog/[...slug].astro`
+  - Products: `docs/src/pages/products.astro`
+  - Services: `docs/src/pages/services.astro`
+
 
 ### Tooling Usage (MCP)
 - **context7**: API usage questions.
@@ -121,7 +139,29 @@ changing before making edits and follow the rules for that surface specifically.
 
 After completing a task, output all MCP Servers used;
 
-### Updating AGENTS.md ans copilot-instructions.md
+### Documentation Update Rules
+
+**ALWAYS** update documentation when making these changes:
+
+#### When changing Vue components (`docs/src/components/vue/**`)
+- [ ] Update `docs/COMPONENTS.md` with new component entry (name, description, props, slots)
+- [ ] Create or update Storybook story in `docs/stories/**/*.stories.ts`
+- [ ] Follow naming convention: `{ComponentName}.stories.ts`
+- [ ] Verify component renders correctly in Storybook
+
+#### When changing content collections (`docs/src/content/**` or `docs/src/content/config.ts`)
+- [ ] Update `docs/CONTENT_COLLECTIONS.md` if schemas, fields, or conventions change
+- [ ] Document all required frontmatter fields
+- [ ] Test pages using `getCollection()` still work
+- [ ] Run `npm run docs:build` to verify no errors
+
+#### Quick validation checklist
+Before finalizing changes:
+- Components: `COMPONENTS.md` updated + Storybook story exists + renders correctly
+- Collections: `CONTENT_COLLECTIONS.md` accurate + schema valid + pages render
+- Build: `npm run docs:build` succeeds without errors
+
+### Updating AGENTS.md and copilot-instructions.md
 - When important changes have taken place or information in AGENTS.md files or copilot-instructions.md
   files is out of date, please update those files to reflect the current state of the repository.
 - Keep the Files small and focused on the most important information for contributors and agents.
