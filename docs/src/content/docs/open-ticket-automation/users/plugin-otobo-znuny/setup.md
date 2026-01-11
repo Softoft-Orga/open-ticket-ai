@@ -25,7 +25,7 @@ Use the OTOBO Admin navigation:
 
 ### Step 2: Click “Add Agent”
 
-![](https://doc.otobo.org/manual/admin/10.0/en/_images/agent-add.png)
+<img src="https://doc.otobo.org/manual/admin/10.0/en/_images/agent-add.png" alt="OTOBO Agent Add" />
 
 Fill in:
 
@@ -89,7 +89,7 @@ Go to:
 
 **Admin → Agents ↔ Groups**
 
-![https://doc.otobo.org/manual/admin/10.0/en/_images/agent-group-management.png](https://doc.otobo.org/manual/admin/10.0/en/_images/agent-group-management.png)
+<img src="https://doc.otobo.org/manual/admin/10.0/en/_images/agent-group-management.png" alt="OTOBO Agent Group Management" />
 
 Select the agent **open_ticket_ai** and give permissions like:
 
@@ -142,7 +142,7 @@ Go to:
 
 ![](/assets/webservice_overview.png)
 
-[https://doc.otobo.org/manual/admin/10.0/en/_images/web-service-management.png](https://doc.otobo.org/manual/admin/10.0/en/_images/web-service-management.png)
+<img src="https://doc.otobo.org/manual/admin/10.0/en/_images/web-service-management.png" alt="OTOBO Web Service Management" />
 
 ---
 
