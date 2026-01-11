@@ -3,17 +3,23 @@
     v-slot="{ open }"
     :default-open="defaultOpen"
     as="div"
-    :class="containerClasses"
+    :class="surfaceClasses"
   >
     <DisclosureButton
-      :class="headerClasses"
+      :disabled="disabled"
+      :class="buttonClasses"
     >
-      <span :class="titleClasses">{{ title }}</span>
+      <slot
+        name="title"
+        :open="open"
+      >
+        <span class="font-semibold text-lg text-white">{{ title }}</span>
+      </slot>
       <svg 
         :class="[
-          'w-5 h-5 transition-transform duration-300',
+          'w-5 h-5 transition-transform duration-300 flex-shrink-0',
           open ? 'rotate-180' : 'rotate-0',
-          iconColorClasses
+          iconClasses
         ]"
         fill="none"
         viewBox="0 0 24 24"
@@ -36,11 +42,9 @@
       leave-from-class="opacity-100 max-h-screen"
       leave-to-class="opacity-0 max-h-0"
     >
-      <DisclosurePanel
-        :class="contentClasses"
-      >
-        <div :class="contentInnerClasses">
-          <slot />
+      <DisclosurePanel class="overflow-hidden">
+        <div :class="contentClasses">
+          <slot :open="open" />
         </div>
       </DisclosurePanel>
     </transition>
@@ -50,62 +54,60 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
+import { surface, button } from '../../../../design-system/recipes'
 
 type Variant = 'default' | 'ghost' | 'bordered' | 'gradient'
 
 interface Props {
-  title: string
+  id?: string
+  title?: string
   defaultOpen?: boolean
   variant?: Variant
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  id: () => `accordion-item-${Math.random().toString(36).substr(2, 9)}`,
+  title: '',
   defaultOpen: false,
-  variant: 'default'
+  variant: 'default',
+  disabled: false
 })
 
-
-// Variant-based styling using Tailwind tokens
-const containerClasses = computed(() => {
+// Surface styling using design-system recipes
+const surfaceClasses = computed(() => {
   const base = 'transition-all duration-200'
   
   const variants = {
     default: 'border-b border-border-dark',
     ghost: '',
-    bordered: 'border border-border-dark rounded-lg mb-2 overflow-hidden',
-    gradient: 'border border-primary/30 rounded-lg mb-2 overflow-hidden bg-gradient-to-r from-primary/5 to-transparent'
+    bordered: surface({ variant: 'surface', radius: 'lg' }) + ' mb-2 overflow-hidden',
+    gradient: surface({ variant: 'surface', tone: 'primary', tint: 'soft', radius: 'lg' }) + ' mb-2 overflow-hidden'
   }
   
   return `${base} ${variants[props.variant]}`
 })
 
-const headerClasses = computed(() => {
-  const base = 'flex w-full justify-between items-center text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-200'
+// Button styling using design-system button recipe
+const buttonClasses = computed(() => {
+  const baseButton = button({ 
+    variant: 'ghost', 
+    tone: 'neutral',
+    radius: 'lg',
+    disabled: props.disabled
+  })
   
   const variants = {
-    default: 'py-4 px-0 hover:text-primary',
-    ghost: 'py-3 px-0 hover:text-primary',
-    bordered: 'py-4 px-5 bg-surface-dark hover:bg-surface-lighter',
-    gradient: 'py-4 px-5 bg-surface-dark/50 hover:bg-surface-dark backdrop-blur-sm'
+    default: 'py-4 px-0',
+    ghost: 'py-3 px-0',
+    bordered: 'py-4 px-5',
+    gradient: 'py-4 px-5 backdrop-blur-sm'
   }
   
-  return `${base} ${variants[props.variant]}`
+  return `${baseButton} w-full justify-between items-center text-left ${variants[props.variant]}`
 })
 
-const titleClasses = computed(() => {
-  const base = 'font-semibold transition-colors duration-200'
-  
-  const variants = {
-    default: 'text-lg text-white',
-    ghost: 'text-base text-white',
-    bordered: 'text-lg text-white',
-    gradient: 'text-lg text-white'
-  }
-  
-  return `${base} ${variants[props.variant]}`
-})
-
-const iconColorClasses = computed(() => {
+const iconClasses = computed(() => {
   const variants = {
     default: 'text-text-dim',
     ghost: 'text-text-dim',
@@ -117,10 +119,6 @@ const iconColorClasses = computed(() => {
 })
 
 const contentClasses = computed(() => {
-  return 'overflow-hidden'
-})
-
-const contentInnerClasses = computed(() => {
   const variants = {
     default: 'pt-2 pb-4 px-0 text-text-dim',
     ghost: 'pt-2 pb-3 px-0 text-text-dim',
