@@ -1,6 +1,6 @@
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { TONES, SIZES, RADII, ELEVATIONS } from '../src/components/vue/core/design-system/tokens'
+import { TONES, SIZES, RADII, ELEVATIONS } from '../src/design-system/tokens'
 
 // Badge supports brand colors (primary, secondary) plus semantic tones
 const BADGE_TYPES = ['primary', 'secondary', ...TONES] as const
