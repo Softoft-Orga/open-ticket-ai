@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import { localizeHref, getLocaleFromPath, type Locale } from '../lib/i18nLinks';
 
 interface Props {
   title: string;
@@ -10,78 +11,88 @@ interface Props {
 
 const { title, description, breadcrumbs = [], toc = [] } = Astro.props;
 
+// Get current locale
+const currentLocale = getLocaleFromPath(Astro.url.pathname) as Locale;
+
+// Localize sidebar section links
 const sidebarSections = [
   {
     label: 'Products',
     items: [
-      { label: 'Overview', link: '/products/overview/' },
-      { label: 'Prediction API', link: '/products/prediction-api/overview/' },
-      { label: 'Synthetic Data', link: '/products/synthetic-data/synthetic-data-generation/' },
+      { label: 'Overview', link: localizeHref('/products/overview/', currentLocale) },
+      { label: 'Prediction API', link: localizeHref('/products/prediction-api/overview/', currentLocale) },
+      { label: 'Synthetic Data', link: localizeHref('/products/synthetic-data/synthetic-data-generation/', currentLocale) },
     ]
   },
   {
     label: 'Guides',
     items: [
-      { label: 'Quick Start', link: '/guides/quick_start/' },
-      { label: 'First Pipeline', link: '/guides/first_pipeline/' },
-      { label: 'Plan Ticket Automation', link: '/guides/plan-ticket-automation-project/' },
+      { label: 'Quick Start', link: localizeHref('/guides/quick_start/', currentLocale) },
+      { label: 'First Pipeline', link: localizeHref('/guides/first_pipeline/', currentLocale) },
+      { label: 'Plan Ticket Automation', link: localizeHref('/guides/plan-ticket-automation-project/', currentLocale) },
     ]
   },
   {
     label: 'Users',
     items: [
-      { label: 'Installation', link: '/users/installation/' },
-      { label: 'Plugin Marketplace', link: '/users/plugin-marketplace/' },
-      { label: 'Configuration Examples', link: '/users/config_examples/' },
-      { label: 'OTOBO/Znuny Setup', link: '/users/plugin-otobo-znuny/setup/' },
+      { label: 'Installation', link: localizeHref('/users/installation/', currentLocale) },
+      { label: 'Plugin Marketplace', link: localizeHref('/users/plugin-marketplace/', currentLocale) },
+      { label: 'Configuration Examples', link: localizeHref('/users/config_examples/', currentLocale) },
+      { label: 'OTOBO/Znuny Setup', link: localizeHref('/users/plugin-otobo-znuny/setup/', currentLocale) },
     ]
   },
   {
     label: 'Developers',
     items: [
-      { label: 'Dependency Injection', link: '/developers/dependency_injection/' },
-      { label: 'Services', link: '/developers/services/' },
-      { label: 'Pipeline Code', link: '/developers/pipeline_code/' },
-      { label: 'Config Rendering', link: '/developers/config_rendering/' },
-      { label: 'Template Rendering', link: '/developers/template_rendering/' },
-      { label: 'Testing', link: '/developers/testing/' },
-      { label: 'Logging', link: '/developers/logging/' },
-      { label: 'Ticket System Integration', link: '/developers/ticket_system_integration/' },
+      { label: 'Dependency Injection', link: localizeHref('/developers/dependency_injection/', currentLocale) },
+      { label: 'Services', link: localizeHref('/developers/services/', currentLocale) },
+      { label: 'Pipeline Code', link: localizeHref('/developers/pipeline_code/', currentLocale) },
+      { label: 'Config Rendering', link: localizeHref('/developers/config_rendering/', currentLocale) },
+      { label: 'Template Rendering', link: localizeHref('/developers/template_rendering/', currentLocale) },
+      { label: 'Testing', link: localizeHref('/developers/testing/', currentLocale) },
+      { label: 'Logging', link: localizeHref('/developers/logging/', currentLocale) },
+      { label: 'Ticket System Integration', link: localizeHref('/developers/ticket_system_integration/', currentLocale) },
     ]
   },
   {
     label: 'Details',
     items: [
-      { label: 'Config Reference', link: '/details/config_reference/' },
-      { label: 'Template Rendering', link: '/details/template_rendering/' },
+      { label: 'Config Reference', link: localizeHref('/details/config_reference/', currentLocale) },
+      { label: 'Template Rendering', link: localizeHref('/details/template_rendering/', currentLocale) },
     ]
   },
   {
     label: 'Blog',
     items: [
-      { label: 'Open Ticket AI 1.4 Release', link: '/blog/open-ticket-ai-1-4-release/' },
-      { label: 'AI in Ticket Systems', link: '/blog/ai-in-ticketsystems/' },
-      { label: 'Automatic Ticket Labeling', link: '/blog/automatic_ticket_labeling/' },
+      { label: 'Open Ticket AI 1.4 Release', link: localizeHref('/blog/open-ticket-ai-1-4-release/', currentLocale) },
+      { label: 'AI in Ticket Systems', link: localizeHref('/blog/ai-in-ticketsystems/', currentLocale) },
+      { label: 'Automatic Ticket Labeling', link: localizeHref('/blog/automatic_ticket_labeling/', currentLocale) },
     ]
   },
 ];
+
+// Localize breadcrumbs
+const localizedBreadcrumbs = breadcrumbs.map(crumb => ({
+  ...crumb,
+  href: crumb.href ? localizeHref(crumb.href, currentLocale) : undefined,
+}));
 ---
 
 <BaseLayout title={title} description={description}>
   <div class="min-h-screen bg-background-dark">
     <!-- Breadcrumbs Header -->
-    {breadcrumbs.length > 0 && (
+    {localizedBreadcrumbs.length > 0 && (
       <div class="border-b border-white/5 bg-[#0f0814]/50 sticky top-16 z-40 backdrop-blur-sm shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
           <div class="flex items-center text-[10px] gap-2 overflow-hidden">
-            {breadcrumbs.map((crumb, i) => (
+            {localizedBreadcrumbs.map((crumb, i) => (
               <>
                 {crumb.href ? (
                   <a href={crumb.href} class="text-slate-500 hover:text-white transition-colors whitespace-nowrap">{crumb.label}</a>
                 ) : (
                   <span class="text-primary-light font-bold truncate">{crumb.label}</span>
                 )}
-                {i < breadcrumbs.length - 1 && (
+                {i < localizedBreadcrumbs.length - 1 && (
                   <span class="text-xs text-slate-700">›</span>
                 )}
               </>

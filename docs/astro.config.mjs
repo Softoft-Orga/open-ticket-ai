@@ -8,6 +8,13 @@ export default defineConfig({
     base: '/',
     outDir: './dist',
     trailingSlash: 'always',
+    i18n: {
+        defaultLocale: 'en',
+        locales: ['en', 'de'],
+        routing: {
+            prefixDefaultLocale: false,
+        },
+    },
     image: {
         // Configure image service with Sharp for optimization
         service: {

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import DocsLayout from '../../layouts/DocsLayout.astro';
+import { localizeHref, getLocaleFromPath, type Locale } from '../../lib/i18nLinks';
 
 export async function getStaticPaths() {
   const docsEntries = await getCollection('docs');
@@ -15,13 +16,16 @@ const { Content, headings } = await entry.render();
 const title = entry.data.title;
 const description = entry.data.description;
 
-// Generate breadcrumbs from the slug
+// Get current locale
+const currentLocale = getLocaleFromPath(Astro.url.pathname) as Locale;
+
+// Generate breadcrumbs from the slug (now with localized hrefs)
 const slugParts = entry.id.replace(/\.(md|mdx)$/, '').split('/');
 const breadcrumbs = [
-  { label: 'Documentation', href: '/docs/' },
+  { label: 'Documentation', href: localizeHref('/docs/', currentLocale) },
   ...slugParts.slice(0, -1).map((part, index) => ({
     label: part.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    href: '/docs/' + slugParts.slice(0, index + 1).join('/') + '/',
+    href: localizeHref('/docs/' + slugParts.slice(0, index + 1).join('/') + '/', currentLocale),
   })),
   { label: title }
 ];

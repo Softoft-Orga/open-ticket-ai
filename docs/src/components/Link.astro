@@ -1,0 +1,25 @@
+---
+/**
+ * Link component for locale-aware internal links
+ * Automatically converts canonical hrefs to locale-aware URLs based on current locale
+ */
+import { localizeHref, getLocaleFromPath, type Locale } from '../lib/i18nLinks';
+
+interface Props {
+  href: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, class: className, ...rest } = Astro.props;
+
+// Get current locale from URL
+const currentLocale = getLocaleFromPath(Astro.url.pathname) as Locale;
+
+// Localize the href
+const localizedHref = localizeHref(href, currentLocale);
+---
+
+<a href={localizedHref} class={className} {...rest}>
+  <slot />
+</a>

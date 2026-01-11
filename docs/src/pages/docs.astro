@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Link from '../components/Link.astro';
 
 const title = "Documentation | Open Ticket AI";
 const description = "Choose the documentation you need. Explore API references, implementation guides, and best practices.";
@@ -33,7 +34,7 @@ const description = "Choose the documentation you need. Explore API references, 
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
         <!-- Open Ticket Automation Docs Card -->
-        <a
+        <Link
           href="/docs/open-ticket-automation/"
           class="group relative block p-8 bg-card-dark rounded-2xl border border-slate-700 hover:border-primary/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-primary/10"
         >
@@ -56,10 +57,10 @@ const description = "Choose the documentation you need. Explore API references, 
               </svg>
             </div>
           </div>
-        </a>
+        </Link>
 
         <!-- Tagging AI Docs Card -->
-        <a
+        <Link
           href="/docs/ticket-tagging/"
           class="group relative block p-8 bg-card-dark rounded-2xl border border-slate-700 hover:border-primary/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-primary/10"
         >
@@ -82,7 +83,7 @@ const description = "Choose the documentation you need. Explore API references, 
               </svg>
             </div>
           </div>
-        </a>
+        </Link>
       </div>
 
       <div class="mt-24 pt-16 border-t border-slate-800 text-center">
