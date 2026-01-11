@@ -51,6 +51,7 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **Badge.vue** — Pill badge. Props: `label`, `tone`, `size`, `icon`. Slots: default (custom content).
 - **Button.vue** — Styled button. Props: `label`, `variant`, `size`, `to`, `href`, `icon`, `block`, `loading`, `disabled`. Slots: default (button content).
 - **Card.vue** — Card container. Props: `title`, `description`, `icon`, `link`. Slots: default (content), `footer`.
+- **Link.vue** — Simple link component. Props: `to`. Slots: default (link text).
 - **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot scope).
 
 ### core/forms
@@ -109,18 +110,8 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **ResultTable.vue** — Table of prediction results. Props: `rows`, `columns`. Slots: _none_.
 
 ## product
-- **ComparisonRow.vue** — Feature comparison row. Props: `label`, `values` (array). Slots: _none_.
-- **FeatureItem.vue** — Feature item bullet. Props: `title`, `description`, `icon`. Slots: _none_.
-- **FullMetric.vue** — Metric display. Props: `label`, `value`, `unit`, `trend`. Slots: _none_.
-- **LiteFreeDetail.vue** — Lite free plan details. Props: `plan`. Slots: _none_.
-2- **PerformanceMetric.vue** — Performance metric stat. Props: `label`, `value`, `delta`. Slots: _none_.
+- **PerformanceMetric.vue** — Performance metric stat. Props: `label`, `value`, `delta`. Slots: _none_.
 - **ProductCard.vue** — Product card. Props: `product`. Slots: _none_.
-- **ProductCards.vue** — Product cards grid. Props: `products`. Slots: _none_.
-- **RoiCalculator.vue** — ROI calculator widget. Props: `defaults`. Slots: _none_.
-- **ServicePackages.vue** — Service packages section. Props: `packages`. Slots: _none_.
-- **SupportPlans.vue** — Support plans listing. Props: `plans`. Slots: _none_.
-- **TaxonomyCard.vue** — Taxonomy card. Props: `item`. Slots: _none_.
-- **TaxonomyRow.vue** — Taxonomy row. Props: `item`. Slots: _none_.
 
 ## services
 - **ExtensionItem.vue** — Extension list item. Props: `extension`. Slots: _none_.

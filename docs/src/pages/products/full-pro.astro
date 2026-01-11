@@ -1,10 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/vue/core/basic/Button.vue';
-import FullMetric from '../../components/vue/product/FullMetric.vue';
-import FeatureItem from '../../components/vue/product/FeatureItem.vue';
-import TaxonomyRow from '../../components/vue/product/TaxonomyRow.vue';
-import ComparisonRow from '../../components/vue/product/ComparisonRow.vue';
+import Card from '../../components/vue/core/basic/Card.vue';
+import Badge from '../../components/vue/core/basic/Badge.vue';
 import { ArrowLeftIcon, RocketLaunchIcon } from '@heroicons/vue/24/outline';
 
 const title = "Full Pro - Advanced Enterprise Tagging AI";
@@ -56,30 +54,50 @@ const description = "The ultimate classification engine for high-volume enterpri
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-10 bg-surface-dark border border-border-dark rounded-3xl">
-          <FullMetric 
-            label="MODEL ARCHITECTURE" 
-            value="8.0B Dense Transformer" 
-            sub="Fine-tuned for helpdesk semantics" 
-            client:load 
-          />
-          <FullMetric 
-            label="VRAM OPTIMIZED" 
-            value="16GB - 24GB" 
-            sub="Supports 4-bit and 8-bit quantization" 
-            client:load 
-          />
-          <FullMetric 
-            label="TAXONOMY DEPTH" 
-            value="250+ Tags (4 Levels)" 
-            sub="Unmatched granularity for reporting" 
-            client:load 
-          />
-          <FullMetric 
-            label="ACCURACY BASELINE" 
-            value="92.4%+" 
-            sub="State-of-the-art benchmarks" 
-            client:load 
-          />
+          <div class="flex flex-col gap-2">
+            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+              MODEL ARCHITECTURE
+            </div>
+            <div class="text-3xl font-black text-white">
+              8.0B Dense Transformer
+            </div>
+            <div class="text-sm text-cyan-glow italic">
+              Fine-tuned for helpdesk semantics
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+              VRAM OPTIMIZED
+            </div>
+            <div class="text-3xl font-black text-white">
+              16GB - 24GB
+            </div>
+            <div class="text-sm text-cyan-glow italic">
+              Supports 4-bit and 8-bit quantization
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+              TAXONOMY DEPTH
+            </div>
+            <div class="text-3xl font-black text-white">
+              250+ Tags (4 Levels)
+            </div>
+            <div class="text-sm text-cyan-glow italic">
+              Unmatched granularity for reporting
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+              ACCURACY BASELINE
+            </div>
+            <div class="text-3xl font-black text-white">
+              92.4%+
+            </div>
+            <div class="text-sm text-cyan-glow italic">
+              State-of-the-art benchmarks
+            </div>
+          </div>
         </div>
       </section>
 
@@ -90,30 +108,58 @@ const description = "The ultimate classification engine for high-volume enterpri
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <FeatureItem 
-            icon="🧠" 
-            title="Reasoning Chain" 
-            desc="LLM provides the logic behind each tag, allowing for human audit and trust-building across teams." 
-            client:load 
-          />
-          <FeatureItem 
-            icon="🎛️" 
-            title="Custom Adapters" 
-            desc="Inject your specific industry jargon via LoRA adapters without re-training the entire model from scratch." 
-            client:load 
-          />
-          <FeatureItem 
-            icon="📦" 
-            title="Batch Processing" 
-            desc="Optimized for massive ticket migrations (backlog tagging) at 100+ tps with zero external dependency on cloud." 
-            client:load 
-          />
-          <FeatureItem 
-            icon="🛡️" 
-            title="Hardware Air-Gap" 
-            desc="Validated for high-security environments with zero external dependency telemetry, runs fully offline." 
-            client:load 
-          />
+          <Card client:load background="surface-dark" padding="lg" hoverable class="rounded-2xl">
+            <div class="flex flex-col gap-4">
+              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="text-2xl">🧠</span>
+              </div>
+              <h3 class="text-xl font-bold text-white">
+                Reasoning Chain
+              </h3>
+              <p class="text-text-dim text-sm leading-relaxed">
+                LLM provides the logic behind each tag, allowing for human audit and trust-building across teams.
+              </p>
+            </div>
+          </Card>
+          <Card client:load background="surface-dark" padding="lg" hoverable class="rounded-2xl">
+            <div class="flex flex-col gap-4">
+              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="text-2xl">🎛️</span>
+              </div>
+              <h3 class="text-xl font-bold text-white">
+                Custom Adapters
+              </h3>
+              <p class="text-text-dim text-sm leading-relaxed">
+                Inject your specific industry jargon via LoRA adapters without re-training the entire model from scratch.
+              </p>
+            </div>
+          </Card>
+          <Card client:load background="surface-dark" padding="lg" hoverable class="rounded-2xl">
+            <div class="flex flex-col gap-4">
+              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="text-2xl">📦</span>
+              </div>
+              <h3 class="text-xl font-bold text-white">
+                Batch Processing
+              </h3>
+              <p class="text-text-dim text-sm leading-relaxed">
+                Optimized for massive ticket migrations (backlog tagging) at 100+ tps with zero external dependency on cloud.
+              </p>
+            </div>
+          </Card>
+          <Card client:load background="surface-dark" padding="lg" hoverable class="rounded-2xl">
+            <div class="flex flex-col gap-4">
+              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="text-2xl">🛡️</span>
+              </div>
+              <h3 class="text-xl font-bold text-white">
+                Hardware Air-Gap
+              </h3>
+              <p class="text-text-dim text-sm leading-relaxed">
+                Validated for high-security environments with zero external dependency telemetry, runs fully offline.
+              </p>
+            </div>
+          </Card>
         </div>
       </section>
 
@@ -126,10 +172,50 @@ const description = "The ultimate classification engine for high-volume enterpri
             </p>
             
             <div class="space-y-1">
-              <TaxonomyRow level={1} label="intent/" tags={["service_request", "incident", "change"]} active client:load />
-              <TaxonomyRow level={2} label="intent/incident/" tags={["security", "downtime", "performance"]} client:load />
-              <TaxonomyRow level={3} label="intent/incident/security/" tags={["breach", "phishing", "malware"]} client:load />
-              <TaxonomyRow level={4} label="intent/incident/security/phishing/" tags={["email", "sms", "voice"]} client:load />
+              <div class="flex items-center justify-between py-4 border-b border-border-dark/30 bg-primary/5">
+                <div class="flex items-center gap-4">
+                  <div class="w-2 h-2 rounded-full bg-primary ml-0"></div>
+                  <span class="font-mono text-sm text-white font-bold">intent/</span>
+                </div>
+                <div class="flex gap-2 flex-wrap justify-end">
+                  <Badge client:load type="primary">service_request</Badge>
+                  <Badge client:load type="primary">incident</Badge>
+                  <Badge client:load type="primary">change</Badge>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-border-dark/30">
+                <div class="flex items-center gap-4">
+                  <div class="w-2 h-2 rounded-full bg-cyan-glow ml-6"></div>
+                  <span class="font-mono text-sm text-text-dim">intent/incident/</span>
+                </div>
+                <div class="flex gap-2 flex-wrap justify-end">
+                  <Badge client:load type="secondary">security</Badge>
+                  <Badge client:load type="secondary">downtime</Badge>
+                  <Badge client:load type="secondary">performance</Badge>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-border-dark/30">
+                <div class="flex items-center gap-4">
+                  <div class="w-2 h-2 rounded-full bg-purple-400 ml-12"></div>
+                  <span class="font-mono text-sm text-text-dim">intent/incident/security/</span>
+                </div>
+                <div class="flex gap-2 flex-wrap justify-end">
+                  <Badge client:load type="secondary">breach</Badge>
+                  <Badge client:load type="secondary">phishing</Badge>
+                  <Badge client:load type="secondary">malware</Badge>
+                </div>
+              </div>
+              <div class="flex items-center justify-between py-4 border-b border-border-dark/30">
+                <div class="flex items-center gap-4">
+                  <div class="w-2 h-2 rounded-full bg-pink-400 ml-16"></div>
+                  <span class="font-mono text-sm text-text-dim">intent/incident/security/phishing/</span>
+                </div>
+                <div class="flex gap-2 flex-wrap justify-end">
+                  <Badge client:load type="secondary">email</Badge>
+                  <Badge client:load type="secondary">sms</Badge>
+                  <Badge client:load type="secondary">voice</Badge>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -145,12 +231,36 @@ const description = "The ultimate classification engine for high-volume enterpri
                 <div class="text-white text-center">Lite Pro</div>
                 <div class="text-primary-light text-center">Full Pro</div>
               </div>
-              <ComparisonRow label="Model Size" v1="4B Params" v2="8B Params" client:load />
-              <ComparisonRow label="Tags" v1="150+" v2="250+" client:load />
-              <ComparisonRow label="Accuracy" v1="~90%" v2="~92.4%" client:load />
-              <ComparisonRow label="Reasoning" v1="—" v2="✓" client:load />
-              <ComparisonRow label="LoRA Support" v1="—" v2="✓" client:load />
-              <ComparisonRow label="Batch Mode" v1="Basic" v2="Optimized" client:load />
+              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
+                <div class="text-text-dim font-medium">Model Size</div>
+                <div class="text-white text-center">4B Params</div>
+                <div class="text-white text-center font-bold">8B Params</div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
+                <div class="text-text-dim font-medium">Tags</div>
+                <div class="text-white text-center">150+</div>
+                <div class="text-white text-center font-bold">250+</div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
+                <div class="text-text-dim font-medium">Accuracy</div>
+                <div class="text-white text-center">~90%</div>
+                <div class="text-white text-center font-bold">~92.4%</div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
+                <div class="text-text-dim font-medium">Reasoning</div>
+                <div class="text-white text-center">—</div>
+                <div class="text-white text-center font-bold">✓</div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
+                <div class="text-text-dim font-medium">LoRA Support</div>
+                <div class="text-white text-center">—</div>
+                <div class="text-white text-center font-bold">✓</div>
+              </div>
+              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
+                <div class="text-text-dim font-medium">Batch Mode</div>
+                <div class="text-white text-center">Basic</div>
+                <div class="text-white text-center font-bold">Optimized</div>
+              </div>
             </div>
           </div>
         </div>
