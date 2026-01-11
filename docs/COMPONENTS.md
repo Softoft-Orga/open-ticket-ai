@@ -29,6 +29,7 @@ Below is an inventory of Vue components in `docs/src/components/vue`, organized 
 - **Button.vue** — Styled button. Props: `label`, `variant`, `size`, `to`, `href`, `icon`, `block`, `loading`, `disabled`. Slots: default (button content).
 - **Card.vue** — Card container. Props: `title`, `description`, `icon`, `link`. Slots: default (content), `footer`.
 - **Link.vue** — Simple link component. Props: `to`. Slots: default (link text).
+- **Modal.vue** — Accessible modal dialog. Props: `open` (boolean), `title` (string), `tone` (`neutral` | `primary` | `success` | `warning` | `danger` | `info`), `size` (`sm` | `md` | `lg`), `closeOnOverlay` (boolean, default: true). Emits: `close`. Slots: default (body), `title` (custom header), `footer` (actions).
 - **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot scope).
 
 ### core/forms
