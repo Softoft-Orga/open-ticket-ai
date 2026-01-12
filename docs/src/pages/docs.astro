@@ -20,7 +20,7 @@ const iconMap: Record<string, string> = {
   'ChartBarIcon': 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z',
 };
 
-async function getDocUrl(docId: string): Promise<string> {
+function getDocUrl(docId: string): string {
   const parts = docId.split('/');
   if (parts.length >= 3 && parts[0] === 'docs') {
     const slug = parts.slice(2).join('/');
@@ -51,6 +51,22 @@ async function getDocTitle(docId: string): Promise<string> {
   
   return docId.split('/').pop()?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Documentation';
 }
+
+const enrichedGroups = popularResources ? await Promise.all(
+  popularResources.groups.map(async (group) => ({
+    title: group.title,
+    items: await Promise.all(
+      group.items.map(async (item) => ({
+        docId: item.docId,
+        icon: item.icon,
+        label: item.label,
+        url: getDocUrl(item.docId),
+        title: item.label || await getDocTitle(item.docId),
+        iconPath: iconMap[item.icon] || iconMap['RocketLaunchIcon'],
+      }))
+    ),
+  }))
+) : [];
 ---
 
 <BaseLayout title={title} description={description}>
@@ -139,34 +155,28 @@ async function getDocTitle(docId: string): Promise<string> {
         </a>
       </div>
 
-      {popularResources && (
+      {enrichedGroups.length > 0 && (
         <div class="mt-24 pt-16 border-t border-slate-800">
-          <h4 class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500 mb-12 text-center">{popularResources.title}</h4>
+          <h4 class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500 mb-12 text-center">{popularResources?.title}</h4>
           
           <div class="space-y-12">
-            {popularResources.groups.map((group) => (
+            {enrichedGroups.map((group) => (
               <div>
                 <h5 class="text-lg font-bold text-slate-400 mb-6">{group.title}</h5>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {group.items.map(async (item) => {
-                    const docUrl = await getDocUrl(item.docId);
-                    const docTitle = item.label || await getDocTitle(item.docId);
-                    const iconPath = iconMap[item.icon] || iconMap['RocketLaunchIcon'];
-                    
-                    return (
-                      <a
-                        href={docUrl}
-                        class="group flex flex-col items-center gap-3 p-6 bg-slate-900/30 rounded-xl border border-slate-800 hover:border-primary/40 hover:bg-slate-900/50 transition-all duration-300"
-                      >
-                        <div class="w-12 h-12 rounded-lg bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                          <svg class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d={iconPath} />
-                          </svg>
-                        </div>
-                        <span class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors text-center">{docTitle}</span>
-                      </a>
-                    );
-                  })}
+                  {group.items.map((item) => (
+                    <a
+                      href={item.url}
+                      class="group flex flex-col items-center gap-3 p-6 bg-slate-900/30 rounded-xl border border-slate-800 hover:border-primary/40 hover:bg-slate-900/50 transition-all duration-300"
+                    >
+                      <div class="w-12 h-12 rounded-lg bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                        <svg class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d={item.iconPath} />
+                        </svg>
+                      </div>
+                      <span class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors text-center">{item.title}</span>
+                    </a>
+                  ))}
                 </div>
               </div>
             ))}
