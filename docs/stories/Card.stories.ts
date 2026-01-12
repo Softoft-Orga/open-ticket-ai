@@ -373,7 +373,7 @@ export const SizeLarge: Story = {
 export const RadiusMedium: Story = {
     args: {
         variant: 'surface',
-        radius: 'md',
+        radius: 'lg',
     },
     render: (args) => ({
         components: {Card},
@@ -583,7 +583,7 @@ export const WithRichContent: Story = {
 
 export const ProductCard: Story = {
     args: {
-        variant: 'secondary',
+        variant: 'outline',
         size: 'md',
         radius: 'xl',
         hoverable: true,

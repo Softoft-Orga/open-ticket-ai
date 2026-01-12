@@ -108,7 +108,7 @@ export const Pills: Story = {
     }),
     args: {
         tabs: ['Dashboard', 'Analytics', 'Reports'],
-        variant: 'pill',
+        style: 'pill',
         tone: 'primary',
         size: 'md'
     }
@@ -228,7 +228,7 @@ export const Vertical: Story = {
     args: {
         tabs: ['General', 'Security', 'Privacy', 'Notifications'],
         vertical: true,
-        variant: 'pill',
+        style: 'pill',
         tone: 'primary',
         size: 'md'
     }
@@ -292,7 +292,7 @@ export const WithVModel: Story = {
     }),
     args: {
         tabs: ['Tab A', 'Tab B', 'Tab C'],
-        variant: 'pill',
+        style: 'pill',
         tone: 'primary',
         size: 'md'
     }

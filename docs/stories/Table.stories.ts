@@ -532,7 +532,7 @@ export const MinimalRadius: Story = {
         dense: true,
         width: 'full',
         hoverEffect: true,
-        radius: 'md',
+        radius: 'lg',
         elevation: 'none'
     }
 }
