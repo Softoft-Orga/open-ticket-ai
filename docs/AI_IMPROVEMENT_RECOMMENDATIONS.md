@@ -34,7 +34,7 @@ This report analyzes the current state of the `/docs` directory and provides act
 #### Recommended Setup
 
 ```bash
-npm install -D vitest @vitest/ui @vue/test-utils happy-dom jsdom
+npm install -D vitest @vitest/ui @vue/test-utils happy-dom
 ```
 
 **Configuration:** `vitest.config.ts`
@@ -181,7 +181,7 @@ npm install -D @storybook/test-runner @storybook/testing-library @storybook/jest
 {
   "scripts": {
     "test:storybook": "test-storybook",
-    "test:storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run build-storybook -- --quiet\" \"wait-on tcp:6006 && npm run test:storybook\""
+    "test:storybook:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run storybook\" \"wait-on tcp:6006 && npm run test:storybook\""
   }
 }
 ```
@@ -1249,13 +1249,22 @@ Export content schemas as JSON:
 
 ```typescript
 // scripts/export-schemas.ts
-import { getCollection } from 'astro:content';
+import { z } from 'astro:content';
 import fs from 'fs/promises';
 
-const schemas = {
-  blog: await getCollection('blog').schema,
-  docs: await getCollection('docs').schema,
-};
+// Import your content config schemas
+import { collections } from '../src/content/config';
+
+// Generate JSON schema from Zod schemas
+const schemas = Object.entries(collections).reduce((acc, [key, value]) => {
+  acc[key] = {
+    // Document the schema structure for validation
+    // Note: Zod doesn't directly export JSON schema, 
+    // so document key fields manually or use zod-to-json-schema package
+    description: `Schema for ${key} collection`
+  };
+  return acc;
+}, {});
 
 await fs.writeFile(
   'docs/content-schemas.json',
