@@ -81,6 +81,16 @@ The site uses `astro-broken-links-checker` to validate internal links during the
     - Inventory: See `COMPONENTS.md` for a complete list with brief descriptions
     - Detailed docs: Check Storybook stories (`.stories.ts` files) for usage examples and props
 
+## Testing
+
+The site includes automated testing via `npm run test:site`:
+
+- **Broken links**: Validates all internal links using `astro-broken-links-checker` (runs during build)
+- **Localized links**: Ensures pages under `/<locale>/` paths only link to URLs with the same locale prefix
+- **Locale markers**: Verifies key localized pages have correct `data-locale` attributes matching their locale
+
+Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` for implementation.
+
 ## Workflow expectations
 
 - **Always lint before committing**: Run `npm run lint` to check for issues. Run `npm run lint:fix`
