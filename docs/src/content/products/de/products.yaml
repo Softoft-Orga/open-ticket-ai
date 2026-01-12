@@ -12,7 +12,6 @@
     - On-Premises-Bereitstellung
     - Community-Support
   tier: lite
-  lang: de
   nav:
     group: Produkte
     order: 1
@@ -34,7 +33,6 @@
     - Vorrangiger E-Mail-Support
     - SLA-Garantien
   tier: pro
-  lang: de
   nav:
     group: Produkte
     order: 2

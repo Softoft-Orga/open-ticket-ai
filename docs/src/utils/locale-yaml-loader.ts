@@ -31,16 +31,10 @@ export function localeYamlLoader(options: {
 
         for (const item of data) {
           const id = `${locale}/${item.slug || item.id}`;
+          const entryData = { ...item, lang: locale };
           
-          await parseData({
-            id,
-            data: { ...item, lang: locale },
-          });
-          
-          store.set({
-            id,
-            data: { ...item, lang: locale },
-          });
+          await parseData({ id, data: entryData });
+          store.set({ id, data: entryData });
         }
       }
     },

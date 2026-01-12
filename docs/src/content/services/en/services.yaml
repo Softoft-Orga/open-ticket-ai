@@ -9,7 +9,6 @@
   - Optional agent replies
   - Full documentation & splits
   startingPrice: 15000
-  lang: en
   serviceGroup: Synthetic Data Creation
   serviceOrder: 12
   id: complex-use-cases
@@ -24,7 +23,6 @@
   - Long-term training programs
   - Custom evaluation frameworks
   startingPrice: 0
-  lang: en
   serviceGroup: Model Development
   serviceOrder: 62
   id: custom-development
@@ -37,7 +35,6 @@
   - Requires 10k–50k+ labeled examples
   - Includes comprehensive dataset preparation and evaluation
   startingPrice: 30000
-  lang: en
   serviceGroup: Model Development
   serviceOrder: 61
   id: custom-tag-model-real-data
@@ -50,7 +47,6 @@
   - Trained primarily via our synthetic data generator
   - Can be optionally hybridized with limited customer samples
   startingPrice: 20000
-  lang: en
   serviceGroup: Model Development
   serviceOrder: 60
   id: custom-tags-model-synthetic
@@ -64,7 +60,6 @@
   - Performance visualizations
   - Recommendations for improvement
   startingPrice: 1500
-  lang: en
   serviceGroup: Extensions
   serviceOrder: 21
   id: evaluation-report
@@ -78,7 +73,6 @@
   - Ready for deployment
   - Performance benchmarks included
   startingPrice: 2500
-  lang: en
   serviceGroup: Extensions
   serviceOrder: 20
   id: fine-tuned-model
@@ -93,7 +87,6 @@
   - Multilingual expansion
   - 1 revision round included
   startingPrice: 7500
-  lang: en
   serviceGroup: Synthetic Data Creation
   serviceOrder: 11
   id: high-volume-training
@@ -108,7 +101,6 @@
   - Migration assistance
   - Technical consultation
   startingPrice: 200
-  lang: en
   serviceGroup: Flexible
   serviceOrder: 30
   id: hourly-engineering
@@ -121,7 +113,6 @@
   - Additional adapter work for non-standard APIs
   - Extended testing for proprietary environments
   startingPrice: 5000
-  lang: en
   serviceGroup: Integration
   serviceOrder: 41
   id: integration-enterprise-custom
@@ -136,7 +127,6 @@
   - One trigger setup (e.g. on creation)
   - Basic testing + handover
   startingPrice: 2000
-  lang: en
   serviceGroup: Integration
   serviceOrder: 40
   id: integration-standard-stack
@@ -151,7 +141,6 @@
   - Continuous coverage
   - Technical guidance
   startingPrice: 400
-  lang: en
   serviceGroup: Flexible
   serviceOrder: 31
   id: ongoing-support
@@ -165,7 +154,6 @@
   - Continuous improvement
   - Version tracking and documentation
   startingPrice: 1000
-  lang: en
   serviceGroup: Extensions
   serviceOrder: 23
   id: ongoing-updates
@@ -178,7 +166,6 @@
   - Testing with real ticket examples
   - Handover documentation
   startingPrice: 3000
-  lang: en
   serviceGroup: Automation
   serviceOrder: 50
   id: ota-automation-pack
@@ -193,7 +180,6 @@
   - Realistic distributions
   - JSONL or CSV delivery
   startingPrice: 3000
-  lang: en
   serviceGroup: Synthetic Data Creation
   serviceOrder: 10
   id: standard-stack
@@ -207,7 +193,6 @@
   - Zammad compatibility
   - Import validation and testing
   startingPrice: 2000
-  lang: en
   serviceGroup: Extensions
   serviceOrder: 22
   id: system-tuning
