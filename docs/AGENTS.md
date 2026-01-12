@@ -81,6 +81,16 @@ The site uses `astro-broken-links-checker` to validate internal links during the
     - Inventory: See `COMPONENTS.md` for a complete list with brief descriptions
     - Detailed docs: Check Storybook stories (`.stories.ts` files) for usage examples and props
 
+## Testing
+
+The site includes automated testing via `npm run test:site`:
+
+- **Broken links**: Validates all internal links using `astro-broken-links-checker` (runs during build)
+- **Localized links**: Ensures pages under `/<locale>/` paths only link to URLs with the same locale prefix
+- **Locale markers**: Verifies key localized pages have correct `data-locale` attributes matching their locale
+
+Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` for implementation.
+
 ## Workflow expectations
 
 - **Always lint before committing**: Run `npm run lint` to check for issues. Run `npm run lint:fix`
@@ -126,7 +136,7 @@ The site uses `astro-broken-links-checker` to validate internal links during the
 
 ### Using localized content collections
 
-**ALWAYS** use the localized collection helpers from `src/utils/i18n.ts` instead of `getCollection`:
+**ALWAYS** use the localized collections
 
 ```astro
 ---
@@ -134,9 +144,10 @@ The site uses `astro-broken-links-checker` to validate internal links during the
 import { getCollection } from 'astro:content';
 const products = await getCollection('products');
 
-// ✅ DO use getLocalizedCollection with Astro.currentLocale
-import { getLocalizedCollection } from '../utils/i18n';
-const products = await getLocalizedCollection('products', Astro.currentLocale);
+// ✅ DO use
+const services = await Astro.locals.content.getLocalizedCollection('services')
+const site = await Astro.locals.content.getLocalizedSingleton('site')
+const product = await Astro.locals.content.getLocalizedEntry('products', 'xyz')
 ---
 ```
 

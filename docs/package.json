@@ -9,6 +9,7 @@
     "docs:preview": "astro preview",
     "docs:check": "astro check",
     "lint:links": "astro build",
+    "test:site": "npm run docs:build && node scripts/tests/site-tests.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "eslint .",
@@ -42,6 +43,7 @@
     "eslint-plugin-astro": "^1.5.0",
     "eslint-plugin-vue": "^10.6.2",
     "globals": "^17.0.0",
+    "jsdom": "^27.4.0",
     "mermaid": "^11.12.0",
     "pagefind": "^1.4.0",
     "@playwright/test": "^1.57.0",
@@ -61,6 +63,7 @@
     "@eslint/js": "^9.39.2",
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
+    "js-yaml": "^4.1.1",
     "tailwind-merge": "^3.4.0",
     "tailwind-variants": "^3.2.2"
   }

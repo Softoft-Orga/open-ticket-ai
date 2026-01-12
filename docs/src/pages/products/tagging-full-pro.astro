@@ -37,7 +37,7 @@ const description = "The ultimate classification engine for high-volume enterpri
       </div>
 
       <div class="flex flex-wrap gap-4 mb-20">
-        <Button variant="primary" size="lg" client:load>
+        <Button variant="surface" size="lg" client:load>
           PRE-ORDER LICENSE (6.000€)
         </Button>
         <Button variant="outline" size="lg" client:load>
@@ -108,7 +108,7 @@ const description = "The ultimate classification engine for high-volume enterpri
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card client:load variant="primary" hoverable class="rounded-2xl">
+          <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
               <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <span class="text-2xl">🧠</span>
@@ -121,7 +121,7 @@ const description = "The ultimate classification engine for high-volume enterpri
               </p>
             </div>
           </Card>
-          <Card client:load variant="primary" hoverable class="rounded-2xl">
+          <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
               <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <span class="text-2xl">🎛️</span>
@@ -134,7 +134,7 @@ const description = "The ultimate classification engine for high-volume enterpri
               </p>
             </div>
           </Card>
-          <Card client:load variant="primary" hoverable class="rounded-2xl">
+          <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
               <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <span class="text-2xl">📦</span>
@@ -147,7 +147,7 @@ const description = "The ultimate classification engine for high-volume enterpri
               </p>
             </div>
           </Card>
-          <Card client:load variant="primary" hoverable class="rounded-2xl">
+          <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
               <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <span class="text-2xl">🛡️</span>
@@ -178,9 +178,9 @@ const description = "The ultimate classification engine for high-volume enterpri
                   <span class="font-mono text-sm text-white font-bold">intent/</span>
                 </div>
                 <div class="flex gap-2 flex-wrap justify-end">
-                  <Badge client:load type="primary">service_request</Badge>
-                  <Badge client:load type="primary">incident</Badge>
-                  <Badge client:load type="primary">change</Badge>
+                  <Badge client:load tone="primary">service_request</Badge>
+                  <Badge client:load tone="primary">incident</Badge>
+                  <Badge client:load tone="primary">change</Badge>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-b border-border-dark/30">
@@ -189,9 +189,9 @@ const description = "The ultimate classification engine for high-volume enterpri
                   <span class="font-mono text-sm text-text-dim">intent/incident/</span>
                 </div>
                 <div class="flex gap-2 flex-wrap justify-end">
-                  <Badge client:load type="secondary">security</Badge>
-                  <Badge client:load type="secondary">downtime</Badge>
-                  <Badge client:load type="secondary">performance</Badge>
+                  <Badge client:load tone="neutral">security</Badge>
+                  <Badge client:load tone="neutral">downtime</Badge>
+                  <Badge client:load tone="neutral">performance</Badge>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-b border-border-dark/30">
@@ -200,9 +200,9 @@ const description = "The ultimate classification engine for high-volume enterpri
                   <span class="font-mono text-sm text-text-dim">intent/incident/security/</span>
                 </div>
                 <div class="flex gap-2 flex-wrap justify-end">
-                  <Badge client:load type="secondary">breach</Badge>
-                  <Badge client:load type="secondary">phishing</Badge>
-                  <Badge client:load type="secondary">malware</Badge>
+                  <Badge client:load tone="neutral">breach</Badge>
+                  <Badge client:load tone="neutral">phishing</Badge>
+                  <Badge client:load tone="neutral">malware</Badge>
                 </div>
               </div>
               <div class="flex items-center justify-between py-4 border-b border-border-dark/30">
@@ -211,9 +211,9 @@ const description = "The ultimate classification engine for high-volume enterpri
                   <span class="font-mono text-sm text-text-dim">intent/incident/security/phishing/</span>
                 </div>
                 <div class="flex gap-2 flex-wrap justify-end">
-                  <Badge client:load type="secondary">email</Badge>
-                  <Badge client:load type="secondary">sms</Badge>
-                  <Badge client:load type="secondary">voice</Badge>
+                  <Badge client:load tone="neutral">email</Badge>
+                  <Badge client:load tone="neutral">sms</Badge>
+                  <Badge client:load tone="neutral">voice</Badge>
                 </div>
               </div>
             </div>
@@ -279,7 +279,7 @@ const description = "The ultimate classification engine for high-volume enterpri
           Join forward-thinking support teams automating their workflow with German Engineering precision.
         </p>
         <div class="flex flex-wrap justify-center gap-6">
-          <Button variant="primary" size="lg" class="uppercase tracking-widest" client:load>
+          <Button variant="surface" size="lg" class="uppercase tracking-widest" client:load>
             Pre-order Full Pro
           </Button>
           <Button variant="outline" size="lg" client:load>

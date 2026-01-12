@@ -46,14 +46,14 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import { tabs as tabsRecipe } from '../../../../design-system/recipes'
 import type { Tone, Size } from '../../../../design-system/tokens'
 
-type TabVariant = 'underline' | 'pill'
+type TabStyle = 'underline' | 'pill'
 
 interface Props {
   tabs: string[]
   modelValue?: number
   ariaLabel?: string
   size?: Size
-  variant?: TabVariant
+  style?: TabStyle
   tone?: Tone
   vertical?: boolean
 }
@@ -62,7 +62,7 @@ const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
   ariaLabel: 'Tabs',
   size: 'md',
-  variant: 'underline',
+  style: 'underline',
   tone: 'primary',
   vertical: false
 })
@@ -88,7 +88,7 @@ const handleChange = (index: number) => {
 
 const tabsStyles = computed(() => {
   return tabsRecipe({
-    variant: props.variant,
+    style: props.style,
     tone: props.tone,
     size: props.size
   })

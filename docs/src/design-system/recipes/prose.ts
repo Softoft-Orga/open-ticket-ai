@@ -1,4 +1,5 @@
 import { tv, type VariantProps } from 'tailwind-variants'
+import type { Size } from '../tokens'
 
 /**
  * Prose recipe - MDX/Markdown content wrapper
@@ -46,7 +47,7 @@ export const prose = tv({
         'prose-ul:my-5 prose-ol:my-5',
         'prose-li:my-2'
       ]
-    }
+    } satisfies Record<Size, string>
   },
   defaultVariants: {
     size: 'md'

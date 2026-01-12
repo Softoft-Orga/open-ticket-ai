@@ -1,5 +1,4 @@
 ---
-import { getLocalizedCollection } from '../../utils/i18n';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { CalendarIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
@@ -42,11 +41,11 @@ const formatDate = (date: Date) => {
             {formatDate(post.data.date)}
           </time>
         </div>
-        
+
         <h1 class="font-display text-5xl font-bold leading-tight tracking-tight text-text-1 mb-6">
           {post.data.title}
         </h1>
-        
+
         {post.data.description && (
           <p class="text-xl text-text-2 leading-relaxed">
             {post.data.description}
@@ -65,7 +64,7 @@ const formatDate = (date: Date) => {
       </header>
 
       <!-- Article Content -->
-      <div class="text-text-1 text-lg leading-relaxed space-y-6 
+      <div class="text-text-1 text-lg leading-relaxed space-y-6
         [&_h1]:text-text-1 [&_h1]:text-4xl [&_h1]:font-bold [&_h1]:mb-4 [&_h1]:mt-8
         [&_h2]:text-text-1 [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:mb-3 [&_h2]:mt-6
         [&_h3]:text-text-1 [&_h3]:text-2xl [&_h3]:font-bold [&_h3]:mb-3 [&_h3]:mt-6
@@ -91,8 +90,8 @@ const formatDate = (date: Date) => {
 
       <!-- Back to Blog -->
       <footer class="mt-16 pt-12 border-t border-surface-lighter">
-        <a 
-          href="/blog/" 
+        <a
+          href="/blog/"
           class="inline-flex items-center gap-2 text-primary-light hover:text-primary transition-colors"
         >
           <ArrowLeftIcon class="w-5 h-5" aria-hidden="true" />

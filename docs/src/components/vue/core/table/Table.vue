@@ -24,13 +24,12 @@
 <script lang="ts" setup>
 import {computed, provide, toRef, withDefaults} from 'vue'
 import { card } from '../../../../design-system/recipes/card'
-import type {Radius, Elevation} from '../design-system/tokens'
+import type {Radius, Elevation} from '../../../../design-system/tokens'
 
-export type TableVariant = 'default' | 'bordered' | 'borderless' | 'glassy' | 'compact'
 export type TableWidth = 'stretch' | 'auto' | 'full'
 
 const props = withDefaults(defineProps<{
-  variant?: TableVariant
+  bordered?: boolean
   striped?: boolean
   dense?: boolean
   width?: TableWidth
@@ -38,7 +37,7 @@ const props = withDefaults(defineProps<{
   radius?: Radius
   elevation?: Elevation
 }>(), {
-  variant: 'default',
+  bordered: true,
   striped: true,
   dense: false,
   width: 'full',
@@ -50,7 +49,7 @@ const props = withDefaults(defineProps<{
 // Provide props for child components
 provide('tableStriped', toRef(props, 'striped'))
 provide('tableDense', toRef(props, 'dense'))
-provide('tableVariant', toRef(props, 'variant'))
+provide('tableBordered', toRef(props, 'bordered'))
 provide('tableHoverEffect', toRef(props, 'hoverEffect'))
 
 // Width classes
@@ -72,16 +71,8 @@ const tableWidthClass = computed(() => {
 
 // Container styling using card recipe
 const containerClasses = computed(() => {
-  if (props.variant === 'borderless') {
+  if (!props.bordered) {
     return ''
-  }
-  
-  if (props.variant === 'glassy') {
-    return card({
-      variant: 'outline',
-      radius: props.radius,
-      elevation: props.elevation
-    }) + ' backdrop-blur-sm'
   }
   
   return card({
@@ -91,21 +82,14 @@ const containerClasses = computed(() => {
   })
 })
 
-// Text color based on variant - using design tokens
+// Text color - using design tokens
 const textColorClass = computed(() => {
-  switch (props.variant) {
-    case 'glassy':
-      return 'text-slate-200'
-    case 'compact':
-      return 'text-text-dim'
-    default:
-      return 'text-text-dim'
-  }
+  return 'text-text-dim'
 })
 
 // Body divider classes - using fixed token classes
 const bodyDividerClass = computed(() => {
-  if (props.variant === 'borderless') {
+  if (!props.bordered) {
     return ''
   }
   return 'divide-y divide-border-dark'
