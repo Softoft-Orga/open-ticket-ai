@@ -39,14 +39,14 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { card } from '../../../../design-system/recipes'
-import type { Tone, Size, Radius, Elevation } from '../../../../design-system/tokens'
+import type { Variant, Tone, Size, Radius, Elevation } from '../../../../design-system/tokens'
 
 export interface CardProps {
   /**
    * Visual style variant from design system tokens
    * @default 'surface'
    */
-  variant?: 'surface' | 'outline' | 'subtle'
+  variant?: Variant
 
   /**
    * Semantic tone (status color)

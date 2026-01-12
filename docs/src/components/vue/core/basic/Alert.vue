@@ -41,7 +41,7 @@ import {
   InformationCircleIcon
 } from '@heroicons/vue/24/outline'
 import { alert } from '../../../../design-system/recipes'
-import type { Tone } from '../../../../design-system/tokens'
+import type { Variant, Tone } from '../../../../design-system/tokens'
 
 type AlertType = 'info' | 'success' | 'warning' | 'danger' | 'tip'
 
@@ -49,13 +49,13 @@ interface Props {
   type?: AlertType
   title?: string
   hideIcon?: boolean
-  variant?: 'soft' | 'solid' | 'outline'
+  variant?: Variant
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'info',
   hideIcon: false,
-  variant: 'soft',
+  variant: 'subtle',
   title: undefined
 })
 

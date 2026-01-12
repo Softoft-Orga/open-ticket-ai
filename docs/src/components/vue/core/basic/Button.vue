@@ -13,10 +13,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { button } from '../../../../design-system/recipes'
-import type { Tone, Size, Radius } from '../../../../design-system/tokens'
+import type { Variant, Tone, Size, Radius } from '../../../../design-system/tokens'
 
 interface Props {
-  variant?: 'solid' | 'outline' | 'ghost'
+  variant?: Variant
   size?: Size
   tone?: Tone
   radius?: Radius
@@ -28,7 +28,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'solid',
+  variant: 'surface',
   size: 'md',
   tone: 'primary',
   radius: 'xl',

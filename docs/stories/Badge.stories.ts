@@ -1,14 +1,12 @@
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { TONES, SIZES } from '../src/design-system/tokens'
-
-const BADGE_VARIANTS = ['solid', 'soft', 'outline'] as const
+import { TONES, SIZES, VARIANTS } from '../src/design-system/tokens'
 
 const meta: Meta<typeof Badge> = {
     title: 'Core/Badge',
     component: Badge,
     argTypes: {
-        variant: {control: {type: 'select'}, options: BADGE_VARIANTS},
+        variant: {control: {type: 'select'}, options: VARIANTS},
         tone: {control: {type: 'select'}, options: TONES},
         size: {control: {type: 'select'}, options: SIZES},
         default: {
@@ -17,7 +15,7 @@ const meta: Meta<typeof Badge> = {
         }
     },
     args: {
-        variant: 'solid',
+        variant: 'surface',
         tone: 'primary',
         size: 'md'
     },
@@ -42,7 +40,7 @@ export const Primary: Story = {
         },
         template: '<Badge v-bind="args">Primary</Badge>'
     }),
-    args: {variant: 'solid', tone: 'primary'}
+    args: {variant: 'surface', tone: 'primary'}
 }
 
 export const Info: Story = {
@@ -53,7 +51,7 @@ export const Info: Story = {
         },
         template: '<Badge v-bind="args">Info</Badge>'
     }),
-    args: {variant: 'solid', tone: 'info'}
+    args: {variant: 'surface', tone: 'info'}
 }
 
 export const Success: Story = {
@@ -64,7 +62,7 @@ export const Success: Story = {
         },
         template: '<Badge v-bind="args">Success</Badge>'
     }),
-    args: {variant: 'solid', tone: 'success'}
+    args: {variant: 'surface', tone: 'success'}
 }
 
 export const Warning: Story = {
@@ -75,7 +73,7 @@ export const Warning: Story = {
         },
         template: '<Badge v-bind="args">Warning</Badge>'
     }),
-    args: {variant: 'solid', tone: 'warning'}
+    args: {variant: 'surface', tone: 'warning'}
 }
 
 export const Danger: Story = {
@@ -86,7 +84,7 @@ export const Danger: Story = {
         },
         template: '<Badge v-bind="args">Danger</Badge>'
     }),
-    args: {variant: 'solid', tone: 'danger'}
+    args: {variant: 'surface', tone: 'danger'}
 }
 
 export const AllTones: Story = {
@@ -110,8 +108,8 @@ export const AllVariants: Story = {
         components: {Badge},
         template: `
             <div class="flex flex-wrap items-center gap-3 rounded-xl bg-surface-dark p-4">
-                <Badge variant="solid" tone="primary">Solid</Badge>
-                <Badge variant="soft" tone="primary">Soft</Badge>
+                <Badge variant="surface" tone="primary">Surface</Badge>
+                <Badge variant="subtle" tone="primary">Subtle</Badge>
                 <Badge variant="outline" tone="primary">Outline</Badge>
             </div>
         `
@@ -156,17 +154,17 @@ export const Sizes: Story = {
     })
 }
 
-export const SoftVariant: Story = {
+export const SubtleVariant: Story = {
     render: () => ({
         components: {Badge},
         template: `
             <div class="flex flex-wrap items-center gap-3 rounded-xl bg-surface-dark p-4">
-                <Badge variant="soft" tone="neutral">Neutral</Badge>
-                <Badge variant="soft" tone="primary">Primary</Badge>
-                <Badge variant="soft" tone="info">Info</Badge>
-                <Badge variant="soft" tone="success">Success</Badge>
-                <Badge variant="soft" tone="warning">Warning</Badge>
-                <Badge variant="soft" tone="danger">Danger</Badge>
+                <Badge variant="subtle" tone="neutral">Neutral</Badge>
+                <Badge variant="subtle" tone="primary">Primary</Badge>
+                <Badge variant="subtle" tone="info">Info</Badge>
+                <Badge variant="subtle" tone="success">Success</Badge>
+                <Badge variant="subtle" tone="warning">Warning</Badge>
+                <Badge variant="subtle" tone="danger">Danger</Badge>
             </div>
         `
     })

@@ -1,7 +1,6 @@
 import Alert from '../src/components/vue/core/basic/Alert.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
-
-const ALERT_VARIANTS = ['soft', 'solid', 'outline'] as const
+import { VARIANTS } from '../src/design-system/tokens'
 
 const meta: Meta<typeof Alert> = {
   title: 'Docs/Alert',
@@ -14,13 +13,13 @@ const meta: Meta<typeof Alert> = {
     },
     variant: {
       control: { type: 'select' },
-      options: ALERT_VARIANTS
+      options: VARIANTS
     }
   },
   parameters: {
     docs: {
       description: {
-        component: 'Alert component for displaying important information, warnings, tips, and other messages in documentation. Supports soft, solid, and outline variants, with optional footer slot.'
+        component: 'Alert component for displaying important information, warnings, tips, and other messages in documentation. Supports surface, subtle, and outline variants, with optional footer slot.'
       }
     }
   }
@@ -40,7 +39,7 @@ export const Info: Story = {
   args: {
     type: 'info',
     title: 'Information',
-    variant: 'soft'
+    variant: 'subtle'
   }
 }
 
@@ -55,7 +54,7 @@ export const Success: Story = {
   args: {
     type: 'success',
     title: 'Success',
-    variant: 'soft'
+    variant: 'subtle'
   }
 }
 
@@ -70,7 +69,7 @@ export const Warning: Story = {
   args: {
     type: 'warning',
     title: 'Warning',
-    variant: 'soft'
+    variant: 'subtle'
   }
 }
 
@@ -85,7 +84,7 @@ export const Danger: Story = {
   args: {
     type: 'danger',
     title: 'Danger',
-    variant: 'soft'
+    variant: 'subtle'
   }
 }
 
@@ -100,22 +99,22 @@ export const Tip: Story = {
   args: {
     type: 'tip',
     title: 'Pro Tip',
-    variant: 'soft'
+    variant: 'subtle'
   }
 }
 
-export const SolidVariant: Story = {
+export const SurfaceVariant: Story = {
   render: (args) => ({
     components: { Alert },
     setup() {
       return { args }
     },
-    template: '<Alert v-bind="args">This is a solid alert with full background color.</Alert>'
+    template: '<Alert v-bind="args">This is a surface alert with full background color.</Alert>'
   }),
   args: {
     type: 'info',
-    title: 'Solid Style',
-    variant: 'solid'
+    title: 'Surface Style',
+    variant: 'surface'
   }
 }
 
@@ -145,7 +144,7 @@ export const WithoutIcon: Story = {
   args: {
     type: 'info',
     hideIcon: true,
-    variant: 'soft'
+    variant: 'subtle'
   }
 }
 
@@ -159,7 +158,7 @@ export const WithoutTitle: Story = {
   }),
   args: {
     type: 'tip',
-    variant: 'soft'
+    variant: 'subtle'
   }
 }
 
@@ -184,7 +183,7 @@ export const LongContent: Story = {
   args: {
     type: 'info',
     title: 'Detailed Information',
-    variant: 'soft'
+    variant: 'subtle'
   }
 }
 
@@ -209,6 +208,6 @@ export const WithFooter: Story = {
   args: {
     type: 'info',
     title: 'Alert with Footer',
-    variant: 'soft'
+    variant: 'subtle'
   }
 }

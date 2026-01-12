@@ -1,9 +1,12 @@
 import { tv, type VariantProps } from 'tailwind-variants'
+import type { Tone, Size } from '../tokens'
+
+type Style = 'underline' | 'pill'
 
 /**
  * Tabs recipe - Tab navigation component
  * 
- * Supports underline and pill variants with tone-based colors.
+ * Supports underline and pill styles with tone-based colors.
  * Use for tab navigation patterns.
  */
 export const tabs = tv({
@@ -13,7 +16,7 @@ export const tabs = tv({
     panel: 'mt-4'
   },
   variants: {
-    variant: {
+    style: {
       underline: {
         list: 'border-b border-border-dark',
         trigger: 'border-b-2 border-transparent hover:text-text-1 data-[selected]:border-current data-[selected]:text-current',
@@ -28,7 +31,7 @@ export const tabs = tv({
     tone: {
       neutral: {
         trigger: 'text-text-dim data-[selected]:text-text-1'
-      },
+      } satisfies Record<Tone, string>,
       primary: {
         trigger: 'text-text-dim data-[selected]:text-primary'
       },
@@ -48,7 +51,7 @@ export const tabs = tv({
     size: {
       sm: {
         trigger: 'px-3 py-1.5 text-sm'
-      },
+      } satisfies Record<Size, string>,
       md: {
         trigger: 'px-4 py-2 text-base'
       },
@@ -58,7 +61,7 @@ export const tabs = tv({
     }
   },
   defaultVariants: {
-    variant: 'underline',
+    style: 'underline',
     tone: 'primary',
     size: 'md'
   }
