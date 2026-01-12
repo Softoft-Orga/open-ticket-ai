@@ -113,9 +113,13 @@ async function findHtmlFiles(dir, files = []) {
 
 /**
  * Extract locale from a path like /de/... or /en/...
+ * Note: Currently supports 2-letter locale codes only (en, de).
+ * For multi-part locales (en-US, zh-CN), update the regex pattern below.
  */
 function getLocaleFromPath(pathname) {
   // Match paths like /de/, /en/, /de/products, etc.
+  // Pattern: /^\/([a-z]{2})(\/|$)/
+  // For multi-part locales, use: /^\/([a-z]{2}(?:-[A-Z]{2})?)(\/|$)/i
   const match = pathname.match(/^\/([a-z]{2})(\/|$)/);
   return match ? match[1] : null;
 }
@@ -231,6 +235,7 @@ async function checkLocalizedMarkers(results) {
   const validMarkers = [];
   
   // Check key pages (index and main section pages per locale)
+  // Note: Update this list when adding new main sections to the site
   const keyPagePatterns = [
     /^\/[a-z]{2}\/(index\.html)?$/,  // /de/, /en/
     /^\/[a-z]{2}\/products\/(index\.html)?$/,
@@ -312,8 +317,9 @@ async function checkBrokenLinks(results) {
   try {
     const content = await readFile(logPath, 'utf-8');
     
-    // Parse the log file
-    // The log groups broken links by URL with the pages that link to them
+    // Parse the log file from astro-broken-links-checker
+    // The checker outputs broken links grouped by URL with source pages listed below
+    // Format: Broken URL on its own line, followed by source pages indented
     const lines = content.trim().split('\n');
     
     if (lines.length === 0 || (lines.length === 1 && lines[0] === '')) {
@@ -322,13 +328,25 @@ async function checkBrokenLinks(results) {
       return;
     }
 
-    // Simple parse: each non-empty line is a broken link entry
-    const brokenLinks = lines.filter(line => line.trim().length > 0);
+    // Count unique broken URLs (non-indented lines that aren't empty or separators)
+    const brokenUrls = lines.filter(line => {
+      const trimmed = line.trim();
+      return trimmed.length > 0 && 
+             !line.startsWith(' ') && 
+             !line.startsWith('\t') &&
+             !trimmed.match(/^[-=]+$/);
+    });
+    
+    if (brokenUrls.length === 0) {
+      results.pass();
+      console.log(`  ✓ No broken links found`);
+      return;
+    }
     
     results.addError(
       'Broken Links',
-      `Found ${brokenLinks.length} broken link(s) - see broken-links.log for details`,
-      { logPath, preview: brokenLinks.slice(0, 5) }
+      `Found ${brokenUrls.length} broken link(s) - see broken-links.log for details`,
+      { logPath, preview: brokenUrls.slice(0, 5) }
     );
   } catch (err) {
     if (err.code === 'ENOENT') {
