@@ -8,6 +8,23 @@
 - Global UI: `docs/src/styles/global.css`
 - **Linting**: ESLint with Flat Config (eslint.config.mjs). Run `npm run lint` before committing.
   Use `npm run lint:fix` to auto-fix issues.
+- **Link checking**: Broken link checker via `astro-broken-links-checker` integration. Runs during
+  build to validate internal links. Configure in `astro.config.mjs`.
+
+## Link checking
+
+The site uses `astro-broken-links-checker` to validate internal links during the build process.
+
+**Configuration** (in `astro.config.mjs`):
+- `logFilePath`: Path to the log file (default: `broken-links.log`)
+- `checkExternalLinks`: Whether to check external links (default: `false` for performance)
+- `throwError`: Whether to fail the build on broken links (default: `false`)
+
+**Usage**:
+- Run `npm run lint:links` to build the site and check for broken links
+- Check the console output for immediate feedback
+- Review `broken-links.log` for detailed results grouped by broken URL
+- The checker caches results and checks links in parallel for better performance
 
 ## Image handling
 
@@ -68,6 +85,8 @@
 
 - **Always lint before committing**: Run `npm run lint` to check for issues. Run `npm run lint:fix`
   to auto-fix.
+- **Check for broken links**: Run `npm run lint:links` to build the site and check for broken
+  internal links. Results are logged to the console and written to `broken-links.log`.
 - Use Playwright MCP to visually check UI changes (Astro on :4321, Storybook on :6006) when tweaking
   design-sensitive components.
 - Prefer MCP-driven Storybook checks/screenshots over manual eyeballing when validating regressions.
