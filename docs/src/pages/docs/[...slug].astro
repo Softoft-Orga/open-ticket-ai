@@ -1,9 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
+import { getLocalizedCollection } from '../../utils/i18n';
 import DocsLayout from '../../layouts/DocsLayout.astro';
 
 export async function getStaticPaths() {
-  const docsEntries = await getCollection('docs');
+  // Docs are not localized yet, so we don't pass a locale
+  const docsEntries = await getLocalizedCollection('docs', undefined);
   return docsEntries.map(entry => ({
     params: { slug: entry.id.replace(/\.(md|mdx)$/, '') },
     props: { entry },

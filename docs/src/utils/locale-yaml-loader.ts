@@ -11,7 +11,7 @@ export function localeYamlLoader(options: {
 }): Loader {
   return {
     name: 'locale-yaml-loader',
-    load: async ({ store, logger, parseData }) => {
+    load: async ({ logger, parseData }) => {
       const { baseDir, fileName } = options;
       
       // Dynamically get locales from Astro i18n config

@@ -13,7 +13,7 @@ function getDefaultLocale(): string {
   return i18n.defaultLocale || 'en';
 }
 
-export async function getLocalizedCollection<T extends 'products' | 'services' | 'site'>(
+export async function getLocalizedCollection<T extends 'products' | 'services' | 'site' | 'blog' | 'docs'>(
   collection: T,
   locale?: string
 ): Promise<CollectionEntry<T>[]> {
@@ -23,6 +23,8 @@ export async function getLocalizedCollection<T extends 'products' | 'services' |
   
   return allEntries.filter(entry => {
     const entryLocale = extractLocaleFromId(entry.id);
+    // If no locale found (for non-localized collections like blog/docs), include all entries
+    if (!entryLocale) return true;
     return entryLocale === targetLocale;
   });
 }

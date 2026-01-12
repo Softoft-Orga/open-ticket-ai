@@ -91,8 +91,26 @@
 
 - [ ] Update `CONTENT_COLLECTIONS.md` if schemas, fields, or conventions change
 - [ ] Verify all required frontmatter fields are documented
-- [ ] Test that pages using `getCollection()` still work
+- [ ] Test that pages using content collections still work
 - [ ] Run `npm run docs:build` to verify no errors
+
+### Using localized content collections
+
+**ALWAYS** use the localized collection helpers from `src/utils/i18n.ts` instead of `getCollection`:
+
+```astro
+---
+// ❌ DON'T use getCollection directly
+import { getCollection } from 'astro:content';
+const products = await getCollection('products');
+
+// ✅ DO use getLocalizedCollection with Astro.currentLocale
+import { getLocalizedCollection } from '../utils/i18n';
+const products = await getLocalizedCollection('products', Astro.currentLocale);
+---
+```
+
+This ensures content is automatically filtered by locale. For non-localized collections (blog, docs), the helper returns all entries.
 
 ### Quick checklist
 
