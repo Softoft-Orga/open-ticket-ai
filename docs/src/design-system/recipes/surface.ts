@@ -10,22 +10,14 @@ type Intensity = 'none' | 'soft'
  * elevation, and interactive states. Use `intensity` to control background opacity
  * and reduce the need for large compoundVariants.
  */
-export const surface = tv<{
-  variant: Variant
-  tone: Tone
-  radius: Radius
-  elevation: Elevation
-  hoverable: Hoverable
-  highlighted: Highlighted
-  intensity: Intensity
-}>({
+export const surface = tv({
   base: 'transition-colors duration-200',
   variants: {
     variant: {
       surface: 'bg-surface-dark border border-border-dark',
       outline: 'bg-transparent border border-border-dark/60',
       subtle: 'bg-surface-lighter border border-border-dark/80'
-    },
+    } satisfies Record<Variant, string>,
     tone: {
       neutral: '',
       primary: 'border-primary/50',
@@ -33,18 +25,18 @@ export const surface = tv<{
       warning: 'border-warning/50',
       danger: 'border-danger/50',
       info: 'border-info/50'
-    },
+    } satisfies Record<Tone, string>,
     radius: {
       lg: 'rounded-lg',
       xl: 'rounded-xl',
       '2xl': 'rounded-2xl'
-    },
+    } satisfies Record<Radius, string>,
     elevation: {
       none: '',
       sm: 'shadow-sm',
       md: 'shadow-md',
       lg: 'shadow-lg'
-    },
+    } satisfies Record<Elevation, string>,
     hoverable: {
       false: '',
       true: 'hover:-translate-y-px hover:shadow-lg transition-transform'

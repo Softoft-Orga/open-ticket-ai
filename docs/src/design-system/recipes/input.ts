@@ -9,13 +9,7 @@ type Validation = 'default' | 'error' | 'success'
  * Provides consistent styling for form inputs with validation variants.
  * Includes focus ring and support for error/success states.
  */
-export const input = tv<{
-  tone: Tone
-  size: Size
-  radius: Radius
-  validation: Validation
-  disabled: boolean
-}>({
+export const input = tv({
   base: [
     'w-full px-3 py-2 bg-surface-dark border text-text-1',
     'placeholder:text-text-dim',
@@ -31,17 +25,17 @@ export const input = tv<{
       warning: 'border-warning/50',
       danger: 'border-danger/50',
       info: 'border-info/50'
-    },
+    } satisfies Record<Tone, string>,
     size: {
       sm: 'px-2.5 py-1.5 text-sm',
       md: 'px-3 py-2 text-base',
       lg: 'px-4 py-3 text-lg'
-    },
+    } satisfies Record<Size, string>,
     radius: {
       lg: 'rounded-lg',
       xl: 'rounded-xl',
       '2xl': 'rounded-2xl'
-    },
+    } satisfies Record<Radius, string>,
     validation: {
       default: '',
       error: 'border-danger focus-visible:ring-danger',

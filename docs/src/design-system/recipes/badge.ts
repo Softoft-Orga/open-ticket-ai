@@ -6,19 +6,17 @@ import type { Variant, Tone, Size } from '../tokens'
  *
  * Supports surface, subtle, and outline variants with tone-based colors.
  * Used for status indicators, labels, and tags.
+ * 
+ * All variant keys use strict token types from tokens.ts.
  */
-export const badge = tv<{
-  variant: Variant
-  tone: Tone
-  size: Size
-}>({
+export const badge = tv({
   base: 'inline-flex items-center justify-center font-medium transition-colors duration-200 whitespace-nowrap',
   variants: {
     variant: {
       surface: 'border border-transparent',
       subtle: 'border border-transparent',
       outline: 'border bg-transparent'
-    },
+    } satisfies Record<Variant, string>,
     tone: {
       neutral: '',
       primary: '',
@@ -26,11 +24,11 @@ export const badge = tv<{
       warning: '',
       danger: '',
       info: ''
-    },
+    } satisfies Record<Tone, string>,
     size: {
       sm: 'px-2 py-0.5 text-xs gap-1 rounded-md',
       md: 'px-2.5 py-1 text-sm gap-1.5 rounded-lg'
-    }
+    } satisfies Record<Size, string>
   },
   compoundVariants: [
     // Surface variant colors

@@ -79,7 +79,7 @@ export const SmallSize: Story = {
         },
         template: '<Button v-bind="args">Small Button</Button>'
     }),
-    args: {variant: 'solid', tone: 'primary', size: 'sm', radius: 'xl', disabled: false}
+    args: {variant: 'surface', tone: 'primary', size: 'sm', radius: 'xl', disabled: false}
 }
 
 export const LargeSize: Story = {
@@ -90,7 +90,7 @@ export const LargeSize: Story = {
         },
         template: '<Button v-bind="args">Large Button</Button>'
     }),
-    args: {variant: 'solid', tone: 'primary', size: 'lg', radius: 'xl', disabled: false}
+    args: {variant: 'surface', tone: 'primary', size: 'lg', radius: 'xl', disabled: false}
 }
 
 export const Disabled: Story = {
@@ -101,7 +101,7 @@ export const Disabled: Story = {
         },
         template: '<Button v-bind="args">Disabled Button</Button>'
     }),
-    args: {variant: 'solid', tone: 'primary', size: 'md', radius: 'xl', disabled: true}
+    args: {variant: 'surface', tone: 'primary', size: 'md', radius: 'xl', disabled: true}
 }
 
 export const Loading: Story = {
@@ -112,7 +112,7 @@ export const Loading: Story = {
         },
         template: '<Button v-bind="args">Loading...</Button>'
     }),
-    args: {variant: 'solid', tone: 'primary', size: 'md', radius: 'xl', loading: true}
+    args: {variant: 'surface', tone: 'primary', size: 'md', radius: 'xl', loading: true}
 }
 
 export const Block: Story = {
@@ -123,7 +123,7 @@ export const Block: Story = {
         },
         template: '<Button v-bind="args">Block Button</Button>'
     }),
-    args: {variant: 'solid', tone: 'primary', size: 'md', radius: 'xl', block: true}
+    args: {variant: 'surface', tone: 'primary', size: 'md', radius: 'xl', block: true}
 }
 
 export const ToneInfo: Story = {
@@ -134,7 +134,7 @@ export const ToneInfo: Story = {
         },
         template: '<Button v-bind="args">Info Button</Button>'
     }),
-    args: {variant: 'solid', tone: 'info', size: 'md', radius: 'xl', disabled: false}
+    args: {variant: 'surface', tone: 'info', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const ToneSuccess: Story = {
@@ -145,7 +145,7 @@ export const ToneSuccess: Story = {
         },
         template: '<Button v-bind="args">Success Button</Button>'
     }),
-    args: {variant: 'solid', tone: 'success', size: 'md', radius: 'xl', disabled: false}
+    args: {variant: 'surface', tone: 'success', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const ToneWarning: Story = {
@@ -156,7 +156,7 @@ export const ToneWarning: Story = {
         },
         template: '<Button v-bind="args">Warning Button</Button>'
     }),
-    args: {variant: 'solid', tone: 'warning', size: 'md', radius: 'xl', disabled: false}
+    args: {variant: 'surface', tone: 'warning', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const ToneDanger: Story = {
@@ -167,7 +167,7 @@ export const ToneDanger: Story = {
         },
         template: '<Button v-bind="args">Danger Button</Button>'
     }),
-    args: {variant: 'solid', tone: 'danger', size: 'md', radius: 'xl', disabled: false}
+    args: {variant: 'surface', tone: 'danger', size: 'md', radius: 'xl', disabled: false}
 }
 
 export const AllVariants: Story = {

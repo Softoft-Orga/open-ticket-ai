@@ -6,18 +6,17 @@ import type { Variant, Tone } from '../tokens'
  * 
  * Provides consistent alert styling with tone-based colors and variants.
  * Use for informational messages, warnings, errors, and success messages.
+ * 
+ * All variant keys use strict token types from tokens.ts.
  */
-export const alert = tv<{
-  variant: Variant
-  tone: Tone
-}>({
+export const alert = tv({
   base: 'flex items-start gap-3 p-4 rounded-lg border transition-colors duration-200',
   variants: {
     variant: {
       surface: 'border-transparent',
       subtle: 'border-transparent',
       outline: 'bg-transparent'
-    },
+    } satisfies Record<Variant, string>,
     tone: {
       neutral: '',
       primary: '',
@@ -25,7 +24,7 @@ export const alert = tv<{
       warning: '',
       danger: '',
       info: ''
-    }
+    } satisfies Record<Tone, string>
   },
   compoundVariants: [
     // Surface variant colors

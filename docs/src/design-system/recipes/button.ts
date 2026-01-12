@@ -6,16 +6,10 @@ import type { Variant, Tone, Size, Radius } from '../tokens'
  *
  * Supports surface, outline, and subtle variants with tone-based colors.
  * Includes focus ring, loading, disabled, and block states.
+ * 
+ * All variant keys use strict token types from tokens.ts.
  */
-export const button = tv<{
-  variant: Variant
-  tone: Tone
-  size: Size
-  radius: Radius
-  loading: boolean
-  disabled: boolean
-  block: boolean
-}>({
+export const button = tv({
   base: [
     'inline-flex items-center justify-center font-medium',
     'transition-all duration-200',
@@ -28,7 +22,7 @@ export const button = tv<{
       surface: 'border border-transparent shadow-sm',
       outline: 'border-2 bg-transparent',
       subtle: 'border border-transparent'
-    },
+    } satisfies Record<Variant, string>,
     tone: {
       neutral: '',
       primary: '',
@@ -36,17 +30,17 @@ export const button = tv<{
       warning: '',
       danger: '',
       info: ''
-    },
+    } satisfies Record<Tone, string>,
     size: {
       sm: 'px-3 py-1.5 text-sm gap-1.5',
       md: 'px-4 py-2 text-base gap-2',
       lg: 'px-6 py-3 text-lg gap-2.5'
-    },
+    } satisfies Record<Size, string>,
     radius: {
       lg: 'rounded-lg',
       xl: 'rounded-xl',
       '2xl': 'rounded-2xl'
-    },
+    } satisfies Record<Radius, string>,
     loading: {
       false: '',
       true: 'cursor-wait'

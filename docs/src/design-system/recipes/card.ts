@@ -8,9 +8,7 @@ import type { Size } from '../tokens'
  * Builds on the surface recipe with additional spacing variants.
  * Use for any card-like container components.
  */
-export const card = tv<{
-  size: Size
-}>({
+export const card = tv({
   extend: surface,
   base: 'text-text-1',
   variants: {
@@ -18,7 +16,7 @@ export const card = tv<{
       sm: 'p-4 gap-3 text-sm',
       md: 'p-6 gap-4 text-base',
       lg: 'p-8 gap-5 text-lg'
-    }
+    } satisfies Record<Size, string>
   },
   defaultVariants: {
     variant: 'surface',

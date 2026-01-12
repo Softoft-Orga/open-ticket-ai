@@ -9,11 +9,7 @@ type Style = 'underline' | 'pill'
  * Supports underline and pill styles with tone-based colors.
  * Use for tab navigation patterns.
  */
-export const tabs = tv<{
-  style: Style
-  tone: Tone
-  size: Size
-}>({
+export const tabs = tv({
   slots: {
     list: 'flex gap-1',
     trigger: 'px-4 py-2 font-medium transition-all duration-200 cursor-pointer',
@@ -35,7 +31,7 @@ export const tabs = tv<{
     tone: {
       neutral: {
         trigger: 'text-text-dim data-[selected]:text-text-1'
-      },
+      } satisfies Record<Tone, string>,
       primary: {
         trigger: 'text-text-dim data-[selected]:text-primary'
       },
@@ -55,7 +51,7 @@ export const tabs = tv<{
     size: {
       sm: {
         trigger: 'px-3 py-1.5 text-sm'
-      },
+      } satisfies Record<Size, string>,
       md: {
         trigger: 'px-4 py-2 text-base'
       },

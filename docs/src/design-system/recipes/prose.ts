@@ -8,9 +8,7 @@ import type { Size } from '../tokens'
  * Compatible with dark theme and works alongside @tailwindcss/typography.
  * Apply to wrapper elements containing rendered markdown/MDX.
  */
-export const prose = tv<{
-  size: Size
-}>({
+export const prose = tv({
   base: [
     'prose prose-invert max-w-none',
     'prose-headings:font-semibold prose-headings:text-text-1',
@@ -49,7 +47,7 @@ export const prose = tv<{
         'prose-ul:my-5 prose-ol:my-5',
         'prose-li:my-2'
       ]
-    }
+    } satisfies Record<Size, string>
   },
   defaultVariants: {
     size: 'md'

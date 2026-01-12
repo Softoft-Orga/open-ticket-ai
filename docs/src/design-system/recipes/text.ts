@@ -9,10 +9,7 @@ type Emphasis = 'normal' | 'dim' | 'strong'
  * Provides consistent text styling with tone and emphasis variants.
  * Use for titles, body text, and dimmed text across the design system.
  */
-export const text = tv<{
-  tone: Tone
-  emphasis: Emphasis
-}>({
+export const text = tv({
   base: 'transition-colors duration-200',
   variants: {
     tone: {
@@ -22,7 +19,7 @@ export const text = tv<{
       warning: 'text-warning',
       danger: 'text-danger',
       info: 'text-info'
-    },
+    } satisfies Record<Tone, string>,
     emphasis: {
       normal: '',
       dim: 'text-text-dim',

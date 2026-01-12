@@ -51,7 +51,7 @@ export const Info: Story = {
         },
         template: '<Badge v-bind="args">Info</Badge>'
     }),
-    args: {variant: 'solid', tone: 'info'}
+    args: {variant: 'surface', tone: 'info'}
 }
 
 export const Success: Story = {
@@ -62,7 +62,7 @@ export const Success: Story = {
         },
         template: '<Badge v-bind="args">Success</Badge>'
     }),
-    args: {variant: 'solid', tone: 'success'}
+    args: {variant: 'surface', tone: 'success'}
 }
 
 export const Warning: Story = {
@@ -73,7 +73,7 @@ export const Warning: Story = {
         },
         template: '<Badge v-bind="args">Warning</Badge>'
     }),
-    args: {variant: 'solid', tone: 'warning'}
+    args: {variant: 'surface', tone: 'warning'}
 }
 
 export const Danger: Story = {
@@ -84,7 +84,7 @@ export const Danger: Story = {
         },
         template: '<Badge v-bind="args">Danger</Badge>'
     }),
-    args: {variant: 'solid', tone: 'danger'}
+    args: {variant: 'surface', tone: 'danger'}
 }
 
 export const AllTones: Story = {
