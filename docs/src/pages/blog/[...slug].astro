@@ -5,10 +5,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { CalendarIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
 
 export async function getStaticPaths() {
-  // Blog posts are not localized yet, so we don't pass a locale
-  const blogPosts = await getLocalizedCollection('blog', undefined);
+  // Get blog posts for English locale
+  const blogPosts = await getLocalizedCollection('blog', 'en');
   return blogPosts.map((post) => ({
-    params: { slug: post.id.replace(/\.(md|mdx)$/, '') },
+    // Remove locale prefix from slug (e.g., 'en/post-name.md' -> 'post-name')
+    params: { slug: post.id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '') },
     props: { post },
   }));
 }
