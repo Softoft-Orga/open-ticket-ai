@@ -1,11 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
+import { getLocalizedCollection } from '../../utils/i18n';
 import DocsLayout from '../../layouts/DocsLayout.astro';
 
 export async function getStaticPaths() {
-  const docsEntries = await getCollection('docs');
+  // Get docs for English locale
+  const docsEntries = await getLocalizedCollection('docs', 'en');
   return docsEntries.map(entry => ({
-    params: { slug: entry.id.replace(/\.(md|mdx)$/, '') },
+    // Remove locale prefix from slug (e.g., 'en/path/file.md' -> 'path/file')
+    params: { slug: entry.id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '') },
     props: { entry },
   }));
 }
@@ -15,8 +17,8 @@ const { Content, headings } = await entry.render();
 const title = entry.data.title;
 const description = entry.data.description;
 
-// Generate breadcrumbs from the slug
-const slugParts = entry.id.replace(/\.(md|mdx)$/, '').split('/');
+// Generate breadcrumbs from the slug (removing locale prefix)
+const slugParts = entry.id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '').split('/');
 const breadcrumbs = [
   { label: 'Documentation', href: '/docs/' },
   ...slugParts.slice(0, -1).map((part, index) => ({

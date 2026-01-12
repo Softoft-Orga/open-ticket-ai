@@ -13,8 +13,7 @@ const { title, description } = Astro.props;
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
 
 // Load site configuration for current locale
-const currentLocale = Astro.currentLocale as 'en' | 'de' | undefined;
-const siteConfig = await getLocalizedSiteConfig(currentLocale);
+const siteConfig = await getLocalizedSiteConfig(Astro.currentLocale);
 const navLinks = siteConfig?.data.nav || [];
 const footerData = siteConfig?.data.footer;
 const logoUrl = siteConfig?.data.meta.logoUrl;

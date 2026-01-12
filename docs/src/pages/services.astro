@@ -28,8 +28,7 @@ const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
 
 // Get all services from the content collection for current locale
-const currentLocale = Astro.currentLocale as 'en' | 'de' | undefined;
-const allServices = await getLocalizedServices(currentLocale);
+const allServices = await getLocalizedServices(Astro.currentLocale);
 
 // Filter services by group
 const syntheticDataServices = allServices

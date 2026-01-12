@@ -66,22 +66,40 @@ src/content/
         └── site.yml
 ```
 
-### 4. Helper Functions
+### 4. Middleware
+
+**File**: `src/middleware.ts`
+
+The middleware automatically stores `currentLocale` in `Astro.locals` so helper functions can access it:
+
+```typescript
+import { defineMiddleware } from 'astro:middleware';
+
+export const onRequest = defineMiddleware(async (context, next) => {
+  context.locals.currentLocale = context.currentLocale;
+  return next();
+});
+```
+
+### 5. Helper Functions
 
 **File**: `src/utils/i18n.ts`
 
-Provides easy-to-use functions that **dynamically get the default locale** from the Astro config:
-- `getLocalizedProducts(locale)` - Get products for a specific locale
-- `getLocalizedServices(locale)` - Get services for a specific locale
-- `getLocalizedSiteConfig(locale)` - Get site configuration for a locale
+Provides easy-to-use functions that **automatically get the locale from `Astro.locals`**:
+- `getLocalizedProducts(locals)` - Get products for current locale
+- `getLocalizedServices(locals)` - Get services for current locale
+- `getLocalizedSiteConfig(locals)` - Get site configuration for current locale
 
 **Key Implementation Details**:
 ```typescript
 import { i18n } from 'astro:config/server';
 
-function getDefaultLocale(): string {
-  if (!i18n) return 'en';
-  return i18n.defaultLocale || 'en';
+export async function getLocalizedCollection<T>(
+  collection: T,
+  locals: App.Locals
+): Promise<CollectionEntry<T>[]> {
+  const targetLocale = locals.currentLocale || getDefaultLocale();
+  // ... filter by locale
 }
 ```
 
@@ -90,12 +108,12 @@ function getDefaultLocale(): string {
 ---
 import { getLocalizedProducts } from '../utils/i18n';
 
-const currentLocale = Astro.currentLocale;
-const products = await getLocalizedProducts(currentLocale);
+// No need to pass locale manually - it's in Astro.locals from middleware!
+const products = await getLocalizedProducts(Astro.locals);
 ---
 ```
 
-**Note**: The locale parameter is optional. If not provided, it defaults to the `defaultLocale` from your Astro config.
+**Note**: The locale is automatically detected from the URL via middleware. No manual passing required!
 
 ## Usage Examples
 
@@ -106,8 +124,8 @@ const products = await getLocalizedProducts(currentLocale);
 import { getLocalizedServices } from '../utils/i18n';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const currentLocale = Astro.currentLocale;
-const allServices = await getLocalizedServices(currentLocale);
+// Locale automatically available via middleware in Astro.locals
+const allServices = await getLocalizedServices(Astro.locals);
 
 // Filter by service group
 const dataServices = allServices
@@ -132,8 +150,8 @@ const dataServices = allServices
 import { getLocalizedSiteConfig } from '../utils/i18n';
 import NavBar from '../components/vue/core/navigation/NavBar.vue';
 
-const currentLocale = Astro.currentLocale;
-const siteConfig = await getLocalizedSiteConfig(currentLocale);
+// Locale automatically available via middleware
+const siteConfig = await getLocalizedSiteConfig(Astro.locals);
 const navLinks = siteConfig?.data.nav || [];
 ---
 
@@ -182,16 +200,6 @@ npm run docs:build
 - Scans the `fr/` folders for content
 - Loads French content when users visit `/fr/` URLs
 - Falls back to the default locale if French files are missing
-cp src/content/site/en/site.yml src/content/site/fr/site.yml
-
-# Edit the fr files with French translations
-```
-
-### Step 5: Test
-
-```bash
-npm run docs:build
-```
 
 ## Best Practices
 

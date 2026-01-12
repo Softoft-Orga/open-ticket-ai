@@ -45,6 +45,17 @@ The custom loader (`src/utils/locale-yaml-loader.ts`) automatically:
 
 **No hardcoded locales!** Everything is configured in `astro.config.mjs`.
 
+### Middleware
+
+Middleware (`src/middleware.ts`) automatically stores the current locale in `Astro.locals`:
+
+```typescript
+export const onRequest = defineMiddleware(async (context, next) => {
+  context.locals.currentLocale = context.currentLocale;
+  return next();
+});
+```
+
 ### Accessing Localized Content
 
 Use the helper functions from `src/utils/i18n.ts` to get locale-aware content:
@@ -53,17 +64,14 @@ Use the helper functions from `src/utils/i18n.ts` to get locale-aware content:
 ---
 import { getLocalizedProducts, getLocalizedServices, getLocalizedSiteConfig } from '../utils/i18n';
 
-// Astro.currentLocale is automatically set by Astro's i18n routing
-const currentLocale = Astro.currentLocale;
-
-// Get localized content - defaults to config's defaultLocale if not provided
-const products = await getLocalizedProducts(currentLocale);
-const services = await getLocalizedServices(currentLocale);
-const siteConfig = await getLocalizedSiteConfig(currentLocale);
+// Locale is automatically available via middleware - no need to pass it manually!
+const products = await getLocalizedProducts(Astro.locals);
+const services = await getLocalizedServices(Astro.locals);
+const siteConfig = await getLocalizedSiteConfig(Astro.locals);
 ---
 ```
 
-**Key principle**: The helpers automatically use the `defaultLocale` from your Astro config if no locale is provided.
+**Key principle**: The helpers automatically read `currentLocale` from `Astro.locals` (set by middleware) and fall back to the `defaultLocale` from your Astro config if not set.
 
 ### Adding a New Locale
 
@@ -671,10 +679,10 @@ const logoUrl = siteConfig?.data.meta.logoUrl;
 
 **If you add a new locale**:
 1. Update `astro.config.mjs` to add the locale to the `locales` array
-2. Update `src/utils/locale-yaml-loader.ts` to include the new locale
-3. Update `src/utils/i18n.ts` to include the new locale in the `LocaleCode` type
-4. Create locale folders and files for all collections (products, services, site)
-5. Test thoroughly with `npm run docs:build`
+2. Create locale folders and files for all collections (products, services, site)
+3. Test thoroughly with `npm run docs:build`
+
+**No code changes needed!** The middleware, loader, and helper functions automatically detect new locales from the config.
 
 ### Validation Checklist
 
