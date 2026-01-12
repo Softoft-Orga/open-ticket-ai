@@ -38,7 +38,7 @@ async function getDocTitle(docId: string): Promise<string> {
       const allDocs = await getCollection('docs');
       const doc = allDocs.find(d => {
         const docSlug = d.slug.replace(/^en\//, '');
-        return docSlug === slug || d.slug.includes(slug);
+        return docSlug === slug;
       });
       
       if (doc) {
@@ -101,7 +101,7 @@ const enrichedGroups = popularResources ? await Promise.all(
           <Card 
             variant="outline" 
             radius="2xl" 
-            hoverable={true}
+            hoverable
             elevation="lg"
             client:load
           >
@@ -131,7 +131,7 @@ const enrichedGroups = popularResources ? await Promise.all(
           <Card 
             variant="outline" 
             radius="2xl" 
-            hoverable={true}
+            hoverable
             elevation="lg"
             client:load
           >
