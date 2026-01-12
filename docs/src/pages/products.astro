@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/vue/core/basic/Badge.vue';
 import Button from '../components/vue/core/basic/Button.vue';
+import Card from '../components/vue/core/basic/Card.vue';
 import { 
   CubeTransparentIcon, 
   ArrowRightIcon,
@@ -122,37 +123,43 @@ const title = "Products - Open Ticket AI";
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Fully Automated Classification -->
-          <div class="flex flex-col gap-4 p-8 bg-surface-dark/50 border border-border-dark rounded-2xl hover:border-primary/50 transition-all duration-300 group">
-            <div class="flex items-center gap-3">
-              <CpuChipIcon class="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
+          <Card variant="outline" hoverable={true} radius="2xl" client:load>
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center gap-3">
+                <CpuChipIcon class="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
+              </div>
+              <h3 class="text-2xl font-bold text-white">Fully Automated Classification</h3>
+              <p class="text-text-dim text-base leading-relaxed">
+                Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly on new tickets and historical backlogs without human intervention.
+              </p>
             </div>
-            <h3 class="text-2xl font-bold text-white">Fully Automated Classification</h3>
-            <p class="text-text-dim text-base leading-relaxed">
-              Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly on new tickets and historical backlogs without human intervention.
-            </p>
-          </div>
+          </Card>
           
           <!-- Hierarchical, Not Flat -->
-          <div class="flex flex-col gap-4 p-8 bg-surface-dark/50 border border-border-dark rounded-2xl hover:border-primary/50 transition-all duration-300 group">
-            <div class="flex items-center gap-3">
-              <Squares2X2Icon class="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
+          <Card variant="outline" hoverable={true} radius="2xl" client:load>
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center gap-3">
+                <Squares2X2Icon class="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
+              </div>
+              <h3 class="text-2xl font-bold text-white">Hierarchical, Not Flat</h3>
+              <p class="text-text-dim text-base leading-relaxed">
+                A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for operational precision. Enables deep, multi-level analytics.
+              </p>
             </div>
-            <h3 class="text-2xl font-bold text-white">Hierarchical, Not Flat</h3>
-            <p class="text-text-dim text-base leading-relaxed">
-              A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for operational precision. Enables deep, multi-level analytics.
-            </p>
-          </div>
+          </Card>
           
           <!-- 10 Quadrillion Combinations -->
-          <div class="flex flex-col gap-4 p-8 bg-surface-dark/50 border border-border-dark rounded-2xl hover:border-primary/50 transition-all duration-300 group">
-            <div class="flex items-center gap-3">
-              <CubeTransparentIcon class="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
+          <Card variant="outline" hoverable={true} radius="2xl" client:load>
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center gap-3">
+                <CubeTransparentIcon class="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
+              </div>
+              <h3 class="text-2xl font-bold text-white">10 Quadrillion Combinations</h3>
+              <p class="text-text-dim text-base leading-relaxed">
+                Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry.
+              </p>
             </div>
-            <h3 class="text-2xl font-bold text-white">10 Quadrillion Combinations</h3>
-            <p class="text-text-dim text-base leading-relaxed">
-              Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry.
-            </p>
-          </div>
+          </Card>
         </div>
       </div>
     </section>
@@ -212,152 +219,160 @@ const title = "Products - Open Ticket AI";
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Lite Free -->
-          <div class="flex flex-col rounded-3xl bg-surface-dark border border-surface-lighter p-8 hover:border-primary/30 transition-all">
-            <div class="flex-1">
-              <h3 class="text-2xl font-bold text-white mb-2">Lite Free</h3>
-              <p class="text-muted text-sm mb-6">Evaluation & Testing</p>
-              
-              <div class="mb-8">
-                <div class="text-5xl font-bold text-white mb-2">
-                  0 €
-                  <span class="text-muted text-lg font-normal">/one-time</span>
+          <Card variant="outline" radius="2xl" hoverable={true} size="lg" client:load>
+            <div class="flex flex-col h-full">
+              <div class="flex-1">
+                <h3 class="text-2xl font-bold text-white mb-2">Lite Free</h3>
+                <p class="text-muted text-sm mb-6">Evaluation & Testing</p>
+                
+                <div class="mb-8">
+                  <div class="text-5xl font-bold text-white mb-2">
+                    0 €
+                    <span class="text-muted text-lg font-normal">/one-time</span>
+                  </div>
                 </div>
+                
+                <ul class="space-y-3 mb-8">
+                  <li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-text-1">Model: 0.5B Parameters</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-text-1">150+ Tags</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-text-1">Accuracy: ~0.82</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-text-1">ROI: from 15 tickets/day</span>
+                  </li>
+                </ul>
+                
+                <p class="text-muted text-sm mb-6">Available 18.01</p>
               </div>
               
-              <ul class="space-y-3 mb-8">
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-text-1">Model: 0.5B Parameters</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-text-1">150+ Tags</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-text-1">Accuracy: ~0.82</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-text-1">ROI: from 15 tickets/day</span>
-                </li>
-              </ul>
-              
-              <p class="text-muted text-sm mb-6">Available 18.01</p>
+              <Button variant="outline" size="md" class="w-full" client:load>
+                Explore Lite Free
+              </Button>
             </div>
-            
-            <Button variant="outline" size="md" class="w-full" client:load>
-              Explore Lite Free
-            </Button>
-          </div>
+          </Card>
           
           <!-- Lite Pro - BEST VALUE -->
-          <div class="flex flex-col rounded-3xl bg-gradient-to-br from-primary/20 to-surface-dark border-2 border-primary p-8 relative transform scale-105 shadow-2xl shadow-primary/20">
-            <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+          <div class="relative">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
               <Badge type="primary" client:load>BEST VALUE</Badge>
             </div>
             
-            <div class="flex-1">
-              <h3 class="text-2xl font-bold text-white mb-2">Lite Pro</h3>
-              <p class="text-primary-light text-sm mb-6">Production Ready</p>
-              
-              <div class="mb-8">
-                <div class="text-5xl font-bold text-white mb-2">
-                  2,500 €
-                  <span class="text-text-dim text-lg font-normal">/one-time</span>
+            <Card variant="outline" tone="primary" radius="2xl" hoverable={true} size="lg" elevation="lg" client:load class="transform scale-105">
+              <div class="flex flex-col h-full">
+                <div class="flex-1">
+                  <h3 class="text-2xl font-bold text-white mb-2">Lite Pro</h3>
+                  <p class="text-primary-light text-sm mb-6">Production Ready</p>
+                  
+                  <div class="mb-8">
+                    <div class="text-5xl font-bold text-white mb-2">
+                      2,500 €
+                      <span class="text-text-dim text-lg font-normal">/one-time</span>
+                    </div>
+                  </div>
+                  
+                  <ul class="space-y-3 mb-8">
+                    <li class="flex items-start gap-3">
+                      <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                      <span class="text-white font-medium">Model: 4B Parameters</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                      <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                      <span class="text-white font-medium">150+ Tags</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                      <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                      <span class="text-white font-medium">Accuracy: ~0.90</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                      <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                      <span class="text-white font-medium">Focus: Routing & Reporting</span>
+                    </li>
+                  </ul>
+                  
+                  <p class="text-primary-light text-sm mb-6">Available 18.01</p>
                 </div>
+                
+                <Button variant="primary" size="md" class="w-full" client:load>
+                  Explore Lite Pro
+                </Button>
               </div>
-              
-              <ul class="space-y-3 mb-8">
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-white font-medium">Model: 4B Parameters</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-white font-medium">150+ Tags</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-white font-medium">Accuracy: ~0.90</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-white font-medium">Focus: Routing & Reporting</span>
-                </li>
-              </ul>
-              
-              <p class="text-primary-light text-sm mb-6">Available 18.01</p>
-            </div>
-            
-            <Button variant="primary" size="md" class="w-full" client:load>
-              Explore Lite Pro
-            </Button>
+            </Card>
           </div>
           
           <!-- Full Pro -->
-          <div class="flex flex-col rounded-3xl bg-surface-dark border border-surface-lighter p-8 hover:border-primary/30 transition-all">
-            <div class="flex-1">
-              <h3 class="text-2xl font-bold text-white mb-2">Full Pro</h3>
-              <p class="text-muted text-sm mb-6">Advanced Enterprise</p>
-              
-              <div class="mb-8">
-                <div class="text-5xl font-bold text-white mb-2">
-                  6,000 €
-                  <span class="text-muted text-lg font-normal">/one-time</span>
+          <Card variant="outline" radius="2xl" hoverable={true} size="lg" client:load>
+            <div class="flex flex-col h-full">
+              <div class="flex-1">
+                <h3 class="text-2xl font-bold text-white mb-2">Full Pro</h3>
+                <p class="text-muted text-sm mb-6">Advanced Enterprise</p>
+                
+                <div class="mb-8">
+                  <div class="text-5xl font-bold text-white mb-2">
+                    6,000 €
+                    <span class="text-muted text-lg font-normal">/one-time</span>
+                  </div>
                 </div>
+                
+                <ul class="space-y-3 mb-8">
+                  <li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-text-1">Model: 8B Parameters</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-text-1">250+ Tags</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-text-1">Accuracy: ~0.92</span>
+                  </li>
+                  <li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-text-1">Focus: Maximum Detail</span>
+                  </li>
+                </ul>
+                
+                <p class="text-muted text-sm mb-6">IN DEVELOPMENT</p>
               </div>
               
-              <ul class="space-y-3 mb-8">
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-text-1">Model: 8B Parameters</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-text-1">250+ Tags</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-text-1">Accuracy: ~0.92</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                  <span class="text-text-1">Focus: Maximum Detail</span>
-                </li>
-              </ul>
-              
-              <p class="text-muted text-sm mb-6">IN DEVELOPMENT</p>
+              <Button variant="outline" size="md" class="w-full" client:load>
+                Explore Full Pro
+              </Button>
             </div>
-            
-            <Button variant="outline" size="md" class="w-full" client:load>
-              Explore Full Pro
-            </Button>
-          </div>
+          </Card>
         </div>
         
         <!-- ROI Simulator CTA -->
@@ -381,33 +396,41 @@ const title = "Products - Open Ticket AI";
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <div class="flex items-start gap-3 p-6 bg-surface-dark/50 rounded-xl border border-border-dark">
-            <ServerIcon class="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-            <div>
-              <h4 class="text-white font-bold mb-1">ON-PREMISE OR PRIVATE CLOUD</h4>
+          <Card variant="outline" radius="xl" client:load>
+            <div class="flex items-start gap-3">
+              <ServerIcon class="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+              <div>
+                <h4 class="text-white font-bold mb-1">ON-PREMISE OR PRIVATE CLOUD</h4>
+              </div>
             </div>
-          </div>
+          </Card>
           
-          <div class="flex items-start gap-3 p-6 bg-surface-dark/50 rounded-xl border border-border-dark">
-            <ShieldCheckIcon class="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-            <div>
-              <h4 class="text-white font-bold mb-1">NO DATA LEAVES INFRASTRUCTURE</h4>
+          <Card variant="outline" radius="xl" client:load>
+            <div class="flex items-start gap-3">
+              <ShieldCheckIcon class="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+              <div>
+                <h4 class="text-white font-bold mb-1">NO DATA LEAVES INFRASTRUCTURE</h4>
+              </div>
             </div>
-          </div>
+          </Card>
           
-          <div class="flex items-start gap-3 p-6 bg-surface-dark/50 rounded-xl border border-border-dark">
-            <CubeTransparentIcon class="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
-            <div>
-              <h4 class="text-white font-bold mb-1">INT8, BF16, FP16 QUANTIZATIONS</h4>
+          <Card variant="outline" radius="xl" client:load>
+            <div class="flex items-start gap-3">
+              <CubeTransparentIcon class="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
+              <div>
+                <h4 class="text-white font-bold mb-1">INT8, BF16, FP16 QUANTIZATIONS</h4>
+              </div>
             </div>
-          </div>
+          </Card>
           
-          <div class="flex items-start gap-3 p-6 bg-surface-dark/50 rounded-xl border border-border-dark">
-            <CpuChipIcon class="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
-            <div>
-              <h4 class="text-white font-bold mb-1">OPTIMIZED FOR CPU & GPU</h4>
+          <Card variant="outline" radius="xl" client:load>
+            <div class="flex items-start gap-3">
+              <CpuChipIcon class="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
+              <div>
+                <h4 class="text-white font-bold mb-1">OPTIMIZED FOR CPU & GPU</h4>
+              </div>
             </div>
-          </div>
+          </Card>
         </div>
         
         <!-- Large CTA -->

@@ -349,7 +349,7 @@ src/content/products/
 
 ### Routing
 
-**Page Files**: 
+**Page Files**:
 - `src/pages/products.astro` - Main products listing page
 - `src/pages/products/*.astro` - Individual product detail pages
 
@@ -359,7 +359,7 @@ src/content/products/
 3. Products are filtered by `slug` or other criteria
 4. Data is passed to Vue components (e.g., `ProductCard.vue`)
 
-**URL Pattern**: 
+**URL Pattern**:
 - Listing: `/products/` (or `/de/products/` for German)
 - Details: Custom pages like `/products/lite-pro/`
 
@@ -476,7 +476,7 @@ Services are organized by `serviceGroup`:
 
 ### Routing
 
-**Page Files**: 
+**Page Files**:
 - `src/pages/services.astro` - Main services listing page
 
 **How It Works**:

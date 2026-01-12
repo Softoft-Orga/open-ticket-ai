@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import vue from '@astrojs/vue';
 import mdx from '@astrojs/mdx';
 import rehypeMermaid from 'rehype-mermaid';
+import astroBrokenLinksChecker from 'astro-broken-links-checker';
 
 export default defineConfig({
     site: 'https://openticketai.com',
@@ -47,5 +48,10 @@ export default defineConfig({
             appEntrypoint: '/src/vue-app.js'
         }),
         mdx(),
+        astroBrokenLinksChecker({
+            logFilePath: 'broken-links.log',
+            checkExternalLinks: false,
+            throwError: false,
+        }),
     ],
 });
