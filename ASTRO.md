@@ -69,7 +69,7 @@ src/pages/posts/1.md         -> mysite.com/posts/1
 For dynamic routes, use bracket notation in filenames (e.g., `[post].astro`) and implement `getStaticPaths()`:
 
 ```astro
---- 
+---
 // In 'server' mode, opt in to prerendering:
 // export const prerender = true
 
@@ -79,7 +79,7 @@ export async function getStaticPaths() {
     { params: { post: '2' } }, // Creates /blog/2
   ];
 }
---- 
+---
 <!-- Your HTML template here. -->
 ```
 
@@ -206,7 +206,7 @@ const allBlogPosts = await getCollection("blog");
 - **Performance-focused**: Zero JavaScript by default, ships only what you need
 - **Developer-friendly**: Great DX with TypeScript support and modern tooling
 - **Flexible**: Bring your own UI framework (or use none)
-- **Content-first**: Optimized for blogs, documentation, marketing sites, and portfolios
+- **Content-first**: Optimized for blog, documentation, marketing sites, and portfolios
 - **Modern**: Built on Vite for fast development and optimized builds
 
 ## Content Layer API (v5.0)

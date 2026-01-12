@@ -1,16 +1,9 @@
 ---
-import { getLocalizedCollection } from '../../utils/i18n';
 import DocsLayout from '../../layouts/DocsLayout.astro';
 
-export async function getStaticPaths() {
-  // Get docs for English locale
-  const docsEntries = await getLocalizedCollection('docs', 'en');
-  return docsEntries.map(entry => ({
-    // Remove locale prefix from slug (e.g., 'en/path/file.md' -> 'path/file')
-    params: { slug: entry.id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '') },
-    props: { entry },
-  }));
-}
+import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths'
+
+export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs')
 
 const { entry } = Astro.props;
 const { Content, headings } = await entry.render();

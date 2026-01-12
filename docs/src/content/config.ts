@@ -21,7 +21,7 @@ const docs = defineCollection({
 });
 
 // 2️⃣ blog collection - content collection (MD/MDX)
-const blogs = defineCollection({
+const blog = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
@@ -121,5 +121,5 @@ const site = defineCollection({
 
 // Export collections
 export const collections = {
-  docs, blogs, services, products, site
+  docs, blog, services, products, site
 };

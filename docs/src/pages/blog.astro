@@ -7,7 +7,7 @@ const pageTitle = "Open Ticket AI Blog";
 const pageDescription = "Latest updates, insights, and news about Open Ticket AI and autonomous support automation.";
 
 // Fetch blog posts from the content collection
-const allBlogPosts = await getLocalizedCollection('blog', Astro.currentLocale);
+const allBlogPosts = await Astro.locals.content.getLocalizedCollection('blog');
 const publishedPosts = allBlogPosts.filter(({ data }) => !data.draft);
 
 // Sort posts by date (newest first)
@@ -155,7 +155,7 @@ const getBlogUrl = (id: string) => {
                 aria-label="Email address for newsletter"
                 required
               />
-              <Button variant="outline" size="md" type="submit" class="w-full" client:load>
+              <Button variant="outline" size="md" class="w-full" client:load>
                 Subscribe
               </Button>
             </form>

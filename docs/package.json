@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "docs:dev": "astro dev",
-    "docs:build": "astro build && npx pagefind --site dist",
+    "docs:build": "astro build",
     "docs:preview": "astro preview",
     "docs:check": "astro check",
     "lint:links": "astro build",
