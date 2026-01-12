@@ -116,6 +116,17 @@ const site = defineCollection({
       })),
       copyright: z.string(),
     }),
+    popularResources: z.object({
+      title: z.string(),
+      groups: z.array(z.object({
+        title: z.string(),
+        items: z.array(z.object({
+          docId: z.string(),
+          icon: z.string(),
+          label: z.string().optional(),
+        })),
+      })),
+    }).optional(),
   }),
 });
 

@@ -48,3 +48,28 @@ footer:
     - label: Imprint
       url: "#"
   copyright: Open Ticket AI UG. All rights reserved.
+
+popularResources:
+  title: Popular Resources
+  groups:
+    - title: Automation Engine
+      items:
+        - docId: docs/en/getting-started
+          icon: RocketLaunchIcon
+        - docId: docs/en/api-reference
+          icon: CommandLineIcon
+        - docId: docs/en/connectors
+          icon: PuzzlePieceIcon
+        - docId: docs/en/webhooks
+          icon: ArrowsRightLeftIcon
+    - title: Tagging Engine
+      items:
+        - docId: docs/en/taxonomy-design
+          icon: Squares2x2Icon
+        - docId: docs/en/hardware-sizing
+          icon: CpuChipIcon
+        - docId: docs/en/model-training
+          icon: ArrowPathIcon
+        - docId: docs/en/benchmarking
+          icon: ChartBarIcon
+

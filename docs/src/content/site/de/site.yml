@@ -49,3 +49,27 @@ footer:
       url: "#"
   copyright: Open Ticket AI UG. Alle Rechte vorbehalten.
 
+popularResources:
+  title: Beliebte Ressourcen
+  groups:
+    - title: Automatisierungs-Engine
+      items:
+        - docId: docs/en/getting-started
+          icon: RocketLaunchIcon
+        - docId: docs/en/api-reference
+          icon: CommandLineIcon
+        - docId: docs/en/connectors
+          icon: PuzzlePieceIcon
+        - docId: docs/en/webhooks
+          icon: ArrowsRightLeftIcon
+    - title: Tagging-Engine
+      items:
+        - docId: docs/en/taxonomy-design
+          icon: Squares2x2Icon
+        - docId: docs/en/hardware-sizing
+          icon: CpuChipIcon
+        - docId: docs/en/model-training
+          icon: ArrowPathIcon
+        - docId: docs/en/benchmarking
+          icon: ChartBarIcon
+
