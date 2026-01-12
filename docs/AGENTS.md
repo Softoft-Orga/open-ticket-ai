@@ -71,6 +71,8 @@
 - Use Playwright MCP to visually check UI changes (Astro on :4321, Storybook on :6006) when tweaking
   design-sensitive components.
 - Prefer MCP-driven Storybook checks/screenshots over manual eyeballing when validating regressions.
+- Use Context7 for getting the newest Documentation for our packages: like astro, vue and other
+  libaries/frameworks
 - Whenever components or story configs change, update the corresponding Storybook stories in
   `docs/stories/**` to reflect new props, variants, and states.
 
@@ -102,7 +104,3 @@ Before finalizing component or content changes:
 - Content: `CONTENT_COLLECTIONS.md` accurate + schema valid + pages render
 - Build passes: `npm run docs:build` succeeds
 
-## Misc
-
-Prefer Tailwind over custom CSS where possible.
-Always try avoiding merge conflicts!

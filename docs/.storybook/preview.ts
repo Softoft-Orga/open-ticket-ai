@@ -1,3 +1,4 @@
+// @ts-ignore
 import type {Preview} from '@storybook/vue3-vite';
 import '../src/styles/global.css';
 

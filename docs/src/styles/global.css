@@ -17,11 +17,11 @@
   }
 
   a {
-    @apply text-primary no-underline underline-offset-4 transition-colors;
+    @apply text-primary transition-colors;
   }
 
   a:hover {
-    @apply text-primary-light underline;
+    @apply text-primary-light;
   }
 
   ::selection {
