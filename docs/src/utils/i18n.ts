@@ -3,8 +3,9 @@ import type { CollectionEntry } from 'astro:content';
 import { i18n } from 'astro:config/server';
 
 function extractLocaleFromId(id: string): string | null {
-  const match = id.match(/^([a-z]{2}(-[A-Z]{2})?)\//);
-  return match ? match[1] : null;
+  // Match locale codes like 'en', 'de', 'en-US', case-insensitive
+  const match = id.match(/^([a-z]{2}(-[A-Z]{2})?)\//i);
+  return match ? match[1].toLowerCase() : null;
 }
 
 function getDefaultLocale(): string {

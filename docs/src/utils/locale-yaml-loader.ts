@@ -42,8 +42,8 @@ export function localeYamlLoader(options: {
           const id = `${locale}/${item.slug || item.id}`;
           const entryData = { ...item, lang: locale };
           
+          // parseData internally calls store.set after validation
           await parseData({ id, data: entryData });
-          store.set({ id, data: entryData });
         }
       }
     },
