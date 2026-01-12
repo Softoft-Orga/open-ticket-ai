@@ -2,6 +2,105 @@
 
 This document describes all content collections used in the Open Ticket AI website (Astro 5). All collections are defined in `src/content/config.ts`.
 
+## i18n and Locale-Aware Collections
+
+The website supports multiple locales (currently English and German). The Astro i18n system is configured in `astro.config.mjs`:
+
+```js
+i18n: {
+  locales: ['en', 'de'],
+  defaultLocale: 'en',
+}
+```
+
+### Locale-Aware Data Collections (Products, Services, Site)
+
+YAML-based data collections (products, services, site) use a **custom locale loader** that automatically loads content from locale-specific folders:
+
+```
+src/content/products/
+├── en/
+│   └── products.yaml
+└── de/
+    └── products.yaml
+
+src/content/services/
+├── en/
+│   └── services.yaml
+└── de/
+    └── services.yaml
+
+src/content/site/
+├── en/
+│   └── site.yml
+└── de/
+    └── site.yml
+```
+
+The custom loader (`src/utils/locale-yaml-loader.ts`) automatically:
+1. **Reads configured locales** from `astro.config.mjs` using `astro:config/server`
+2. Loads YAML files from each locale folder
+3. Assigns a locale-prefixed ID to each entry (e.g., `en/product-slug`, `de/product-slug`)
+4. Sets the `lang` field to the locale code
+
+**No hardcoded locales!** Everything is configured in `astro.config.mjs`.
+
+### Middleware
+
+Middleware (`src/middleware.ts`) automatically stores the current locale in `Astro.locals`:
+
+```typescript
+export const onRequest = defineMiddleware(async (context, next) => {
+  context.locals.currentLocale = context.currentLocale;
+  return next();
+});
+```
+
+### Accessing Localized Content
+
+Use the helper functions from `src/utils/i18n.ts` to get locale-aware content:
+
+```astro
+---
+import { getLocalizedProducts, getLocalizedServices, getLocalizedSiteConfig } from '../utils/i18n';
+
+// Locale is automatically available via middleware - no need to pass it manually!
+const products = await getLocalizedProducts(Astro.locals);
+const services = await getLocalizedServices(Astro.locals);
+const siteConfig = await getLocalizedSiteConfig(Astro.locals);
+---
+```
+
+**Key principle**: The helpers automatically read `currentLocale` from `Astro.locals` (set by middleware) and fall back to the `defaultLocale` from your Astro config if not set.
+
+### Adding a New Locale
+
+To add a new locale (e.g., French 'fr'):
+
+1. Update `astro.config.mjs`:
+   ```js
+   i18n: {
+     locales: ['en', 'de', 'fr'],
+     defaultLocale: 'en',
+   }
+   ```
+
+   **That's it for configuration!** The loader and helpers automatically detect the new locale.
+
+2. Create locale folders and files:
+   ```
+   src/content/products/fr/products.yaml
+   src/content/services/fr/services.yaml
+   src/content/site/fr/site.yml
+   ```
+
+3. Test the build:
+   ```bash
+   npm run docs:build
+   ```
+
+**No code changes needed!** The system is fully dynamic.
+
 ## Overview
 
 The website uses five content collections:
@@ -208,11 +307,20 @@ Content goes here...
 
 **Purpose**: Product listings and product metadata for the Open Ticket AI product suite.
 
-**Type**: Data collection (YAML file with Astro loader)
+**Type**: Data collection (YAML files with custom locale loader)
 
-**Location**: `src/content/products.yaml` (single YAML file)
+**Location**: `src/content/products/{locale}/products.yaml`
 
 **Schema Source**: `src/content/config.ts` → `productsCollection`
+
+**Directory Structure**:
+```
+src/content/products/
+├── en/
+│   └── products.yaml
+└── de/
+    └── products.yaml
+```
 
 ### Required Fields
 
@@ -238,37 +346,49 @@ Content goes here...
 
 - Each product entry MUST have a unique `slug` field
 - Use kebab-case for slugs (e.g., `open-ticket-ai-lite`, `synthetic-data-generator`)
-- The slug is used to filter/find products in pages
+- The custom loader creates IDs in the format `{locale}/{slug}` (e.g., `en/open-ticket-ai-lite`)
 
 ### Language/i18n Conventions
 
-- **Default**: English (`lang: en`)
-- **No i18n currently**: All products are in English
-- **Future**: Could duplicate entries with language-specific slugs or use a nested structure
+- **Locale-aware**: Products are now organized by locale folders
+- **Supported locales**: `en` (English), `de` (German)
+- **Automatic locale assignment**: The `lang` field is automatically set by the custom loader based on the folder
+- Each locale has its own `products.yaml` file with translated content
 
 ### Routing
 
-**Page Files**: 
+**Page Files**:
 - `src/pages/products.astro` - Main products listing page
 - `src/pages/products/*.astro` - Individual product detail pages
 
 **How It Works**:
-1. Pages call `getCollection('products')` to fetch all product data
-2. Products are filtered by `slug` or other criteria
-3. Data is passed to Vue components (e.g., `ProductCard.vue`)
+1. Pages import `getLocalizedProducts()` from `src/utils/i18n.ts`
+2. Call the helper with `Astro.currentLocale` to get products for the current language
+3. Products are filtered by `slug` or other criteria
+4. Data is passed to Vue components (e.g., `ProductCard.vue`)
 
-**URL Pattern**: 
-- Listing: `/products/`
-- Details: Custom pages like `/products/lite-pro/`, `/products/full-pro/`
+**URL Pattern**:
+- Listing: `/products/` (or `/de/products/` for German)
+- Details: Custom pages like `/products/lite-pro/`
 
 ### How to Add a New Product
 
-1. Open `src/content/products.yaml`
+1. Open the appropriate locale file: `src/content/products/{locale}/products.yaml`
+   - For English: `src/content/products/en/products.yaml`
+   - For German: `src/content/products/de/products.yaml`
 2. Add a new YAML entry with required fields (`slug`, `title`)
 3. Fill in optional fields as needed
-4. Save the file
-5. Use the product in pages by filtering: `allProducts.find(p => p.data.slug === 'your-slug')`
-6. Build the site to verify
+4. **Important**: Use the same `slug` across all locale files for the same product
+5. Save the file
+6. In pages, use:
+   ```astro
+   ---
+   import { getLocalizedProducts } from '../utils/i18n';
+   const products = await getLocalizedProducts(Astro.currentLocale);
+   const myProduct = products.find(p => p.data.slug === 'your-slug');
+   ---
+   ```
+7. Build the site to verify
 
 **Example**:
 ```yaml
@@ -295,10 +415,12 @@ Content goes here...
 
 - **YAML syntax errors**: Indentation matters! Use 2 spaces, not tabs
 - **Missing slug**: Every entry needs a unique `slug`
-- **Duplicate slugs**: Will cause conflicts when filtering products
+- **Duplicate slugs within the same locale**: Will cause conflicts
+- **Inconsistent slugs across locales**: Use the same `slug` for the same product in all locale files
 - **Array syntax**: Use `- item` format for arrays (features, badges)
 - **Multiline strings**: Use `|` for multiline descriptions
 - **Schema validation**: Invalid `tier` values will fail validation (must be 'lite', 'pro', or 'enterprise')
+- **Missing locale file**: If a locale file is missing, the loader will warn but continue (products won't be available in that locale)
 
 ---
 
@@ -306,11 +428,20 @@ Content goes here...
 
 **Purpose**: Service offerings, consulting packages, and professional services.
 
-**Type**: Data collection (YAML file with Astro loader)
+**Type**: Data collection (YAML files with custom locale loader)
 
-**Location**: `src/content/services.yaml` (single YAML file)
+**Location**: `src/content/services/{locale}/services.yaml`
 
 **Schema Source**: `src/content/config.ts` → `servicesCollection`
+
+**Directory Structure**:
+```
+src/content/services/
+├── en/
+│   └── services.yaml
+└── de/
+    └── services.yaml
+```
 
 ### Required Fields
 
@@ -331,7 +462,7 @@ Content goes here...
 
 - Each service entry MUST have a unique `slug` field
 - Use kebab-case for slugs (e.g., `custom-development`, `integration-basic`)
-- The slug is used to filter/find services in pages
+- The custom loader creates IDs in the format `{locale}/{slug}` (e.g., `en/custom-development`)
 
 ### Service Groups
 
@@ -340,33 +471,40 @@ Services are organized by `serviceGroup`:
 - `"Extensions"` - Extension and plugin services
 - `"Integration"` - Integration services
 - `"Model Development"` - Custom model development
+- `"Automation"` - Automation services
+- `"Flexible"` - Flexible and custom services
 - (Add new groups as needed)
 
 ### Language/i18n Conventions
 
-- **Default**: English (`lang: en`)
-- **No i18n currently**: All services are in English
-- **Future**: Could duplicate entries with language-specific slugs
+- **Locale-aware**: Services are now organized by locale folders
+- **Supported locales**: `en` (English), `de` (German)
+- **Automatic locale assignment**: The `lang` field is automatically set by the custom loader
+- Each locale has its own `services.yaml` file with translated content
 
 ### Routing
 
-**Page Files**: 
+**Page Files**:
 - `src/pages/services.astro` - Main services listing page
 
 **How It Works**:
-1. Page calls `getCollection('services')` to fetch all service data
-2. Services are filtered by `serviceGroup` and sorted by `serviceOrder`
-3. Data is rendered directly in the services page using inline Astro markup and Tailwind classes
+1. Page imports `getLocalizedServices()` from `src/utils/i18n.ts`
+2. Calls the helper with `Astro.currentLocale` to get services for the current language
+3. Services are filtered by `serviceGroup` and sorted by `serviceOrder`
+4. Data is rendered directly in the services page using inline Astro markup and Tailwind classes
 
-**URL Pattern**: `/services/` (single page with all services grouped)
+**URL Pattern**: `/services/` (or `/de/services/` for German) - single page with all services grouped
 
 ### How to Add a New Service
 
-1. Open `src/content/services.yaml`
+1. Open the appropriate locale file: `src/content/services/{locale}/services.yaml`
+   - For English: `src/content/services/en/services.yaml`
+   - For German: `src/content/services/de/services.yaml`
 2. Add a new YAML entry with required fields (`slug`, `title`, `serviceGroup`)
 3. Fill in optional fields as needed
 4. Set `serviceOrder` to control position within its group
-5. Save the file
+5. **Important**: Use the same `slug` across all locale files for the same service
+6. Save the file
 6. The service will automatically appear on `/services/` grouped by `serviceGroup`
 
 **Example**:
@@ -392,7 +530,8 @@ Services are organized by `serviceGroup`:
 
 - **YAML syntax errors**: Indentation matters! Use 2 spaces, not tabs
 - **Missing required fields**: `slug`, `title`, and `serviceGroup` are required
-- **Duplicate slugs**: Will cause conflicts
+- **Duplicate slugs within the same locale**: Will cause conflicts
+- **Inconsistent slugs across locales**: Use the same `slug` for the same service in all locale files
 - **Service order**: Use `serviceOrder` to control positioning; defaults to 0 if omitted
 - **Price field**: `startingPrice` must be a number, not a string
 - **Hidden services**: Set `hidden: true` to remove from display (useful for WIP entries)
@@ -403,11 +542,20 @@ Services are organized by `serviceGroup`:
 
 **Purpose**: Global site configuration including navigation links, footer sections, and site metadata.
 
-**Type**: Data collection (YAML file with Astro loader)
+**Type**: Data collection (YAML files with custom locale loader)
 
-**Location**: `src/content/site/site.yml` (single YAML file)
+**Location**: `src/content/site/{locale}/site.yml`
 
 **Schema Source**: `src/content/config.ts` → `siteCollection`
+
+**Directory Structure**:
+```
+src/content/site/
+├── en/
+│   └── site.yml
+└── de/
+    └── site.yml
+```
 
 ### Required Fields
 
@@ -421,9 +569,6 @@ Services are organized by `serviceGroup`:
     - label: string              # Link label text
       url: string                # Link URL
   footer:                        # REQUIRED - Footer configuration
-    brandName: string            # REQUIRED - Brand name displayed in footer
-    brandTagline: string         # REQUIRED - Tagline/description below brand name
-    socialHeading: string        # REQUIRED - Heading for social media section
     sections: FooterSection[]    # Footer link sections
       - title: string            # Section title
         links: FooterLink[]      # Links in this section
@@ -441,14 +586,14 @@ Services are organized by `serviceGroup`:
 
 ### Usage
 
-The site collection is loaded in `BaseLayout.astro` and its data is passed to the `NavBar` and `FooterComponent` components:
+The site collection is loaded in `BaseLayout.astro` using the locale-aware helper:
 
 ```astro
 ---
-import { getCollection } from 'astro:content';
+import { getLocalizedSiteConfig } from '../utils/i18n';
 
-const siteEntries = await getCollection('site');
-const siteConfig = siteEntries.find(entry => entry.data.slug === 'main');
+const currentLocale = Astro.currentLocale;
+const siteConfig = await getLocalizedSiteConfig(currentLocale);
 const navLinks = siteConfig?.data.nav || [];
 const footerData = siteConfig?.data.footer;
 const logoUrl = siteConfig?.data.meta.logoUrl;
@@ -460,10 +605,13 @@ const logoUrl = siteConfig?.data.meta.logoUrl;
 
 ### How to Update Site Configuration
 
-1. Open `src/content/site/site.yml`
+1. Open the appropriate locale file: `src/content/site/{locale}/site.yml`
+   - For English: `src/content/site/en/site.yml`
+   - For German: `src/content/site/de/site.yml`
 2. Modify the navigation links, footer sections, or metadata as needed
-3. Save the file
-4. The changes will automatically be reflected across all pages using `BaseLayout`
+3. **Important**: Keep the `slug` as `"main"` in all locale files
+4. Save the file
+5. The changes will automatically be reflected across all pages using `BaseLayout` for that locale
 
 **Example**:
 ```yaml
@@ -480,9 +628,6 @@ const logoUrl = siteConfig?.data.meta.logoUrl;
     - label: Pricing
       url: /pricing/
   footer:
-    brandName: Open Ticket AI
-    brandTagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
-    socialHeading: Connect
     sections:
       - title: Product
         links:
@@ -507,11 +652,12 @@ const logoUrl = siteConfig?.data.meta.logoUrl;
 ### Common Pitfalls
 
 - **YAML syntax errors**: Indentation matters! Use 2 spaces, not tabs
-- **Missing required fields**: `slug`, `meta`, `nav`, and `footer` are all required. Within `footer`, `brandName`, `brandTagline`, and `socialHeading` are now required fields
+- **Missing required fields**: `slug`, `meta`, `nav`, and `footer` are all required
+- **Inconsistent slug**: Always use `"main"` as the slug in all locale files
 - **Array syntax**: Use `- item` format for arrays
 - **Platform identifiers**: The `platform` field in social links is used to determine which icon to show. Currently supports "github" and "linkedin"
 - **Copyright text**: Will be prefixed with © and the current year automatically
-- **Brand information**: The `brandName` and `brandTagline` are displayed in the footer's first column. The `socialHeading` is shown above the social media icons
+- **Missing locale file**: If a locale file is missing, the site will fall back to English or show no navigation
 
 ---
 
@@ -521,19 +667,30 @@ const logoUrl = siteConfig?.data.meta.logoUrl;
 
 **If you modify `src/content/config.ts`** (add/remove collections, change schemas):
 1. **MUST** update this file (`CONTENT_COLLECTIONS.md`)
-2. **MUST** verify all pages using `getCollection()` still work
-3. **MUST** check TypeScript types are valid
+2. **MUST** update helper functions in `src/utils/i18n.ts` if adding new collections
+3. **MUST** verify all pages using `getCollection()` or locale helpers still work
+4. **MUST** check TypeScript types are valid
 
 **If you add/remove/modify collection entries**:
 1. Update this file if conventions or structure change
-2. Test the relevant pages (`npm run docs:dev`)
-3. Rebuild the site (`npm run docs:build`)
+2. Ensure consistency across all locale files (same slugs, similar structure)
+3. Test the relevant pages (`npm run docs:dev`)
+4. Rebuild the site (`npm run docs:build`)
+
+**If you add a new locale**:
+1. Update `astro.config.mjs` to add the locale to the `locales` array
+2. Create locale folders and files for all collections (products, services, site)
+3. Test thoroughly with `npm run docs:build`
+
+**No code changes needed!** The middleware, loader, and helper functions automatically detect new locales from the config.
 
 ### Validation Checklist
 
 Before committing changes to content collections:
 
 - [ ] Schema changes reflected in `config.ts`
+- [ ] Locale helper functions updated if needed
+- [ ] All locale files present for new entries (or explicitly missing for incomplete translations)
 - [ ] `CONTENT_COLLECTIONS.md` updated with new fields/collections
 - [ ] All required frontmatter fields present
 - [ ] No YAML syntax errors (for products/services)

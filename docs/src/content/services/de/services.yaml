@@ -1,0 +1,14 @@
+- slug: complex-use-cases
+  title: Komplexe Anwendungsfälle
+  oneLiner: Enterprise-Strategie
+  description: "100k-500k+ Tickets-Datensatz mit strikter Gewichtung & Einschränkungen, \nrealistischer Rauschmodellierung und optionalen Agent-Antworten. Inkl. vollständiger \nDokumentation und Aufteilungen für Unternehmensstrategien.\n"
+  outcomes:
+  - 100k-500k+ Tickets-Datensatz
+  - Strikte Gewichtung & Einschränkungen
+  - Realistische Rauschmodellierung
+  - Optionale Agent-Antworten
+  - Vollständige Dokumentation & Aufteilungen
+  startingPrice: 15000
+  serviceGroup: Synthetische Datenerstellung
+  serviceOrder: 12
+  id: complex-use-cases

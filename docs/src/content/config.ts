@@ -1,5 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-import { file } from 'astro/loaders';
+import { localeYamlLoader } from '../utils/locale-yaml-loader';
 
 // Navigation schema shared across collections
 const navSchema = z.object({
@@ -37,7 +37,10 @@ const blogCollection = defineCollection({
 
 // 3️⃣ products collection - data collection (YAML)
 const productsCollection = defineCollection({
-  loader: file('src/content/products.yaml'),
+  loader: localeYamlLoader({
+    baseDir: 'src/content/products',
+    fileName: 'products.yaml',
+  }),
   schema: z.object({
     slug: z.string(),
     title: z.string(),
@@ -56,7 +59,10 @@ const productsCollection = defineCollection({
 
 // 4️⃣ services collection - data collection (YAML)
 const servicesCollection = defineCollection({
-  loader: file("src/content/services.yaml"),
+  loader: localeYamlLoader({
+    baseDir: 'src/content/services',
+    fileName: 'services.yaml',
+  }),
   schema: z.object({
     slug: z.string(),
     title: z.string(),
@@ -73,7 +79,10 @@ const servicesCollection = defineCollection({
 
 // 5️⃣ site collection - data collection (YAML)
 const siteCollection = defineCollection({
-  loader: file("src/content/site.yml"),
+  loader: localeYamlLoader({
+    baseDir: 'src/content/site',
+    fileName: 'site.yml',
+  }),
   schema: z.object({
     slug: z.string(),
     meta: z.object({

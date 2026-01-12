@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getLocalizedCollection } from '../utils/i18n';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/vue/core/basic/Button.vue';
 import { ArrowRightIcon, CalendarIcon, MagnifyingGlassIcon, EnvelopeIcon, Squares2X2Icon, RocketLaunchIcon, CodeBracketIcon, LightBulbIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
@@ -8,12 +8,11 @@ const pageTitle = "Open Ticket AI Blog";
 const pageDescription = "Latest updates, insights, and news about Open Ticket AI and autonomous support automation.";
 
 // Fetch blog posts from the content collection
-const allBlogPosts = await getCollection('blog', ({ data }) => {
-  return !data.draft;
-});
+const allBlogPosts = await getLocalizedCollection('blog', Astro.currentLocale);
+const publishedPosts = allBlogPosts.filter(({ data }) => !data.draft);
 
 // Sort posts by date (newest first)
-const sortedBlogPosts = allBlogPosts.sort((a, b) => {
+const sortedBlogPosts = publishedPosts.sort((a, b) => {
   return b.data.date.getTime() - a.data.date.getTime();
 });
 
@@ -33,9 +32,9 @@ const getPlaceholderImage = (index: number) => {
   return `https://picsum.photos/400/250?${index}`;
 };
 
-// Helper function to get blog post URL (strip .md/.mdx extension from id)
+// Helper function to get blog post URL (strip locale prefix and extension from id)
 const getBlogUrl = (id: string) => {
-  return `/blog/${id.replace(/\.(md|mdx)$/, '')}/`;
+  return `/blog/${id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '')}/`;
 };
 ---
 

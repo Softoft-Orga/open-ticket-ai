@@ -1,5 +1,5 @@
 ---
-import {getCollection} from 'astro:content';
+import { getLocalizedServices } from '../utils/i18n';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/vue/core/basic/Button.vue';
 import Card from '../components/vue/core/basic/Card.vue';
@@ -27,8 +27,8 @@ import {
 const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
 
-// Get all services from the content collection
-const allServices = await getCollection('services');
+// Get all services from the content collection for current locale
+const allServices = await getLocalizedServices(Astro.currentLocale);
 
 // Filter services by group
 const syntheticDataServices = allServices
