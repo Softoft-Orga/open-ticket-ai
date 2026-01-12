@@ -421,6 +421,9 @@ Services are organized by `serviceGroup`:
     - label: string              # Link label text
       url: string                # Link URL
   footer:                        # REQUIRED - Footer configuration
+    brandName: string            # REQUIRED - Brand name displayed in footer
+    brandTagline: string         # REQUIRED - Tagline/description below brand name
+    socialHeading: string        # REQUIRED - Heading for social media section
     sections: FooterSection[]    # Footer link sections
       - title: string            # Section title
         links: FooterLink[]      # Links in this section
@@ -477,6 +480,9 @@ const logoUrl = siteConfig?.data.meta.logoUrl;
     - label: Pricing
       url: /pricing/
   footer:
+    brandName: Open Ticket AI
+    brandTagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
+    socialHeading: Connect
     sections:
       - title: Product
         links:
@@ -501,10 +507,11 @@ const logoUrl = siteConfig?.data.meta.logoUrl;
 ### Common Pitfalls
 
 - **YAML syntax errors**: Indentation matters! Use 2 spaces, not tabs
-- **Missing required fields**: `slug`, `meta`, `nav`, and `footer` are all required
+- **Missing required fields**: `slug`, `meta`, `nav`, and `footer` are all required. Within `footer`, `brandName`, `brandTagline`, and `socialHeading` are now required fields
 - **Array syntax**: Use `- item` format for arrays
 - **Platform identifiers**: The `platform` field in social links is used to determine which icon to show. Currently supports "github" and "linkedin"
 - **Copyright text**: Will be prefixed with © and the current year automatically
+- **Brand information**: The `brandName` and `brandTagline` are displayed in the footer's first column. The `socialHeading` is shown above the social media icons
 
 ---
 
