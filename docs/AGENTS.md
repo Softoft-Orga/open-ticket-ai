@@ -95,6 +95,14 @@ The site uses `astro-broken-links-checker` to validate internal links during the
 - Whenever components or story configs change, update the corresponding Storybook stories in
   `docs/stories/**` to reflect new props, variants, and states.
 
+## Testing
+
+- **Crash-smoke tests**: Run `npm run test:playwright` to verify pages load without errors
+  - Checks: no console.error, no pageerror events, response status OK
+  - Tests all key routes in both EN and DE locales
+  - Auto-builds and starts preview server via Playwright's `webServer` config
+  - Stable, fast tests with no UI/snapshot dependencies
+
 ## Documentation update rules
 
 ### When changing Vue components

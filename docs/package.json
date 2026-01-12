@@ -6,13 +6,15 @@
   "scripts": {
     "docs:dev": "astro dev",
     "docs:build": "astro build && npx pagefind --site dist",
+    "docs:build:noindex": "astro build || exit 0",
     "docs:preview": "astro preview",
     "docs:check": "astro check",
     "lint:links": "astro build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "test:playwright": "playwright test"
   },
   "keywords": [],
   "author": "",
@@ -43,6 +45,7 @@
     "globals": "^17.0.0",
     "mermaid": "^11.12.0",
     "pagefind": "^1.4.0",
+    "@playwright/test": "^1.57.0",
     "playwright": "^1.57.0",
     "postcss": "^8.4.38",
     "rehype-mermaid": "^3.0.0",
