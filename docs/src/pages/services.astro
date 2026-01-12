@@ -1,5 +1,4 @@
 ---
-import { getLocalizedServices } from '../utils/i18n';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/vue/core/basic/Button.vue';
 import Card from '../components/vue/core/basic/Card.vue';
@@ -28,7 +27,8 @@ const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
 
 // Get all services from the content collection for current locale
-const allServices = await getLocalizedServices(Astro.currentLocale);
+const allServices = await Astro.locals.content.getLocalizedCollection('services')
+;
 
 // Filter services by group
 const syntheticDataServices = allServices
@@ -269,8 +269,8 @@ const typicalScopeItems = [
                                 ))}
                             </ul>
                             <div slot="actions">
-                                <Button 
-                                    variant={highlighted ? 'solid' : 'outline'}
+                                <Button
+                                    variant={highlighted ? 'surface' : 'outline'}
                                     tone={highlighted ? 'primary' : 'neutral'}
                                     size="md"
                                     class="w-full"
@@ -356,7 +356,7 @@ const typicalScopeItems = [
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-6">
                                 <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-2">
                                     Supported Systems
@@ -376,8 +376,8 @@ const typicalScopeItems = [
                             </ul>
 
                             <div slot="actions">
-                                <Button 
-                                    variant={highlighted ? 'solid' : 'outline'}
+                                <Button
+                                    variant={highlighted ? 'surface' : 'outline'}
                                     tone={highlighted ? 'primary' : 'neutral'}
                                     size="md"
                                     class="w-full"

@@ -1,23 +1,23 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Card from '../components/vue/core/basic/Card.vue';
-import Button from '../components/vue/core/basic/Button.vue';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Card from '../../components/vue/core/basic/Card.vue';
+import Button from '../../components/vue/core/basic/Button.vue';
 
-const title = "ROI Calculator";
+const title = "Pricing & ROI Calculator";
 const description = "Calculate the return on investment for automated ticket tagging in your helpdesk environment.";
 ---
 
 <BaseLayout title={title} description={description}>
   <div slot="head" />
 
-  <div class="min-h-screen bg-background-dark py-12">
+  <div class="min-h-screen bg-bg-1 py-12">
     <div class="max-w-7xl mx-auto px-4 py-8">
       <!-- Header -->
       <div class="mb-12 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+        <h1 class="text-4xl md:text-5xl font-bold text-text-1 mb-4">
           ROI Analysis
         </h1>
-        <p class="text-text-dim text-lg max-w-2xl mx-auto">
+        <p class="text-text-2 text-lg max-w-2xl mx-auto">
           Understand the potential return on investment for automated ticket tagging in your helpdesk environment.
         </p>
       </div>
@@ -28,31 +28,31 @@ const description = "Calculate the return on investment for automated ticket tag
           <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
             Time Savings
           </div>
-          <div class="text-3xl font-bold text-white mb-2">
+          <div class="text-3xl font-bold text-text-1 mb-2">
             40-60%
           </div>
           <p class="text-sm text-text-dim">
             Average reduction in manual tagging time per ticket
           </p>
         </Card>
-        
+
         <Card client:load tone="primary" hoverable>
           <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
             Cost Reduction
           </div>
-          <div class="text-3xl font-bold text-white mb-2">
+          <div class="text-3xl font-bold text-text-1 mb-2">
             €2-5
           </div>
           <p class="text-sm text-text-dim">
             Saved per ticket through automation
           </p>
         </Card>
-        
+
         <Card client:load tone="primary" hoverable>
           <div class="text-sm text-text-dim mb-2 font-semibold uppercase tracking-wider">
             Payback Period
           </div>
-          <div class="text-3xl font-bold text-white mb-2">
+          <div class="text-3xl font-bold text-text-1 mb-2">
             3-6 months
           </div>
           <p class="text-sm text-text-dim">
@@ -63,79 +63,79 @@ const description = "Calculate the return on investment for automated ticket tag
 
       <!-- Example Scenarios -->
       <Card client:load tone="primary" class="mb-12">
-        <h2 class="text-2xl font-bold text-white mb-6">Example ROI Scenarios</h2>
-        
+        <h2 class="text-2xl font-bold text-text-1 mb-6">Example ROI Scenarios</h2>
+
         <div class="overflow-x-auto">
           <table class="w-full text-left">
             <thead>
-              <tr class="border-b border-border-dark">
-                <th class="py-3 px-4 text-sm font-semibold text-text-dim uppercase tracking-wider">Scenario</th>
-                <th class="py-3 px-4 text-sm font-semibold text-text-dim uppercase tracking-wider">Daily Tickets</th>
-                <th class="py-3 px-4 text-sm font-semibold text-text-dim uppercase tracking-wider">Manual Cost/Ticket</th>
-                <th class="py-3 px-4 text-sm font-semibold text-text-dim uppercase tracking-wider">Annual Savings</th>
-                <th class="py-3 px-4 text-sm font-semibold text-text-dim uppercase tracking-wider">ROI</th>
+              <tr class="border-b border-border-1">
+                <th class="py-3 px-4 text-sm font-semibold text-text-2 uppercase tracking-wider">Scenario</th>
+                <th class="py-3 px-4 text-sm font-semibold text-text-2 uppercase tracking-wider">Daily Tickets</th>
+                <th class="py-3 px-4 text-sm font-semibold text-text-2 uppercase tracking-wider">Manual Cost/Ticket</th>
+                <th class="py-3 px-4 text-sm font-semibold text-text-2 uppercase tracking-wider">Annual Savings</th>
+                <th class="py-3 px-4 text-sm font-semibold text-text-2 uppercase tracking-wider">ROI</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-border-dark/30">
+            <tbody class="divide-y divide-border-1/30">
               <tr>
-                <td class="py-4 px-4 text-white font-medium">Small Team</td>
-                <td class="py-4 px-4 text-white">100</td>
-                <td class="py-4 px-4 text-white">€3.00</td>
+                <td class="py-4 px-4 text-text-1 font-medium">Small Team</td>
+                <td class="py-4 px-4 text-text-1">100</td>
+                <td class="py-4 px-4 text-text-1">€3.00</td>
                 <td class="py-4 px-4 text-primary-light font-bold">€54,750</td>
                 <td class="py-4 px-4 text-cyan-glow font-bold">274%</td>
               </tr>
               <tr>
-                <td class="py-4 px-4 text-white font-medium">Medium Enterprise</td>
-                <td class="py-4 px-4 text-white">500</td>
-                <td class="py-4 px-4 text-white">€4.00</td>
+                <td class="py-4 px-4 text-text-1 font-medium">Medium Enterprise</td>
+                <td class="py-4 px-4 text-text-1">500</td>
+                <td class="py-4 px-4 text-text-1">€4.00</td>
                 <td class="py-4 px-4 text-primary-light font-bold">€365,000</td>
                 <td class="py-4 px-4 text-cyan-glow font-bold">1,825%</td>
               </tr>
               <tr>
-                <td class="py-4 px-4 text-white font-medium">Large Enterprise</td>
-                <td class="py-4 px-4 text-white">2000</td>
-                <td class="py-4 px-4 text-white">€5.00</td>
+                <td class="py-4 px-4 text-text-1 font-medium">Large Enterprise</td>
+                <td class="py-4 px-4 text-text-1">2000</td>
+                <td class="py-4 px-4 text-text-1">€5.00</td>
                 <td class="py-4 px-4 text-primary-light font-bold">€1,825,000</td>
                 <td class="py-4 px-4 text-cyan-glow font-bold">9,125%</td>
               </tr>
             </tbody>
           </table>
         </div>
-        
-        <p class="text-xs text-text-dim mt-4 italic">
+
+        <p class="text-xs text-text-2 mt-4 italic">
           * Calculations assume 50% time savings and 250 working days per year. Actual results may vary.
         </p>
       </Card>
 
       <!-- Key Benefits -->
       <div class="bg-gradient-to-br from-primary/10 to-cyan-glow/5 border border-primary/20 rounded-3xl p-12 text-center">
-        <h2 class="text-3xl font-bold text-white mb-6">
+        <h2 class="text-3xl font-bold text-text-1 mb-6">
           Beyond Cost Savings
         </h2>
         <div class="grid md:grid-cols-3 gap-8 mb-8">
           <div>
             <div class="text-4xl mb-3">⚡</div>
-            <h3 class="text-lg font-bold text-white mb-2">Faster Response Times</h3>
-            <p class="text-sm text-text-dim">
+            <h3 class="text-lg font-bold text-text-1 mb-2">Faster Response Times</h3>
+            <p class="text-sm text-text-2">
               Automated tagging enables instant routing and prioritization
             </p>
           </div>
           <div>
             <div class="text-4xl mb-3">📊</div>
-            <h3 class="text-lg font-bold text-white mb-2">Better Insights</h3>
-            <p class="text-sm text-text-dim">
+            <h3 class="text-lg font-bold text-text-1 mb-2">Better Insights</h3>
+            <p class="text-sm text-text-2">
               Consistent tagging improves analytics and reporting accuracy
             </p>
           </div>
           <div>
             <div class="text-4xl mb-3">😊</div>
-            <h3 class="text-lg font-bold text-white mb-2">Improved Satisfaction</h3>
-            <p class="text-sm text-text-dim">
+            <h3 class="text-lg font-bold text-text-1 mb-2">Improved Satisfaction</h3>
+            <p class="text-sm text-text-2">
               Faster resolution times lead to happier customers and agents
             </p>
           </div>
         </div>
-        <Button client:load variant="surface" tone="primary" size="lg">
+        <Button client:load tone="primary" size="lg">
           Contact Sales for Custom Analysis
         </Button>
       </div>
