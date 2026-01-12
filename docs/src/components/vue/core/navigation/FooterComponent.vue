@@ -7,10 +7,10 @@
             <div class="flex size-8 items-center justify-center rounded bg-link/20 text-link">
               <TicketIcon class="w-5 h-5" />
             </div>
-            <span class="font-display text-lg font-bold text-white tracking-tight">Open Ticket AI</span>
+            <span class="font-display text-lg font-bold text-white tracking-tight">{{ brandName }}</span>
           </div>
           <p class="text-slate-500 text-sm leading-relaxed max-w-xs">
-            Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
+            {{ brandTagline }}
           </p>
         </div>
         
@@ -36,7 +36,7 @@
 
         <div v-if="social.length > 0">
           <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">
-            Connect
+            {{ socialHeading }}
           </h4>
           <div class="flex gap-4 text-primary">
             <a
@@ -100,6 +100,9 @@ type SocialLink = {
 }
 
 type FooterData = {
+  brandName?: string
+  brandTagline?: string
+  socialHeading?: string
   sections: FooterSection[]
   social: SocialLink[]
   legal: FooterLink[]
@@ -116,5 +119,8 @@ const sections = computed(() => props.footerData?.sections || [])
 const social = computed(() => props.footerData?.social || [])
 const legal = computed(() => props.footerData?.legal || [])
 const copyright = computed(() => props.footerData?.copyright || 'Open Ticket AI UG. All rights reserved.')
+const brandName = computed(() => props.footerData?.brandName || 'Open Ticket AI')
+const brandTagline = computed(() => props.footerData?.brandTagline || 'Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.')
+const socialHeading = computed(() => props.footerData?.socialHeading || 'Connect')
 const year = computed(() => new Date().getFullYear())
 </script>
