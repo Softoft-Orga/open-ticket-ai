@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import {computed, provide, toRef, withDefaults} from 'vue'
 import { card } from '../../../../design-system/recipes/card'
-import type {Radius, Elevation} from '../design-system/tokens'
+import type {Radius, Elevation} from '../../../../design-system/tokens'
 
 export type TableVariant = 'default' | 'bordered' | 'borderless' | 'glassy' | 'compact'
 export type TableWidth = 'stretch' | 'auto' | 'full'

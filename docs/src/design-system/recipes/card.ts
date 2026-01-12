@@ -1,5 +1,6 @@
 import { tv, type VariantProps } from 'tailwind-variants'
 import { surface } from './surface'
+import type { Size } from '../tokens'
 
 /**
  * Card recipe - Composable card component
@@ -7,7 +8,9 @@ import { surface } from './surface'
  * Builds on the surface recipe with additional spacing variants.
  * Use for any card-like container components.
  */
-export const card = tv({
+export const card = tv<{
+  size: Size
+}>({
   extend: surface,
   base: 'text-text-1',
   variants: {
@@ -25,7 +28,7 @@ export const card = tv({
     elevation: 'none',
     hoverable: false,
     highlighted: false,
-    tint: 'none'
+    intensity: 'none'
   }
 })
 

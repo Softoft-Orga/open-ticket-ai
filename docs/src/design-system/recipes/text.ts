@@ -1,4 +1,7 @@
 import { tv, type VariantProps } from 'tailwind-variants'
+import type { Tone } from '../tokens'
+
+type Emphasis = 'normal' | 'dim' | 'strong'
 
 /**
  * Text recipe - Text styles used across components
@@ -6,7 +9,10 @@ import { tv, type VariantProps } from 'tailwind-variants'
  * Provides consistent text styling with tone and emphasis variants.
  * Use for titles, body text, and dimmed text across the design system.
  */
-export const text = tv({
+export const text = tv<{
+  tone: Tone
+  emphasis: Emphasis
+}>({
   base: 'transition-colors duration-200',
   variants: {
     tone: {

@@ -121,7 +121,7 @@ const panelClasses = computed(() => {
       tone: props.tone,
       radius: '2xl',
       elevation: 'lg',
-      tint: props.tone !== 'neutral' ? 'soft' : 'none'
+      intensity: props.tone !== 'neutral' ? 'soft' : 'none'
     }),
     'p-8'
   ].join(' ')
@@ -129,7 +129,7 @@ const panelClasses = computed(() => {
 
 const closeButtonClasses = computed(() => {
   return button({
-    variant: 'ghost',
+    variant: 'subtle',
     tone: 'neutral',
     size: 'sm',
     radius: 'lg'

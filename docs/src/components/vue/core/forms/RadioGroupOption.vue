@@ -53,13 +53,15 @@ import { computed } from 'vue'
 import { RadioGroupOption } from '@headlessui/vue'
 import { card } from '../../../../design-system/recipes/card'
 import { focusRing } from '../../../../design-system/recipes/focus'
-import type { Variant, Tone } from '../design-system/tokens'
+import type { Tone } from '../../../../design-system/tokens'
+
+type VariantOption = 'primary' | 'secondary' | 'outline' | 'ghost'
 
 interface Props {
   value: string | number
   label?: string
   description?: string
-  variant?: Variant
+  variant?: VariantOption
   tone?: Tone
 }
 
@@ -85,7 +87,7 @@ const cardClasses = (checked: boolean, disabled: boolean) => {
     return card({
       variant: checked ? 'subtle' : 'surface',
       tone,
-      tint: checked ? 'soft' : 'none',
+      intensity: checked ? 'soft' : 'none',
       size: 'sm',
       radius: 'lg',
       highlighted: checked
@@ -120,7 +122,7 @@ const cardClasses = (checked: boolean, disabled: boolean) => {
       return card({
         variant: checked ? 'subtle' : 'surface',
         tone: 'primary',
-        tint: checked ? 'soft' : 'none',
+        intensity: checked ? 'soft' : 'none',
         size: 'sm',
         radius: 'lg',
         highlighted: checked

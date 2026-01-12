@@ -82,7 +82,7 @@ const surfaceClasses = computed(() => {
     default: 'border-b border-border-dark',
     ghost: '',
     bordered: surface({ variant: 'surface', radius: 'lg' }) + ' mb-2 overflow-hidden',
-    gradient: surface({ variant: 'surface', tone: 'primary', tint: 'soft', radius: 'lg' }) + ' mb-2 overflow-hidden'
+    gradient: surface({ variant: 'surface', tone: 'primary', intensity: 'soft', radius: 'lg' }) + ' mb-2 overflow-hidden'
   }
   
   return `${base} ${variants[props.variant]}`
@@ -91,7 +91,7 @@ const surfaceClasses = computed(() => {
 // Button styling using design-system button recipe
 const buttonClasses = computed(() => {
   const baseButton = button({ 
-    variant: 'ghost', 
+    variant: 'subtle', 
     tone: 'neutral',
     radius: 'lg',
     disabled: props.disabled

@@ -3,15 +3,15 @@ import {ref} from 'vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 import { TONES, SIZES } from '../src/design-system/tokens'
 
-const TAB_VARIANTS = ['underline', 'pill'] as const
+const TAB_STYLES = ['underline', 'pill'] as const
 
 const meta: Meta<typeof Tabs> = {
     title: 'Core/Tabs',
     component: Tabs,
     argTypes: {
-        variant: {
+        style: {
             control: 'select',
-            options: TAB_VARIANTS
+            options: TAB_STYLES
         },
         tone: {
             control: 'select',
@@ -50,7 +50,7 @@ export const Default: Story = {
         <template #tab-0>
           <div class="p-4 text-gray-300">
             <h3 class="text-lg font-semibold mb-2">First Tab Content</h3>
-            <p>This is the content for the first tab. The default variant is underline with tone-based selection indicator.</p>
+            <p>This is the content for the first tab. The default style is underline with tone-based selection indicator.</p>
           </div>
         </template>
         <template #tab-1>
@@ -70,7 +70,7 @@ export const Default: Story = {
     }),
     args: {
         tabs: ['Overview', 'Features', 'Documentation'],
-        variant: 'underline',
+        style: 'underline',
         tone: 'primary',
         size: 'md'
     }
@@ -124,7 +124,7 @@ export const Sizes: Story = {
     <div class="p-8 bg-background-dark space-y-8">
       <div>
         <h3 class="text-white mb-4">Small Size</h3>
-        <Tabs :tabs="args.tabs" size="sm" variant="pill" tone="primary">
+        <Tabs :tabs="args.tabs" size="sm" style="pill" tone="primary">
           <template #tab-0><div class="p-2 text-gray-300">Small tab content</div></template>
           <template #tab-1><div class="p-2 text-gray-300">Small tab content</div></template>
           <template #tab-2><div class="p-2 text-gray-300">Small tab content</div></template>
@@ -132,7 +132,7 @@ export const Sizes: Story = {
       </div>
       <div>
         <h3 class="text-white mb-4">Medium Size (Default)</h3>
-        <Tabs :tabs="args.tabs" size="md" variant="pill" tone="primary">
+        <Tabs :tabs="args.tabs" size="md" style="pill" tone="primary">
           <template #tab-0><div class="p-4 text-gray-300">Medium tab content</div></template>
           <template #tab-1><div class="p-4 text-gray-300">Medium tab content</div></template>
           <template #tab-2><div class="p-4 text-gray-300">Medium tab content</div></template>
@@ -140,7 +140,7 @@ export const Sizes: Story = {
       </div>
       <div>
         <h3 class="text-white mb-4">Large Size</h3>
-        <Tabs :tabs="args.tabs" size="lg" variant="pill" tone="primary">
+        <Tabs :tabs="args.tabs" size="lg" style="pill" tone="primary">
           <template #tab-0><div class="p-6 text-gray-300">Large tab content</div></template>
           <template #tab-1><div class="p-6 text-gray-300">Large tab content</div></template>
           <template #tab-2><div class="p-6 text-gray-300">Large tab content</div></template>
@@ -160,7 +160,7 @@ export const Tones: Story = {
     <div class="p-8 bg-background-dark space-y-8">
       <div>
         <h3 class="text-white mb-4">Primary Tone</h3>
-        <Tabs :tabs="['First', 'Second', 'Third']" variant="pill" tone="primary">
+        <Tabs :tabs="['First', 'Second', 'Third']" style="pill" tone="primary">
           <template #tab-0><div class="p-4 text-gray-300">Primary tone selected</div></template>
           <template #tab-1><div class="p-4 text-gray-300">Content</div></template>
           <template #tab-2><div class="p-4 text-gray-300">Content</div></template>
@@ -168,7 +168,7 @@ export const Tones: Story = {
       </div>
       <div>
         <h3 class="text-white mb-4">Success Tone</h3>
-        <Tabs :tabs="['First', 'Second', 'Third']" variant="pill" tone="success">
+        <Tabs :tabs="['First', 'Second', 'Third']" style="pill" tone="success">
           <template #tab-0><div class="p-4 text-gray-300">Success tone selected</div></template>
           <template #tab-1><div class="p-4 text-gray-300">Content</div></template>
           <template #tab-2><div class="p-4 text-gray-300">Content</div></template>
@@ -176,7 +176,7 @@ export const Tones: Story = {
       </div>
       <div>
         <h3 class="text-white mb-4">Warning Tone</h3>
-        <Tabs :tabs="['First', 'Second', 'Third']" variant="pill" tone="warning">
+        <Tabs :tabs="['First', 'Second', 'Third']" style="pill" tone="warning">
           <template #tab-0><div class="p-4 text-gray-300">Warning tone selected</div></template>
           <template #tab-1><div class="p-4 text-gray-300">Content</div></template>
           <template #tab-2><div class="p-4 text-gray-300">Content</div></template>

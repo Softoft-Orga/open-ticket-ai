@@ -1,4 +1,5 @@
 import { tv, type VariantProps } from 'tailwind-variants'
+import type { Size } from '../tokens'
 
 /**
  * Prose recipe - MDX/Markdown content wrapper
@@ -7,7 +8,9 @@ import { tv, type VariantProps } from 'tailwind-variants'
  * Compatible with dark theme and works alongside @tailwindcss/typography.
  * Apply to wrapper elements containing rendered markdown/MDX.
  */
-export const prose = tv({
+export const prose = tv<{
+  size: Size
+}>({
   base: [
     'prose prose-invert max-w-none',
     'prose-headings:font-semibold prose-headings:text-text-1',

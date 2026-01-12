@@ -1,12 +1,21 @@
 import { tv, type VariantProps } from 'tailwind-variants'
+import type { Tone, Size, Radius } from '../tokens'
+
+type Validation = 'default' | 'error' | 'success'
 
 /**
  * Input recipe - Text input, textarea, and select styling
  * 
- * Provides consistent styling for form inputs with state variants.
+ * Provides consistent styling for form inputs with validation variants.
  * Includes focus ring and support for error/success states.
  */
-export const input = tv({
+export const input = tv<{
+  tone: Tone
+  size: Size
+  radius: Radius
+  validation: Validation
+  disabled: boolean
+}>({
   base: [
     'w-full px-3 py-2 bg-surface-dark border text-text-1',
     'placeholder:text-text-dim',
@@ -33,7 +42,7 @@ export const input = tv({
       xl: 'rounded-xl',
       '2xl': 'rounded-2xl'
     },
-    state: {
+    validation: {
       default: '',
       error: 'border-danger focus-visible:ring-danger',
       success: 'border-success focus-visible:ring-success'
@@ -44,15 +53,15 @@ export const input = tv({
     }
   },
   compoundVariants: [
-    // State overrides tone for border colors
-    { state: 'error', class: 'border-danger' },
-    { state: 'success', class: 'border-success' }
+    // Validation overrides tone for border colors
+    { validation: 'error', class: 'border-danger' },
+    { validation: 'success', class: 'border-success' }
   ],
   defaultVariants: {
     tone: 'neutral',
     size: 'md',
     radius: 'lg',
-    state: 'default',
+    validation: 'default',
     disabled: false
   }
 })

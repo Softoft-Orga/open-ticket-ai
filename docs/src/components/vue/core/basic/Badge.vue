@@ -5,16 +5,16 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { badge } from '../../../../design-system/recipes'
-import type { Tone, Size } from '../../../../design-system/tokens'
+import type { Variant, Tone, Size } from '../../../../design-system/tokens'
 
 interface Props {
-  variant?: 'solid' | 'soft' | 'outline'
+  variant?: Variant
   tone?: Tone
   size?: Size
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'solid',
+  variant: 'surface',
   tone: 'primary',
   size: 'md'
 })
