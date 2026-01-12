@@ -26,7 +26,7 @@ export default [
   
   ...tseslint.configs.recommended.map(config => ({
     ...config,
-    files: ['**/*.ts', '**/*.mts', '**/*.tsx', '**/*.vue'],
+    files: ['**/*.ts', '**/*.mts', '**/*.tsx'],
   })),
   
   ...pluginVue.configs['flat/recommended'],
