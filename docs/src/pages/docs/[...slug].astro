@@ -2,9 +2,12 @@
 import DocsLayout from '../../layouts/DocsLayout.astro';
 
 import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths'
+import type {CollectionEntry} from "astro:content";
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs')
-
+type Props = {
+  entry: CollectionEntry<'docs'>;
+};
 const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
 const title = entry.data.title;
