@@ -44,11 +44,11 @@ const ctaUrl = '/get-started/';
           s.async = true;
           document.head.appendChild(s);
           window.dataLayer = window.dataLayer || [];
-          /* eslint-disable @typescript-eslint/no-explicit-any */
+           
           function gtag(...args) {
             dataLayer.push(...args);
           }
-          /* eslint-enable @typescript-eslint/no-explicit-any */
+           
           gtag('js', new Date());
           gaIds.forEach((id) => {
             gtag('config', id, { send_page_view: false });
