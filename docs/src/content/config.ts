@@ -1,5 +1,4 @@
 import { defineCollection, z } from 'astro:content';
-import { file, glob } from 'astro/loaders';
 import { localeYamlLoader } from '../utils/locale-yaml-loader';
 
 // Navigation schema shared across collections
