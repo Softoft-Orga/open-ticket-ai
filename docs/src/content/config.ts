@@ -86,6 +86,9 @@ const siteCollection = defineCollection({
       url: z.string(),
     })),
     footer: z.object({
+      brandName: z.string(),
+      brandTagline: z.string(),
+      socialHeading: z.string(),
       sections: z.array(z.object({
         title: z.string(),
         links: z.array(z.object({
