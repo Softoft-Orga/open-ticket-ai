@@ -12,6 +12,9 @@ export default defineConfig({
     i18n: {
         locales: ['en', 'de'],
         defaultLocale: 'en',
+        routing: {
+            prefixDefaultLocale: false,
+        },
     },
     image: {
         // Configure image service with Sharp for optimization
