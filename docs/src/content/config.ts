@@ -73,7 +73,7 @@ const servicesCollection = defineCollection({
 
 // 5️⃣ site collection - data collection (YAML)
 const siteCollection = defineCollection({
-  loader: file("src/content/site/site.yml"),
+  loader: file("src/content/site.yml"),
   schema: z.object({
     slug: z.string(),
     meta: z.object({

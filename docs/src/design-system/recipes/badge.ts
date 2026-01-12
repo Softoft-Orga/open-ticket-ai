@@ -2,7 +2,7 @@ import { tv, type VariantProps } from 'tailwind-variants'
 
 /**
  * Badge recipe - Small label/tag component
- * 
+ *
  * Supports solid, soft, and outline variants with tone-based colors.
  * Used for status indicators, labels, and tags.
  */
@@ -31,11 +31,11 @@ export const badge = tv({
     // Solid variant colors
     { variant: 'solid', tone: 'neutral', class: 'bg-surface-lighter text-text-1' },
     { variant: 'solid', tone: 'primary', class: 'bg-primary text-white' },
-    { variant: 'solid', tone: 'success', class: 'bg-success text-white' },
+    { variant: 'solid', tone: 'success', class: 'bg-success-dark text-white' },
     { variant: 'solid', tone: 'warning', class: 'bg-warning text-white' },
     { variant: 'solid', tone: 'danger', class: 'bg-danger text-white' },
     { variant: 'solid', tone: 'info', class: 'bg-info text-white' },
-    
+
     // Soft variant colors
     { variant: 'soft', tone: 'neutral', class: 'bg-surface-dark text-text-1' },
     { variant: 'soft', tone: 'primary', class: 'bg-primary/10 text-primary' },
@@ -43,7 +43,7 @@ export const badge = tv({
     { variant: 'soft', tone: 'warning', class: 'bg-warning/10 text-warning' },
     { variant: 'soft', tone: 'danger', class: 'bg-danger/10 text-danger' },
     { variant: 'soft', tone: 'info', class: 'bg-info/10 text-info' },
-    
+
     // Outline variant colors
     { variant: 'outline', tone: 'neutral', class: 'border-border-dark text-text-1' },
     { variant: 'outline', tone: 'primary', class: 'border-primary text-primary' },

@@ -2,7 +2,7 @@ import { tv, type VariantProps } from 'tailwind-variants'
 
 /**
  * Button recipe - Interactive button component
- * 
+ *
  * Supports solid, outline, and ghost variants with tone-based colors.
  * Includes focus ring, loading, disabled, and block states.
  */
@@ -59,7 +59,7 @@ export const button = tv({
     { variant: 'solid', tone: 'warning', class: 'bg-warning text-white hover:bg-warning-dark' },
     { variant: 'solid', tone: 'danger', class: 'bg-danger text-white hover:bg-danger-dark' },
     { variant: 'solid', tone: 'info', class: 'bg-info text-white hover:bg-info/90' },
-    
+
     // Outline variant colors
     { variant: 'outline', tone: 'neutral', class: 'border-border-dark text-text-1 hover:bg-surface-dark' },
     { variant: 'outline', tone: 'primary', class: 'border-primary text-primary hover:bg-primary/10' },
@@ -67,7 +67,7 @@ export const button = tv({
     { variant: 'outline', tone: 'warning', class: 'border-warning text-warning hover:bg-warning/10' },
     { variant: 'outline', tone: 'danger', class: 'border-danger text-danger hover:bg-danger/10' },
     { variant: 'outline', tone: 'info', class: 'border-info text-info hover:bg-info/10' },
-    
+
     // Ghost variant colors
     { variant: 'ghost', tone: 'neutral', class: 'text-text-1 hover:bg-surface-dark' },
     { variant: 'ghost', tone: 'primary', class: 'text-primary hover:bg-primary/10' },
