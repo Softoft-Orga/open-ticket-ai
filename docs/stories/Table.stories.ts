@@ -8,10 +8,9 @@ const meta: Meta<typeof Table> = {
     title: 'Core/Table',
     component: Table,
     argTypes: {
-        variant: {
-            control: 'select',
-            options: ['default', 'bordered', 'borderless', 'glassy', 'compact'],
-            description: 'Visual style variant of the table'
+        bordered: {
+            control: 'boolean',
+            description: 'Show table border and card styling'
         },
         striped: {
             control: 'boolean',
@@ -29,7 +28,7 @@ const meta: Meta<typeof Table> = {
         radius: {
             control: 'select',
             options: RADII,
-            description: 'Border radius size from design tokens (md, lg, xl, 2xl)'
+            description: 'Border radius size from design tokens (lg, xl, 2xl)'
         },
         elevation: {
             control: 'select',
@@ -44,12 +43,12 @@ const meta: Meta<typeof Table> = {
     parameters: {
         docs: {
             description: {
-                component: 'Flexible and responsive table component with multiple style variants, configurable radius and elevation from design tokens, and strong hover effects. Built with Tailwind CSS to match the dark theme design system.'
+                component: 'Flexible and responsive table component with configurable radius and elevation from design tokens, and strong hover effects. Built with Tailwind CSS to match the dark theme design system.'
             }
         }
     },
     args: {
-        variant: 'default',
+        bordered: true,
         striped: true,
         dense: false,
         width: 'full',
@@ -99,7 +98,7 @@ export const Default: Story = {
         `
     }),
     args: {
-        variant: 'default',
+        bordered: true,
         striped: true,
         dense: false,
         width: 'full',
@@ -146,7 +145,7 @@ export const Bordered: Story = {
         `
     }),
     args: {
-        variant: 'bordered',
+        bordered: true,
         striped: true,
         dense: false,
         width: 'full',
@@ -190,7 +189,7 @@ export const Glassy: Story = {
         `
     }),
     args: {
-        variant: 'glassy',
+        bordered: true,
         striped: true,
         dense: false,
         width: 'full',
@@ -232,7 +231,7 @@ export const Borderless: Story = {
         `
     }),
     args: {
-        variant: 'borderless',
+        bordered: false,
         striped: true,
         dense: false,
         width: 'full',
@@ -278,7 +277,7 @@ export const Compact: Story = {
         `
     }),
     args: {
-        variant: 'compact',
+        bordered: true,
         striped: true,
         dense: true,
         width: 'full',
@@ -318,7 +317,7 @@ export const AutoWidth: Story = {
         `
     }),
     args: {
-        variant: 'default',
+        bordered: true,
         striped: true,
         dense: false,
         width: 'auto',
@@ -398,7 +397,7 @@ export const NoHover: Story = {
         `
     }),
     args: {
-        variant: 'default',
+        bordered: true,
         striped: true,
         dense: false,
         width: 'full',
@@ -436,7 +435,7 @@ export const LargeRadius: Story = {
         `
     }),
     args: {
-        variant: 'bordered',
+        bordered: true,
         striped: false,
         dense: false,
         width: 'full',
@@ -485,7 +484,7 @@ export const HighElevation: Story = {
         `
     }),
     args: {
-        variant: 'default',
+        bordered: true,
         striped: true,
         dense: false,
         width: 'full',
@@ -527,7 +526,7 @@ export const MinimalRadius: Story = {
         `
     }),
     args: {
-        variant: 'compact',
+        bordered: true,
         striped: true,
         dense: true,
         width: 'full',

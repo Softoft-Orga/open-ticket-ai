@@ -53,27 +53,25 @@ import { computed } from 'vue'
 import { RadioGroupOption } from '@headlessui/vue'
 import { card } from '../../../../design-system/recipes/card'
 import { focusRing } from '../../../../design-system/recipes/focus'
-import type { Tone } from '../../../../design-system/tokens'
-
-type VariantOption = 'primary' | 'secondary' | 'outline' | 'ghost'
+import type { Variant, Tone } from '../../../../design-system/tokens'
 
 interface Props {
   value: string | number
   label?: string
   description?: string
-  variant?: VariantOption
+  variant?: Variant
   tone?: Tone
 }
 
 const props = withDefaults(defineProps<Props>(), {
   label: '',
   description: '',
-  variant: 'primary',
+  variant: 'surface',
   tone: undefined
 })
 
 const focusClasses = computed(() => {
-  const tone = props.tone || (props.variant === 'secondary' ? 'neutral' : 'primary')
+  const tone = props.tone || 'primary'
   return focusRing({ tone })
 })
 
@@ -82,107 +80,54 @@ const cardClasses = (checked: boolean, disabled: boolean) => {
     return card({ variant: 'surface', size: 'sm', radius: 'lg' })
   }
 
-  const tone = props.tone
-  if (tone) {
-    return card({
-      variant: checked ? 'subtle' : 'surface',
-      tone,
-      intensity: checked ? 'soft' : 'none',
-      size: 'sm',
-      radius: 'lg',
-      highlighted: checked
-    })
-  }
+  const tone = props.tone || 'primary'
+  const variant = props.variant
 
-  switch (props.variant) {
-    case 'secondary':
-      return card({
-        variant: checked ? 'subtle' : 'surface',
-        tone: 'neutral',
-        size: 'sm',
-        radius: 'lg',
-        highlighted: checked
-      })
-    case 'outline':
-      return card({
-        variant: 'outline',
-        tone: checked ? 'primary' : 'neutral',
-        size: 'sm',
-        radius: 'lg',
-        highlighted: checked
-      })
-    case 'ghost':
-      return card({
-        variant: 'outline',
-        tone: 'neutral',
-        size: 'sm',
-        radius: 'lg'
-      })
-    default:
-      return card({
-        variant: checked ? 'subtle' : 'surface',
-        tone: 'primary',
-        intensity: checked ? 'soft' : 'none',
-        size: 'sm',
-        radius: 'lg',
-        highlighted: checked
-      })
-  }
+  return card({
+    variant: checked ? (variant === 'outline' ? 'outline' : 'subtle') : variant,
+    tone: variant === 'outline' && checked ? 'primary' : tone,
+    intensity: checked && variant !== 'outline' ? 'soft' : 'none',
+    size: 'sm',
+    radius: 'lg',
+    highlighted: checked
+  })
 }
 
 const checkedTextClass = computed(() => {
-  if (props.tone) {
-    switch (props.tone) {
-      case 'info':
-        return 'text-info'
-      case 'success':
-        return 'text-success'
-      case 'warning':
-        return 'text-warning'
-      case 'danger':
-        return 'text-danger'
-      default:
-        break
-    }
-  }
+  const tone = props.tone || 'primary'
   
-  switch (props.variant) {
-    case 'secondary':
-      return 'text-secondary'
-    case 'outline':
+  switch (tone) {
+    case 'info':
+      return 'text-info'
+    case 'success':
+      return 'text-success'
+    case 'warning':
+      return 'text-warning'
+    case 'danger':
+      return 'text-danger'
+    case 'neutral':
+      return 'text-text-1'
     case 'primary':
-      return 'text-primary-light'
-    case 'ghost':
-      return 'text-white'
     default:
       return 'text-primary-light'
   }
 })
 
 const checkedRadioClasses = computed(() => {
-  if (props.tone) {
-    switch (props.tone) {
-      case 'info':
-        return 'border-info text-info'
-      case 'success':
-        return 'border-success text-success'
-      case 'warning':
-        return 'border-warning text-warning'
-      case 'danger':
-        return 'border-danger text-danger'
-      default:
-        break
-    }
-  }
+  const tone = props.tone || 'primary'
   
-  switch (props.variant) {
-    case 'secondary':
-      return 'border-secondary text-secondary'
-    case 'outline':
+  switch (tone) {
+    case 'info':
+      return 'border-info text-info'
+    case 'success':
+      return 'border-success text-success'
+    case 'warning':
+      return 'border-warning text-warning'
+    case 'danger':
+      return 'border-danger text-danger'
+    case 'neutral':
+      return 'border-border-dark text-text-1'
     case 'primary':
-      return 'border-primary text-primary'
-    case 'ghost':
-      return 'border-white text-white'
     default:
       return 'border-primary text-primary'
   }
