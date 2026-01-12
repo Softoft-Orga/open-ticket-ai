@@ -15,6 +15,9 @@
     - label: Blog
       url: /blog/
   footer:
+    brandName: Open Ticket AI
+    brandTagline: Intelligente Automatisierung für OTRS, Znuny und Zammad. Deutsche Ingenieurskunst.
+    socialHeading: Verbinden
     sections:
       - title: Produkt
         links:
