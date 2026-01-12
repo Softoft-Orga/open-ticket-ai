@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page, ConsoleMessage } from '@playwright/test';
 
 /**
  * Crash-smoke tests: verify pages load without crashes.
@@ -35,7 +35,7 @@ interface PageErrors {
   consoleErrors: string[];
 }
 
-async function collectPageErrors(page: any): Promise<PageErrors> {
+async function collectPageErrors(page: Page): Promise<PageErrors> {
   const errors: PageErrors = {
     pageErrors: [],
     consoleErrors: [],
@@ -45,7 +45,7 @@ async function collectPageErrors(page: any): Promise<PageErrors> {
     errors.pageErrors.push(error);
   });
 
-  page.on('console', (msg: any) => {
+  page.on('console', (msg: ConsoleMessage) => {
     if (msg.type() === 'error') {
       const text = msg.text();
       // Ignore resource loading errors (404s, network errors) as they're not crash signals
@@ -63,6 +63,7 @@ for (const locale of locales) {
   test.describe(`Smoke tests - ${locale.toUpperCase()} locale`, () => {
     for (const route of routes) {
       test(`${route} loads without crashes`, async ({ page }) => {
+        // Set up error collection BEFORE navigating
         const errors = await collectPageErrors(page);
         
         // Navigate to the page with generous timeout

@@ -99,9 +99,10 @@ The site uses `astro-broken-links-checker` to validate internal links during the
 
 - **Crash-smoke tests**: Run `npm run test:playwright` to verify pages load without errors
   - Checks: no console.error, no pageerror events, response status OK
-  - Tests all key routes in both EN and DE locales
-  - Auto-builds and starts preview server via Playwright's `webServer` config
+  - Tests all key routes (/, /products/, /pricing/, /roi-calculator/, /blog/, /docs/)
+  - Auto-starts Astro dev server via Playwright's `webServer` config
   - Stable, fast tests with no UI/snapshot dependencies
+  - Resource loading errors (404s for images/fonts) are filtered out
 
 ## Documentation update rules
 
