@@ -1,5 +1,6 @@
 import { tv, type VariantProps } from 'tailwind-variants'
 import { surface } from './surface'
+import type { Size } from '../tokens'
 
 /**
  * Card recipe - Composable card component
@@ -15,7 +16,7 @@ export const card = tv({
       sm: 'p-4 gap-3 text-sm',
       md: 'p-6 gap-4 text-base',
       lg: 'p-8 gap-5 text-lg'
-    }
+    } satisfies Record<Size, string>
   },
   defaultVariants: {
     variant: 'surface',
@@ -25,7 +26,7 @@ export const card = tv({
     elevation: 'none',
     hoverable: false,
     highlighted: false,
-    tint: 'none'
+    intensity: 'none'
   }
 })
 

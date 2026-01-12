@@ -8,6 +8,13 @@ from = "/api/german_prediction/v1/classify"
 to = "/.netlify/functions/classify"
 status = 200
 
+# Language-based redirect: Redirect German speakers to /de/
+[[redirects]]
+from = "/"
+to = "/de/"
+status = 302
+Language = ["de"]
+
 [[redirects]]
 from = "https://ticket-classification.softoft.de/*"
 to = "https://open-ticket-ai.com/:splat"
@@ -22,6 +29,16 @@ status = 301
 [[redirects]]
 from = "/en/guides/*"
 to = "/guides/:splat/"
+status = 301
+
+[[redirects]]
+from = "/en/docs"
+to = "/docs/"
+status = 301
+
+[[redirects]]
+from = "/en/docs/*"
+to = "/docs/:splat/"
 status = 301
 
 [[redirects]]
@@ -62,6 +79,21 @@ status = 301
 [[redirects]]
 from = "/en/blog/*"
 to = "/blog/:splat/"
+status = 301
+
+[[redirects]]
+from = "/en/services"
+to = "/services/"
+status = 301
+
+[[redirects]]
+from = "/en/pricing"
+to = "/pricing/"
+status = 301
+
+[[redirects]]
+from = "/en/roi-calculator"
+to = "/roi-calculator/"
 status = 301
 
 [[redirects]]

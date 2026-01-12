@@ -1,43 +1,46 @@
-import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
-import { i18n } from 'astro:config/server';
+import { getCollection, getEntry, type CollectionKey, type CollectionEntry } from 'astro:content'
 
-function extractLocaleFromId(id: string): string | null {
-  // Match locale codes like 'en', 'de', 'en-US', case-insensitive
-  const match = id.match(/^([a-z]{2}(-[A-Z]{2})?)\//i);
-  return match ? match[1].toLowerCase() : null;
+const extractLocaleFromId = (id: string): string | null => {
+  const m = id.match(/^([a-z]{2}(?:-[A-Z]{2})?)\//)
+  return m ? m[1] : null
 }
 
-function getDefaultLocale(): string {
-  if (!i18n) return 'en';
-  return i18n.defaultLocale || 'en';
-}
+export const createLocalizedContent = (locale: string, fallbackLocale = 'en') => {
+    const target = (locale || fallbackLocale).toLowerCase()
 
-export async function getLocalizedCollection<T extends 'products' | 'services' | 'site' | 'blog' | 'docs'>(
-  collection: T,
-  locale?: string
-): Promise<CollectionEntry<T>[]> {
-  const allEntries = await getCollection(collection);
-  
-  const targetLocale = locale || getDefaultLocale();
-  
-  return allEntries.filter(entry => {
-    const entryLocale = extractLocaleFromId(entry.id);
-    // If no locale found (for non-localized collections like blog/docs), include all entries
-    if (!entryLocale) return true;
-    return entryLocale === targetLocale;
-  });
-}
+    const getLocalizedCollection = async <T extends CollectionKey>(
+        collection: T,
+    ): Promise<CollectionEntry<T>[]> => {
+        const all = await getCollection(collection)
+        return all.filter((e) => {
+            const l = extractLocaleFromId(e.id)
+            if (!l) return true
+            return l.toLowerCase() === target
+        })
+    }
 
-export async function getLocalizedSiteConfig(locale?: string) {
-  const siteEntries = await getLocalizedCollection('site', locale);
-  return siteEntries.find(entry => entry.data.slug === 'main');
-}
+    const getLocalizedEntry = async <T extends CollectionKey>(
+        collection: T,
+        id: string,
+    ): Promise<CollectionEntry<T> | undefined> => {
+        const withLocale = `${target}/${id}`
+        const direct = await getEntry(collection, withLocale as any)
+        if (direct) {
+            return direct
+        }
+        if (target !== fallbackLocale.toLowerCase()) {
+            const fb = `${fallbackLocale}/${id}`
+            return getEntry(collection, fb as any)
+        }
+        return undefined
+    }
 
-export async function getLocalizedProducts(locale?: string) {
-  return getLocalizedCollection('products', locale);
-}
+    const getLocalizedSingleton = async <T extends CollectionKey>(
+        collection: T,
+    ): Promise<CollectionEntry<T> | undefined> => {
+        const items = await getLocalizedCollection(collection)
+        return items[0]
+    }
 
-export async function getLocalizedServices(locale?: string) {
-  return getLocalizedCollection('services', locale);
+    return { getLocalizedCollection, getLocalizedEntry, getLocalizedSingleton }
 }

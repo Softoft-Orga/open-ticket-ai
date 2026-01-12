@@ -24,8 +24,7 @@ export default defineConfig({
                 limitInputPixels: false, // Allow processing of large images
             },
         },
-        // Authorized domains for remote image optimization
-        domains: ['astro.build', 'doc.otobo.org', 'softoft.sirv.com'],
+        domains: ['astro.build'],
         // Remote image patterns for external images
         remotePatterns: [
             {

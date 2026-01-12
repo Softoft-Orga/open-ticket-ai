@@ -1,4 +1,7 @@
 import { tv, type VariantProps } from 'tailwind-variants'
+import type { Tone } from '../tokens'
+
+type Emphasis = 'normal' | 'dim' | 'strong'
 
 /**
  * Text recipe - Text styles used across components
@@ -16,7 +19,7 @@ export const text = tv({
       warning: 'text-warning',
       danger: 'text-danger',
       info: 'text-info'
-    },
+    } satisfies Record<Tone, string>,
     emphasis: {
       normal: '',
       dim: 'text-text-dim',

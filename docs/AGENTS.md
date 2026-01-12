@@ -127,7 +127,7 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 
 ### Using localized content collections
 
-**ALWAYS** use the localized collection helpers from `src/utils/i18n.ts` instead of `getCollection`:
+**ALWAYS** use the localized collections
 
 ```astro
 ---
@@ -135,9 +135,10 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 import { getCollection } from 'astro:content';
 const products = await getCollection('products');
 
-// ✅ DO use getLocalizedCollection with Astro.currentLocale
-import { getLocalizedCollection } from '../utils/i18n';
-const products = await getLocalizedCollection('products', Astro.currentLocale);
+// ✅ DO use
+const services = await Astro.locals.content.getLocalizedCollection('services')
+const site = await Astro.locals.content.getLocalizedSingleton('site')
+const product = await Astro.locals.content.getLocalizedEntry('products', 'xyz')
 ---
 ```
 
