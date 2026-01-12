@@ -13,7 +13,7 @@ export default defineConfig({
   reporter: 'html',
   
   use: {
-    baseURL: 'http://127.0.0.1:4321',
+    baseURL: 'http://localhost:4321',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -26,8 +26,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run docs:build:noindex && npm run docs:preview',
-    url: 'http://127.0.0.1:4321',
+    command: 'npm run docs:dev',
+    url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     timeout: 180 * 1000,
     stdout: 'pipe',
