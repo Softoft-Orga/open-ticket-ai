@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
 import type { Loader } from 'astro/loaders';
+import { i18n } from 'astro:config/server';
+import { toCodes } from 'astro:i18n';
 
 export function localeYamlLoader(options: {
   baseDir: string;
@@ -11,7 +13,14 @@ export function localeYamlLoader(options: {
     name: 'locale-yaml-loader',
     load: async ({ store, logger, parseData }) => {
       const { baseDir, fileName } = options;
-      const locales = ['en', 'de'];
+      
+      // Dynamically get locales from Astro i18n config
+      if (!i18n) {
+        logger.error('i18n is not configured in astro.config.mjs');
+        return;
+      }
+      
+      const locales = toCodes(i18n.locales);
 
       for (const locale of locales) {
         const filePath = path.join(baseDir, locale, fileName);

@@ -17,20 +17,33 @@ i18n: {
 }
 ```
 
+**Note**: The custom loader and helper functions dynamically read this configuration at build time using Astro's `astro:config/server` virtual module, so you don't need to hardcode locales anywhere else.
+
 ### 2. Custom Locale YAML Loader
 
 **File**: `src/utils/locale-yaml-loader.ts`
 
 This custom loader:
-- Scans locale-specific folders (`en/`, `de/`, etc.)
+- **Dynamically reads locales** from `astro.config.mjs` using `astro:config/server`
+- Scans locale-specific folders based on the configured locales
 - Loads YAML files containing arrays of items
 - Assigns each entry an ID in the format `{locale}/{slug}`
 - Automatically sets the `lang` field based on the folder
 
+**Key Implementation Details**:
+```typescript
+import { i18n } from 'astro:config/server';
+import { toCodes } from 'astro:i18n';
+
+// Dynamically get locales from Astro config
+const locales = toCodes(i18n.locales);
+```
+
 **Benefits**:
+- No hardcoded locales - everything is configured in `astro.config.mjs`
 - Automatic locale detection from folder structure
 - Support for YAML arrays (multiple items per file)
-- Easy to extend for new locales
+- Easy to extend - just add new locales to `astro.config.mjs`
 
 ### 3. Content Structure
 
@@ -57,20 +70,32 @@ src/content/
 
 **File**: `src/utils/i18n.ts`
 
-Provides easy-to-use functions:
+Provides easy-to-use functions that **dynamically get the default locale** from the Astro config:
 - `getLocalizedProducts(locale)` - Get products for a specific locale
 - `getLocalizedServices(locale)` - Get services for a specific locale
 - `getLocalizedSiteConfig(locale)` - Get site configuration for a locale
+
+**Key Implementation Details**:
+```typescript
+import { i18n } from 'astro:config/server';
+
+function getDefaultLocale(): string {
+  if (!i18n) return 'en';
+  return i18n.defaultLocale || 'en';
+}
+```
 
 **Usage in .astro files**:
 ```astro
 ---
 import { getLocalizedProducts } from '../utils/i18n';
 
-const currentLocale = Astro.currentLocale; // 'en' or 'de'
+const currentLocale = Astro.currentLocale;
 const products = await getLocalizedProducts(currentLocale);
 ---
 ```
+
+**Note**: The locale parameter is optional. If not provided, it defaults to the `defaultLocale` from your Astro config.
 
 ## Usage Examples
 
@@ -117,7 +142,7 @@ const navLinks = siteConfig?.data.nav || [];
 
 ## Adding a New Locale
 
-To add French (`fr`) as a new locale:
+To add French (`fr`) as a new locale, you only need to:
 
 ### Step 1: Update Astro Config
 
@@ -129,21 +154,9 @@ i18n: {
 }
 ```
 
-### Step 2: Update Custom Loader
+**That's it!** The custom loader and helper functions will automatically detect the new locale from the config.
 
-```typescript
-// src/utils/locale-yaml-loader.ts
-const locales = ['en', 'de', 'fr'];
-```
-
-### Step 3: Update Type Definitions
-
-```typescript
-// src/utils/i18n.ts
-type LocaleCode = 'en' | 'de' | 'fr';
-```
-
-### Step 4: Create Content Files
+### Step 2: Create Content Files
 
 ```bash
 mkdir -p src/content/products/fr
@@ -153,6 +166,22 @@ mkdir -p src/content/site/fr
 # Copy and translate files
 cp src/content/products/en/products.yaml src/content/products/fr/products.yaml
 cp src/content/services/en/services.yaml src/content/services/fr/services.yaml
+cp src/content/site/en/site.yml src/content/site/fr/site.yml
+
+# Edit the fr files with French translations
+```
+
+### Step 3: Test
+
+```bash
+npm run docs:build
+```
+
+**No code changes needed!** The system automatically:
+- Reads the new locale from `astro.config.mjs`
+- Scans the `fr/` folders for content
+- Loads French content when users visit `/fr/` URLs
+- Falls back to the default locale if French files are missing
 cp src/content/site/en/site.yml src/content/site/fr/site.yml
 
 # Edit the fr files with French translations

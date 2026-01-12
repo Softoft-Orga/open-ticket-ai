@@ -38,9 +38,12 @@ src/content/site/
 ```
 
 The custom loader (`src/utils/locale-yaml-loader.ts`) automatically:
-1. Loads YAML files from each locale folder
-2. Assigns a locale-prefixed ID to each entry (e.g., `en/product-slug`, `de/product-slug`)
-3. Sets the `lang` field to the locale code
+1. **Reads configured locales** from `astro.config.mjs` using `astro:config/server`
+2. Loads YAML files from each locale folder
+3. Assigns a locale-prefixed ID to each entry (e.g., `en/product-slug`, `de/product-slug`)
+4. Sets the `lang` field to the locale code
+
+**No hardcoded locales!** Everything is configured in `astro.config.mjs`.
 
 ### Accessing Localized Content
 
@@ -51,16 +54,16 @@ Use the helper functions from `src/utils/i18n.ts` to get locale-aware content:
 import { getLocalizedProducts, getLocalizedServices, getLocalizedSiteConfig } from '../utils/i18n';
 
 // Astro.currentLocale is automatically set by Astro's i18n routing
-const currentLocale = Astro.currentLocale; // 'en' or 'de'
+const currentLocale = Astro.currentLocale;
 
-// Get localized content
+// Get localized content - defaults to config's defaultLocale if not provided
 const products = await getLocalizedProducts(currentLocale);
 const services = await getLocalizedServices(currentLocale);
 const siteConfig = await getLocalizedSiteConfig(currentLocale);
 ---
 ```
 
-**Key principle**: Never pass locale as a parameter to helper functions; instead, use `Astro.currentLocale` within .astro components and pass it to the helpers.
+**Key principle**: The helpers automatically use the `defaultLocale` from your Astro config if no locale is provided.
 
 ### Adding a New Locale
 
@@ -74,22 +77,21 @@ To add a new locale (e.g., French 'fr'):
    }
    ```
 
-2. Update `src/utils/locale-yaml-loader.ts` to include the new locale in the `locales` array:
-   ```ts
-   const locales = ['en', 'de', 'fr'];
-   ```
+   **That's it for configuration!** The loader and helpers automatically detect the new locale.
 
-3. Create locale folders and files:
+2. Create locale folders and files:
    ```
    src/content/products/fr/products.yaml
    src/content/services/fr/services.yaml
    src/content/site/fr/site.yml
    ```
 
-4. Update the `LocaleCode` type in `src/utils/i18n.ts`:
-   ```ts
-   type LocaleCode = 'en' | 'de' | 'fr';
+3. Test the build:
+   ```bash
+   npm run docs:build
    ```
+
+**No code changes needed!** The system is fully dynamic.
 
 ## Overview
 
