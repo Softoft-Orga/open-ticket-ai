@@ -1,7 +1,7 @@
 <template>
-  <RadioGroupOption 
-    v-slot="{ checked, disabled }" 
-    :value="value" 
+  <RadioGroupOption
+    v-slot="{ checked, disabled }"
+    :value="value"
     as="template"
   >
     <div
@@ -30,7 +30,7 @@
             </div>
           </div>
         </div>
-        
+
         <div
           :class="[
             'shrink-0 h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all',
@@ -51,8 +51,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { RadioGroupOption } from '@headlessui/vue'
-import { card } from '../../../../design-system/recipes/card'
-import { focusRing } from '../../../../design-system/recipes/focus'
+import { card } from '../../../../design-system/recipes'
+import { focusRing } from '../../../../design-system/recipes'
 import type { Variant, Tone } from '../../../../design-system/tokens'
 
 interface Props {
@@ -95,7 +95,7 @@ const cardClasses = (checked: boolean, disabled: boolean) => {
 
 const checkedTextClass = computed(() => {
   const tone = props.tone || 'primary'
-  
+
   switch (tone) {
     case 'info':
       return 'text-info'
@@ -115,7 +115,7 @@ const checkedTextClass = computed(() => {
 
 const checkedRadioClasses = computed(() => {
   const tone = props.tone || 'primary'
-  
+
   switch (tone) {
     case 'info':
       return 'border-info text-info'

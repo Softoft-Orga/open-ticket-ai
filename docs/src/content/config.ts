@@ -1,5 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-import { localeYamlLoader } from '../utils/locale-yaml-loader';
+import {glob} from "astro/loaders";
 
 // Navigation schema shared across collections
 const navSchema = z.object({
@@ -9,7 +9,7 @@ const navSchema = z.object({
 }).optional();
 
 // 1️⃣ docs collection - content collection (MD/MDX)
-const docsCollection = defineCollection({
+const docs = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
@@ -21,7 +21,7 @@ const docsCollection = defineCollection({
 });
 
 // 2️⃣ blog collection - content collection (MD/MDX)
-const blogCollection = defineCollection({
+const blogs = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
@@ -36,12 +36,12 @@ const blogCollection = defineCollection({
 });
 
 // 3️⃣ products collection - data collection (YAML)
-const productsCollection = defineCollection({
-  loader: localeYamlLoader({
-    baseDir: 'src/content/products',
-    fileName: 'products.yaml',
+const products = defineCollection({
+  loader: glob({
+    base: './src/content/products',
+    pattern: '**.{yml,yaml}',
   }),
-  schema: z.object({
+  schema: z.array(z.object({
     slug: z.string(),
     title: z.string(),
     tagline: z.string().optional(),
@@ -54,16 +54,16 @@ const productsCollection = defineCollection({
     badges: z.array(z.string()).optional(),
     image: z.string().optional(),
     icon: z.string().optional(),
-  }),
+  })),
 });
 
 // 4️⃣ services collection - data collection (YAML)
-const servicesCollection = defineCollection({
-  loader: localeYamlLoader({
-    baseDir: 'src/content/services',
-    fileName: 'services.yaml',
+const services = defineCollection({
+  loader: glob({
+    base: './src/content/services',
+    pattern: '*/services.{yml,yaml}',
   }),
-  schema: z.object({
+  schema: z.array(z.object({
     slug: z.string(),
     title: z.string(),
     oneLiner: z.string().optional(),
@@ -74,14 +74,14 @@ const servicesCollection = defineCollection({
     serviceGroup: z.string(),
     serviceOrder: z.number().optional(),
     hidden: z.boolean().optional(),
-  }),
+  })),
 });
 
 // 5️⃣ site collection - data collection (YAML)
-const siteCollection = defineCollection({
-  loader: localeYamlLoader({
-    baseDir: 'src/content/site',
-    fileName: 'site.yml',
+const site = defineCollection({
+  loader: glob({
+    base: './src/content/site',
+    pattern: '**/*.{yml,yaml}',
   }),
   schema: z.object({
     slug: z.string(),
@@ -121,9 +121,5 @@ const siteCollection = defineCollection({
 
 // Export collections
 export const collections = {
-  docs: docsCollection,
-  blog: blogCollection,
-  products: productsCollection,
-  services: servicesCollection,
-  site: siteCollection,
+  docs, blogs, services, products, site
 };
