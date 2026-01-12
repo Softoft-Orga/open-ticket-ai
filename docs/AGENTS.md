@@ -105,6 +105,15 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 - Whenever components or story configs change, update the corresponding Storybook stories in
   `docs/stories/**` to reflect new props, variants, and states.
 
+## Testing
+
+- **Crash-smoke tests**: Run `npm run test:playwright` to verify pages load without errors
+  - Checks: no console.error, no pageerror events, response status OK
+  - Tests all key routes (/, /products/, /pricing/, /roi-calculator/, /blog/, /docs/)
+  - Auto-starts Astro dev server via Playwright's `webServer` config
+  - Stable, fast tests with no UI/snapshot dependencies
+  - Resource loading errors (404s for images/fonts) are filtered out
+
 ## Documentation update rules
 
 ### When changing Vue components
