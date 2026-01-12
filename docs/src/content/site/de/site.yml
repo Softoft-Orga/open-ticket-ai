@@ -1,0 +1,47 @@
+- slug: main
+  meta:
+    siteName: Open Ticket AI
+    tagline: Intelligente Automatisierung für OTRS, Znuny und Zammad. Deutsche Ingenieurskunst.
+    logoUrl: /public/open-ticket-logo.png
+  nav:
+    - label: Produkte
+      url: /products/
+    - label: Dienstleistungen
+      url: /services/
+    - label: Preise
+      url: /pricing/
+    - label: Dokumentation
+      url: /docs/
+    - label: Blog
+      url: /blog/
+  footer:
+    sections:
+      - title: Produkt
+        links:
+          - label: Funktionen
+            url: /products
+          - label: Integrationen
+            url: /services
+          - label: Sicherheit
+            url: /docs
+      - title: Unternehmen
+        links:
+          - label: Über uns
+            url: "#"
+          - label: Karriere
+            url: "#"
+          - label: Rechtliches
+            url: "#"
+    social:
+      - platform: github
+        url: https://github.com/openticketai
+        ariaLabel: GitHub
+      - platform: linkedin
+        url: https://www.linkedin.com/company/open-ticket-ai
+        ariaLabel: LinkedIn
+    legal:
+      - label: Datenschutz
+        url: "#"
+      - label: Impressum
+        url: "#"
+    copyright: Open Ticket AI UG. Alle Rechte vorbehalten.
