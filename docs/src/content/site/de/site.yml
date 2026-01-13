@@ -54,13 +54,13 @@ popularResources:
   groups:
     - title: Automatisierungs-Engine
       items:
-        - docId: docs/en/getting-started
+        - docId: docs/en/guides/quick-start
           icon: RocketLaunchIcon
-        - docId: docs/en/api-reference
+        - docId: docs/en/developers/config_rendering
           icon: CommandLineIcon
-        - docId: docs/en/connectors
+        - docId: docs/en/developers/ticket_system_integration
           icon: PuzzlePieceIcon
-        - docId: docs/en/webhooks
+        - docId: docs/en/developers/plugin_development
           icon: ArrowsRightLeftIcon
     - title: Tagging-Engine
       items:
@@ -68,8 +68,8 @@ popularResources:
           icon: Squares2x2Icon
         - docId: docs/en/hardware-sizing
           icon: CpuChipIcon
-        - docId: docs/en/model-training
+        - docId: docs/en/using-model
           icon: ArrowPathIcon
-        - docId: docs/en/benchmarking
+        - docId: docs/en/tag-mapping
           icon: ChartBarIcon
 
