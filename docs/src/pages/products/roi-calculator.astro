@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
-import Button from '../../components/vue/core/basic/Button.vue';
+import BeyondSavingsCard from '../../components/vue/domain/BeyondSavingsCard.vue';
 
 const title = "Pricing & ROI Calculator";
 const description = "Calculate the return on investment for automated ticket tagging in your helpdesk environment.";
@@ -108,37 +108,7 @@ const description = "Calculate the return on investment for automated ticket tag
       </Card>
 
       <!-- Key Benefits -->
-      <div class="bg-gradient-to-br from-primary/10 to-cyan-glow/5 border border-primary/20 rounded-3xl p-12 text-center">
-        <h2 class="text-3xl font-bold text-text-1 mb-6">
-          Beyond Cost Savings
-        </h2>
-        <div class="grid md:grid-cols-3 gap-8 mb-8">
-          <div>
-            <div class="text-4xl mb-3">⚡</div>
-            <h3 class="text-lg font-bold text-text-1 mb-2">Faster Response Times</h3>
-            <p class="text-sm text-text-2">
-              Automated tagging enables instant routing and prioritization
-            </p>
-          </div>
-          <div>
-            <div class="text-4xl mb-3">📊</div>
-            <h3 class="text-lg font-bold text-text-1 mb-2">Better Insights</h3>
-            <p class="text-sm text-text-2">
-              Consistent tagging improves analytics and reporting accuracy
-            </p>
-          </div>
-          <div>
-            <div class="text-4xl mb-3">😊</div>
-            <h3 class="text-lg font-bold text-text-1 mb-2">Improved Satisfaction</h3>
-            <p class="text-sm text-text-2">
-              Faster resolution times lead to happier customers and agents
-            </p>
-          </div>
-        </div>
-        <Button client:load tone="primary" size="lg">
-          Contact Sales for Custom Analysis
-        </Button>
-      </div>
+      <BeyondSavingsCard client:load />
     </div>
   </div>
 </BaseLayout>
