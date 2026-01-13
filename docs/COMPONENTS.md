@@ -15,8 +15,6 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
   info' | 'success' | 'warning' | 'danger' | 'tip'), `variant` ('soft' | 'solid' | 'outline'),
   `title`, `hideIcon`. Slots: default (body), `footer`. Story: `stories/Alert.stories.ts`.
 
-- **BlogOverview.vue** — Interactive blog listing component with search, filtering, and sorting. Props: `posts` (BlogPost[] array with id and data fields including title, description, date, category, image, draft, tags). Features reactive search by title, topic/category filtering, and sorting (Newest First, Oldest First, Most Popular). Includes a Netlify form for blog subscriptions. Slots: _none_. Story: _none_ (used in `/blog/` page).
-
 - **HeadlessUiTailwindDemo.vue** — Demonstrates Headless UI ui-open/ui-closed classes. Props:
   _none_. Slots: _none_. Story: `stories/HeadlessUiTailwindDemo.stories.ts`.
 - **LoadingComponent.vue** — Loading spinner/placeholder. Props: `label`. Slots: _none_. Story:
@@ -87,10 +85,10 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
 
 ### core/transitions
 
-- **UiTransitionFade.vue** — Fade transition wrapper using HeadlessUI TransitionChild. Props: _none_. 
-   Provides smooth opacity transitions with motion-reduce support. Use for overlays, backdrops, and 
+- **UiTransitionFade.vue** — Fade transition wrapper using HeadlessUI TransitionChild. Props: _none_.
+   Provides smooth opacity transitions with motion-reduce support. Use for overlays, backdrops, and
    simple fade effects. Slots: default (content to transition). Duration: 300ms enter, 200ms leave.
-- **UiTransitionSlide.vue** — Slide transition wrapper using HeadlessUI TransitionChild. Props: 
-   `direction` ('up' | 'down' | 'left' | 'right', default: 'down'). Provides slide + fade transitions 
-   with motion-reduce support. Use for menus, slide-over panels, and directional animations. Slots: 
+- **UiTransitionSlide.vue** — Slide transition wrapper using HeadlessUI TransitionChild. Props:
+   `direction` ('up' | 'down' | 'left' | 'right', default: 'down'). Provides slide + fade transitions
+   with motion-reduce support. Use for menus, slide-over panels, and directional animations. Slots:
    default (content to transition). Duration: 300ms enter, 200ms leave.
