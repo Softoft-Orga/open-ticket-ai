@@ -41,6 +41,7 @@ const product = await Astro.locals.content.getLocalizedEntry('products', 'xyz')
 - `draft`: boolean
 - `date`: Date (**Blogs only**, Required)
 - `tags`, `category`: (**Blogs only**)
+- `image`: string (**Blogs only**, Optional) - URL or path to blog post image
 
 ### 2. Products (YAML)
 - `slug`: string (Required)
