@@ -3,8 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/vue/core/basic/Badge.vue';
 import Button from '../components/vue/core/basic/Button.vue';
 import Card from '../components/vue/core/basic/Card.vue';
-import { 
-  CubeTransparentIcon, 
+import {
+  CubeTransparentIcon,
   ArrowRightIcon,
   RocketLaunchIcon,
   ServerIcon,
@@ -27,7 +27,7 @@ const title = "Products - Open Ticket AI";
         <div class="mb-8">
           <Badge tone="primary" client:load>● LIVE CLASSIFICATION ENGINE v2.0</Badge>
         </div>
-        
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <!-- Left Content -->
           <div class="flex flex-col gap-8">
@@ -39,11 +39,11 @@ const title = "Products - Open Ticket AI";
                 In Real Time.
               </span>
             </h1>
-            
+
             <p class="text-text-dim text-xl leading-relaxed max-w-xl">
               Analyze incoming tickets and assign structured, hierarchical tags instantly. No rules to maintain. Fully automated.
             </p>
-            
+
             <div class="flex flex-wrap gap-4 pt-4">
               <Button variant="surface" size="lg" client:load>
                 Start Free Trial
@@ -53,7 +53,7 @@ const title = "Products - Open Ticket AI";
               </Button>
             </div>
           </div>
-          
+
           <!-- Right Side - Terminal Demo -->
           <div class="relative">
             <div class="rounded-2xl bg-[#0c0d15] border border-surface-lighter overflow-hidden shadow-2xl">
@@ -65,7 +65,7 @@ const title = "Products - Open Ticket AI";
                 </div>
                 <span class="text-text-dim text-sm ml-4 font-mono">processor_v2.exe</span>
               </div>
-              
+
               <div class="p-6 space-y-6 font-mono text-sm">
                 <div class="space-y-3">
                   <div class="text-muted">RAW INPUT</div>
@@ -80,7 +80,7 @@ const title = "Products - Open Ticket AI";
                     </p>
                   </div>
                 </div>
-                
+
                 <div class="space-y-3">
                   <div class="text-primary font-bold">AI STRUCTURED OUTPUT</div>
                   <div class="space-y-2">
@@ -120,7 +120,7 @@ const title = "Products - Open Ticket AI";
             Built for enterprise scale and precision.
           </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Fully Automated Classification -->
           <Card variant="outline" hoverable={true} radius="2xl" client:load>
@@ -134,7 +134,7 @@ const title = "Products - Open Ticket AI";
               </p>
             </div>
           </Card>
-          
+
           <!-- Hierarchical, Not Flat -->
           <Card variant="outline" hoverable={true} radius="2xl" client:load>
             <div class="flex flex-col gap-4">
@@ -147,7 +147,7 @@ const title = "Products - Open Ticket AI";
               </p>
             </div>
           </Card>
-          
+
           <!-- 10 Quadrillion Combinations -->
           <Card variant="outline" hoverable={true} radius="2xl" client:load>
             <div class="flex flex-col gap-4">
@@ -164,48 +164,6 @@ const title = "Products - Open Ticket AI";
       </div>
     </section>
 
-    <!-- Analytics Demo Section -->
-    <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24">
-      <div class="w-full max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div class="flex flex-col gap-6">
-            <h2 class="text-4xl md:text-5xl font-bold text-white">Actionable Reporting for Management.</h2>
-            <p class="text-text-dim text-xl leading-relaxed">
-              See exactly where time and risk come from. Detect bottlenecks immediately with granular, AI-assigned tags that reveal the truth behind your support metrics.
-            </p>
-            <a href="#" class="flex items-center gap-2 text-primary font-bold text-lg group hover:text-primary-light transition-colors">
-              Explore Analytics Dashboard
-              <ArrowRightIcon class="w-5 h-5 transition-transform group-hover:translate-x-1" />
-            </a>
-          </div>
-          
-          <div class="rounded-2xl bg-[#0c0d15] border border-surface-lighter p-6 shadow-2xl">
-            <div class="bg-surface-dark/80 rounded-lg p-4 border border-border-dark font-mono text-sm space-y-3">
-              <div class="text-muted mb-4">bash</div>
-              <div class="text-cyan-glow">$ query analytics --group-by intent --metric resolution_time</div>
-              <div class="text-muted text-xs mt-2">Processing 14,281 tickets...</div>
-              
-              <div class="mt-4 space-y-2">
-                <div class="flex justify-between items-center bg-primary/10 rounded px-3 py-2 border border-primary/20">
-                  <span class="text-primary-light">intent/service_request/access_request</span>
-                  <span class="text-white font-bold">9 min <span class="text-muted text-xs">avg</span></span>
-                </div>
-                <div class="flex justify-between items-center bg-primary/10 rounded px-3 py-2 border border-primary/20">
-                  <span class="text-primary-light">intent/incident/security_incident</span>
-                  <span class="text-white font-bold">3.1h <span class="text-muted text-xs">avg</span></span>
-                </div>
-                <div class="flex justify-between items-center bg-primary/10 rounded px-3 py-2 border border-primary/20">
-                  <span class="text-primary-light">intent/billing/dispute</span>
-                  <span class="text-white font-bold">4.2d <span class="text-muted text-xs">avg</span></span>
-                </div>
-              </div>
-              
-              <div class="text-muted mt-4">$</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Flexible Editions -->
     <section class="w-full px-4 md:px-10 lg:px-20 xl:px-40 py-24 bg-surface-dark/30">
@@ -216,7 +174,7 @@ const title = "Products - Open Ticket AI";
             Choose the model complexity that fits your operational needs.
           </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Lite Free -->
           <Card variant="outline" radius="2xl" hoverable={true} size="lg" client:load>
@@ -224,14 +182,14 @@ const title = "Products - Open Ticket AI";
               <div class="flex-1">
                 <h3 class="text-2xl font-bold text-white mb-2">Lite Free</h3>
                 <p class="text-muted text-sm mb-6">Evaluation & Testing</p>
-                
+
                 <div class="mb-8">
                   <div class="text-5xl font-bold text-white mb-2">
                     0 €
                     <span class="text-muted text-lg font-normal">/one-time</span>
                   </div>
                 </div>
-                
+
                 <ul class="space-y-3 mb-8">
                   <li class="flex items-start gap-3">
                     <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -258,35 +216,35 @@ const title = "Products - Open Ticket AI";
                     <span class="text-text-1">ROI: from 15 tickets/day</span>
                   </li>
                 </ul>
-                
+
                 <p class="text-muted text-sm mb-6">Available 18.01</p>
               </div>
-              
-              <Button variant="outline" size="md" class="w-full" client:load>
+
+              <Button variant="outline" size="md" class="w-full" href="/products/tagging-lite-free/" client:load>
                 Explore Lite Free
               </Button>
             </div>
           </Card>
-          
+
           <!-- Lite Pro - BEST VALUE -->
           <div class="relative">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
               <Badge tone="primary" client:load>BEST VALUE</Badge>
             </div>
-            
+
             <Card variant="outline" tone="primary" radius="2xl" hoverable={true} size="lg" elevation="lg" client:load class="transform scale-105">
               <div class="flex flex-col h-full">
                 <div class="flex-1">
                   <h3 class="text-2xl font-bold text-white mb-2">Lite Pro</h3>
                   <p class="text-primary-light text-sm mb-6">Production Ready</p>
-                  
+
                   <div class="mb-8">
                     <div class="text-5xl font-bold text-white mb-2">
                       2,500 €
                       <span class="text-text-dim text-lg font-normal">/one-time</span>
                     </div>
                   </div>
-                  
+
                   <ul class="space-y-3 mb-8">
                     <li class="flex items-start gap-3">
                       <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -313,31 +271,31 @@ const title = "Products - Open Ticket AI";
                       <span class="text-white font-medium">Focus: Routing & Reporting</span>
                     </li>
                   </ul>
-                  
+
                   <p class="text-primary-light text-sm mb-6">Available 18.01</p>
                 </div>
-                
-                <Button variant="surface" size="md" class="w-full" client:load>
+
+                <Button variant="surface" size="md" class="w-full" href="/products/tagging-lite-pro/" client:load>
                   Explore Lite Pro
                 </Button>
               </div>
             </Card>
           </div>
-          
+
           <!-- Full Pro -->
           <Card variant="outline" radius="2xl" hoverable={true} size="lg" client:load>
             <div class="flex flex-col h-full">
               <div class="flex-1">
                 <h3 class="text-2xl font-bold text-white mb-2">Full Pro</h3>
                 <p class="text-muted text-sm mb-6">Advanced Enterprise</p>
-                
+
                 <div class="mb-8">
                   <div class="text-5xl font-bold text-white mb-2">
                     6,000 €
                     <span class="text-muted text-lg font-normal">/one-time</span>
                   </div>
                 </div>
-                
+
                 <ul class="space-y-3 mb-8">
                   <li class="flex items-start gap-3">
                     <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -364,23 +322,15 @@ const title = "Products - Open Ticket AI";
                     <span class="text-text-1">Focus: Maximum Detail</span>
                   </li>
                 </ul>
-                
+
                 <p class="text-muted text-sm mb-6">IN DEVELOPMENT</p>
               </div>
-              
-              <Button variant="outline" size="md" class="w-full" client:load>
+
+              <Button variant="outline" size="md" class="w-full" href="/products/tagging-full-pro/" client:load>
                 Explore Full Pro
               </Button>
             </div>
           </Card>
-        </div>
-        
-        <!-- ROI Simulator CTA -->
-        <div class="mt-12 text-center">
-          <a href="#" class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-surface-dark border border-primary/50 hover:bg-primary/10 transition-all group">
-            <RocketLaunchIcon class="w-6 h-6 text-primary" />
-            <span class="text-white font-bold text-lg">TRY THE ROI SIMULATOR</span>
-          </a>
         </div>
       </div>
     </section>
@@ -394,7 +344,7 @@ const title = "Products - Open Ticket AI";
             Secure by design. Optimized for your infrastructure.
           </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           <Card variant="outline" radius="xl" client:load>
             <div class="flex items-start gap-3">
@@ -404,7 +354,7 @@ const title = "Products - Open Ticket AI";
               </div>
             </div>
           </Card>
-          
+
           <Card variant="outline" radius="xl" client:load>
             <div class="flex items-start gap-3">
               <ShieldCheckIcon class="w-6 h-6 text-primary flex-shrink-0 mt-1" />
@@ -413,7 +363,7 @@ const title = "Products - Open Ticket AI";
               </div>
             </div>
           </Card>
-          
+
           <Card variant="outline" radius="xl" client:load>
             <div class="flex items-start gap-3">
               <CubeTransparentIcon class="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
@@ -422,7 +372,7 @@ const title = "Products - Open Ticket AI";
               </div>
             </div>
           </Card>
-          
+
           <Card variant="outline" radius="xl" client:load>
             <div class="flex items-start gap-3">
               <CpuChipIcon class="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
@@ -432,27 +382,27 @@ const title = "Products - Open Ticket AI";
             </div>
           </Card>
         </div>
-        
+
         <!-- Large CTA -->
         <div class="relative rounded-3xl bg-gradient-to-br from-primary/10 via-surface-dark to-cyan-500/5 border border-primary/30 p-16 text-center overflow-hidden">
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"></div>
-          
+
           <div class="relative z-10">
             <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
               <RocketLaunchIcon class="w-10 h-10 text-white" />
             </div>
-            
+
             <h2 class="text-4xl md:text-6xl font-bold text-white mb-6">
               Turn Raw Tickets into<br/>
               <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">
                 Operational Intelligence.
               </span>
             </h2>
-            
+
             <p class="text-text-dim text-xl mb-10 max-w-3xl mx-auto">
               Join forward-thinking support teams automating their workflow today.
             </p>
-            
+
             <div class="flex flex-wrap gap-4 justify-center">
               <Button variant="surface" size="lg" client:load>
                 GET LITE FREE VERSION

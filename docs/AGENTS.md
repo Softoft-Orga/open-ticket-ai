@@ -76,7 +76,7 @@ The site uses `astro-broken-links-checker` to validate internal links during the
 
 ## Quick references
 
-- **Components**: Live under `docs/src/components/vue/**` and are showcased via Storybook stories in
+- Core **Components**: Live under `docs/src/components/vue/core/**` and are showcased via Storybook stories in
   `docs/stories/**`.
     - Inventory: See `COMPONENTS.md` for a complete list with brief descriptions
     - Detailed docs: Check Storybook stories (`.stories.ts` files) for usage examples and props
@@ -102,7 +102,7 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 - Prefer MCP-driven Storybook checks/screenshots over manual eyeballing when validating regressions.
 - Use Context7 for getting the newest Documentation for our packages: like astro, vue and other
   libaries/frameworks
-- Whenever components or story configs change, update the corresponding Storybook stories in
+- Whenever core components or story configs change, update the corresponding Storybook stories in
   `docs/stories/**` to reflect new props, variants, and states.
 
 ## Testing
@@ -118,7 +118,7 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 
 ### When changing Vue components
 
-**ALWAYS** update when you add/remove/rename/move Vue components under `docs/src/components/vue/`:
+**ALWAYS** update when you add/remove/rename/move Vue core components under `docs/src/components/vue/core`:
 
 - [ ] Update `COMPONENTS.md` with the new component entry (name, description, props, slots)
 - [ ] Create or update corresponding Storybook story in `docs/stories/**/*.stories.ts`

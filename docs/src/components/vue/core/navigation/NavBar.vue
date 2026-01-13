@@ -29,7 +29,7 @@
         <Button
           v-if="ctaLabel"
           :href="ctaUrl"
-          variant="solid"
+          variant="subtle"
           tone="primary"
           size="md"
         >
@@ -102,7 +102,7 @@
               >
                 <Button
                   :href="ctaUrl"
-                  variant="solid"
+                  variant="subtle"
                   tone="primary"
                   size="md"
                   block

@@ -28,8 +28,8 @@ const description = 'Professional services for Open Ticket AI integration and su
 
 // Get all services from the content collection for current locale
 const allServices = await Astro.locals.content.getLocalizedCollection('services')
-;
-
+console.log(allServices)
+console.log("HII")
 // Filter services by group
 const syntheticDataServices = allServices
     .filter(s => s.data.serviceGroup === 'Synthetic Data Creation')
