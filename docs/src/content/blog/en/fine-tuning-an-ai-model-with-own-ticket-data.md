@@ -10,6 +10,7 @@ tags:
   - training
 category: Tutorial
 draft: false
+image: ~/assets/images/ai-brain-connected-statistics-dark-blue.png
 ---
 # How to Fine-Tune an AI Model with Your Own Ticket Data
 

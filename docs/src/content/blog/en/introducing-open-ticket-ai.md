@@ -11,6 +11,7 @@ category: News
 nav:
   order: 1
 draft: false
+image: ~/assets/images/laptop-ai-ticketsystem.png
 ---
 
 # Introducing Open Ticket AI
