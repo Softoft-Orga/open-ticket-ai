@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { MagnifyingGlassIcon, CalendarIcon, EnvelopeIcon, Squares2X2Icon, RocketLaunchIcon, CodeBracketIcon, LightBulbIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline';
-import Button from './basic/Button.vue';
 
 interface BlogPost {
   id: string;
@@ -71,6 +70,10 @@ const filteredAndSortedPosts = computed(() => {
     result.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   } else if (sortBy.value === 'Oldest First') {
     result.sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+  } else if (sortBy.value === 'Most Popular') {
+    // For now, sort by newest first as we don't have popularity metrics
+    // This can be extended later to use view counts or other metrics
+    result.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   }
 
   return result;
@@ -195,14 +198,12 @@ const topicCounts = computed(() => {
               aria-label="Email address for newsletter"
               required
             >
-            <Button
-              variant="outline"
-              size="md"
-              class="w-full"
+            <button
               type="submit"
+              class="w-full inline-flex items-center justify-center gap-2 rounded-xl border-2 border-surface-lighter px-6 py-3 text-sm font-bold text-white transition-all hover:border-primary hover:bg-primary/10"
             >
               Subscribe
-            </Button>
+            </button>
           </form>
         </div>
       </aside>
