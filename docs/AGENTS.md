@@ -16,11 +16,13 @@
 The site uses `astro-broken-links-checker` to validate internal links during the build process.
 
 **Configuration** (in `astro.config.mjs`):
+
 - `logFilePath`: Path to the log file (default: `broken-links.log`)
 - `checkExternalLinks`: Whether to check external links (default: `false` for performance)
 - `throwError`: Whether to fail the build on broken links (default: `false`)
 
 **Usage**:
+
 - Run `npm run lint:links` to build the site and check for broken links
 - Check the console output for immediate feedback
 - Review `broken-links.log` for detailed results grouped by broken URL
@@ -74,9 +76,18 @@ The site uses `astro-broken-links-checker` to validate internal links during the
   Tailwind config tokens docs/tailwind.config.cjs
 - Use our Vue core components, see COMPONENTS.md
 
+## Vue Components
+
+We have Core Components and Domain Components. Core Components are used very often and are basic
+Components like Badge, Alert
+Button and similar.
+Domain Components are specific components like a BeyondSavingCard that is shown on ROI Page. We use
+them for reactivity that can not be achieved with Astro but these are not reused.
+
 ## Quick references
 
-- Core **Components**: Live under `docs/src/components/vue/core/**` and are showcased via Storybook stories in
+- Core **Components**: Live under `docs/src/components/vue/core/**` and are showcased via Storybook
+  stories in
   `docs/stories/**`.
     - Inventory: See `COMPONENTS.md` for a complete list with brief descriptions
     - Detailed docs: Check Storybook stories (`.stories.ts` files) for usage examples and props
@@ -85,9 +96,12 @@ The site uses `astro-broken-links-checker` to validate internal links during the
 
 The site includes automated testing via `npm run test:site`:
 
-- **Broken links**: Validates all internal links using `astro-broken-links-checker` (runs during build)
-- **Localized links**: Ensures pages under `/<locale>/` paths only link to URLs with the same locale prefix
-- **Locale markers**: Verifies key localized pages have correct `data-locale` attributes matching their locale
+- **Broken links**: Validates all internal links using `astro-broken-links-checker` (runs during
+  build)
+- **Localized links**: Ensures pages under `/<locale>/` paths only link to URLs with the same locale
+  prefix
+- **Locale markers**: Verifies key localized pages have correct `data-locale` attributes matching
+  their locale
 
 Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` for implementation.
 
@@ -108,17 +122,18 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 ## Testing
 
 - **Crash-smoke tests**: Run `npm run test:playwright` to verify pages load without errors
-  - Checks: no console.error, no pageerror events, response status OK
-  - Tests all key routes (/, /products/, /pricing/, /roi-calculator/, /blog/, /docs/)
-  - Auto-starts Astro dev server via Playwright's `webServer` config
-  - Stable, fast tests with no UI/snapshot dependencies
-  - Resource loading errors (404s for images/fonts) are filtered out
+    - Checks: no console.error, no pageerror events, response status OK
+    - Tests all key routes (/, /products/, /pricing/, /roi-calculator/, /blog/, /docs/)
+    - Auto-starts Astro dev server via Playwright's `webServer` config
+    - Stable, fast tests with no UI/snapshot dependencies
+    - Resource loading errors (404s for images/fonts) are filtered out
 
 ## Documentation update rules
 
 ### When changing Vue components
 
-**ALWAYS** update when you add/remove/rename/move Vue core components under `docs/src/components/vue/core`:
+**ALWAYS** update when you add/remove/rename/move Vue core components under
+`docs/src/components/vue/core`:
 
 - [ ] Update `COMPONENTS.md` with the new component entry (name, description, props, slots)
 - [ ] Create or update corresponding Storybook story in `docs/stories/**/*.stories.ts`
@@ -151,13 +166,14 @@ const product = await Astro.locals.content.getLocalizedEntry('products', 'xyz')
 ---
 ```
 
-This ensures content is automatically filtered by locale. For non-localized collections (blog, docs), the helper returns all entries.
+This ensures content is automatically filtered by locale. For non-localized collections (blog,
+docs), the helper returns all entries.
 
 ### Quick checklist
 
 Before finalizing component or content changes:
 
-- Components: `COMPONENTS.md` updated + Storybook story exists + story renders
+- Core Components: `COMPONENTS.md` updated + Storybook story exists + story renders, when a core component was changed not if a Domain Component changes!
 - Content: `CONTENT_COLLECTIONS.md` accurate + schema valid + pages render
 - Build passes: `npm run docs:build` succeeds
 
