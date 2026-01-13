@@ -15,6 +15,8 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
   info' | 'success' | 'warning' | 'danger' | 'tip'), `variant` ('soft' | 'solid' | 'outline'),
   `title`, `hideIcon`. Slots: default (body), `footer`. Story: `stories/Alert.stories.ts`.
 
+- **BlogOverview.vue** — Interactive blog listing component with search, filtering, and sorting. Props: `posts` (BlogPost[] array with id and data fields including title, description, date, category, image, draft, tags). Features reactive search by title, topic/category filtering, and sorting (Newest First, Oldest First, Most Popular). Includes a Netlify form for blog subscriptions. Slots: _none_. Story: _none_ (used in `/blog/` page).
+
 - **HeadlessUiTailwindDemo.vue** — Demonstrates Headless UI ui-open/ui-closed classes. Props:
   _none_. Slots: _none_. Story: `stories/HeadlessUiTailwindDemo.stories.ts`.
 - **LoadingComponent.vue** — Loading spinner/placeholder. Props: `label`. Slots: _none_. Story:
