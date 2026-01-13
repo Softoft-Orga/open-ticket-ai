@@ -55,6 +55,18 @@ const formatDate = (date: Date) => {
             ))}
           </div>
         )}
+
+        {entry.data.image && (
+          <div class="mt-8 -mx-4 sm:-mx-6 lg:-mx-8">
+            <div class="relative aspect-[21/9] w-full overflow-hidden rounded-xl bg-surface-lighter">
+              <img
+                src={entry.data.image}
+                alt={entry.data.title}
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        )}
       </header>
 
       <!-- Article Content -->
