@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Card from '../../components/vue/core/basic/Card.vue';
+import Button from '../../components/vue/core/basic/Button.vue';
+
+const pageTitle = 'Thank You - Contact Sales';
+const pageDescription = 'Your message has been received successfully. We will get back to you soon.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="min-h-screen bg-gradient-to-b from-background-dark to-surface-dark py-16 px-4">
+    <div class="max-w-2xl mx-auto">
+      <Card variant="surface" tone="success" size="lg" radius="2xl" elevation="lg" client:load>
+        <div class="text-center py-12">
+          <div class="mb-6">
+            <svg class="w-20 h-20 mx-auto text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h1 class="text-4xl font-bold text-white mb-4">Thank You!</h1>
+          <p class="text-xl text-text-1 mb-8">
+            Your message has been received successfully. Our sales team will get back to you shortly.
+          </p>
+          <div class="flex gap-4 justify-center">
+            <Button variant="surface" tone="primary" href="/" client:load>
+              Back to Home
+            </Button>
+            <Button variant="outline" tone="neutral" href="/products/" client:load>
+              View Products
+            </Button>
+          </div>
+        </div>
+      </Card>
+    </div>
+  </div>
+</BaseLayout>
