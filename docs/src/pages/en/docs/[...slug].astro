@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.js';
-import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths.ts';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getLocalizedCatchAllStaticPaths } from '../../../utils/staticPaths.ts';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
-import Button from '../../components/vue/core/basic/Button.vue';
+import Button from '../../../components/vue/core/basic/Button.vue';
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs');
 

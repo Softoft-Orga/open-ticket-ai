@@ -1,6 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import BaseLayout from '../../layouts/BaseLayout.js';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import Button from '../../components/vue/core/basic/Button.vue';
 import Card from '../../components/vue/core/basic/Card.vue';
@@ -56,7 +56,12 @@ const title = 'Products - Open Ticket AI';
               <ContactSalesButton formTitle="Contact Sales" client:load>
                 CONTACT SALES
               </ContactSalesButton>
-              <Button href={getRelativeLocaleUrl(Astro.currentLocale, 'products/roi-calculator')} variant="outline" size="lg" client:load>
+              <Button
+                href={getRelativeLocaleUrl(Astro.currentLocale, 'products/roi-calculator')}
+                variant="outline"
+                size="lg"
+                client:load
+              >
                 View ROI Calculator
               </Button>
             </div>
@@ -566,7 +571,14 @@ const title = 'Products - Open Ticket AI';
               <ContactSalesButton formTitle="Contact Sales" client:load>
                 CONTACT SALES
               </ContactSalesButton>
-              <Button href={getRelativeLocaleUrl(Astro.currentLocale, 'docs')} variant="outline" size="lg" client:load> View Docs </Button>
+              <Button
+                href={getRelativeLocaleUrl(Astro.currentLocale, 'docs')}
+                variant="outline"
+                size="lg"
+                client:load
+              >
+                View Docs
+              </Button>
             </div>
           </div>
         </div>

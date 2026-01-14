@@ -55,7 +55,9 @@ const getPlaceholderImage = (index: number) => {
 
 const getBlogUrl = (id: string) => {
   const canonicalPath = id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
-  return `${props.localizedBlogBaseURL}/${canonicalPath}/`;
+  // Remove trailing slash from base URL to avoid double slashes
+  const baseUrl = props.localizedBlogBaseURL.replace(/\/$/, '');
+  return `${baseUrl}/${canonicalPath}/`;
 };
 
 const filteredAndSortedPosts = computed(() => {

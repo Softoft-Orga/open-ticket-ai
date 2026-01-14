@@ -33,16 +33,18 @@ const footerData = siteConfig?.data.footer
         ...section,
         links: section.links.map(link => ({
           ...link,
-          url: link.url.startsWith('#') || link.url.startsWith('http')
-            ? link.url
-            : getRelativeLocaleUrl(Astro.currentLocale, link.url),
+          url:
+            link.url.startsWith('#') || link.url.startsWith('http')
+              ? link.url
+              : getRelativeLocaleUrl(Astro.currentLocale, link.url),
         })),
       })),
       legal: siteConfig.data.footer.legal.map(link => ({
         ...link,
-        url: link.url.startsWith('#') || link.url.startsWith('http')
-          ? link.url
-          : getRelativeLocaleUrl(Astro.currentLocale, link.url),
+        url:
+          link.url.startsWith('#') || link.url.startsWith('http')
+            ? link.url
+            : getRelativeLocaleUrl(Astro.currentLocale, link.url),
       })),
     }
   : undefined;

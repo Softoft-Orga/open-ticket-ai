@@ -2,10 +2,10 @@
 import type { CollectionEntry } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { Image } from 'astro:assets';
-import BaseLayout from '../../../layouts/BaseLayout.js';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { CalendarIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
 
-import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths.ts';
+import { getLocalizedCatchAllStaticPaths } from '../../../utils/staticPaths.ts';
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('blog');
 
