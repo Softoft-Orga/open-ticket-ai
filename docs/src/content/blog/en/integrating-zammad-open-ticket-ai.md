@@ -9,7 +9,7 @@ tags:
   - api
 category: Integration
 draft: false
-image: ~/assets/images/ai-solves-many-tickets-data-connected-systems.png
+image: ../../../assets/images/ai-solves-many-tickets-data-connected-systems.png
 ---
 
 # Zammad Integration for Open Ticket AI

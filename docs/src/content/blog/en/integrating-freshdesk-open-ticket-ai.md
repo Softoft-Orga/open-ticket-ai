@@ -9,7 +9,7 @@ tags:
   - api
 category: Integration
 draft: false
-image: ~/assets/images/connecting-multiple-services-integration.png
+image: ../../../assets/images/connecting-multiple-services-integration.png
 ---
 
 # Freshdesk Integration for Open Ticket AI

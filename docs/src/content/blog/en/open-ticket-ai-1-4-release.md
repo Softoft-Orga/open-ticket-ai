@@ -9,7 +9,7 @@ tags:
   - announcement
 category: Product Update
 draft: false
-image: https://softoft.sirv.com/open-ticket-ai/Open-Ticket-AI-Release-Version-1.4.webp
+image: ../../../assets/images/laptop-ai-ticketsystem.png
 ---
 
 # Open Ticket AI 1.4: The First Major Production Release

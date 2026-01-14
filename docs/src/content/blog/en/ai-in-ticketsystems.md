@@ -9,7 +9,7 @@ tags:
   - customer-support
 category: Technology
 draft: false
-image: ~/assets/images/ai-analyses-tickets-integrated-into-ticketsystem.png
+image: ../../../assets/images/ai-analyses-tickets-integrated-into-ticketsystem.png
 ---
 
 # **AI Ticketing Systems: Revolutionizing Support**

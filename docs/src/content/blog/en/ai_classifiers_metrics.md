@@ -10,7 +10,7 @@ tags:
   - evaluation
 category: Technology
 draft: false
-image: ~/assets/images/statistics-reporting-ticketsystem.png
+image: ../../../assets/images/statistics-reporting-ticketsystem.png
 ---
 
 # Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter

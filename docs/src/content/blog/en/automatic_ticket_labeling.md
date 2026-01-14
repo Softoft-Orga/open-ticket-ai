@@ -10,7 +10,7 @@ tags:
   - labeling
 category: Tutorial
 draft: false
-image: ~/assets/images/ticket-list-classified-automation.png
+image: ../../../assets/images/ticket-list-classified-automation.png
 ---
 
 # Labeling 10,000 Tickets Efficiently: Semi-Automated Labeling Strategies

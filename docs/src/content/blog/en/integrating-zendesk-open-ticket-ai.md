@@ -9,7 +9,7 @@ tags:
   - api
 category: Integration
 draft: false
-image: ~/assets/images/ticketsystem-integration-ai-dark-blue.png
+image: ../../../assets/images/ticketsystem-integration-ai-dark-blue.png
 ---
 
 # Zendesk Integration for Open Ticket AI
