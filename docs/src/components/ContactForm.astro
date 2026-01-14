@@ -1,0 +1,99 @@
+---
+import { input } from './vue/core/design-system/recipes';
+import Button from './vue/core/basic/Button.vue';
+
+interface Props {
+  title?: string;
+  successActionUrl?: string;
+  name?: string;
+}
+
+const {
+  title = "Contact Sales",
+  successActionUrl = "/success/contact-sales",
+  name = "contact-sales"
+} = Astro.props;
+
+const inputClasses = input({
+  tone: 'neutral',
+  size: 'md',
+  radius: 'lg'
+});
+---
+
+<form
+  action={successActionUrl}
+  class="space-y-4"
+  data-netlify="true"
+  method="POST"
+  name={name}
+>
+  <input
+    type="hidden"
+    name="form-name"
+    value={name}
+  />
+
+  <div>
+    <label
+      class="block text-sm font-medium text-text-1 mb-2"
+      for="subject"
+    >
+      Subject
+    </label>
+    <input
+      id="subject"
+      class={inputClasses}
+      name="subject"
+      required
+      type="text"
+      value={title}
+    />
+  </div>
+
+  <div>
+    <label
+      class="block text-sm font-medium text-text-1 mb-2"
+      for="email"
+    >
+      Email
+    </label>
+    <input
+      id="email"
+      class={inputClasses}
+      name="email"
+      required
+      type="email"
+      placeholder="your@email.com"
+    />
+  </div>
+
+  <div>
+    <label
+      class="block text-sm font-medium text-text-1 mb-2"
+      for="message"
+    >
+      Message
+    </label>
+    <textarea
+      id="message"
+      class={inputClasses}
+      name="message"
+      required
+      rows="4"
+      placeholder="How can we help you?"
+    ></textarea>
+  </div>
+
+  <div class="pt-4">
+    <Button
+      tone="primary"
+      variant="surface"
+      size="md"
+      radius="xl"
+      block={true}
+    >
+      Submit
+    </Button>
+  </div>
+</form>
