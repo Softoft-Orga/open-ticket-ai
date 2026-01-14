@@ -1,8 +1,6 @@
 import { tv, type VariantProps } from 'tailwind-variants';
 import type { Tone, Size } from '../tokens.ts';
 
-type Style = 'underline' | 'pill';
-
 /**
  * Tabs recipe - Tab navigation component
  *

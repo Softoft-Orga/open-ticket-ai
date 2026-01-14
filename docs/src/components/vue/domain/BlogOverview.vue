@@ -10,6 +10,7 @@ import {
   LightBulbIcon,
   ShieldCheckIcon,
 } from '@heroicons/vue/24/outline';
+import Button from '../core/basic/Button.vue';
 
 interface BlogPost {
   id: string;
@@ -135,15 +136,17 @@ const topicCounts = computed(() => {
             Explore Topics
           </h3>
           <nav class="space-y-2">
-            <button
+            <Button
               v-for="topic in topics"
               :key="topic.name"
               :class="[
-                'group flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-medium transition-all',
-                selectedTopic === topic.name
-                  ? 'border border-primary/30 bg-primary/20 text-primary-light'
-                  : 'border border-transparent text-text-dim hover:bg-surface-lighter hover:text-white',
+                'group flex w-full items-center justify-between text-left text-sm font-medium',
+                selectedTopic === topic.name ? '' : 'hover:text-white',
               ]"
+              :tone="selectedTopic === topic.name ? 'primary' : 'neutral'"
+              :variant="selectedTopic === topic.name ? 'outline' : 'subtle'"
+              radius="lg"
+              size="md"
               @click="selectedTopic = topic.name"
             >
               <div class="flex items-center gap-3">
@@ -161,7 +164,7 @@ const topicCounts = computed(() => {
               >
                 {{ topicCounts[topic.name] || 0 }}
               </span>
-            </button>
+            </Button>
           </nav>
         </div>
 
@@ -193,12 +196,9 @@ const topicCounts = computed(() => {
               aria-label="Email address for newsletter"
               required
             />
-            <button
-              type="submit"
-              class="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-surface-lighter px-6 py-3 text-sm font-bold text-white transition-all hover:border-primary hover:bg-primary/10"
-            >
+            <Button block radius="xl" size="md" tone="primary" type="submit" variant="outline">
               Subscribe
-            </button>
+            </Button>
           </form>
         </div>
       </aside>

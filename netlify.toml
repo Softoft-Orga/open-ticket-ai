@@ -8,12 +8,10 @@ from = "/api/german_prediction/v1/classify"
 to = "/.netlify/functions/classify"
 status = 200
 
-# Language-based redirect: Redirect German speakers to /de/
-[[redirects]]
-from = "/"
-to = "/de/"
-status = 302
-Language = ["de"]
+[[edge_functions]]
+path = "/*"
+function = "i18n-redirect"
+
 
 [[redirects]]
 from = "https://ticket-classification.softoft.de/*"
@@ -21,85 +19,6 @@ to = "https://open-ticket-ai.com/:splat"
 status = 301
 force = true
 
-[[redirects]]
-from = "/en/guides"
-to = "/guides/"
-status = 301
-
-[[redirects]]
-from = "/en/guides/*"
-to = "/guides/:splat/"
-status = 301
-
-[[redirects]]
-from = "/en/docs"
-to = "/docs/"
-status = 301
-
-[[redirects]]
-from = "/en/docs/*"
-to = "/docs/:splat/"
-status = 301
-
-[[redirects]]
-from = "/en/users"
-to = "/users/"
-status = 301
-
-[[redirects]]
-from = "/en/users/*"
-to = "/users/:splat/"
-status = 301
-
-[[redirects]]
-from = "/en/developers"
-to = "/developers/"
-status = 301
-
-[[redirects]]
-from = "/en/developers/*"
-to = "/developers/:splat/"
-status = 301
-
-[[redirects]]
-from = "/en/products"
-to = "/products/"
-status = 301
-
-[[redirects]]
-from = "/en/products/*"
-to = "/products/:splat/"
-status = 301
-
-[[redirects]]
-from = "/en/blog"
-to = "/blog/"
-status = 301
-
-[[redirects]]
-from = "/en/blog/*"
-to = "/blog/:splat/"
-status = 301
-
-[[redirects]]
-from = "/en/services"
-to = "/services/"
-status = 301
-
-[[redirects]]
-from = "/en/pricing"
-to = "/pricing/"
-status = 301
-
-[[redirects]]
-from = "/en/roi-calculator"
-to = "/roi-calculator/"
-status = 301
-
-[[redirects]]
-from = "/en/*"
-to = "/:splat/"
-status = 301
 
 [[headers]]
 for = "/assets/*.js"
@@ -126,5 +45,3 @@ from = "/assets/*"
 to = "/assets/:splat"
 status = 200
 
-# --- Root language redirects (removed for Astro migration) ---
-# The new Astro site does not use the /en/ prefix

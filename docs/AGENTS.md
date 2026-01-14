@@ -96,6 +96,12 @@ Button and similar.
 Domain Components are specific components like a BeyondSavingCard that is shown on ROI Page. We use
 them for reactivity that can not be achieved with Astro but these are not reused.
 
+
+## Astro Components
+When there is a simple Domain Component that is reused multiple times and does not need Vue features
+like reactivity; then create an Astro Component instead of a Vue Component!
+
+
 ## Quick references
 
 - Core **Components**: Live under `docs/src/components/vue/core/**` and are showcased via Storybook
