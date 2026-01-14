@@ -316,6 +316,67 @@ describe('Design System Token Contracts', () => {
 - **AI-friendly**: When adding a new component, AI knows to add it to these tests
 - **Compile-time safety**: TypeScript enforces these constraints during development
 
+**Copilot Prompt to Implement These Contract Tests**:
+
+```
+@workspace Implement contract tests for design system token types in the documentation site.
+
+Requirements:
+1. Create /docs/tests/unit/components/contracts/DesignSystemTokens.contract.test.ts
+2. Install Vitest if not already installed: npm install -D vitest @vitest/ui
+3. Create vitest.config.ts in /docs with proper Vue and TypeScript support
+4. Import design system token types from /docs/src/components/vue/core/design-system/tokens.ts
+5. Import all core components from /docs/src/components/vue/core (Button, Badge, Card, Modal, Alert, Tabs, RadioGroupOption, etc.)
+6. For each component, create tests that validate:
+   - If component has 'variant' prop, it uses the Variant type
+   - If component has 'tone' prop, it uses the Tone type
+   - If component has 'size' prop, it uses the Size type
+   - If component has 'radius' prop, it uses the Radius type
+7. Use expectTypeOf from vitest for type assertions
+8. Group tests by token type (Variant, Tone, Size, Radius)
+9. Add npm script "test:contracts" to package.json: "vitest run tests/unit/components/contracts"
+10. Ensure tests pass by running npm run test:contracts
+
+Example test structure:
+describe('Design System Token Contracts', () => {
+  describe('Variant prop types', () => {
+    it('ComponentName uses Variant type', () => {
+      type Props = InstanceType<typeof ComponentName>['$props'];
+      expectTypeOf<Props['variant']>().toEqualTypeOf<Variant | undefined>();
+    });
+  });
+});
+
+Include all components from /docs/src/components/vue/core that have design system token props.
+Verify the tests compile and pass before completing.
+```
+
+**Alternative Quick Start Prompt**:
+
+```
+@workspace Set up Vitest and create contract tests for design system tokens.
+
+1. Install dependencies:
+   cd /docs && npm install -D vitest @vitest/ui @vue/test-utils happy-dom
+
+2. Create vitest.config.ts:
+   import { defineConfig } from 'vitest/config';
+   import vue from '@vitejs/plugin-vue';
+   export default defineConfig({
+     plugins: [vue()],
+     test: { environment: 'happy-dom', globals: true }
+   });
+
+3. Create contract test at /docs/tests/unit/components/contracts/DesignSystemTokens.contract.test.ts
+   following the pattern in /docs/_TESTS_QA_IMPROVEMENT_SUGGESTIONS.md section 1.2.C
+
+4. Add script to package.json: "test:unit": "vitest"
+
+5. Run: npm run test:unit tests/unit/components/contracts
+
+Ensure all core components with Variant, Tone, Size, or Radius props are included in the tests.
+```
+
 ---
 
 ## 2. Code Quality Issues & Fixes
@@ -350,6 +411,122 @@ npm install -D eslint-plugin-local
 
 **AI-Friendly Rule**: When AI sees this error, it knows to replace `<button>` with `<Button>` from `@/components/vue/core/basic/Button.vue`.
 
+**Analysis: When Native Button is Actually Needed**
+
+After analyzing the codebase, native `<button>` elements are justified in these cases:
+
+1. **Button.vue itself** (line 45): The Button component uses `<component :is="button">` which renders a native button - this is **correct and necessary**
+
+2. **Tabs.vue** (line 11-16): Uses HeadlessUI `<Tab>` component with native button. The button integrates with HeadlessUI's state management - **native button is needed here** for proper HeadlessUI integration
+
+3. **BlogOverview.vue** (lines 138, 196): Both instances should use the Button component:
+   - Line 138: Topic filter buttons - **should use Button component**
+   - Line 196: Newsletter subscribe button - **should use Button component**
+
+4. **NavBar.vue** (line 36-42): Mobile menu toggle button - **native button is acceptable** as it's a simple icon-only toggle with HeadlessUI Dialog integration
+
+**Recommended ESLint Configuration**:
+
+```javascript
+// eslint.config.mjs
+export default [
+  // ... existing config
+  {
+    files: ['src/components/**/*.vue'],
+    rules: {
+      'vue/no-bare-strings-in-template': 'off',
+      // Custom rule: Disallow native button except in specific components
+      'vue/component-tags-order': ['error', {
+        order: ['script', 'template', 'style']
+      }]
+    }
+  },
+  {
+    files: ['src/components/vue/domain/**/*.vue'],
+    rules: {
+      // Strict: No native buttons allowed in domain components
+      'vue/no-restricted-syntax': ['error', {
+        selector: 'VElement[name="button"]:not([is])',
+        message: 'Use <Button> component from @/components/vue/core/basic/Button.vue instead of native <button>.'
+      }]
+    }
+  },
+  {
+    files: [
+      'src/components/vue/core/basic/Button.vue',
+      'src/components/vue/core/basic/Tabs.vue',
+      'src/components/vue/core/navigation/NavBar.vue'
+    ],
+    rules: {
+      // Exceptions: These components can use native buttons
+      'vue/no-restricted-syntax': 'off'
+    }
+  }
+];
+```
+
+**Copilot Prompt to Install ESLint Rule and Fix Violations**:
+
+```
+@workspace Install and configure ESLint rule to enforce Button component usage, then fix all violations.
+
+Tasks:
+1. Update /docs/eslint.config.mjs with the custom rule configuration:
+   - Add vue/no-restricted-syntax rule to disallow native <button> in domain components
+   - Create exceptions for Button.vue, Tabs.vue, NavBar.vue (where native buttons are needed)
+   - Apply strict rule to src/components/vue/domain/**/*.vue
+
+2. Fix violations in BlogOverview.vue:
+   - Import Button component: import Button from '../core/basic/Button.vue';
+   - Line 138: Replace native button with <Button> for topic filters
+     - Determine appropriate variant/tone from current styling
+     - Use variant="subtle" or "outline" based on selected state
+   - Line 196: Replace native button with <Button> for newsletter subscribe
+     - Use variant="outline" tone="primary"
+
+3. After fixing, run: npm run lint
+
+4. Verify no warnings/errors related to button usage
+
+Reference the Button component props:
+- variant: 'surface' | 'outline' | 'subtle'
+- tone: 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
+- size: 'sm' | 'md' | 'lg'
+- radius: 'lg' | 'xl' | '2xl'
+
+Maintain existing behavior and styling while using the Button component.
+```
+
+**Manual Fix Example for BlogOverview.vue**:
+
+```vue
+<!-- BEFORE (Line 138-146) -->
+<button
+  v-for="topic in topics"
+  :key="topic.name"
+  :class="[
+    'group flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-medium transition-all',
+    selectedTopic === topic.name
+      ? 'border border-primary/30 bg-primary/20 text-primary-light'
+      : 'border border-transparent text-text-dim hover:bg-surface-lighter hover:text-white',
+  ]"
+  @click="selectedTopic = topic.name"
+>
+
+<!-- AFTER -->
+<Button
+  v-for="topic in topics"
+  :key="topic.name"
+  :variant="selectedTopic === topic.name ? 'surface' : 'subtle'"
+  :tone="selectedTopic === topic.name ? 'primary' : 'neutral'"
+  size="md"
+  radius="lg"
+  block
+  class="justify-between text-left"
+  @click="selectedTopic = topic.name"
+>
+```
+
 ### 2.2 Hardcoded Tailwind Classes Instead of Design System
 
 **Issue**: Direct Tailwind classes bypass design system recipes.
@@ -381,6 +558,197 @@ export const input = tv({
   },
 });
 ```
+
+**Analysis: Additional Recipes to Add**
+
+After analyzing the codebase for frequently hardcoded patterns, these recipes would significantly improve consistency:
+
+**1. Icon Container Recipe** (Found in: SuccessfullFormSubmisionCard.vue, BlogOverview.vue)
+
+```typescript
+// src/components/vue/core/design-system/recipes/iconContainer.ts
+import { tv } from 'tailwind-variants';
+import type { Tone, Size } from '../tokens';
+
+export const iconContainer = tv({
+  base: [
+    'inline-flex items-center justify-center rounded-full',
+    'transition-colors duration-200'
+  ],
+  variants: {
+    tone: {
+      neutral: 'bg-surface-lighter text-text-1',
+      primary: 'bg-primary/20 text-primary',
+      success: 'bg-success/20 text-success',
+      warning: 'bg-warning/20 text-warning',
+      danger: 'bg-danger/20 text-danger',
+      info: 'bg-info/20 text-info',
+    } satisfies Record<Tone, string>,
+    size: {
+      sm: 'size-8',
+      md: 'size-12',
+      lg: 'size-16',
+    } satisfies Record<Size, string>,
+  },
+  defaultVariants: {
+    tone: 'primary',
+    size: 'md',
+  },
+});
+```
+
+**Usage**:
+```vue
+<!-- BEFORE -->
+<div class="mb-6 flex size-12 items-center justify-center rounded-xl bg-primary/20 text-primary">
+  <EnvelopeIcon class="h-7 w-7" />
+</div>
+
+<!-- AFTER -->
+<div :class="iconContainer({ tone: 'primary', size: 'md' })">
+  <EnvelopeIcon class="h-7 w-7" />
+</div>
+```
+
+**2. Form Input Recipe** (Found in: BlogOverview.vue line 126, 190, ContactSalesButton.vue)
+
+Already shown above - high priority as inputs appear in multiple places.
+
+**3. Nav Link Recipe** (Found in: NavBar.vue, FooterComponent.vue)
+
+```typescript
+// src/components/vue/core/design-system/recipes/navLink.ts
+import { tv } from 'tailwind-variants';
+
+export const navLink = tv({
+  base: [
+    'rounded-lg px-2 py-1 transition-colors',
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60'
+  ],
+  variants: {
+    active: {
+      true: 'text-text-1',
+      false: 'text-text-2 hover:text-text-1',
+    },
+    size: {
+      sm: 'text-xs',
+      md: 'text-sm',
+      lg: 'text-base',
+    },
+  },
+  defaultVariants: {
+    active: false,
+    size: 'md',
+  },
+});
+```
+
+**4. Section Container Recipe** (Found in: Multiple pages)
+
+```typescript
+// src/components/vue/core/design-system/recipes/section.ts
+import { tv } from 'tailwind-variants';
+
+export const section = tv({
+  base: 'mx-auto px-4 sm:px-6 lg:px-8',
+  variants: {
+    width: {
+      narrow: 'max-w-4xl',
+      default: 'max-w-7xl',
+      wide: 'max-w-[1400px]',
+      full: 'max-w-none',
+    },
+    spacing: {
+      sm: 'py-12',
+      md: 'py-16',
+      lg: 'py-24',
+      xl: 'py-32',
+    },
+  },
+  defaultVariants: {
+    width: 'default',
+    spacing: 'lg',
+  },
+});
+```
+
+**5. Glass/Blur Container Recipe** (Found in: NavBar.vue, Modal.vue)
+
+```typescript
+// src/components/vue/core/design-system/recipes/glass.ts
+import { tv } from 'tailwind-variants';
+
+export const glass = tv({
+  base: 'backdrop-blur-md',
+  variants: {
+    variant: {
+      light: 'bg-white/10',
+      dark: 'bg-background-dark/80',
+      primary: 'bg-primary/10',
+    },
+    border: {
+      true: 'border border-border-dark',
+      false: '',
+    },
+  },
+  defaultVariants: {
+    variant: 'dark',
+    border: false,
+  },
+});
+```
+
+**Priority Ranking**:
+
+1. **High Priority**: input, iconContainer - used frequently in domain components
+2. **Medium Priority**: navLink, glass - improve navigation consistency
+3. **Low Priority**: section - nice to have for layout consistency
+
+**Copilot Prompt to Add Recipes**:
+
+```
+@workspace Add frequently used design system recipes to improve code consistency.
+
+Tasks:
+1. Create new recipe files in /docs/src/components/vue/core/design-system/recipes/:
+   - iconContainer.ts - for icon wrapper containers
+   - input.ts - for form input fields (if not exists, otherwise enhance it)
+   - navLink.ts - for navigation links
+   - glass.ts - for glass morphism effects
+   - section.ts - for section containers
+
+2. For each recipe:
+   - Use tailwind-variants tv() function
+   - Import necessary types from ../tokens.ts
+   - Use satisfies Record<Type, string> for type safety
+   - Include base classes and variants
+   - Set sensible defaultVariants
+
+3. Update /docs/src/components/vue/core/design-system/recipes/index.ts:
+   - Add exports for new recipes
+
+4. Update /docs/COMPONENTS.md:
+   - Document new recipes in design system section
+
+5. Refactor existing components to use new recipes:
+   - BlogOverview.vue: Use input and iconContainer recipes
+   - SuccessfullFormSubmisionCard.vue: Use iconContainer recipe
+   - ContactSalesButton.vue: Use input recipe
+   - NavBar.vue: Use navLink and glass recipes
+
+6. Run linter: npm run lint:fix
+7. Verify components render correctly
+
+Follow the patterns in existing recipe files (button.ts, badge.ts, card.ts) for consistency.
+```
+
+**Benefits of Adding These Recipes**:
+
+- **Consistency**: Same styling patterns across all components
+- **Maintainability**: Change once, apply everywhere
+- **Type Safety**: TypeScript ensures correct usage
+- **AI-Friendly**: Clear, reusable patterns for code generation
+- **Reduced Bundle**: Tailwind can better optimize repeated classes
 
 **Usage**:
 
