@@ -39,10 +39,12 @@ function discoverRoutes(dir: string, baseDir: string): string[] {
 
       // Convert file path to route
       const relativePath = relative(baseDir, fullPath);
-      let route = '/' + relativePath
-        .replace(/\.astro$/, '')
-        .replace(/\/index$/, '')
-        .replace(/index$/, '');
+      let route =
+        '/' +
+        relativePath
+          .replace(/\.astro$/, '')
+          .replace(/\/index$/, '')
+          .replace(/index$/, '');
 
       // Ensure trailing slash
       if (route !== '/' && !route.endsWith('/')) {
