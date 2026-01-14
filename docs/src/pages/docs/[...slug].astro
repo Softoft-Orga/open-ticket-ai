@@ -41,12 +41,9 @@ const toc = headings
   }));
 
 // Generate sidebar from docs collection - filter by current locale
-const currentLocale = (Astro.currentLocale ?? 'en').toLowerCase();
+const currentLocale = Astro.currentLocale.toLowerCase();
 const allDocsRaw = await getCollection('docs');
-const allDocs = allDocsRaw.filter(entry => {
-  const entryLocale = entry.id.match(/^([a-z]{2}(?:-[A-Z]{2})?)\//i)?.[1]?.toLowerCase();
-  return entryLocale === currentLocale;
-});
+const allDocs = allDocsRaw.filter(entry => entry.id.toLowerCase().startsWith(`${currentLocale}/`));
 
 // Group docs by nav.group and sort by nav.order
 type SidebarSection = {

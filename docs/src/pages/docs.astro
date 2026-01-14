@@ -7,9 +7,11 @@ const title = 'Documentation | Open Ticket AI';
 const description =
   'Choose the documentation you need. Explore API references, implementation guides, and best practices.';
 
-const currentLocale = (Astro.currentLocale ?? 'en').toLowerCase();
+const currentLocale = Astro.currentLocale.toLowerCase();
 const allSiteConfigs = await getCollection('site');
-const siteConfig = allSiteConfigs.find(entry => entry.id.toLowerCase().startsWith(currentLocale));
+const siteConfig = allSiteConfigs.find(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
 const popularResources = siteConfig?.data.popularResources;
 
 const iconMap: Record<string, string> = {
