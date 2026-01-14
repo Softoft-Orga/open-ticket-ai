@@ -139,14 +139,14 @@ const topicCounts = computed(() => {
             <Button
               v-for="topic in topics"
               :key="topic.name"
-              :variant="selectedTopic === topic.name ? 'outline' : 'subtle'"
-              :tone="selectedTopic === topic.name ? 'primary' : 'neutral'"
-              size="md"
-              radius="lg"
               :class="[
                 'group flex w-full items-center justify-between text-left text-sm font-medium',
                 selectedTopic === topic.name ? '' : 'hover:text-white',
               ]"
+              :tone="selectedTopic === topic.name ? 'primary' : 'neutral'"
+              :variant="selectedTopic === topic.name ? 'outline' : 'subtle'"
+              radius="lg"
+              size="md"
               @click="selectedTopic = topic.name"
             >
               <div class="flex items-center gap-3">
@@ -196,7 +196,7 @@ const topicCounts = computed(() => {
               aria-label="Email address for newsletter"
               required
             />
-            <Button type="submit" variant="outline" tone="primary" size="md" radius="xl" block>
+            <Button block radius="xl" size="md" tone="primary" type="submit" variant="outline">
               Subscribe
             </Button>
           </form>

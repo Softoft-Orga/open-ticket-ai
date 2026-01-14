@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.js';
 import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths.ts';
+import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import Button from '../../components/vue/core/basic/Button.vue';
 
@@ -40,8 +41,10 @@ const toc = headings
     id: h.slug,
   }));
 
-// Generate sidebar from docs collection
-const allDocs = await Astro.locals.content.getLocalizedCollection('docs');
+// Generate sidebar from docs collection - filter by current locale
+const currentLocale = Astro.currentLocale.toLowerCase();
+const allDocsRaw = await getCollection('docs');
+const allDocs = allDocsRaw.filter(entry => entry.id.toLowerCase().startsWith(`${currentLocale}/`));
 
 // Group docs by nav.group and sort by nav.order
 type SidebarSection = {
