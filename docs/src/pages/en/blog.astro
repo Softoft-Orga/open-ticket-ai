@@ -4,8 +4,8 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogOverview from '../../components/vue/domain/BlogOverview.vue';
 import { ArrowRightIcon, CalendarIcon } from '@heroicons/vue/24/outline';
-import { Image } from "astro:assets";
-import { getImage } from "astro:assets";
+import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 
 const pageTitle = 'Open Ticket AI Blog';
 const pageDescription =
@@ -44,17 +44,17 @@ interface BlogPost {
 
 const gridPostsRaw = sortedBlogPosts.slice(1) as Array<{
   id: string;
-  data: Omit<BlogPost["data"], "image"> & { image?: any };
+  data: Omit<BlogPost['data'], 'image'> & { image?: any };
 }>;
 
 const gridPosts: BlogPost[] = await Promise.all(
-  gridPostsRaw.map(async (post) => {
+  gridPostsRaw.map(async post => {
     const img = post.data.image;
     const optimized = img
       ? await getImage({
           src: img,
           width: 1200,
-          format: "webp",
+          format: 'webp',
         })
       : null;
 

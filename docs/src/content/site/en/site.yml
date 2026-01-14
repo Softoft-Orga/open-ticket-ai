@@ -27,7 +27,7 @@ footer:
     - title: Company
       links:
         - label: About
-          url: '#'
+          url: 'company/about'
         - label: Data Privacy
           url: '#'
         - label: Legal Notice
@@ -75,7 +75,7 @@ legalInfo:
   address:
     street: Example Street 123
     city: Berlin
-    zip: 10115
+    zip: '10115'
     country: Germany
   legalForm: UG (haftungsbeschränkt)
   vatId: DE123456789
@@ -88,4 +88,3 @@ team:
     pictureUrl: /images/team/jane-smith.png
     email: jane.smith@open-ticket-ai.com
     phoneNumber: +49 30 12345679
-
