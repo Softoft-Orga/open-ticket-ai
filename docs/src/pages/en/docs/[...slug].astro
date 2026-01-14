@@ -4,7 +4,7 @@ import { getLocalizedCatchAllStaticPaths } from '../../../utils/staticPaths.ts';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import Button from '../../../components/vue/core/basic/Button.vue';
-import {getRelativeLocaleUrl} from "astro:i18n";
+import { getRelativeLocaleUrl } from 'astro:i18n';
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs');
 
@@ -149,7 +149,7 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
                   {section.items.map(item => (
                     <li>
                       <a
-                        href={getRelativeLocaleUrl(Astro.currentLocale,item.link)}
+                        href={getRelativeLocaleUrl(Astro.currentLocale, item.link)}
                         class:list={[
                           'block rounded-md px-3 py-1.5 text-xs transition-all',
                           item.active
