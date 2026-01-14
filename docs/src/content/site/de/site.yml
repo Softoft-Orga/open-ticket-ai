@@ -54,22 +54,22 @@ popularResources:
   groups:
     - title: Automatisierungs-Engine
       items:
-        - docId: docs/en/guides/quick-start
+        - docId: docs/de/guides/quick-start
           icon: RocketLaunchIcon
-        - docId: docs/en/developers/config_rendering
+        - docId: docs/de/developers/config_rendering
           icon: CommandLineIcon
-        - docId: docs/en/developers/ticket_system_integration
+        - docId: docs/de/developers/ticket_system_integration
           icon: PuzzlePieceIcon
-        - docId: docs/en/developers/plugin_development
+        - docId: docs/de/developers/plugin_development
           icon: ArrowsRightLeftIcon
     - title: Tagging-Engine
       items:
-        - docId: docs/en/taxonomy-design
+        - docId: docs/de/taxonomy-design
           icon: Squares2x2Icon
-        - docId: docs/en/hardware-sizing
+        - docId: docs/de/hardware-sizing
           icon: CpuChipIcon
-        - docId: docs/en/using-model
+        - docId: docs/de/using-model
           icon: ArrowPathIcon
-        - docId: docs/en/tag-mapping
+        - docId: docs/de/tag-mapping
           icon: ChartBarIcon
 
