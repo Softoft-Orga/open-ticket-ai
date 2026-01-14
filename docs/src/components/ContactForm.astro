@@ -8,6 +8,8 @@ interface Props {
   messageLabel: string;
   emailLabel: string;
   subjectLabel: string;
+  emailPlaceholder: string;
+  messagePlaceholder: string;
   successActionUrl?: string;
   name?: string;
 }
@@ -18,6 +20,8 @@ const {
   messageLabel,
   emailLabel,
   subjectLabel,
+  emailPlaceholder,
+  messagePlaceholder,
   successActionUrl = '/success/contact-sales',
   name = 'contact-sales',
 } = Astro.props;
@@ -45,7 +49,7 @@ const inputClasses = input({
       name="email"
       required
       type="email"
-      placeholder="your@email.com"
+      placeholder={emailPlaceholder}
     />
   </div>
 
@@ -57,7 +61,7 @@ const inputClasses = input({
       name="message"
       required
       rows="4"
-      placeholder="How can we help you?"></textarea>
+      placeholder={messagePlaceholder}></textarea>
   </div>
 
   <div class="pt-4">
