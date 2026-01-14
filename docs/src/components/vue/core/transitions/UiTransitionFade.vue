@@ -13,5 +13,5 @@
 </template>
 
 <script setup lang="ts">
-import { TransitionChild } from '@headlessui/vue'
+import { TransitionChild } from '@headlessui/vue';
 </script>

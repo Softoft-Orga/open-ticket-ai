@@ -30,7 +30,7 @@ Use the OTOBO Admin navigation:
 Fill in:
 
 | Field         | Value                        |
-|---------------|------------------------------|
+| ------------- | ---------------------------- |
 | **Username**  | `open_ticket_ai`             |
 | **Firstname** | Open                         |
 | **Lastname**  | Ticket AI                    |
@@ -75,7 +75,7 @@ Open Ticket AI can only perform actions that the user is allowed to do.
 Depending on your automation pipeline, you must grant:
 
 | Automation Type         | Required Permissions                          |
-|-------------------------|-----------------------------------------------|
+| ----------------------- | --------------------------------------------- |
 | Queue Classification    | **ro**, **move_into**                         |
 | Priority Classification | **ro**, **priority**                          |
 | Note creation           | **ro**, **note**                              |
@@ -94,21 +94,19 @@ Go to:
 Select the agent **open_ticket_ai** and give permissions like:
 
 | Permission | Meaning                |
-|------------|------------------------|
+| ---------- | ---------------------- |
 | ro         | Read ticket            |
 | move_into  | Move ticket into queue |
 | priority   | Change priority        |
 | note       | Add internal notes     |
 
-rw if you need to create a ticket.
----
+## rw if you need to create a ticket.
 
 ## Option B — Assign via Roles (optional but scalable)
 
 If your OTOBO uses Roles → Groups mapping, assign:
 
 **Admin → Agents ↔ Roles**
-
 
 Then ensure the Role has the required group permissions.
 
@@ -118,9 +116,9 @@ Then ensure the Role has the required group permissions.
 
 Your automation pipeline refers to specific names such as:
 
-* Queues: *“IT”*, *“Real Estate”*, etc.
-* Priorities: *“3 Mittel”*, *“5 Kritisch”*, etc.
-* Types, Services (if used)
+- Queues: _“IT”_, _“Real Estate”_, etc.
+- Priorities: _“3 Mittel”_, _“5 Kritisch”_, etc.
+- Types, Services (if used)
 
 ### You must manually confirm:
 
@@ -138,7 +136,6 @@ If the name is wrong, the WebService update will fail.
 Go to:
 
 **Admin → Web Services**
-
 
 ![](/assets/webservice_overview.png)
 
@@ -162,10 +159,10 @@ Upload the file using the **Import web service** button.
 
 This creates:
 
-* `/ticket-get`
-* `/ticket-update`
-* `/ticket-search`
-* `/ticket-create`
+- `/ticket-get`
+- `/ticket-update`
+- `/ticket-search`
+- `/ticket-create`
 
 All restricted so **only the user `open_ticket_ai` may use them**.
 
@@ -177,19 +174,19 @@ The YAML you import includes:
 
 ```yaml
 ValueMap:
-    UserLogin:
-        ValueMapRegEx:
-            .*: open_ticket_ai
+  UserLogin:
+    ValueMapRegEx:
+      .*: open_ticket_ai
 ```
 
-This forces *every* inbound request to authenticate as `open_ticket_ai`
+This forces _every_ inbound request to authenticate as `open_ticket_ai`
 —even if an attacker sends arbitrary usernames.
 
 This prevents:
 
-* Password brute-force attacks
-* API abuse
-* Unauthorized ticket manipulation
+- Password brute-force attacks
+- API abuse
+- Unauthorized ticket manipulation
 
 With a **16-character random password**, brute-force is impossible even under extreme load.
 

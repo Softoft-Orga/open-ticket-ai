@@ -1,7 +1,7 @@
-import Modal from '../src/components/vue/core/basic/Modal.vue'
-import Button from '../src/components/vue/core/basic/Button.vue'
-import type { Meta, StoryObj } from '@storybook/vue3'
-import { ref } from 'vue'
+import Modal from '../src/components/vue/core/basic/Modal.vue';
+import Button from '../src/components/vue/core/basic/Button.vue';
+import type { Meta, StoryObj } from '@storybook/vue3';
+import { ref } from 'vue';
 
 const meta: Meta<typeof Modal> = {
   title: 'Core/Modal',
@@ -10,34 +10,35 @@ const meta: Meta<typeof Modal> = {
   argTypes: {
     tone: {
       control: { type: 'select' },
-      options: ['neutral', 'primary', 'success', 'warning', 'danger', 'info']
+      options: ['neutral', 'primary', 'success', 'warning', 'danger', 'info'],
     },
     size: {
       control: { type: 'select' },
-      options: ['sm', 'md', 'lg']
+      options: ['sm', 'md', 'lg'],
     },
     closeOnOverlay: {
-      control: { type: 'boolean' }
-    }
+      control: { type: 'boolean' },
+    },
   },
   parameters: {
     docs: {
       description: {
-        component: 'Accessible modal dialog component built with Headless UI. Supports different tones, sizes, and customizable content via slots. Features backdrop blur, escape key handling, and focus trapping.'
-      }
-    }
-  }
-}
-export default meta
+        component:
+          'Accessible modal dialog component built with Headless UI. Supports different tones, sizes, and customizable content via slots. Features backdrop blur, escape key handling, and focus trapping.',
+      },
+    },
+  },
+};
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -47,22 +48,22 @@ export const Default: Story = {
           <p class="mt-4">Click outside the modal or press Escape to close it.</p>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Modal Title',
     tone: 'neutral',
     size: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const WithFooter: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -77,22 +78,22 @@ export const WithFooter: Story = {
           </template>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Confirm Action',
     tone: 'neutral',
     size: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const PrimaryTone: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -101,22 +102,22 @@ export const PrimaryTone: Story = {
           <p>This modal uses the primary tone, giving it a subtle primary color tint.</p>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Primary Modal',
     tone: 'primary',
     size: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const SuccessTone: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -130,22 +131,22 @@ export const SuccessTone: Story = {
           </template>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Success',
     tone: 'success',
     size: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const WarningTone: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -160,22 +161,22 @@ export const WarningTone: Story = {
           </template>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Warning',
     tone: 'warning',
     size: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const DangerTone: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -190,22 +191,22 @@ export const DangerTone: Story = {
           </template>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Confirm Deletion',
     tone: 'danger',
     size: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const InfoTone: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -219,22 +220,22 @@ export const InfoTone: Story = {
           </ul>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Information',
     tone: 'info',
     size: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const SmallSize: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -243,22 +244,22 @@ export const SmallSize: Story = {
           <p>This is a small modal, great for quick confirmations.</p>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Small Modal',
     tone: 'neutral',
     size: 'sm',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const LargeSize: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -277,22 +278,22 @@ export const LargeSize: Story = {
           </div>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Large Modal',
     tone: 'neutral',
     size: 'lg',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const NoCloseOnOverlay: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -306,22 +307,22 @@ export const NoCloseOnOverlay: Story = {
           </template>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     title: 'Required Action',
     tone: 'neutral',
     size: 'md',
-    closeOnOverlay: false
-  }
-}
+    closeOnOverlay: false,
+  },
+};
 
 export const CustomTitleSlot: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Modal, Button },
     setup() {
-      const isOpen = ref(false)
-      return { args, isOpen }
+      const isOpen = ref(false);
+      return { args, isOpen };
     },
     template: `
       <div>
@@ -340,11 +341,11 @@ export const CustomTitleSlot: Story = {
           <p>This modal demonstrates using the title slot for custom header content.</p>
         </Modal>
       </div>
-    `
+    `,
   }),
   args: {
     tone: 'primary',
     size: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};

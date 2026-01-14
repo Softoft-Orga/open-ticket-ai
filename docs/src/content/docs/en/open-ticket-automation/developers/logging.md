@@ -1,11 +1,12 @@
 ---
 title: Logging System
-description: "Developer guide for using the logging system in Open Ticket AI with abstract interfaces and dependency injection."
+description: 'Developer guide for using the logging system in Open Ticket AI with abstract interfaces and dependency injection.'
 lang: en
 nav:
   group: Developers
   order: 7
 ---
+
 # Logging System
 
 Open Ticket AI uses an abstract logging interface that allows developers to configure logging
@@ -66,7 +67,7 @@ setup.
 `LoggingConfig` defines the supported runtime configuration:
 
 | Field                   | Type                                                               | Default                                                  | Description                                                                        |
-|-------------------------|--------------------------------------------------------------------|----------------------------------------------------------|------------------------------------------------------------------------------------|
+| ----------------------- | ------------------------------------------------------------------ | -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | `level`                 | Literal[`"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"`, `"CRITICAL"`] | `"INFO"`                                                 | Minimum severity level captured by handlers.                                       |
 | `log_to_file`           | `bool`                                                             | `False`                                                  | Enables writing log output to a file handler.                                      |
 | `log_file_path`         | `str \| None`                                                      | `None`                                                   | Absolute or relative path for file logging. Required when `log_to_file` is `True`. |
@@ -115,12 +116,12 @@ automatically.
 
 The `AppLogger` protocol defines the following methods:
 
-- **`bind(**kwargs)`**: Create a new logger with additional context
-- **`debug(message, **kwargs)`**: Log debug information
-- **`info(message, **kwargs)`**: Log informational messages
-- **`warning(message, **kwargs)`**: Log warnings
-- **`error(message, **kwargs)`**: Log errors
-- **`exception(message, **kwargs)`**: Log exceptions with traceback
+- **`bind(**kwargs)`\*\*: Create a new logger with additional context
+- **`debug(message, **kwargs)`\*\*: Log debug information
+- **`info(message, **kwargs)`\*\*: Log informational messages
+- **`warning(message, **kwargs)`\*\*: Log warnings
+- **`error(message, **kwargs)`\*\*: Log errors
+- **`exception(message, **kwargs)`\*\*: Log exceptions with traceback
 
 ## Best practices
 

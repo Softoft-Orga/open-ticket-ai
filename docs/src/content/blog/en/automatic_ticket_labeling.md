@@ -1,6 +1,6 @@
 ---
-title: "Labeling 10,000 Tickets Efficiently: Semi-Automated Labeling Strategies"
-description: "Save time labeling thousands of tickets. Learn a semi-automated workflow using GPT for zero-shot pre-labeling and Label Studio for efficient review."
+title: 'Labeling 10,000 Tickets Efficiently: Semi-Automated Labeling Strategies'
+description: 'Save time labeling thousands of tickets. Learn a semi-automated workflow using GPT for zero-shot pre-labeling and Label Studio for efficient review.'
 lang: en
 date: 2024-10-15
 tags:
@@ -12,14 +12,15 @@ category: Tutorial
 draft: false
 image: ~/assets/images/ticket-list-classified-automation.png
 ---
+
 # Labeling 10,000 Tickets Efficiently: Semi-Automated Labeling Strategies
 
 Labeling thousands of support tickets manually is time-consuming and expensive. A **semi-automated
 workflow** leverages large language models (LLMs) like GPT to **pre-label** tickets (using
 zero-shot/few-shot prompts) and then uses human annotators to **review and correct** those labels.
 This hybrid approach dramatically cuts annotation effort: for example, one case study found
-GPT-generated “pre-annotations” *“good enough to help us speed up the labeling process”*. In
-practice, *minimal labels* from the model can reduce time and cost of annotation. In this article we
+GPT-generated “pre-annotations” _“good enough to help us speed up the labeling process”_. In
+practice, _minimal labels_ from the model can reduce time and cost of annotation. In this article we
 explain how to set up such a pipeline, show Python examples (using GPT via OpenRouter or OpenAI),
 and discuss tools like Label Studio for review.
 
@@ -27,7 +28,7 @@ and discuss tools like Label Studio for review.
 
 Modern LLMs can classify text with **zero or few examples**. In zero-shot labeling, the model
 assigns categories without being explicitly trained on ticket data. As one tutorial puts it:
-*“Zero-shot learning allows models to classify new instances without labeled examples”*. In
+_“Zero-shot learning allows models to classify new instances without labeled examples”_. In
 practice, you craft a prompt instructing GPT to tag a ticket. For example:
 
 ```text
@@ -65,8 +66,8 @@ Once GPT generates labels, the next step is **importing them into a labeling int
 review. One popular open-source solution is [Label Studio](https://labelstud.io). Label Studio
 supports importing model predictions as “pre-annotations” alongside the data. Annotators see the
 suggested label and only need to correct mistakes, not label from scratch. In effect, the team
-*“shifts from the time-intensive task of data labeling to the far more efficient process of
-reviewing and refining the preliminary labels”*.
+_“shifts from the time-intensive task of data labeling to the far more efficient process of
+reviewing and refining the preliminary labels”_.
 
 Label Studio even offers an ML backend: you can write a small server using the `LabelStudioMLBase`
 class that calls GPT for each task. In their tutorial, Label Studio shows wrapping GPT-4 calls in
@@ -76,88 +77,88 @@ array (containing each label). For example (simplified):
 
 ```json
 [
-    {
-        "data": {
-            "text": "User cannot login to account"
-        },
-        "predictions": [
-            {
-                "result": [
-                    {
-                        "value": {
-                            "choices": [
-                                {
-                                    "text": "Bug"
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        ]
+  {
+    "data": {
+      "text": "User cannot login to account"
     },
-    {
-        "data": {
-            "text": "Add dark mode to settings"
-        },
-        "predictions": [
-            {
-                "result": [
-                    {
-                        "value": {
-                            "choices": [
-                                {
-                                    "text": "Feature Request"
-                                }
-                            ]
-                        }
-                    }
-                ]
+    "predictions": [
+      {
+        "result": [
+          {
+            "value": {
+              "choices": [
+                {
+                  "text": "Bug"
+                }
+              ]
             }
+          }
         ]
-    }
+      }
+    ]
+  },
+  {
+    "data": {
+      "text": "Add dark mode to settings"
+    },
+    "predictions": [
+      {
+        "result": [
+          {
+            "value": {
+              "choices": [
+                {
+                  "text": "Feature Request"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
 ]
 ```
 
 After importing, Label Studio will display each ticket with the model’s label pre-filled. The
 annotator’s job is to **review and correct**. This semi-automated workflow has been shown to work
-well: a Kili Technology example demonstrated loading a GPT-pre-labeled dataset and noted *“we have
-successfully pre-annotated our dataset”* and that this approach *“has the potential to save us a lot
-of time”*. In practice, GPT’s accuracy on labeling might be \~80–90%, meaning humans correct only
+well: a Kili Technology example demonstrated loading a GPT-pre-labeled dataset and noted _“we have
+successfully pre-annotated our dataset”_ and that this approach _“has the potential to save us a lot
+of time”_. In practice, GPT’s accuracy on labeling might be \~80–90%, meaning humans correct only
 the remaining 10–20%.
 
 ## Tools and Workflow Steps
 
 To summarize, a typical semi-automated labeling pipeline looks like this:
 
-* **Prepare the ticket dataset.** Export your 10,000 unlabeled tickets (e.g. as JSON or CSV).
-* **Generate pre-labels via LLM.** Run code (like above) calling GPT-4 (or another model via
+- **Prepare the ticket dataset.** Export your 10,000 unlabeled tickets (e.g. as JSON or CSV).
+- **Generate pre-labels via LLM.** Run code (like above) calling GPT-4 (or another model via
   OpenRouter) to classify each ticket. Save the responses.
-* **Import predictions into a labeling tool.** Use Label Studio (or similar) to load tickets and
+- **Import predictions into a labeling tool.** Use Label Studio (or similar) to load tickets and
   associate each with the GPT-generated label (the “prediction”). Label Studio docs explain how to
   import predictions with your data.
-* **Human review.** Annotators go through the tickets in Label Studio, accepting or correcting the
+- **Human review.** Annotators go through the tickets in Label Studio, accepting or correcting the
   labels. This is much faster than labeling from scratch. Label Studio’s interface highlights the
   model suggestion for each task, so the task becomes quick validation.
-* **Export final labels.** Once reviewed, export the corrected annotations for model training or
+- **Export final labels.** Once reviewed, export the corrected annotations for model training or
   analytics.
 
 Key public tools that support this approach include:
 
-* **OpenRouter** – a unified LLM API gateway (openrouter.ai). It lets you easily switch between
+- **OpenRouter** – a unified LLM API gateway (openrouter.ai). It lets you easily switch between
   GPT-4, Anthropic Claude, Google PaLM, etc.. You can even specify a fallback list in one API call.
-* **OpenAI API (GPT-4/3.5)** – the core engine for generating labels with zero/few-shot prompts.
-* **Label Studio** – an open-source data labeling UI. It supports importing predictions and has an
+- **OpenAI API (GPT-4/3.5)** – the core engine for generating labels with zero/few-shot prompts.
+- **Label Studio** – an open-source data labeling UI. It supports importing predictions and has an
   ML backend to call models.
-* **Doccano** – a simpler open-source tool for text annotation (classification, NER, etc.). It does
+- **Doccano** – a simpler open-source tool for text annotation (classification, NER, etc.). It does
   not have built-in LLM integration, but you can still use GPT offline to generate labels and load
   them as initial choices.
-* **Snorkel/Programmatic Labeling** – for some rule-based or weak-supervision cases, tools like
+- **Snorkel/Programmatic Labeling** – for some rule-based or weak-supervision cases, tools like
   Snorkel can complement LLM labels, but modern LLMs often cover many cases out of the box.
 
 ## Dummy Ticket Data Example
 
-To illustrate, here is some *dummy ticket data* you might work with:
+To illustrate, here is some _dummy ticket data_ you might work with:
 
 ```python
 tickets = [
@@ -188,7 +189,7 @@ Suppose GPT returns `"Bug"`, `"Question"`, `"Feature"`, `"Bug"` respectively. Af
 ```
 
 These labels would then be loaded into the review interface. Even if some are wrong (e.g. GPT might
-mislabel a tricky bug as a feature), the annotator only needs to *fix* them instead of starting from
+mislabel a tricky bug as a feature), the annotator only needs to _fix_ them instead of starting from
 scratch. Empirically, GPT-generated labels often reach \~80–90% accuracy, so reviewing is much
 faster than full labeling.
 
@@ -196,8 +197,8 @@ faster than full labeling.
 
 The semi-automated approach scales well. In a large project, human annotators might only need to fix
 a few hundred or thousand labels instead of 10,000. As the Kili tutorial observed after running GPT
-pre-labels: *“Great! We have successfully pre-annotated our dataset. Looks like this solution has
-the potential to save us a lot of time in future projects.”*. In other words, LLMs serve as a force
+pre-labels: _“Great! We have successfully pre-annotated our dataset. Looks like this solution has
+the potential to save us a lot of time in future projects.”_. In other words, LLMs serve as a force
 multiplier. Even though the model isn’t 100% correct, it **“speeds up the labeling process”** by
 doing most of the work.
 
@@ -214,8 +215,7 @@ Semi-automated labeling with GPT and tools like OpenRouter and Label Studio is a
 for quickly labeling large text datasets. By **pre-labeling 10,000 tickets with an LLM and then
 reviewing**, companies can jump-start their AI workflows with minimal initial data. This approach
 cuts costs and time dramatically while still ensuring quality through human oversight. As one
-implementation guide notes, shifting the workflow from *“data labeling”* to *“reviewing and
-refining”* of LLM-generated labels *“significantly accelerates your workflow.”*. In short, combining
+implementation guide notes, shifting the workflow from _“data labeling”_ to _“reviewing and
+refining”_ of LLM-generated labels _“significantly accelerates your workflow.”_. In short, combining
 GPT-based pre-annotation with a friendly UI (Label Studio, Doccano, etc.) helps software/AI teams
 label massive ticket datasets efficiently and accurately.
-

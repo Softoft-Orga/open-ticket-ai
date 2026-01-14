@@ -6,16 +6,8 @@
     :class="containerClass"
     @change="handleChange"
   >
-    <TabList
-      :class="tabsStyles.list()"
-      :aria-label="ariaLabel"
-    >
-      <Tab
-        v-for="(label, idx) in tabs"
-        :key="idx"
-        v-slot="{ selected }"
-        as="template"
-      >
+    <TabList :class="tabsStyles.list()" :aria-label="ariaLabel">
+      <Tab v-for="(label, idx) in tabs" :key="idx" v-slot="{ selected }" as="template">
         <button
           :class="tabsStyles.trigger({ class: selected ? 'data-[selected]' : '' })"
           :data-selected="selected || undefined"
@@ -26,36 +18,29 @@
     </TabList>
 
     <TabPanels :class="tabPanelsClass">
-      <TabPanel
-        v-for="(label, idx) in tabs"
-        :key="`panel-${idx}`"
-        :class="tabsStyles.panel()"
-      >
-        <slot
-          :name="`tab-${idx}`"
-          :index="idx"
-        />
+      <TabPanel v-for="(label, idx) in tabs" :key="`panel-${idx}`" :class="tabsStyles.panel()">
+        <slot :name="`tab-${idx}`" :index="idx" />
       </TabPanel>
     </TabPanels>
   </TabGroup>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue'
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
-import { tabs as tabsRecipe } from '../design-system/recipes'
-import type { Tone, Size } from '../design-system/tokens.ts'
+import { ref, computed, watch } from 'vue';
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
+import { tabs as tabsRecipe } from '../design-system/recipes';
+import type { Tone, Size } from '../design-system/tokens.ts';
 
-type TabStyle = 'underline' | 'pill'
+type TabStyle = 'underline' | 'pill';
 
 interface Props {
-  tabs: string[]
-  modelValue?: number
-  ariaLabel?: string
-  size?: Size
-  style?: TabStyle
-  tone?: Tone
-  vertical?: boolean
+  tabs: string[];
+  modelValue?: number;
+  ariaLabel?: string;
+  size?: Size;
+  style?: TabStyle;
+  tone?: Tone;
+  vertical?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -64,51 +49,54 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
   style: 'underline',
   tone: 'primary',
-  vertical: false
-})
+  vertical: false,
+});
 
 /* eslint-disable no-unused-vars */
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: number): void
-  (e: 'change', value: number): void
-}>()
+  (e: 'update:modelValue', value: number): void;
+  (e: 'change', value: number): void;
+}>();
 /* eslint-enable no-unused-vars */
 
-const selectedIndex = ref(props.modelValue)
+const selectedIndex = ref(props.modelValue);
 
-watch(() => props.modelValue, (newVal) => {
-  selectedIndex.value = newVal
-})
+watch(
+  () => props.modelValue,
+  newVal => {
+    selectedIndex.value = newVal;
+  }
+);
 
 const handleChange = (index: number) => {
-  selectedIndex.value = index
-  emit('update:modelValue', index)
-  emit('change', index)
-}
+  selectedIndex.value = index;
+  emit('update:modelValue', index);
+  emit('change', index);
+};
 
 const tabsStyles = computed(() => {
   return tabsRecipe({
     style: props.style,
     tone: props.tone,
-    size: props.size
-  })
-})
+    size: props.size,
+  });
+});
 
 const containerClass = computed(() => {
-  const classes = []
+  const classes = [];
   if (props.vertical) {
-    classes.push('flex gap-4')
+    classes.push('flex gap-4');
   }
-  return classes.join(' ')
-})
+  return classes.join(' ');
+});
 
 const tabPanelsClass = computed(() => {
-  const classes = []
+  const classes = [];
 
   if (props.vertical) {
-    classes.push('flex-1')
+    classes.push('flex-1');
   }
 
-  return classes.join(' ')
-})
+  return classes.join(' ');
+});
 </script>

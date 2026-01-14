@@ -1,11 +1,12 @@
 ---
 title: Hardware Sizing
-description: "Hardware and infrastructure requirements for running ticket classification models at different scales."
+description: 'Hardware and infrastructure requirements for running ticket classification models at different scales.'
 lang: en
 nav:
   group: Ticket Tagging
   order: 2
 ---
+
 # Hardware Sizing
 
 Understand the hardware requirements for running ticket classification models at different scales.
@@ -22,18 +23,19 @@ Hardware requirements for ticket classification depend on several factors:
 
 ## Quick Reference
 
-| Scale | Tickets/Day | Min RAM | Min CPU | GPU | Model Type |
-|-------|-------------|---------|---------|-----|------------|
-| Small | <1,000 | 512 MB | 1 core | No | Simple ML |
-| Medium | 1,000-10,000 | 2 GB | 2 cores | Optional | BERT-based |
-| Large | 10,000-100,000 | 8 GB | 4 cores | Recommended | BERT/Large |
-| Enterprise | >100,000 | 16+ GB | 8+ cores | Required | Custom/Fine-tuned |
+| Scale      | Tickets/Day    | Min RAM | Min CPU  | GPU         | Model Type        |
+| ---------- | -------------- | ------- | -------- | ----------- | ----------------- |
+| Small      | <1,000         | 512 MB  | 1 core   | No          | Simple ML         |
+| Medium     | 1,000-10,000   | 2 GB    | 2 cores  | Optional    | BERT-based        |
+| Large      | 10,000-100,000 | 8 GB    | 4 cores  | Recommended | BERT/Large        |
+| Enterprise | >100,000       | 16+ GB  | 8+ cores | Required    | Custom/Fine-tuned |
 
 ## Deployment Models
 
 ### CPU-Only Deployment
 
 **Best for**:
+
 - Small to medium ticket volumes (<10,000/day)
 - Budget-conscious deployments
 - Simpler models (distilled BERT, small transformers)
@@ -55,6 +57,7 @@ Medium Scale:
 ```
 
 **Expected Performance**:
+
 - Classification time: 200-500ms per ticket
 - Throughput: 100-500 tickets/minute
 - Model loading time: 5-30 seconds
@@ -62,6 +65,7 @@ Medium Scale:
 ### GPU-Accelerated Deployment
 
 **Best for**:
+
 - Large ticket volumes (>10,000/day)
 - Real-time classification requirements
 - Large transformer models
@@ -86,6 +90,7 @@ Enterprise Scale:
 ```
 
 **Expected Performance**:
+
 - Classification time: 10-50ms per ticket
 - Throughput: 1,000-10,000 tickets/minute
 - Model loading time: 2-10 seconds
@@ -95,16 +100,19 @@ Enterprise Scale:
 ### Small Models (50-150 MB)
 
 **Examples**:
+
 - DistilBERT
 - MiniLM
 - TinyBERT
 
 **Requirements**:
+
 - RAM: 512 MB - 1 GB
 - CPU: 1-2 cores sufficient
 - GPU: Not required
 
 **Use Cases**:
+
 - Low-volume environments
 - Cost-sensitive deployments
 - Edge deployments
@@ -112,16 +120,19 @@ Enterprise Scale:
 ### Medium Models (300-500 MB)
 
 **Examples**:
+
 - BERT-base
 - RoBERTa-base
 - Custom fine-tuned models
 
 **Requirements**:
+
 - RAM: 2-4 GB
 - CPU: 2-4 cores recommended
 - GPU: Optional, improves performance 5-10x
 
 **Use Cases**:
+
 - Most production deployments
 - Balanced accuracy/performance
 - Standard ticket volumes
@@ -129,17 +140,20 @@ Enterprise Scale:
 ### Large Models (1-5 GB)
 
 **Examples**:
+
 - BERT-large
 - RoBERTa-large
 - GPT-based models
 - Custom ensemble models
 
 **Requirements**:
+
 - RAM: 8-16 GB
 - CPU: 4-8 cores minimum
 - GPU: Highly recommended (T4 or better)
 
 **Use Cases**:
+
 - High-accuracy requirements
 - Complex classification tasks
 - Multi-label classification
@@ -176,15 +190,15 @@ metadata:
   name: ticket-classifier
 spec:
   containers:
-  - name: classifier
-    image: openticketai/engine:latest
-    resources:
-      requests:
-        memory: "2Gi"
-        cpu: "1000m"
-      limits:
-        memory: "4Gi"
-        cpu: "2000m"
+    - name: classifier
+      image: openticketai/engine:latest
+      resources:
+        requests:
+          memory: '2Gi'
+          cpu: '1000m'
+        limits:
+          memory: '4Gi'
+          cpu: '2000m'
 ```
 
 ### Resource Monitoring
@@ -214,11 +228,13 @@ RAM: 8 GB, CPU: 8 cores
 ```
 
 **Pros**:
+
 - Simple to implement
 - No code changes required
 - Easy to manage
 
 **Cons**:
+
 - Limited by hardware maximums
 - Single point of failure
 - Potentially expensive
@@ -235,11 +251,13 @@ Deploy multiple instances:
 ```
 
 **Pros**:
+
 - Better reliability
 - Handles traffic spikes
 - More cost-effective at scale
 
 **Cons**:
+
 - More complex setup
 - Requires load balancer
 - Shared state considerations
@@ -262,12 +280,12 @@ spec:
   minReplicas: 2
   maxReplicas: 10
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ```
 
 ## Storage Requirements
@@ -361,26 +379,28 @@ curl -w "@curl-format.txt" -o /dev/null -s http://localhost:8080/classify
 
 ### Performance Targets
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Latency P50 | <200ms | Median response time |
-| Latency P95 | <500ms | 95th percentile |
-| Latency P99 | <1000ms | 99th percentile |
-| Throughput | >100/min | Tickets classified |
-| CPU Usage | <80% | Average utilization |
-| Memory Usage | <80% | Peak utilization |
+| Metric       | Target   | Measurement          |
+| ------------ | -------- | -------------------- |
+| Latency P50  | <200ms   | Median response time |
+| Latency P95  | <500ms   | 95th percentile      |
+| Latency P99  | <1000ms  | 99th percentile      |
+| Throughput   | >100/min | Tickets classified   |
+| CPU Usage    | <80%     | Average utilization  |
+| Memory Usage | <80%     | Peak utilization     |
 
 ## Troubleshooting
 
 ### Out of Memory Errors
 
 **Symptoms**:
+
 ```
 MemoryError: Unable to allocate array
 Container killed (OOMKilled)
 ```
 
 **Solutions**:
+
 1. Increase memory allocation
 2. Use smaller model variant
 3. Reduce batch size
@@ -389,10 +409,12 @@ Container killed (OOMKilled)
 ### Slow Classification
 
 **Symptoms**:
+
 - Latency >1 second per ticket
 - Growing processing queue
 
 **Solutions**:
+
 1. Enable GPU acceleration
 2. Use model distillation
 3. Optimize batch processing
@@ -401,10 +423,12 @@ Container killed (OOMKilled)
 ### High CPU Usage
 
 **Symptoms**:
+
 - CPU constantly >90%
 - Throttled performance
 
 **Solutions**:
+
 1. Add more CPU cores
 2. Optimize model inference
 3. Implement request queuing

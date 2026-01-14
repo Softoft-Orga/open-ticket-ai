@@ -1,5 +1,5 @@
-import { tv, type VariantProps } from 'tailwind-variants'
-import type { Variant, Tone } from '../tokens.ts'
+import { tv, type VariantProps } from 'tailwind-variants';
+import type { Variant, Tone } from '../tokens.ts';
 
 /**
  * Alert recipe - Alert/notification component
@@ -15,7 +15,7 @@ export const alert = tv({
     variant: {
       surface: 'border-transparent',
       subtle: 'border-transparent',
-      outline: 'bg-transparent'
+      outline: 'bg-transparent',
     } satisfies Record<Variant, string>,
     tone: {
       neutral: '',
@@ -23,8 +23,8 @@ export const alert = tv({
       success: '',
       warning: '',
       danger: '',
-      info: ''
-    } satisfies Record<Tone, string>
+      info: '',
+    } satisfies Record<Tone, string>,
   },
   compoundVariants: [
     // Surface variant colors
@@ -49,12 +49,12 @@ export const alert = tv({
     { variant: 'outline', tone: 'success', class: 'border-success text-success' },
     { variant: 'outline', tone: 'warning', class: 'border-warning text-warning' },
     { variant: 'outline', tone: 'danger', class: 'border-danger text-danger' },
-    { variant: 'outline', tone: 'info', class: 'border-info text-info' }
+    { variant: 'outline', tone: 'info', class: 'border-info text-info' },
   ],
   defaultVariants: {
     variant: 'subtle',
-    tone: 'info'
-  }
-})
+    tone: 'info',
+  },
+});
 
-export type AlertVariants = VariantProps<typeof alert>
+export type AlertVariants = VariantProps<typeof alert>;

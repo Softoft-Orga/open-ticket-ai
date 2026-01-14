@@ -5,6 +5,7 @@ This document provides examples of how to use the Astro `<Image>` component in t
 ## Configuration
 
 Image optimization is configured in `docs/astro.config.mjs`:
+
 - **Image Service**: Sharp (configured to allow processing of large images)
 - **Authorized Domains**: `astro.build`, `doc.otobo.org`, `softoft.sirv.com`
 - **Remote Patterns**: `**.githubusercontent.com`, `**.sirv.com`
@@ -12,7 +13,9 @@ Image optimization is configured in `docs/astro.config.mjs`:
 ## Storage Locations
 
 ### Local Assets (Optimized)
+
 Store in `docs/src/assets/` for images that need optimization:
+
 ```
 docs/src/assets/
   ├── logos/
@@ -21,7 +24,9 @@ docs/src/assets/
 ```
 
 ### Public Static Files
+
 Store in `docs/public/` for static images served as-is:
+
 ```
 docs/public/
   ├── assets/
@@ -45,6 +50,7 @@ import logo from '../assets/logos/company-logo.png';
 ```
 
 **Benefits:**
+
 - Automatic format optimization (WebP, AVIF)
 - Automatic width/height inference
 - Build-time image processing
@@ -58,15 +64,16 @@ Images from the `public/` folder require explicit dimensions:
 import { Image } from 'astro:assets';
 ---
 
-<Image 
-  src="/assets/feature-screenshot.png" 
-  alt="Product feature screenshot" 
-  width="800" 
-  height="600" 
+<Image
+  src="/assets/feature-screenshot.png"
+  alt="Product feature screenshot"
+  width="800"
+  height="600"
 />
 ```
 
 **When to use:**
+
 - Images that shouldn't be processed
 - SVG files that don't need optimization
 - Very small images
@@ -80,15 +87,16 @@ Remote images from authorized domains can be optimized:
 import { Image } from 'astro:assets';
 ---
 
-<Image 
-  src="https://doc.otobo.org/manual/admin/10.0/en/_images/agent-add.png" 
-  alt="OTOBO admin panel" 
-  width="1200" 
-  height="800" 
+<Image
+  src="https://doc.otobo.org/manual/admin/10.0/en/_images/agent-add.png"
+  alt="OTOBO admin panel"
+  width="1200"
+  height="800"
 />
 ```
 
 **Authorized domains:**
+
 - `astro.build`
 - `doc.otobo.org`
 - `softoft.sirv.com`
@@ -116,8 +124,8 @@ import mobileImage from '../assets/mobile-hero.jpg';
 import desktopImage from '../assets/desktop-hero.jpg';
 ---
 
-<Picture 
-  src={desktopImage} 
+<Picture
+  src={desktopImage}
   formats={['avif', 'webp']}
   alt="Hero banner"
   widths={[400, 800, 1200]}
@@ -135,6 +143,7 @@ import desktopImage from '../assets/desktop-hero.jpg';
 ## Common Patterns
 
 ### Card with Image
+
 ```astro
 ---
 import { Image } from 'astro:assets';
@@ -149,6 +158,7 @@ import cardImage from '../assets/products/product-1.jpg';
 ```
 
 ### Blog Post Header
+
 ```astro
 ---
 import { Image } from 'astro:assets';
@@ -156,15 +166,13 @@ const { frontmatter } = Astro.props;
 ---
 
 <article>
-  <Image 
-    src={frontmatter.coverImage} 
-    alt={frontmatter.coverImageAlt} 
-  />
+  <Image src={frontmatter.coverImage} alt={frontmatter.coverImageAlt} />
   <h1>{frontmatter.title}</h1>
 </article>
 ```
 
 ### Gallery with Multiple Images
+
 ```astro
 ---
 import { Image } from 'astro:assets';
@@ -172,27 +180,23 @@ const images = await Astro.glob('../assets/gallery/*.{png,jpg}');
 ---
 
 <div class="gallery">
-  {images.map((image) => (
-    <Image 
-      src={image.default} 
-      alt="Gallery image" 
-      width="400" 
-      height="300" 
-    />
-  ))}
+  {images.map(image => <Image src={image.default} alt="Gallery image" width="400" height="300" />)}
 </div>
 ```
 
 ## Troubleshooting
 
 ### Image not found
+
 - Check the path is correct relative to the current file
 - Ensure the image exists in the expected location
 
 ### Remote image not optimizing
+
 - Verify the domain is listed in `astro.config.mjs` under `image.domains` or `image.remotePatterns`
 - Check that width and height are provided
 
 ### Build errors
+
 - Run `npm run docs:check` to validate the Astro configuration
 - Check console for specific error messages about missing images

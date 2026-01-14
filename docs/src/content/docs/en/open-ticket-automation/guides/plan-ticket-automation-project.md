@@ -1,11 +1,12 @@
 ---
 title: Plan Your Ticket Automation Project
-description: "A practical guide to scoping, prioritizing, and sequencing your ticket automation rollout."
+description: 'A practical guide to scoping, prioritizing, and sequencing your ticket automation rollout.'
 lang: en
 nav:
   group: Guides
   order: 3
 ---
+
 # Ticket Automation Planner — Pick Your Best Path
 
 Modernize ticket routing fast—no matter where you start. This planner helps you choose the right
@@ -21,10 +22,10 @@ attributes), gates/metrics to know when you’re ready, and a data-readiness che
 
 **How to use this page**
 
-* Start with the one-screen overview and answer three questions: **Labeled? → Unlabeled? → Fast?**
-* Click the box for **Flow A/B/C/D** to jump to its steps, deliverables, and KPIs.
-* Use the **add-ons** if you need multiple languages or more outputs (tags, assignee, first answer).
-* Keep the **gates** tight (per-class F1 + business KPIs) so pilots translate to production
+- Start with the one-screen overview and answer three questions: **Labeled? → Unlabeled? → Fast?**
+- Click the box for **Flow A/B/C/D** to jump to its steps, deliverables, and KPIs.
+- Use the **add-ons** if you need multiple languages or more outputs (tags, assignee, first answer).
+- Keep the **gates** tight (per-class F1 + business KPIs) so pilots translate to production
   confidence.
 
 Now continue with the overview diagram and the detailed flows below.
@@ -80,8 +81,8 @@ flowchart TD
 
 **When to choose this:**
 
-* You already have **thousands of tickets with queue, priority, or tag labels**.
-* You want a **custom-trained** model for maximum accuracy.
+- You already have **thousands of tickets with queue, priority, or tag labels**.
+- You want a **custom-trained** model for maximum accuracy.
 
 **What happens in this flow:**
 
@@ -116,8 +117,8 @@ flowchart TD
 
 **When to choose this:**
 
-* You have **large historical ticket archives** but no labels.
-* You can allocate some human review time for quality checks.
+- You have **large historical ticket archives** but no labels.
+- You can allocate some human review time for quality checks.
 
 **What happens in this flow:**
 
@@ -154,8 +155,8 @@ flowchart TD
 
 **When to choose this:**
 
-* You're starting **from scratch** or have too few tickets to train on.
-* You want a **cold-start** solution to go live quickly.
+- You're starting **from scratch** or have too few tickets to train on.
+- You want a **cold-start** solution to go live quickly.
 
 **What happens in this flow:**
 
@@ -189,8 +190,8 @@ flowchart TD
 
 **When to choose this:**
 
-* You need **results immediately**.
-* You want to try automation without training first.
+- You need **results immediately**.
+- You want to try automation without training first.
 
 **What happens in this flow:**
 

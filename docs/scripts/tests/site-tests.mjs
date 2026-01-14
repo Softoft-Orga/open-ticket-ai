@@ -4,7 +4,7 @@
 
 /**
  * Site Testing Suite
- * 
+ *
  * Runs comprehensive site validation including:
  * - Broken link checking (via astro-broken-links-checker)
  * - Localized link validation (internal links must match page locale)
@@ -97,17 +97,17 @@ class TestResults {
  */
 async function findHtmlFiles(dir, files = []) {
   const entries = await readdir(dir, { withFileTypes: true });
-  
+
   for (const entry of entries) {
     const fullPath = join(dir, entry.name);
-    
+
     if (entry.isDirectory()) {
       await findHtmlFiles(fullPath, files);
     } else if (entry.isFile() && entry.name.endsWith('.html')) {
       files.push(fullPath);
     }
   }
-  
+
   return files;
 }
 
@@ -133,12 +133,12 @@ function resolveUrl(href, basePath) {
     if (/^[a-z][a-z0-9+.-]*:/i.test(href)) {
       return { isExternal: true, resolved: href };
     }
-    
+
     // Handle fragment-only links
     if (href.startsWith('#')) {
       return { isExternal: true, resolved: href };
     }
-    
+
     // Resolve relative paths
     const base = basePath.endsWith('/') ? basePath : basePath + '/';
     const url = new URL(href, `https://example.com${base}`);
@@ -154,7 +154,7 @@ function resolveUrl(href, basePath) {
  */
 async function checkLocalizedLinks(results) {
   console.log(`${colors.blue}Checking localized link rules...${colors.reset}`);
-  
+
   const htmlFiles = await findHtmlFiles(DIST_DIR);
   const violations = [];
   let checkedPages = 0;
@@ -164,9 +164,9 @@ async function checkLocalizedLinks(results) {
     // Convert file path to URL path
     const relativePath = filePath.substring(DIST_DIR.length);
     const urlPath = relativePath.replace(/index\.html$/, '').replace(/\.html$/, '/');
-    
+
     const pageLocale = getLocaleFromPath(urlPath);
-    
+
     // Only check pages that are under a locale path
     if (!pageLocale) {
       continue;
@@ -180,7 +180,7 @@ async function checkLocalizedLinks(results) {
     for (const link of links) {
       const href = link.getAttribute('href');
       const { isExternal, resolved } = resolveUrl(href, urlPath);
-      
+
       // Skip external links
       if (isExternal) {
         continue;
@@ -188,7 +188,7 @@ async function checkLocalizedLinks(results) {
 
       checkedLinks++;
       const linkLocale = getLocaleFromPath(resolved);
-      
+
       // Internal link from localized page should point to same locale or no locale
       // (some shared resources might not be localized)
       if (linkLocale && linkLocale !== pageLocale) {
@@ -207,8 +207,8 @@ async function checkLocalizedLinks(results) {
     results.addError(
       'Localized Links',
       `Found ${violations.length} link(s) pointing to wrong locale`,
-      violations.map(v => 
-        `${v.page} (${v.pageLocale}) → ${v.href} → ${v.resolved} (${v.linkLocale})`
+      violations.map(
+        v => `${v.page} (${v.pageLocale}) → ${v.href} → ${v.resolved} (${v.linkLocale})`
       )
     );
   } else if (checkedPages > 0) {
@@ -229,15 +229,15 @@ async function checkLocalizedLinks(results) {
  */
 async function checkLocalizedMarkers(results) {
   console.log(`${colors.blue}Checking localized content markers...${colors.reset}`);
-  
+
   const htmlFiles = await findHtmlFiles(DIST_DIR);
   const violations = [];
   const validMarkers = [];
-  
+
   // Check key pages (index and main section pages per locale)
   // Note: Update this list when adding new main sections to the site
   const keyPagePatterns = [
-    /^\/[a-z]{2}\/(index\.html)?$/,  // /de/, /en/
+    /^\/[a-z]{2}\/(index\.html)?$/, // /de/, /en/
     /^\/[a-z]{2}\/products\/(index\.html)?$/,
     /^\/[a-z]{2}\/services\/(index\.html)?$/,
     /^\/[a-z]{2}\/pricing\/(index\.html)?$/,
@@ -246,7 +246,7 @@ async function checkLocalizedMarkers(results) {
   for (const filePath of htmlFiles) {
     const relativePath = filePath.substring(DIST_DIR.length);
     const urlPath = relativePath.replace(/index\.html$/, '').replace(/\.html$/, '/');
-    
+
     // Check if this is a key page
     const isKeyPage = keyPagePatterns.some(pattern => pattern.test(urlPath));
     if (!isKeyPage) {
@@ -260,10 +260,10 @@ async function checkLocalizedMarkers(results) {
 
     const content = await readFile(filePath, 'utf-8');
     const dom = new JSDOM(content);
-    
+
     // Look for data-locale marker (could be on html, body, or a wrapper element)
     const markerElements = dom.window.document.querySelectorAll('[data-locale]');
-    
+
     if (markerElements.length === 0) {
       violations.push({
         page: urlPath,
@@ -288,8 +288,8 @@ async function checkLocalizedMarkers(results) {
     results.addError(
       'Locale Markers',
       `Found ${violations.length} page(s) with missing or incorrect locale markers`,
-      violations.map(v => 
-        v.found === null 
+      violations.map(v =>
+        v.found === null
           ? `${v.page}: missing data-locale (expected: ${v.expected})`
           : `${v.page}: data-locale="${v.found}" (expected: ${v.expected})`
       )
@@ -298,11 +298,9 @@ async function checkLocalizedMarkers(results) {
     results.pass();
     console.log(`  ✓ Verified ${validMarkers.length} key pages have correct locale markers`);
   } else {
-    results.addWarning(
-      'Locale Markers',
-      'No key localized pages found to check markers',
-      { hint: 'This check is skipped if locale routing is not enabled' }
-    );
+    results.addWarning('Locale Markers', 'No key localized pages found to check markers', {
+      hint: 'This check is skipped if locale routing is not enabled',
+    });
   }
 }
 
@@ -311,17 +309,17 @@ async function checkLocalizedMarkers(results) {
  */
 async function checkBrokenLinks(results) {
   console.log(`${colors.blue}Checking for broken links...${colors.reset}`);
-  
+
   const logPath = resolve(__dirname, '../../broken-links.log');
-  
+
   try {
     const content = await readFile(logPath, 'utf-8');
-    
+
     // Parse the log file from astro-broken-links-checker
     // The checker outputs broken links grouped by URL with source pages listed below
     // Format: Broken URL on its own line, followed by source pages indented
     const lines = content.trim().split('\n');
-    
+
     if (lines.length === 0 || (lines.length === 1 && lines[0] === '')) {
       results.pass();
       console.log(`  ✓ No broken links found`);
@@ -331,18 +329,20 @@ async function checkBrokenLinks(results) {
     // Count unique broken URLs (non-indented lines that aren't empty or separators)
     const brokenUrls = lines.filter(line => {
       const trimmed = line.trim();
-      return trimmed.length > 0 && 
-             !line.startsWith(' ') && 
-             !line.startsWith('\t') &&
-             !trimmed.match(/^[-=]+$/);
+      return (
+        trimmed.length > 0 &&
+        !line.startsWith(' ') &&
+        !line.startsWith('\t') &&
+        !trimmed.match(/^[-=]+$/)
+      );
     });
-    
+
     if (brokenUrls.length === 0) {
       results.pass();
       console.log(`  ✓ No broken links found`);
       return;
     }
-    
+
     results.addError(
       'Broken Links',
       `Found ${brokenUrls.length} broken link(s) - see broken-links.log for details`,
@@ -356,10 +356,7 @@ async function checkBrokenLinks(results) {
         { hint: 'The astro-broken-links-checker should create this during build' }
       );
     } else {
-      results.addError(
-        'Broken Links',
-        `Failed to read broken-links.log: ${err.message}`
-      );
+      results.addError('Broken Links', `Failed to read broken-links.log: ${err.message}`);
     }
   }
 }
@@ -369,15 +366,15 @@ async function checkBrokenLinks(results) {
  */
 async function runTests() {
   console.log(`${colors.cyan}Starting site tests...${colors.reset}\n`);
-  
+
   const results = new TestResults();
-  
+
   try {
     // Run all checks
     await checkBrokenLinks(results);
     await checkLocalizedLinks(results);
     await checkLocalizedMarkers(results);
-    
+
     // Report results
     const success = results.report();
     process.exit(success ? 0 : 1);

@@ -1,11 +1,12 @@
 ---
 title: Dependency Injection
-description: "Learn how Open Ticket AI uses dependency injection to manage services, resolve dependencies, and enable testability with loose coupling."
+description: 'Learn how Open Ticket AI uses dependency injection to manage services, resolve dependencies, and enable testability with loose coupling.'
 lang: en
 nav:
   group: Developers
   order: 1
 ---
+
 # Dependency Injection
 
 Open Ticket AI uses dependency injection (DI) to manage services, pipes, and shared infrastructure.

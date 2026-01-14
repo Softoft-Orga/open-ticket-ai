@@ -4,148 +4,138 @@ import Button from '../../components/vue/core/basic/Button.vue';
 import Card from '../../components/vue/core/basic/Card.vue';
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 
-const title = "Tagging AI Lite Pro";
-const description = "Our flagship medium-weight model. Precision-tuned for routing, SLA assignment, and management reporting with professional accuracy.";
+const title = 'Tagging AI Lite Pro';
+const description =
+  'Our flagship medium-weight model. Precision-tuned for routing, SLA assignment, and management reporting with professional accuracy.';
 ---
 
 <BaseLayout title={title} description={description}>
-  <div slot="head" />
+  <div slot="head"></div>
 
   <div class="min-h-screen bg-background-dark">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <div class="mb-8">
-        <a href="/products" class="inline-flex items-center gap-2 text-primary hover:text-primary-light transition-colors group">
-          <ArrowLeftIcon class="w-4 h-4 transition-transform group-hover:-translate-x-1" aria-hidden="true" />
+        <a
+          href="/products"
+          class="group inline-flex items-center gap-2 text-primary transition-colors hover:text-primary-light"
+        >
+          <ArrowLeftIcon
+            class="h-4 w-4 transition-transform group-hover:-translate-x-1"
+            aria-hidden="true"
+          />
           <span class="font-medium">PRODUCTS</span>
         </a>
         <span class="mx-3 text-border-dark">/</span>
-        <span class="text-white font-bold">LITE PRO</span>
+        <span class="font-bold text-white">LITE PRO</span>
       </div>
 
       <div class="mb-16">
-        <div class="inline-flex items-center gap-3 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest mb-6">
+        <div
+          class="mb-6 inline-flex items-center gap-3 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-black uppercase tracking-widest text-primary"
+        >
           <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            <span
+              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"
+            ></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
           </span>
           PRODUCTION READY (4B PARAMETERS)
         </div>
-        <h1 class="font-display text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+        <h1 class="font-display mb-6 text-5xl font-black leading-tight text-white md:text-7xl">
           Tagging AI<br />
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-glow">Lite Pro.</span>
+          <span class="bg-gradient-to-r from-primary to-cyan-glow bg-clip-text text-transparent"
+            >Lite Pro.</span
+          >
         </h1>
-        <p class="text-xl text-text-dim max-w-3xl leading-relaxed">
+        <p class="max-w-3xl text-xl leading-relaxed text-text-dim">
           {description}
         </p>
       </div>
 
-      <div class="flex flex-wrap gap-4 mb-20">
-        <Button variant="surface" size="lg" client:load>
-          BUY LICENSE (2.500€)
-        </Button>
-        <Button variant="outline" size="lg" client:load>
-          Calculate ROI
-        </Button>
+      <div class="mb-20 flex flex-wrap gap-4">
+        <Button variant="surface" size="lg" client:load> BUY LICENSE (2.500€) </Button>
+        <Button variant="outline" size="lg" client:load> Calculate ROI </Button>
       </div>
 
       <section class="mb-24">
-        <div class="flex items-center gap-3 mb-8">
-          <div class="w-8 h-8 rounded-lg bg-cyan-glow/20 flex items-center justify-center">
+        <div class="mb-8 flex items-center gap-3">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-glow/20">
             <span class="text-cyan-glow">⚙️</span>
           </div>
           <h2 class="text-3xl font-bold text-white">Enterprise Specifications</h2>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-10 bg-surface-dark border border-border-dark rounded-3xl">
+
+        <div
+          class="grid grid-cols-1 gap-8 rounded-3xl border border-border-dark bg-surface-dark p-10 md:grid-cols-2 lg:grid-cols-4"
+        >
           <div class="flex flex-col gap-2">
-            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+            <div class="text-xs font-bold uppercase tracking-widest text-text-dim">
               MODEL COMPLEXITY
             </div>
-            <div class="text-3xl font-black text-white">
-              4.2B Parameters
-            </div>
-            <div class="text-sm text-cyan-glow italic">
-              Large Transformer
-            </div>
+            <div class="text-3xl font-black text-white">4.2B Parameters</div>
+            <div class="text-sm italic text-cyan-glow">Large Transformer</div>
           </div>
           <div class="flex flex-col gap-2">
-            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+            <div class="text-xs font-bold uppercase tracking-widest text-text-dim">
               INFERENCE SPEED
             </div>
-            <div class="text-3xl font-black text-white">
-              &lt; 150ms
-            </div>
-            <div class="text-sm text-cyan-glow italic">
-              On Tesla P100
-            </div>
+            <div class="text-3xl font-black text-white">&lt; 150ms</div>
+            <div class="text-sm italic text-cyan-glow">On Tesla P100</div>
           </div>
           <div class="flex flex-col gap-2">
-            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+            <div class="text-xs font-bold uppercase tracking-widest text-text-dim">
               ACCURACY TARGET
             </div>
-            <div class="text-3xl font-black text-white">
-              ~90.2%
-            </div>
-            <div class="text-sm text-cyan-glow italic">
-              Verified on SME datasets
-            </div>
+            <div class="text-3xl font-black text-white">~90.2%</div>
+            <div class="text-sm italic text-cyan-glow">Verified on SME datasets</div>
           </div>
           <div class="flex flex-col gap-2">
-            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
-              MAINTENANCE
-            </div>
-            <div class="text-3xl font-black text-white">
-              Included
-            </div>
-            <div class="text-sm text-cyan-glow italic">
-              Monthly updates
-            </div>
+            <div class="text-xs font-bold uppercase tracking-widest text-text-dim">MAINTENANCE</div>
+            <div class="text-3xl font-black text-white">Included</div>
+            <div class="text-sm italic text-cyan-glow">Monthly updates</div>
           </div>
         </div>
       </section>
 
       <section class="mb-24">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-white mb-4 font-display">KEY FEATURES</h2>
-          <div class="w-24 h-1 bg-gradient-to-r from-primary to-cyan-glow mx-auto rounded-full"></div>
+        <div class="mb-16 text-center">
+          <h2 class="font-display mb-4 text-4xl font-bold text-white">KEY FEATURES</h2>
+          <div class="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-primary to-cyan-glow">
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
           <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <span class="text-2xl">📊</span>
               </div>
-              <h3 class="text-xl font-bold text-white">
-                Management Reporting
-              </h3>
-              <p class="text-text-dim text-sm leading-relaxed">
-                Hierarchical tags enable deep-dive analysis of root causes and help desk performance trends.
+              <h3 class="text-xl font-bold text-white">Management Reporting</h3>
+              <p class="text-sm leading-relaxed text-text-dim">
+                Hierarchical tags enable deep-dive analysis of root causes and help desk performance
+                trends.
               </p>
             </div>
           </Card>
           <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
-              <div class="w-12 h-12 rounded-xl bg-cyan-glow/20 flex items-center justify-center">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-glow/20">
                 <span class="text-2xl">🎯</span>
               </div>
-              <h3 class="text-xl font-bold text-white">
-                Intelligent Routing
-              </h3>
-              <p class="text-text-dim text-sm leading-relaxed">
-                Instantly assign tickets to specialized teams based on fine-grained intent detection.
+              <h3 class="text-xl font-bold text-white">Intelligent Routing</h3>
+              <p class="text-sm leading-relaxed text-text-dim">
+                Instantly assign tickets to specialized teams based on fine-grained intent
+                detection.
               </p>
             </div>
           </Card>
           <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <span class="text-2xl">🛡️</span>
               </div>
-              <h3 class="text-xl font-bold text-white">
-                Air-Gapped Privacy
-              </h3>
-              <p class="text-text-dim text-sm leading-relaxed">
+              <h3 class="text-xl font-bold text-white">Air-Gapped Privacy</h3>
+              <p class="text-sm leading-relaxed text-text-dim">
                 Designed for banking, healthcare and government use-cases. No cloud needed.
               </p>
             </div>
@@ -154,73 +144,76 @@ const description = "Our flagship medium-weight model. Precision-tuned for routi
       </section>
 
       <section class="mb-24">
-        <div class="bg-surface-dark border border-border-dark rounded-3xl p-10">
-          <h2 class="text-center text-4xl font-black text-white mb-12">LITE VS PRO</h2>
+        <div class="rounded-3xl border border-border-dark bg-surface-dark p-10">
+          <h2 class="mb-12 text-center text-4xl font-black text-white">LITE VS PRO</h2>
 
           <div class="space-y-1">
-            <div class="grid grid-cols-3 gap-6 pb-6 border-b border-primary/30 text-xs font-black uppercase tracking-wider">
+            <div
+              class="grid grid-cols-3 gap-6 border-b border-primary/30 pb-6 text-xs font-black uppercase tracking-wider"
+            >
               <div class="text-text-dim">Feature</div>
-              <div class="text-white text-center">Lite Free</div>
-              <div class="text-primary-light text-center">Lite Pro</div>
+              <div class="text-center text-white">Lite Free</div>
+              <div class="text-center text-primary-light">Lite Pro</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
-              <div class="text-text-dim font-medium">Model Size</div>
-              <div class="text-white text-center">0.5B Parameters</div>
-              <div class="text-white text-center font-bold">4.2B Parameters</div>
+            <div class="grid grid-cols-3 gap-6 border-b border-border-dark/30 py-4 text-sm">
+              <div class="font-medium text-text-dim">Model Size</div>
+              <div class="text-center text-white">0.5B Parameters</div>
+              <div class="text-center font-bold text-white">4.2B Parameters</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
-              <div class="text-text-dim font-medium">Tag Taxonomy</div>
-              <div class="text-white text-center">150+ Tags</div>
-              <div class="text-white text-center font-bold">150+ Tags</div>
+            <div class="grid grid-cols-3 gap-6 border-b border-border-dark/30 py-4 text-sm">
+              <div class="font-medium text-text-dim">Tag Taxonomy</div>
+              <div class="text-center text-white">150+ Tags</div>
+              <div class="text-center font-bold text-white">150+ Tags</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
-              <div class="text-text-dim font-medium">Expected Accuracy</div>
-              <div class="text-white text-center">~82%</div>
-              <div class="text-white text-center font-bold">~90%</div>
+            <div class="grid grid-cols-3 gap-6 border-b border-border-dark/30 py-4 text-sm">
+              <div class="font-medium text-text-dim">Expected Accuracy</div>
+              <div class="text-center text-white">~82%</div>
+              <div class="text-center font-bold text-white">~90%</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
-              <div class="text-text-dim font-medium">Inference Speed</div>
-              <div class="text-white text-center">~300ms</div>
-              <div class="text-white text-center font-bold">&lt; 150ms</div>
+            <div class="grid grid-cols-3 gap-6 border-b border-border-dark/30 py-4 text-sm">
+              <div class="font-medium text-text-dim">Inference Speed</div>
+              <div class="text-center text-white">~300ms</div>
+              <div class="text-center font-bold text-white">&lt; 150ms</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
-              <div class="text-text-dim font-medium">Hardware Requirements</div>
-              <div class="text-white text-center">8GB RAM, CPU-only</div>
-              <div class="text-white text-center font-bold">16GB RAM, GPU recommended</div>
+            <div class="grid grid-cols-3 gap-6 border-b border-border-dark/30 py-4 text-sm">
+              <div class="font-medium text-text-dim">Hardware Requirements</div>
+              <div class="text-center text-white">8GB RAM, CPU-only</div>
+              <div class="text-center font-bold text-white">16GB RAM, GPU recommended</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
-              <div class="text-text-dim font-medium">Use Case</div>
-              <div class="text-white text-center">Testing &amp; PoC</div>
-              <div class="text-white text-center font-bold">Production routing &amp; analytics</div>
+            <div class="grid grid-cols-3 gap-6 border-b border-border-dark/30 py-4 text-sm">
+              <div class="font-medium text-text-dim">Use Case</div>
+              <div class="text-center text-white">Testing &amp; PoC</div>
+              <div class="text-center font-bold text-white">Production routing &amp; analytics</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
-              <div class="text-text-dim font-medium">Support &amp; Updates</div>
-              <div class="text-white text-center">Community</div>
-              <div class="text-white text-center font-bold">Professional (Included)</div>
+            <div class="grid grid-cols-3 gap-6 border-b border-border-dark/30 py-4 text-sm">
+              <div class="font-medium text-text-dim">Support &amp; Updates</div>
+              <div class="text-center text-white">Community</div>
+              <div class="text-center font-bold text-white">Professional (Included)</div>
             </div>
-            <div class="grid grid-cols-3 gap-6 py-4 border-b border-border-dark/30 text-sm">
-              <div class="text-text-dim font-medium">Price</div>
-              <div class="text-white text-center">0€</div>
-              <div class="text-white text-center font-bold">2,500€ (one-time)</div>
+            <div class="grid grid-cols-3 gap-6 border-b border-border-dark/30 py-4 text-sm">
+              <div class="font-medium text-text-dim">Price</div>
+              <div class="text-center text-white">0€</div>
+              <div class="text-center font-bold text-white">2,500€ (one-time)</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="bg-gradient-to-br from-primary/10 to-cyan-glow/5 border border-primary/20 rounded-3xl p-12 text-center">
-        <h2 class="text-4xl font-black text-white mb-4 font-display">
+      <section
+        class="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 to-cyan-glow/5 p-12 text-center"
+      >
+        <h2 class="font-display mb-4 text-4xl font-black text-white">
           Professional Tagging.<br />Production Ready.
         </h2>
-        <p class="text-text-dim text-lg mb-8 max-w-2xl mx-auto">
-          Join forward-thinking support teams automating their workflow with German Engineering precision.
+        <p class="mx-auto mb-8 max-w-2xl text-lg text-text-dim">
+          Join forward-thinking support teams automating their workflow with German Engineering
+          precision.
         </p>
         <div class="flex flex-wrap justify-center gap-6">
           <Button variant="surface" size="lg" class="uppercase tracking-widest" client:load>
             Buy Lite Pro
           </Button>
-          <Button variant="outline" size="lg" client:load>
-            View Documentation
-          </Button>
+          <Button variant="outline" size="lg" client:load> View Documentation </Button>
         </div>
       </section>
     </div>

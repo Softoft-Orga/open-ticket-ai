@@ -4,23 +4,23 @@ import Button from '../components/vue/core/basic/Button.vue';
 import Card from '../components/vue/core/basic/Card.vue';
 import Badge from '../components/vue/core/basic/Badge.vue';
 import {
-    CubeTransparentIcon,
-    ServerIcon,
-    ArrowPathRoundedSquareIcon,
-    CircleStackIcon,
-    ArchiveBoxIcon,
-    SparklesIcon,
-    ArrowRightIcon,
-    CheckIcon,
-    CpuChipIcon,
-    WrenchScrewdriverIcon,
-    ChartBarIcon,
-    Cog6ToothIcon,
-    ArrowPathIcon,
-    CpuChipIcon as CpuIcon,
-    CubeTransparentIcon as CubeIcon,
-    CheckBadgeIcon,
-    RocketLaunchIcon
+  CubeTransparentIcon,
+  ServerIcon,
+  ArrowPathRoundedSquareIcon,
+  CircleStackIcon,
+  ArchiveBoxIcon,
+  SparklesIcon,
+  ArrowRightIcon,
+  CheckIcon,
+  CpuChipIcon,
+  WrenchScrewdriverIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+  ArrowPathIcon,
+  CpuChipIcon as CpuIcon,
+  CubeTransparentIcon as CubeIcon,
+  CheckBadgeIcon,
+  RocketLaunchIcon,
 } from '@heroicons/vue/24/outline';
 
 const title = 'Services - Open Ticket AI';
@@ -33,574 +33,619 @@ const allServices = servicesEntries.flatMap(entry => entry.data);
 
 // Filter services by group
 const syntheticDataServices = allServices
-    .filter(s => s.serviceGroup === 'Synthetic Data Creation')
-    .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
+  .filter(s => s.serviceGroup === 'Synthetic Data Creation')
+  .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
 
 const extensions = allServices
-    .filter(s => s.serviceGroup === 'Extensions')
-    .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
+  .filter(s => s.serviceGroup === 'Extensions')
+  .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
 
 const integrationServices = allServices
-    .filter(s => s.serviceGroup === 'Integration')
-    .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
+  .filter(s => s.serviceGroup === 'Integration')
+  .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
 
 const automationServices = allServices
-    .filter(s => s.serviceGroup === 'Automation')
-    .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
+  .filter(s => s.serviceGroup === 'Automation')
+  .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
 
 const modelDevelopmentServices = allServices
-    .filter(s => s.serviceGroup === 'Model Development')
-    .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
+  .filter(s => s.serviceGroup === 'Model Development')
+  .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
 
 const flexibleServices = allServices
-    .filter(s => s.serviceGroup === 'Flexible')
-    .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
+  .filter(s => s.serviceGroup === 'Flexible')
+  .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
 
 // Helper function to format price
 function formatPrice(price: number | undefined): string {
-    if (!price || price === 0) return 'On Request';
-    return `${price.toLocaleString('de-DE')} €`;
+  if (!price || price === 0) return 'On Request';
+  return `${price.toLocaleString('de-DE')} €`;
 }
 
 // Helper function to determine if highlighted (middle service)
 function isHighlighted(index: number, total: number): boolean {
-    return total === 3 && index === 1;
+  return total === 3 && index === 1;
 }
 
 // Helper function to get integration service display info
 function getIntegrationServiceInfo(slug: string): { subtitle: string; systems: string } {
-    const mapping: Record<string, { subtitle: string; systems: string }> = {
-        'integration-standard-stack': {
-            subtitle: 'Standard Stack',
-            systems: 'OTOBO, Znuny (OTRS stack), Zammad'
-        },
-        'integration-enterprise-custom': {
-            subtitle: 'Enterprise / Custom',
-            systems: 'Jira Service Management, Zendesk, Freshdesk, ServiceNow, Custom'
-        }
-    };
-    return mapping[slug] || {subtitle: '', systems: ''};
+  const mapping: Record<string, { subtitle: string; systems: string }> = {
+    'integration-standard-stack': {
+      subtitle: 'Standard Stack',
+      systems: 'OTOBO, Znuny (OTRS stack), Zammad',
+    },
+    'integration-enterprise-custom': {
+      subtitle: 'Enterprise / Custom',
+      systems: 'Jira Service Management, Zendesk, Freshdesk, ServiceNow, Custom',
+    },
+  };
+  return mapping[slug] || { subtitle: '', systems: '' };
 }
 
 // Map icon names for extensions to Heroicon components
 const iconComponentMap: Record<string, any> = {
-    'tune': WrenchScrewdriverIcon,
-    'analytics': ChartBarIcon,
-    'integration_instructions': Cog6ToothIcon,
-    'update': ArrowPathIcon,
-    'psychology': CpuIcon,
-    'hub': CubeIcon,
-    'verified': CheckBadgeIcon,
-    'rocket_launch': RocketLaunchIcon,
+  tune: WrenchScrewdriverIcon,
+  analytics: ChartBarIcon,
+  integration_instructions: Cog6ToothIcon,
+  update: ArrowPathIcon,
+  psychology: CpuIcon,
+  hub: CubeIcon,
+  verified: CheckBadgeIcon,
+  rocket_launch: RocketLaunchIcon,
 };
 
 const extensionIcons: Record<string, string> = {
-    'fine-tuned-model': 'tune',
-    'evaluation-report': 'analytics',
-    'system-tuning': 'integration_instructions',
-    'ongoing-updates': 'update',
+  'fine-tuned-model': 'tune',
+  'evaluation-report': 'analytics',
+  'system-tuning': 'integration_instructions',
+  'ongoing-updates': 'update',
 };
 
 // Typical scope items for model development
 const typicalScopeItems = [
-    {
-        icon: 'psychology',
-        title: 'Tag Definition',
-        desc: 'Taxonomy design, custom tag definitions, or mapping your structure with our standard ontology.'
-    },
-    {
-        icon: 'hub',
-        title: 'Dataset Strategy',
-        desc: 'Balancing synthetic vs real data, handling multiple languages, and covering edge cases.'
-    },
-    {
-        icon: 'verified',
-        title: 'Training & Evaluation',
-        desc: 'Full model training cycles with rigorous acceptance tests and performance validation.'
-    },
-    {
-        icon: 'rocket_launch',
-        title: 'Packaging & Deployment',
-        desc: 'Guidance for self-hosted inference setup, containerization, and update strategies.'
-    }
+  {
+    icon: 'psychology',
+    title: 'Tag Definition',
+    desc: 'Taxonomy design, custom tag definitions, or mapping your structure with our standard ontology.',
+  },
+  {
+    icon: 'hub',
+    title: 'Dataset Strategy',
+    desc: 'Balancing synthetic vs real data, handling multiple languages, and covering edge cases.',
+  },
+  {
+    icon: 'verified',
+    title: 'Training & Evaluation',
+    desc: 'Full model training cycles with rigorous acceptance tests and performance validation.',
+  },
+  {
+    icon: 'rocket_launch',
+    title: 'Packaging & Deployment',
+    desc: 'Guidance for self-hosted inference setup, containerization, and update strategies.',
+  },
 ];
 ---
 
 <BaseLayout title={title} description={description}>
-    <div class="min-h-screen bg-background-dark pb-32">
-        <!-- Hero -->
-        <section class="relative pt-24 pb-20 text-center">
-            <div class="mx-auto max-w-7xl px-6">
+  <div class="min-h-screen bg-background-dark pb-32">
+    <!-- Hero -->
+    <section class="relative pb-20 pt-24 text-center">
+      <div class="mx-auto max-w-7xl px-6">
+        <div class="mb-8">
+          <Badge variant="subtle" tone="success" size="sm" client:load>
+            <span class="flex items-center gap-2">
+              <span class="flex h-2 w-2 rounded-full bg-green-500"></span>
+              German Engineering Precision
+            </span>
+          </Badge>
+        </div>
+        <h1
+          class="mx-auto mb-8 max-w-4xl text-6xl font-black leading-[0.9] tracking-tighter text-white sm:text-7xl lg:text-8xl"
+        >
+          We Don't Just Build AI. <br />
+          <span class="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent"
+            >We Integrate It.</span
+          >
+        </h1>
+        <p class="mx-auto max-w-2xl text-xl font-medium leading-relaxed text-slate-400">
+          Transparent, fixed-price packages for enterprise-grade helpdesk automation. From
+          self-hosted AI models to full workflow automation.
+        </p>
+      </div>
+    </section>
+
+    <!-- Ticket Tagging AI Model Section -->
+    <section class="mx-auto mb-32 max-w-7xl px-6">
+      <div
+        class="flex flex-col gap-16 rounded-3xl border border-white/5 bg-[#120818] p-10 lg:flex-row"
+      >
+        <div class="lg:w-2/3">
+          <div class="mb-6 flex items-center gap-3">
+            <div class="rounded-lg bg-primary/10 p-2 text-primary">
+              <CubeTransparentIcon class="h-8 w-8" aria-hidden="true" />
+            </div>
+            <h2 class="text-3xl font-bold text-white">Ticket Tagging AI Model</h2>
+          </div>
+          <p class="mb-10 max-w-2xl text-lg leading-relaxed text-slate-400">
+            Our core AI model designed for the automatic classification and tagging of helpdesk
+            tickets. It processes incoming requests to instantly identify critical metadata before a
+            human even sees the ticket.
+          </p>
+          <div class="grid grid-cols-2 gap-6">
+            <div class="flex items-center gap-3 text-slate-300">
+              <div class="size-2 rounded-full bg-primary"></div>
+              <span class="font-bold">Category & Topic</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-300">
+              <div class="size-2 rounded-full bg-primary"></div>
+              <span class="font-bold">Intent Recognition</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-300">
+              <div class="size-2 rounded-full bg-primary"></div>
+              <span class="font-bold">Impact, Urgency & Priority</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-300">
+              <div class="size-2 rounded-full bg-primary"></div>
+              <span class="font-bold">Routing Hints</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-4 lg:w-1/3">
+          <div class="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">
+            Deployment & Integration
+          </div>
+          <Card variant="outline" size="sm" radius="xl" client:load>
+            <div class="flex items-start gap-4">
+              <ServerIcon class="h-6 w-6 flex-shrink-0 text-primary" aria-hidden="true" />
+              <div>
+                <h4 class="text-sm font-bold text-white">Self-Hosted</h4>
+                <p class="text-[11px] leading-tight text-slate-500">
+                  Full on-premise deployment. No data leaves your secure infrastructure.
+                </p>
+              </div>
+            </div>
+          </Card>
+          <Card variant="outline" size="sm" radius="xl" client:load>
+            <div class="flex items-start gap-4">
+              <ArrowPathRoundedSquareIcon
+                class="h-6 w-6 flex-shrink-0 text-primary"
+                aria-hidden="true"
+              />
+              <div>
+                <h4 class="text-sm font-bold text-white">Auto Write-Back</h4>
+                <p class="text-[11px] leading-tight text-slate-500">
+                  Deep integration with ticket systems to automatically write back tags and fields.
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </section>
+
+    <!-- Synthetic Data Generation -->
+    <section class="mx-auto mb-32 max-w-7xl px-6">
+      <div class="mb-16 text-center">
+        <div class="mb-6">
+          <Badge variant="subtle" tone="info" size="sm" client:load>
+            <span class="flex items-center gap-2">
+              <CircleStackIcon class="h-3 w-3" aria-hidden="true" />
+              Data Generation
+            </span>
+          </Badge>
+        </div>
+        <h2 class="mb-6 text-5xl font-black tracking-tight text-white">
+          Synthetic Data Generation
+        </h2>
+        <p class="mx-auto max-w-3xl text-lg leading-relaxed text-slate-400">
+          Custom, realistic, multilingual support-ticket datasets for AI training, evaluation, and
+          benchmarking. No sensitive customer data exposed.
+        </p>
+      </div>
+
+      <div class="mb-20 grid grid-cols-1 gap-8 md:grid-cols-3">
+        {
+          syntheticDataServices.map((service, index) => {
+            const highlighted = isHighlighted(index, syntheticDataServices.length);
+            return (
+              <Card
+                variant={highlighted ? 'surface' : 'outline'}
+                tone={highlighted ? 'primary' : 'neutral'}
+                size="md"
+                radius="2xl"
+                elevation={highlighted ? 'md' : 'none'}
+                client:load
+              >
+                <div slot="title">
+                  <h4 class="font-display text-xl font-bold text-white">{service.title}</h4>
+                  {service.oneLiner && (
+                    <p class="mt-1 text-xs font-bold uppercase text-primary">{service.oneLiner}</p>
+                  )}
+                </div>
                 <div class="mb-8">
-                    <Badge variant="subtle" tone="success" size="sm" client:load>
-                        <span class="flex items-center gap-2">
-                            <span class="flex h-2 w-2 rounded-full bg-green-500"></span>
-                            German Engineering Precision
-                        </span>
-                    </Badge>
+                  <div class="mb-1 text-sm font-bold uppercase tracking-widest text-slate-400">
+                    from
+                  </div>
+                  <div class="font-display text-3xl font-bold text-white">
+                    {formatPrice(service.startingPrice)}
+                  </div>
                 </div>
-                <h1 class="mx-auto max-w-4xl text-6xl font-black text-white sm:text-7xl lg:text-8xl tracking-tighter mb-8 leading-[0.9]">
-                    We Don't Just Build AI. <br/>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">We Integrate It.</span>
-                </h1>
-                <p class="mx-auto max-w-2xl text-xl text-slate-400 leading-relaxed font-medium">
-                    Transparent, fixed-price packages for enterprise-grade helpdesk automation.
-                    From self-hosted AI models to full workflow automation.
-                </p>
-            </div>
-        </section>
+                <ul class="mb-10 flex-grow space-y-3">
+                  {(service.outcomes || []).map(feature => (
+                    <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                      <CheckIcon
+                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary"
+                        aria-hidden="true"
+                      />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div slot="actions">
+                  <Button
+                    variant={highlighted ? 'surface' : 'outline'}
+                    tone={highlighted ? 'primary' : 'neutral'}
+                    size="md"
+                    class="w-full"
+                    data-service-modal-trigger
+                    data-service=""
+                    client:load
+                  >
+                    {index === 1 ? 'Get Demo' : 'Contact Sales'}
+                  </Button>
+                </div>
+              </Card>
+            );
+          })
+        }
+      </div>
 
-        <!-- Ticket Tagging AI Model Section -->
-        <section class="max-w-7xl mx-auto px-6 mb-32">
-            <div class="bg-[#120818] border border-white/5 rounded-3xl p-10 flex flex-col lg:flex-row gap-16">
-                <div class="lg:w-2/3">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="p-2 rounded-lg bg-primary/10 text-primary">
-                            <CubeTransparentIcon class="w-8 h-8" aria-hidden="true"/>
-                        </div>
-                        <h2 class="text-3xl font-bold text-white">Ticket Tagging AI Model</h2>
-                    </div>
-                    <p class="text-slate-400 text-lg mb-10 max-w-2xl leading-relaxed">
-                        Our core AI model designed for the automatic classification and tagging of helpdesk tickets.
-                        It processes incoming requests to instantly identify critical metadata before a human even sees
-                        the ticket.
+      <!-- Common Extensions -->
+      <div class="rounded-2xl border border-white/5 bg-[#0a060d] p-8">
+        <div class="mb-8 flex items-center gap-3">
+          <ArchiveBoxIcon class="h-6 w-6 text-slate-500" aria-hidden="true" />
+          <h3 class="text-sm font-bold uppercase tracking-widest text-slate-400">
+            Common Extensions <span class="font-normal text-slate-600">(Add-ons)</span>
+          </h3>
+        </div>
+        <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+          {
+            extensions.map(extension => {
+              const iconName = extensionIcons[extension.slug] || 'tune';
+              const IconComponent = iconComponentMap[iconName] || WrenchScrewdriverIcon;
+              return (
+                <div class="flex items-start gap-4">
+                  <div class="mt-0.5 text-primary">
+                    <IconComponent class="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h5 class="mb-1 text-sm font-bold text-white">{extension.title}</h5>
+                    <p class="text-xs leading-relaxed text-slate-500">
+                      {extension.description || extension.oneLiner || ''}
                     </p>
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="flex items-center gap-3 text-slate-300">
-                            <div class="size-2 rounded-full bg-primary"></div>
-                            <span class="font-bold">Category & Topic</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-slate-300">
-                            <div class="size-2 rounded-full bg-primary"></div>
-                            <span class="font-bold">Intent Recognition</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-slate-300">
-                            <div class="size-2 rounded-full bg-primary"></div>
-                            <span class="font-bold">Impact, Urgency & Priority</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-slate-300">
-                            <div class="size-2 rounded-full bg-primary"></div>
-                            <span class="font-bold">Routing Hints</span>
-                        </div>
-                    </div>
+                  </div>
                 </div>
-                <div class="lg:w-1/3 flex flex-col gap-4">
-                    <div class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Deployment &
-                        Integration
-                    </div>
-                    <Card variant="outline" size="sm" radius="xl" client:load>
-                        <div class="flex gap-4 items-start">
-                            <ServerIcon class="w-6 h-6 text-primary flex-shrink-0" aria-hidden="true"/>
-                            <div>
-                                <h4 class="text-white text-sm font-bold">Self-Hosted</h4>
-                                <p class="text-slate-500 text-[11px] leading-tight">Full on-premise deployment. No data
-                                    leaves your secure infrastructure.</p>
-                            </div>
-                        </div>
-                    </Card>
-                    <Card variant="outline" size="sm" radius="xl" client:load>
-                        <div class="flex gap-4 items-start">
-                            <ArrowPathRoundedSquareIcon class="w-6 h-6 text-primary flex-shrink-0" aria-hidden="true"/>
-                            <div>
-                                <h4 class="text-white text-sm font-bold">Auto Write-Back</h4>
-                                <p class="text-slate-500 text-[11px] leading-tight">Deep integration with ticket systems to
-                                    automatically write back tags and fields.</p>
-                            </div>
-                        </div>
-                    </Card>
-                </div>
-            </div>
-        </section>
+              );
+            })
+          }
+        </div>
+      </div>
+    </section>
 
-        <!-- Synthetic Data Generation -->
-        <section class="max-w-7xl mx-auto px-6 mb-32">
-            <div class="text-center mb-16">
+    <!-- Integration Services -->
+    <section class="mx-auto mb-32 max-w-7xl px-6">
+      <div class="mb-16 text-center">
+        <h2 class="mb-6 text-5xl font-black text-white">Integration Services</h2>
+        <p class="text-lg text-slate-400">
+          Fixed-price packages to connect Open Ticket AI with your existing ecosystem.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        {
+          integrationServices.map((service, index) => {
+            const info = getIntegrationServiceInfo(service.slug);
+            const highlighted = index === 1;
+            return (
+              <Card
+                variant={highlighted ? 'surface' : 'outline'}
+                tone={highlighted ? 'primary' : 'neutral'}
+                size="md"
+                radius="2xl"
+                elevation="none"
+                client:load
+              >
+                <div class="mb-6 flex items-start justify-between">
+                  <div>
+                    <h4 class="text-xl font-bold text-white">Integration Package</h4>
+                    <p class="mt-1 text-xs font-bold uppercase tracking-widest text-primary">
+                      {info.subtitle}
+                    </p>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-white">
+                      {formatPrice(service.startingPrice)}
+                    </div>
+                    <div class="text-[10px] uppercase text-slate-500">One-time fee</div>
+                  </div>
+                </div>
+
                 <div class="mb-6">
-                    <Badge variant="subtle" tone="info" size="sm" client:load>
-                        <span class="flex items-center gap-2">
-                            <CircleStackIcon class="w-3 h-3" aria-hidden="true"/>
-                            Data Generation
-                        </span>
-                    </Badge>
+                  <div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    Supported Systems
+                  </div>
+                  <div class="text-sm font-medium text-slate-200">{info.systems}</div>
                 </div>
-                <h2 class="text-5xl font-black text-white mb-6 tracking-tight">Synthetic Data Generation</h2>
-                <p class="text-slate-400 text-lg max-w-3xl mx-auto leading-relaxed">
-                    Custom, realistic, multilingual support-ticket datasets for AI training, evaluation, and
-                    benchmarking.
-                    No sensitive customer data exposed.
-                </p>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                {syntheticDataServices.map((service, index) => {
-                    const highlighted = isHighlighted(index, syntheticDataServices.length);
-                    return (
-                        <Card
-                            variant={highlighted ? 'surface' : 'outline'}
-                            tone={highlighted ? 'primary' : 'neutral'}
-                            size="md"
-                            radius="2xl"
-                            elevation={highlighted ? 'md' : 'none'}
-                            client:load
-                        >
-                            <div slot="title">
-                                <h4 class="text-white text-xl font-bold font-display">
-                                    {service.title}
-                                </h4>
-                                {service.oneLiner && (
-                                    <p class="text-primary text-xs font-bold uppercase mt-1">
-                                        {service.oneLiner}
-                                    </p>
-                                )}
-                            </div>
-                            <div class="mb-8">
-                                <div class="text-slate-400 text-sm mb-1 uppercase tracking-widest font-bold">
-                                    from
-                                </div>
-                                <div class="text-3xl font-bold text-white font-display">
-                                    {formatPrice(service.startingPrice)}
-                                </div>
-                            </div>
-                            <ul class="space-y-3 mb-10 flex-grow">
-                                {(service.outcomes || []).map((feature) => (
-                                    <li class="flex items-start gap-2.5 text-sm text-slate-300">
-                                        <CheckIcon class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
-                                        <span>{feature}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                            <div slot="actions">
-                                <Button
-                                    variant={highlighted ? 'surface' : 'outline'}
-                                    tone={highlighted ? 'primary' : 'neutral'}
-                                    size="md"
-                                    class="w-full"
-                                    data-service-modal-trigger
-                                    data-service=""
-                                    client:load
-                                >
-                                    {index === 1 ? "Get Demo" : "Contact Sales"}
-                                </Button>
-                            </div>
-                        </Card>
-                    );
-                })}
-            </div>
+                <ul class="mb-8 flex-grow space-y-2.5">
+                  {(service.outcomes || []).map(feature => (
+                    <li class="flex items-start gap-2 text-sm text-slate-400">
+                      <CheckIcon
+                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary"
+                        aria-hidden="true"
+                      />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
 
-            <!-- Common Extensions -->
-            <div class="bg-[#0a060d] border border-white/5 rounded-2xl p-8">
-                <div class="flex items-center gap-3 mb-8">
-                    <ArchiveBoxIcon class="w-6 h-6 text-slate-500" aria-hidden="true"/>
-                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">Common Extensions <span
-                        class="text-slate-600 font-normal">(Add-ons)</span></h3>
+                <div slot="actions">
+                  <Button
+                    variant={highlighted ? 'surface' : 'outline'}
+                    tone={highlighted ? 'primary' : 'neutral'}
+                    size="md"
+                    class="w-full"
+                    data-service-modal-trigger
+                    data-service=""
+                    client:load
+                  >
+                    {index === 1 ? 'Get Demo' : 'Contact Sales'}
+                  </Button>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                    {extensions.map((extension) => {
-                        const iconName = extensionIcons[extension.slug] || 'tune';
-                        const IconComponent = iconComponentMap[iconName] || WrenchScrewdriverIcon;
-                        return (
-                            <div class="flex items-start gap-4">
-                                <div class="text-primary mt-0.5">
-                                    <IconComponent class="w-6 h-6" aria-hidden="true" />
-                                </div>
-                                <div>
-                                    <h5 class="text-white text-sm font-bold mb-1">
-                                        {extension.title}
-                                    </h5>
-                                    <p class="text-slate-500 text-xs leading-relaxed">
-                                        {extension.description || extension.oneLiner || ''}
-                                    </p>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        </section>
+              </Card>
+            );
+          })
+        }
+      </div>
+      <div class="mt-8 rounded-xl border border-red-500/10 bg-red-500/5 py-3 text-center">
+        <p class="text-xs font-bold uppercase tracking-widest text-red-500/60">
+          Out of Scope <span class="text-red-500">(Billed Hourly):</span> Multi-instance rollouts, complex
+          field transformations, custom UI work, deep customization, and bespoke workflows.
+        </p>
+      </div>
+    </section>
 
-        <!-- Integration Services -->
-        <section class="max-w-7xl mx-auto px-6 mb-32">
-            <div class="text-center mb-16">
-                <h2 class="text-5xl font-black text-white mb-6">Integration Services</h2>
-                <p class="text-slate-400 text-lg">Fixed-price packages to connect Open Ticket AI with your existing
-                    ecosystem.</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {integrationServices.map((service, index) => {
-                    const info = getIntegrationServiceInfo(service.slug);
-                    const highlighted = index === 1;
-                    return (
-                        <Card
-                            variant={highlighted ? 'surface' : 'outline'}
-                            tone={highlighted ? 'primary' : 'neutral'}
-                            size="md"
-                            radius="2xl"
-                            elevation="none"
-                            client:load
-                        >
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <h4 class="text-white text-xl font-bold">
-                                        Integration Package
-                                    </h4>
-                                    <p class="text-primary text-xs font-bold uppercase tracking-widest mt-1">
-                                        {info.subtitle}
-                                    </p>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-2xl font-bold text-white">
-                                        {formatPrice(service.startingPrice)}
-                                    </div>
-                                    <div class="text-[10px] text-slate-500 uppercase">
-                                        One-time fee
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-6">
-                                <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-2">
-                                    Supported Systems
-                                </div>
-                                <div class="text-slate-200 text-sm font-medium">
-                                    {info.systems}
-                                </div>
-                            </div>
-
-                            <ul class="space-y-2.5 mb-8 flex-grow">
-                                {(service.outcomes || []).map((feature) => (
-                                    <li class="flex items-start gap-2 text-sm text-slate-400">
-                                        <CheckIcon class="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
-                                        <span>{feature}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <div slot="actions">
-                                <Button
-                                    variant={highlighted ? 'surface' : 'outline'}
-                                    tone={highlighted ? 'primary' : 'neutral'}
-                                    size="md"
-                                    class="w-full"
-                                    data-service-modal-trigger
-                                    data-service=""
-                                    client:load
-                                >
-                                    {index === 1 ? "Get Demo" : "Contact Sales"}
-                                </Button>
-                            </div>
-                        </Card>
-                    );
-                })}
-            </div>
-            <div class="mt-8 text-center bg-red-500/5 border border-red-500/10 rounded-xl py-3">
-                <p class="text-xs font-bold uppercase tracking-widest text-red-500/60">
-                    Out of Scope <span class="text-red-500">(Billed Hourly):</span> Multi-instance rollouts, complex
-                    field transformations, custom UI work, deep customization, and bespoke workflows.
-                </p>
-            </div>
-        </section>
-
-        <!-- Automation Services (OTA) -->
-        <section class="max-w-7xl mx-auto px-6 mb-32">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-5">
-                    <div class="mb-6">
-                        <Badge variant="subtle" tone="primary" size="sm" client:load>
-                            <span class="flex items-center gap-2">
-                                <SparklesIcon class="w-3 h-3" aria-hidden="true"/>
-                                Automation Engine
-                            </span>
-                        </Badge>
+    <!-- Automation Services (OTA) -->
+    <section class="mx-auto mb-32 max-w-7xl px-6">
+      <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          <div class="mb-6">
+            <Badge variant="subtle" tone="primary" size="sm" client:load>
+              <span class="flex items-center gap-2">
+                <SparklesIcon class="h-3 w-3" aria-hidden="true" />
+                Automation Engine
+              </span>
+            </Badge>
+          </div>
+          <h2 class="mb-6 text-5xl font-black text-white">Automation Services</h2>
+          <h3 class="mb-6 text-xl font-bold text-slate-200">Open Ticket Automation (OTA)</h3>
+          <p class="mb-8 text-lg leading-relaxed text-slate-400">
+            OTA is our open-source layer that translates AI tags into concrete actions. It bridges
+            the gap between intelligence and resolution.
+          </p>
+          <ul class="space-y-4">
+            {
+              [
+                'Routing & Assignments',
+                'Priority & SLA Updates',
+                'Auto-replies & Notes',
+                'Triggering Tasks',
+              ].map(item => (
+                <li class="flex items-center gap-3 font-bold text-slate-300">
+                  <ArrowRightIcon class="h-5 w-5 text-primary" aria-hidden="true" />
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="lg:col-span-7">
+          {
+            automationServices.map(service => (
+              <div class="rounded-2xl border border-primary/20 bg-[#1a101f] p-8">
+                <div class="mb-10 flex items-start justify-between border-b border-white/5 pb-6">
+                  <div>
+                    <h4 class="text-xl font-bold text-white">{service.title}</h4>
+                    <p class="mt-1 text-xs text-slate-500">{service.oneLiner}</p>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-3xl font-bold text-white">
+                      {formatPrice(service.startingPrice)}
                     </div>
-                    <h2 class="text-5xl font-black text-white mb-6">Automation Services</h2>
-                    <h3 class="text-xl font-bold text-slate-200 mb-6">Open Ticket Automation (OTA)</h3>
-                    <p class="text-slate-400 text-lg leading-relaxed mb-8">
-                        OTA is our open-source layer that translates AI tags into concrete actions. It bridges the gap
-                        between intelligence and resolution.
-                    </p>
-                    <ul class="space-y-4">
-                        {['Routing & Assignments', 'Priority & SLA Updates', 'Auto-replies & Notes', 'Triggering Tasks'].map((item) => (
-                            <li class="flex items-center gap-3 text-slate-300 font-bold">
-                                <ArrowRightIcon class="w-5 h-5 text-primary" aria-hidden="true"/>
-                                {item}
-                            </li>
-                        ))}
-                    </ul>
+                    <div class="text-[10px] uppercase text-slate-500">One-time</div>
+                  </div>
                 </div>
-                <div class="lg:col-span-7">
-                    {automationServices.map((service) => (
-                        <div class="bg-[#1a101f] border border-primary/20 rounded-2xl p-8">
-                            <div class="flex justify-between items-start mb-10 pb-6 border-b border-white/5">
-                                <div>
-                                    <h4 class="text-white text-xl font-bold">{service.title}</h4>
-                                    <p class="text-slate-500 text-xs mt-1">{service.oneLiner}</p>
-                                </div>
-                                <div class="text-right">
-                                    <div
-                                        class="text-3xl font-bold text-white">{formatPrice(service.startingPrice)}</div>
-                                    <div class="text-[10px] text-slate-500 uppercase">One-time</div>
-                                </div>
-                            </div>
 
-                            <div>
-                                <div class="text-[10px] text-white uppercase font-black mb-4">What's included</div>
-                                <ul class="space-y-3">
-                                    {(service.outcomes || []).map((item) => (
-                                        <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                                            <CheckIcon class="w-4 h-4 text-primary flex-shrink-0 mt-0.5"
-                                                       aria-hidden="true"/>
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
+                <div>
+                  <div class="mb-4 text-[10px] font-black uppercase text-white">
+                    What's included
+                  </div>
+                  <ul class="space-y-3">
+                    {(service.outcomes || []).map(item => (
+                      <li class="flex items-start gap-2.5 text-xs text-slate-400">
+                        <CheckIcon
+                          class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
+                          aria-hidden="true"
+                        />
+                        <span>{item}</span>
+                      </li>
                     ))}
+                  </ul>
                 </div>
-            </div>
-        </section>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
-        <!-- Model Development -->
-        <section class="max-w-7xl mx-auto px-6 mb-32">
-            <div class="text-center mb-16">
-                <div class="mb-6">
-                    <Badge variant="subtle" tone="primary" size="sm" client:load>
-                        <span class="flex items-center gap-2">
-                            <CpuChipIcon class="w-3 h-3" aria-hidden="true"/>
-                            Intelligence Layer
-                        </span>
-                    </Badge>
-                </div>
-                <h2 class="text-5xl font-black text-white mb-6">Model Development <span
-                    class="text-slate-500 font-medium">(Custom Tagging Models)</span></h2>
-                <p class="text-slate-400 text-lg">Custom training and architecture for specialized tagging
-                    requirements.</p>
-            </div>
+    <!-- Model Development -->
+    <section class="mx-auto mb-32 max-w-7xl px-6">
+      <div class="mb-16 text-center">
+        <div class="mb-6">
+          <Badge variant="subtle" tone="primary" size="sm" client:load>
+            <span class="flex items-center gap-2">
+              <CpuChipIcon class="h-3 w-3" aria-hidden="true" />
+              Intelligence Layer
+            </span>
+          </Badge>
+        </div>
+        <h2 class="mb-6 text-5xl font-black text-white">
+          Model Development <span class="font-medium text-slate-500">(Custom Tagging Models)</span>
+        </h2>
+        <p class="text-lg text-slate-400">
+          Custom training and architecture for specialized tagging requirements.
+        </p>
+      </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                {modelDevelopmentServices.map((service, index) => {
-                    if (index === 1) {
-                        return (
-                            <div
-                                class="bg-gradient-to-r from-[#1a1a1a] to-[#0a0a0a] border border-primary/20 rounded-2xl p-8">
-                                <div class="flex justify-between items-start mb-8">
-                                    <div>
-                                        <h4 class="text-white text-xl font-bold">{service.title}</h4>
-                                        <p class="text-slate-500 text-xs mt-1">{service.oneLiner}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <div
-                                            class="text-3xl font-bold text-white">{formatPrice(service.startingPrice)}</div>
-                                        <div class="text-[10px] text-slate-500 uppercase">One-time</div>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-4 mb-8">
-                                    <div class="text-[10px] text-white uppercase font-black">Typical Scope</div>
-                                    <ul class="space-y-3">
-                                        {typicalScopeItems.map((item) => (
-                                            <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                                                <CheckIcon class="w-4 h-4 text-primary flex-shrink-0 mt-0.5"
-                                                           aria-hidden="true"/>
-                                                <span>{item.title}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        );
-                    }
-
-                    return (
-                        <div class="bg-[#1a101f] border border-primary/20 rounded-2xl p-8">
-                            <div class="flex justify-between items-start mb-10 pb-6 border-b border-white/5">
-                                <div>
-                                    <h4 class="text-white text-xl font-bold">{service.title}</h4>
-                                    <p class="text-slate-500 text-xs mt-1">{service.oneLiner}</p>
-                                </div>
-                                <div class="text-right">
-                                    <div
-                                        class="text-3xl font-bold text-white">{formatPrice(service.startingPrice)}</div>
-                                    <div class="text-[10px] text-slate-500 uppercase">One-time</div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="text-[10px] text-white uppercase font-black mb-4">What's included</div>
-                                <ul class="space-y-3">
-                                    {(service.outcomes || []).map((item) => (
-                                        <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                                            <CheckIcon class="w-4 h-4 text-primary flex-shrink-0 mt-0.5"
-                                                       aria-hidden="true"/>
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        </section>
-
-        <!-- Flexible Services -->
-        <section class="max-w-7xl mx-auto px-6 mb-32">
-            <div class="text-center mb-16">
-                <div class="mb-6">
-                    <Badge variant="subtle" tone="info" size="sm" client:load>
-                        <span class="flex items-center gap-2">
-                            <SparklesIcon class="w-3 h-3" aria-hidden="true"/>
-                            Flexible Services
-                        </span>
-                    </Badge>
-                </div>
-                <h2 class="text-5xl font-black text-white mb-6">Flexible Services</h2>
-                <p class="text-slate-400 text-lg max-w-3xl mx-auto leading-relaxed">
-                    Tailored solutions and expert guidance for your unique automation needs.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {flexibleServices.map((service) => (
-                    <div class="bg-[#1a101f] border border-primary/20 rounded-2xl p-8">
-                        <div class="flex justify-between items-start mb-8">
-                            <div>
-                                <h4 class="text-white text-xl font-bold">{service.title}</h4>
-                                <p class="text-slate-500 text-xs mt-1">{service.oneLiner}</p>
-                            </div>
-                            <div class="text-right">
-                                <div
-                                    class="text-3xl font-bold text-white">{formatPrice(service.startingPrice)}</div>
-                                <div class="text-[10px] text-slate-500 uppercase">One-time</div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-4 mb-8">
-                            <div class="text-[10px] text-white uppercase font-black">Typical Scope</div>
-                            <ul class="space-y-3">
-                                {typicalScopeItems.map((item) => (
-                                    <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                                        <CheckIcon class="w-4 h-4 text-primary flex-shrink-0 mt-0.5"
-                                                   aria-hidden="true"/>
-                                        <span>{item.title}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div class="bg-black/20 rounded-xl p-4 border border-white/5">
-                            <div class="text-[10px] text-white uppercase font-black mb-4">Need more?</div>
-                            <p class="text-xs text-slate-400 mb-4">Custom requirements or additional features?</p>
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-slate-300">Bespoke Development</span>
-                                <span class="font-bold text-white">On Request</span>
-                            </div>
-                        </div>
+      <div class="mb-20 grid grid-cols-1 gap-8 md:grid-cols-3">
+        {
+          modelDevelopmentServices.map((service, index) => {
+            if (index === 1) {
+              return (
+                <div class="rounded-2xl border border-primary/20 bg-gradient-to-r from-[#1a1a1a] to-[#0a0a0a] p-8">
+                  <div class="mb-8 flex items-start justify-between">
+                    <div>
+                      <h4 class="text-xl font-bold text-white">{service.title}</h4>
+                      <p class="mt-1 text-xs text-slate-500">{service.oneLiner}</p>
                     </div>
-                ))}
-            </div>
-        </section>
-    </div>
-</BaseLayout>
+                    <div class="text-right">
+                      <div class="text-3xl font-bold text-white">
+                        {formatPrice(service.startingPrice)}
+                      </div>
+                      <div class="text-[10px] uppercase text-slate-500">One-time</div>
+                    </div>
+                  </div>
 
+                  <div class="mb-8 space-y-4">
+                    <div class="text-[10px] font-black uppercase text-white">Typical Scope</div>
+                    <ul class="space-y-3">
+                      {typicalScopeItems.map(item => (
+                        <li class="flex items-start gap-2.5 text-xs text-slate-400">
+                          <CheckIcon
+                            class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
+                            aria-hidden="true"
+                          />
+                          <span>{item.title}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <div class="rounded-2xl border border-primary/20 bg-[#1a101f] p-8">
+                <div class="mb-10 flex items-start justify-between border-b border-white/5 pb-6">
+                  <div>
+                    <h4 class="text-xl font-bold text-white">{service.title}</h4>
+                    <p class="mt-1 text-xs text-slate-500">{service.oneLiner}</p>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-3xl font-bold text-white">
+                      {formatPrice(service.startingPrice)}
+                    </div>
+                    <div class="text-[10px] uppercase text-slate-500">One-time</div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="mb-4 text-[10px] font-black uppercase text-white">
+                    What's included
+                  </div>
+                  <ul class="space-y-3">
+                    {(service.outcomes || []).map(item => (
+                      <li class="flex items-start gap-2.5 text-xs text-slate-400">
+                        <CheckIcon
+                          class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
+                          aria-hidden="true"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <!-- Flexible Services -->
+    <section class="mx-auto mb-32 max-w-7xl px-6">
+      <div class="mb-16 text-center">
+        <div class="mb-6">
+          <Badge variant="subtle" tone="info" size="sm" client:load>
+            <span class="flex items-center gap-2">
+              <SparklesIcon class="h-3 w-3" aria-hidden="true" />
+              Flexible Services
+            </span>
+          </Badge>
+        </div>
+        <h2 class="mb-6 text-5xl font-black text-white">Flexible Services</h2>
+        <p class="mx-auto max-w-3xl text-lg leading-relaxed text-slate-400">
+          Tailored solutions and expert guidance for your unique automation needs.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {
+          flexibleServices.map(service => (
+            <div class="rounded-2xl border border-primary/20 bg-[#1a101f] p-8">
+              <div class="mb-8 flex items-start justify-between">
+                <div>
+                  <h4 class="text-xl font-bold text-white">{service.title}</h4>
+                  <p class="mt-1 text-xs text-slate-500">{service.oneLiner}</p>
+                </div>
+                <div class="text-right">
+                  <div class="text-3xl font-bold text-white">
+                    {formatPrice(service.startingPrice)}
+                  </div>
+                  <div class="text-[10px] uppercase text-slate-500">One-time</div>
+                </div>
+              </div>
+
+              <div class="mb-8 space-y-4">
+                <div class="text-[10px] font-black uppercase text-white">Typical Scope</div>
+                <ul class="space-y-3">
+                  {typicalScopeItems.map(item => (
+                    <li class="flex items-start gap-2.5 text-xs text-slate-400">
+                      <CheckIcon
+                        class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
+                        aria-hidden="true"
+                      />
+                      <span>{item.title}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="rounded-xl border border-white/5 bg-black/20 p-4">
+                <div class="mb-4 text-[10px] font-black uppercase text-white">Need more?</div>
+                <p class="mb-4 text-xs text-slate-400">
+                  Custom requirements or additional features?
+                </p>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-slate-300">Bespoke Development</span>
+                  <span class="font-bold text-white">On Request</span>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>

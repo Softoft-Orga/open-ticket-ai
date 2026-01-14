@@ -5,55 +5,55 @@ import rehypeMermaid from 'rehype-mermaid';
 import astroBrokenLinksChecker from 'astro-broken-links-checker';
 
 export default defineConfig({
-    site: 'https://openticketai.com',
-    base: '/',
-    outDir: './dist',
-    trailingSlash: 'always',
-    i18n: {
-        locales: ['en', 'de'],
-        defaultLocale: 'en',
-        routing: {
-            prefixDefaultLocale: false,
-        },
+  site: 'https://openticketai.com',
+  base: '/',
+  outDir: './dist',
+  trailingSlash: 'always',
+  i18n: {
+    locales: ['en', 'de'],
+    defaultLocale: 'en',
+    routing: {
+      prefixDefaultLocale: false,
     },
-    image: {
-        // Configure image service with Sharp for optimization
-        service: {
-            entrypoint: 'astro/assets/services/sharp',
-            config: {
-                limitInputPixels: false, // Allow processing of large images
-            },
-        },
-        domains: ['astro.build'],
-        // Remote image patterns for external images
-        remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: '**.githubusercontent.com',
-            },
-            {
-                protocol: 'https',
-                hostname: '**.sirv.com',
-            },
-        ],
+  },
+  image: {
+    // Configure image service with Sharp for optimization
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        limitInputPixels: false, // Allow processing of large images
+      },
     },
-    markdown: {
-        rehypePlugins: [[rehypeMermaid, {strategy: 'img-svg', dark: true}]],
-    },
-    vite: {
-        define: {
-            '__VUE_PROD_DEVTOOLS__': 'false',
-        },
-    },
-    integrations: [
-        vue({
-            appEntrypoint: '/src/vue-app.js'
-        }),
-        mdx(),
-        astroBrokenLinksChecker({
-            logFilePath: 'broken-links.log',
-            checkExternalLinks: false,
-            throwError: false,
-        }),
+    domains: ['astro.build'],
+    // Remote image patterns for external images
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.sirv.com',
+      },
     ],
+  },
+  markdown: {
+    rehypePlugins: [[rehypeMermaid, { strategy: 'img-svg', dark: true }]],
+  },
+  vite: {
+    define: {
+      __VUE_PROD_DEVTOOLS__: 'false',
+    },
+  },
+  integrations: [
+    vue({
+      appEntrypoint: '/src/vue-app.js',
+    }),
+    mdx(),
+    astroBrokenLinksChecker({
+      logFilePath: 'broken-links.log',
+      checkExternalLinks: false,
+      throwError: false,
+    }),
+  ],
 });

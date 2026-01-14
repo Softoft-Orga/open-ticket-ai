@@ -1,5 +1,5 @@
 ---
-title:  Config Rendering
+title: Config Rendering
 ---
 
 ```mermaid

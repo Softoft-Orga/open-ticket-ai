@@ -1,7 +1,7 @@
-import { tv, type VariantProps } from 'tailwind-variants'
-import type { Variant, Tone, Radius, Elevation, Hoverable, Highlighted } from '../tokens.ts'
+import { tv, type VariantProps } from 'tailwind-variants';
+import type { Variant, Tone, Radius, Elevation, Hoverable, Highlighted } from '../tokens.ts';
 
-type Intensity = 'none' | 'soft'
+type Intensity = 'none' | 'soft';
 
 /**
  * Surface recipe - Container surface styles
@@ -16,7 +16,7 @@ export const surface = tv({
     variant: {
       surface: 'bg-surface-dark border border-border-dark',
       outline: 'bg-transparent border border-border-dark/60',
-      subtle: 'bg-surface-lighter border border-border-dark/80'
+      subtle: 'bg-surface-lighter border border-border-dark/80',
     } satisfies Record<Variant, string>,
     tone: {
       neutral: '',
@@ -24,31 +24,31 @@ export const surface = tv({
       success: 'border-success/50',
       warning: 'border-warning/50',
       danger: 'border-danger/50',
-      info: 'border-info/50'
+      info: 'border-info/50',
     } satisfies Record<Tone, string>,
     radius: {
       lg: 'rounded-lg',
       xl: 'rounded-xl',
-      '2xl': 'rounded-2xl'
+      '2xl': 'rounded-2xl',
     } satisfies Record<Radius, string>,
     elevation: {
       none: '',
       sm: 'shadow-sm',
       md: 'shadow-md',
-      lg: 'shadow-lg'
+      lg: 'shadow-lg',
     } satisfies Record<Elevation, string>,
     hoverable: {
       false: '',
-      true: 'hover:-translate-y-px hover:shadow-lg transition-transform'
+      true: 'hover:-translate-y-px hover:shadow-lg transition-transform',
     },
     highlighted: {
       false: '',
-      true: 'ring-1 ring-primary/40'
+      true: 'ring-1 ring-primary/40',
     },
     intensity: {
       none: '',
-      soft: ''
-    }
+      soft: '',
+    },
   },
   compoundVariants: [
     // Surface variant with soft intensity
@@ -63,7 +63,7 @@ export const surface = tv({
     { variant: 'subtle', intensity: 'soft', tone: 'success', class: 'bg-success/10' },
     { variant: 'subtle', intensity: 'soft', tone: 'warning', class: 'bg-warning/10' },
     { variant: 'subtle', intensity: 'soft', tone: 'danger', class: 'bg-danger/10' },
-    { variant: 'subtle', intensity: 'soft', tone: 'info', class: 'bg-info/10' }
+    { variant: 'subtle', intensity: 'soft', tone: 'info', class: 'bg-info/10' },
   ],
   defaultVariants: {
     variant: 'surface',
@@ -72,8 +72,8 @@ export const surface = tv({
     elevation: 'none',
     hoverable: false,
     highlighted: false,
-    intensity: 'none'
-  }
-})
+    intensity: 'none',
+  },
+});
 
-export type SurfaceVariants = VariantProps<typeof surface>
+export type SurfaceVariants = VariantProps<typeof surface>;

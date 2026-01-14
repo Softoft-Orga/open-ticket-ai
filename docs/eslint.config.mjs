@@ -23,12 +23,12 @@ export default [
   },
 
   eslint.configs.recommended,
-  
+
   ...tseslint.configs.recommended.map(config => ({
     ...config,
     files: ['**/*.ts', '**/*.mts', '**/*.tsx'],
   })),
-  
+
   ...pluginVue.configs['flat/recommended'],
   ...pluginAstro.configs.recommended,
 

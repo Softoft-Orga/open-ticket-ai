@@ -1,6 +1,6 @@
 ---
 title: Zendesk Integration for Open Ticket AI
-description: "Integrate on-premise Open Ticket AI with Zendesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Zendesk tickets via REST."
+description: 'Integrate on-premise Open Ticket AI with Zendesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Zendesk tickets via REST.'
 lang: en
 date: 2024-08-01
 tags:
@@ -11,6 +11,7 @@ category: Integration
 draft: false
 image: ~/assets/images/ticketsystem-integration-ai-dark-blue.png
 ---
+
 # Zendesk Integration for Open Ticket AI
 
 Open Ticket AI (OTAI) runs fully on-premise and classifies support tickets into queues, priorities and custom labels. To integrate OTAI with **Zendesk**, you create a small plugin that provides a `ZendeskTicketsystemService`. OTAI loads this service automatically and uses it to read and update Zendesk tickets through the REST API.
@@ -38,7 +39,7 @@ zendesk_ticket_system_service.py
 plugin.py
 pyproject.toml
 
-````
+```
 
 ### `zendesk_ticket_system_service.py`
 
@@ -68,7 +69,7 @@ class ZendeskTicketsystemService(TicketSystemService):
 
     async def update_ticket(self, ticket_id: str, data: dict) -> dict:
         return await self._request("PUT", f"/tickets/{ticket_id}", json={"ticket": data})
-````
+```
 
 ### `plugin.py`
 
@@ -89,11 +90,11 @@ class ZendeskPlugin(Plugin):
 
 Use these fields in your OTAI config:
 
-* `domain`: your Zendesk subdomain (e.g. `mycompany`)
-* `email`: Zendesk login e-mail
-* `api_token`: API Token from Zendesk Admin → API → Token Access
-* `timeout`: optional
-* `verify`: TLS verification or CA bundle path
+- `domain`: your Zendesk subdomain (e.g. `mycompany`)
+- `email`: Zendesk login e-mail
+- `api_token`: API Token from Zendesk Admin → API → Token Access
+- `timeout`: optional
+- `verify`: TLS verification or CA bundle path
 
 ## Configuration Example
 
@@ -131,8 +132,7 @@ Everything runs on-premise, without Zendesk’s own AI modules.
 
 ## Benefits
 
-* complete data control (OTAI stays local)
-* no need for Zendesk’s proprietary AI
-* simple REST integration
-* identical plugin structure to Zammad, OTOBO/Znuny, Freshdesk, OTRS
-
+- complete data control (OTAI stays local)
+- no need for Zendesk’s proprietary AI
+- simple REST integration
+- identical plugin structure to Zammad, OTOBO/Znuny, Freshdesk, OTRS

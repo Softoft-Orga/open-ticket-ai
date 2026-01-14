@@ -1,11 +1,12 @@
 ---
 title: Tag Mapping
-description: "Map classification results to ticket system fields, queues, priorities, and custom attributes."
+description: 'Map classification results to ticket system fields, queues, priorities, and custom attributes.'
 lang: en
 nav:
   group: Ticket Tagging
   order: 4
 ---
+
 # Tag Mapping
 
 Learn how to map classification results to your ticket system's fields, queues, priorities, and custom attributes.
@@ -28,22 +29,23 @@ Map classification labels directly to queue names:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "your-model"
+    text: '{{ ticket.subject }}'
+    model_name: 'your-model'
 
 - id: update_queue
-  use: "base:UpdateTicketPipe"
-  injects: { ticket_system: "otobo_znuny" }
+  use: 'base:UpdateTicketPipe'
+  injects: { ticket_system: 'otobo_znuny' }
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       queue:
         name: "{{ get_pipe_result('classify', 'label') }}"
 ```
 
 **Requirements**:
+
 - Queue names in ticket system match classification labels exactly
 - Model outputs valid queue names
 
@@ -53,15 +55,15 @@ Map classification to priority levels:
 
 ```yaml
 - id: classify_priority
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }} {{ ticket.body }}"
-    model_name: "priority-classifier"
+    text: '{{ ticket.subject }} {{ ticket.body }}'
+    model_name: 'priority-classifier'
 
 - id: update_priority
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       priority:
         name: "{{ get_pipe_result('classify_priority', 'label') }}"
@@ -75,13 +77,13 @@ Use lookup tables for flexible mapping:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "category-classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'category-classifier'
 
 - id: map_to_queue
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {%- set mapping = {
@@ -96,9 +98,9 @@ Use lookup tables for flexible mapping:
       {{ mapping.get(get_pipe_result('classify', 'label'), 'IT - General') }}
 
 - id: update_queue
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       queue:
         name: "{{ get_pipe_result('map_to_queue') }}"
@@ -110,13 +112,13 @@ Update multiple fields based on classification:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }} {{ ticket.body }}"
-    model_name: "ticket-classifier"
+    text: '{{ ticket.subject }} {{ ticket.body }}'
+    model_name: 'ticket-classifier'
 
 - id: apply_mapping
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {%- set mappings = {
@@ -147,9 +149,9 @@ Update multiple fields based on classification:
       }) }}
 
 - id: update_ticket
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       queue:
         name: "{{ get_pipe_result('apply_mapping')['queue'] }}"
@@ -167,13 +169,13 @@ Different mappings based on confidence:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'classifier'
 
 - id: determine_queue
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {%- set confidence = get_pipe_result('classify', 'confidence') -%}
@@ -187,9 +189,9 @@ Different mappings based on confidence:
       {%- endif -%}
 
 - id: update_queue
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       queue:
         name: "{{ get_pipe_result('determine_queue') }}"
@@ -201,19 +203,19 @@ Combine multiple factors:
 
 ```yaml
 - id: classify_type
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "type-classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'type-classifier'
 
 - id: classify_urgency
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.body }}"
-    model_name: "urgency-classifier"
+    text: '{{ ticket.body }}'
+    model_name: 'urgency-classifier'
 
 - id: determine_priority
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {%- set type = get_pipe_result('classify_type', 'label') -%}
@@ -229,9 +231,9 @@ Combine multiple factors:
       {%- endif -%}
 
 - id: update_priority
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       priority:
         name: "{{ get_pipe_result('determine_priority') }}"
@@ -245,15 +247,15 @@ Add tags based on classification:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }} {{ ticket.body }}"
-    model_name: "classifier"
+    text: '{{ ticket.subject }} {{ ticket.body }}'
+    model_name: 'classifier'
     options:
       top_k: 3
 
 - id: generate_tags
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {{
@@ -267,12 +269,12 @@ Add tags based on classification:
       }}
 
 - id: update_tags
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       dynamic_fields:
-        - name: "Tags"
+        - name: 'Tags'
           value: "{{ get_pipe_result('generate_tags') }}"
 ```
 
@@ -282,31 +284,31 @@ Map to custom fields in your ticket system:
 
 ```yaml
 - id: classify_category
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "category-classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'category-classifier'
 
 - id: classify_subcategory
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.body }}"
-    model_name: "subcategory-classifier"
+    text: '{{ ticket.body }}'
+    model_name: 'subcategory-classifier'
 
 - id: update_custom_fields
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       dynamic_fields:
-        - name: "AutoCategory"
+        - name: 'AutoCategory'
           value: "{{ get_pipe_result('classify_category', 'label') }}"
-        - name: "AutoSubcategory"
+        - name: 'AutoSubcategory'
           value: "{{ get_pipe_result('classify_subcategory', 'label') }}"
-        - name: "ClassificationConfidence"
+        - name: 'ClassificationConfidence'
           value: "{{ get_pipe_result('classify_category', 'confidence') }}"
-        - name: "ClassifiedAt"
-          value: "{{ now().isoformat() }}"
+        - name: 'ClassifiedAt'
+          value: '{{ now().isoformat() }}'
 ```
 
 ## Hierarchical Mapping
@@ -317,19 +319,19 @@ Map to hierarchical queue structures:
 
 ```yaml
 - id: classify_department
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "department-classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'department-classifier'
 
 - id: classify_team
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.body }}"
-    model_name: "team-classifier"
+    text: '{{ ticket.body }}'
+    model_name: 'team-classifier'
 
 - id: build_queue_path
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {%- set dept = get_pipe_result('classify_department', 'label') -%}
@@ -337,15 +339,16 @@ Map to hierarchical queue structures:
       {{ dept }} :: {{ team }}
 
 - id: update_queue
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       queue:
         name: "{{ get_pipe_result('build_queue_path') }}"
 ```
 
 **Example Output**:
+
 - `IT :: Hardware Support`
 - `IT :: Software Development`
 - `HR :: Recruitment`
@@ -356,13 +359,13 @@ Navigate category hierarchies:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'classifier'
 
 - id: map_to_hierarchy
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {%- set hierarchy = {
@@ -375,16 +378,16 @@ Navigate category hierarchies:
       {{ hierarchy.get(label, ['General', 'Support', 'Unknown']) }}
 
 - id: update_categories
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       dynamic_fields:
-        - name: "Category1"
+        - name: 'Category1'
           value: "{{ get_pipe_result('map_to_hierarchy')[0] }}"
-        - name: "Category2"
+        - name: 'Category2'
           value: "{{ get_pipe_result('map_to_hierarchy')[1] }}"
-        - name: "Category3"
+        - name: 'Category3'
           value: "{{ get_pipe_result('map_to_hierarchy')[2] }}"
 ```
 
@@ -396,23 +399,23 @@ Add a note documenting the classification:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }} {{ ticket.body }}"
-    model_name: "classifier"
+    text: '{{ ticket.subject }} {{ ticket.body }}'
+    model_name: 'classifier'
 
 - id: add_classification_note
-  use: "base:AddNotePipe"
-  injects: { ticket_system: "otobo_znuny" }
+  use: 'base:AddNotePipe'
+  injects: { ticket_system: 'otobo_znuny' }
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     note:
-      subject: "Automated Classification"
+      subject: 'Automated Classification'
       body: >
         This ticket was automatically classified as: {{ get_pipe_result('classify', 'label') }}
         Confidence: {{ (get_pipe_result('classify', 'confidence') * 100) | round(1) }}%
         Classified at: {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
-      content_type: "text/plain; charset=utf8"
+      content_type: 'text/plain; charset=utf8'
 ```
 
 ### Confidence Warning
@@ -421,22 +424,22 @@ Add a note for low-confidence classifications:
 
 ```yaml
 - id: check_confidence
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: "{{ get_pipe_result('classify', 'confidence') < 0.7 }}"
 
 - id: add_warning_note
-  use: "base:AddNotePipe"
-  injects: { ticket_system: "otobo_znuny" }
+  use: 'base:AddNotePipe'
+  injects: { ticket_system: 'otobo_znuny' }
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     note:
-      subject: "⚠️ Low Confidence Classification"
+      subject: '⚠️ Low Confidence Classification'
       body: >
         Automated classification has low confidence ({{ (get_pipe_result('classify', 'confidence') * 100) | round(1) }}%).
         Predicted: {{ get_pipe_result('classify', 'label') }}
         Please review and reclassify if necessary.
-      content_type: "text/plain; charset=utf8"
+      content_type: 'text/plain; charset=utf8'
     condition: "{{ get_pipe_result('check_confidence') }}"
 ```
 
@@ -448,13 +451,13 @@ Handle unknown classifications:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'classifier'
 
 - id: validate_classification
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {%- set valid_queues = [
@@ -468,9 +471,9 @@ Handle unknown classifications:
       {{ label if label in valid_queues else 'Unclassified' }}
 
 - id: update_queue
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       queue:
         name: "{{ get_pipe_result('validate_classification') }}"
@@ -482,25 +485,25 @@ Try multiple classification strategies:
 
 ```yaml
 - id: primary_classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }} {{ ticket.body }}"
-    model_name: "primary-classifier"
+    text: '{{ ticket.subject }} {{ ticket.body }}'
+    model_name: 'primary-classifier'
 
 - id: check_confidence
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: "{{ get_pipe_result('primary_classify', 'confidence') >= 0.8 }}"
 
 - id: fallback_classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "fallback-classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'fallback-classifier'
   condition: "{{ not get_pipe_result('check_confidence') }}"
 
 - id: final_label
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {%- if get_pipe_result('check_confidence') -%}
@@ -518,15 +521,15 @@ Test mappings without updating tickets:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'classifier'
 
 - id: log_mapping
-  use: "base:LogPipe"
+  use: 'base:LogPipe'
   params:
-    level: "INFO"
+    level: 'INFO'
     message: >
       [DRY RUN] Would update ticket {{ ticket.id }}:
       From: {{ ticket.queue }}
@@ -545,16 +548,16 @@ Log all mapping decisions:
 
 ```yaml
 - id: map_queue
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {%- set mapping = {...} -%}
       {{ mapping.get(get_pipe_result('classify', 'label'), 'Default Queue') }}
 
 - id: log_decision
-  use: "base:LogPipe"
+  use: 'base:LogPipe'
   params:
-    level: "INFO"
+    level: 'INFO'
     message: >
       Ticket {{ ticket.id }} mapping:
       Classification: {{ get_pipe_result('classify', 'label') }}
@@ -592,6 +595,7 @@ Log all mapping decisions:
 ```yaml
 Classification → Queue Name
 ```
+
 Use when: Labels match queue names exactly
 
 ### Pattern 2: Lookup Table
@@ -599,6 +603,7 @@ Use when: Labels match queue names exactly
 ```yaml
 Classification → Mapping Table → Queue/Priority/etc
 ```
+
 Use when: Labels differ from queue names
 
 ### Pattern 3: Multi-Stage
@@ -608,6 +613,7 @@ Classification 1 → Category
 Classification 2 → Subcategory
 Combine → Final Queue
 ```
+
 Use when: Hierarchical categorization needed
 
 ### Pattern 4: Conditional
@@ -615,6 +621,7 @@ Use when: Hierarchical categorization needed
 ```yaml
 Classification + Confidence → Decision Logic → Action
 ```
+
 Use when: Different actions for different confidence levels
 
 ## Next Steps

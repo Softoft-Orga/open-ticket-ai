@@ -1,6 +1,6 @@
 ---
 title: Pipe System
-description: "Learn how Open Ticket AI pipes process data through sequential execution, context sharing, dependencies, and conditional logic."
+description: 'Learn how Open Ticket AI pipes process data through sequential execution, context sharing, dependencies, and conditional logic.'
 ---
 
 # Pipe System
@@ -66,11 +66,11 @@ Atomic processing units that implement specific business logic:
 - id: fetch_tickets
   use: open_ticket_ai.base:FetchTicketsPipe
   injects:
-    ticket_system: "otobo_znuny"
+    ticket_system: 'otobo_znuny'
   params:
     search_criteria:
       queue:
-        name: "Support"
+        name: 'Support'
       limit: 10
 ```
 
@@ -94,7 +94,7 @@ Renders an expression and returns that value. If it renders to a FailMarker, the
 
 ```yaml
 - id: check_any_tickets
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {{ fail() if (get_pipe_result('fetch_tickets','fetched_tickets')|length)==0 else 'ok' }}
@@ -134,21 +134,21 @@ flowchart TB
   steps:
     - id: fetch
       use: open_ticket_ai.base:FetchTicketsPipe
-      injects: { ticket_system: "otobo_znuny" }
+      injects: { ticket_system: 'otobo_znuny' }
       params:
         search_criteria:
-          queue: { name: "Incoming" }
+          queue: { name: 'Incoming' }
           limit: 10
 
     - id: classify
       use: otai_hf_local:HFLocalTextClassificationPipe
       params:
-        model: "bert-base-german-cased"
+        model: 'bert-base-german-cased'
         text: "{{ get_pipe_result('fetch').data.fetched_tickets[0].subject }}"
 
     - id: update
       use: open_ticket_ai.base:UpdateTicketPipe
-      injects: { ticket_system: "otobo_znuny" }
+      injects: { ticket_system: 'otobo_znuny' }
       params:
         ticket_id: "{{ get_pipe_result('fetch').data.fetched_tickets[0].id }}"
         updated_ticket:
@@ -168,12 +168,12 @@ flowchart TB
 **Composite Execution:**
 
 1. **For Each Step**:
-    - **Render**: Renders Params with Jinja2 using current context
-    - **Execute**: Execute next child pipe with rendered params
-    - **Loop**: Continue to next step
+   - **Render**: Renders Params with Jinja2 using current context
+   - **Execute**: Execute next child pipe with rendered params
+   - **Loop**: Continue to next step
 2. **Finalization**:
-    - **Union**: Merge all child results using
-    - **Return**: Return final updated context
+   - **Union**: Merge all child results using
+   - **Return**: Return final updated context
 
 ### SimpleSequentialOrchestrator (special)
 
@@ -198,20 +198,20 @@ flowchart TB
 
 ```yaml
 - id: orchestrator
-  use: "base:SimpleSequentialOrchestrator"
+  use: 'base:SimpleSequentialOrchestrator'
   params:
-    orchestrator_sleep: "PT0.5S"
-    exception_sleep: "PT5S"
+    orchestrator_sleep: 'PT0.5S'
+    exception_sleep: 'PT5S'
     always_retry: true
     steps:
       - id: tick
-        use: "base:IntervalTrigger"
-        params: { interval: "PT5S" }
+        use: 'base:IntervalTrigger'
+        params: { interval: 'PT5S' }
       - id: fetch
-        use: "base:FetchTicketsPipe"
-        injects: { ticket_system: "otobo_znuny" }
+        use: 'base:FetchTicketsPipe'
+        injects: { ticket_system: 'otobo_znuny' }
         params:
-          ticket_search_criteria: { queue: { name: "Incoming" }, limit: 1 }
+          ticket_search_criteria: { queue: { name: 'Incoming' }, limit: 1 }
 ```
 
 </details>
@@ -238,16 +238,16 @@ flowchart TB
 
 ```yaml
 - id: run-when-triggered
-  use: "base:SimpleSequentialRunner"
+  use: 'base:SimpleSequentialRunner'
   params:
     on:
       id: gate
-      use: "base:IntervalTrigger"
-      params: { interval: "PT60S" }
+      use: 'base:IntervalTrigger'
+      params: { interval: 'PT60S' }
     run:
       id: do-something
-      use: "base:ExpressionPipe"
-      params: { expression: "Triggered run" }
+      use: 'base:ExpressionPipe'
+      params: { expression: 'Triggered run' }
 ```
 
 ## Context Passing Between Pipes
@@ -255,14 +255,14 @@ flowchart TB
 **Field Details:**
 
 - **`pipes`**: Contains results from all previously executed pipes, keyed by pipe ID
-    - **Access via `pipe_result('pipe_id')` in templates**
-    - Accumulated as each pipe completes
-    - In CompositePipe: merged results from all child steps
+  - **Access via `pipe_result('pipe_id')` in templates**
+  - Accumulated as each pipe completes
+  - In CompositePipe: merged results from all child steps
 
 - **`params`**: Current pipe's parameters
-    - Set when the pipe is created
-    - Accessible via `params.*` in templates
-    - For nested pipes, can reference parent via `parent`
+  - Set when the pipe is created
+  - Accessible via `params.*` in templates
+  - For nested pipes, can reference parent via `parent`
 
 - **`parent`**: Reference to parent params
 
@@ -271,33 +271,33 @@ flowchart TB
 Each pipe produces a `PipeResult` containing execution outcome and data:
 
 | Attribute     | Data Type        | Description                                                                      |
-|---------------|------------------|----------------------------------------------------------------------------------|
+| ------------- | ---------------- | -------------------------------------------------------------------------------- |
 | **succeeded** | true/false       | Whether the pipe completed successfully without errors                           |
 | **data**      | name:value pairs | Output data produced by the pipe for use by following pipes or external systems  |
-| *was_skipped* | true/false       | Whether the pipe was skipped due to failed dependencies or conditional execution |
-| *message*     | TEXT             | Human-readable message describing the result or any issues                       |
+| _was_skipped_ | true/false       | Whether the pipe was skipped due to failed dependencies or conditional execution |
+| _message_     | TEXT             | Human-readable message describing the result or any issues                       |
 
 you access those results in the params of another pipe with those functions. Currenly there is no
 way to read was_skipped or message;
 
-| Function          | Parameters                                         | Returns                                                      | Errors if…          |
-|-------------------|----------------------------------------------------|--------------------------------------------------------------|---------------------|
-| `has_failed`      | `pipe_id: text`                                    | `True` if the given pipe result is  marked failed            | Unknown pipe ID     |
-| `get_pipe_result` | `pipe_id: text`, `data_key: text; default = value` | Value stored in previous pipe  result under given `data_key` | Pipe or key missing |
+| Function          | Parameters                                         | Returns                                                     | Errors if…          |
+| ----------------- | -------------------------------------------------- | ----------------------------------------------------------- | ------------------- |
+| `has_failed`      | `pipe_id: text`                                    | `True` if the given pipe result is marked failed            | Unknown pipe ID     |
+| `get_pipe_result` | `pipe_id: text`, `data_key: text; default = value` | Value stored in previous pipe result under given `data_key` | Pipe or key missing |
 
 So for example if piperesult is
 
-````yaml
+```yaml
 - id: ticket_fetcher
   result:
     succeeded: true
     data:
       fetched_tickets:
         - id: 123
-          subject: "Help me!"
+          subject: 'Help me!'
         - id: 124
-          subject: "Another ticket"
-````
+          subject: 'Another ticket'
+```
 
 To access the fetched tickets you would use:
 
@@ -309,9 +309,9 @@ Returning:
 
 ```yaml
 - id: 123
-  subject: "Help me!"
+  subject: 'Help me!'
 - id: 124
-  subject: "Another ticket"
+  subject: 'Another ticket'
 ```
 
 To access the subject of the first ticket you would use:
@@ -342,7 +342,7 @@ Checking the success can be used in combination with fail() to create guards:
 
 ```yaml
 - id: fail_no_tickets
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {{ fail() if has_failed('ticket_fetcher' else 'ok' }}
@@ -353,7 +353,7 @@ The Pipeline/FLow would stop executing at this point if the ticket_fetcher pipe 
 ## Pipe Registry Overview
 
 | Name                         | registryKey                         | Params (names, comma-separated)                          |
-|------------------------------|-------------------------------------|----------------------------------------------------------|
+| ---------------------------- | ----------------------------------- | -------------------------------------------------------- |
 | AddNotePipe                  | `base:AddNotePipe`                  | ticket_id, note                                          |
 | FetchTicketsPipe             | `base:FetchTicketsPipe`             | ticket_search_criteria                                   |
 | UpdateTicketPipe             | `base:UpdateTicketPipe`             | ticket_id, updated_ticket                                |
@@ -379,13 +379,13 @@ It logs a short preview of the note and writes it via the ticket system service.
 So to “use” it set `use` to this registryKey.
 
 ```yaml
-- id: "my-add_note_pipe"
-  use: "base:AddNotePipe"
+- id: 'my-add_note_pipe'
+  use: 'base:AddNotePipe'
   params:
-    ticket_id: "<ticket id>"
+    ticket_id: '<ticket id>'
     note:
-      subject: "<subject>"
-      body: "<body>"
+      subject: '<subject>'
+      body: '<body>'
 ```
 
 ---
@@ -398,12 +398,12 @@ The Pipe `FetchTicketsPipe` queries tickets from the ticket system using a unifi
 **registryKey:** `base:FetchTicketsPipe`
 
 ```yaml
-- id: "my-fetch_tickets"
-  use: "base:FetchTicketsPipe"
+- id: 'my-fetch_tickets'
+  use: 'base:FetchTicketsPipe'
   params:
     ticket_search_criteria:
       queue:
-        name: "<QueueName>"
+        name: '<QueueName>'
       limit: 10
 ```
 
@@ -417,13 +417,13 @@ payload (e.g., queue, priority, fields). Returns success state from the ticket s
 **registryKey:** `base:UpdateTicketPipe`
 
 ```yaml
-- id: "my-update_ticket"
-  use: "base:UpdateTicketPipe"
+- id: 'my-update_ticket'
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "<ticket id>"
+    ticket_id: '<ticket id>'
     updated_ticket:
       queue:
-        name: "<QueueName>"
+        name: '<QueueName>'
 ```
 
 ---
@@ -436,13 +436,13 @@ model, returning label, confidence, and scores (if available).
 **registryKey:** `base:ClassificationPipe`
 
 ```yaml
-- id: "my-classify"
-  use: "base:ClassificationPipe"
-  injects: { classification_service: "hf_local" }
+- id: 'my-classify'
+  use: 'base:ClassificationPipe'
+  injects: { classification_service: 'hf_local' }
   params:
-    text: "{{ some_text }}"
-    model_name: "softoft/otai-queue-de-bert-v1"
-    api_token: "{{ env.HF_TOKEN | default(None) }}"
+    text: '{{ some_text }}'
+    model_name: 'softoft/otai-queue-de-bert-v1'
+    api_token: '{{ env.HF_TOKEN | default(None) }}'
 ```
 
 ---
@@ -455,8 +455,8 @@ pipe fails (useful for control-flow/guards).
 **registryKey:** `base:ExpressionPipe`
 
 ```yaml
-- id: "my-expression"
-  use: "base:ExpressionPipe"
+- id: 'my-expression'
+  use: 'base:ExpressionPipe'
   params:
     expression: "{{ fail() if condition else 'ok' }}"
 ```
@@ -471,10 +471,10 @@ interval has passed since the last trigger, otherwise fails.
 **registryKey:** `base:IntervalTrigger`
 
 ```yaml
-- id: "my-interval"
-  use: "base:IntervalTrigger"
+- id: 'my-interval'
+  use: 'base:IntervalTrigger'
   params:
-    interval: "PT60S"
+    interval: 'PT60S'
 ```
 
 ---
@@ -487,17 +487,17 @@ two-step control runner.
 **registryKey:** `base:SimpleSequentialRunner`
 
 ```yaml
-- id: "my-simple_runner"
-  use: "base:SimpleSequentialRunner"
+- id: 'my-simple_runner'
+  use: 'base:SimpleSequentialRunner'
   params:
     on:
-      id: "interval"
-      use: "base:IntervalTrigger"
-      params: { interval: "PT5M" }
+      id: 'interval'
+      use: 'base:IntervalTrigger'
+      params: { interval: 'PT5M' }
     run:
-      id: "do-something"
-      use: "base:ExpressionPipe"
-      params: { expression: "go!" }
+      id: 'do-something'
+      use: 'base:ExpressionPipe'
+      params: { expression: 'go!' }
 ```
 
 ---
@@ -511,16 +511,16 @@ optionally sleeps between cycles and on exceptions, and can auto-retry.
 For `SimpleSequentialOrchestrator` you don’t need to set params, since all attributes are optional.
 
 ```yaml
-- id: "my-orchestrator"
-  use: "base:SimpleSequentialOrchestrator"
+- id: 'my-orchestrator'
+  use: 'base:SimpleSequentialOrchestrator'
   params:
-    orchestrator_sleep: "PT0.5S"
-    exception_sleep: "PT5S"
+    orchestrator_sleep: 'PT0.5S'
+    exception_sleep: 'PT5S'
     always_retry: true
     steps:
-      - id: "step-1"
-        use: "base:ExpressionPipe"
-        params: { expression: "ok" }
+      - id: 'step-1'
+        use: 'base:ExpressionPipe'
+        params: { expression: 'ok' }
 ```
 
 ---
@@ -534,14 +534,14 @@ a union of prior results. It’s the base building block for multi-step flows.
 For `CompositePipe` you don’t need to set params, since all attributes are optional.
 
 ```yaml
-- id: "my-composite"
-  use: "base:CompositePipe"
+- id: 'my-composite'
+  use: 'base:CompositePipe'
   params:
     steps:
-      - id: "one"
-        use: "base:ExpressionPipe"
-        params: { expression: "first" }
-      - id: "two"
-        use: "base:ExpressionPipe"
-        params: { expression: "second" }
+      - id: 'one'
+        use: 'base:ExpressionPipe'
+        params: { expression: 'first' }
+      - id: 'two'
+        use: 'base:ExpressionPipe'
+        params: { expression: 'second' }
 ```

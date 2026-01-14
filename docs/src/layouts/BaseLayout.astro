@@ -12,7 +12,7 @@ const { title, description } = Astro.props;
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
 
 // Load site configuration for current locale
-const siteConfig = await Astro.locals.content.getLocalizedSingleton('site')
+const siteConfig = await Astro.locals.content.getLocalizedSingleton('site');
 const navLinks = siteConfig?.data.nav || [];
 const footerData = siteConfig?.data.footer;
 const logoUrl = siteConfig?.data.meta.logoUrl;
@@ -20,7 +20,7 @@ const ctaLabel = 'Get Started';
 const ctaUrl = '/products/';
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={Astro.currentLocale || 'en'} data-locale={Astro.currentLocale || 'en'}>
   <head>
     <meta charset="UTF-8" />
@@ -46,7 +46,7 @@ const ctaUrl = '/products/';
             dataLayer.push(...args);
           }
           gtag('js', new Date());
-          gaIds.forEach((id) => {
+          gaIds.forEach(id => {
             gtag('config', id, { send_page_view: false });
           });
         }
@@ -56,7 +56,7 @@ const ctaUrl = '/products/';
           setTimeout(load, 2000);
         }
         let fired = false;
-        ['scroll', 'pointerdown', 'keydown', 'touchstart'].forEach((ev) => {
+        ['scroll', 'pointerdown', 'keydown', 'touchstart'].forEach(ev => {
           addEventListener(
             ev,
             function () {
