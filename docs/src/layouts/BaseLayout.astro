@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import NavBar from '../components/vue/core/navigation/NavBar.vue';
 import FooterComponent from '../components/vue/core/navigation/FooterComponent.vue';
 import '../styles/global.css';
@@ -18,15 +19,43 @@ const allSiteConfigs = await getCollection('site');
 const siteConfig = allSiteConfigs.find(entry =>
   entry.id.toLowerCase().startsWith(`${currentLocale}/`)
 );
-const navLinks = siteConfig?.data.nav || [];
-const footerData = siteConfig?.data.footer;
+
+// Localize URLs from site config
+const navLinks = (siteConfig?.data.nav || []).map(link => ({
+  ...link,
+  url: getRelativeLocaleUrl(Astro.currentLocale, link.url),
+}));
+
+const footerData = siteConfig?.data.footer
+  ? {
+      ...siteConfig.data.footer,
+      sections: siteConfig.data.footer.sections.map(section => ({
+        ...section,
+        links: section.links.map(link => ({
+          ...link,
+          url:
+            link.url.startsWith('#') || link.url.startsWith('http')
+              ? link.url
+              : getRelativeLocaleUrl(Astro.currentLocale, link.url),
+        })),
+      })),
+      legal: siteConfig.data.footer.legal.map(link => ({
+        ...link,
+        url:
+          link.url.startsWith('#') || link.url.startsWith('http')
+            ? link.url
+            : getRelativeLocaleUrl(Astro.currentLocale, link.url),
+      })),
+    }
+  : undefined;
+
 const logoUrl = siteConfig?.data.meta.logoUrl;
 const ctaLabel = 'Get Started';
-const ctaUrl = '/products/';
+const ctaUrl = getRelativeLocaleUrl(Astro.currentLocale, 'products');
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale || 'en'} data-locale={Astro.currentLocale || 'en'}>
+<html lang={Astro.currentLocale} data-locale={Astro.currentLocale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

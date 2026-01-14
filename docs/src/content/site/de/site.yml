@@ -5,14 +5,14 @@ meta:
   logoUrl: /public/open-ticket-logo.png
 nav:
   - label: Produkte
-    url: /products/
+    url: products
   - label: Dienstleistungen
-    url: /services/
+    url: services
 
   - label: Dokumentation
-    url: /docs/
+    url: docs
   - label: Blog
-    url: /blog/
+    url: blog
 footer:
   brandName: Open Ticket AI
   brandTagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
@@ -21,11 +21,11 @@ footer:
     - title: Produkt
       links:
         - label: Funktionen
-          url: /products
+          url: products
         - label: Integrationen
-          url: /services
+          url: services
         - label: Sicherheit
-          url: /docs
+          url: docs
     - title: Unternehmen
       links:
         - label: Über uns

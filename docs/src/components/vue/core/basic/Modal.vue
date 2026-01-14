@@ -23,7 +23,7 @@
               </div>
 
               <!-- Body -->
-              <div class="text-slate-300">
+              <div>
                 <slot />
               </div>
 
