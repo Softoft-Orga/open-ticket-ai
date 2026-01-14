@@ -3,6 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/vue/core/basic/Button.vue';
 import Card from '../components/vue/core/basic/Card.vue';
 import Badge from '../components/vue/core/basic/Badge.vue';
+import ModalTrigger from '../components/vue/core/basic/ModalTrigger.vue';
+import ContactForm from '../components/ContactForm.astro';
 import {
   CubeTransparentIcon,
   ServerIcon,
@@ -282,17 +284,16 @@ const typicalScopeItems = [
                   ))}
                 </ul>
                 <div slot="actions">
-                  <Button
-                    variant={highlighted ? 'surface' : 'outline'}
-                    tone={highlighted ? 'primary' : 'neutral'}
-                    size="md"
-                    class="w-full"
-                    data-service-modal-trigger
-                    data-service=""
+                  <ModalTrigger
+                    title={`Contact Us: ${service.title}`}
+                    buttonText={index === 1 ? 'Get Demo' : 'Contact Sales'}
+                    buttonVariant={highlighted ? 'surface' : 'outline'}
+                    buttonTone={highlighted ? 'primary' : 'neutral'}
+                    buttonSize="md"
                     client:load
                   >
-                    {index === 1 ? 'Get Demo' : 'Contact Sales'}
-                  </Button>
+                    <ContactForm title={service.title} />
+                  </ModalTrigger>
                 </div>
               </Card>
             );
@@ -390,17 +391,16 @@ const typicalScopeItems = [
                 </ul>
 
                 <div slot="actions">
-                  <Button
-                    variant={highlighted ? 'surface' : 'outline'}
-                    tone={highlighted ? 'primary' : 'neutral'}
-                    size="md"
-                    class="w-full"
-                    data-service-modal-trigger
-                    data-service=""
+                  <ModalTrigger
+                    title={`Contact Us: Integration Package - ${info.subtitle}`}
+                    buttonText={index === 1 ? 'Get Demo' : 'Contact Sales'}
+                    buttonVariant={highlighted ? 'surface' : 'outline'}
+                    buttonTone={highlighted ? 'primary' : 'neutral'}
+                    buttonSize="md"
                     client:load
                   >
-                    {index === 1 ? 'Get Demo' : 'Contact Sales'}
-                  </Button>
+                    <ContactForm title={`Integration Package - ${info.subtitle}`} />
+                  </ModalTrigger>
                 </div>
               </Card>
             );
@@ -452,7 +452,7 @@ const typicalScopeItems = [
         <div class="lg:col-span-7">
           {
             automationServices.map(service => (
-              <div class="rounded-2xl border border-primary/20 bg-[#1a101f] p-8">
+              <Card variant="outline" tone="primary" size="lg" radius="2xl" client:load>
                 <div class="mb-10 flex items-start justify-between border-b border-white/5 pb-6">
                   <div>
                     <h4 class="text-xl font-bold text-white">{service.title}</h4>
@@ -482,7 +482,20 @@ const typicalScopeItems = [
                     ))}
                   </ul>
                 </div>
-              </div>
+
+                <div slot="actions">
+                  <ModalTrigger
+                    title={`Contact Us: ${service.title}`}
+                    buttonText="Contact Sales"
+                    buttonVariant="surface"
+                    buttonTone="primary"
+                    buttonSize="md"
+                    client:load
+                  >
+                    <ContactForm title={service.title} />
+                  </ModalTrigger>
+                </div>
+              </Card>
             ))
           }
         </div>
@@ -513,7 +526,14 @@ const typicalScopeItems = [
           modelDevelopmentServices.map((service, index) => {
             if (index === 1) {
               return (
-                <div class="rounded-2xl border border-primary/20 bg-gradient-to-r from-[#1a1a1a] to-[#0a0a0a] p-8">
+                <Card
+                  variant="surface"
+                  tone="primary"
+                  size="lg"
+                  radius="2xl"
+                  elevation="md"
+                  client:load
+                >
                   <div class="mb-8 flex items-start justify-between">
                     <div>
                       <h4 class="text-xl font-bold text-white">{service.title}</h4>
@@ -541,12 +561,25 @@ const typicalScopeItems = [
                       ))}
                     </ul>
                   </div>
-                </div>
+
+                  <div slot="actions">
+                    <ModalTrigger
+                      title={`Contact Us: ${service.title}`}
+                      buttonText="Get Demo"
+                      buttonVariant="surface"
+                      buttonTone="primary"
+                      buttonSize="md"
+                      client:load
+                    >
+                      <ContactForm title={service.title} />
+                    </ModalTrigger>
+                  </div>
+                </Card>
               );
             }
 
             return (
-              <div class="rounded-2xl border border-primary/20 bg-[#1a101f] p-8">
+              <Card variant="outline" tone="primary" size="lg" radius="2xl" client:load>
                 <div class="mb-10 flex items-start justify-between border-b border-white/5 pb-6">
                   <div>
                     <h4 class="text-xl font-bold text-white">{service.title}</h4>
@@ -576,7 +609,20 @@ const typicalScopeItems = [
                     ))}
                   </ul>
                 </div>
-              </div>
+
+                <div slot="actions">
+                  <ModalTrigger
+                    title={`Contact Us: ${service.title}`}
+                    buttonText="Contact Sales"
+                    buttonVariant="outline"
+                    buttonTone="primary"
+                    buttonSize="md"
+                    client:load
+                  >
+                    <ContactForm title={service.title} />
+                  </ModalTrigger>
+                </div>
+              </Card>
             );
           })
         }
@@ -603,7 +649,7 @@ const typicalScopeItems = [
       <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {
           flexibleServices.map(service => (
-            <div class="rounded-2xl border border-primary/20 bg-[#1a101f] p-8">
+            <Card variant="outline" tone="primary" size="lg" radius="2xl" client:load>
               <div class="mb-8 flex items-start justify-between">
                 <div>
                   <h4 class="text-xl font-bold text-white">{service.title}</h4>
@@ -642,7 +688,20 @@ const typicalScopeItems = [
                   <span class="font-bold text-white">On Request</span>
                 </div>
               </div>
-            </div>
+
+              <div slot="actions">
+                <ModalTrigger
+                  title={`Contact Us: ${service.title}`}
+                  buttonText="Contact Sales"
+                  buttonVariant="outline"
+                  buttonTone="info"
+                  buttonSize="md"
+                  client:load
+                >
+                  <ContactForm title={service.title} />
+                </ModalTrigger>
+              </div>
+            </Card>
           ))
         }
       </div>
