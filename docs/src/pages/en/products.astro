@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import Button from '../../components/vue/core/basic/Button.vue';
@@ -55,7 +56,12 @@ const title = 'Products - Open Ticket AI';
               <ContactSalesButton formTitle="Contact Sales" client:load>
                 CONTACT SALES
               </ContactSalesButton>
-              <Button href="/products/roi-calculator/" variant="outline" size="lg" client:load>
+              <Button
+                href={getRelativeLocaleUrl(Astro.currentLocale, 'products/roi-calculator')}
+                variant="outline"
+                size="lg"
+                client:load
+              >
                 View ROI Calculator
               </Button>
             </div>
@@ -279,7 +285,7 @@ const title = 'Products - Open Ticket AI';
                 variant="outline"
                 size="md"
                 class="w-full"
-                href="/products/tagging-lite-free/"
+                href={getRelativeLocaleUrl(Astro.currentLocale, 'products/tagging-lite-free')}
                 client:load
               >
                 Explore Lite Free
@@ -377,7 +383,7 @@ const title = 'Products - Open Ticket AI';
                   variant="surface"
                   size="md"
                   class="w-full"
-                  href="/products/tagging-lite-pro/"
+                  href={getRelativeLocaleUrl(Astro.currentLocale, 'products/tagging-lite-pro')}
                   client:load
                 >
                   Explore Lite Pro
@@ -462,7 +468,7 @@ const title = 'Products - Open Ticket AI';
                 variant="outline"
                 size="md"
                 class="w-full"
-                href="/products/tagging-full-pro/"
+                href={getRelativeLocaleUrl(Astro.currentLocale, 'products/tagging-full-pro')}
                 client:load
               >
                 Explore Full Pro
@@ -474,7 +480,7 @@ const title = 'Products - Open Ticket AI';
         <!-- ROI Simulator CTA -->
         <div class="mt-12 text-center">
           <a
-            href="/products/roi-calculator/"
+            href={getRelativeLocaleUrl(Astro.currentLocale, 'products/roi-calculator')}
             class="group inline-flex items-center gap-3 rounded-xl border border-primary/50 bg-surface-dark px-8 py-4 transition-all hover:bg-primary/10"
           >
             <RocketLaunchIcon class="h-6 w-6 text-primary" />
@@ -565,7 +571,14 @@ const title = 'Products - Open Ticket AI';
               <ContactSalesButton formTitle="Contact Sales" client:load>
                 CONTACT SALES
               </ContactSalesButton>
-              <Button href="/docs/" variant="outline" size="lg" client:load> View Docs </Button>
+              <Button
+                href={getRelativeLocaleUrl(Astro.currentLocale, 'docs')}
+                variant="outline"
+                size="lg"
+                client:load
+              >
+                View Docs
+              </Button>
             </div>
           </div>
         </div>
