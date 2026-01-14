@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import NavBar from '../components/vue/core/navigation/NavBar.vue';
 import FooterComponent from '../components/vue/core/navigation/FooterComponent.vue';
 import '../styles/global.css';
@@ -10,14 +11,43 @@ interface Props {
 
 const { title, description } = Astro.props;
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
+const currentLocale = Astro.currentLocale || 'en';
 
 // Load site configuration for current locale
 const siteConfig = await Astro.locals.content.getLocalizedSingleton('site');
-const navLinks = siteConfig?.data.nav || [];
-const footerData = siteConfig?.data.footer;
+
+// Convert canonical URLs to localized URLs
+const navLinks = siteConfig?.data.nav?.map(link => ({
+  ...link,
+  url: link.url.startsWith('#') || link.url.startsWith('http') 
+    ? link.url 
+    : getRelativeLocaleUrl(currentLocale, link.url),
+})) || [];
+
+// Convert footer URLs to localized URLs
+const footerData = siteConfig?.data.footer ? {
+  ...siteConfig.data.footer,
+  sections: siteConfig.data.footer.sections?.map(section => ({
+    ...section,
+    links: section.links?.map(link => ({
+      ...link,
+      url: link.url.startsWith('#') || link.url.startsWith('http')
+        ? link.url
+        : getRelativeLocaleUrl(currentLocale, link.url),
+    })),
+  })),
+  legal: siteConfig.data.footer.legal?.map(link => ({
+    ...link,
+    url: link.url.startsWith('#') || link.url.startsWith('http')
+      ? link.url
+      : getRelativeLocaleUrl(currentLocale, link.url),
+  })),
+} : undefined;
+
 const logoUrl = siteConfig?.data.meta.logoUrl;
 const ctaLabel = 'Get Started';
-const ctaUrl = '/products/';
+const ctaUrl = getRelativeLocaleUrl(currentLocale, 'products');
+const homeUrl = getRelativeLocaleUrl(currentLocale, '/');
 ---
 
 <!doctype html>
@@ -71,7 +101,7 @@ const ctaUrl = '/products/';
     </script>
   </head>
   <body class="font-sans">
-    <NavBar client:load links={navLinks} logoUrl={logoUrl} ctaLabel={ctaLabel} ctaUrl={ctaUrl} />
+    <NavBar client:load links={navLinks} logoUrl={logoUrl} ctaLabel={ctaLabel} ctaUrl={ctaUrl} homeUrl={homeUrl} />
     <slot />
     <FooterComponent client:load footerData={footerData} />
   </body>

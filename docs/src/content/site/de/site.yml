@@ -5,14 +5,14 @@ meta:
   logoUrl: /public/open-ticket-logo.png
 nav:
   - label: Produkte
-    url: /products/
+    url: products
   - label: Dienstleistungen
-    url: /services/
+    url: services
 
   - label: Dokumentation
-    url: /docs/
+    url: docs
   - label: Blog
-    url: /blog/
+    url: blog
 footer:
   brandName: Open Ticket AI
   brandTagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
@@ -21,11 +21,11 @@ footer:
     - title: Produkt
       links:
         - label: Funktionen
-          url: /products
+          url: products
         - label: Integrationen
-          url: /services
+          url: services
         - label: Sicherheit
-          url: /docs
+          url: docs
     - title: Unternehmen
       links:
         - label: Über uns
@@ -53,21 +53,21 @@ popularResources:
   groups:
     - title: Automatisierungs-Engine
       items:
-        - docId: docs/de/guides/quick-start
+        - docId: docs/guides/quick-start
           icon: RocketLaunchIcon
-        - docId: docs/de/developers/config_rendering
+        - docId: docs/developers/config_rendering
           icon: CommandLineIcon
-        - docId: docs/de/developers/ticket_system_integration
+        - docId: docs/developers/ticket_system_integration
           icon: PuzzlePieceIcon
-        - docId: docs/de/developers/plugin_development
+        - docId: docs/developers/plugin_development
           icon: ArrowsRightLeftIcon
     - title: Tagging-Engine
       items:
-        - docId: docs/de/taxonomy-design
+        - docId: docs/taxonomy-design
           icon: Squares2x2Icon
-        - docId: docs/de/hardware-sizing
+        - docId: docs/hardware-sizing
           icon: CpuChipIcon
-        - docId: docs/de/using-model
+        - docId: docs/using-model
           icon: ArrowPathIcon
-        - docId: docs/de/tag-mapping
+        - docId: docs/tag-mapping
           icon: ChartBarIcon

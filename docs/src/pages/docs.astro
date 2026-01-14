@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Card from '../components/vue/core/basic/Card.vue';
 import { getCollection } from 'astro:content';
@@ -7,6 +8,7 @@ const title = 'Documentation | Open Ticket AI';
 const description =
   'Choose the documentation you need. Explore API references, implementation guides, and best practices.';
 
+const currentLocale = Astro.currentLocale || 'en';
 const siteConfig = await Astro.locals.content.getLocalizedSingleton('site');
 const popularResources = siteConfig?.data.popularResources;
 
@@ -30,9 +32,10 @@ const iconMap: Record<string, string> = {
 
 function getDocUrl(docId: string): string {
   const parts = docId.split('/');
-  if (parts.length >= 3 && parts[0] === 'docs') {
-    const slug = parts.slice(2).join('/');
-    return `/${parts[0]}/${slug}/`;
+  if (parts.length >= 2 && parts[0] === 'docs') {
+    // Handle canonical doc IDs without locale prefix (e.g., 'docs/guides/quick-start')
+    const slug = parts.slice(1).join('/');
+    return getRelativeLocaleUrl(currentLocale, `docs/${slug}`);
   }
   return '#';
 }
@@ -40,12 +43,13 @@ function getDocUrl(docId: string): string {
 async function getDocTitle(docId: string): Promise<string> {
   try {
     const parts = docId.split('/');
-    if (parts.length >= 3 && parts[0] === 'docs') {
-      const slug = parts.slice(2).join('/');
+    if (parts.length >= 2 && parts[0] === 'docs') {
+      // Handle canonical doc IDs without locale prefix
+      const slug = parts.slice(1).join('/');
 
       const allDocs = await getCollection('docs');
       const doc = allDocs.find(d => {
-        const docSlug = d.slug.replace(/^en\//, '');
+        const docSlug = d.slug.replace(/^[a-z]{2}\//, '');
         return docSlug === slug;
       });
 
@@ -123,7 +127,7 @@ const enrichedGroups = popularResources
       </div>
 
       <div class="mx-auto mb-24 grid max-w-5xl grid-cols-1 gap-10 md:grid-cols-2">
-        <a href="/docs/open-ticket-automation/" class="group relative block">
+        <a href={getRelativeLocaleUrl(currentLocale, 'docs/open-ticket-automation')} class="group relative block">
           <Card variant="outline" radius="2xl" hoverable elevation="lg" client:load>
             <div class="mb-4 flex items-center gap-4">
               <div
@@ -175,7 +179,7 @@ const enrichedGroups = popularResources
           </Card>
         </a>
 
-        <a href="/docs/ticket-tagging/" class="group relative block">
+        <a href={getRelativeLocaleUrl(currentLocale, 'docs/ticket-tagging')} class="group relative block">
           <Card variant="outline" radius="2xl" hoverable elevation="lg" client:load>
             <div class="mb-4 flex items-center gap-4">
               <div

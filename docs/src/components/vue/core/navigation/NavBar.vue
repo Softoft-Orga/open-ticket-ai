@@ -5,7 +5,7 @@
     <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
       <a
         class="flex items-center gap-3 rounded-lg text-text-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
-        href="/"
+        :href="homeUrl"
       >
         <img
           :src="logoSrc"
@@ -108,12 +108,14 @@ type Props = {
   links?: NavLink[];
   ctaLabel?: string;
   ctaUrl?: string;
+  homeUrl?: string;
 };
 
 const props = defineProps<Props>();
 
 const navLinks = computed(() => props.links || []);
 const logoSrc = computed(() => props.logoUrl ?? '/public/open-ticket-logo.png');
+const homeUrl = computed(() => props.homeUrl ?? '/');
 
 const activePath = ref('/');
 const syncActivePath = () => {

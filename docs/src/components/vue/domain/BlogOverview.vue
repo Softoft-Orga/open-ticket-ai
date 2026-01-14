@@ -26,6 +26,7 @@ interface BlogPost {
 
 interface Props {
   posts: BlogPost[];
+  currentLocale: string;
 }
 
 const props = defineProps<Props>();
@@ -51,7 +52,13 @@ const getPlaceholderImage = (index: number) => {
 };
 
 const getBlogUrl = (id: string) => {
-  return `/blog/${id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '')}/`;
+  const slug = id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
+  // Construct localized URL based on currentLocale
+  const locale = props.currentLocale || 'en';
+  if (locale === 'en') {
+    return `/blog/${slug}/`;
+  }
+  return `/${locale}/blog/${slug}/`;
 };
 
 const filteredAndSortedPosts = computed(() => {
@@ -178,7 +185,7 @@ const topicCounts = computed(() => {
           <form
             name="blog-subscription"
             method="POST"
-            action="/success/blog-subscription/"
+            :action="props.currentLocale === 'en' ? '/success/blog-subscription/' : `/${props.currentLocale}/success/blog-subscription/`"
             data-netlify="true"
             class="space-y-4"
           >

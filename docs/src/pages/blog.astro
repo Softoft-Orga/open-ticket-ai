@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogOverview from '../components/vue/domain/BlogOverview.vue';
 import { ArrowRightIcon, CalendarIcon } from '@heroicons/vue/24/outline';
@@ -6,6 +7,8 @@ import { ArrowRightIcon, CalendarIcon } from '@heroicons/vue/24/outline';
 const pageTitle = 'Open Ticket AI Blog';
 const pageDescription =
   'Latest updates, insights, and news about Open Ticket AI and autonomous support automation.';
+
+const currentLocale = Astro.currentLocale || 'en';
 
 // Fetch blog posts from the content collection
 const allBlogPosts = await Astro.locals.content.getLocalizedCollection('blog');
@@ -29,7 +32,8 @@ const formatDate = (date: Date) => {
 
 // Helper function to get blog post URL (strip locale prefix and extension from id)
 const getBlogUrl = (id: string) => {
-  return `/blog/${id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '')}/`;
+  const slug = id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
+  return getRelativeLocaleUrl(currentLocale, `blog/${slug}`);
 };
 ---
 
@@ -89,6 +93,6 @@ const getBlogUrl = (id: string) => {
     }
 
     <!-- Blog Overview Component -->
-    <BlogOverview posts={gridPosts} client:load />
+    <BlogOverview posts={gridPosts} currentLocale={currentLocale} client:load />
   </div>
 </BaseLayout>

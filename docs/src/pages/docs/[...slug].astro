@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths';
 import type { CollectionEntry } from 'astro:content';
@@ -13,6 +14,7 @@ const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
 const title = entry.data.title;
 const description = entry.data.description;
+const currentLocale = Astro.currentLocale || 'en';
 
 // Generate breadcrumbs from the slug (removing locale prefix)
 const slugParts = entry.id
@@ -20,13 +22,13 @@ const slugParts = entry.id
   .replace(/\.(md|mdx)$/, '')
   .split('/');
 const breadcrumbs = [
-  { label: 'Documentation', href: '/docs/' },
+  { label: 'Documentation', href: getRelativeLocaleUrl(currentLocale, 'docs') },
   ...slugParts.slice(0, -1).map((part, index) => ({
     label: part
       .split('-')
       .map(w => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' '),
-    href: '/docs/' + slugParts.slice(0, index + 1).join('/') + '/',
+    href: getRelativeLocaleUrl(currentLocale, 'docs/' + slugParts.slice(0, index + 1).join('/')),
   })),
   { label: title },
 ];
@@ -69,7 +71,7 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
       .sort((a, b) => (a.data.nav?.order || 999) - (b.data.nav?.order || 999))
       .map(doc => {
         const docSlug = doc.id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
-        const link = `/docs/${docSlug}/`;
+        const link = getRelativeLocaleUrl(currentLocale, `docs/${docSlug}`);
         return {
           label: doc.data.title,
           link,

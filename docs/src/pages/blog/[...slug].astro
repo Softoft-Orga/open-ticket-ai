@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -14,6 +15,7 @@ type Props = {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+const currentLocale = Astro.currentLocale || 'en';
 
 const formatDate = (date: Date) => {
   return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -94,7 +96,7 @@ const formatDate = (date: Date) => {
       <!-- Back to Blog -->
       <footer class="mt-16 border-t border-surface-lighter pt-12">
         <a
-          href="/blog/"
+          href={getRelativeLocaleUrl(currentLocale, 'blog')}
           class="inline-flex items-center gap-2 text-primary-light transition-colors hover:text-primary"
         >
           <ArrowLeftIcon class="h-5 w-5" aria-hidden="true" />
