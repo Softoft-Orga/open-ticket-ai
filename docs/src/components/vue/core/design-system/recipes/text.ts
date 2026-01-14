@@ -1,8 +1,6 @@
 import { tv, type VariantProps } from 'tailwind-variants';
 import type { Tone } from '../tokens.ts';
 
-type Emphasis = 'normal' | 'dim' | 'strong';
-
 /**
  * Text recipe - Text styles used across components
  *

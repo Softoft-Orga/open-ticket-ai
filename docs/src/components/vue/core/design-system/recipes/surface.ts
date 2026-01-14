@@ -1,7 +1,5 @@
 import { tv, type VariantProps } from 'tailwind-variants';
-import type { Variant, Tone, Radius, Elevation, Hoverable, Highlighted } from '../tokens.ts';
-
-type Intensity = 'none' | 'soft';
+import type { Variant, Tone, Radius, Elevation } from '../tokens.ts';
 
 /**
  * Surface recipe - Container surface styles
