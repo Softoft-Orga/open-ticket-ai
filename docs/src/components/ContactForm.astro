@@ -3,13 +3,25 @@ import { input } from './vue/core/design-system/recipes';
 import Button from './vue/core/basic/Button.vue';
 
 interface Props {
-  title?: string;
+  title: string;
+  submitButtonText: string;
+  messageLabel: string;
+  emailLabel: string;
+  subjectLabel: string;
+  emailPlaceholder: string;
+  messagePlaceholder: string;
   successActionUrl?: string;
   name?: string;
 }
 
 const {
-  title = 'Contact Sales',
+  title,
+  submitButtonText,
+  messageLabel,
+  emailLabel,
+  subjectLabel,
+  emailPlaceholder,
+  messagePlaceholder,
   successActionUrl = '/success/contact-sales',
   name = 'contact-sales',
 } = Astro.props;
@@ -25,34 +37,36 @@ const inputClasses = input({
   <input type="hidden" name="form-name" value={name} />
 
   <div>
-    <label class="mb-2 block text-sm font-medium text-text-1" for="subject"> Subject </label>
+    <label class="mb-2 block text-sm font-medium text-text-1" for="subject"> {subjectLabel} </label>
     <input id="subject" class={inputClasses} name="subject" required type="text" value={title} />
   </div>
 
   <div>
-    <label class="mb-2 block text-sm font-medium text-text-1" for="email"> Email </label>
+    <label class="mb-2 block text-sm font-medium text-text-1" for="email"> {emailLabel} </label>
     <input
       id="email"
       class={inputClasses}
       name="email"
       required
       type="email"
-      placeholder="your@email.com"
+      placeholder={emailPlaceholder}
     />
   </div>
 
   <div>
-    <label class="mb-2 block text-sm font-medium text-text-1" for="message"> Message </label>
+    <label class="mb-2 block text-sm font-medium text-text-1" for="message"> {messageLabel} </label>
     <textarea
       id="message"
       class={inputClasses}
       name="message"
       required
       rows="4"
-      placeholder="How can we help you?"></textarea>
+      placeholder={messagePlaceholder}></textarea>
   </div>
 
   <div class="pt-4">
-    <Button tone="primary" variant="surface" size="md" radius="xl" block={true}> Submit </Button>
+    <Button tone="primary" variant="surface" size="md" radius="xl" block={true}>
+      {submitButtonText}
+    </Button>
   </div>
 </form>
