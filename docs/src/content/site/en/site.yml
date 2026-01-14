@@ -8,8 +8,6 @@ nav:
     url: /products/
   - label: Services
     url: /services/
-  - label: Pricing
-    url: /pricing/
   - label: Docs
     url: /docs/
   - label: Blog
