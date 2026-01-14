@@ -1,4 +1,6 @@
 import { test, expect, Page, ConsoleMessage } from '@playwright/test';
+import { readdirSync } from 'fs';
+import { join, relative } from 'path';
 
 /**
  * Crash-smoke tests: verify pages load without crashes.
@@ -17,8 +19,46 @@ import { test, expect, Page, ConsoleMessage } from '@playwright/test';
  * as they don't indicate page crashes.
  */
 
-// URLs to test across both locales
-const routes = ['/', '/products/', '/pricing/', '/roi-calculator/', '/blog/', '/docs/'];
+/**
+ * Recursively scan the pages directory to discover all routes.
+ * Converts file paths to URL routes, excluding dynamic routes ([...slug]).
+ */
+function discoverRoutes(dir: string, baseDir: string): string[] {
+  const routes: string[] = [];
+  const entries = readdirSync(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      // Recursively scan subdirectories
+      routes.push(...discoverRoutes(fullPath, baseDir));
+    } else if (entry.isFile() && entry.name.endsWith('.astro')) {
+      // Skip dynamic routes (e.g., [...slug].astro)
+      if (entry.name.includes('[')) continue;
+
+      // Convert file path to route
+      const relativePath = relative(baseDir, fullPath);
+      let route = '/' + relativePath
+        .replace(/\.astro$/, '')
+        .replace(/\/index$/, '')
+        .replace(/index$/, '');
+
+      // Ensure trailing slash
+      if (route !== '/' && !route.endsWith('/')) {
+        route += '/';
+      }
+
+      routes.push(route);
+    }
+  }
+
+  return routes.sort();
+}
+
+// Dynamically discover all static routes from the pages directory
+const pagesDir = join(process.cwd(), 'src', 'pages');
+const routes = discoverRoutes(pagesDir, pagesDir);
 
 const locales = ['en'];
 
