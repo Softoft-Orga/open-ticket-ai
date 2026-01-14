@@ -1,19 +1,10 @@
 <template>
-  <RadioGroupRoot
-    v-model="selected"
-    :disabled="disabled"
-  >
-    <RadioGroupLabel
-      v-if="label"
-      class="mb-3 block text-sm font-medium text-gray-300"
-    >
+  <RadioGroupRoot v-model="selected" :disabled="disabled">
+    <RadioGroupLabel v-if="label" class="mb-3 block text-sm font-medium text-gray-300">
       {{ label }}
     </RadioGroupLabel>
 
-    <div
-      v-if="$slots.description"
-      class="mb-3 text-sm text-text-dim"
-    >
+    <div v-if="$slots.description" class="mb-3 text-sm text-text-dim">
       <slot name="description" />
     </div>
 

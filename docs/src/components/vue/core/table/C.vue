@@ -1,9 +1,6 @@
 <!-- Cell.vue -->
 <template>
-  <component
-    :is="tag"
-    :class="cellClasses"
-  >
+  <component :is="tag" :class="cellClasses">
     <slot />
   </component>
 </template>

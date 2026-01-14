@@ -1,18 +1,10 @@
 <template>
   <div>
-    <Button
-      tone="primary"
-      variant="surface"
-      @click="isOpen = true"
-    >
+    <Button tone="primary" variant="surface" @click="isOpen = true">
       <slot />
     </Button>
 
-    <Modal
-      :open="isOpen"
-      :title="formTitle"
-      @close="isOpen = false"
-    >
+    <Modal :open="isOpen" :title="formTitle" @close="isOpen = false">
       <form
         :action="successActionUrl"
         class="space-y-4"
@@ -20,17 +12,10 @@
         method="POST"
         name="contact-sales"
       >
-        <input
-          type="hidden"
-          name="form-name"
-          value="contact-sales"
-        >
+        <input type="hidden" name="form-name" value="contact-sales" />
 
         <div>
-          <label
-            class="mb-2 block text-sm font-medium text-text-1"
-            for="subject"
-          > Subject </label>
+          <label class="mb-2 block text-sm font-medium text-text-1" for="subject"> Subject </label>
           <input
             id="subject"
             v-model="formData.subject"
@@ -38,14 +23,11 @@
             name="subject"
             required
             type="text"
-          >
+          />
         </div>
 
         <div>
-          <label
-            class="mb-2 block text-sm font-medium text-text-1"
-            for="email"
-          > Email </label>
+          <label class="mb-2 block text-sm font-medium text-text-1" for="email"> Email </label>
           <input
             id="email"
             v-model="formData.email"
@@ -53,14 +35,11 @@
             name="email"
             required
             type="email"
-          >
+          />
         </div>
 
         <div>
-          <label
-            class="mb-2 block text-sm font-medium text-text-1"
-            for="message"
-          > Message </label>
+          <label class="mb-2 block text-sm font-medium text-text-1" for="message"> Message </label>
           <textarea
             id="message"
             v-model="formData.message"
@@ -72,14 +51,7 @@
         </div>
 
         <div class="flex gap-3 pt-4">
-          <Button
-            class="flex-1"
-            tone="primary"
-            type="submit"
-            variant="surface"
-          >
-            Submit
-          </Button>
+          <Button class="flex-1" tone="primary" type="submit" variant="surface"> Submit </Button>
           <Button
             class="flex-1"
             tone="neutral"

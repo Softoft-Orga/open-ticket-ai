@@ -1,30 +1,16 @@
 <template>
   <div :class="alertClasses">
-    <div
-      v-if="!hideIcon"
-      class="mt-0.5 flex-shrink-0"
-    >
-      <component
-        :is="iconComponent"
-        :class="iconClasses"
-        aria-hidden="true"
-      />
+    <div v-if="!hideIcon" class="mt-0.5 flex-shrink-0">
+      <component :is="iconComponent" :class="iconClasses" aria-hidden="true" />
     </div>
     <div class="flex-1">
-      <h4
-        v-if="title"
-        class="mb-1 font-semibold"
-      >
+      <h4 v-if="title" class="mb-1 font-semibold">
         {{ title }}
       </h4>
       <div class="text-sm">
         <slot />
       </div>
-      <div
-        v-if="$slots.footer"
-        class="mt-3 border-t pt-3"
-        :class="footerBorderClasses"
-      >
+      <div v-if="$slots.footer" class="mt-3 border-t pt-3" :class="footerBorderClasses">
         <slot name="footer" />
       </div>
     </div>

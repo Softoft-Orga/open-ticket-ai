@@ -11,7 +11,7 @@
           :src="logoSrc"
           alt="Company logo"
           class="size-10 rounded-lg border border-border-dark object-cover"
-        >
+        />
         <span class="font-display text-lg font-bold tracking-tight">Open Ticket AI</span>
       </a>
 
@@ -28,13 +28,7 @@
       </nav>
 
       <div class="hidden items-center gap-4 md:flex">
-        <Button
-          v-if="ctaLabel"
-          :href="ctaUrl"
-          variant="subtle"
-          tone="primary"
-          size="md"
-        >
+        <Button v-if="ctaLabel" :href="ctaUrl" variant="subtle" tone="primary" size="md">
           {{ ctaLabel }}
         </Button>
       </div>
@@ -48,30 +42,19 @@
       </button>
     </div>
 
-    <TransitionRoot
-      :show="mobileMenuOpen"
-      as="template"
-    >
+    <TransitionRoot :show="mobileMenuOpen" as="template">
       <div class="md:hidden">
-        <TransitionChild
-          v-bind="fade"
-          as="template"
-        >
+        <TransitionChild v-bind="fade" as="template">
           <div
             class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm"
             @click="closeMobileMenu"
           />
         </TransitionChild>
-        <TransitionChild
-          v-bind="slideLeft"
-          as="template"
-        >
+        <TransitionChild v-bind="slideLeft" as="template">
           <div class="fixed inset-y-0 right-0 flex w-full max-w-sm">
             <div class="h-full w-full border-l border-border-dark bg-surface-dark p-6 shadow-2xl">
               <div class="mb-8 flex items-center justify-between">
-                <p class="text-lg font-bold text-text-1">
-                  Menu
-                </p>
+                <p class="text-lg font-bold text-text-1">Menu</p>
                 <button
                   class="rounded-lg p-2 text-text-2 transition-colors hover:text-text-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                   aria-label="Close menu"
@@ -98,17 +81,8 @@
                 </a>
               </nav>
 
-              <div
-                v-if="ctaLabel"
-                class="mt-8 border-t border-border-dark pt-6"
-              >
-                <Button
-                  :href="ctaUrl"
-                  variant="subtle"
-                  tone="primary"
-                  size="md"
-                  block
-                >
+              <div v-if="ctaLabel" class="mt-8 border-t border-border-dark pt-6">
+                <Button :href="ctaUrl" variant="subtle" tone="primary" size="md" block>
                   {{ ctaLabel }}
                 </Button>
               </div>
