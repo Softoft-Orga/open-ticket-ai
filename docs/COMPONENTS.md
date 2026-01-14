@@ -52,7 +52,7 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
   `closeOnOverlay` (boolean, default: true). Emits: `close`. Slots: default (body), `title` (custom
   header), `footer` (actions). Story: `stories/Modal.stories.ts`.
 - **ModalTrigger.vue** — Modal with internal state management and trigger button. Manages its own `
- isOpen` state internally—no modal state leaks to parent. Props: `title` (string), `tone` (Tone),
+isOpen` state internally—no modal state leaks to parent. Props: `title` (string), `tone` (Tone),
   `size` (Size), `closeOnOverlay` (boolean, default: true), `buttonText` (string, default: 'Open'),
   `buttonVariant` (Variant, default: 'surface'), `buttonTone` (Tone, default: 'primary'),
   `buttonSize` (Size, default: 'md'). Slots: `button` (custom trigger button, receives `{ open }`
