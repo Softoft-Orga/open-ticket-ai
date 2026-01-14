@@ -1,6 +1,19 @@
 <template>
   <div>
-    <slot name="trigger" :open="open" />
+    <Button
+      :variant="buttonVariant"
+      :tone="buttonTone"
+      :size="buttonSize"
+      :radius="buttonRadius"
+      :disabled="buttonDisabled"
+      :loading="buttonLoading"
+      :block="buttonBlock"
+      :to="buttonTo"
+      :href="buttonHref"
+      @click="open"
+    >
+      {{ buttonText }}
+    </Button>
 
     <Modal
       :open="isOpen"
@@ -26,13 +39,24 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import Modal from './Modal.vue';
-import type { Tone, Size } from '../design-system/tokens.ts';
+import Button from './Button.vue';
+import type { Tone, Size, Variant, Radius } from '../design-system/tokens.ts';
 
 interface Props {
   title?: string;
   tone?: Tone;
   size?: Size;
   closeOnOverlay?: boolean;
+  buttonText?: string;
+  buttonVariant?: Variant;
+  buttonTone?: Tone;
+  buttonSize?: Size;
+  buttonRadius?: Radius;
+  buttonDisabled?: boolean;
+  buttonLoading?: boolean;
+  buttonBlock?: boolean;
+  buttonTo?: string;
+  buttonHref?: string;
 }
 
 withDefaults(defineProps<Props>(), {
@@ -40,6 +64,16 @@ withDefaults(defineProps<Props>(), {
   tone: 'neutral',
   size: 'md',
   closeOnOverlay: true,
+  buttonText: 'Open Modal',
+  buttonVariant: 'surface',
+  buttonTone: 'primary',
+  buttonSize: 'md',
+  buttonRadius: 'xl',
+  buttonDisabled: false,
+  buttonLoading: false,
+  buttonBlock: false,
+  buttonTo: undefined,
+  buttonHref: undefined,
 });
 
 const isOpen = ref(false);

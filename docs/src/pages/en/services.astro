@@ -1,8 +1,7 @@
 ---
-import ModalTrigger from '../components/vue/core/basic/ModalTrigger.vue';
-import ContactForm from '../components/ContactForm.astro';
+import ModalTrigger from '../../components/vue/core/basic/ModalTrigger.vue';
+import ContactForm from '../../components/ContactForm.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Button from '../../components/vue/core/basic/Button.vue';
 import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import {
@@ -284,19 +283,17 @@ const typicalScopeItems = [
                   ))}
                 </ul>
                 <div slot="actions">
-                  <ModalTrigger title="Contact Sales" tone="neutral" size="lg" client:load>
-                    <template v-slot:trigger="{ open }">
-                      <Button
-                        variant={highlighted ? 'surface' : 'outline'}
-                        tone={highlighted ? 'primary' : 'neutral'}
-                        size="md"
-                        class="w-full"
-                        @click="open"
-                        client:load
-                      >
-                        {index === 1 ? 'Get Demo' : 'Contact Sales'}
-                      </Button>
-                    </template>
+                  <ModalTrigger
+                    title="Contact Sales"
+                    tone="neutral"
+                    size="lg"
+                    button-text={index === 1 ? 'Get Demo' : 'Contact Sales'}
+                    button-variant={highlighted ? 'surface' : 'outline'}
+                    button-tone={highlighted ? 'primary' : 'neutral'}
+                    button-size="md"
+                    button-block
+                    client:load
+                  >
                     <ContactForm title={service.title} />
                   </ModalTrigger>
                 </div>
@@ -396,19 +393,17 @@ const typicalScopeItems = [
                 </ul>
 
                 <div slot="actions">
-                  <ModalTrigger title="Contact Sales" tone="neutral" size="lg" client:load>
-                    <template v-slot:trigger="{ open }">
-                      <Button
-                        variant={highlighted ? 'surface' : 'outline'}
-                        tone={highlighted ? 'primary' : 'neutral'}
-                        size="md"
-                        class="w-full"
-                        @click="open"
-                        client:load
-                      >
-                        {index === 1 ? 'Get Demo' : 'Contact Sales'}
-                      </Button>
-                    </template>
+                  <ModalTrigger
+                    title="Contact Sales"
+                    tone="neutral"
+                    size="lg"
+                    button-text={index === 1 ? 'Get Demo' : 'Contact Sales'}
+                    button-variant={highlighted ? 'surface' : 'outline'}
+                    button-tone={highlighted ? 'primary' : 'neutral'}
+                    button-size="md"
+                    button-block
+                    client:load
+                  >
                     <ContactForm title={service.title} />
                   </ModalTrigger>
                 </div>
@@ -501,19 +496,17 @@ const typicalScopeItems = [
                 </div>
 
                 <div slot="actions">
-                  <ModalTrigger title="Contact Sales" tone="neutral" size="lg" client:load>
-                    <template v-slot:trigger="{ open }">
-                      <Button
-                        variant="surface"
-                        tone="primary"
-                        size="md"
-                        class="w-full"
-                        @click="open"
-                        client:load
-                      >
-                        Contact Sales
-                      </Button>
-                    </template>
+                  <ModalTrigger
+                    title="Contact Sales"
+                    tone="neutral"
+                    size="lg"
+                    button-text="Contact Sales"
+                    button-variant="surface"
+                    button-tone="primary"
+                    button-size="md"
+                    button-block
+                    client:load
+                  >
                     <ContactForm title={service.title} />
                   </ModalTrigger>
                 </div>
@@ -586,19 +579,17 @@ const typicalScopeItems = [
                   </div>
 
                   <div slot="actions">
-                    <ModalTrigger title="Contact Sales" tone="neutral" size="lg" client:load>
-                      <template v-slot:trigger="{ open }">
-                        <Button
-                          variant="surface"
-                          tone="primary"
-                          size="md"
-                          class="w-full"
-                          @click="open"
-                          client:load
-                        >
-                          Get Demo
-                        </Button>
-                      </template>
+                    <ModalTrigger
+                      title="Contact Sales"
+                      tone="neutral"
+                      size="lg"
+                      button-text="Get Demo"
+                      button-variant="surface"
+                      button-tone="primary"
+                      button-size="md"
+                      button-block
+                      client:load
+                    >
                       <ContactForm title={service.title} />
                     </ModalTrigger>
                   </div>
@@ -646,19 +637,17 @@ const typicalScopeItems = [
                 </div>
 
                 <div slot="actions">
-                  <ModalTrigger title="Contact Sales" tone="neutral" size="lg" client:load>
-                    <template v-slot:trigger="{ open }">
-                      <Button
-                        variant="outline"
-                        tone="neutral"
-                        size="md"
-                        class="w-full"
-                        @click="open"
-                        client:load
-                      >
-                        Contact Sales
-                      </Button>
-                    </template>
+                  <ModalTrigger
+                    title="Contact Sales"
+                    tone="neutral"
+                    size="lg"
+                    button-text="Contact Sales"
+                    button-variant="outline"
+                    button-tone="neutral"
+                    button-size="md"
+                    button-block
+                    client:load
+                  >
                     <ContactForm title={service.title} />
                   </ModalTrigger>
                 </div>
@@ -739,19 +728,17 @@ const typicalScopeItems = [
               </div>
 
               <div slot="actions">
-                <ModalTrigger title="Contact Sales" tone="neutral" size="lg" client:load>
-                  <template v-slot:trigger="{ open }">
-                    <Button
-                      variant="outline"
-                      tone="neutral"
-                      size="md"
-                      class="w-full"
-                      @click="open"
-                      client:load
-                    >
-                      Contact Sales
-                    </Button>
-                  </template>
+                <ModalTrigger
+                  title="Contact Sales"
+                  tone="neutral"
+                  size="lg"
+                  button-text="Contact Sales"
+                  button-variant="outline"
+                  button-tone="neutral"
+                  button-size="md"
+                  button-block
+                  client:load
+                >
                   <ContactForm title={service.title} />
                 </ModalTrigger>
               </div>
