@@ -4,6 +4,7 @@ import { getLocalizedCatchAllStaticPaths } from '../../../utils/staticPaths.ts';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import Button from '../../../components/vue/core/basic/Button.vue';
+import {getRelativeLocaleUrl} from "astro:i18n";
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs');
 
@@ -99,12 +100,12 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
       breadcrumbs.length > 0 && (
         <div class="sticky top-16 z-40 border-b border-white/5 bg-[#0f0814]/50 shadow-sm backdrop-blur-sm">
           <div class="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:px-6">
-            <div class="flex items-center gap-2 overflow-hidden text-[10px]">
+            <div class="flex items-center gap-2 overflow-hidden text-xs">
               {breadcrumbs.map((crumb, i) => (
                 <>
                   {crumb.href ? (
                     <a
-                      href={crumb.href}
+                      href={getRelativeLocaleUrl(Astro.currentLocale, crumb.href)}
                       class="whitespace-nowrap text-slate-500 transition-colors hover:text-white"
                     >
                       {crumb.label}
@@ -120,7 +121,7 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
               <a
                 href="https://github.com/Softoft-Orga/open-ticket-ai"
                 target="_blank"
-                class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 hover:text-white"
+                class="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-white"
               >
                 <span class="text-sm">⚡</span>
                 GitHub
@@ -148,7 +149,7 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
                   {section.items.map(item => (
                     <li>
                       <a
-                        href={item.link}
+                        href={getRelativeLocaleUrl(Astro.currentLocale,item.link)}
                         class:list={[
                           'block rounded-md px-3 py-1.5 text-xs transition-all',
                           item.active
@@ -197,30 +198,6 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
                 </a>
               ))}
             </nav>
-
-            <div class="mt-12 px-4">
-              <div class="group relative overflow-hidden rounded-xl border border-white/5 bg-gradient-to-br from-primary/10 to-surface-dark p-4">
-                <div class="relative z-10">
-                  <span class="mb-2 text-xl text-primary">💬</span>
-                  <div class="mb-1 text-[10px] font-black uppercase text-white">
-                    Support Discord
-                  </div>
-                  <p class="mb-3 text-[9px] leading-tight text-slate-500">
-                    Get help from the community.
-                  </p>
-                  <Button
-                    variant="subtle"
-                    tone="neutral"
-                    size="sm"
-                    radius="lg"
-                    block
-                    class="text-[9px]"
-                  >
-                    Join Server
-                  </Button>
-                </div>
-              </div>
-            </div>
           </aside>
         )
       }

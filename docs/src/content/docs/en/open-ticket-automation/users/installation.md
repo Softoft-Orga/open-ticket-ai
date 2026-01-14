@@ -29,7 +29,7 @@ Complete this **before** starting automation:
 - Ensure required Queues & Priorities exist
 - Permissions needed: `ro`, `move_into`, `priority`, `note`
 
-See **[OTOBO/Znuny Plugin Setup](./plugin-otobo-znuny/setup.md)** for details.
+See **[OTOBO/Znuny Plugin Setup](otobo-znuny-plugin-setup.md)** for details.
 
 ## 1) Check Hardware & OS
 
