@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
@@ -100,10 +101,10 @@ const privacyFeatures = [
         </p>
 
         <div class="flex flex-wrap justify-center gap-4 pt-4">
-          <Button variant="surface" tone="primary" size="lg" href="/docs/" client:load>
+          <Button variant="surface" tone="primary" size="lg" href={getRelativeLocaleUrl(Astro.currentLocale, 'docs')} client:load>
             Explore Documentation
           </Button>
-          <Button variant="outline" tone="primary" size="lg" href="/services/" client:load>
+          <Button variant="outline" tone="primary" size="lg" href={getRelativeLocaleUrl(Astro.currentLocale, 'services')} client:load>
             View Services
           </Button>
         </div>
@@ -247,7 +248,7 @@ const privacyFeatures = [
             variant="outline"
             tone="primary"
             size="lg"
-            href="/docs/ticket-tagging/"
+            href={getRelativeLocaleUrl(Astro.currentLocale, 'docs/ticket-tagging')}
             client:load
           >
             Learn More About Tagging AI
@@ -529,7 +530,7 @@ const privacyFeatures = [
         </div>
 
         <div class="text-center">
-          <Button variant="outline" tone="neutral" size="lg" href="/services/" client:load>
+          <Button variant="outline" tone="neutral" size="lg" href={getRelativeLocaleUrl(Astro.currentLocale, 'services')} client:load>
             View All Services
           </Button>
         </div>
@@ -554,10 +555,10 @@ const privacyFeatures = [
               our documentation or talk to our team.
             </p>
             <div class="relative flex flex-wrap justify-center gap-4">
-              <Button variant="surface" tone="primary" size="lg" href="/docs/" client:load>
+              <Button variant="surface" tone="primary" size="lg" href={getRelativeLocaleUrl(Astro.currentLocale, 'docs')} client:load>
                 Read Documentation
               </Button>
-              <Button variant="outline" tone="primary" size="lg" href="/services/" client:load>
+              <Button variant="outline" tone="primary" size="lg" href={getRelativeLocaleUrl(Astro.currentLocale, 'services')} client:load>
                 Talk to Sales
               </Button>
             </div>

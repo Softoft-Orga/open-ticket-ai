@@ -27,6 +27,8 @@ interface BlogPost {
 
 interface Props {
   posts: BlogPost[];
+  localizedBlogBaseURL: string;
+  localizedSubFormAction: string;
 }
 
 const props = defineProps<Props>();
@@ -52,7 +54,8 @@ const getPlaceholderImage = (index: number) => {
 };
 
 const getBlogUrl = (id: string) => {
-  return `/blog/${id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '')}/`;
+  const canonicalPath = id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
+  return `${props.localizedBlogBaseURL}/${canonicalPath}/`;
 };
 
 const filteredAndSortedPosts = computed(() => {
@@ -181,7 +184,7 @@ const topicCounts = computed(() => {
           <form
             name="blog-subscription"
             method="POST"
-            action="/success/blog-subscription/"
+            :action="localizedSubFormAction"
             data-netlify="true"
             class="space-y-4"
           >

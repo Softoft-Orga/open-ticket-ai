@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../layouts/BaseLayout.js';
 import BlogOverview from '../../components/vue/domain/BlogOverview.vue';
 import { ArrowRightIcon, CalendarIcon } from '@heroicons/vue/24/outline';
@@ -34,8 +35,13 @@ const formatDate = (date: Date) => {
 
 // Helper function to get blog post URL (strip locale prefix and extension from id)
 const getBlogUrl = (id: string) => {
-  return `/blog/${id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '')}/`;
+  const canonicalPath = id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
+  return getRelativeLocaleUrl(Astro.currentLocale, `blog/${canonicalPath}`);
 };
+
+// Localized URLs for BlogOverview component
+const localizedBlogBaseURL = getRelativeLocaleUrl(Astro.currentLocale, 'blog');
+const localizedSubFormAction = getRelativeLocaleUrl(Astro.currentLocale, 'success/blog-subscription');
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
@@ -94,6 +100,11 @@ const getBlogUrl = (id: string) => {
     }
 
     <!-- Blog Overview Component -->
-    <BlogOverview posts={gridPosts} client:load />
+    <BlogOverview 
+      posts={gridPosts} 
+      localizedBlogBaseURL={localizedBlogBaseURL}
+      localizedSubFormAction={localizedSubFormAction}
+      client:load 
+    />
   </div>
 </BaseLayout>

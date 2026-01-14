@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../../layouts/BaseLayout.js';
 import { CalendarIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
@@ -94,7 +95,7 @@ const formatDate = (date: Date) => {
       <!-- Back to Blog -->
       <footer class="mt-16 border-t border-surface-lighter pt-12">
         <a
-          href="/en/blog/"
+          href={getRelativeLocaleUrl(Astro.currentLocale, 'blog')}
           class="inline-flex items-center gap-2 text-primary-light transition-colors hover:text-primary"
         >
           <ArrowLeftIcon class="h-5 w-5" aria-hidden="true" />
