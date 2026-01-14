@@ -43,7 +43,7 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
   `loading`, `block`, `to`, `href`. Slots: default (button content). Story: `stories/Button.stories.ts`.
 - **Card.vue** — Card container using design-system card() recipe. Props: `variant` ('surface' | '
   outline' | 'subtle'), `tone` (Tone), `size` (Size), `radius` (Radius), `elevation` (Elevation),
-  `hoverable`. Slots: `image`, `header`, `title`, default (content), `actions`, `footer`. Story:
+  `hoverable`,`actionsSticky`. Slots: `image`, `header`, `title`, default (content), `actions`, `footer`. Story:
   `stories/Card.stories.ts`.
 - **Link.vue** — Simple link component. Props: `to`. Slots: default (link text). Story:
   `stories/Link.stories.ts`.
@@ -51,11 +51,13 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
   `neutral` | `primary` | `success` | `warning` | `danger` | `info`), `size` (`sm` | `md` | `lg`),
   `closeOnOverlay` (boolean, default: true). Emits: `close`. Slots: default (body), `title` (custom
   header), `footer` (actions). Story: `stories/Modal.stories.ts`.
-- **ModalTrigger.vue** — Modal with internal state management. Manages its own `isOpen` state
-  internally—no modal state leaks to parent. Props: `title` (string), `tone` (Tone), `size` (Size),
-  `closeOnOverlay` (boolean, default: true). Slots: `trigger` (required, receives `{ open }`
-  function), `title` (custom header), default (body), `footer` (actions). Story:
-  `stories/ModalTrigger.stories.ts`.
+- **ModalTrigger.vue** — Modal with internal state management and built-in button. Manages its own
+  `isOpen` state internally—no modal state leaks to parent. Props: `title` (string), `tone` (Tone),
+  `size` (Size), `closeOnOverlay` (boolean, default: true), `buttonText` (string, default: "Open
+  Modal"), `buttonVariant` (Variant), `buttonTone` (Tone), `buttonSize` (Size), `buttonRadius`
+  (Radius), `buttonDisabled` (boolean), `buttonLoading` (boolean), `buttonBlock` (boolean),
+  `buttonTo` (string), `buttonHref` (string). Slots: `title` (custom header), default (body),
+  `footer` (actions). Story: `stories/ModalTrigger.stories.ts`.
 - **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot
   scope). Story: `stories/Tabs.stories.ts`.
 
