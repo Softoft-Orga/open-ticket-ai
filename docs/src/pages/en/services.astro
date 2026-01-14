@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
-import ModalTrigger from '../components/vue/core/basic/ModalTrigger.vue';
-import ContactForm from '../components/ContactForm.astro';
+import ModalTrigger from '../../components/vue/core/basic/ModalTrigger.vue';
+import ContactForm from '../../components/ContactForm.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
@@ -361,6 +361,7 @@ const typicalScopeItems = [
                 size="md"
                 radius="2xl"
                 elevation="none"
+                actionsSticky
                 client:load
               >
                 <div class="mb-6 flex items-start justify-between">
@@ -553,6 +554,7 @@ const typicalScopeItems = [
                   radius="2xl"
                   elevation="md"
                   class="bg-gradient-to-r from-[#1a1a1a] to-[#0a0a0a]"
+                  actionsSticky
                   client:load
                 >
                   <div slot="header" class="flex items-start justify-between">
@@ -609,6 +611,7 @@ const typicalScopeItems = [
                 size="md"
                 radius="2xl"
                 elevation="none"
+                actionsSticky
                 client:load
               >
                 <div slot="header" class="flex items-start justify-between">

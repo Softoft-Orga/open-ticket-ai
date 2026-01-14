@@ -43,7 +43,7 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
   `loading`, `block`, `to`, `href`. Slots: default (button content). Story: `stories/Button.stories.ts`.
 - **Card.vue** — Card container using design-system card() recipe. Props: `variant` ('surface' | '
   outline' | 'subtle'), `tone` (Tone), `size` (Size), `radius` (Radius), `elevation` (Elevation),
-  `hoverable`. Slots: `image`, `header`, `title`, default (content), `actions`, `footer`. Story:
+  `hoverable`,`actionsSticky`. Slots: `image`, `header`, `title`, default (content), `actions`, `footer`. Story:
   `stories/Card.stories.ts`.
 - **Link.vue** — Simple link component. Props: `to`. Slots: default (link text). Story:
   `stories/Link.stories.ts`.
