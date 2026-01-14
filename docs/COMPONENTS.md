@@ -48,16 +48,14 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
 - **Link.vue** — Simple link component. Props: `to`. Slots: default (link text). Story:
   `stories/Link.stories.ts`.
 - **Modal.vue** — Accessible modal dialog. Props: `open` (boolean), `title` (string), `tone` (
-   `neutral` | `primary` | `success` | `warning` | `danger` | `info`), `size` (`sm` | `md` | `lg`),
-   `closeOnOverlay` (boolean, default: true). Emits: `close`. Slots: default (body), `title` (custom
-   header), `footer` (actions). Story: `stories/Modal.stories.ts`.
-- **ModalTrigger.vue** — Modal with internal state management and trigger button. Manages its own `
-   isOpen` state internally—no modal state leaks to parent. Props: `title` (string), `tone` (Tone),
-   `size` (Size), `closeOnOverlay` (boolean, default: true), `buttonText` (string, default: 'Open'),
-   `buttonVariant` (Variant, default: 'surface'), `buttonTone` (Tone, default: 'primary'),
-   `buttonSize` (Size, default: 'md'). Slots: `button` (custom trigger button, receives `{ open }`
-   function), `title` (custom header), default (body), `footer` (actions). Story:
-   `stories/ModalTrigger.stories.ts`.
+  `neutral` | `primary` | `success` | `warning` | `danger` | `info`), `size` (`sm` | `md` | `lg`),
+  `closeOnOverlay` (boolean, default: true). Emits: `close`. Slots: default (body), `title` (custom
+  header), `footer` (actions). Story: `stories/Modal.stories.ts`.
+- **ModalTrigger.vue** — Modal with internal state management. Manages its own `isOpen` state
+  internally—no modal state leaks to parent. Props: `title` (string), `tone` (Tone), `size` (Size),
+  `closeOnOverlay` (boolean, default: true). Slots: `trigger` (required, receives `{ open }`
+  function), `title` (custom header), default (body), `footer` (actions). Story:
+  `stories/ModalTrigger.stories.ts`.
 - **Tabs.vue** — Basic tabs. Props: `tabs` (array), `initial`. Slots: default (tab panels via slot
   scope). Story: `stories/Tabs.stories.ts`.
 

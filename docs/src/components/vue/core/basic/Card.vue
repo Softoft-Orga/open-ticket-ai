@@ -1,21 +1,36 @@
 <template>
   <div :class="cardClasses">
-    <div v-if="$slots.image" :class="['-m-6 mb-0 overflow-hidden', imageRadiusClass]">
+    <div
+      v-if="$slots.image"
+      :class="['-m-6 mb-0 overflow-hidden', imageRadiusClass]"
+    >
       <slot name="image" />
     </div>
-    <div v-if="$slots.header" :class="headerClasses">
+    <div
+      v-if="$slots.header"
+      :class="headerClasses"
+    >
       <slot name="header" />
     </div>
-    <div v-if="$slots.title" :class="titleClasses">
+    <div
+      v-if="$slots.title"
+      :class="titleClasses"
+    >
       <slot name="title" />
     </div>
     <div :class="contentClasses">
       <slot />
     </div>
-    <div v-if="$slots.actions" :class="actionsClasses">
+    <div
+      v-if="$slots.actions"
+      :class="actionsClasses"
+    >
       <slot name="actions" />
     </div>
-    <div v-if="$slots.footer" :class="footerClasses">
+    <div
+      v-if="$slots.footer"
+      :class="footerClasses"
+    >
       <slot name="footer" />
     </div>
   </div>

@@ -1,5 +1,9 @@
 <template>
-  <RadioGroupOption v-slot="{ checked, disabled }" :value="value" as="template">
+  <RadioGroupOption
+    v-slot="{ checked, disabled }"
+    :value="value"
+    as="template"
+  >
     <div
       :class="[
         'relative flex cursor-pointer px-5 py-4 transition-all',
@@ -16,7 +20,10 @@
                 {{ label }}
               </slot>
             </div>
-            <div v-if="description || $slots.description" class="mt-1 text-text-dim">
+            <div
+              v-if="description || $slots.description"
+              class="mt-1 text-text-dim"
+            >
               <slot name="description">
                 {{ description }}
               </slot>
@@ -31,7 +38,10 @@
             disabled && 'opacity-50',
           ]"
         >
-          <div v-if="checked" class="h-2.5 w-2.5 rounded-full bg-current" />
+          <div
+            v-if="checked"
+            class="h-2.5 w-2.5 rounded-full bg-current"
+          />
         </div>
       </div>
     </div>
