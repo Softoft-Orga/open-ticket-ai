@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Card from '../../../components/vue/core/basic/Card.vue';
-import ContactSalesButton from '../../../components/vue/domain/ContactSalesButton.vue';
+import ModalTrigger from '../../../components/vue/core/basic/ModalTrigger.vue';
+import ContactForm from '../../../components/ContactForm.astro';
 
 const title = 'Pricing & ROI Calculator';
 const description =
@@ -134,13 +135,18 @@ const description =
             </p>
           </div>
         </div>
-        <ContactSalesButton
-          formTitle="Custom ROI Analysis Request"
-          successActionUrl="/success/roi-calculator/"
+        <ModalTrigger
+          title="Custom ROI Analysis Request"
+          buttonText="Contact Sales for Custom Analysis"
+          buttonVariant="surface"
+          buttonTone="primary"
           client:load
         >
-          Contact Sales for Custom Analysis
-        </ContactSalesButton>
+          <ContactForm
+            title="Custom ROI Analysis Request"
+            successActionUrl="/success/roi-calculator/"
+          />
+        </ModalTrigger>
       </div>
     </div>
   </div>
