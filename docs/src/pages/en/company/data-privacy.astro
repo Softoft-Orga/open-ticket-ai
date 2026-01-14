@@ -22,7 +22,6 @@ const siteConfig = allSiteConfigs.find(entry =>
 );
 
 const dataPrivacy = siteConfig?.data.dataPrivacy;
-const legalInfo = siteConfig?.data.legalInfo;
 
 if (!dataPrivacy) {
   throw new Error('Data privacy information not found in site configuration');
