@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { defaultLocale } from 'astro:i18n';
 
 // Navigation schema shared across collections
 const navSchema = z
@@ -16,7 +17,7 @@ const docs = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
-    lang: z.string().default('en'),
+    lang: z.string().default(defaultLocale),
     nav: navSchema,
     draft: z.boolean().optional(),
   }),
@@ -28,7 +29,7 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
-    lang: z.string().default('en'),
+    lang: z.string().default(defaultLocale),
     nav: navSchema,
     draft: z.boolean().optional(),
     date: z.date(),
@@ -52,7 +53,7 @@ const products = defineCollection({
       description: z.string().optional(),
       features: z.array(z.string()).optional(),
       tier: z.enum(['lite', 'pro', 'enterprise']).optional(),
-      lang: z.string().default('en'),
+      lang: z.string().default(defaultLocale),
       nav: navSchema,
       status: z.string().optional(),
       badges: z.array(z.string()).optional(),
@@ -76,7 +77,7 @@ const services = defineCollection({
       description: z.string().optional(),
       outcomes: z.array(z.string()).optional(),
       startingPrice: z.number().optional(),
-      lang: z.string().default('en'),
+      lang: z.string().default(defaultLocale),
       serviceGroup: z.string(),
       serviceOrder: z.number().optional(),
       hidden: z.boolean().optional(),
