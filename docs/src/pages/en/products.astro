@@ -4,7 +4,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import Button from '../../components/vue/core/basic/Button.vue';
 import Card from '../../components/vue/core/basic/Card.vue';
-import ContactSalesButton from '../../components/vue/domain/ContactSalesButton.vue';
+import ModalTrigger from '../../components/vue/core/basic/ModalTrigger.vue';
+import ContactForm from '../../components/ContactForm.astro';
 import {
   CubeTransparentIcon,
   RocketLaunchIcon,
@@ -53,9 +54,16 @@ const title = 'Products - Open Ticket AI';
             </p>
 
             <div class="flex flex-wrap gap-4 pt-4">
-              <ContactSalesButton formTitle="Contact Sales" client:load>
-                CONTACT SALES
-              </ContactSalesButton>
+              <ModalTrigger
+                title="Contact Sales"
+                buttonText="CONTACT SALES"
+                buttonVariant="surface"
+                buttonTone="primary"
+                buttonSize="lg"
+                client:load
+              >
+                <ContactForm title="Contact Sales" />
+              </ModalTrigger>
               <Button
                 href={getRelativeLocaleUrl(Astro.currentLocale, 'products/roi-calculator')}
                 variant="outline"
@@ -568,9 +576,16 @@ const title = 'Products - Open Ticket AI';
             </p>
 
             <div class="flex flex-wrap justify-center gap-4">
-              <ContactSalesButton formTitle="Contact Sales" client:load>
-                CONTACT SALES
-              </ContactSalesButton>
+              <ModalTrigger
+                title="Contact Sales"
+                buttonText="CONTACT SALES"
+                buttonVariant="surface"
+                buttonTone="primary"
+                buttonSize="lg"
+                client:load
+              >
+                <ContactForm title="Contact Sales" />
+              </ModalTrigger>
               <Button
                 href={getRelativeLocaleUrl(Astro.currentLocale, 'docs')}
                 variant="outline"
