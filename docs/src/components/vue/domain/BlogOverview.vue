@@ -115,10 +115,7 @@ const topicCounts = computed(() => {
       <!-- Sidebar -->
       <aside class="w-full flex-shrink-0 space-y-12 lg:w-80">
         <div class="relative">
-          <label
-            for="search-articles"
-            class="sr-only"
-          >Search articles</label>
+          <label for="search-articles" class="sr-only">Search articles</label>
           <MagnifyingGlassIcon
             class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-dim"
             aria-hidden="true"
@@ -130,7 +127,7 @@ const topicCounts = computed(() => {
             placeholder="Search articles..."
             type="text"
             aria-label="Search articles"
-          >
+          />
         </div>
 
         <div>
@@ -150,10 +147,7 @@ const topicCounts = computed(() => {
               @click="selectedTopic = topic.name"
             >
               <div class="flex items-center gap-3">
-                <component
-                  :is="topic.icon"
-                  class="h-5 w-5"
-                />
+                <component :is="topic.icon" class="h-5 w-5" />
                 <span>{{ topic.name }}</span>
               </div>
               <span
@@ -175,14 +169,9 @@ const topicCounts = computed(() => {
           <div
             class="mb-6 flex size-12 items-center justify-center rounded-xl bg-primary/20 text-primary"
           >
-            <EnvelopeIcon
-              class="h-7 w-7"
-              aria-hidden="true"
-            />
+            <EnvelopeIcon class="h-7 w-7" aria-hidden="true" />
           </div>
-          <h3 class="font-display mb-3 text-xl font-bold text-white">
-            Stay in the loop
-          </h3>
+          <h3 class="font-display mb-3 text-xl font-bold text-white">Stay in the loop</h3>
           <p class="mb-6 text-sm text-text-dim">
             Get the latest on AI automation and engineering straight to your inbox.
           </p>
@@ -193,15 +182,8 @@ const topicCounts = computed(() => {
             data-netlify="true"
             class="space-y-4"
           >
-            <input
-              type="hidden"
-              name="form-name"
-              value="blog-subscription"
-            >
-            <label
-              for="newsletter-email"
-              class="sr-only"
-            >Email address</label>
+            <input type="hidden" name="form-name" value="blog-subscription" />
+            <label for="newsletter-email" class="sr-only">Email address</label>
             <input
               id="newsletter-email"
               name="email"
@@ -210,7 +192,7 @@ const topicCounts = computed(() => {
               type="email"
               aria-label="Email address for newsletter"
               required
-            >
+            />
             <button
               type="submit"
               class="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-surface-lighter px-6 py-3 text-sm font-bold text-white transition-all hover:border-primary hover:bg-primary/10"
@@ -224,14 +206,9 @@ const topicCounts = computed(() => {
       <!-- Articles Grid -->
       <div class="flex-1">
         <div class="mb-12 flex items-end justify-between border-b border-surface-lighter pb-6">
-          <h2 class="font-display text-3xl font-bold text-white">
-            Latest Articles
-          </h2>
+          <h2 class="font-display text-3xl font-bold text-white">Latest Articles</h2>
           <div class="flex items-center gap-2">
-            <label
-              for="sort-select"
-              class="text-sm text-text-dim"
-            >Sort by:</label>
+            <label for="sort-select" class="text-sm text-text-dim">Sort by:</label>
             <select
               id="sort-select"
               v-model="sortBy"
@@ -245,19 +222,11 @@ const topicCounts = computed(() => {
           </div>
         </div>
 
-        <div
-          v-if="filteredAndSortedPosts.length === 0"
-          class="py-12 text-center"
-        >
-          <p class="text-lg text-text-dim">
-            No articles found matching your criteria.
-          </p>
+        <div v-if="filteredAndSortedPosts.length === 0" class="py-12 text-center">
+          <p class="text-lg text-text-dim">No articles found matching your criteria.</p>
         </div>
 
-        <div
-          v-else
-          class="grid gap-8 md:grid-cols-2"
-        >
+        <div v-else class="grid gap-8 md:grid-cols-2">
           <a
             v-for="(post, index) in filteredAndSortedPosts"
             :key="post.id"
@@ -270,7 +239,7 @@ const topicCounts = computed(() => {
                 :alt="post.data.title"
                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
-              >
+              />
               <div
                 class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent"
               />

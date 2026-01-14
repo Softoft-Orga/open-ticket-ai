@@ -6,16 +6,8 @@
     :class="containerClass"
     @change="handleChange"
   >
-    <TabList
-      :class="tabsStyles.list()"
-      :aria-label="ariaLabel"
-    >
-      <Tab
-        v-for="(label, idx) in tabs"
-        :key="idx"
-        v-slot="{ selected }"
-        as="template"
-      >
+    <TabList :class="tabsStyles.list()" :aria-label="ariaLabel">
+      <Tab v-for="(label, idx) in tabs" :key="idx" v-slot="{ selected }" as="template">
         <button
           :class="tabsStyles.trigger({ class: selected ? 'data-[selected]' : '' })"
           :data-selected="selected || undefined"
@@ -26,15 +18,8 @@
     </TabList>
 
     <TabPanels :class="tabPanelsClass">
-      <TabPanel
-        v-for="(label, idx) in tabs"
-        :key="`panel-${idx}`"
-        :class="tabsStyles.panel()"
-      >
-        <slot
-          :name="`tab-${idx}`"
-          :index="idx"
-        />
+      <TabPanel v-for="(label, idx) in tabs" :key="`panel-${idx}`" :class="tabsStyles.panel()">
+        <slot :name="`tab-${idx}`" :index="idx" />
       </TabPanel>
     </TabPanels>
   </TabGroup>

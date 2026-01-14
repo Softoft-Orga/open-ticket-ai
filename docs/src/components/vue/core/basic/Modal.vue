@@ -1,54 +1,24 @@
 <template>
-  <TransitionRoot
-    :show="open"
-    as="template"
-  >
-    <Dialog
-      as="div"
-      class="relative z-50"
-      @close="handleClose"
-    >
+  <TransitionRoot :show="open" as="template">
+    <Dialog as="div" class="relative z-50" @close="handleClose">
       <!-- Backdrop -->
-      <TransitionChild
-        v-bind="fade"
-        as="template"
-      >
+      <TransitionChild v-bind="fade" as="template">
         <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
       </TransitionChild>
 
       <!-- Modal container -->
       <div class="fixed inset-0 overflow-y-auto">
         <div class="flex min-h-full items-center justify-center p-4">
-          <TransitionChild
-            v-bind="fadeScaleSm"
-            as="template"
-          >
+          <TransitionChild v-bind="fadeScaleSm" as="template">
             <DialogPanel :class="panelClasses">
               <!-- Header -->
-              <div
-                v-if="title || $slots.title"
-                class="mb-6 flex items-start justify-between"
-              >
-                <DialogTitle
-                  v-if="!$slots.title"
-                  as="h3"
-                  class="text-2xl font-bold text-white"
-                >
+              <div v-if="title || $slots.title" class="mb-6 flex items-start justify-between">
+                <DialogTitle v-if="!$slots.title" as="h3" class="text-2xl font-bold text-white">
                   {{ title }}
                 </DialogTitle>
-                <slot
-                  v-else
-                  name="title"
-                />
-                <button
-                  type="button"
-                  :class="closeButtonClasses"
-                  @click="handleClose"
-                >
-                  <XMarkIcon
-                    class="h-6 w-6"
-                    aria-hidden="true"
-                  />
+                <slot v-else name="title" />
+                <button type="button" :class="closeButtonClasses" @click="handleClose">
+                  <XMarkIcon class="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
 
@@ -58,10 +28,7 @@
               </div>
 
               <!-- Footer -->
-              <div
-                v-if="$slots.footer"
-                class="mt-6 border-t border-border-dark/40 pt-6"
-              >
+              <div v-if="$slots.footer" class="mt-6 border-t border-border-dark/40 pt-6">
                 <slot name="footer" />
               </div>
             </DialogPanel>

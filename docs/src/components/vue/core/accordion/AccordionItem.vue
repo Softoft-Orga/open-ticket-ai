@@ -1,18 +1,7 @@
 <template>
-  <Disclosure
-    v-slot="{ open }"
-    :default-open="defaultOpen"
-    as="div"
-    :class="surfaceClasses"
-  >
-    <DisclosureButton
-      :disabled="disabled"
-      :class="buttonClasses"
-    >
-      <slot
-        name="title"
-        :open="open"
-      >
+  <Disclosure v-slot="{ open }" :default-open="defaultOpen" as="div" :class="surfaceClasses">
+    <DisclosureButton :disabled="disabled" :class="buttonClasses">
+      <slot name="title" :open="open">
         <span class="text-lg font-semibold text-white">{{ title }}</span>
       </slot>
       <svg
@@ -26,12 +15,7 @@
         stroke="currentColor"
         aria-hidden="true"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 9l-7 7-7-7"
-        />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </DisclosureButton>
     <transition

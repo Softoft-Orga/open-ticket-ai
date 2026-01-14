@@ -4,6 +4,7 @@ import tseslint from 'typescript-eslint';
 import pluginVue from 'eslint-plugin-vue';
 import pluginAstro from 'eslint-plugin-astro';
 import globals from 'globals';
+import prettierConfig from 'eslint-config-prettier';
 
 export default [
   {
@@ -67,4 +68,7 @@ export default [
       },
     },
   },
+
+  // Must be last to override formatting rules from other configs
+  prettierConfig,
 ];

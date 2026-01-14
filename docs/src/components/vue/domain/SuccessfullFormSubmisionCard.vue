@@ -1,12 +1,5 @@
 <template>
-  <Card
-    class="text-center"
-    elevation="lg"
-    radius="2xl"
-    size="lg"
-    tone="success"
-    variant="surface"
-  >
+  <Card class="text-center" elevation="lg" radius="2xl" size="lg" tone="success" variant="surface">
     <div class="py-8 md:py-12">
       <div class="mb-8">
         <div class="inline-flex h-20 w-20 items-center justify-center rounded-full bg-success/20">
@@ -22,10 +15,7 @@
         {{ description }}
       </p>
 
-      <div
-        v-if="$slots.default"
-        class="mb-10 text-left"
-      >
+      <div v-if="$slots.default" class="mb-10 text-left">
         <slot />
       </div>
 

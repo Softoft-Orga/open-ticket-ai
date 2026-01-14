@@ -1,9 +1,6 @@
 <template>
   <div>
-    <slot
-      name="trigger"
-      :open="open"
-    />
+    <slot name="trigger" :open="open" />
 
     <Modal
       :open="isOpen"
@@ -13,19 +10,13 @@
       :close-on-overlay="closeOnOverlay"
       @close="close"
     >
-      <template
-        v-if="$slots.title"
-        #title
-      >
+      <template v-if="$slots.title" #title>
         <slot name="title" />
       </template>
 
       <slot />
 
-      <template
-        v-if="$slots.footer"
-        #footer
-      >
+      <template v-if="$slots.footer" #footer>
         <slot name="footer" />
       </template>
     </Modal>
