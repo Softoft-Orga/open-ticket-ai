@@ -1,0 +1,44 @@
+name: Docs CI
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'docs/**'
+  pull_request:
+    branches: [dev]
+    paths:
+      - 'docs/**'
+
+jobs:
+  docs-ci:
+    name: Docs CI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run Playwright tests
+        run: npm run test:playwright
+
+      - name: Run site tests
+        run: npm run test:site
