@@ -9,6 +9,7 @@ tags:
   - classification
 category: Technology
 draft: false
+image: ~/assets/images/ai-analyzes-tickets-classification.png
 ---
 
 # AI-Powered Ticket Classification
