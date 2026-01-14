@@ -1,6 +1,6 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths';
+import BaseLayout from '../../../layouts/BaseLayout.js';
+import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths.ts';
 import type { CollectionEntry } from 'astro:content';
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs');
