@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/vue/core/basic/Button.vue';
 import Card from '../components/vue/core/basic/Card.vue';
@@ -29,7 +30,11 @@ const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
 
 // Get all services from the content collection for current locale
-const servicesEntries = await Astro.locals.content.getLocalizedCollection('services');
+const currentLocale = (Astro.currentLocale ?? 'en').toLowerCase();
+const allServicesEntries = await getCollection('services');
+const servicesEntries = allServicesEntries.filter(entry =>
+  entry.id.toLowerCase().startsWith(currentLocale)
+);
 // Each entry's data is an array of services, so flatten them
 const allServices = servicesEntries.flatMap(entry => entry.data);
 

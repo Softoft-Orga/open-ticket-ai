@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import NavBar from '../components/vue/core/navigation/NavBar.vue';
 import FooterComponent from '../components/vue/core/navigation/FooterComponent.vue';
 import '../styles/global.css';
@@ -12,7 +13,9 @@ const { title, description } = Astro.props;
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
 
 // Load site configuration for current locale
-const siteConfig = await Astro.locals.content.getLocalizedSingleton('site');
+const currentLocale = (Astro.currentLocale ?? 'en').toLowerCase();
+const allSiteConfigs = await getCollection('site');
+const siteConfig = allSiteConfigs.find(entry => entry.id.toLowerCase().startsWith(currentLocale));
 const navLinks = siteConfig?.data.nav || [];
 const footerData = siteConfig?.data.footer;
 const logoUrl = siteConfig?.data.meta.logoUrl;

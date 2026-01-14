@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogOverview from '../components/vue/domain/BlogOverview.vue';
 import { ArrowRightIcon, CalendarIcon } from '@heroicons/vue/24/outline';
@@ -7,9 +8,14 @@ const pageTitle = 'Open Ticket AI Blog';
 const pageDescription =
   'Latest updates, insights, and news about Open Ticket AI and autonomous support automation.';
 
-// Fetch blog posts from the content collection
-const allBlogPosts = await Astro.locals.content.getLocalizedCollection('blog');
-const publishedPosts = allBlogPosts.filter(({ data }) => !data.draft);
+// Fetch blog posts from the content collection for current locale
+const currentLocale = (Astro.currentLocale ?? 'en').toLowerCase();
+const allBlogPosts = await getCollection('blog');
+const localizedBlogPosts = allBlogPosts.filter(entry => {
+  const entryLocale = entry.id.match(/^([a-z]{2}(?:-[A-Z]{2})?)\//i)?.[1]?.toLowerCase();
+  return entryLocale === currentLocale;
+});
+const publishedPosts = localizedBlogPosts.filter(({ data }) => !data.draft);
 
 // Sort posts by date (newest first)
 const sortedBlogPosts = publishedPosts.sort((a, b) => {

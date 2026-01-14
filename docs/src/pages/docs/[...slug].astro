@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths';
+import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs');
@@ -39,8 +40,13 @@ const toc = headings
     id: h.slug,
   }));
 
-// Generate sidebar from docs collection
-const allDocs = await Astro.locals.content.getLocalizedCollection('docs');
+// Generate sidebar from docs collection - filter by current locale
+const currentLocale = (Astro.currentLocale ?? 'en').toLowerCase();
+const allDocsRaw = await getCollection('docs');
+const allDocs = allDocsRaw.filter(entry => {
+  const entryLocale = entry.id.match(/^([a-z]{2}(?:-[A-Z]{2})?)\//i)?.[1]?.toLowerCase();
+  return entryLocale === currentLocale;
+});
 
 // Group docs by nav.group and sort by nav.order
 type SidebarSection = {
