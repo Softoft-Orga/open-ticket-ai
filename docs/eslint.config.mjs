@@ -48,6 +48,31 @@ export default [
   },
 
   {
+    files: ['src/components/vue/domain/**/*.vue'],
+    rules: {
+      'vue/no-restricted-syntax': [
+        'error',
+        {
+          selector: 'VElement[rawName="button"]',
+          message:
+            'Use the Button component from vue/core/basic/Button.vue instead of native <button> elements in domain components.',
+        },
+      ],
+    },
+  },
+
+  {
+    files: [
+      'src/components/vue/core/basic/Button.vue',
+      'src/components/vue/core/basic/Tabs.vue',
+      'src/components/vue/core/navigation/NavBar.vue',
+    ],
+    rules: {
+      'vue/no-restricted-syntax': 'off',
+    },
+  },
+
+  {
     files: ['**/*.js', '**/*.mjs', '**/*.ts', '**/*.vue', '**/*.astro'],
     languageOptions: {
       ecmaVersion: 'latest',
