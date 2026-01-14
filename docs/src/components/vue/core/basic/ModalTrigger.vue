@@ -1,15 +1,7 @@
 <template>
   <div>
-    <slot
-      name="button"
-      :open="open"
-    >
-      <Button
-        :variant="buttonVariant"
-        :tone="buttonTone"
-        :size="buttonSize"
-        @click="open"
-      >
+    <slot name="button" :open="open">
+      <Button :variant="buttonVariant" :tone="buttonTone" :size="buttonSize" @click="open">
         {{ buttonText }}
       </Button>
     </slot>
@@ -22,19 +14,13 @@
       :close-on-overlay="closeOnOverlay"
       @close="close"
     >
-      <template
-        v-if="$slots.title"
-        #title
-      >
+      <template v-if="$slots.title" #title>
         <slot name="title" />
       </template>
 
       <slot />
 
-      <template
-        v-if="$slots.footer"
-        #footer
-      >
+      <template v-if="$slots.footer" #footer>
         <slot name="footer" />
       </template>
     </Modal>
@@ -42,20 +28,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import Button from './Button.vue'
-import Modal from './Modal.vue'
-import type { Tone, Size, Variant } from '../design-system/tokens.ts'
+import { ref } from 'vue';
+import Button from './Button.vue';
+import Modal from './Modal.vue';
+import type { Tone, Size, Variant } from '../design-system/tokens.ts';
 
 interface Props {
-  title?: string
-  tone?: Tone
-  size?: Size
-  closeOnOverlay?: boolean
-  buttonText?: string
-  buttonVariant?: Variant
-  buttonTone?: Tone
-  buttonSize?: Size
+  title?: string;
+  tone?: Tone;
+  size?: Size;
+  closeOnOverlay?: boolean;
+  buttonText?: string;
+  buttonVariant?: Variant;
+  buttonTone?: Tone;
+  buttonSize?: Size;
 }
 
 withDefaults(defineProps<Props>(), {
@@ -66,16 +52,16 @@ withDefaults(defineProps<Props>(), {
   buttonText: 'Open',
   buttonVariant: 'surface',
   buttonTone: 'primary',
-  buttonSize: 'md'
-})
+  buttonSize: 'md',
+});
 
-const isOpen = ref(false)
+const isOpen = ref(false);
 
 const open = () => {
-  isOpen.value = true
-}
+  isOpen.value = true;
+};
 
 const close = () => {
-  isOpen.value = false
-}
+  isOpen.value = false;
+};
 </script>
