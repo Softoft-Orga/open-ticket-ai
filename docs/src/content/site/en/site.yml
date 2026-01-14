@@ -26,11 +26,13 @@ footer:
           url: docs
     - title: Company
       links:
-        - label: About Us
+        - label: About
           url: '#'
-        - label: Careers
+        - label: Data Privacy
           url: '#'
-        - label: Legal
+        - label: Legal Notice
+          url: '#'
+        - label: Terms & Conditions
           url: '#'
   social:
     - platform: github
@@ -39,11 +41,6 @@ footer:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
-  legal:
-    - label: Privacy Policy
-      url: '#'
-    - label: Imprint
-      url: '#'
   copyright: Open Ticket AI UG. All rights reserved.
 
 popularResources:
@@ -71,3 +68,24 @@ popularResources:
           icon: ArrowPathIcon
         - docId: /tag-mapping
           icon: ChartBarIcon
+
+legalInfo:
+  companyName: Open Ticket AI UG
+  ceo: John Doe
+  address:
+    street: Example Street 123
+    city: Berlin
+    zip: 10115
+    country: Germany
+  legalForm: UG (haftungsbeschränkt)
+  vatId: DE123456789
+  registerInfo: Amtsgericht Berlin (Charlottenburg), HRB 123456 B
+  email: info@open-ticket-ai.com
+  phone: +49 30 12345678
+team:
+  - name: Jane Smith
+    role: Lead Developer
+    pictureUrl: /images/team/jane-smith.png
+    email: jane.smith@open-ticket-ai.com
+    phoneNumber: +49 30 12345679
+

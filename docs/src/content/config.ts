@@ -126,12 +126,6 @@ const site = defineCollection({
                     ariaLabel: z.string(),
                 })
             ),
-            legal: z.array(
-                z.object({
-                    label: z.string(),
-                    url: z.string(),
-                })
-            ),
             copyright: z.string(),
         }),
         popularResources: z
@@ -152,6 +146,30 @@ const site = defineCollection({
                 ),
             })
             .optional(),
+        legalInfo: z.object({
+            companyName: z.string(),
+            ceo: z.string(),
+            address: z.object({
+                street: z.string(),
+                city: z.string(),
+                zip: z.string(),
+                country: z.string(),
+            }),
+            legalForm: z.string(),
+            vatId: z.string(),
+            registerInfo: z.string(),
+            email: z.string(),
+            phone: z.string(),
+        }).optional(),
+        team: z.array(
+            z.object({
+                name: z.string().optional(),
+                role: z.string().optional(),
+                pictureUrl: z.string().optional(),
+                email: z.string().optional(),
+                phoneNumber: z.string().optional(),
+            })
+        ).optional(),
     }),
 });
 
