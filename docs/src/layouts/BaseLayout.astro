@@ -17,32 +17,38 @@ const currentLocale = Astro.currentLocale || 'en';
 const siteConfig = await Astro.locals.content.getLocalizedSingleton('site');
 
 // Convert canonical URLs to localized URLs
-const navLinks = siteConfig?.data.nav?.map(link => ({
-  ...link,
-  url: link.url.startsWith('#') || link.url.startsWith('http') 
-    ? link.url 
-    : getRelativeLocaleUrl(currentLocale, link.url),
-})) || [];
-
-// Convert footer URLs to localized URLs
-const footerData = siteConfig?.data.footer ? {
-  ...siteConfig.data.footer,
-  sections: siteConfig.data.footer.sections?.map(section => ({
-    ...section,
-    links: section.links?.map(link => ({
-      ...link,
-      url: link.url.startsWith('#') || link.url.startsWith('http')
+const navLinks =
+  siteConfig?.data.nav?.map(link => ({
+    ...link,
+    url:
+      link.url.startsWith('#') || link.url.startsWith('http')
         ? link.url
         : getRelativeLocaleUrl(currentLocale, link.url),
-    })),
-  })),
-  legal: siteConfig.data.footer.legal?.map(link => ({
-    ...link,
-    url: link.url.startsWith('#') || link.url.startsWith('http')
-      ? link.url
-      : getRelativeLocaleUrl(currentLocale, link.url),
-  })),
-} : undefined;
+  })) || [];
+
+// Convert footer URLs to localized URLs
+const footerData = siteConfig?.data.footer
+  ? {
+      ...siteConfig.data.footer,
+      sections: siteConfig.data.footer.sections?.map(section => ({
+        ...section,
+        links: section.links?.map(link => ({
+          ...link,
+          url:
+            link.url.startsWith('#') || link.url.startsWith('http')
+              ? link.url
+              : getRelativeLocaleUrl(currentLocale, link.url),
+        })),
+      })),
+      legal: siteConfig.data.footer.legal?.map(link => ({
+        ...link,
+        url:
+          link.url.startsWith('#') || link.url.startsWith('http')
+            ? link.url
+            : getRelativeLocaleUrl(currentLocale, link.url),
+      })),
+    }
+  : undefined;
 
 const logoUrl = siteConfig?.data.meta.logoUrl;
 const ctaLabel = 'Get Started';
@@ -101,7 +107,14 @@ const homeUrl = getRelativeLocaleUrl(currentLocale, '/');
     </script>
   </head>
   <body class="font-sans">
-    <NavBar client:load links={navLinks} logoUrl={logoUrl} ctaLabel={ctaLabel} ctaUrl={ctaUrl} homeUrl={homeUrl} />
+    <NavBar
+      client:load
+      links={navLinks}
+      logoUrl={logoUrl}
+      ctaLabel={ctaLabel}
+      ctaUrl={ctaUrl}
+      homeUrl={homeUrl}
+    />
     <slot />
     <FooterComponent client:load footerData={footerData} />
   </body>

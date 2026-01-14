@@ -185,7 +185,11 @@ const topicCounts = computed(() => {
           <form
             name="blog-subscription"
             method="POST"
-            :action="props.currentLocale === 'en' ? '/success/blog-subscription/' : `/${props.currentLocale}/success/blog-subscription/`"
+            :action="
+              props.currentLocale === 'en'
+                ? '/success/blog-subscription/'
+                : `/${props.currentLocale}/success/blog-subscription/`
+            "
             data-netlify="true"
             class="space-y-4"
           >

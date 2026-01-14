@@ -58,7 +58,12 @@ const currentLocale = Astro.currentLocale || 'en';
               <ContactSalesButton formTitle="Contact Sales" client:load>
                 CONTACT SALES
               </ContactSalesButton>
-              <Button href={getRelativeLocaleUrl(currentLocale, 'products/roi-calculator')} variant="outline" size="lg" client:load>
+              <Button
+                href={getRelativeLocaleUrl(currentLocale, 'products/roi-calculator')}
+                variant="outline"
+                size="lg"
+                client:load
+              >
                 View ROI Calculator
               </Button>
             </div>
@@ -568,7 +573,14 @@ const currentLocale = Astro.currentLocale || 'en';
               <ContactSalesButton formTitle="Contact Sales" client:load>
                 CONTACT SALES
               </ContactSalesButton>
-              <Button href={getRelativeLocaleUrl(currentLocale, 'docs')} variant="outline" size="lg" client:load> View Docs </Button>
+              <Button
+                href={getRelativeLocaleUrl(currentLocale, 'docs')}
+                variant="outline"
+                size="lg"
+                client:load
+              >
+                View Docs
+              </Button>
             </div>
           </div>
         </div>

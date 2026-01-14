@@ -1,10 +1,12 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/vue/core/basic/Button.vue';
 
 const title = 'Tagging AI Lite Free';
 const description =
   'Small-footprint classification. Optimized for edge deployment and privacy-focused evaluation.';
+const currentLocale = Astro.currentLocale || 'en';
 ---
 
 <BaseLayout title={title} description={description}>
@@ -12,7 +14,10 @@ const description =
     <div class="mx-auto max-w-7xl px-6 py-20 lg:px-24">
       <!-- Breadcrumb Navigation -->
       <nav class="mb-12 flex items-center gap-2 text-sm text-text-dim">
-        <a href="/products" class="transition-colors hover:text-primary">PRODUCTS</a>
+        <a
+          href={getRelativeLocaleUrl(currentLocale, 'products')}
+          class="transition-colors hover:text-primary">PRODUCTS</a
+        >
         <span>/</span>
         <span class="text-white">LITE FREE</span>
       </nav>
