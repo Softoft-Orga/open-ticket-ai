@@ -80,13 +80,16 @@ const siteConfig = allSiteConfigs.find(entry =>
 
 ### 4. Site (YAML)
 
-- `slug`: string (Use "main")
+- `slug`: string (Optional - omit to use file path as ID)
 - `meta`: `{ siteName, tagline, logoUrl }`
 - `nav`: Array of `{ label, url }`
 - `footer`: `{ brandName, sections, social, legal, copyright }`
 
+**Important**: Site collection files should be named with locale codes (e.g., `en.yml`, `de.yml`) and placed in locale-specific directories (`src/content/site/en/`, `src/content/site/de/`). Do not include a `slug` field - the glob loader will use the file path to generate unique IDs per locale.
+
 ## Maintenance Rules
 
 1. **Schema Changes**: Update `src/content/config.ts`.
-2. **Translation**: Ensure consistency of `slug` across all locale versions of the same entry.
+2. **Translation**: Ensure consistency across all locale versions of the same entry.
 3. **Build Validation**: Run `npm run docs:build` to verify content against schemas.
+4. **Glob Patterns**: Data collections using glob loader should use patterns that preserve locale directory structure (e.g., `*/filename.yml` instead of `**/*.yml`).
