@@ -9,7 +9,7 @@ tags:
   - integration
 category: Guide
 draft: false
-image: "../../../assets/images/ticket-system-ai-on-premise-platform.png"
+image: '../../../assets/images/ticket-system-ai-on-premise-platform.png'
 ---
 
 # Open Source Ticket Systems, AI, and Automation: The Ultimate 2025 Guide to Transforming Support Workflows

@@ -33,7 +33,7 @@ footer:
         - label: Legal Notice
           url: '#'
         - label: Terms & Conditions
-          url: '#'
+          url: terms
   social:
     - platform: github
       url: https://github.com/openticketai
@@ -41,6 +41,9 @@ footer:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
+  legal:
+    - label: Terms & Conditions
+      url: terms
   copyright: Open Ticket AI UG. All rights reserved.
 
 popularResources:
@@ -75,7 +78,7 @@ legalInfo:
   address:
     street: Example Street 123
     city: Berlin
-    zip: 10115
+    zip: '10115'
     country: Germany
   legalForm: UG (haftungsbeschränkt)
   vatId: DE123456789
@@ -88,4 +91,3 @@ team:
     pictureUrl: /images/team/jane-smith.png
     email: jane.smith@open-ticket-ai.com
     phoneNumber: +49 30 12345679
-

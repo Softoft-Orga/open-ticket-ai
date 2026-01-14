@@ -40,6 +40,9 @@ footer:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
+  legal:
+    - label: AGB
+      url: terms
   copyright: Open Ticket AI UG. Alle Rechte vorbehalten.
 
 popularResources:
@@ -74,7 +77,7 @@ legalInfo:
   address:
     street: Beispielstraße 123
     city: Berlin
-    zip: 10115
+    zip: '10115'
     country: Deutschland
   legalForm: UG (haftungsbeschränkt)
   vatId: DE123456789
@@ -87,4 +90,3 @@ team:
     pictureUrl: /images/team/jane-smith.png
     email: jane.smith@open-ticket-ai.com
     phoneNumber: +49 30 12345679
-
