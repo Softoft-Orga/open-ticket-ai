@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error - Preview type from @storybook/vue3-vite
 import type { Preview } from '@storybook/vue3-vite';
 import '../src/styles/global.css';
 
