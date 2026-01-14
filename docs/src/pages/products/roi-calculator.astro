@@ -1,8 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
-import Button from '../../components/vue/core/basic/Button.vue';
-import ContactSalesButton from '../../components/vue/domain/ContactSalesButton.vue';
+import ContactSalesModal from '../../components/vue/domain/ContactSalesModal.vue';
 
 const title = 'Pricing & ROI Calculator';
 const description =
@@ -135,13 +134,14 @@ const description =
             </p>
           </div>
         </div>
-        <ContactSalesButton
-          formTitle="Custom ROI Analysis Request"
+        <ContactSalesModal
+          title="Custom ROI Analysis Request"
           successActionUrl="/success/roi-calculator/"
+          name="roi-calculator"
           client:load
         >
           Contact Sales for Custom Analysis
-        </ContactSalesButton>
+        </ContactSalesModal>
       </div>
     </div>
   </div>

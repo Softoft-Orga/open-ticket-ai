@@ -3,10 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/vue/core/basic/Badge.vue';
 import Button from '../components/vue/core/basic/Button.vue';
 import Card from '../components/vue/core/basic/Card.vue';
-import ContactSalesButton from '../components/vue/domain/ContactSalesButton.vue';
+import ContactSalesModal from '../components/vue/domain/ContactSalesModal.vue';
 import {
   CubeTransparentIcon,
-  ArrowRightIcon,
   RocketLaunchIcon,
   ServerIcon,
   ShieldCheckIcon,
@@ -53,9 +52,9 @@ const title = 'Products - Open Ticket AI';
             </p>
 
             <div class="flex flex-wrap gap-4 pt-4">
-              <ContactSalesButton formTitle="Contact Sales" client:load>
+              <ContactSalesModal title="Contact Sales" client:load>
                 CONTACT SALES
-              </ContactSalesButton>
+              </ContactSalesModal>
               <Button href="/products/roi-calculator/" variant="outline" size="lg" client:load>
                 View ROI Calculator
               </Button>
@@ -563,9 +562,9 @@ const title = 'Products - Open Ticket AI';
             </p>
 
             <div class="flex flex-wrap justify-center gap-4">
-              <ContactSalesButton formTitle="Contact Sales" client:load>
+              <ContactSalesModal title="Contact Sales" client:load>
                 CONTACT SALES
-              </ContactSalesButton>
+              </ContactSalesModal>
               <Button href="/docs/" variant="outline" size="lg" client:load> View Docs </Button>
             </div>
           </div>
