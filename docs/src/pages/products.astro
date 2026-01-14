@@ -58,10 +58,15 @@ const title = 'Products - Open Ticket AI';
                 buttonText="CONTACT SALES"
                 buttonVariant="surface"
                 buttonTone="primary"
+                buttonSize="lg"
                 size="lg"
                 client:load
               >
-                <ContactForm title="Contact Sales" />
+                <ContactForm
+                  title="Contact Sales"
+                  successActionUrl="/success/contact-sales/"
+                  name="contact-sales"
+                />
               </ModalTrigger>
               <Button href="/products/roi-calculator/" variant="outline" size="lg" client:load>
                 View ROI Calculator
@@ -575,10 +580,15 @@ const title = 'Products - Open Ticket AI';
                 buttonText="CONTACT SALES"
                 buttonVariant="surface"
                 buttonTone="primary"
+                buttonSize="lg"
                 size="lg"
                 client:load
               >
-                <ContactForm title="Contact Sales" />
+                <ContactForm
+                  title="Contact Sales"
+                  successActionUrl="/success/contact-sales/"
+                  name="contact-sales"
+                />
               </ModalTrigger>
               <Button href="/docs/" variant="outline" size="lg" client:load> View Docs </Button>
             </div>
