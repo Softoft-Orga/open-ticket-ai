@@ -1,11 +1,12 @@
 ---
 title: Using Model
-description: "Configure, deploy, and use classification models for automated ticket tagging and categorization."
+description: 'Configure, deploy, and use classification models for automated ticket tagging and categorization.'
 lang: en
 nav:
   group: Ticket Tagging
   order: 3
 ---
+
 # Using Model
 
 Learn how to configure, deploy, and use classification models for automated ticket tagging.
@@ -28,26 +29,28 @@ Start with pre-trained models for quick deployment:
 # Using a general-purpose model
 services:
   hf_local:
-    use: "hf-local:HFClassificationService"
+    use: 'hf-local:HFClassificationService'
     params:
       api_token: "{{ get_env('OTAI_HF_TOKEN') }}"
 
 orchestrator:
   steps:
     - id: classify
-      use: "base:ClassificationPipe"
-      injects: { classification_service: "hf_local" }
+      use: 'base:ClassificationPipe'
+      injects: { classification_service: 'hf_local' }
       params:
-        text: "{{ ticket.subject }} {{ ticket.body }}"
-        model_name: "distilbert-base-uncased-finetuned-sst-2-english"
+        text: '{{ ticket.subject }} {{ ticket.body }}'
+        model_name: 'distilbert-base-uncased-finetuned-sst-2-english'
 ```
 
 **Advantages**:
+
 - Quick to deploy
 - No training required
 - Works out-of-the-box
 
 **Disadvantages**:
+
 - May not match your specific use case
 - Lower accuracy for domain-specific tickets
 - Generic categories
@@ -60,31 +63,33 @@ Use domain-specific fine-tuned models:
 orchestrator:
   steps:
     - id: classify_queue
-      use: "base:ClassificationPipe"
-      injects: { classification_service: "hf_local" }
+      use: 'base:ClassificationPipe'
+      injects: { classification_service: 'hf_local' }
       params:
-        text: "{{ ticket.subject }} {{ ticket.body }}"
-        model_name: "softoft/EHS_Queue_Prediction"
+        text: '{{ ticket.subject }} {{ ticket.body }}'
+        model_name: 'softoft/EHS_Queue_Prediction'
 ```
 
 **Advantages**:
+
 - Higher accuracy for your domain
 - Understands your terminology
 - Matches your taxonomy
 
 **Disadvantages**:
+
 - Requires training data
 - Takes time to fine-tune
 - May need periodic retraining
 
 ### Model Comparison
 
-| Model Type | Accuracy | Setup Time | Cost | Best For |
-|------------|----------|------------|------|----------|
-| Pre-trained | 60-75% | Minutes | Low | Quick start, testing |
-| Fine-tuned | 80-95% | Days-Weeks | Medium | Production use |
-| Custom | 85-98% | Weeks-Months | High | Specialized needs |
-| Ensemble | 90-99% | Weeks | High | Maximum accuracy |
+| Model Type  | Accuracy | Setup Time   | Cost   | Best For             |
+| ----------- | -------- | ------------ | ------ | -------------------- |
+| Pre-trained | 60-75%   | Minutes      | Low    | Quick start, testing |
+| Fine-tuned  | 80-95%   | Days-Weeks   | Medium | Production use       |
+| Custom      | 85-98%   | Weeks-Months | High   | Specialized needs    |
+| Ensemble    | 90-99%   | Weeks        | High   | Maximum accuracy     |
 
 ## Configuration
 
@@ -94,46 +99,46 @@ Minimal setup for classification:
 
 ```yaml
 open_ticket_ai:
-  api_version: ">=1.0.0"
-  
+  api_version: '>=1.0.0'
+
   services:
     hf_local:
-      use: "hf-local:HFClassificationService"
+      use: 'hf-local:HFClassificationService'
       params:
         api_token: "{{ get_env('OTAI_HF_TOKEN') }}"
-  
+
   orchestrator:
-    use: "base:SimpleSequentialOrchestrator"
+    use: 'base:SimpleSequentialOrchestrator'
     params:
       steps:
         - id: runner
-          use: "base:SimpleSequentialRunner"
+          use: 'base:SimpleSequentialRunner'
           params:
             on:
-              id: "interval"
-              use: "base:IntervalTrigger"
+              id: 'interval'
+              use: 'base:IntervalTrigger'
               params:
-                interval: "PT60S"  # Run every 60 seconds
+                interval: 'PT60S' # Run every 60 seconds
             run:
-              id: "pipeline"
-              use: "base:CompositePipe"
+              id: 'pipeline'
+              use: 'base:CompositePipe'
               params:
                 steps:
                   - id: fetch
-                    use: "base:FetchTicketsPipe"
-                    injects: { ticket_system: "otobo_znuny" }
+                    use: 'base:FetchTicketsPipe'
+                    injects: { ticket_system: 'otobo_znuny' }
                     params:
                       ticket_search_criteria:
-                        queue: { name: "Inbox" }
-                        state: { name: "new" }
+                        queue: { name: 'Inbox' }
+                        state: { name: 'new' }
                         limit: 10
-                  
+
                   - id: classify
-                    use: "base:ClassificationPipe"
-                    injects: { classification_service: "hf_local" }
+                    use: 'base:ClassificationPipe'
+                    injects: { classification_service: 'hf_local' }
                     params:
                       text: "{{ get_pipe_result('fetch','fetched_tickets')[0]['subject'] }}"
-                      model_name: "distilbert-base-uncased"
+                      model_name: 'distilbert-base-uncased'
 ```
 
 ### Advanced Configuration
@@ -143,24 +148,24 @@ Multi-label classification with confidence thresholds:
 ```yaml
 steps:
   - id: classify_category
-    use: "base:ClassificationPipe"
-    injects: { classification_service: "hf_local" }
+    use: 'base:ClassificationPipe'
+    injects: { classification_service: 'hf_local' }
     params:
-      text: "{{ ticket.subject }} {{ ticket.body }}"
-      model_name: "your-org/ticket-category-classifier"
+      text: '{{ ticket.subject }} {{ ticket.body }}'
+      model_name: 'your-org/ticket-category-classifier'
       options:
-        top_k: 3  # Return top 3 predictions
-        threshold: 0.7  # Minimum confidence threshold
-  
+        top_k: 3 # Return top 3 predictions
+        threshold: 0.7 # Minimum confidence threshold
+
   - id: classify_priority
-    use: "base:ClassificationPipe"
-    injects: { classification_service: "hf_local" }
+    use: 'base:ClassificationPipe'
+    injects: { classification_service: 'hf_local' }
     params:
-      text: "{{ ticket.subject }} {{ ticket.body }}"
-      model_name: "your-org/ticket-priority-classifier"
-  
+      text: '{{ ticket.subject }} {{ ticket.body }}'
+      model_name: 'your-org/ticket-priority-classifier'
+
   - id: select_category
-    use: "base:ExpressionPipe"
+    use: 'base:ExpressionPipe'
     params:
       expression: >
         {{
@@ -179,18 +184,20 @@ Models are automatically downloaded and cached:
 ```yaml
 services:
   hf_local:
-    use: "hf-local:HFClassificationService"
+    use: 'hf-local:HFClassificationService'
     params:
       api_token: "{{ get_env('OTAI_HF_TOKEN') }}"
-      cache_dir: "/app/models"  # Optional: specify cache location
+      cache_dir: '/app/models' # Optional: specify cache location
 ```
 
 **First Run**:
+
 - Model downloaded from HuggingFace
 - Cached locally (5-10 seconds for small models, 30-60s for large)
 - Ready for inference
 
 **Subsequent Runs**:
+
 - Model loaded from cache
 - Fast startup (1-5 seconds)
 
@@ -215,16 +222,18 @@ Improve accuracy by combining multiple ticket fields:
 
 ```yaml
 params:
-  text: "{{ ticket.subject }} {{ ticket.body }}"
+  text: '{{ ticket.subject }} {{ ticket.body }}'
 ```
 
 **With Priority**:
+
 ```yaml
 params:
-  text: "Priority: {{ ticket.priority }}. Subject: {{ ticket.subject }}. Body: {{ ticket.body }}"
+  text: 'Priority: {{ ticket.priority }}. Subject: {{ ticket.subject }}. Body: {{ ticket.body }}'
 ```
 
 **With Metadata**:
+
 ```yaml
 params:
   text: >
@@ -240,7 +249,7 @@ Clean input text for better results:
 
 ```yaml
 - id: clean_text
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {{
@@ -251,10 +260,10 @@ Clean input text for better results:
       }}
 
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
     text: "{{ get_pipe_result('clean_text') }}"
-    model_name: "your-model"
+    model_name: 'your-model'
 ```
 
 ## Confidence Thresholds
@@ -265,13 +274,13 @@ Use confidence scores to ensure quality:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "your-model"
+    text: '{{ ticket.subject }}'
+    model_name: 'your-model'
 
 - id: final_category
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {{
@@ -287,9 +296,9 @@ Route differently based on confidence:
 
 ```yaml
 - id: update_ticket
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       queue:
         name: >
@@ -309,12 +318,12 @@ Route differently based on confidence:
 
 ### Threshold Guidelines
 
-| Confidence | Action | Use Case |
-|------------|--------|----------|
-| >0.95 | Auto-assign | High certainty classifications |
-| 0.80-0.95 | Auto-assign with flag | Standard classifications |
-| 0.60-0.80 | Suggest to agent | Low certainty - needs review |
-| <0.60 | Manual classification | Too uncertain |
+| Confidence | Action                | Use Case                       |
+| ---------- | --------------------- | ------------------------------ |
+| >0.95      | Auto-assign           | High certainty classifications |
+| 0.80-0.95  | Auto-assign with flag | Standard classifications       |
+| 0.60-0.80  | Suggest to agent      | Low certainty - needs review   |
+| <0.60      | Manual classification | Too uncertain                  |
 
 ## Multi-Label Classification
 
@@ -322,17 +331,17 @@ Classify tickets into multiple categories:
 
 ```yaml
 - id: classify_multiple
-  use: "base:ClassificationPipe"
-  injects: { classification_service: "hf_local" }
+  use: 'base:ClassificationPipe'
+  injects: { classification_service: 'hf_local' }
   params:
-    text: "{{ ticket.subject }} {{ ticket.body }}"
-    model_name: "your-org/multi-label-classifier"
+    text: '{{ ticket.subject }} {{ ticket.body }}'
+    model_name: 'your-org/multi-label-classifier'
     options:
       top_k: 5
       threshold: 0.6
 
 - id: apply_tags
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {{
@@ -351,13 +360,13 @@ Track model performance:
 
 ```yaml
 - id: classify
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "your-model"
+    text: '{{ ticket.subject }}'
+    model_name: 'your-model'
 
 - id: log_prediction
-  use: "base:LogPipe"
+  use: 'base:LogPipe'
   params:
     message: >
       Classified ticket {{ ticket.id }}:
@@ -400,6 +409,7 @@ END {
 **Error**: `Model 'xyz' not found`
 
 **Solutions**:
+
 1. Verify model name is correct
 2. Check HuggingFace token is valid
 3. Ensure model is public or you have access
@@ -415,6 +425,7 @@ python -c "from transformers import AutoModel; AutoModel.from_pretrained('model-
 **Symptoms**: Classifications often incorrect
 
 **Solutions**:
+
 1. Use a fine-tuned model for your domain
 2. Combine more ticket fields in input text
 3. Increase training data if using custom model
@@ -426,6 +437,7 @@ python -c "from transformers import AutoModel; AutoModel.from_pretrained('model-
 **Symptoms**: High latency, slow processing
 
 **Solutions**:
+
 1. Use smaller model variant (e.g., DistilBERT vs BERT)
 2. Enable GPU acceleration
 3. Reduce input text length
@@ -437,6 +449,7 @@ python -c "from transformers import AutoModel; AutoModel.from_pretrained('model-
 **Error**: `OOM (Out of Memory)`
 
 **Solutions**:
+
 1. Use smaller model
 2. Increase container memory limit
 3. Reduce batch size
@@ -479,17 +492,17 @@ services:
 
 ```yaml
 - id: classify_queue
-  use: "base:ClassificationPipe"
-  injects: { classification_service: "hf_local" }
+  use: 'base:ClassificationPipe'
+  injects: { classification_service: 'hf_local' }
   params:
-    text: "{{ ticket.subject }} {{ ticket.body }}"
-    model_name: "softoft/EHS_Queue_Prediction"
+    text: '{{ ticket.subject }} {{ ticket.body }}'
+    model_name: 'softoft/EHS_Queue_Prediction'
 
 - id: update_queue
-  use: "base:UpdateTicketPipe"
-  injects: { ticket_system: "otobo_znuny" }
+  use: 'base:UpdateTicketPipe'
+  injects: { ticket_system: 'otobo_znuny' }
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       queue:
         name: "{{ get_pipe_result('classify_queue', 'label') }}"
@@ -499,13 +512,13 @@ services:
 
 ```yaml
 - id: detect_priority
-  use: "base:ClassificationPipe"
+  use: 'base:ClassificationPipe'
   params:
-    text: "{{ ticket.subject }}"
-    model_name: "your-org/priority-classifier"
+    text: '{{ ticket.subject }}'
+    model_name: 'your-org/priority-classifier'
 
 - id: final_priority
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {{
@@ -515,9 +528,9 @@ services:
       }}
 
 - id: update_priority
-  use: "base:UpdateTicketPipe"
+  use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: "{{ ticket.id }}"
+    ticket_id: '{{ ticket.id }}'
     updated_ticket:
       priority:
         name: "{{ get_pipe_result('final_priority') }}"

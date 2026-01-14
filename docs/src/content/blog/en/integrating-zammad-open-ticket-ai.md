@@ -1,6 +1,6 @@
 ---
 title: Zammad Integration for Open Ticket AI
-description: "Integrate Open Ticket AI with Zammad using the built-in OTAI Zammad plugin. The adapter exists but is not fully tested yet."
+description: 'Integrate Open Ticket AI with Zammad using the built-in OTAI Zammad plugin. The adapter exists but is not fully tested yet.'
 lang: en
 date: 2024-07-25
 tags:
@@ -11,6 +11,7 @@ category: Integration
 draft: false
 image: ~/assets/images/ai-solves-many-tickets-data-connected-systems.png
 ---
+
 # Zammad Integration for Open Ticket AI
 
 Open Ticket AI (OTAI) includes a plugin for **Zammad**, allowing OTAI to read and update tickets through the Zammad REST API. This enables AI-driven routing, prioritization and categorization directly inside Zammad.
@@ -39,7 +40,7 @@ zammad_ticket_system_service.py
 plugin.py
 pyproject.toml
 
-````
+```
 
 ### `plugin.py`
 
@@ -54,7 +55,7 @@ class ZammadPlugin(Plugin):
         return [
             ZammadTicketsystemService,
         ]
-````
+```
 
 The plugin exposes exactly one injectable: `ZammadTicketsystemService`.
 
@@ -73,7 +74,7 @@ These map directly to the service’s `params` model.
 
 ## Example Configuration
 
-*(You just change “use” to `zammad:ZammadTicketsystemService`)*
+_(You just change “use” to `zammad:ZammadTicketsystemService`)_
 
 ```yaml
 ticket_systems:
@@ -107,17 +108,16 @@ The process is identical to OTOBO/Znuny, Freshdesk, OTRS or any other OTAI ticke
 
 The Zammad integration is **implemented**, but:
 
-* it is **not fully tested**
-* API coverage may be incomplete
-* real-world Zammad setups may require additional adjustments
-* performance characteristics (pagination, search endpoints, large result sets) still need benchmarking
+- it is **not fully tested**
+- API coverage may be incomplete
+- real-world Zammad setups may require additional adjustments
+- performance characteristics (pagination, search endpoints, large result sets) still need benchmarking
 
 You can already use the plugin for prototyping and internal testing, but production use should wait until further validation.
 
 ## Benefits
 
-* AI classification entirely on-premise
-* no Zammad cloud extensions or external AI needed
-* integrates cleanly into existing OTAI workflows
-* same plugin architecture as all other OTAI services
-
+- AI classification entirely on-premise
+- no Zammad cloud extensions or external AI needed
+- integrates cleanly into existing OTAI workflows
+- same plugin architecture as all other OTAI services

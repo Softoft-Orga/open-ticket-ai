@@ -1,73 +1,75 @@
-import Table from '../src/components/vue/core/table/Table.vue'
-import Row from '../src/components/vue/core/table/Row.vue'
-import C from '../src/components/vue/core/table/C.vue'
-import type {Meta, StoryObj} from '@storybook/vue3'
-import {ELEVATIONS, RADII} from "../src/components/vue/core/design-system/tokens.ts";
+import Table from '../src/components/vue/core/table/Table.vue';
+import Row from '../src/components/vue/core/table/Row.vue';
+import C from '../src/components/vue/core/table/C.vue';
+import type { Meta, StoryObj } from '@storybook/vue3';
+import { ELEVATIONS, RADII } from '../src/components/vue/core/design-system/tokens.ts';
 
 const meta: Meta<typeof Table> = {
-    title: 'Core/Table',
-    component: Table,
-    argTypes: {
-        bordered: {
-            control: 'boolean',
-            description: 'Show table border and card styling'
-        },
-        striped: {
-            control: 'boolean',
-            description: 'Enable alternating row background colors'
-        },
-        dense: {
-            control: 'boolean',
-            description: 'Use compact spacing for rows and cells'
-        },
-        width: {
-            control: 'select',
-            options: ['full', 'stretch', 'auto'],
-            description: 'Table width behavior: full (100% width), stretch (100% with min-width), auto (content-based width)'
-        },
-        radius: {
-            control: 'select',
-            options: RADII,
-            description: 'Border radius size from design tokens (lg, xl, 2xl)'
-        },
-        elevation: {
-            control: 'select',
-            options: ELEVATIONS,
-            description: 'Shadow/elevation level from design tokens (none, sm, md, lg)'
-        },
-        hoverEffect: {
-            control: 'boolean',
-            description: 'Enable hover effect on rows'
-        }
+  title: 'Core/Table',
+  component: Table,
+  argTypes: {
+    bordered: {
+      control: 'boolean',
+      description: 'Show table border and card styling',
     },
-    parameters: {
-        docs: {
-            description: {
-                component: 'Flexible and responsive table component with configurable radius and elevation from design tokens, and strong hover effects. Built with Tailwind CSS to match the dark theme design system.'
-            }
-        }
+    striped: {
+      control: 'boolean',
+      description: 'Enable alternating row background colors',
     },
-    args: {
-        bordered: true,
-        striped: true,
-        dense: false,
-        width: 'full',
-        hoverEffect: true,
-        radius: 'xl',
-        elevation: 'sm'
-    }
-}
-export default meta
+    dense: {
+      control: 'boolean',
+      description: 'Use compact spacing for rows and cells',
+    },
+    width: {
+      control: 'select',
+      options: ['full', 'stretch', 'auto'],
+      description:
+        'Table width behavior: full (100% width), stretch (100% with min-width), auto (content-based width)',
+    },
+    radius: {
+      control: 'select',
+      options: RADII,
+      description: 'Border radius size from design tokens (lg, xl, 2xl)',
+    },
+    elevation: {
+      control: 'select',
+      options: ELEVATIONS,
+      description: 'Shadow/elevation level from design tokens (none, sm, md, lg)',
+    },
+    hoverEffect: {
+      control: 'boolean',
+      description: 'Enable hover effect on rows',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Flexible and responsive table component with configurable radius and elevation from design tokens, and strong hover effects. Built with Tailwind CSS to match the dark theme design system.',
+      },
+    },
+  },
+  args: {
+    bordered: true,
+    striped: true,
+    dense: false,
+    width: 'full',
+    hoverEffect: true,
+    radius: 'xl',
+    elevation: 'sm',
+  },
+};
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <Table v-bind="args">
                 <Row>
                     <C header>Feature</C>
@@ -95,26 +97,26 @@ export const Default: Story = {
                     <C align="right" class="text-success">Active</C>
                 </Row>
             </Table>
-        `
-    }),
-    args: {
-        bordered: true,
-        striped: true,
-        dense: false,
-        width: 'full',
-        hoverEffect: true,
-        radius: 'xl',
-        elevation: 'sm'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: true,
+    striped: true,
+    dense: false,
+    width: 'full',
+    hoverEffect: true,
+    radius: 'xl',
+    elevation: 'sm',
+  },
+};
 
 export const Bordered: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <Table v-bind="args">
                 <Row>
                     <C header>Metric</C>
@@ -142,26 +144,26 @@ export const Bordered: Story = {
                     <C align="right" class="text-success font-semibold">94.1%</C>
                 </Row>
             </Table>
-        `
-    }),
-    args: {
-        bordered: true,
-        striped: true,
-        dense: false,
-        width: 'full',
-        hoverEffect: true,
-        radius: 'xl',
-        elevation: 'md'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: true,
+    striped: true,
+    dense: false,
+    width: 'full',
+    hoverEffect: true,
+    radius: 'xl',
+    elevation: 'md',
+  },
+};
 
 export const Glassy: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-gradient-to-br from-background-dark to-surface-dark p-8 rounded-xl">
                 <Table v-bind="args">
                     <Row>
@@ -186,26 +188,26 @@ export const Glassy: Story = {
                     </Row>
                 </Table>
             </div>
-        `
-    }),
-    args: {
-        bordered: true,
-        striped: true,
-        dense: false,
-        width: 'full',
-        hoverEffect: true,
-        radius: '2xl',
-        elevation: 'md'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: true,
+    striped: true,
+    dense: false,
+    width: 'full',
+    hoverEffect: true,
+    radius: '2xl',
+    elevation: 'md',
+  },
+};
 
 export const Borderless: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <Table v-bind="args">
                 <Row>
                     <C header>Name</C>
@@ -228,26 +230,26 @@ export const Borderless: Story = {
                     <C align="right">987</C>
                 </Row>
             </Table>
-        `
-    }),
-    args: {
-        bordered: false,
-        striped: true,
-        dense: false,
-        width: 'full',
-        hoverEffect: true,
-        radius: 'xl',
-        elevation: 'none'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: false,
+    striped: true,
+    dense: false,
+    width: 'full',
+    hoverEffect: true,
+    radius: 'xl',
+    elevation: 'none',
+  },
+};
 
 export const Compact: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <Table v-bind="args">
                 <Row>
                     <C header>ID</C>
@@ -274,26 +276,26 @@ export const Compact: Story = {
                     <C align="right" class="text-text-dim">1d ago</C>
                 </Row>
             </Table>
-        `
-    }),
-    args: {
-        bordered: true,
-        striped: true,
-        dense: true,
-        width: 'full',
-        hoverEffect: true,
-        radius: 'lg',
-        elevation: 'sm'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: true,
+    striped: true,
+    dense: true,
+    width: 'full',
+    hoverEffect: true,
+    radius: 'lg',
+    elevation: 'sm',
+  },
+};
 
 export const AutoWidth: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="flex justify-center">
                 <Table v-bind="args">
                     <Row>
@@ -314,26 +316,26 @@ export const AutoWidth: Story = {
                     </Row>
                 </Table>
             </div>
-        `
-    }),
-    args: {
-        bordered: true,
-        striped: true,
-        dense: false,
-        width: 'auto',
-        hoverEffect: true,
-        radius: 'xl',
-        elevation: 'sm'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: true,
+    striped: true,
+    dense: false,
+    width: 'auto',
+    hoverEffect: true,
+    radius: 'xl',
+    elevation: 'sm',
+  },
+};
 
 export const StretchWidth: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="max-w-5xl">
                 <Table v-bind="args">
                     <Row>
@@ -358,20 +360,20 @@ export const StretchWidth: Story = {
                     </Row>
                 </Table>
             </div>
-        `
-    }),
-    args: {
-        width: 'stretch'
-    }
-}
+        `,
+  }),
+  args: {
+    width: 'stretch',
+  },
+};
 
 export const NoHover: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <Table v-bind="args">
                 <Row>
                     <C header>Quarter</C>
@@ -394,26 +396,26 @@ export const NoHover: Story = {
                     <C align="right" class="text-success">+20%</C>
                 </Row>
             </Table>
-        `
-    }),
-    args: {
-        bordered: true,
-        striped: true,
-        dense: false,
-        width: 'full',
-        hoverEffect: false,
-        radius: 'xl',
-        elevation: 'sm'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: true,
+    striped: true,
+    dense: false,
+    width: 'full',
+    hoverEffect: false,
+    radius: 'xl',
+    elevation: 'sm',
+  },
+};
 
 export const LargeRadius: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <Table v-bind="args">
                 <Row>
                     <C header>Feature</C>
@@ -432,26 +434,26 @@ export const LargeRadius: Story = {
                     <C align="right" class="text-danger">✗</C>
                 </Row>
             </Table>
-        `
-    }),
-    args: {
-        bordered: true,
-        striped: false,
-        dense: false,
-        width: 'full',
-        hoverEffect: true,
-        radius: '2xl',
-        elevation: 'lg'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: true,
+    striped: false,
+    dense: false,
+    width: 'full',
+    hoverEffect: true,
+    radius: '2xl',
+    elevation: 'lg',
+  },
+};
 
 export const HighElevation: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-gradient-to-br from-background-dark to-surface-dark p-8">
                 <Table v-bind="args">
                     <Row>
@@ -481,26 +483,26 @@ export const HighElevation: Story = {
                     </Row>
                 </Table>
             </div>
-        `
-    }),
-    args: {
-        bordered: true,
-        striped: true,
-        dense: false,
-        width: 'full',
-        hoverEffect: true,
-        radius: 'xl',
-        elevation: 'lg'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: true,
+    striped: true,
+    dense: false,
+    width: 'full',
+    hoverEffect: true,
+    radius: 'xl',
+    elevation: 'lg',
+  },
+};
 
 export const MinimalRadius: Story = {
-    render: (args) => ({
-        components: {Table, Row, C},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Table, Row, C },
+    setup() {
+      return { args };
+    },
+    template: `
             <Table v-bind="args">
                 <Row>
                     <C header>Service</C>
@@ -523,15 +525,15 @@ export const MinimalRadius: Story = {
                     <C align="right">3ms</C>
                 </Row>
             </Table>
-        `
-    }),
-    args: {
-        bordered: true,
-        striped: true,
-        dense: true,
-        width: 'full',
-        hoverEffect: true,
-        radius: 'lg',
-        elevation: 'none'
-    }
-}
+        `,
+  }),
+  args: {
+    bordered: true,
+    striped: true,
+    dense: true,
+    width: 'full',
+    hoverEffect: true,
+    radius: 'lg',
+    elevation: 'none',
+  },
+};

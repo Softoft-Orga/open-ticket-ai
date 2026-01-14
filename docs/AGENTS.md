@@ -6,6 +6,8 @@
   UI review.
 - Styling: Tailwind (see `docs/tailwind.config.cjs`)
 - Global UI: `docs/src/styles/global.css`
+- **Formatting**: Prettier with plugins for Astro and Tailwind CSS. Run `npm run format` to format
+  all files. Use `npm run format:check` to verify formatting.
 - **Linting**: ESLint with Flat Config (eslint.config.mjs). Run `npm run lint` before committing.
   Use `npm run lint:fix` to auto-fix issues.
 - **Link checking**: Broken link checker via `astro-broken-links-checker` integration. Runs during
@@ -31,42 +33,52 @@ The site uses `astro-broken-links-checker` to validate internal links during the
 ## Image handling
 
 - **Image storage locations**:
-    - **Local assets**: Store in `docs/src/assets/` for imported images that need optimization
-    - **Public images**: Store in `docs/public/assets/` or `docs/public/images/` for static images
-      served as-is
-    - **Subdirectories**: Organize by category (e.g., `public/assets/`, `public/images/`,
-      `public/icons/`)
+  - **Local assets**: Store in `docs/src/assets/` for imported images that need optimization
+  - **Public images**: Store in `docs/public/assets/` or `docs/public/images/` for static images
+    served as-is
+  - **Subdirectories**: Organize by category (e.g., `public/assets/`, `public/images/`,
+    `public/icons/`)
 - **Image optimization**: Configured in `docs/astro.config.mjs` using Sharp service
-    - Automatically optimizes images from `src/` directory
-    - Authorized domains: `astro.build`, `doc.otobo.org`, `softoft.sirv.com`
-    - Remote patterns allowed: `**.githubusercontent.com`, `**.sirv.com`
+  - Automatically optimizes images from `src/` directory
+  - Authorized domains: `astro.build`, `doc.otobo.org`, `softoft.sirv.com`
+  - Remote patterns allowed: `**.githubusercontent.com`, `**.sirv.com`
 - **Using images in Astro components/pages**:
-    - **For local images in `src/assets/`**: Import and use with `<Image>` component
-      ```astro
-      ---
-      import { Image } from 'astro:assets';
-      import myImage from '../assets/my-image.png';
-      ---
-      <Image src={myImage} alt="Description" />
-      ```
-    - **For public folder images**: Use path string with required width/height
-      ```astro
-      ---
-      import { Image } from 'astro:assets';
-      ---
-      <Image src="/assets/my-image.png" alt="Description" width="800" height="600" />
-      ```
-    - **For remote images**: Use full URL with required width/height
-      ```astro
-      ---
-      import { Image } from 'astro:assets';
-      ---
-      <Image src="https://example.com/image.jpg" alt="Description" width="800" height="600" />
-      ```
-    - **Always** include `alt` attribute for accessibility
-    - Local imported images auto-generate width/height; public/remote images require explicit
-      dimensions
-    - The `<Image>` component automatically optimizes formats (WebP, AVIF) and sizes
+  - **For local images in `src/assets/`**: Import and use with `<Image>` component
+
+    ```astro
+    ---
+    import { Image } from 'astro:assets';
+    import myImage from '../assets/my-image.png';
+    ---
+
+    <Image src={myImage} alt="Description" />
+    ```
+
+  - **For public folder images**: Use path string with required width/height
+
+    ```astro
+    ---
+    import { Image } from 'astro:assets';
+    ---
+
+    <Image src="/assets/my-image.png" alt="Description" width="800" height="600" />
+    ```
+
+  - **For remote images**: Use full URL with required width/height
+
+    ```astro
+    ---
+    import { Image } from 'astro:assets';
+    ---
+
+    <Image src="https://example.com/image.jpg" alt="Description" width="800" height="600" />
+    ```
+
+  - **Always** include `alt` attribute for accessibility
+  - Local imported images auto-generate width/height; public/remote images require explicit
+    dimensions
+  - The `<Image>` component automatically optimizes formats (WebP, AVIF) and sizes
+
 - **In Markdown/MDX content**: Use standard markdown syntax `![alt text](/images/file.png)` - Astro
   will optimize these automatically
 
@@ -89,8 +101,8 @@ them for reactivity that can not be achieved with Astro but these are not reused
 - Core **Components**: Live under `docs/src/components/vue/core/**` and are showcased via Storybook
   stories in
   `docs/stories/**`.
-    - Inventory: See `COMPONENTS.md` for a complete list with brief descriptions
-    - Detailed docs: Check Storybook stories (`.stories.ts` files) for usage examples and props
+  - Inventory: See `COMPONENTS.md` for a complete list with brief descriptions
+  - Detailed docs: Check Storybook stories (`.stories.ts` files) for usage examples and props
 
 ## Testing
 
@@ -107,6 +119,9 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 
 ## Workflow expectations
 
+- **Always format code after each task**: Run `npm run format` to format all files with Prettier
+  after completing any task or making changes. This ensures consistent code style across the
+  project.
 - **Always lint before committing**: Run `npm run lint` to check for issues. Run `npm run lint:fix`
   to auto-fix.
 - **Check for broken links**: Run `npm run lint:links` to build the site and check for broken
@@ -122,11 +137,11 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 ## Testing
 
 - **Crash-smoke tests**: Run `npm run test:playwright` to verify pages load without errors
-    - Checks: no console.error, no pageerror events, response status OK
-    - Tests all key routes (/, /products/, /pricing/, /roi-calculator/, /blog/, /docs/)
-    - Auto-starts Astro dev server via Playwright's `webServer` config
-    - Stable, fast tests with no UI/snapshot dependencies
-    - Resource loading errors (404s for images/fonts) are filtered out
+  - Checks: no console.error, no pageerror events, response status OK
+  - Tests all key routes (/, /products/, /pricing/, /roi-calculator/, /blog/, /docs/)
+  - Auto-starts Astro dev server via Playwright's `webServer` config
+  - Stable, fast tests with no UI/snapshot dependencies
+  - Resource loading errors (404s for images/fonts) are filtered out
 
 ## Documentation update rules
 
@@ -160,9 +175,9 @@ import { getCollection } from 'astro:content';
 const products = await getCollection('products');
 
 // ✅ DO use
-const services = await Astro.locals.content.getLocalizedCollection('services')
-const site = await Astro.locals.content.getLocalizedSingleton('site')
-const product = await Astro.locals.content.getLocalizedEntry('products', 'xyz')
+const services = await Astro.locals.content.getLocalizedCollection('services');
+const site = await Astro.locals.content.getLocalizedSingleton('site');
+const product = await Astro.locals.content.getLocalizedEntry('products', 'xyz');
 ---
 ```
 
@@ -173,7 +188,8 @@ docs), the helper returns all entries.
 
 Before finalizing component or content changes:
 
-- Core Components: `COMPONENTS.md` updated + Storybook story exists + story renders, when a core component was changed not if a Domain Component changes!
+- Formatting: Run `npm run format` to format all files with Prettier
+- Core Components: `COMPONENTS.md` updated + Storybook story exists + story renders, when a core
+  component was changed not if a Domain Component changes!
 - Content: `CONTENT_COLLECTIONS.md` accurate + schema valid + pages render
 - Build passes: `npm run docs:build` succeeds
-

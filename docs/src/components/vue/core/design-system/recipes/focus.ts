@@ -1,5 +1,5 @@
-import { tv, type VariantProps } from 'tailwind-variants'
-import type { Tone } from '../tokens.ts'
+import { tv, type VariantProps } from 'tailwind-variants';
+import type { Tone } from '../tokens.ts';
 
 /**
  * Focus ring recipe - Focus ring styles for interactive elements
@@ -16,12 +16,12 @@ export const focusRing = tv({
       success: 'focus-visible:ring-success',
       warning: 'focus-visible:ring-warning',
       danger: 'focus-visible:ring-danger',
-      info: 'focus-visible:ring-info'
-    } satisfies Record<Tone, string>
+      info: 'focus-visible:ring-info',
+    } satisfies Record<Tone, string>,
   },
   defaultVariants: {
-    tone: 'primary'
-  }
-})
+    tone: 'primary',
+  },
+});
 
-export type FocusRingVariants = VariantProps<typeof focusRing>
+export type FocusRingVariants = VariantProps<typeof focusRing>;

@@ -1,6 +1,6 @@
 ---
 title: Freshdesk Integration for Open Ticket AI
-description: "Integrate on-premise Open Ticket AI with Freshdesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Freshdesk tickets via REST."
+description: 'Integrate on-premise Open Ticket AI with Freshdesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Freshdesk tickets via REST.'
 lang: en
 date: 2024-08-10
 tags:
@@ -11,6 +11,7 @@ category: Integration
 draft: false
 image: ~/assets/images/connecting-multiple-services-integration.png
 ---
+
 # Freshdesk Integration for Open Ticket AI
 
 Open Ticket AI (OTAI) runs fully on-premise and classifies support tickets into queues, priorities and custom categories. To integrate OTAI with **Freshdesk**, you create a small plugin that provides a `FreshdeskTicketsystemService`. OTAI loads this service automatically and uses it to read and update tickets through the Freshdesk REST API.
@@ -38,7 +39,7 @@ freshdesk_ticket_system_service.py
 plugin.py
 pyproject.toml
 
-````
+```
 
 ### `freshdesk_ticket_system_service.py`
 
@@ -68,7 +69,7 @@ class FreshdeskTicketsystemService(TicketSystemService):
 
     async def update_ticket(self, ticket_id: str, data: dict) -> dict:
         return await self._request("PUT", f"/tickets/{ticket_id}", json=data)
-````
+```
 
 ### `plugin.py`
 
@@ -116,7 +117,7 @@ Everything runs on-premise. Freshdesk authentication uses basic auth with your A
 
 ## Benefits
 
-* full data control (OTAI remains local)
-* seamless use of Freshdesk UI and workflows
-* AI-driven routing without Freshdesk’s proprietary AI
-* clean plugin architecture identical to Zammad / OTOBO / Znuny
+- full data control (OTAI remains local)
+- seamless use of Freshdesk UI and workflows
+- AI-driven routing without Freshdesk’s proprietary AI
+- clean plugin architecture identical to Zammad / OTOBO / Znuny

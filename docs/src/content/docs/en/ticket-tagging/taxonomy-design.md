@@ -1,11 +1,12 @@
 ---
 title: Taxonomy Design
-description: "Design and structure your ticket classification taxonomy for effective automated tagging and categorization."
+description: 'Design and structure your ticket classification taxonomy for effective automated tagging and categorization.'
 lang: en
 nav:
   group: Ticket Tagging
   order: 1
 ---
+
 # Taxonomy Design
 
 Learn how to design an effective taxonomy for automated ticket tagging and classification.
@@ -65,11 +66,13 @@ IT Support
 ```
 
 **Advantages**:
+
 - Clear organization
 - Supports multi-level classification
 - Easy to understand and maintain
 
 **Disadvantages**:
+
 - More complex to implement
 - Requires careful training data preparation
 - May need multi-stage classification
@@ -90,11 +93,13 @@ Single-level categories:
 ```
 
 **Advantages**:
+
 - Simple to implement
 - Easier to train models
 - Faster classification
 
 **Disadvantages**:
+
 - Limited granularity
 - May become unwieldy with many categories
 
@@ -112,6 +117,7 @@ For each category, document:
 **Scope**: [What is included]
 
 **Examples**:
+
 - Example ticket 1
 - Example ticket 2
 - Example ticket 3
@@ -132,17 +138,20 @@ For each category, document:
 
 **Description**: Requests to reset forgotten passwords or unlock locked accounts
 
-**Scope**: 
+**Scope**:
+
 - Forgotten password requests
 - Account lockouts due to failed login attempts
 - Password expiration issues
 
 **Examples**:
+
 - "I forgot my password and can't log in"
 - "My account is locked after too many failed attempts"
 - "I need to reset my password for the customer portal"
 
 **Exclusions**:
+
 - New account creation (→ Account Management)
 - Permission/access level changes (→ Access Requests)
 - Password policy questions (→ General IT Support)
@@ -168,16 +177,19 @@ Before automating, test your taxonomy manually:
 ### Common Issues
 
 **Low Agreement** (<60%):
+
 - Categories may overlap too much
 - Definitions may be unclear
 - Need better examples and documentation
 
 **Medium Agreement** (60-80%):
+
 - Some edge cases need clarification
 - May need to merge similar categories
 - Refinement of category boundaries needed
 
 **High Agreement** (>80%):
+
 - Taxonomy is ready for automation
 - Proceed with model training
 

@@ -30,11 +30,11 @@ footer:
     - title: Unternehmen
       links:
         - label: Über uns
-          url: "#"
+          url: '#'
         - label: Karriere
-          url: "#"
+          url: '#'
         - label: Rechtliches
-          url: "#"
+          url: '#'
   social:
     - platform: github
       url: https://github.com/openticketai
@@ -44,9 +44,9 @@ footer:
       ariaLabel: LinkedIn
   legal:
     - label: Datenschutz
-      url: "#"
+      url: '#'
     - label: Impressum
-      url: "#"
+      url: '#'
   copyright: Open Ticket AI UG. Alle Rechte vorbehalten.
 
 popularResources:
@@ -72,4 +72,3 @@ popularResources:
           icon: ArrowPathIcon
         - docId: docs/de/tag-mapping
           icon: ChartBarIcon
-

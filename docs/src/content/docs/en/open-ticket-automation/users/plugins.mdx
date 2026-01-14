@@ -43,47 +43,47 @@ Plugins provide services and pipes that you reference in your YAML configuration
 # Define services from plugins
 services:
   ticket_system:
-    use: "otobo-znuny:OTOBOZnunyTicketSystemService"
+    use: 'otobo-znuny:OTOBOZnunyTicketSystemService'
     params:
       base_url: "{{ get_env('OTOBO_URL') }}"
       username: "{{ get_env('OTOBO_USER') }}"
       password: "{{ get_env('OTOBO_PASSWORD') }}"
 
   classifier:
-    use: "hf-local:HuggingFaceLocalTextClassificationService"
+    use: 'hf-local:HuggingFaceLocalTextClassificationService'
     params:
-      model_name: "distilbert-base-uncased-finetuned-sst-2-english"
+      model_name: 'distilbert-base-uncased-finetuned-sst-2-english'
 
 # Use plugin pipes in your pipeline
 orchestrator:
   runners:
     - run:
         id: fetch_tickets
-        use: "base:FetchTicketsPipe"
+        use: 'base:FetchTicketsPipe'
         injects:
-          ticket_system: "ticket_system"
+          ticket_system: 'ticket_system'
         params:
           ticket_search_criteria:
-            queue_name: "Support"
-            state: "new"
+            queue_name: 'Support'
+            state: 'new'
             limit: 25
 
     - run:
         id: classify_tickets
-        use: "hf-local:TextClassificationPipe"
+        use: 'hf-local:TextClassificationPipe'
         injects:
-          classifier: "classifier"
+          classifier: 'classifier'
         params:
           tickets: "{{ get_pipe_result('fetch_tickets', 'fetched_tickets') }}"
 
     - run:
         id: update_tickets
-        use: "base:UpdateTicketPipe"
+        use: 'base:UpdateTicketPipe'
         injects:
-          ticket_system: "ticket_system"
+          ticket_system: 'ticket_system'
         params:
-          ticket_id: "{{ ticket.id }}"
-          queue: "{{ classification.label }}"
+          ticket_id: '{{ ticket.id }}'
+          queue: '{{ classification.label }}'
 ```
 
 ## Available Plugins
@@ -108,12 +108,12 @@ orchestrator:
   runners:
     - run:
         id: fetch_new_tickets
-        use: "base:FetchTicketsPipe"
+        use: 'base:FetchTicketsPipe'
         injects:
-          ticket_system: "my_ticket_system"
+          ticket_system: 'my_ticket_system'
         params:
           ticket_search_criteria:
-            state: "new"
+            state: 'new'
             limit: 50
 ```
 
@@ -140,9 +140,9 @@ uv add otai-otobo-znuny
 ```yaml
 services:
   otobo:
-    use: "otobo-znuny:OTOBOZnunyTicketSystemService"
+    use: 'otobo-znuny:OTOBOZnunyTicketSystemService'
     params:
-      base_url: "https://helpdesk.example.com"
+      base_url: 'https://helpdesk.example.com'
       username: "{{ get_env('OTOBO_USER') }}"
       password: "{{ get_env('OTOBO_PASSWORD') }}"
 
@@ -150,13 +150,13 @@ orchestrator:
   runners:
     - run:
         id: fetch
-        use: "base:FetchTicketsPipe"
+        use: 'base:FetchTicketsPipe'
         injects:
-          ticket_system: "otobo"
+          ticket_system: 'otobo'
         params:
           ticket_search_criteria:
-            queue_name: "IT Support"
-            state: "new"
+            queue_name: 'IT Support'
+            state: 'new'
 ```
 
 ### HuggingFace Local Plugin
@@ -182,9 +182,9 @@ uv add otai-hf-local
 ```yaml
 services:
   ml_classifier:
-    use: "hf-local:HuggingFaceLocalTextClassificationService"
+    use: 'hf-local:HuggingFaceLocalTextClassificationService'
     params:
-      model_name: "distilbert-base-uncased-finetuned-sst-2-english"
+      model_name: 'distilbert-base-uncased-finetuned-sst-2-english'
       # Or use your custom fine-tuned model
       # model_name: "my-org/custom-ticket-classifier"
 
@@ -192,11 +192,11 @@ orchestrator:
   runners:
     - run:
         id: classify
-        use: "hf-local:TextClassificationPipe"
+        use: 'hf-local:TextClassificationPipe'
         injects:
-          classifier: "ml_classifier"
+          classifier: 'ml_classifier'
         params:
-          text: "{{ ticket.title }} {{ ticket.body }}"
+          text: '{{ ticket.title }} {{ ticket.body }}'
 ```
 
 ## Benefits of the Plugin System

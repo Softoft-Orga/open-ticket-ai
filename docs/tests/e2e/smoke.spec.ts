@@ -4,17 +4,17 @@ import { join, relative } from 'path';
 
 /**
  * Crash-smoke tests: verify pages load without crashes.
- * 
+ *
  * These tests check for:
  * - HTTP response is OK (2xx or 3xx)
  * - No uncaught page errors (pageerror event)
  * - No JavaScript console.error messages (excluding resource load failures)
- * 
+ *
  * We deliberately avoid:
  * - Visual regression/snapshots
  * - Exact text matching
  * - UI element selectors
- * 
+ *
  * Resource loading errors (404s for images, fonts, etc.) are filtered out
  * as they don't indicate page crashes.
  */
@@ -98,7 +98,7 @@ for (const locale of locales) {
       test(`${route} loads without crashes`, async ({ page }) => {
         // Set up error collection BEFORE navigating
         const errors = await collectPageErrors(page);
-        
+
         // Navigate to the page with generous timeout
         const url = locale === 'en' ? route : `/${locale}${route}`;
         const response = await page.goto(url, {
@@ -113,16 +113,12 @@ for (const locale of locales) {
         await page.waitForTimeout(1000);
 
         // Verify no page errors occurred
-        expect(
-          errors.pageErrors,
-          `${url} should have no uncaught page errors`
-        ).toHaveLength(0);
+        expect(errors.pageErrors, `${url} should have no uncaught page errors`).toHaveLength(0);
 
         // Verify no console.error messages
-        expect(
-          errors.consoleErrors,
-          `${url} should have no console.error messages`
-        ).toHaveLength(0);
+        expect(errors.consoleErrors, `${url} should have no console.error messages`).toHaveLength(
+          0
+        );
       });
     }
   });

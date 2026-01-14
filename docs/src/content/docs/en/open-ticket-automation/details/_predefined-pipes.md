@@ -57,20 +57,20 @@ pipe:
     - id: normalize
       uses: actions/normalize-text@v1
       with:
-        fields: [ title, description ]
+        fields: [title, description]
 
     - id: classify
       uses: actions/classify@v2
       with:
-        model: "${{ parameters.classification_model }}"
+        model: '${{ parameters.classification_model }}'
         input: ${{ steps.normalize.output.cleaned_text }}
 
     - id: sla_guard
       uses: actions/sla-reminder@v1
       when: ${{ ticket.created_at + parameters.sla_minutes < now() }}
       with:
-        channel: "${{ parameters.notification_channel }}"
-        message: "SLA threshold reached for ticket ${{ ticket.id }}"
+        channel: '${{ parameters.notification_channel }}'
+        message: 'SLA threshold reached for ticket ${{ ticket.id }}'
 
   outputs:
     classification: ${{ steps.classify.output.label }}
@@ -98,7 +98,7 @@ pipe:
 ## Catalog Ideas
 
 | Pipe Name                    | Problem Solved                                          | Key Steps                                                            | Notes                             |
-|------------------------------|---------------------------------------------------------|----------------------------------------------------------------------|-----------------------------------|
+| ---------------------------- | ------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------- |
 | `triage-basic`               | Classify and enqueue new tickets                        | normalization → classification → SLA reminder                        | Baseline for all teams            |
 | `triage-advanced`            | Multi-language classification with translation fallback | language detection → translation → classification → routing          | Requires translation credits      |
 | `auto-escalate`              | Escalate urgent tickets                                 | severity detection → senior engineer notification → incident logging | Integrates with on-call schedules |

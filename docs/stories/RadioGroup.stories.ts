@@ -1,7 +1,7 @@
-import RadioGroup from '../src/components/vue/core/forms/RadioGroup.vue'
-import RadioGroupOption from '../src/components/vue/core/forms/RadioGroupOption.vue'
-import type { Meta, StoryObj } from '@storybook/vue3'
-import { ref } from 'vue'
+import RadioGroup from '../src/components/vue/core/forms/RadioGroup.vue';
+import RadioGroupOption from '../src/components/vue/core/forms/RadioGroupOption.vue';
+import type { Meta, StoryObj } from '@storybook/vue3';
+import { ref } from 'vue';
 
 const meta: Meta<typeof RadioGroup> = {
   title: 'Core/Forms/RadioGroup',
@@ -9,27 +9,25 @@ const meta: Meta<typeof RadioGroup> = {
   argTypes: {
     modelValue: { control: 'text' },
     label: { control: 'text' },
-    disabled: { control: 'boolean' }
+    disabled: { control: 'boolean' },
   },
   parameters: {
     backgrounds: {
       default: 'dark',
-      values: [
-        { name: 'dark', value: '#0f0814' }
-      ]
-    }
-  }
-}
-export default meta
+      values: [{ name: 'dark', value: '#0f0814' }],
+    },
+  },
+};
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { RadioGroup, RadioGroupOption },
     setup() {
-      const selected = ref('option1')
-      return { args, selected }
+      const selected = ref('option1');
+      return { args, selected };
     },
     template: `
       <div style="max-width: 500px;">
@@ -39,20 +37,20 @@ export const Primary: Story = {
           <RadioGroupOption value="option3" label="Option 3" description="This is the third option" variant="primary" />
         </RadioGroup>
       </div>
-    `
+    `,
   }),
   args: {
     label: 'Choose an option',
-    disabled: false
-  }
-}
+    disabled: false,
+  },
+};
 
 export const Secondary: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { RadioGroup, RadioGroupOption },
     setup() {
-      const selected = ref('plan2')
-      return { args, selected }
+      const selected = ref('plan2');
+      return { args, selected };
     },
     template: `
       <div style="max-width: 500px;">
@@ -62,20 +60,20 @@ export const Secondary: Story = {
           <RadioGroupOption value="plan3" label="Enterprise" description="For large organizations" variant="secondary" />
         </RadioGroup>
       </div>
-    `
+    `,
   }),
   args: {
     label: 'Select your plan',
-    disabled: false
-  }
-}
+    disabled: false,
+  },
+};
 
 export const Outline: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { RadioGroup, RadioGroupOption },
     setup() {
-      const selected = ref('email')
-      return { args, selected }
+      const selected = ref('email');
+      return { args, selected };
     },
     template: `
       <div style="max-width: 500px;">
@@ -85,20 +83,20 @@ export const Outline: Story = {
           <RadioGroupOption value="push" label="Push notifications" variant="outline" />
         </RadioGroup>
       </div>
-    `
+    `,
   }),
   args: {
     label: 'Notification method',
-    disabled: false
-  }
-}
+    disabled: false,
+  },
+};
 
 export const Ghost: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { RadioGroup, RadioGroupOption },
     setup() {
-      const selected = ref('light')
-      return { args, selected }
+      const selected = ref('light');
+      return { args, selected };
     },
     template: `
       <div style="max-width: 500px;">
@@ -108,20 +106,20 @@ export const Ghost: Story = {
           <RadioGroupOption value="auto" label="Auto (system)" variant="ghost" />
         </RadioGroup>
       </div>
-    `
+    `,
   }),
   args: {
     label: 'Theme preference',
-    disabled: false
-  }
-}
+    disabled: false,
+  },
+};
 
 export const WithTones: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { RadioGroup, RadioGroupOption },
     setup() {
-      const selected = ref('medium')
-      return { args, selected }
+      const selected = ref('medium');
+      return { args, selected };
     },
     template: `
       <div style="max-width: 500px;">
@@ -132,20 +130,20 @@ export const WithTones: Story = {
           <RadioGroupOption value="completed" label="Completed" description="Task is done" tone="success" />
         </RadioGroup>
       </div>
-    `
+    `,
   }),
   args: {
     label: 'Set priority level',
-    disabled: false
-  }
-}
+    disabled: false,
+  },
+};
 
 export const Disabled: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { RadioGroup, RadioGroupOption },
     setup() {
-      const selected = ref('option2')
-      return { args, selected }
+      const selected = ref('option2');
+      return { args, selected };
     },
     template: `
       <div style="max-width: 500px;">
@@ -155,20 +153,20 @@ export const Disabled: Story = {
           <RadioGroupOption value="option3" label="Option 3" description="All options are disabled" variant="primary" />
         </RadioGroup>
       </div>
-    `
+    `,
   }),
   args: {
     label: 'Disabled radio group',
-    disabled: true
-  }
-}
+    disabled: true,
+  },
+};
 
 export const WithDescriptionSlot: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { RadioGroup, RadioGroupOption },
     setup() {
-      const selected = ref('option1')
-      return { args, selected }
+      const selected = ref('option1');
+      return { args, selected };
     },
     template: `
       <div style="max-width: 500px;">
@@ -193,23 +191,23 @@ export const WithDescriptionSlot: Story = {
           </RadioGroupOption>
         </RadioGroup>
       </div>
-    `
+    `,
   }),
   args: {
     label: 'Select your subscription tier',
-    disabled: false
-  }
-}
+    disabled: false,
+  },
+};
 
 export const AllVariants: Story = {
   render: () => ({
     components: { RadioGroup, RadioGroupOption },
     setup() {
-      const selectedPrimary = ref('p1')
-      const selectedSecondary = ref('s2')
-      const selectedOutline = ref('o1')
-      const selectedGhost = ref('g3')
-      return { selectedPrimary, selectedSecondary, selectedOutline, selectedGhost }
+      const selectedPrimary = ref('p1');
+      const selectedSecondary = ref('s2');
+      const selectedOutline = ref('o1');
+      const selectedGhost = ref('g3');
+      return { selectedPrimary, selectedSecondary, selectedOutline, selectedGhost };
     },
     template: `
       <div style="display: flex; flex-direction: column; gap: 2rem; padding: 2rem;">
@@ -242,6 +240,6 @@ export const AllVariants: Story = {
           </RadioGroup>
         </div>
       </div>
-    `
-  })
-}
+    `,
+  }),
+};

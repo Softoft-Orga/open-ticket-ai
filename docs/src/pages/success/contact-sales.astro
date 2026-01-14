@@ -3,12 +3,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SuccessfullFormSubmisionCard from '../../components/vue/domain/SuccessfullFormSubmisionCard.vue';
 
 const pageTitle = 'Thank You - Contact Sales';
-const pageDescription = 'Your message has been received successfully. We will get back to you soon.';
+const pageDescription =
+  'Your message has been received successfully. We will get back to you soon.';
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <div class="min-h-screen bg-gradient-to-b from-background-dark to-surface-dark py-16 px-4">
-    <div class="max-w-2xl mx-auto">
+  <div class="min-h-screen bg-gradient-to-b from-background-dark to-surface-dark px-4 py-16">
+    <div class="mx-auto max-w-2xl">
       <SuccessfullFormSubmisionCard
         title="Thank You!"
         description="Your message has been received successfully. Our sales team will get back to you shortly."

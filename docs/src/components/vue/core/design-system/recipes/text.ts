@@ -1,7 +1,7 @@
-import { tv, type VariantProps } from 'tailwind-variants'
-import type { Tone } from '../tokens.ts'
+import { tv, type VariantProps } from 'tailwind-variants';
+import type { Tone } from '../tokens.ts';
 
-type Emphasis = 'normal' | 'dim' | 'strong'
+type Emphasis = 'normal' | 'dim' | 'strong';
 
 /**
  * Text recipe - Text styles used across components
@@ -18,13 +18,13 @@ export const text = tv({
       success: 'text-success',
       warning: 'text-warning',
       danger: 'text-danger',
-      info: 'text-info'
+      info: 'text-info',
     } satisfies Record<Tone, string>,
     emphasis: {
       normal: '',
       dim: 'text-text-dim',
-      strong: 'font-semibold'
-    }
+      strong: 'font-semibold',
+    },
   },
   compoundVariants: [
     // Dim emphasis overrides tone colors with dimmed variants
@@ -33,12 +33,12 @@ export const text = tv({
     { emphasis: 'dim', tone: 'success', class: 'text-success/70' },
     { emphasis: 'dim', tone: 'warning', class: 'text-warning/70' },
     { emphasis: 'dim', tone: 'danger', class: 'text-danger/70' },
-    { emphasis: 'dim', tone: 'info', class: 'text-info/70' }
+    { emphasis: 'dim', tone: 'info', class: 'text-info/70' },
   ],
   defaultVariants: {
     tone: 'neutral',
-    emphasis: 'normal'
-  }
-})
+    emphasis: 'normal',
+  },
+});
 
-export type TextVariants = VariantProps<typeof text>
+export type TextVariants = VariantProps<typeof text>;

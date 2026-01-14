@@ -1,35 +1,25 @@
 <template>
-  <Card
-    class="text-center"
-    elevation="lg"
-    radius="2xl"
-    size="lg"
-    tone="success"
-    variant="surface"
-  >
+  <Card class="text-center" elevation="lg" radius="2xl" size="lg" tone="success" variant="surface">
     <div class="py-8 md:py-12">
       <div class="mb-8">
-        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-success/20">
-          <CheckCircleIcon class="w-12 h-12 text-success" />
+        <div class="inline-flex h-20 w-20 items-center justify-center rounded-full bg-success/20">
+          <CheckCircleIcon class="h-12 w-12 text-success" />
         </div>
       </div>
 
-      <h1 class="text-3xl md:text-5xl font-bold text-white mb-6">
+      <h1 class="mb-6 text-3xl font-bold text-white md:text-5xl">
         {{ title }}
       </h1>
 
-      <p class="text-xl text-text-1 mb-10 leading-relaxed max-w-xl mx-auto">
+      <p class="mx-auto mb-10 max-w-xl text-xl leading-relaxed text-text-1">
         {{ description }}
       </p>
 
-      <div
-        v-if="$slots.default"
-        class="mb-10 text-left"
-      >
+      <div v-if="$slots.default" class="mb-10 text-left">
         <slot />
       </div>
 
-      <div class="flex flex-wrap gap-4 justify-center">
+      <div class="flex flex-wrap justify-center gap-4">
         <Button
           v-if="primaryButtonText"
           :href="primaryButtonHref"
@@ -54,24 +44,23 @@
 </template>
 
 <script lang="ts" setup>
-import { CheckCircleIcon } from '@heroicons/vue/24/outline'
-import Card from '../core/basic/Card.vue'
-import Button from '../core/basic/Button.vue'
+import { CheckCircleIcon } from '@heroicons/vue/24/outline';
+import Card from '../core/basic/Card.vue';
+import Button from '../core/basic/Button.vue';
 
 interface Props {
-  title: string
-  description: string
-  primaryButtonText?: string
-  primaryButtonHref?: string
-  secondaryButtonText?: string
-  secondaryButtonHref?: string
+  title: string;
+  description: string;
+  primaryButtonText?: string;
+  primaryButtonHref?: string;
+  secondaryButtonText?: string;
+  secondaryButtonHref?: string;
 }
 
 withDefaults(defineProps<Props>(), {
   primaryButtonText: 'Back to Home',
   primaryButtonHref: '/',
   secondaryButtonText: undefined,
-  secondaryButtonHref: undefined
-})
+  secondaryButtonHref: undefined,
+});
 </script>
-

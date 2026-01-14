@@ -11,20 +11,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { button } from '../design-system/recipes'
-import type { Variant, Tone, Size, Radius } from '../design-system/tokens.ts'
+import { computed } from 'vue';
+import { button } from '../design-system/recipes';
+import type { Variant, Tone, Size, Radius } from '../design-system/tokens.ts';
 
 interface Props {
-  variant?: Variant
-  size?: Size
-  tone?: Tone
-  radius?: Radius
-  disabled?: boolean
-  loading?: boolean
-  block?: boolean
-  to?: string
-  href?: string
+  variant?: Variant;
+  size?: Size;
+  tone?: Tone;
+  radius?: Radius;
+  disabled?: boolean;
+  loading?: boolean;
+  block?: boolean;
+  to?: string;
+  href?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -36,14 +36,14 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   block: false,
   to: undefined,
-  href: undefined
-})
+  href: undefined,
+});
 
 const componentType = computed(() => {
-  if (props.to) return 'router-link'
-  if (props.href) return 'a'
-  return 'button'
-})
+  if (props.to) return 'router-link';
+  if (props.href) return 'a';
+  return 'button';
+});
 
 const buttonClasses = computed(() => {
   return button({
@@ -53,7 +53,7 @@ const buttonClasses = computed(() => {
     radius: props.radius,
     loading: props.loading,
     disabled: props.disabled,
-    block: props.block
-  })
-})
+    block: props.block,
+  });
+});
 </script>

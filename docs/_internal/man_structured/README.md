@@ -121,6 +121,7 @@ uv run python scripts/validate_sidecars.py
 ```
 
 This script will:
+
 - Scan the codebase for all Pipe, Service, and Trigger classes
 - Check that each has a corresponding sidecar file
 - Validate the sidecar structure against the schema
@@ -149,20 +150,20 @@ These sidecars are consumed by:
 ### Loading Sidecars in Vue Components
 
 ```typescript
-import { useSidecars } from '@/src/composables/useSidecars'
+import { useSidecars } from '@/src/composables/useSidecars';
 
-const { getSidecar, filterByType, filterByCategory } = useSidecars()
+const { getSidecar, filterByType, filterByCategory } = useSidecars();
 
 // Get a specific sidecar
-const addNotePipe = getSidecar('pipe', 'add_note_pipe')
+const addNotePipe = getSidecar('pipe', 'add_note_pipe');
 
 // Filter by type
-const allPipes = filterByType('pipe')
-const allServices = filterByType('service')
-const allTriggers = filterByType('trigger')
+const allPipes = filterByType('pipe');
+const allServices = filterByType('service');
+const allTriggers = filterByType('trigger');
 
 // Filter by category
-const ticketSystemPipes = filterByCategory('ticket-system')
+const ticketSystemPipes = filterByCategory('ticket-system');
 ```
 
 ## Maintenance
@@ -195,7 +196,9 @@ For detailed information about the sidecar schema, see:
 ## Current Inventory
 
 ### Pipes (6 component files + 2 templates)
+
 **Component Sidecars:**
+
 - `add_note_pipe.sidecar.yml` - Adds notes to tickets
 - `composite_pipe.sidecar.yml` - Orchestrates multiple steps
 - `fetch_tickets_pipe.sidecar.yml` - Retrieves tickets from systems
@@ -204,13 +207,16 @@ For detailed information about the sidecar schema, see:
 - `update_ticket_pipe.sidecar.yml` - Updates ticket properties
 
 **Templates/Reference:**
+
 - `default_pipe.sidecar.yml` - Template/example for no-op placeholder pipes
 - `sidecar_pipe_schema.yml` - Schema reference with multilingual support example
 
 ### Services (1 file)
+
 - `otobo_znuny_ticket_system_service.sidecar.yml` - OTOBO/Znuny integration
 
 ### Triggers (1 file)
+
 - `interval_trigger.sidecar.yml` - Time-based trigger
 
 ---

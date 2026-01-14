@@ -1,148 +1,188 @@
-import Accordion from '../src/components/vue/core/accordion/Accordion.vue'
-import AccordionItem from '../src/components/vue/core/accordion/AccordionItem.vue'
-import type {Meta, StoryObj} from '@storybook/vue3'
-import { ref } from 'vue'
+import Accordion from '../src/components/vue/core/accordion/Accordion.vue';
+import AccordionItem from '../src/components/vue/core/accordion/AccordionItem.vue';
+import type { Meta, StoryObj } from '@storybook/vue3';
+import { ref } from 'vue';
 
-const VARIANTS = ['default', 'ghost', 'bordered', 'gradient'] as const
+const VARIANTS = ['default', 'ghost', 'bordered', 'gradient'] as const;
 
 const meta: Meta<typeof Accordion> = {
-    title: 'Core/Accordion',
-    component: Accordion,
-    argTypes: {
-        variant: {
-            control: 'select',
-            options: VARIANTS
-        },
-        multiple: {
-            control: 'boolean'
-        }
-    }
-}
-export default meta
+  title: 'Core/Accordion',
+  component: Accordion,
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: VARIANTS,
+    },
+    multiple: {
+      control: 'boolean',
+    },
+  },
+};
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 const sampleItems = [
-    {id: 'ai-automation', title: 'AI-Powered Automation', content: 'Automatically process and resolve tickets using advanced AI algorithms that learn from your team\'s patterns and improve over time.'},
-    {id: 'smart-priority', title: 'Smart Prioritization', content: 'Intelligent ticket routing and prioritization based on urgency, customer tier, and historical resolution patterns.'},
-    {id: 'multi-channel', title: 'Multi-Channel Support', content: 'Seamlessly integrate with email, chat, social media, and phone support across all your customer touchpoints.'},
-]
+  {
+    id: 'ai-automation',
+    title: 'AI-Powered Automation',
+    content:
+      "Automatically process and resolve tickets using advanced AI algorithms that learn from your team's patterns and improve over time.",
+  },
+  {
+    id: 'smart-priority',
+    title: 'Smart Prioritization',
+    content:
+      'Intelligent ticket routing and prioritization based on urgency, customer tier, and historical resolution patterns.',
+  },
+  {
+    id: 'multi-channel',
+    title: 'Multi-Channel Support',
+    content:
+      'Seamlessly integrate with email, chat, social media, and phone support across all your customer touchpoints.',
+  },
+];
 
 const longSampleItems = [
-    {id: 'getting-started', title: 'Getting Started', content: 'Learn the basics of our platform with this comprehensive introduction to key features and workflows.'},
-    {id: 'advanced-config', title: 'Advanced Configuration', content: 'Deep dive into advanced settings, custom rules, and integration options to tailor the system to your needs.'},
-    {id: 'api-integration', title: 'API Integration', content: 'Connect your existing tools and services using our robust REST API with comprehensive documentation and examples.'},
-    {id: 'security', title: 'Security & Compliance', content: 'Understanding our security measures, data protection policies, and compliance certifications including GDPR and SOC 2.'},
-    {id: 'troubleshooting', title: 'Troubleshooting', content: 'Common issues and their solutions, along with tips for debugging and optimizing performance.'},
-]
+  {
+    id: 'getting-started',
+    title: 'Getting Started',
+    content:
+      'Learn the basics of our platform with this comprehensive introduction to key features and workflows.',
+  },
+  {
+    id: 'advanced-config',
+    title: 'Advanced Configuration',
+    content:
+      'Deep dive into advanced settings, custom rules, and integration options to tailor the system to your needs.',
+  },
+  {
+    id: 'api-integration',
+    title: 'API Integration',
+    content:
+      'Connect your existing tools and services using our robust REST API with comprehensive documentation and examples.',
+  },
+  {
+    id: 'security',
+    title: 'Security & Compliance',
+    content:
+      'Understanding our security measures, data protection policies, and compliance certifications including GDPR and SOC 2.',
+  },
+  {
+    id: 'troubleshooting',
+    title: 'Troubleshooting',
+    content:
+      'Common issues and their solutions, along with tips for debugging and optimizing performance.',
+  },
+];
 
 export const DefaultVariant: Story = {
-    render: (args) => ({
-        components: {Accordion},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Accordion },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-surface-dark p-8 rounded-lg">
                 <h3 class="text-white text-xl font-bold mb-4">Default Variant</h3>
                 <Accordion v-bind="args" />
             </div>
         `,
-    }),
-    args: {
-        items: sampleItems,
-        variant: 'default'
-    },
-}
+  }),
+  args: {
+    items: sampleItems,
+    variant: 'default',
+  },
+};
 
 export const GhostVariant: Story = {
-    render: (args) => ({
-        components: {Accordion},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Accordion },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-surface-dark p-8 rounded-lg">
                 <h3 class="text-white text-xl font-bold mb-4">Ghost Variant</h3>
                 <Accordion v-bind="args" />
             </div>
         `,
-    }),
-    args: {
-        items: sampleItems,
-        variant: 'ghost'
-    },
-}
+  }),
+  args: {
+    items: sampleItems,
+    variant: 'ghost',
+  },
+};
 
 export const BorderedVariant: Story = {
-    render: (args) => ({
-        components: {Accordion},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Accordion },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-surface-dark p-8 rounded-lg">
                 <h3 class="text-white text-xl font-bold mb-4">Bordered Variant</h3>
                 <Accordion v-bind="args" />
             </div>
         `,
-    }),
-    args: {
-        items: sampleItems,
-        variant: 'bordered'
-    },
-}
+  }),
+  args: {
+    items: sampleItems,
+    variant: 'bordered',
+  },
+};
 
 export const GradientVariant: Story = {
-    render: (args) => ({
-        components: {Accordion},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Accordion },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-surface-dark p-8 rounded-lg">
                 <h3 class="text-white text-xl font-bold mb-4">Gradient Variant</h3>
                 <Accordion v-bind="args" />
             </div>
         `,
-    }),
-    args: {
-        items: sampleItems,
-        variant: 'gradient'
-    },
-}
+  }),
+  args: {
+    items: sampleItems,
+    variant: 'gradient',
+  },
+};
 
 export const MultipleMode: Story = {
-    render: (args) => ({
-        components: {Accordion},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Accordion },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-surface-dark p-8 rounded-lg">
                 <h3 class="text-white text-xl font-bold mb-4">Multiple Mode</h3>
                 <p class="text-text-dim text-sm mb-4">Multiple items can be open at the same time</p>
                 <Accordion v-bind="args" />
             </div>
         `,
-    }),
-    args: {
-        items: sampleItems.map((item, i) => ({
-            ...item,
-            defaultOpen: i === 0 || i === 1
-        })),
-        variant: 'bordered',
-        multiple: true
-    },
-}
+  }),
+  args: {
+    items: sampleItems.map((item, i) => ({
+      ...item,
+      defaultOpen: i === 0 || i === 1,
+    })),
+    variant: 'bordered',
+    multiple: true,
+  },
+};
 
 export const ItemsWithCustomSlots: Story = {
-    render: (args) => ({
-        components: {Accordion},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Accordion },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-surface-dark p-8 rounded-lg">
                 <h3 class="text-white text-xl font-bold mb-4">Items + Custom Title Slots</h3>
                 <p class="text-text-dim text-sm mb-4">Using items prop with custom title rendering via slots</p>
@@ -161,19 +201,19 @@ export const ItemsWithCustomSlots: Story = {
                 </Accordion>
             </div>
         `,
-    }),
-    args: {
-        items: sampleItems,
-    },
-}
+  }),
+  args: {
+    items: sampleItems,
+  },
+};
 
 export const ManualComposition: Story = {
-    render: (args) => ({
-        components: {Accordion, AccordionItem},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Accordion, AccordionItem },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-surface-dark p-8 rounded-lg">
                 <h3 class="text-white text-xl font-bold mb-4">Manual Composition</h3>
                 <p class="text-text-dim text-sm mb-4">Using AccordionItem components directly without items prop</p>
@@ -225,18 +265,18 @@ export const ManualComposition: Story = {
                 </Accordion>
             </div>
         `,
-    }),
-    args: {},
-}
+  }),
+  args: {},
+};
 
 export const ControlledState: Story = {
-    render: (args) => ({
-        components: {Accordion},
-        setup() {
-            const openItem = ref('smart-priority')
-            return {args, openItem, sampleItems}
-        },
-        template: `
+  render: args => ({
+    components: { Accordion },
+    setup() {
+      const openItem = ref('smart-priority');
+      return { args, openItem, sampleItems };
+    },
+    template: `
             <div class="bg-surface-dark p-8 rounded-lg space-y-4">
                 <h3 class="text-white text-xl font-bold mb-4">Controlled State (v-model)</h3>
                 <p class="text-text-dim text-sm mb-4">Open item controlled by parent component</p>
@@ -277,17 +317,17 @@ export const ControlledState: Story = {
                 <p class="text-text-dim text-sm mt-4">Current open item: <code class="bg-surface-lighter px-2 py-1 rounded">{{ openItem || 'none' }}</code></p>
             </div>
         `,
-    }),
-    args: {},
-}
+  }),
+  args: {},
+};
 
 export const StandaloneItem: Story = {
-    render: (args) => ({
-        components: {AccordionItem},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { AccordionItem },
+    setup() {
+      return { args };
+    },
+    template: `
             <div class="bg-surface-dark p-8 rounded-lg space-y-4">
                 <h3 class="text-white text-xl font-bold mb-4">Standalone AccordionItem Examples</h3>
                 
@@ -313,17 +353,17 @@ export const StandaloneItem: Story = {
                 </div>
             </div>
         `,
-    }),
-    args: {},
-}
+  }),
+  args: {},
+};
 
 export const AllVariantsShowcase: Story = {
-    render: (args) => ({
-        components: {Accordion},
-        setup() {
-            return {args, longSampleItems}
-        },
-        template: `
+  render: args => ({
+    components: { Accordion },
+    setup() {
+      return { args, longSampleItems };
+    },
+    template: `
             <div class="bg-background-dark p-8 space-y-8">
                 <div class="bg-surface-dark p-8 rounded-lg">
                     <h3 class="text-white text-2xl font-bold mb-2">Default Variant</h3>
@@ -350,6 +390,6 @@ export const AllVariantsShowcase: Story = {
                 </div>
             </div>
         `,
-    }),
-    args: {},
-}
+  }),
+  args: {},
+};

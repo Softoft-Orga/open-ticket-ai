@@ -1,41 +1,36 @@
 <template>
   <footer class="border-t border-white/5 bg-background-dark py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+      <div class="mb-16 grid grid-cols-1 gap-12 md:grid-cols-4">
         <div class="md:col-span-1">
-          <div class="flex items-center gap-2 mb-6">
+          <div class="mb-6 flex items-center gap-2">
             <div class="flex size-8 items-center justify-center rounded bg-link/20 text-link">
-              <TicketIcon class="w-5 h-5" />
+              <TicketIcon class="h-5 w-5" />
             </div>
-            <span class="font-display text-lg font-bold text-white tracking-tight">{{ brandName }}</span>
+            <span class="font-display text-lg font-bold tracking-tight text-white">{{
+              brandName
+            }}</span>
           </div>
-          <p class="text-slate-500 text-sm leading-relaxed max-w-xs">
+          <p class="max-w-xs text-sm leading-relaxed text-slate-500">
             {{ brandTagline }}
           </p>
         </div>
-        
-        <div
-          v-for="(section, index) in sections"
-          :key="index"
-        >
-          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">
+
+        <div v-for="(section, index) in sections" :key="index">
+          <h4 class="mb-6 text-sm font-bold uppercase tracking-widest text-white">
             {{ section.title }}
           </h4>
-          <ul class="space-y-4 text-slate-500 text-sm">
-            <li
-              v-for="(link, linkIndex) in section.links"
-              :key="linkIndex"
-            >
-              <a
-                :href="link.url"
-                class="text-primary hover:text-primary-light transition-colors"
-              >{{ link.label }}</a>
+          <ul class="space-y-4 text-sm text-slate-500">
+            <li v-for="(link, linkIndex) in section.links" :key="linkIndex">
+              <a :href="link.url" class="text-primary transition-colors hover:text-primary-light">{{
+                link.label
+              }}</a>
             </li>
           </ul>
         </div>
 
         <div v-if="social.length > 0">
-          <h4 class="text-white font-bold text-sm mb-6 uppercase tracking-widest">
+          <h4 class="mb-6 text-sm font-bold uppercase tracking-widest text-white">
             {{ socialHeading }}
           </h4>
           <div class="flex gap-4 text-primary">
@@ -44,35 +39,27 @@
               :key="index"
               :href="socialLink.url"
               :aria-label="socialLink.ariaLabel"
-              class="hover:text-primary-light transition-colors"
+              class="transition-colors hover:text-primary-light"
             >
-              <CodeBracketSquareIcon
-                v-if="socialLink.platform === 'github'"
-                class="w-6 h-6"
-              />
-              <LinkIcon
-                v-else-if="socialLink.platform === 'linkedin'"
-                class="w-6 h-6"
-              />
+              <CodeBracketSquareIcon v-if="socialLink.platform === 'github'" class="h-6 w-6" />
+              <LinkIcon v-else-if="socialLink.platform === 'linkedin'" class="h-6 w-6" />
             </a>
           </div>
         </div>
       </div>
-      
-      <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div class="text-xs text-slate-600">
-          © {{ year }} {{ copyright }}
-        </div>
-        <div
-          v-if="legal.length > 0"
-          class="flex gap-8 text-xs text-primary"
-        >
+
+      <div
+        class="flex flex-col items-center justify-between gap-6 border-t border-white/5 pt-8 md:flex-row"
+      >
+        <div class="text-xs text-slate-600">© {{ year }} {{ copyright }}</div>
+        <div v-if="legal.length > 0" class="flex gap-8 text-xs text-primary">
           <a
             v-for="(legalLink, index) in legal"
             :key="index"
             :href="legalLink.url"
-            class="hover:text-primary-light transition-colors"
-          >{{ legalLink.label }}</a>
+            class="transition-colors hover:text-primary-light"
+            >{{ legalLink.label }}</a
+          >
         </div>
       </div>
     </div>
@@ -80,47 +67,53 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { TicketIcon, CodeBracketSquareIcon, LinkIcon } from '@heroicons/vue/24/outline'
+import { computed } from 'vue';
+import { TicketIcon, CodeBracketSquareIcon, LinkIcon } from '@heroicons/vue/24/outline';
 
 type FooterLink = {
-  label: string
-  url: string
-}
+  label: string;
+  url: string;
+};
 
 type FooterSection = {
-  title: string
-  links: FooterLink[]
-}
+  title: string;
+  links: FooterLink[];
+};
 
 type SocialLink = {
-  platform: string
-  url: string
-  ariaLabel: string
-}
+  platform: string;
+  url: string;
+  ariaLabel: string;
+};
 
 type FooterData = {
-  brandName?: string
-  brandTagline?: string
-  socialHeading?: string
-  sections: FooterSection[]
-  social: SocialLink[]
-  legal: FooterLink[]
-  copyright: string
-}
+  brandName?: string;
+  brandTagline?: string;
+  socialHeading?: string;
+  sections: FooterSection[];
+  social: SocialLink[];
+  legal: FooterLink[];
+  copyright: string;
+};
 
 type Props = {
-  footerData?: FooterData
-}
+  footerData?: FooterData;
+};
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
-const sections = computed(() => props.footerData?.sections || [])
-const social = computed(() => props.footerData?.social || [])
-const legal = computed(() => props.footerData?.legal || [])
-const copyright = computed(() => props.footerData?.copyright || 'Open Ticket AI UG. All rights reserved.')
-const brandName = computed(() => props.footerData?.brandName || 'Open Ticket AI')
-const brandTagline = computed(() => props.footerData?.brandTagline || 'Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.')
-const socialHeading = computed(() => props.footerData?.socialHeading || 'Connect')
-const year = computed(() => new Date().getFullYear())
+const sections = computed(() => props.footerData?.sections || []);
+const social = computed(() => props.footerData?.social || []);
+const legal = computed(() => props.footerData?.legal || []);
+const copyright = computed(
+  () => props.footerData?.copyright || 'Open Ticket AI UG. All rights reserved.'
+);
+const brandName = computed(() => props.footerData?.brandName || 'Open Ticket AI');
+const brandTagline = computed(
+  () =>
+    props.footerData?.brandTagline ||
+    'Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.'
+);
+const socialHeading = computed(() => props.footerData?.socialHeading || 'Connect');
+const year = computed(() => new Date().getFullYear());
 </script>

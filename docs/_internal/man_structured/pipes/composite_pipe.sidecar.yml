@@ -8,13 +8,13 @@ _category: orchestration
 
 _inputs:
   placement: flat
-  alongside: [ id, use ]
+  alongside: [id, use]
   params:
     steps: List of pipe configurations to execute sequentially
-_defaults: { }
+_defaults: {}
 
 _output:
-  state_enum: [ ok, failed ]
+  state_enum: [ok, failed]
   description: Pipe returns a union of all step results. Success if all steps succeed, failed if any step fails.
   payload_schema_ref: OpenTicketAI.Pipes.Composite.Result
   examples:
@@ -27,7 +27,7 @@ _output:
       state: failed
       error: step_execution_failed
       payload:
-        failed_step_id: "step_2"
+        failed_step_id: 'step_2'
 
 _errors:
   fail:
@@ -40,7 +40,7 @@ _errors:
       when: Steps configuration is missing or invalid
     - code: step_config_invalid
       when: One of the step configurations is invalid
-  continue: [ ]
+  continue: []
 
 _engine_support:
   on_failure: false

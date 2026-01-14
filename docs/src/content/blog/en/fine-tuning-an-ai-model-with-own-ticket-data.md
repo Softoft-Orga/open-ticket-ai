@@ -1,6 +1,6 @@
 ---
 title: How to Fine-Tune an AI Model with Your Own Ticket Data
-description: "Fine-tune an AI model on your ticket data for accurate, automated classification. This guide shows how to prepare datasets and train with Hugging Face or a REST API."
+description: 'Fine-tune an AI model on your ticket data for accurate, automated classification. This guide shows how to prepare datasets and train with Hugging Face or a REST API.'
 lang: en
 date: 2024-09-20
 tags:
@@ -12,6 +12,7 @@ category: Tutorial
 draft: false
 image: ~/assets/images/ai-brain-connected-statistics-dark-blue.png
 ---
+
 # How to Fine-Tune an AI Model with Your Own Ticket Data
 
 Fine-tuning an AI model on your own ticket data is a powerful way to customize ticket classification
@@ -27,14 +28,14 @@ generic model.
 
 Modern text classification workflows follow these high-level steps:
 
-* **Collect and Label Data:** Gather historical tickets and assign them the correct categories (
+- **Collect and Label Data:** Gather historical tickets and assign them the correct categories (
   queues) or priorities. Each ticket should have a text field and at least one label.
-* **Format the Dataset:** Save this labeled data in a structured format (CSV or JSON). For example,
+- **Format the Dataset:** Save this labeled data in a structured format (CSV or JSON). For example,
   a CSV might have columns `"text","label"`.
-* **Split into Train/Test:** Reserve a portion for validation/testing to evaluate performance.
-* **Fine-Tune the Model:** Use a library like Hugging Face Transformers, or our Open Ticket AI API,
+- **Split into Train/Test:** Reserve a portion for validation/testing to evaluate performance.
+- **Fine-Tune the Model:** Use a library like Hugging Face Transformers, or our Open Ticket AI API,
   to train a classification model on the data.
-* **Evaluate and Deploy:** Check accuracy (or F1) on held-out data, then use the trained model to
+- **Evaluate and Deploy:** Check accuracy (or F1) on held-out data, then use the trained model to
   classify new tickets.
 
 Tech-savvy readers can follow these steps in detail. The examples below illustrate how to prepare
@@ -48,9 +49,9 @@ anything relevant to your system.
 First, gather a representative set of past tickets and label them according to your classification
 scheme. Labels could be departments (like **Technical Support**, **Customer Service**, **Billing**,
 etc.) or priority levels (e.g. **Low**, **Medium**, **High**). For example, the Softoft ticket
-dataset includes categories such as *Technical Support*, *Billing and Payments*, *IT Support*, and
-*General Inquiry*. A Hugging Face example model uses labels like *Billing Question*, *Feature
-Request*, *General Inquiry*, and *Technical Issue*. Define whatever categories make sense for your
+dataset includes categories such as _Technical Support_, _Billing and Payments_, _IT Support_, and
+_General Inquiry_. A Hugging Face example model uses labels like _Billing Question_, _Feature
+Request_, _General Inquiry_, and _Technical Issue_. Define whatever categories make sense for your
 workflow.
 
 Organize the data in CSV or JSON format. Each record should contain the ticket text and its label.
@@ -76,8 +77,8 @@ train / 20% test). This split lets you measure how well the fine-tuned model gen
 
 Consistent, accurate labels are crucial. Make sure each ticket is correctly assigned to one of your
 chosen categories. This might be done manually by support staff or by using existing ticket metadata
-if available. Often, organizations label tickets by *queue* or department, and sometimes also by
-*priority*. For example, the Softoft email ticket dataset categorizes tickets by both department (
+if available. Often, organizations label tickets by _queue_ or department, and sometimes also by
+_priority_. For example, the Softoft email ticket dataset categorizes tickets by both department (
 queue) and priority. Priority can be useful if you want to train a model to predict urgency: e.g.,
 `Low`, `Medium`, `Critical`. In many setups, you might train one model for department classification
 and another for priority classification.
@@ -95,11 +96,11 @@ following examples we assume a single-label classification task (one label colum
 
 **Key tips for labeling:**
 
-* Define your label names clearly. For instance, *Technical Support* vs *IT Support* vs *Hardware
-  Issue* – avoid ambiguous overlap.
-* If tickets often belong to multiple categories, you might consider multi-label classification (
+- Define your label names clearly. For instance, _Technical Support_ vs _IT Support_ vs _Hardware
+  Issue_ – avoid ambiguous overlap.
+- If tickets often belong to multiple categories, you might consider multi-label classification (
   assigning multiple labels) or break it into separate models.
-* Use consistent formatting (same spelling, casing) for labels in your dataset.
+- Use consistent formatting (same spelling, casing) for labels in your dataset.
 
 By the end of this step, you should have a labeled dataset file (CSV or JSON) with ticket texts and
 their labels, ready for the model.
@@ -225,7 +226,7 @@ Dockerized solution with a REST API that can ingest your labeled ticket data and
 automatically. This means you can keep all data local and still leverage powerful ML. The ATC API
 has endpoints to upload data, trigger training, and classify tickets.
 
-* **Upload Training Data:** Send your labeled tickets CSV to the `/api/v1/train-data` endpoint. The
+- **Upload Training Data:** Send your labeled tickets CSV to the `/api/v1/train-data` endpoint. The
   API expects a CSV payload (`Content-Type: text/csv`) containing your training data. For example,
   using Python `requests`:
 
@@ -241,7 +242,7 @@ has endpoints to upload data, trigger training, and classify tickets.
   This corresponds to the “Train Data” API in the ATC docs. A successful response means the data is
   received.
 
-* **Start Model Training:** After uploading the data, trigger training by calling `/api/v1/train` (
+- **Start Model Training:** After uploading the data, trigger training by calling `/api/v1/train` (
   no body needed). In practice:
 
   ```bash
@@ -260,7 +261,7 @@ has endpoints to upload data, trigger training, and classify tickets.
   under the hood, possibly based on similar Transformer models). Training runs on your server, and
   the model is saved locally when done.
 
-* **Classify New Tickets:** Once training is complete, use the `/api/v1/classify` endpoint to get
+- **Classify New Tickets:** Once training is complete, use the `/api/v1/classify` endpoint to get
   predictions for new ticket texts. Send a JSON payload with the field `"ticket_data"` containing
   the ticket text. For example:
 
@@ -380,4 +381,3 @@ By following these steps, your support system can automatically route tickets to
 flag urgent issues, and save your staff countless hours of manual sorting. This deep integration of
 NLP into your ticket workflow is now accessible with modern libraries and APIs – you just need to
 supply your data and labels.
-

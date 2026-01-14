@@ -1,11 +1,12 @@
 ---
 title: First Pipeline Tutorial
-description: "Build your first Open Ticket AI pipeline end-to-end with orchestration and classification."
+description: 'Build your first Open Ticket AI pipeline end-to-end with orchestration and classification.'
 lang: en
 nav:
   group: Guides
   order: 2
 ---
+
 # Creating Your First Pipeline
 
 This guide walks through building a working ticket-classification pipeline on top of the latest Open Ticket AI configuration schema. You will learn how plugin modules are loaded, how services are registered by identifier, and how the orchestrator is composed entirely from nested `PipeConfig` definitions.
@@ -30,15 +31,15 @@ The following minimal configuration highlights the structure and validates again
 
 ```yaml
 open_ticket_ai:
-  api_version: "1"
+  api_version: '1'
   plugins:
     - otai-base
   services:
     default_renderer:
-      use: "base:JinjaRenderer"
+      use: 'base:JinjaRenderer'
   orchestrator:
     id: orchestrator
-    use: "base:SimpleSequentialOrchestrator"
+    use: 'base:SimpleSequentialOrchestrator'
     params:
       steps: []
 ```
@@ -92,80 +93,80 @@ Save the following validated configuration as `config.yml` in your working direc
 
 ```yaml
 open_ticket_ai:
-  api_version: "1"
+  api_version: '1'
   plugins:
     - otai-base
     - otai-otobo-znuny
     - otai-hf-local
   services:
     default_renderer:
-      use: "base:JinjaRenderer"
+      use: 'base:JinjaRenderer'
     otobo_znuny:
-      use: "otobo-znuny:OTOBOZnunyTicketSystemService"
+      use: 'otobo-znuny:OTOBOZnunyTicketSystemService'
       params:
-        base_url: "https://helpdesk.example.com/otobo/nph-genericinterface.pl"
-        username: "open_ticket_ai"
+        base_url: 'https://helpdesk.example.com/otobo/nph-genericinterface.pl'
+        username: 'open_ticket_ai'
         password: "{{ get_env('OTOBO_API_TOKEN') }}"
     hf_classifier:
-      use: "hf-local:HFClassificationService"
+      use: 'hf-local:HFClassificationService'
       params:
         api_token: "{{ get_env('HF_TOKEN') }}"
   orchestrator:
     id: ticket-automation
-    use: "base:SimpleSequentialOrchestrator"
+    use: 'base:SimpleSequentialOrchestrator'
     params:
-      orchestrator_sleep: "PT60S"
+      orchestrator_sleep: 'PT60S'
       steps:
         - id: ticket-routing-runner
-          use: "base:SimpleSequentialRunner"
+          use: 'base:SimpleSequentialRunner'
           params:
             on:
               id: every-minute
-              use: "base:IntervalTrigger"
+              use: 'base:IntervalTrigger'
               params:
-                interval: "PT60S"
+                interval: 'PT60S'
             run:
               id: ticket-routing
-              use: "base:CompositePipe"
+              use: 'base:CompositePipe'
               params:
                 steps:
                   - id: fetch_open_tickets
-                    use: "base:FetchTicketsPipe"
+                    use: 'base:FetchTicketsPipe'
                     injects:
-                      ticket_system: "otobo_znuny"
+                      ticket_system: 'otobo_znuny'
                     params:
                       ticket_search_criteria:
                         queue:
-                          name: "OpenTicketAI::Incoming"
+                          name: 'OpenTicketAI::Incoming'
                         limit: 25
                   - id: ensure_tickets_found
-                    use: "base:ExpressionPipe"
+                    use: 'base:ExpressionPipe'
                     params:
                       expression: "{{ fail('No open tickets found') if (get_pipe_result('fetch_open_tickets','fetched_tickets') | length) == 0 else 'tickets ready' }}"
                   - id: queue_classifier
-                    use: "base:ClassificationPipe"
+                    use: 'base:ClassificationPipe'
                     injects:
-                      classification_service: "hf_classifier"
+                      classification_service: 'hf_classifier'
                     params:
                       text: "{{ get_pipe_result('fetch_open_tickets','fetched_tickets')[0]['subject'] }} {{ get_pipe_result('fetch_open_tickets','fetched_tickets')[0]['body'] }}"
-                      model_name: "softoft/otai-queue-de-bert-v1"
+                      model_name: 'softoft/otai-queue-de-bert-v1'
                   - id: update_queue
-                    use: "base:UpdateTicketPipe"
+                    use: 'base:UpdateTicketPipe'
                     injects:
-                      ticket_system: "otobo_znuny"
+                      ticket_system: 'otobo_znuny'
                     params:
                       ticket_id: "{{ get_pipe_result('fetch_open_tickets','fetched_tickets')[0]['id'] }}"
                       updated_ticket:
                         queue:
                           name: "{{ get_pipe_result('queue_classifier','label') }}"
                   - id: add_classification_note
-                    use: "base:AddNotePipe"
+                    use: 'base:AddNotePipe'
                     injects:
-                      ticket_system: "otobo_znuny"
+                      ticket_system: 'otobo_znuny'
                     params:
                       ticket_id: "{{ get_pipe_result('fetch_open_tickets','fetched_tickets')[0]['id'] }}"
                       note:
-                        subject: "Queue classification"
+                        subject: 'Queue classification'
                         body: |
                           Auto-classified queue: {{ get_pipe_result('queue_classifier','label') }}
                           Confidence: {{ (get_pipe_result('queue_classifier','confidence') * 100) | round(1) }}%

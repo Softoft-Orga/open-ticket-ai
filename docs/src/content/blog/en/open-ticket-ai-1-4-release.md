@@ -1,6 +1,6 @@
 ---
 title: Open Ticket AI 1.4 Release - The First Major Production Release
-description: "Discover Open Ticket AI 1.4, the first production-ready release featuring powerful"
+description: 'Discover Open Ticket AI 1.4, the first production-ready release featuring powerful'
 lang: en
 date: 2024-10-28
 tags:
@@ -109,13 +109,13 @@ The easiest way to setup Open Ticket AI on your server is using **Docker Compose
 
 ```yaml
 services:
-    open-ticket-ai:
-        image: openticketai/engine:latest
-        restart: "unless-stopped"
-        environment:
-            OTAI_TS_PASSWORD: "${OTAI_TS_PASSWORD}"
-        volumes:
-            - ./config.yml:/app/config.yml:ro
+  open-ticket-ai:
+    image: openticketai/engine:latest
+    restart: 'unless-stopped'
+    environment:
+      OTAI_TS_PASSWORD: '${OTAI_TS_PASSWORD}'
+    volumes:
+      - ./config.yml:/app/config.yml:ro
 ```
 
 **2. Create your `config.yml`** (see [Configuration Guide](../users/config_rendering.mdx))

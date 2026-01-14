@@ -8,7 +8,7 @@ _category: ticket-system
 
 _inputs:
   placement: flat
-  alongside: [ id, use ]
+  alongside: [id, use]
   params:
     ticket_system_id: Target ticket system ID from registry
     ticket_search_criteria: Search criteria (TicketSearchCriteria object, dict, or None)
@@ -16,7 +16,7 @@ _defaults:
   ticket_search_criteria: null
 
 _output:
-  state_enum: [ ok, skipped, failed ]
+  state_enum: [ok, skipped, failed]
   description: Pipe returns a state and optional payload containing found tickets.
   payload_schema_ref: OpenTicketAI.Pipes.FetchTickets.Result
   examples:
@@ -25,8 +25,8 @@ _output:
       payload:
         found_tickets:
           - id: 12345
-            subject: "Example ticket"
-            status: "open"
+            subject: 'Example ticket'
+            status: 'open'
     skipped:
       state: skipped
       payload:

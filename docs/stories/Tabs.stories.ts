@@ -1,50 +1,48 @@
-import Tabs from '../src/components/vue/core/basic/Tabs.vue'
-import {ref} from 'vue'
-import type {Meta, StoryObj} from '@storybook/vue3'
-import { TONES, SIZES } from '../src/components/vue/core/design-system/tokens.ts'
+import Tabs from '../src/components/vue/core/basic/Tabs.vue';
+import { ref } from 'vue';
+import type { Meta, StoryObj } from '@storybook/vue3';
+import { TONES, SIZES } from '../src/components/vue/core/design-system/tokens.ts';
 
-const TAB_STYLES = ['underline', 'pill'] as const
+const TAB_STYLES = ['underline', 'pill'] as const;
 
 const meta: Meta<typeof Tabs> = {
-    title: 'Core/Tabs',
-    component: Tabs,
-    argTypes: {
-        style: {
-            control: 'select',
-            options: TAB_STYLES
-        },
-        tone: {
-            control: 'select',
-            options: TONES
-        },
-        size: {
-            control: 'select',
-            options: SIZES
-        },
-        vertical: {
-            control: 'boolean'
-        }
+  title: 'Core/Tabs',
+  component: Tabs,
+  argTypes: {
+    style: {
+      control: 'select',
+      options: TAB_STYLES,
     },
-    parameters: {
-        backgrounds: {
-            default: 'dark',
-            values: [
-                { name: 'dark', value: '#0b1220' }
-            ]
-        }
-    }
-}
-export default meta
+    tone: {
+      control: 'select',
+      options: TONES,
+    },
+    size: {
+      control: 'select',
+      options: SIZES,
+    },
+    vertical: {
+      control: 'boolean',
+    },
+  },
+  parameters: {
+    backgrounds: {
+      default: 'dark',
+      values: [{ name: 'dark', value: '#0b1220' }],
+    },
+  },
+};
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-    render: (args) => ({
-        components: {Tabs},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Tabs },
+    setup() {
+      return { args };
+    },
+    template: `
     <div class="p-8 bg-background-dark min-h-[400px]">
       <Tabs v-bind="args">
         <template #tab-0>
@@ -66,23 +64,23 @@ export const Default: Story = {
           </div>
         </template>
       </Tabs>
-    </div>`
-    }),
-    args: {
-        tabs: ['Overview', 'Features', 'Documentation'],
-        style: 'underline',
-        tone: 'primary',
-        size: 'md'
-    }
-}
+    </div>`,
+  }),
+  args: {
+    tabs: ['Overview', 'Features', 'Documentation'],
+    style: 'underline',
+    tone: 'primary',
+    size: 'md',
+  },
+};
 
 export const Pills: Story = {
-    render: (args) => ({
-        components: {Tabs},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Tabs },
+    setup() {
+      return { args };
+    },
+    template: `
     <div class="p-8 bg-background-dark min-h-[400px]">
       <Tabs v-bind="args">
         <template #tab-0>
@@ -104,23 +102,23 @@ export const Pills: Story = {
           </div>
         </template>
       </Tabs>
-    </div>`
-    }),
-    args: {
-        tabs: ['Dashboard', 'Analytics', 'Reports'],
-        style: 'pill',
-        tone: 'primary',
-        size: 'md'
-    }
-}
+    </div>`,
+  }),
+  args: {
+    tabs: ['Dashboard', 'Analytics', 'Reports'],
+    style: 'pill',
+    tone: 'primary',
+    size: 'md',
+  },
+};
 
 export const Sizes: Story = {
-    render: (args) => ({
-        components: {Tabs},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Tabs },
+    setup() {
+      return { args };
+    },
+    template: `
     <div class="p-8 bg-background-dark space-y-8">
       <div>
         <h3 class="text-white mb-4">Small Size</h3>
@@ -146,17 +144,17 @@ export const Sizes: Story = {
           <template #tab-2><div class="p-6 text-gray-300">Large tab content</div></template>
         </Tabs>
       </div>
-    </div>`
-    }),
-    args: {
-        tabs: ['Tab 1', 'Tab 2', 'Tab 3']
-    }
-}
+    </div>`,
+  }),
+  args: {
+    tabs: ['Tab 1', 'Tab 2', 'Tab 3'],
+  },
+};
 
 export const Tones: Story = {
-    render: () => ({
-        components: {Tabs},
-        template: `
+  render: () => ({
+    components: { Tabs },
+    template: `
     <div class="p-8 bg-background-dark space-y-8">
       <div>
         <h3 class="text-white mb-4">Primary Tone</h3>
@@ -182,17 +180,17 @@ export const Tones: Story = {
           <template #tab-2><div class="p-4 text-gray-300">Content</div></template>
         </Tabs>
       </div>
-    </div>`
-    })
-}
+    </div>`,
+  }),
+};
 
 export const Vertical: Story = {
-    render: (args) => ({
-        components: {Tabs},
-        setup() {
-            return {args}
-        },
-        template: `
+  render: args => ({
+    components: { Tabs },
+    setup() {
+      return { args };
+    },
+    template: `
     <div class="p-8 bg-background-dark min-h-[400px]">
       <Tabs v-bind="args">
         <template #tab-0>
@@ -223,25 +221,25 @@ export const Vertical: Story = {
           </div>
         </template>
       </Tabs>
-    </div>`
-    }),
-    args: {
-        tabs: ['General', 'Security', 'Privacy', 'Notifications'],
-        vertical: true,
-        style: 'pill',
-        tone: 'primary',
-        size: 'md'
-    }
-}
+    </div>`,
+  }),
+  args: {
+    tabs: ['General', 'Security', 'Privacy', 'Notifications'],
+    vertical: true,
+    style: 'pill',
+    tone: 'primary',
+    size: 'md',
+  },
+};
 
 export const WithVModel: Story = {
-    render: (args) => ({
-        components: {Tabs},
-        setup() {
-            const activeTab = ref(1)
-            return {args, activeTab}
-        },
-        template: `
+  render: args => ({
+    components: { Tabs },
+    setup() {
+      const activeTab = ref(1);
+      return { args, activeTab };
+    },
+    template: `
     <div class="p-8 bg-background-dark min-h-[400px]">
       <div class="mb-4 p-3 bg-surface-dark rounded-lg">
         <p class="text-sm text-gray-300">
@@ -288,12 +286,12 @@ export const WithVModel: Story = {
           Go to Tab C
         </button>
       </div>
-    </div>`
-    }),
-    args: {
-        tabs: ['Tab A', 'Tab B', 'Tab C'],
-        style: 'pill',
-        tone: 'primary',
-        size: 'md'
-    }
-}
+    </div>`,
+  }),
+  args: {
+    tabs: ['Tab A', 'Tab B', 'Tab C'],
+    style: 'pill',
+    tone: 'primary',
+    size: 'md',
+  },
+};

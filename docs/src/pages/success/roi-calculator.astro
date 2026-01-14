@@ -2,15 +2,15 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SuccessfullFormSubmisionCard from '../../components/vue/domain/SuccessfullFormSubmisionCard.vue';
 
-const title = "Thank You!";
-const description = "Your custom ROI analysis request has been received.";
+const title = 'Thank You!';
+const description = 'Your custom ROI analysis request has been received.';
 ---
 
 <BaseLayout title={title} description={description}>
-  <div slot="head" />
+  <div slot="head"></div>
 
-  <div class="min-h-screen bg-bg-1 flex items-center justify-center py-12 px-4">
-    <div class="max-w-3xl w-full">
+  <div class="flex min-h-screen items-center justify-center bg-bg-1 px-4 py-12">
+    <div class="w-full max-w-3xl">
       <SuccessfullFormSubmisionCard
         title="Request Received!"
         description="Thank you for your interest in a custom ROI analysis."
@@ -20,24 +20,51 @@ const description = "Your custom ROI analysis request has been received.";
         secondaryButtonHref="/"
         client:load
       >
-        <div class="bg-bg-2/50 rounded-xl p-6 mb-8 text-left">
-          <h2 class="text-xl font-semibold text-text-1 mb-3">What happens next?</h2>
+        <div class="bg-bg-2/50 mb-8 rounded-xl p-6 text-left">
+          <h2 class="mb-3 text-xl font-semibold text-text-1">What happens next?</h2>
           <ul class="space-y-3 text-text-2">
             <li class="flex items-start">
-              <svg class="w-5 h-5 text-primary-light mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <svg
+                class="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-primary-light"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <span>Our team will review your information within 1-2 business days</span>
             </li>
             <li class="flex items-start">
-              <svg class="w-5 h-5 text-primary-light mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <svg
+                class="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-primary-light"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <span>We'll prepare a customized ROI analysis based on your ticket volume</span>
             </li>
             <li class="flex items-start">
-              <svg class="w-5 h-5 text-primary-light mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <svg
+                class="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-primary-light"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <span>A member of our sales team will reach out to discuss your specific needs</span>
             </li>

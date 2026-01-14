@@ -2,13 +2,13 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SuccessfullFormSubmisionCard from '../../components/vue/domain/SuccessfullFormSubmisionCard.vue';
 
-const pageTitle = "Subscription Confirmed";
-const pageDescription = "Thank you for subscribing to the Open Ticket AI blog.";
+const pageTitle = 'Subscription Confirmed';
+const pageDescription = 'Thank you for subscribing to the Open Ticket AI blog.';
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <div class="min-h-screen bg-background-dark flex items-center justify-center px-4">
-    <div class="max-w-2xl w-full">
+  <div class="flex min-h-screen items-center justify-center bg-background-dark px-4">
+    <div class="w-full max-w-2xl">
       <SuccessfullFormSubmisionCard
         title="You're All Set!"
         description="Thank you for subscribing to the Open Ticket AI blog. We'll keep you updated with the latest on AI automation, engineering insights, and product updates."

@@ -1,5 +1,5 @@
-import { tv, type VariantProps } from 'tailwind-variants'
-import type { Variant, Tone, Size } from '../tokens.ts'
+import { tv, type VariantProps } from 'tailwind-variants';
+import type { Variant, Tone, Size } from '../tokens.ts';
 
 /**
  * Badge recipe - Small label/tag component
@@ -15,7 +15,7 @@ export const badge = tv({
     variant: {
       surface: 'border border-transparent',
       subtle: 'border border-transparent',
-      outline: 'border bg-transparent'
+      outline: 'border bg-transparent',
     } satisfies Record<Variant, string>,
     tone: {
       neutral: '',
@@ -23,12 +23,12 @@ export const badge = tv({
       success: '',
       warning: '',
       danger: '',
-      info: ''
+      info: '',
     } satisfies Record<Tone, string>,
     size: {
       sm: 'px-2 py-0.5 text-xs gap-1 rounded-md',
-      md: 'px-2.5 py-1 text-sm gap-1.5 rounded-lg'
-    } satisfies Record<Size, string>
+      md: 'px-2.5 py-1 text-sm gap-1.5 rounded-lg',
+    } satisfies Record<Size, string>,
   },
   compoundVariants: [
     // Surface variant colors
@@ -53,13 +53,13 @@ export const badge = tv({
     { variant: 'outline', tone: 'success', class: 'border-success text-success' },
     { variant: 'outline', tone: 'warning', class: 'border-warning text-warning' },
     { variant: 'outline', tone: 'danger', class: 'border-danger text-danger' },
-    { variant: 'outline', tone: 'info', class: 'border-info text-info' }
+    { variant: 'outline', tone: 'info', class: 'border-info text-info' },
   ],
   defaultVariants: {
     variant: 'surface',
     tone: 'primary',
-    size: 'md'
-  }
-})
+    size: 'md',
+  },
+});
 
-export type BadgeVariants = VariantProps<typeof badge>
+export type BadgeVariants = VariantProps<typeof badge>;
