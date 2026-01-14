@@ -1,12 +1,12 @@
 <template>
-  <TabGroup 
-    :selected-index="selectedIndex" 
+  <TabGroup
+    :selected-index="selectedIndex"
     :vertical="vertical"
     as="div"
     :class="containerClass"
     @change="handleChange"
   >
-    <TabList 
+    <TabList
       :class="tabsStyles.list()"
       :aria-label="ariaLabel"
     >
@@ -43,8 +43,8 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
-import { tabs as tabsRecipe } from '../../../../design-system/recipes'
-import type { Tone, Size } from '../../../../design-system/tokens'
+import { tabs as tabsRecipe } from '../design-system/recipes'
+import type { Tone, Size } from '../design-system/tokens.ts'
 
 type TabStyle = 'underline' | 'pill'
 
@@ -104,11 +104,11 @@ const containerClass = computed(() => {
 
 const tabPanelsClass = computed(() => {
   const classes = []
-  
+
   if (props.vertical) {
     classes.push('flex-1')
   }
-  
+
   return classes.join(' ')
 })
 </script>

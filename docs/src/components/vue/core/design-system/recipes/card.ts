@@ -1,10 +1,10 @@
 import { tv, type VariantProps } from 'tailwind-variants'
-import { surface } from './surface'
-import type { Size } from '../tokens'
+import { surface } from './surface.ts'
+import type { Size } from '../tokens.ts'
 
 /**
  * Card recipe - Composable card component
- * 
+ *
  * Builds on the surface recipe with additional spacing variants.
  * Use for any card-like container components.
  */

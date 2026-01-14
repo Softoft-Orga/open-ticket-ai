@@ -40,8 +40,8 @@ import {
   LightBulbIcon,
   InformationCircleIcon
 } from '@heroicons/vue/24/outline'
-import { alert } from '../../../../design-system/recipes'
-import type { Variant, Tone } from '../../../../design-system/tokens'
+import { alert } from '../design-system/recipes'
+import type { Variant, Tone } from '../design-system/tokens.ts'
 
 type AlertType = 'info' | 'success' | 'warning' | 'danger' | 'tip'
 
@@ -90,7 +90,7 @@ const iconComponent = computed(() => {
 const iconClasses = computed(() => {
   const sizeClass = 'w-6 h-6'
   let colorClass = ''
-  
+
   switch (props.type) {
     case 'success':
       colorClass = 'text-success'
@@ -107,7 +107,7 @@ const iconClasses = computed(() => {
     default:
       colorClass = 'text-info'
   }
-  
+
   return `${sizeClass} ${colorClass}`
 })
 

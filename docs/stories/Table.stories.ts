@@ -2,7 +2,7 @@ import Table from '../src/components/vue/core/table/Table.vue'
 import Row from '../src/components/vue/core/table/Row.vue'
 import C from '../src/components/vue/core/table/C.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import {ELEVATIONS, RADII} from "../src/design-system/tokens.ts";
+import {ELEVATIONS, RADII} from "../src/components/vue/core/design-system/tokens.ts";
 
 const meta: Meta<typeof Table> = {
     title: 'Core/Table',

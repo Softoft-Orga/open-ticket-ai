@@ -1,213 +1,143 @@
 <template>
-  <div>
-    <Button
-      variant="surface"
-      tone="primary"
-      @click="isOpen = true"
-    >
-      {{ buttonText }}
-    </Button>
-
-    <TransitionRoot
-      :show="isOpen"
-      as="template"
-    >
-      <Dialog
-        as="div"
-        class="relative z-50"
-        @close="isOpen = false"
-      >
-        <TransitionChild
-          v-bind="fade"
-          as="template"
+    <div>
+        <Button
+            tone="primary"
+            variant="surface"
+            @click="isOpen = true"
         >
-          <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" />
-        </TransitionChild>
+            <slot/>
+        </Button>
 
-        <div class="fixed inset-0 overflow-y-auto">
-          <div class="flex min-h-full items-center justify-center p-4">
-            <TransitionChild
-              v-bind="fadeScaleSm"
-              as="template"
+        <Modal
+            :open="isOpen"
+            :title="formTitle"
+            @close="isOpen = false"
+        >
+            <form
+                :action="successActionUrl"
+                class="space-y-4"
+                data-netlify="true"
+                method="POST"
+                name="contact-sales"
             >
-              <DialogPanel :class="panelClasses">
-                <div class="flex items-start justify-between mb-6">
-                  <DialogTitle
-                    as="h3"
-                    class="text-2xl font-bold text-white"
-                  >
-                    {{ formTitle }}
-                  </DialogTitle>
-                  <button
-                    type="button"
-                    :class="closeButtonClasses"
-                    @click="isOpen = false"
-                  >
-                    <XMarkIcon
-                      class="w-6 h-6"
-                      aria-hidden="true"
-                    />
-                  </button>
-                </div>
-
-                <form
-                  name="contact-sales"
-                  method="POST"
-                  action="/success/contact-sales"
-                  data-netlify="true"
-                  netlify-honeypot="bot-field"
-                  class="space-y-4"
-                >
-                  <input
+                <input
                     type="hidden"
                     name="form-name"
                     value="contact-sales"
-                  >
-                  <input
-                    type="hidden"
-                    name="bot-field"
-                  >
+                >
 
-                  <div>
+                <div>
                     <label
-                      for="subject"
-                      class="block text-sm font-medium text-text-1 mb-2"
+                        class="block text-sm font-medium text-text-1 mb-2"
+                        for="subject"
                     >
-                      Subject
+                        Subject
                     </label>
                     <input
-                      id="subject"
-                      v-model="formData.subject"
-                      type="text"
-                      name="subject"
-                      required
-                      :class="inputClasses"
+                        id="subject"
+                        v-model="formData.subject"
+                        :class="inputClasses"
+                        name="subject"
+                        required
+                        type="text"
                     >
-                  </div>
+                </div>
 
-                  <div>
+                <div>
                     <label
-                      for="email"
-                      class="block text-sm font-medium text-text-1 mb-2"
+                        class="block text-sm font-medium text-text-1 mb-2"
+                        for="email"
                     >
-                      Email
+                        Email
                     </label>
                     <input
-                      id="email"
-                      v-model="formData.email"
-                      type="email"
-                      name="email"
-                      required
-                      :class="inputClasses"
+                        id="email"
+                        v-model="formData.email"
+                        :class="inputClasses"
+                        name="email"
+                        required
+                        type="email"
                     >
-                  </div>
+                </div>
 
-                  <div>
+                <div>
                     <label
-                      for="message"
-                      class="block text-sm font-medium text-text-1 mb-2"
+                        class="block text-sm font-medium text-text-1 mb-2"
+                        for="message"
                     >
-                      Message
+                        Message
                     </label>
                     <textarea
-                      id="message"
-                      v-model="formData.message"
-                      name="message"
-                      rows="4"
-                      required
-                      :class="inputClasses"
+                        id="message"
+                        v-model="formData.message"
+                        :class="inputClasses"
+                        name="message"
+                        required
+                        rows="4"
                     />
-                  </div>
+                </div>
 
-                  <div class="flex gap-3 pt-4">
+                <div class="flex gap-3 pt-4">
                     <Button
-                      type="submit"
-                      variant="surface"
-                      tone="primary"
-                      class="flex-1"
+                        class="flex-1"
+                        tone="primary"
+                        type="submit"
+                        variant="surface"
                     >
-                      Submit
+                        Submit
                     </Button>
                     <Button
-                      type="button"
-                      variant="outline"
-                      tone="neutral"
-                      class="flex-1"
-                      @click="handleCancel"
+                        class="flex-1"
+                        tone="neutral"
+                        type="button"
+                        variant="outline"
+                        @click="handleCancel"
                     >
-                      Cancel
+                        Cancel
                     </Button>
-                  </div>
-                </form>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
-        </div>
-      </Dialog>
-    </TransitionRoot>
-  </div>
+                </div>
+            </form>
+        </Modal>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
+import {computed, ref} from 'vue'
 import Button from '../core/basic/Button.vue'
-import { surface } from '../../../design-system/recipes/surface'
-import { button } from '../../../design-system/recipes/button'
-import { input } from '../../../design-system/recipes/input'
-import { fade, fadeScaleSm } from '../core/transitions/presets'
+import Modal from '../core/basic/Modal.vue'
+import {input} from '../core/design-system/recipes'
 
 interface Props {
-  buttonText: string
-  formTitle: string
+    formTitle: string
+    successActionUrl?: string
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+    successActionUrl: '/success/contact-sales'
+})
 
 const isOpen = ref(false)
 const formData = ref({
-  subject: props.formTitle,
-  email: '',
-  message: ''
-})
-
-const handleCancel = () => {
-  isOpen.value = false
-  formData.value = {
     subject: props.formTitle,
     email: '',
     message: ''
-  }
+})
+
+const handleCancel = () => {
+    isOpen.value = false
+    formData.value = {
+        subject: props.formTitle,
+        email: '',
+        message: ''
+    }
 }
 
-const panelClasses = computed(() => {
-  return [
-    'w-full max-w-2xl transform overflow-hidden text-left align-middle transition-all',
-    surface({
-      variant: 'surface',
-      tone: 'neutral',
-      radius: '2xl',
-      elevation: 'lg'
-    }),
-    'p-8'
-  ].join(' ')
-})
-
-const closeButtonClasses = computed(() => {
-  return button({
-    variant: 'subtle',
-    tone: 'neutral',
-    size: 'sm',
-    radius: 'lg'
-  })
-})
 
 const inputClasses = computed(() => {
-  return input({
-    tone: 'neutral',
-    size: 'md',
-    radius: 'lg'
-  })
+    return input({
+        tone: 'neutral',
+        size: 'md',
+        radius: 'lg'
+    })
 })
 </script>

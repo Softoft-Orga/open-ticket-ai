@@ -1,9 +1,9 @@
 import { tv, type VariantProps } from 'tailwind-variants'
-import type { Size } from '../tokens'
+import type { Size } from '../tokens.ts'
 
 /**
  * Prose recipe - MDX/Markdown content wrapper
- * 
+ *
  * Provides consistent typography styling for documentation content.
  * Compatible with dark theme and works alongside @tailwindcss/typography.
  * Apply to wrapper elements containing rendered markdown/MDX.

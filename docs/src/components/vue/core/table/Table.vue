@@ -23,8 +23,8 @@
 
 <script lang="ts" setup>
 import {computed, provide, toRef, withDefaults} from 'vue'
-import { card } from '../../../../design-system/recipes/card'
-import type {Radius, Elevation} from '../../../../design-system/tokens'
+import { card } from '../design-system/recipes/card'
+import type {Radius, Elevation} from '../design-system/tokens.ts'
 
 export type TableWidth = 'stretch' | 'auto' | 'full'
 
@@ -74,7 +74,7 @@ const containerClasses = computed(() => {
   if (!props.bordered) {
     return ''
   }
-  
+
   return card({
     variant: 'surface',
     radius: props.radius,

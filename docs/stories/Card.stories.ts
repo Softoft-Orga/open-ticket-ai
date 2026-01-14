@@ -1,7 +1,7 @@
 import Card from '../src/components/vue/core/basic/Card.vue'
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { VARIANTS, TONES, SIZES, RADII, ELEVATIONS } from '../src/design-system/tokens'
+import { VARIANTS, TONES, SIZES, RADII, ELEVATIONS } from '../src/components/vue/core/design-system/tokens.ts'
 
 const meta: Meta<typeof Card> = {
     title: 'Core/Card',

@@ -1,11 +1,11 @@
 import { tv, type VariantProps } from 'tailwind-variants'
-import type { Variant, Tone, Radius, Elevation, Hoverable, Highlighted } from '../tokens'
+import type { Variant, Tone, Radius, Elevation, Hoverable, Highlighted } from '../tokens.ts'
 
 type Intensity = 'none' | 'soft'
 
 /**
  * Surface recipe - Container surface styles
- * 
+ *
  * Provides consistent surface styling with support for variants, tones, radius,
  * elevation, and interactive states. Use `intensity` to control background opacity
  * and reduce the need for large compoundVariants.
@@ -57,7 +57,7 @@ export const surface = tv({
     { variant: 'surface', intensity: 'soft', tone: 'warning', class: 'bg-warning/5' },
     { variant: 'surface', intensity: 'soft', tone: 'danger', class: 'bg-danger/5' },
     { variant: 'surface', intensity: 'soft', tone: 'info', class: 'bg-info/5' },
-    
+
     // Subtle variant with soft intensity
     { variant: 'subtle', intensity: 'soft', tone: 'primary', class: 'bg-primary/10' },
     { variant: 'subtle', intensity: 'soft', tone: 'success', class: 'bg-success/10' },

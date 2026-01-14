@@ -15,7 +15,7 @@
       >
         <span class="font-semibold text-lg text-white">{{ title }}</span>
       </slot>
-      <svg 
+      <svg
         :class="[
           'w-5 h-5 transition-transform duration-300 flex-shrink-0',
           open ? 'rotate-180' : 'rotate-0',
@@ -26,10 +26,10 @@
         stroke="currentColor"
         aria-hidden="true"
       >
-        <path 
-          stroke-linecap="round" 
-          stroke-linejoin="round" 
-          stroke-width="2" 
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
           d="M19 9l-7 7-7-7"
         />
       </svg>
@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { surface, button } from '../../../../design-system/recipes'
+import { surface, button } from '../design-system/recipes'
 
 type Variant = 'default' | 'ghost' | 'bordered' | 'gradient'
 
@@ -77,33 +77,33 @@ const props = withDefaults(defineProps<Props>(), {
 // Surface styling using design-system recipes
 const surfaceClasses = computed(() => {
   const base = 'transition-all duration-200'
-  
+
   const variants = {
     default: 'border-b border-border-dark',
     ghost: '',
     bordered: surface({ variant: 'surface', radius: 'lg' }) + ' mb-2 overflow-hidden',
     gradient: surface({ variant: 'surface', tone: 'primary', intensity: 'soft', radius: 'lg' }) + ' mb-2 overflow-hidden'
   }
-  
+
   return `${base} ${variants[props.variant]}`
 })
 
 // Button styling using design-system button recipe
 const buttonClasses = computed(() => {
-  const baseButton = button({ 
-    variant: 'subtle', 
+  const baseButton = button({
+    variant: 'subtle',
     tone: 'neutral',
     radius: 'lg',
     disabled: props.disabled
   })
-  
+
   const variants = {
     default: 'py-4 px-0',
     ghost: 'py-3 px-0',
     bordered: 'py-4 px-5',
     gradient: 'py-4 px-5 backdrop-blur-sm'
   }
-  
+
   return `${baseButton} w-full justify-between items-center text-left ${variants[props.variant]}`
 })
 
@@ -114,7 +114,7 @@ const iconClasses = computed(() => {
     bordered: 'text-primary',
     gradient: 'text-primary'
   }
-  
+
   return variants[props.variant]
 })
 
@@ -125,7 +125,7 @@ const contentClasses = computed(() => {
     bordered: 'px-5 pb-4 text-text-dim',
     gradient: 'px-5 pb-4 text-text-dim'
   }
-  
+
   return variants[props.variant]
 })
 </script>

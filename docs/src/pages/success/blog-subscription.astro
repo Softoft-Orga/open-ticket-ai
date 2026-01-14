@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Button from '../../components/vue/core/basic/Button.vue';
+import SuccessfullFormSubmisionCard from '../../components/vue/domain/SuccessfullFormSubmisionCard.vue';
 
 const pageTitle = "Subscription Confirmed";
 const pageDescription = "Thank you for subscribing to the Open Ticket AI blog.";
@@ -8,35 +8,16 @@ const pageDescription = "Thank you for subscribing to the Open Ticket AI blog.";
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <div class="min-h-screen bg-background-dark flex items-center justify-center px-4">
-    <div class="max-w-2xl w-full text-center">
-      <div class="mb-8 flex justify-center">
-        <div class="size-24 rounded-full bg-primary/20 flex items-center justify-center">
-          <svg class="w-12 h-12 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-      </div>
-
-      <h1 class="font-display text-5xl font-bold text-white mb-6">
-        You're All Set!
-      </h1>
-
-      <p class="text-xl text-text-dim mb-12 leading-relaxed">
-        Thank you for subscribing to the Open Ticket AI blog. We'll keep you updated with the latest on AI automation, engineering insights, and product updates.
-      </p>
-
-      <div class="flex flex-wrap gap-4 justify-center">
-        <a href="/blog/" class="inline-block">
-          <Button variant="subtle" size="lg" client:load>
-            Back to Blog
-          </Button>
-        </a>
-        <a href="/" class="inline-block">
-          <Button variant="outline" size="lg" client:load>
-            Go to Homepage
-          </Button>
-        </a>
-      </div>
+    <div class="max-w-2xl w-full">
+      <SuccessfullFormSubmisionCard
+        title="You're All Set!"
+        description="Thank you for subscribing to the Open Ticket AI blog. We'll keep you updated with the latest on AI automation, engineering insights, and product updates."
+        primaryButtonText="Back to Blog"
+        primaryButtonHref="/blog/"
+        secondaryButtonText="Go to Homepage"
+        secondaryButtonHref="/"
+        client:load
+      />
     </div>
   </div>
 </BaseLayout>

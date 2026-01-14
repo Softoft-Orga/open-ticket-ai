@@ -12,8 +12,8 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { button } from '../../../../design-system/recipes'
-import type { Variant, Tone, Size, Radius } from '../../../../design-system/tokens'
+import { button } from '../design-system/recipes'
+import type { Variant, Tone, Size, Radius } from '../design-system/tokens.ts'
 
 interface Props {
   variant?: Variant

@@ -4,8 +4,8 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { badge } from '../../../../design-system/recipes'
-import type { Variant, Tone, Size } from '../../../../design-system/tokens'
+import { badge } from '../design-system/recipes'
+import type { Variant, Tone, Size } from '../design-system/tokens.ts'
 
 interface Props {
   variant?: Variant

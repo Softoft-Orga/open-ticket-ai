@@ -1,6 +1,6 @@
 import Button from '../src/components/vue/core/basic/Button.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { SIZES, TONES, RADII, VARIANTS } from '../src/design-system/tokens'
+import { SIZES, TONES, RADII, VARIANTS } from '../src/components/vue/core/design-system/tokens.ts'
 
 const meta: Meta<typeof Button> = {
     title: 'Core/Button',

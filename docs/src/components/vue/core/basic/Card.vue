@@ -38,8 +38,8 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { card } from '../../../../design-system/recipes'
-import type { Variant, Tone, Size, Radius, Elevation } from '../../../../design-system/tokens'
+import { card } from '../design-system/recipes'
+import type { Variant, Tone, Size, Radius, Elevation } from '../design-system/tokens.ts'
 
 export interface CardProps {
   /**

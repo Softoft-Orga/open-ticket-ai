@@ -1,11 +1,11 @@
 import { tv, type VariantProps } from 'tailwind-variants'
-import type { Tone } from '../tokens'
+import type { Tone } from '../tokens.ts'
 
 type Emphasis = 'normal' | 'dim' | 'strong'
 
 /**
  * Text recipe - Text styles used across components
- * 
+ *
  * Provides consistent text styling with tone and emphasis variants.
  * Use for titles, body text, and dimmed text across the design system.
  */

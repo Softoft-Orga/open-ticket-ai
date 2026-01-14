@@ -1,7 +1,7 @@
 import Tabs from '../src/components/vue/core/basic/Tabs.vue'
 import {ref} from 'vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { TONES, SIZES } from '../src/design-system/tokens'
+import { TONES, SIZES } from '../src/components/vue/core/design-system/tokens.ts'
 
 const TAB_STYLES = ['underline', 'pill'] as const
 
@@ -269,19 +269,19 @@ export const WithVModel: Story = {
         </template>
       </Tabs>
       <div class="mt-6 flex gap-2">
-        <button 
+        <button
           @click="activeTab = 0"
           class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
         >
           Go to Tab A
         </button>
-        <button 
+        <button
           @click="activeTab = 1"
           class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
         >
           Go to Tab B
         </button>
-        <button 
+        <button
           @click="activeTab = 2"
           class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
         >

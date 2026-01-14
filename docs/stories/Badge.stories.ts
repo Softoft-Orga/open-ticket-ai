@@ -1,6 +1,6 @@
 import Badge from '../src/components/vue/core/basic/Badge.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
-import { TONES, SIZES, VARIANTS } from '../src/design-system/tokens'
+import { TONES, SIZES, VARIANTS } from '../src/components/vue/core/design-system/tokens.ts'
 
 const meta: Meta<typeof Badge> = {
     title: 'Core/Badge',

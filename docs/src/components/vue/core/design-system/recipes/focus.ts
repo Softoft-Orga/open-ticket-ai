@@ -1,9 +1,9 @@
 import { tv, type VariantProps } from 'tailwind-variants'
-import type { Tone } from '../tokens'
+import type { Tone } from '../tokens.ts'
 
 /**
  * Focus ring recipe - Focus ring styles for interactive elements
- * 
+ *
  * Provides consistent focus ring styling with tone-based colors.
  * Use for buttons, inputs, and other interactive components.
  */

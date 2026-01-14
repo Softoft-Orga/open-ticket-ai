@@ -1,12 +1,12 @@
 import { tv, type VariantProps } from 'tailwind-variants'
-import type { Variant, Tone, Size, Radius } from '../tokens'
+import type { Variant, Tone, Size, Radius } from '../tokens.ts'
 
 /**
  * Button recipe - Interactive button component
  *
  * Supports surface, outline, and subtle variants with tone-based colors.
  * Includes focus ring, loading, disabled, and block states.
- * 
+ *
  * All variant keys use strict token types from tokens.ts.
  */
 export const button = tv({

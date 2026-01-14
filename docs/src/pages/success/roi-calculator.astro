@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Card from '../../components/vue/core/basic/Card.vue';
-import Button from '../../components/vue/core/basic/Button.vue';
+import SuccessfullFormSubmisionCard from '../../components/vue/domain/SuccessfullFormSubmisionCard.vue';
 
 const title = "Thank You!";
 const description = "Your custom ROI analysis request has been received.";
@@ -11,22 +10,16 @@ const description = "Your custom ROI analysis request has been received.";
   <div slot="head" />
 
   <div class="min-h-screen bg-bg-1 flex items-center justify-center py-12 px-4">
-    <div class="max-w-2xl w-full">
-      <Card client:load tone="primary" class="text-center">
-        <div class="mb-6">
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 mb-4">
-            <svg class="w-8 h-8 text-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-          </div>
-          <h1 class="text-3xl md:text-4xl font-bold text-text-1 mb-4">
-            Request Received!
-          </h1>
-          <p class="text-lg text-text-2 mb-6">
-            Thank you for your interest in a custom ROI analysis.
-          </p>
-        </div>
-
+    <div class="max-w-3xl w-full">
+      <SuccessfullFormSubmisionCard
+        title="Request Received!"
+        description="Thank you for your interest in a custom ROI analysis."
+        primaryButtonText="Back to ROI Calculator"
+        primaryButtonHref="/products/roi-calculator"
+        secondaryButtonText="Return to Home"
+        secondaryButtonHref="/"
+        client:load
+      >
         <div class="bg-bg-2/50 rounded-xl p-6 mb-8 text-left">
           <h2 class="text-xl font-semibold text-text-1 mb-3">What happens next?</h2>
           <ul class="space-y-3 text-text-2">
@@ -50,16 +43,7 @@ const description = "Your custom ROI analysis request has been received.";
             </li>
           </ul>
         </div>
-
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button client:load href="/products/roi-calculator" tone="primary">
-            Back to ROI Calculator
-          </Button>
-          <Button client:load href="/" variant="subtle" tone="neutral">
-            Return to Home
-          </Button>
-        </div>
-      </Card>
+      </SuccessfullFormSubmisionCard>
     </div>
   </div>
 </BaseLayout>

@@ -51,9 +51,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { RadioGroupOption } from '@headlessui/vue'
-import { card } from '../../../../design-system/recipes'
-import { focusRing } from '../../../../design-system/recipes'
-import type { Variant, Tone } from '../../../../design-system/tokens'
+import { card } from '../design-system/recipes'
+import { focusRing } from '../design-system/recipes'
+import type { Variant, Tone } from '../design-system/tokens.ts'
 
 interface Props {
   value: string | number

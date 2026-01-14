@@ -1,6 +1,6 @@
 import Alert from '../src/components/vue/core/basic/Alert.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
-import { VARIANTS } from '../src/design-system/tokens'
+import { VARIANTS } from '../src/components/vue/core/design-system/tokens.ts'
 
 const meta: Meta<typeof Alert> = {
   title: 'Docs/Alert',

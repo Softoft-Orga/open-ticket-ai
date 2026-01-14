@@ -1,11 +1,11 @@
 import { tv, type VariantProps } from 'tailwind-variants'
-import type { Tone, Size, Radius } from '../tokens'
+import type { Tone, Size, Radius } from '../tokens.ts'
 
 type Validation = 'default' | 'error' | 'success'
 
 /**
  * Input recipe - Text input, textarea, and select styling
- * 
+ *
  * Provides consistent styling for form inputs with validation variants.
  * Includes focus ring and support for error/success states.
  */

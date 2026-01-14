@@ -76,10 +76,10 @@
 import { computed } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
-import { surface } from '../../../../design-system/recipes/surface'
-import { button } from '../../../../design-system/recipes/button'
+import { surface } from '../design-system/recipes/surface'
+import { button } from '../design-system/recipes/button'
 import { fade, fadeScaleSm } from '../transitions/presets'
-import type { Tone, Size } from '../../../../design-system/tokens'
+import type { Tone, Size } from '../design-system/tokens.ts'
 
 interface Props {
   open: boolean
