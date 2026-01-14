@@ -43,49 +43,90 @@ docs/
         NavBar.integration.test.ts
 ```
 
-**Example Test Pattern** (AI-friendly, declarative):
+**Example Test Pattern** (AI-friendly, behavior-focused):
 
 ```typescript
 // tests/unit/components/core/Button.test.ts
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
 import Button from '@/components/vue/core/basic/Button.vue';
+import { button } from '@/components/vue/core/design-system/recipes';
 
 describe('Button', () => {
-  it('renders with default props', () => {
+  it('renders slot content', () => {
     const wrapper = mount(Button, { slots: { default: 'Click me' } });
     expect(wrapper.text()).toBe('Click me');
-    expect(wrapper.classes()).toContain('bg-primary');
   });
 
-  it('applies variant classes correctly', () => {
+  it('applies design system recipe classes', () => {
     const wrapper = mount(Button, {
-      props: { variant: 'outline', tone: 'success' },
+      props: { variant: 'outline', tone: 'success', size: 'md', radius: 'xl' },
       slots: { default: 'Save' },
     });
-    expect(wrapper.classes()).toContain('border-success');
+    // Test against the recipe output, not hardcoded classes
+    const expectedClasses = button({
+      variant: 'outline',
+      tone: 'success',
+      size: 'md',
+      radius: 'xl',
+    });
+    expect(wrapper.attributes('class')).toBe(expectedClasses);
   });
 
-  it('disables button when disabled prop is true', () => {
+  it('becomes disabled when disabled prop is true', () => {
     const wrapper = mount(Button, {
       props: { disabled: true },
       slots: { default: 'Disabled' },
     });
     expect(wrapper.attributes('disabled')).toBeDefined();
+    expect(wrapper.element).toBeDisabled();
+  });
+
+  it('emits click event when clicked', async () => {
+    const wrapper = mount(Button, { slots: { default: 'Click' } });
+    await wrapper.trigger('click');
+    expect(wrapper.emitted('click')).toHaveLength(1);
   });
 });
 ```
 
 **AI Agent Benefits**:
 
-- **Clear test names** describe exact behavior
-- **Prop-based testing** maps directly to component API
-- **CSS class assertions** validate design system usage
-- Tests break immediately when components change
+- **Behavior-focused tests** verify component functionality, not implementation details
+- **Recipe-based assertions** use the same design system source of truth
+- Tests remain stable when design system recipes are updated
+- **Event testing** validates component interactions
+- Tests automatically adapt when design tokens change
+
+**Why This Approach is Better**:
+
+Testing against recipe outputs instead of hardcoded CSS classes means:
+
+- When design system changes (e.g., `bg-primary` becomes `bg-brand-500`), tests still pass
+- Tests verify the component correctly applies recipes, not specific class names
+- AI agents can update recipes without breaking tests
+- Maintenance is minimal - only update tests when behavior changes, not styling
 
 #### **B. Visual Regression Testing with Storybook**
 
-**Why**: Catch unintended UI changes automatically.
+**Why**: Catch unintended UI changes automatically through visual snapshots.
+
+**How it Works**:
+
+Visual regression testing compares screenshots of components before and after changes:
+
+1. **Baseline**: First run creates reference screenshots of all Storybook stories
+2. **Comparison**: Subsequent runs compare new screenshots against baselines
+3. **Review**: Differences are flagged for human review
+4. **Update**: Approved changes become the new baseline
+
+**Determining Intent**:
+
+The test doesn't "know" if a change is intended - that's **your job**:
+
+- ✅ **Intended change**: You review the diff, approve it, and update the baseline
+- ❌ **Unintended change**: The diff reveals a bug; you fix the code and re-run
+- 🔍 **Review workflow**: Use tools like Percy, Chromatic, or Playwright's trace viewer
 
 **Implementation**:
 
@@ -107,36 +148,98 @@ Add to `package.json`:
 **Benefits**:
 
 - Existing stories become automated tests
-- AI can update stories to fix broken tests
-- Visual diffs catch subtle CSS changes
+- Catches subtle CSS bugs (margin shifts, color changes, layout breaks)
+- AI can help review diffs by describing what changed
+- Human approval required for baseline updates (prevents auto-accepting bugs)
+
+**Best Practice**:
+
+Use visual regression for **layout and appearance**, unit tests for **behavior and logic**.
 
 #### **C. Contract Testing for Component Props**
 
-**Why**: Ensure component APIs remain stable.
+**Why**: Ensure component APIs remain stable and use design system tokens consistently.
 
-**Pattern**: Use TypeScript + Vitest to validate prop types:
+**Pattern**: Use TypeScript + Vitest to validate prop types against design system tokens:
 
 ```typescript
-// tests/unit/components/contracts/Button.contract.test.ts
+// tests/unit/components/contracts/DesignSystemTokens.contract.test.ts
 import { describe, it, expectTypeOf } from 'vitest';
+import type { Variant, Tone, Size, Radius } from '@/components/vue/core/design-system/tokens';
+
+// Import all components that should use design system tokens
 import type Button from '@/components/vue/core/basic/Button.vue';
+import type Badge from '@/components/vue/core/basic/Badge.vue';
+import type Card from '@/components/vue/core/basic/Card.vue';
+import type Modal from '@/components/vue/core/basic/Modal.vue';
 
-type ButtonProps = InstanceType<typeof Button>['$props'];
+describe('Design System Token Contracts', () => {
+  describe('Variant prop types', () => {
+    it('Button uses Variant type', () => {
+      type ButtonProps = InstanceType<typeof Button>['$props'];
+      expectTypeOf<ButtonProps['variant']>().toEqualTypeOf<Variant | undefined>();
+    });
 
-describe('Button Contract', () => {
-  it('enforces strict variant types', () => {
-    expectTypeOf<ButtonProps['variant']>().toEqualTypeOf<
-      'surface' | 'outline' | 'subtle' | undefined
-    >();
+    it('Badge uses Variant type', () => {
+      type BadgeProps = InstanceType<typeof Badge>['$props'];
+      expectTypeOf<BadgeProps['variant']>().toEqualTypeOf<Variant | undefined>();
+    });
+
+    it('Card uses Variant type', () => {
+      type CardProps = InstanceType<typeof Card>['$props'];
+      expectTypeOf<CardProps['variant']>().toEqualTypeOf<Variant | undefined>();
+    });
   });
 
-  it('enforces strict tone types', () => {
-    expectTypeOf<ButtonProps['tone']>().toEqualTypeOf<
-      'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | undefined
-    >();
+  describe('Tone prop types', () => {
+    it('Button uses Tone type', () => {
+      type ButtonProps = InstanceType<typeof Button>['$props'];
+      expectTypeOf<ButtonProps['tone']>().toEqualTypeOf<Tone | undefined>();
+    });
+
+    it('Badge uses Tone type', () => {
+      type BadgeProps = InstanceType<typeof Badge>['$props'];
+      expectTypeOf<BadgeProps['tone']>().toEqualTypeOf<Tone | undefined>();
+    });
+
+    it('Modal uses Tone type', () => {
+      type ModalProps = InstanceType<typeof Modal>['$props'];
+      expectTypeOf<ModalProps['tone']>().toEqualTypeOf<Tone | undefined>();
+    });
+  });
+
+  describe('Size prop types', () => {
+    it('Button uses Size type', () => {
+      type ButtonProps = InstanceType<typeof Button>['$props'];
+      expectTypeOf<ButtonProps['size']>().toEqualTypeOf<Size | undefined>();
+    });
+
+    it('Badge uses Size type', () => {
+      type BadgeProps = InstanceType<typeof Badge>['$props'];
+      expectTypeOf<BadgeProps['size']>().toEqualTypeOf<Size | undefined>();
+    });
+  });
+
+  describe('Radius prop types', () => {
+    it('Button uses Radius type', () => {
+      type ButtonProps = InstanceType<typeof Button>['$props'];
+      expectTypeOf<ButtonProps['radius']>().toEqualTypeOf<Radius | undefined>();
+    });
+
+    it('Card uses Radius type', () => {
+      type CardProps = InstanceType<typeof Card>['$props'];
+      expectTypeOf<CardProps['radius']>().toEqualTypeOf<Radius | undefined>();
+    });
   });
 });
 ```
+
+**Benefits**:
+
+- **Centralized validation**: One test suite ensures all components use correct token types
+- **Prevents drift**: Components can't use custom variants like `'primary' | 'secondary'` instead of the design system `Variant` type
+- **AI-friendly**: When adding a new component, AI knows to add it to these tests
+- **Compile-time safety**: TypeScript enforces these constraints during development
 
 ---
 
@@ -247,6 +350,41 @@ import UiTransitionFadeScale from '../transitions/UiTransitionFadeScale.vue';
 
 **AI Rule**: When creating/updating modals, dialogs, dropdowns, or slide-overs, ALWAYS use transition wrappers from `AGENTS.md`.
 
+**Copilot Prompt for Implementing This Change**:
+
+```
+@workspace Update the Modal component in /docs/src/components/vue/core/basic/Modal.vue to use
+the transition components. Follow these requirements:
+
+1. Import UiTransitionFade and UiTransitionFadeScale from '../transitions/'
+2. Wrap the backdrop (fixed inset-0 bg-black/80 div) with UiTransitionFade
+3. Wrap the DialogPanel with UiTransitionFadeScale using strength="sm"
+4. Ensure TransitionRoot wraps both transitions with :show="open" and as="template"
+5. Follow the exact pattern shown in /docs/src/components/vue/core/transitions/AGENTS.md
+6. Do not remove any existing functionality - only add the transitions
+7. Test that the modal opens and closes smoothly with the new transitions
+
+Reference the transition presets in /docs/src/components/vue/core/transitions/presets.ts
+for the correct transition classes. The transitions should support motion-reduce preferences.
+```
+
+**For Batch Updates Across Multiple Components**:
+
+```
+@workspace Audit all interactive components in /docs/src/components/vue/core and add
+appropriate transitions where missing. For each component:
+
+1. Modal, Dialog: Use UiTransitionFade for backdrop + UiTransitionFadeScale for panel
+2. Dropdown, Menu, Popover: Use UiTransitionSlide with direction='down'
+3. Slide-over panels: Use UiTransitionSlide with direction='left' or 'right'
+4. Toast notifications: Use UiTransitionSlide with direction='up'
+5. Accordion: Optional - only if smooth collapse is needed
+
+Follow the transition guidelines in /docs/src/components/vue/core/transitions/AGENTS.md.
+Ensure all transitions include motion-reduce support. Update COMPONENTS.md for any
+components that now have transitions.
+```
+
 ### 2.4 ESLint Violations
 
 **Current Issues** (from `npm run lint`):
@@ -283,6 +421,55 @@ npx lint-staged
   }
 }
 ```
+
+**Making GitHub Copilot Agent Run Pre-commit Hooks**:
+
+GitHub Copilot Workspace agents **do** run pre-commit hooks automatically when you use the `report_progress` tool, which internally runs `git commit`. Here's how it works:
+
+1. **Automatic Execution**: When `report_progress` commits changes, husky hooks run automatically
+2. **Hook Failures**: If lint-staged fails, the commit is rejected and Copilot sees the error
+3. **Auto-fix Loop**: Copilot can read the error, run `npm run lint:fix`, and retry the commit
+
+**How Copilot Agents Handle Pre-commit Hooks**:
+
+```typescript
+// This is what happens internally when agent uses report_progress:
+
+1. Agent calls report_progress({ commitMessage: "...", prDescription: "..." })
+2. Tool runs: git add . && git commit -m "..."
+3. Husky intercepts: Runs .husky/pre-commit script
+4. lint-staged runs: Lints and formats staged files
+5. If linting fails: Commit aborts, error returned to agent
+6. Agent sees error: Can run lint:fix and call report_progress again
+7. If linting passes: Commit succeeds, code is pushed
+```
+
+**Agent-Friendly Hook Configuration**:
+
+For best results with AI agents, configure hooks to:
+
+- **Auto-fix when possible**: Use `--fix` flags in lint-staged
+- **Fail clearly**: Return specific error messages
+- **Be idempotent**: Running twice should produce the same result
+
+**Example of Copilot Using Hooks**:
+
+```markdown
+Agent: "I'll fix the linting issues and commit the changes"
+Agent: report_progress(commitMessage="Fix button component")
+Hook: ❌ ESLint found 3 errors in Button.vue
+Agent: "The pre-commit hook failed. Let me fix the linting errors."
+Agent: bash("npm run lint:fix")
+Agent: report_progress(commitMessage="Fix button component")
+Hook: ✅ All checks passed
+Result: Commit successful, changes pushed
+```
+
+**Limitations**:
+
+- Agents cannot bypass hooks (this is a security feature)
+- Agents must fix issues to proceed with commits
+- Hooks run in the sandboxed environment with limited network access
 
 ---
 
@@ -376,8 +563,151 @@ When creating/updating a component, AI should verify:
 ### 4.3 AI Agent Helpers
 
 - **ts-morph**: Programmatic TypeScript AST manipulation
-- **vue-component-meta**: Extract component prop types
+- **vue-component-meta**: Extract component prop types at runtime
 - **zod**: Runtime schema validation for test data
+
+#### Setting Up vue-component-meta
+
+**Purpose**: Automatically extract and validate component prop types, slots, and events at build time.
+
+**Installation**:
+
+```bash
+npm install -D vue-component-meta typescript
+```
+
+**Basic Usage**:
+
+```typescript
+// scripts/extract-component-metadata.ts
+import { createComponentMetaChecker } from 'vue-component-meta';
+import * as path from 'path';
+
+const tsconfigPath = path.resolve(__dirname, '../tsconfig.json');
+const checker = createComponentMetaChecker(tsconfigPath, {
+  forceUseTs: true,
+  schema: { ignore: ['MyIgnoredNestedProps'] },
+  printer: { newLine: 1 },
+});
+
+// Extract metadata for a component
+const meta = checker.getComponentMeta(
+  path.resolve(__dirname, '../src/components/vue/core/basic/Button.vue')
+);
+
+console.log('Props:', meta.props);
+console.log('Events:', meta.events);
+console.log('Slots:', meta.slots);
+console.log('Exposed:', meta.exposed);
+
+// Output example:
+// Props: [
+//   { name: 'variant', type: 'Variant', required: false, default: 'surface' },
+//   { name: 'tone', type: 'Tone', required: false, default: 'primary' },
+//   { name: 'size', type: 'Size', required: false, default: 'md' }
+// ]
+```
+
+**Advanced: Generate Test Fixtures**:
+
+```typescript
+// scripts/generate-component-tests.ts
+import { createComponentMetaChecker } from 'vue-component-meta';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const checker = createComponentMetaChecker('./tsconfig.json');
+
+function generateTestForComponent(componentPath: string) {
+  const meta = checker.getComponentMeta(componentPath);
+  const componentName = path.basename(componentPath, '.vue');
+
+  const testTemplate = `
+import { describe, it, expect } from 'vitest';
+import { mount } from '@vue/test-utils';
+import ${componentName} from '${componentPath}';
+
+describe('${componentName}', () => {
+  it('renders with default props', () => {
+    const wrapper = mount(${componentName});
+    expect(wrapper.exists()).toBe(true);
+  });
+
+  ${meta.props
+    .filter((p) => p.required)
+    .map(
+      (prop) => `
+  it('requires ${prop.name} prop', () => {
+    // TypeScript should enforce this at compile time
+    // This test documents the requirement
+  });`
+    )
+    .join('\n')}
+
+  ${meta.events
+    .map(
+      (event) => `
+  it('emits ${event.name} event', async () => {
+    const wrapper = mount(${componentName});
+    // Trigger the action that emits ${event.name}
+    // expect(wrapper.emitted('${event.name}')).toBeTruthy();
+  });`
+    )
+    .join('\n')}
+});
+`;
+
+  const testPath = componentPath.replace('/src/', '/tests/unit/').replace('.vue', '.test.ts');
+  fs.mkdirSync(path.dirname(testPath), { recursive: true });
+  fs.writeFileSync(testPath, testTemplate);
+}
+
+// Generate tests for all core components
+const components = [
+  './src/components/vue/core/basic/Button.vue',
+  './src/components/vue/core/basic/Modal.vue',
+  './src/components/vue/core/basic/Card.vue',
+];
+
+components.forEach(generateTestForComponent);
+```
+
+**AI Agent Use Case**:
+
+When AI needs to update a component, it can:
+
+1. Run `vue-component-meta` to extract current props
+2. Compare with desired changes
+3. Generate updated tests automatically
+4. Validate that tests still pass
+
+**Integration with Storybook**:
+
+```typescript
+// .storybook/main.ts
+export default {
+  async viteFinal(config) {
+    const { mergeConfig } = await import('vite');
+    const { vueComponentMeta } = await import('vite-plugin-vue-component-meta');
+
+    return mergeConfig(config, {
+      plugins: [
+        vueComponentMeta({
+          // Automatically generate prop tables in Storybook
+          exclude: ['**/node_modules/**'],
+        }),
+      ],
+    });
+  },
+};
+```
+
+**Benefits for AI Agents**:
+
+- **Automatic test generation**: AI can scaffold tests based on component metadata
+- **Type safety**: Validates component APIs match TypeScript definitions
+- **Documentation sync**: Ensures COMPONENTS.md stays accurate
+- **Refactoring support**: Detects when prop changes break tests
 
 ---
 
