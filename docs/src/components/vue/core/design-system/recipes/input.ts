@@ -1,8 +1,6 @@
 import { tv, type VariantProps } from 'tailwind-variants';
 import type { Tone, Size, Radius } from '../tokens.ts';
 
-type Validation = 'default' | 'error' | 'success';
-
 /**
  * Input recipe - Text input, textarea, and select styling
  *

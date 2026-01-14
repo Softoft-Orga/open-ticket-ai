@@ -24,13 +24,13 @@ export const createLocalizedContent = (locale: string, fallbackLocale = 'en') =>
     id: string
   ): Promise<CollectionEntry<T> | undefined> => {
     const withLocale = `${target}/${id}`;
-    const direct = await getEntry(collection, withLocale as any);
+    const direct = await getEntry(collection, withLocale as CollectionEntry<T>['id']);
     if (direct) {
       return direct;
     }
     if (target !== fallbackLocale.toLowerCase()) {
       const fb = `${fallbackLocale}/${id}`;
-      return getEntry(collection, fb as any);
+      return getEntry(collection, fb as CollectionEntry<T>['id']);
     }
     return undefined;
   };

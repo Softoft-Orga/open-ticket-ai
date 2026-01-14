@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.js';
 import { getLocalizedCatchAllStaticPaths } from '../../utils/staticPaths.ts';
 import type { CollectionEntry } from 'astro:content';
+import Button from '../../components/vue/core/basic/Button.vue';
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs');
 
@@ -204,9 +205,16 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
                   <p class="mb-3 text-[9px] leading-tight text-slate-500">
                     Get help from the community.
                   </p>
-                  <button class="w-full rounded bg-white/5 py-1.5 text-[9px] font-bold text-slate-300 transition-colors hover:bg-white/10">
+                  <Button
+                    variant="subtle"
+                    tone="neutral"
+                    size="sm"
+                    radius="lg"
+                    block
+                    class="text-[9px]"
+                  >
                     Join Server
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
