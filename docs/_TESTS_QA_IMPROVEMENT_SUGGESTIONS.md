@@ -128,6 +128,81 @@ The test doesn't "know" if a change is intended - that's **your job**:
 - ❌ **Unintended change**: The diff reveals a bug; you fix the code and re-run
 - 🔍 **Review workflow**: Use tools like Percy, Chromatic, or Playwright's trace viewer
 
+**Can AI Agents Review Visual Diffs?**
+
+**Yes, with limitations**. AI agents can assist with visual regression review, but human oversight is recommended:
+
+**AI Agent Capabilities:**
+- ✅ **Describe changes**: AI can analyze before/after screenshots and describe what changed (e.g., "button moved 5px down", "color changed from #a60df2 to #7b09b5")
+- ✅ **Detect regressions**: AI can flag likely bugs (e.g., overlapping text, broken layouts, missing elements)
+- ✅ **Auto-approve minor changes**: For trivial changes (e.g., single pixel shifts from browser rendering), AI can auto-approve
+- ✅ **Pattern matching**: AI can learn your approval patterns and suggest decisions
+
+**AI Agent Limitations:**
+- ❌ **Design intent**: AI cannot know if a color change is intentional branding update or accidental bug
+- ❌ **User experience**: AI cannot judge if a layout change improves or degrades UX
+- ⚠️ **Context required**: AI needs your design goals and brand guidelines to make good decisions
+
+**Recommended Workflow with AI:**
+
+```typescript
+// 1. AI analyzes visual diffs and categorizes them
+AI: "Found 5 visual changes:
+  - Low risk (3): Minor font rendering differences, auto-approved
+  - Medium risk (1): Button color changed from primary to success
+  - High risk (1): Navigation menu shifted 50px, possibly broken layout"
+
+// 2. Human reviews medium/high risk changes
+Human: "Button color change is intentional (new design), approve"
+Human: "Navigation shift is a bug, reject and investigate"
+
+// 3. AI updates baselines based on approvals
+AI: "Updated baseline for button color change"
+AI: "Flagged navigation issue for developer attention"
+```
+
+**Tools That Support AI-Assisted Review:**
+
+1. **Chromatic with AI Analysis**: Uses ML to detect visual regressions and suggest approvals
+2. **Percy with Copilot**: GitHub Copilot can analyze Percy diffs and provide recommendations
+3. **Custom workflow**: Use GPT-4 Vision API to analyze Playwright screenshots
+
+**Practical Implementation:**
+
+```typescript
+// scripts/ai-visual-review.ts
+import { analyzeScreenshotDiff } from './ai-helpers';
+
+async function reviewVisualChanges(beforeImg: string, afterImg: string) {
+  const analysis = await analyzeScreenshotDiff(beforeImg, afterImg);
+  
+  if (analysis.risk === 'low' && analysis.confidence > 0.9) {
+    // Auto-approve trivial changes
+    return { approve: true, reason: analysis.description };
+  }
+  
+  if (analysis.risk === 'high') {
+    // Flag for human review
+    return { approve: false, needsReview: true, reason: analysis.description };
+  }
+  
+  // Medium risk - ask AI for recommendation with context
+  const recommendation = await askAIWithContext(analysis, {
+    designSystem: './design-tokens.json',
+    recentChanges: './CHANGELOG.md'
+  });
+  
+  return recommendation;
+}
+```
+
+**Best Practice:**
+
+- Use AI for **initial triage** (categorize changes by risk)
+- Require human approval for **critical UI changes** (navigation, forms, CTAs)
+- Let AI **auto-approve** minor rendering differences
+- Have AI **explain** each change so you can make informed decisions quickly
+
 **Implementation**:
 
 ```bash
