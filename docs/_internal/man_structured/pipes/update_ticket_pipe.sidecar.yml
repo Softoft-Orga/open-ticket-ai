@@ -8,15 +8,15 @@ _category: ticket-system
 
 _inputs:
   placement: flat
-  alongside: [ id, use ]
+  alongside: [id, use]
   params:
     ticket_system_id: Target ticket system ID from registry
     ticket_id: Target ticket ID
     updated_ticket: Ticket data to update (UnifiedTicket object or dict)
-_defaults: { }
+_defaults: {}
 
 _output:
-  state_enum: [ ok, skipped, failed ]
+  state_enum: [ok, skipped, failed]
   description: Pipe returns a state and optional payload.
   payload_schema_ref: OpenTicketAI.Pipes.UpdateTicket.Result
   examples:
@@ -24,7 +24,7 @@ _output:
       state: ok
       payload:
         ticket_id: 12345
-        updated_fields: [ "subject", "priority" ]
+        updated_fields: ['subject', 'priority']
     skipped:
       state: skipped
       payload:

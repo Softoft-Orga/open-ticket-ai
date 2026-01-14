@@ -1,6 +1,6 @@
-import Alert from '../src/components/vue/core/basic/Alert.vue'
-import type { Meta, StoryObj } from '@storybook/vue3'
-import { VARIANTS } from '../src/components/vue/core/design-system/tokens.ts'
+import Alert from '../src/components/vue/core/basic/Alert.vue';
+import type { Meta, StoryObj } from '@storybook/vue3';
+import { VARIANTS } from '../src/components/vue/core/design-system/tokens.ts';
 
 const meta: Meta<typeof Alert> = {
   title: 'Docs/Alert',
@@ -9,164 +9,166 @@ const meta: Meta<typeof Alert> = {
   argTypes: {
     type: {
       control: { type: 'select' },
-      options: ['info', 'success', 'warning', 'danger', 'tip']
+      options: ['info', 'success', 'warning', 'danger', 'tip'],
     },
     variant: {
       control: { type: 'select' },
-      options: VARIANTS
-    }
+      options: VARIANTS,
+    },
   },
   parameters: {
     docs: {
       description: {
-        component: 'Alert component for displaying important information, warnings, tips, and other messages in documentation. Supports surface, subtle, and outline variants, with optional footer slot.'
-      }
-    }
-  }
-}
-export default meta
+        component:
+          'Alert component for displaying important information, warnings, tips, and other messages in documentation. Supports surface, subtle, and outline variants, with optional footer slot.',
+      },
+    },
+  },
+};
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Info: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
-    template: '<Alert v-bind="args">This is an informational message that provides helpful context to the reader.</Alert>'
+    template:
+      '<Alert v-bind="args">This is an informational message that provides helpful context to the reader.</Alert>',
   }),
   args: {
     type: 'info',
     title: 'Information',
-    variant: 'subtle'
-  }
-}
+    variant: 'subtle',
+  },
+};
 
 export const Success: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
-    template: '<Alert v-bind="args">Your operation completed successfully!</Alert>'
+    template: '<Alert v-bind="args">Your operation completed successfully!</Alert>',
   }),
   args: {
     type: 'success',
     title: 'Success',
-    variant: 'subtle'
-  }
-}
+    variant: 'subtle',
+  },
+};
 
 export const Warning: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
-    template: '<Alert v-bind="args">Please be careful when performing this operation.</Alert>'
+    template: '<Alert v-bind="args">Please be careful when performing this operation.</Alert>',
   }),
   args: {
     type: 'warning',
     title: 'Warning',
-    variant: 'subtle'
-  }
-}
+    variant: 'subtle',
+  },
+};
 
 export const Danger: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
-    template: '<Alert v-bind="args">This action cannot be undone. Proceed with caution.</Alert>'
+    template: '<Alert v-bind="args">This action cannot be undone. Proceed with caution.</Alert>',
   }),
   args: {
     type: 'danger',
     title: 'Danger',
-    variant: 'subtle'
-  }
-}
+    variant: 'subtle',
+  },
+};
 
 export const Tip: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
-    template: '<Alert v-bind="args">You can use keyboard shortcuts to navigate faster!</Alert>'
+    template: '<Alert v-bind="args">You can use keyboard shortcuts to navigate faster!</Alert>',
   }),
   args: {
     type: 'tip',
     title: 'Pro Tip',
-    variant: 'subtle'
-  }
-}
+    variant: 'subtle',
+  },
+};
 
 export const SurfaceVariant: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
-    template: '<Alert v-bind="args">This is a surface alert with full background color.</Alert>'
+    template: '<Alert v-bind="args">This is a surface alert with full background color.</Alert>',
   }),
   args: {
     type: 'info',
     title: 'Surface Style',
-    variant: 'surface'
-  }
-}
+    variant: 'surface',
+  },
+};
 
 export const OutlineVariant: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
-    template: '<Alert v-bind="args">This is an outline alert with transparent background.</Alert>'
+    template: '<Alert v-bind="args">This is an outline alert with transparent background.</Alert>',
   }),
   args: {
     type: 'info',
     title: 'Outline Style',
-    variant: 'outline'
-  }
-}
+    variant: 'outline',
+  },
+};
 
 export const WithoutIcon: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
-    template: '<Alert v-bind="args">This alert has no icon displayed.</Alert>'
+    template: '<Alert v-bind="args">This alert has no icon displayed.</Alert>',
   }),
   args: {
     type: 'info',
     hideIcon: true,
-    variant: 'subtle'
-  }
-}
+    variant: 'subtle',
+  },
+};
 
 export const WithoutTitle: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
-    template: '<Alert v-bind="args">This is an alert without a title, just the content.</Alert>'
+    template: '<Alert v-bind="args">This is an alert without a title, just the content.</Alert>',
   }),
   args: {
     type: 'tip',
-    variant: 'subtle'
-  }
-}
+    variant: 'subtle',
+  },
+};
 
 export const LongContent: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <Alert v-bind="args">
@@ -178,20 +180,20 @@ export const LongContent: Story = {
           <li>Multiple paragraphs</li>
         </ul>
       </Alert>
-    `
+    `,
   }),
   args: {
     type: 'info',
     title: 'Detailed Information',
-    variant: 'subtle'
-  }
-}
+    variant: 'subtle',
+  },
+};
 
 export const WithFooter: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <Alert v-bind="args">
@@ -203,11 +205,11 @@ export const WithFooter: Story = {
           </div>
         </template>
       </Alert>
-    `
+    `,
   }),
   args: {
     type: 'info',
     title: 'Alert with Footer',
-    variant: 'subtle'
-  }
-}
+    variant: 'subtle',
+  },
+};

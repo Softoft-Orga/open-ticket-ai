@@ -1,9 +1,9 @@
 /**
  * Transition presets for HeadlessUI TransitionChild components
- * 
+ *
  * These presets provide consistent, accessible animations with motion-reduce support.
  * Use with v-bind on TransitionChild components.
- * 
+ *
  * @example
  * <TransitionChild v-bind="fade" as="template">
  *   <div>Content</div>
@@ -20,8 +20,8 @@ export const fade = {
   enterTo: 'opacity-100',
   leave: 'transition-opacity duration-200 ease-in',
   leaveFrom: 'opacity-100',
-  leaveTo: 'opacity-0'
-}
+  leaveTo: 'opacity-0',
+};
 
 /**
  * Fade with scale transition (small)
@@ -33,8 +33,8 @@ export const fadeScaleSm = {
   enterTo: 'opacity-100 scale-100',
   leave: 'transition-all duration-200 ease-in motion-reduce:transition-opacity',
   leaveFrom: 'opacity-100 scale-100',
-  leaveTo: 'opacity-0 scale-95 motion-reduce:scale-100'
-}
+  leaveTo: 'opacity-0 scale-95 motion-reduce:scale-100',
+};
 
 /**
  * Fade with scale transition (medium)
@@ -46,8 +46,8 @@ export const fadeScaleMd = {
   enterTo: 'opacity-100 scale-100',
   leave: 'transition-all duration-200 ease-in motion-reduce:transition-opacity',
   leaveFrom: 'opacity-100 scale-100',
-  leaveTo: 'opacity-0 scale-90 motion-reduce:scale-100'
-}
+  leaveTo: 'opacity-0 scale-90 motion-reduce:scale-100',
+};
 
 /**
  * Slide from top
@@ -59,8 +59,8 @@ export const slideDown = {
   enterTo: 'opacity-100 translate-y-0',
   leave: 'transition-all duration-200 ease-in motion-reduce:transition-opacity',
   leaveFrom: 'opacity-100 translate-y-0',
-  leaveTo: 'opacity-0 -translate-y-4 motion-reduce:translate-y-0'
-}
+  leaveTo: 'opacity-0 -translate-y-4 motion-reduce:translate-y-0',
+};
 
 /**
  * Slide from bottom
@@ -72,8 +72,8 @@ export const slideUp = {
   enterTo: 'opacity-100 translate-y-0',
   leave: 'transition-all duration-200 ease-in motion-reduce:transition-opacity',
   leaveFrom: 'opacity-100 translate-y-0',
-  leaveTo: 'opacity-0 translate-y-4 motion-reduce:translate-y-0'
-}
+  leaveTo: 'opacity-0 translate-y-4 motion-reduce:translate-y-0',
+};
 
 /**
  * Slide from right
@@ -85,8 +85,8 @@ export const slideLeft = {
   enterTo: 'opacity-100 translate-x-0',
   leave: 'transition-all duration-200 ease-in motion-reduce:transition-opacity',
   leaveFrom: 'opacity-100 translate-x-0',
-  leaveTo: 'opacity-0 translate-x-4 motion-reduce:translate-x-0'
-}
+  leaveTo: 'opacity-0 translate-x-4 motion-reduce:translate-x-0',
+};
 
 /**
  * Slide from left
@@ -98,5 +98,5 @@ export const slideRight = {
   enterTo: 'opacity-100 translate-x-0',
   leave: 'transition-all duration-200 ease-in motion-reduce:transition-opacity',
   leaveFrom: 'opacity-100 translate-x-0',
-  leaveTo: 'opacity-0 -translate-x-4 motion-reduce:translate-x-0'
-}
+  leaveTo: 'opacity-0 -translate-x-4 motion-reduce:translate-x-0',
+};

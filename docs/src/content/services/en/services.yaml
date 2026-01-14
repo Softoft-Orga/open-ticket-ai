@@ -3,11 +3,11 @@
   oneLiner: Enterprise Strategy
   description: "100k–500k+ tickets dataset with strict balancing & constraints, \nrealistic noise modeling, and optional agent replies. Includes full \ndocumentation and splits for enterprise-level strategies.\n"
   outcomes:
-  - 100k–500k+ tickets dataset
-  - Strict balancing & constraints
-  - Realistic noise modeling
-  - Optional agent replies
-  - Full documentation & splits
+    - 100k–500k+ tickets dataset
+    - Strict balancing & constraints
+    - Realistic noise modeling
+    - Optional agent replies
+    - Full documentation & splits
   startingPrice: 15000
   serviceGroup: Synthetic Data Creation
   serviceOrder: 12
@@ -17,11 +17,11 @@
   oneLiner: Special Requirements
   description: "Anything beyond tag-model creation: special architectures, constraints, \non-prem performance targets, multilingual requirements, advanced-evaluation, \nlong-term training programs.\n"
   outcomes:
-  - Special architectures and constraints
-  - On-prem performance optimization
-  - Advanced multilingual requirements
-  - Long-term training programs
-  - Custom evaluation frameworks
+    - Special architectures and constraints
+    - On-prem performance optimization
+    - Advanced multilingual requirements
+    - Long-term training programs
+    - Custom evaluation frameworks
   startingPrice: 0
   serviceGroup: Model Development
   serviceOrder: 62
@@ -31,9 +31,9 @@
   oneLiner: Real Data Training
   description: "Training primarily on your historical ticket data. Requires 10k-50k+ labeled \nexamples. Includes comprehensive dataset preparation and evaluation for \nmaximum accuracy with your specific patterns.\n"
   outcomes:
-  - Training primarily on your historical ticket data
-  - Requires 10k–50k+ labeled examples
-  - Includes comprehensive dataset preparation and evaluation
+    - Training primarily on your historical ticket data
+    - Requires 10k–50k+ labeled examples
+    - Includes comprehensive dataset preparation and evaluation
   startingPrice: 30000
   serviceGroup: Model Development
   serviceOrder: 61
@@ -43,9 +43,9 @@
   oneLiner: Synthetic Training Focus
   description: "Custom tag definition trained primarily via our synthetic data generator. \nCan be optionally hybridized with limited customer samples for specialized \ntagging requirements.\n"
   outcomes:
-  - Custom tag definition (or yours + our additions)
-  - Trained primarily via our synthetic data generator
-  - Can be optionally hybridized with limited customer samples
+    - Custom tag definition (or yours + our additions)
+    - Trained primarily via our synthetic data generator
+    - Can be optionally hybridized with limited customer samples
   startingPrice: 20000
   serviceGroup: Model Development
   serviceOrder: 60
@@ -55,10 +55,10 @@
   oneLiner: Comprehensive performance metrics
   description: "Comprehensive metrics report on model performance using the dataset. \nGet detailed insights into accuracy, precision, recall, and other \nkey performance indicators.\n"
   outcomes:
-  - Comprehensive metrics report
-  - Accuracy and precision analysis
-  - Performance visualizations
-  - Recommendations for improvement
+    - Comprehensive metrics report
+    - Accuracy and precision analysis
+    - Performance visualizations
+    - Recommendations for improvement
   startingPrice: 1500
   serviceGroup: Extensions
   serviceOrder: 21
@@ -68,10 +68,10 @@
   oneLiner: Custom AI model training extension
   description: "Deliver a tagging model specifically fine-tuned on the generated dataset. \nThis extension provides you with a ready-to-deploy model optimized for \nyour specific use case.\n"
   outcomes:
-  - Custom fine-tuned tagging model
-  - Optimized for your dataset
-  - Ready for deployment
-  - Performance benchmarks included
+    - Custom fine-tuned tagging model
+    - Optimized for your dataset
+    - Ready for deployment
+    - Performance benchmarks included
   startingPrice: 2500
   serviceGroup: Extensions
   serviceOrder: 20
@@ -81,11 +81,11 @@
   oneLiner: Production Ready
   description: "50k–100k tickets dataset with custom schema (queues, SLAs), controlled \nlabel distributions, and multilingual expansion. Includes 1 revision \nround for production-ready datasets.\n"
   outcomes:
-  - 50k–100k tickets dataset
-  - Custom schema (queues, SLAs)
-  - Controlled label distributions
-  - Multilingual expansion
-  - 1 revision round included
+    - 50k–100k tickets dataset
+    - Custom schema (queues, SLAs)
+    - Controlled label distributions
+    - Multilingual expansion
+    - 1 revision round included
   startingPrice: 7500
   serviceGroup: Synthetic Data Creation
   serviceOrder: 11
@@ -95,11 +95,11 @@
   oneLiner: Flexible engineering support
   description: "For extra changes beyond package scope, custom features/workflows, \ntroubleshooting, and migrations. Get expert engineering support on \nan as-needed basis.\n"
   outcomes:
-  - Custom feature development
-  - Workflow customization
-  - Troubleshooting support
-  - Migration assistance
-  - Technical consultation
+    - Custom feature development
+    - Workflow customization
+    - Troubleshooting support
+    - Migration assistance
+    - Technical consultation
   startingPrice: 200
   serviceGroup: Flexible
   serviceOrder: 30
@@ -109,9 +109,9 @@
   oneLiner: Enterprise / Custom Integration
   description: "Extended integration package for Jira Service Management, Zendesk, Freshdesk, \nServiceNow, or custom systems. Includes everything in Standard Package plus \nadditional adapter work for non-standard APIs.\n"
   outcomes:
-  - Everything in Standard Package
-  - Additional adapter work for non-standard APIs
-  - Extended testing for proprietary environments
+    - Everything in Standard Package
+    - Additional adapter work for non-standard APIs
+    - Extended testing for proprietary environments
   startingPrice: 5000
   serviceGroup: Integration
   serviceOrder: 41
@@ -121,11 +121,11 @@
   oneLiner: Standard Stack Integration
   description: "Fixed-price package to connect Open Ticket AI with OTOBO, Znuny (OTRS stack), \nor Zammad ticket systems. Includes technical setup and basic testing.\n"
   outcomes:
-  - Technical setup of Tagging AI service
-  - Connection to 1 ticket system instance
-  - Mapping tags to technical field logic
-  - One trigger setup (e.g. on creation)
-  - Basic testing + handover
+    - Technical setup of Tagging AI service
+    - Connection to 1 ticket system instance
+    - Mapping tags to technical field logic
+    - One trigger setup (e.g. on creation)
+    - Basic testing + handover
   startingPrice: 2000
   serviceGroup: Integration
   serviceOrder: 40
@@ -135,11 +135,11 @@
   oneLiner: Subscription-based support coverage
   description: "Best-effort subscription for reliable coverage. Includes async support \nvia ticket/email and minor fixes. Ensure your team has continuous \naccess to expert assistance.\n"
   outcomes:
-  - Async support via ticket/email
-  - Minor bug fixes included
-  - Best-effort response times
-  - Continuous coverage
-  - Technical guidance
+    - Async support via ticket/email
+    - Minor bug fixes included
+    - Best-effort response times
+    - Continuous coverage
+    - Technical guidance
   startingPrice: 400
   serviceGroup: Flexible
   serviceOrder: 31
@@ -149,10 +149,10 @@
   oneLiner: Periodic dataset refreshes
   description: "Periodic dataset refreshes to match evolving business logic. Keep your \nAI models up-to-date with the latest patterns and requirements from \nyour organization.\n"
   outcomes:
-  - Periodic dataset updates
-  - Alignment with business changes
-  - Continuous improvement
-  - Version tracking and documentation
+    - Periodic dataset updates
+    - Alignment with business changes
+    - Continuous improvement
+    - Version tracking and documentation
   startingPrice: 1000
   serviceGroup: Extensions
   serviceOrder: 23
@@ -162,9 +162,9 @@
   oneLiner: Implementation of 3 core automations
   description: "Open Ticket Automation (OTA) is our open-source layer that translates AI tags \ninto concrete actions. This package includes configuration of 3 automations based \non your rules, testing with real ticket examples, and handover documentation.\n"
   outcomes:
-  - Config of 3 automations based on your rules
-  - Testing with real ticket examples
-  - Handover documentation
+    - Config of 3 automations based on your rules
+    - Testing with real ticket examples
+    - Handover documentation
   startingPrice: 3000
   serviceGroup: Automation
   serviceOrder: 50
@@ -174,11 +174,11 @@
   oneLiner: Evaluation & Testing
   description: "Up to 20,000 synthetic tickets with weighted multilingual generation, \ncore ticket fields setup, and realistic distributions. Perfect for \nevaluation and testing of your AI models.\n"
   outcomes:
-  - Up to 20,000 synthetic tickets
-  - Weighted multilingual generation
-  - Core ticket fields setup
-  - Realistic distributions
-  - JSONL or CSV delivery
+    - Up to 20,000 synthetic tickets
+    - Weighted multilingual generation
+    - Core ticket fields setup
+    - Realistic distributions
+    - JSONL or CSV delivery
   startingPrice: 3000
   serviceGroup: Synthetic Data Creation
   serviceOrder: 10
@@ -188,10 +188,10 @@
   oneLiner: Platform-specific format optimization
   description: "Specific format tuning for import into OTOBO, Znuny, or Zammad systems. \nEnsure seamless integration with your existing helpdesk platform.\n"
   outcomes:
-  - OTOBO format optimization
-  - Znuny integration support
-  - Zammad compatibility
-  - Import validation and testing
+    - OTOBO format optimization
+    - Znuny integration support
+    - Zammad compatibility
+    - Import validation and testing
   startingPrice: 2000
   serviceGroup: Extensions
   serviceOrder: 22

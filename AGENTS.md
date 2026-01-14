@@ -159,3 +159,10 @@ The customer-facing website lives in `/docs` and uses:
 - [ ] `uv run ruff check .` clean
 - [ ] `uv run mypy .` clean
 - [ ] `uv run -m pytest` green
+
+## Checklist for contributors (must pass) (When making Website/Docs changes in /docs)
+
+- [ ] Run `npm run format` in the `/docs` directory to format all files with Prettier
+- [ ] Run `npm run format:check` to verify all files are formatted correctly
+- [ ] Run `npm run lint` to check for ESLint issues
+- [ ] Run `npm run lint:fix` to auto-fix ESLint issues

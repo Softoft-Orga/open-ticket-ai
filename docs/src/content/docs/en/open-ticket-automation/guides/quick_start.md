@@ -1,11 +1,12 @@
 ---
 title: Quick Start Guide
-description: "Get started with Open Ticket AI in 5 minutes. Quick setup guide for Python 3.13+ with OTOBO, Znuny, or OTRS ticket system integration."
+description: 'Get started with Open Ticket AI in 5 minutes. Quick setup guide for Python 3.13+ with OTOBO, Znuny, or OTRS ticket system integration.'
 lang: en
 nav:
   group: Guides
   order: 1
 ---
+
 # Quick Start Guide
 
 Get started with Open Ticket AI in 5 minutes.
@@ -59,19 +60,19 @@ Create `config.yml`:
 plugins:
   - name: otobo_znuny
     config:
-      base_url: "${OTOBO_BASE_URL}"
-      api_token: "${OTOBO_API_TOKEN}"
+      base_url: '${OTOBO_BASE_URL}'
+      api_token: '${OTOBO_API_TOKEN}'
 
 # Configure pipeline
 orchestrator:
   pipelines:
     - name: classify_tickets
-      run_every_milli_seconds: 60000  # Run every 60 seconds
+      run_every_milli_seconds: 60000 # Run every 60 seconds
       pipes:
         # Fetch open tickets
         - pipe_name: fetch_tickets
           search:
-            StateType: "Open"
+            StateType: 'Open'
             limit: 10
 
         # Log tickets (for testing)
@@ -113,17 +114,17 @@ orchestrator:
       pipes:
         - pipe_name: fetch_tickets
           search:
-            StateType: "Open"
+            StateType: 'Open'
             limit: 10
 
         # Add ML classification
         - pipe_name: classify_queue
-          model_name: "bert-base-uncased"
+          model_name: 'bert-base-uncased'
 
         # Update tickets
         - pipe_name: update_ticket
           fields:
-            QueueID: "{{ context.predicted_queue_id }}"
+            QueueID: '{{ context.predicted_queue_id }}'
 ```
 
 ### Explore Examples

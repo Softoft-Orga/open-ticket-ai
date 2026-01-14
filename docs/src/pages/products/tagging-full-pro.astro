@@ -5,158 +5,148 @@ import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import { ArrowLeftIcon, RocketLaunchIcon } from '@heroicons/vue/24/outline';
 
-const title = "Full Pro - Advanced Enterprise Tagging AI";
-const description = "The ultimate classification engine for high-volume enterprise helpdesks. Maximum detail, explained reasoning, and full LoRA-adapter support.";
+const title = 'Full Pro - Advanced Enterprise Tagging AI';
+const description =
+  'The ultimate classification engine for high-volume enterprise helpdesks. Maximum detail, explained reasoning, and full LoRA-adapter support.';
 ---
 
 <BaseLayout title={title} description={description}>
-  <div slot="head" />
+  <div slot="head"></div>
 
   <div class="min-h-screen bg-background-dark">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <div class="mb-8">
-        <a href="/products" class="inline-flex items-center gap-2 text-primary hover:text-primary-light transition-colors group">
-          <ArrowLeftIcon class="w-4 h-4 transition-transform group-hover:-translate-x-1" aria-hidden="true" />
+        <a
+          href="/products"
+          class="group inline-flex items-center gap-2 text-primary transition-colors hover:text-primary-light"
+        >
+          <ArrowLeftIcon
+            class="h-4 w-4 transition-transform group-hover:-translate-x-1"
+            aria-hidden="true"
+          />
           <span class="font-medium">PRODUCTS</span>
         </a>
         <span class="mx-3 text-text-dim">/</span>
-        <span class="text-white font-bold">FULL PRO</span>
+        <span class="font-bold text-white">FULL PRO</span>
       </div>
 
       <div class="mb-16">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest mb-6">
+        <div
+          class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-black uppercase tracking-widest text-primary"
+        >
           ⚙️ ADVANCED ENTERPRISE (8B PARAMETERS)
         </div>
-        <h1 class="font-display text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+        <h1 class="font-display mb-6 text-5xl font-black leading-tight text-white md:text-7xl">
           Tagging AI<br />
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-glow">Full Pro.</span>
+          <span class="bg-gradient-to-r from-primary to-cyan-glow bg-clip-text text-transparent"
+            >Full Pro.</span
+          >
         </h1>
-        <p class="text-xl text-text-dim max-w-3xl leading-relaxed">
+        <p class="max-w-3xl text-xl leading-relaxed text-text-dim">
           {description}
         </p>
       </div>
 
-      <div class="flex flex-wrap gap-4 mb-20">
-        <Button variant="surface" size="lg" client:load>
-          PRE-ORDER LICENSE (6.000€)
-        </Button>
-        <Button variant="outline" size="lg" client:load>
-          ROI Simulation
-        </Button>
+      <div class="mb-20 flex flex-wrap gap-4">
+        <Button variant="surface" size="lg" client:load> PRE-ORDER LICENSE (6.000€) </Button>
+        <Button variant="outline" size="lg" client:load> ROI Simulation </Button>
       </div>
 
       <section class="mb-24">
-        <div class="flex items-center gap-3 mb-8">
-          <div class="w-8 h-8 rounded-lg bg-cyan-glow/20 flex items-center justify-center">
+        <div class="mb-8 flex items-center gap-3">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-glow/20">
             <span class="text-cyan-glow">🏗️</span>
           </div>
           <h2 class="text-3xl font-bold text-white">Full Pro Specifications</h2>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-10 bg-surface-dark border border-border-dark rounded-3xl">
+
+        <div
+          class="grid grid-cols-1 gap-8 rounded-3xl border border-border-dark bg-surface-dark p-10 md:grid-cols-2 lg:grid-cols-4"
+        >
           <div class="flex flex-col gap-2">
-            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+            <div class="text-xs font-bold uppercase tracking-widest text-text-dim">
               MODEL ARCHITECTURE
             </div>
-            <div class="text-3xl font-black text-white">
-              8.0B Dense Transformer
-            </div>
-            <div class="text-sm text-cyan-glow italic">
-              Fine-tuned for helpdesk semantics
-            </div>
+            <div class="text-3xl font-black text-white">8.0B Dense Transformer</div>
+            <div class="text-sm italic text-cyan-glow">Fine-tuned for helpdesk semantics</div>
           </div>
           <div class="flex flex-col gap-2">
-            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+            <div class="text-xs font-bold uppercase tracking-widest text-text-dim">
               VRAM OPTIMIZED
             </div>
-            <div class="text-3xl font-black text-white">
-              16GB - 24GB
-            </div>
-            <div class="text-sm text-cyan-glow italic">
-              Supports 4-bit and 8-bit quantization
-            </div>
+            <div class="text-3xl font-black text-white">16GB - 24GB</div>
+            <div class="text-sm italic text-cyan-glow">Supports 4-bit and 8-bit quantization</div>
           </div>
           <div class="flex flex-col gap-2">
-            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+            <div class="text-xs font-bold uppercase tracking-widest text-text-dim">
               TAXONOMY DEPTH
             </div>
-            <div class="text-3xl font-black text-white">
-              250+ Tags (4 Levels)
-            </div>
-            <div class="text-sm text-cyan-glow italic">
-              Unmatched granularity for reporting
-            </div>
+            <div class="text-3xl font-black text-white">250+ Tags (4 Levels)</div>
+            <div class="text-sm italic text-cyan-glow">Unmatched granularity for reporting</div>
           </div>
           <div class="flex flex-col gap-2">
-            <div class="text-xs font-bold text-text-dim uppercase tracking-widest">
+            <div class="text-xs font-bold uppercase tracking-widest text-text-dim">
               ACCURACY BASELINE
             </div>
-            <div class="text-3xl font-black text-white">
-              92.4%+
-            </div>
-            <div class="text-sm text-cyan-glow italic">
-              State-of-the-art benchmarks
-            </div>
+            <div class="text-3xl font-black text-white">92.4%+</div>
+            <div class="text-sm italic text-cyan-glow">State-of-the-art benchmarks</div>
           </div>
         </div>
       </section>
 
       <section class="mb-24">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-white mb-4 font-display">ENTERPRISE EXCLUSIVES</h2>
-          <div class="w-24 h-1 bg-gradient-to-r from-primary to-cyan-glow mx-auto rounded-full"></div>
+        <div class="mb-16 text-center">
+          <h2 class="font-display mb-4 text-4xl font-bold text-white">ENTERPRISE EXCLUSIVES</h2>
+          <div class="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-primary to-cyan-glow">
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <span class="text-2xl">🧠</span>
               </div>
-              <h3 class="text-xl font-bold text-white">
-                Reasoning Chain
-              </h3>
-              <p class="text-text-dim text-sm leading-relaxed">
-                LLM provides the logic behind each tag, allowing for human audit and trust-building across teams.
+              <h3 class="text-xl font-bold text-white">Reasoning Chain</h3>
+              <p class="text-sm leading-relaxed text-text-dim">
+                LLM provides the logic behind each tag, allowing for human audit and trust-building
+                across teams.
               </p>
             </div>
           </Card>
           <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <span class="text-2xl">🎛️</span>
               </div>
-              <h3 class="text-xl font-bold text-white">
-                Custom Adapters
-              </h3>
-              <p class="text-text-dim text-sm leading-relaxed">
-                Inject your specific industry jargon via LoRA adapters without re-training the entire model from scratch.
+              <h3 class="text-xl font-bold text-white">Custom Adapters</h3>
+              <p class="text-sm leading-relaxed text-text-dim">
+                Inject your specific industry jargon via LoRA adapters without re-training the
+                entire model from scratch.
               </p>
             </div>
           </Card>
           <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <span class="text-2xl">📦</span>
               </div>
-              <h3 class="text-xl font-bold text-white">
-                Batch Processing
-              </h3>
-              <p class="text-text-dim text-sm leading-relaxed">
-                Optimized for massive ticket migrations (backlog tagging) at 100+ tps with zero external dependency on cloud.
+              <h3 class="text-xl font-bold text-white">Batch Processing</h3>
+              <p class="text-sm leading-relaxed text-text-dim">
+                Optimized for massive ticket migrations (backlog tagging) at 100+ tps with zero
+                external dependency on cloud.
               </p>
             </div>
           </Card>
           <Card client:load variant="surface" hoverable class="rounded-2xl">
             <div class="flex flex-col gap-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                 <span class="text-2xl">🛡️</span>
               </div>
-              <h3 class="text-xl font-bold text-white">
-                Hardware Air-Gap
-              </h3>
-              <p class="text-text-dim text-sm leading-relaxed">
-                Validated for high-security environments with zero external dependency telemetry, runs fully offline.
+              <h3 class="text-xl font-bold text-white">Hardware Air-Gap</h3>
+              <p class="text-sm leading-relaxed text-text-dim">
+                Validated for high-security environments with zero external dependency telemetry,
+                runs fully offline.
               </p>
             </div>
           </Card>
@@ -164,53 +154,58 @@ const description = "The ultimate classification engine for high-volume enterpri
       </section>
 
       <section class="mb-24">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div class="bg-surface-dark border border-border-dark rounded-3xl p-10">
-            <h3 class="text-2xl font-bold text-white mb-6">Taxonomy Breakdown</h3>
-            <p class="text-text-dim text-sm mb-8">
-              Full Pro supports 4-level hierarchical tags across 250+ categories, giving you unprecedented operational visibility.
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-2">
+          <div class="rounded-3xl border border-border-dark bg-surface-dark p-10">
+            <h3 class="mb-6 text-2xl font-bold text-white">Taxonomy Breakdown</h3>
+            <p class="mb-8 text-sm text-text-dim">
+              Full Pro supports 4-level hierarchical tags across 250+ categories, giving you
+              unprecedented operational visibility.
             </p>
-            
+
             <div class="space-y-1">
-              <div class="flex items-center justify-between py-4 border-b border-border-dark/30 bg-primary/5">
+              <div
+                class="flex items-center justify-between border-b border-border-dark/30 bg-primary/5 py-4"
+              >
                 <div class="flex items-center gap-4">
-                  <div class="w-2 h-2 rounded-full bg-primary ml-0"></div>
-                  <span class="font-mono text-sm text-white font-bold">intent/</span>
+                  <div class="ml-0 h-2 w-2 rounded-full bg-primary"></div>
+                  <span class="font-mono text-sm font-bold text-white">intent/</span>
                 </div>
-                <div class="flex gap-2 flex-wrap justify-end">
+                <div class="flex flex-wrap justify-end gap-2">
                   <Badge client:load tone="primary">service_request</Badge>
                   <Badge client:load tone="primary">incident</Badge>
                   <Badge client:load tone="primary">change</Badge>
                 </div>
               </div>
-              <div class="flex items-center justify-between py-4 border-b border-border-dark/30">
+              <div class="flex items-center justify-between border-b border-border-dark/30 py-4">
                 <div class="flex items-center gap-4">
-                  <div class="w-2 h-2 rounded-full bg-cyan-glow ml-6"></div>
+                  <div class="ml-6 h-2 w-2 rounded-full bg-cyan-glow"></div>
                   <span class="font-mono text-sm text-text-dim">intent/incident/</span>
                 </div>
-                <div class="flex gap-2 flex-wrap justify-end">
+                <div class="flex flex-wrap justify-end gap-2">
                   <Badge client:load tone="neutral">security</Badge>
                   <Badge client:load tone="neutral">downtime</Badge>
                   <Badge client:load tone="neutral">performance</Badge>
                 </div>
               </div>
-              <div class="flex items-center justify-between py-4 border-b border-border-dark/30">
+              <div class="flex items-center justify-between border-b border-border-dark/30 py-4">
                 <div class="flex items-center gap-4">
-                  <div class="w-2 h-2 rounded-full bg-primary-light ml-12"></div>
+                  <div class="ml-12 h-2 w-2 rounded-full bg-primary-light"></div>
                   <span class="font-mono text-sm text-text-dim">intent/incident/security/</span>
                 </div>
-                <div class="flex gap-2 flex-wrap justify-end">
+                <div class="flex flex-wrap justify-end gap-2">
                   <Badge client:load tone="neutral">breach</Badge>
                   <Badge client:load tone="neutral">phishing</Badge>
                   <Badge client:load tone="neutral">malware</Badge>
                 </div>
               </div>
-              <div class="flex items-center justify-between py-4 border-b border-border-dark/30">
+              <div class="flex items-center justify-between border-b border-border-dark/30 py-4">
                 <div class="flex items-center gap-4">
-                  <div class="w-2 h-2 rounded-full bg-secondary-light ml-16"></div>
-                  <span class="font-mono text-sm text-text-dim">intent/incident/security/phishing/</span>
+                  <div class="ml-16 h-2 w-2 rounded-full bg-secondary-light"></div>
+                  <span class="font-mono text-sm text-text-dim"
+                    >intent/incident/security/phishing/</span
+                  >
                 </div>
-                <div class="flex gap-2 flex-wrap justify-end">
+                <div class="flex flex-wrap justify-end gap-2">
                   <Badge client:load tone="neutral">email</Badge>
                   <Badge client:load tone="neutral">sms</Badge>
                   <Badge client:load tone="neutral">voice</Badge>
@@ -219,72 +214,78 @@ const description = "The ultimate classification engine for high-volume enterpri
             </div>
           </div>
 
-          <div class="bg-surface-dark border border-border-dark rounded-3xl p-10">
-            <h3 class="text-2xl font-bold text-white mb-6">Lite Pro vs Full Pro</h3>
-            <p class="text-text-dim text-sm mb-8">
-              Both models are production-ready, but Full Pro delivers maximum detail and custom adapter support.
+          <div class="rounded-3xl border border-border-dark bg-surface-dark p-10">
+            <h3 class="mb-6 text-2xl font-bold text-white">Lite Pro vs Full Pro</h3>
+            <p class="mb-8 text-sm text-text-dim">
+              Both models are production-ready, but Full Pro delivers maximum detail and custom
+              adapter support.
             </p>
-            
+
             <div class="space-y-1">
-              <div class="grid grid-cols-3 gap-4 pb-4 border-b border-primary/30 text-xs font-black uppercase tracking-wider">
+              <div
+                class="grid grid-cols-3 gap-4 border-b border-primary/30 pb-4 text-xs font-black uppercase tracking-wider"
+              >
                 <div class="text-text-dim">Metric</div>
-                <div class="text-white text-center">Lite Pro</div>
-                <div class="text-primary-light text-center">Full Pro</div>
+                <div class="text-center text-white">Lite Pro</div>
+                <div class="text-center text-primary-light">Full Pro</div>
               </div>
-              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
-                <div class="text-text-dim font-medium">Model Size</div>
-                <div class="text-white text-center">4B Params</div>
-                <div class="text-white text-center font-bold">8B Params</div>
+              <div class="grid grid-cols-3 gap-4 border-b border-border-dark/30 py-4 text-sm">
+                <div class="font-medium text-text-dim">Model Size</div>
+                <div class="text-center text-white">4B Params</div>
+                <div class="text-center font-bold text-white">8B Params</div>
               </div>
-              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
-                <div class="text-text-dim font-medium">Tags</div>
-                <div class="text-white text-center">150+</div>
-                <div class="text-white text-center font-bold">250+</div>
+              <div class="grid grid-cols-3 gap-4 border-b border-border-dark/30 py-4 text-sm">
+                <div class="font-medium text-text-dim">Tags</div>
+                <div class="text-center text-white">150+</div>
+                <div class="text-center font-bold text-white">250+</div>
               </div>
-              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
-                <div class="text-text-dim font-medium">Accuracy</div>
-                <div class="text-white text-center">~90%</div>
-                <div class="text-white text-center font-bold">~92.4%</div>
+              <div class="grid grid-cols-3 gap-4 border-b border-border-dark/30 py-4 text-sm">
+                <div class="font-medium text-text-dim">Accuracy</div>
+                <div class="text-center text-white">~90%</div>
+                <div class="text-center font-bold text-white">~92.4%</div>
               </div>
-              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
-                <div class="text-text-dim font-medium">Reasoning</div>
-                <div class="text-white text-center">—</div>
-                <div class="text-white text-center font-bold">✓</div>
+              <div class="grid grid-cols-3 gap-4 border-b border-border-dark/30 py-4 text-sm">
+                <div class="font-medium text-text-dim">Reasoning</div>
+                <div class="text-center text-white">—</div>
+                <div class="text-center font-bold text-white">✓</div>
               </div>
-              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
-                <div class="text-text-dim font-medium">LoRA Support</div>
-                <div class="text-white text-center">—</div>
-                <div class="text-white text-center font-bold">✓</div>
+              <div class="grid grid-cols-3 gap-4 border-b border-border-dark/30 py-4 text-sm">
+                <div class="font-medium text-text-dim">LoRA Support</div>
+                <div class="text-center text-white">—</div>
+                <div class="text-center font-bold text-white">✓</div>
               </div>
-              <div class="grid grid-cols-3 gap-4 py-4 border-b border-border-dark/30 text-sm">
-                <div class="text-text-dim font-medium">Batch Mode</div>
-                <div class="text-white text-center">Basic</div>
-                <div class="text-white text-center font-bold">Optimized</div>
+              <div class="grid grid-cols-3 gap-4 border-b border-border-dark/30 py-4 text-sm">
+                <div class="font-medium text-text-dim">Batch Mode</div>
+                <div class="text-center text-white">Basic</div>
+                <div class="text-center font-bold text-white">Optimized</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="bg-gradient-to-br from-primary/10 to-cyan-glow/5 border border-primary/20 rounded-3xl p-12 text-center">
-        <div class="flex justify-center mb-6">
-          <div class="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/40">
-            <RocketLaunchIcon class="w-8 h-8 text-white" aria-hidden="true" />
+      <section
+        class="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 to-cyan-glow/5 p-12 text-center"
+      >
+        <div class="mb-6 flex justify-center">
+          <div
+            class="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary shadow-xl shadow-primary/40"
+          >
+            <RocketLaunchIcon class="h-8 w-8 text-white" aria-hidden="true" />
           </div>
         </div>
-        <h2 class="text-4xl font-black text-white mb-4 font-display">
+        <h2 class="font-display mb-4 text-4xl font-black text-white">
           Turn Raw Tickets into<br />Operational Intelligence.
         </h2>
-        <p class="text-text-dim text-lg mb-8 max-w-2xl mx-auto">
-          Join forward-thinking support teams automating their workflow with German Engineering precision.
+        <p class="mx-auto mb-8 max-w-2xl text-lg text-text-dim">
+          Join forward-thinking support teams automating their workflow with German Engineering
+          precision.
         </p>
         <div class="flex flex-wrap justify-center gap-6">
           <Button variant="surface" size="lg" class="uppercase tracking-widest" client:load>
             Pre-order Full Pro
           </Button>
-          <Button variant="outline" size="lg" client:load>
-            View Architecture
-          </Button>
+          <Button variant="outline" size="lg" client:load> View Architecture </Button>
         </div>
       </section>
     </div>
@@ -292,7 +293,7 @@ const description = "The ultimate classification engine for high-volume enterpri
 </BaseLayout>
 
 <style>
-.glow-text {
-  text-shadow: 0 0 20px rgba(100, 108, 255, 0.3);
-}
+  .glow-text {
+    text-shadow: 0 0 20px rgba(100, 108, 255, 0.3);
+  }
 </style>

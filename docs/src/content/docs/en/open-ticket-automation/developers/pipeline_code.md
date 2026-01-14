@@ -1,7 +1,8 @@
 ---
 title: Pipeline Code Development
-description: "Developer guide for implementing custom pipes in Open Ticket AI with the dict[str, Any] pattern for parameter validation."
+description: 'Developer guide for implementing custom pipes in Open Ticket AI with the dict[str, Any] pattern for parameter validation.'
 ---
+
 # Pipeline Code Development
 
 This guide explains how to implement custom pipes using the current parameter validation pattern.
@@ -16,11 +17,11 @@ Atomic processing units that implement specific business logic:
 - id: fetch_tickets
   use: open_ticket_ai.base:FetchTicketsPipe
   injects:
-    ticket_system: "otobo_znuny"
+    ticket_system: 'otobo_znuny'
   params:
     search_criteria:
       queue:
-        name: "Support"
+        name: 'Support'
       limit: 10
 ```
 
@@ -57,28 +58,28 @@ flowchart TB
   steps:
     - id: fetch
       use: open_ticket_ai.base:FetchTicketsPipe
-      injects: { ticket_system: "otobo_znuny" }
+      injects: { ticket_system: 'otobo_znuny' }
       params:
         search_criteria:
-          queue: { name: "Incoming" }
+          queue: { name: 'Incoming' }
           limit: 10
 
     - id: classify
       use: otai_hf_local:HFLocalTextClassificationPipe
       params:
-        model: "bert-base-german-cased"
+        model: 'bert-base-german-cased'
         text: "{{ get_pipe_result('fetch').data.fetched_tickets[0].subject }}"
-      depends_on: [ fetch ]
+      depends_on: [fetch]
 
     - id: update
       use: open_ticket_ai.base:UpdateTicketPipe
-      injects: { ticket_system: "otobo_znuny" }
+      injects: { ticket_system: 'otobo_znuny' }
       params:
         ticket_id: "{{ get_pipe_result('fetch').data.fetched_tickets[0].id }}"
         updated_ticket:
           queue:
             name: "{{ get_pipe_result('classify').data.predicted_queue }}"
-      depends_on: [ classify ]
+      depends_on: [classify]
 ```
 
 </details>
@@ -95,32 +96,32 @@ flowchart TB
 
 1. **Initialization**: Prepare to iterate through `steps` list
 2. **For Each Step**:
-    - **Merge**: Combine parent params with step params (step overrides)
-    - **Build**: Use factory to create child pipe instance
-    - **Execute**: Call `child.process(context)` → updates context
-    - **Collect**: Child result stored in `context.pipes[child_id]`
-    - **Loop**: Continue to next step
+   - **Merge**: Combine parent params with step params (step overrides)
+   - **Build**: Use factory to create child pipe instance
+   - **Execute**: Call `child.process(context)` → updates context
+   - **Collect**: Child result stored in `context.pipes[child_id]`
+   - **Loop**: Continue to next step
 3. **Finalization**:
-    - **Union**: Merge all child results using `PipeResult.union()`
-    - **Save**: Store composite result in context
-    - **Return**: Return final updated context
+   - **Union**: Merge all child results using `PipeResult.union()`
+   - **Save**: Store composite result in context
+   - **Return**: Return final updated context
 
 **Field Details:**
 
 - **`pipes`**: Contains results from all previously executed pipes, keyed by pipe ID
-    - Accumulated as each pipe completes
-    - In CompositePipe: merged results from all child steps
-    - Access via `pipe_result('pipe_id')` in templates
+  - Accumulated as each pipe completes
+  - In CompositePipe: merged results from all child steps
+  - Access via `pipe_result('pipe_id')` in templates
 
 - **`params`**: Current pipe's parameters
-    - Set when the pipe is created
-    - Accessible via `params.*` in templates
-    - For nested pipes, can reference parent via `parent.params`
+  - Set when the pipe is created
+  - Accessible via `params.*` in templates
+  - For nested pipes, can reference parent via `parent.params`
 
 - **`parent`**: Reference to parent context (if inside a CompositePipe)
-    - Allows access to parent scope variables
-    - Creates hierarchical context chain
-    - Can traverse multiple levels (`parent.parent...`)
+  - Allows access to parent scope variables
+  - Creates hierarchical context chain
+  - Can traverse multiple levels (`parent.parent...`)
 
 ## Pipe Types (Simple Guide)
 
@@ -128,17 +129,17 @@ flowchart TB
 
 Small, focused steps. Examples:
 
-* **AddNotePipe** — `registryKey: base:AddNotePipe`
-* **FetchTicketsPipe** — `registryKey: base:FetchTicketsPipe`
-* **UpdateTicketPipe** — `registryKey: base:UpdateTicketPipe`
+- **AddNotePipe** — `registryKey: base:AddNotePipe`
+- **FetchTicketsPipe** — `registryKey: base:FetchTicketsPipe`
+- **UpdateTicketPipe** — `registryKey: base:UpdateTicketPipe`
 
 ```yaml
 - id: fetch_tickets
-  use: "base:FetchTicketsPipe"
-  injects: { ticket_system: "otobo_znuny" }
+  use: 'base:FetchTicketsPipe'
+  injects: { ticket_system: 'otobo_znuny' }
   params:
     ticket_search_criteria:
-      queue: { name: "Support" }
+      queue: { name: 'Support' }
       limit: 10
 ```
 
@@ -151,7 +152,7 @@ Renders an expression and returns that value. If it renders to a FailMarker, the
 
 ```yaml
 - id: check_any_tickets
-  use: "base:ExpressionPipe"
+  use: 'base:ExpressionPipe'
   params:
     expression: >
       {{ fail() if (get_pipe_result('fetch_tickets','fetched_tickets')|length)==0 else 'ok' }}
@@ -173,30 +174,30 @@ class A, B, C node
 
 ```yaml
 - id: ticket_flow
-  use: "base:CompositePipe"
+  use: 'base:CompositePipe'
   params:
     steps:
       - id: fetch
-        use: "base:FetchTicketsPipe"
-        injects: { ticket_system: "otobo_znuny" }
+        use: 'base:FetchTicketsPipe'
+        injects: { ticket_system: 'otobo_znuny' }
         params:
-          ticket_search_criteria: { queue: { name: "Incoming" }, limit: 10 }
+          ticket_search_criteria: { queue: { name: 'Incoming' }, limit: 10 }
 
       - id: pick_first
-        use: "base:ExpressionPipe"
+        use: 'base:ExpressionPipe'
         params:
           expression: "{{ get_pipe_result('fetch','fetched_tickets')[0] }}"
 
       - id: classify
-        use: "base:ClassificationPipe"
-        injects: { classification_service: "hf_local" }
+        use: 'base:ClassificationPipe'
+        injects: { classification_service: 'hf_local' }
         params:
           text: "{{ get_pipe_result('pick_first')['subject'] }} {{ get_pipe_result('pick_first')['body'] }}"
-          model_name: "softoft/otai-queue-de-bert-v1"
+          model_name: 'softoft/otai-queue-de-bert-v1'
 
       - id: update
-        use: "base:UpdateTicketPipe"
-        injects: { ticket_system: "otobo_znuny" }
+        use: 'base:UpdateTicketPipe'
+        injects: { ticket_system: 'otobo_znuny' }
         params:
           ticket_id: "{{ get_pipe_result('pick_first')['id'] }}"
           updated_ticket:
@@ -206,9 +207,9 @@ class A, B, C node
 
 **How it behaves (non-technical):**
 
-* Runs children one by one
-* Stops on first failure
-* Returns a merged result of everything that succeeded
+- Runs children one by one
+- Stops on first failure
+- Returns a merged result of everything that succeeded
   Here you go — tiny + simple.
 
 ```mermaid
@@ -237,20 +238,20 @@ the child pipes’ results as a single pipe result. `registryKey: base:SimpleSeq
 
 ```yaml
 - id: orchestrator
-  use: "base:SimpleSequentialOrchestrator"
+  use: 'base:SimpleSequentialOrchestrator'
   params:
-    orchestrator_sleep: "PT0.5S"
-    exception_sleep: "PT5S"
+    orchestrator_sleep: 'PT0.5S'
+    exception_sleep: 'PT5S'
     always_retry: true
     steps:
       - id: tick
-        use: "base:IntervalTrigger"
-        params: { interval: "PT5S" }
+        use: 'base:IntervalTrigger'
+        params: { interval: 'PT5S' }
       - id: fetch
-        use: "base:FetchTicketsPipe"
-        injects: { ticket_system: "otobo_znuny" }
+        use: 'base:FetchTicketsPipe'
+        injects: { ticket_system: 'otobo_znuny' }
         params:
-          ticket_search_criteria: { queue: { name: "Incoming" }, limit: 1 }
+          ticket_search_criteria: { queue: { name: 'Incoming' }, limit: 1 }
 ```
 
 ---
@@ -262,24 +263,24 @@ otherwise it skips. `registryKey: base:SimpleSequentialRunner`
 
 ```yaml
 - id: run-when-triggered
-  use: "base:SimpleSequentialRunner"
+  use: 'base:SimpleSequentialRunner'
   params:
     on:
       id: gate
-      use: "base:IntervalTrigger"
-      params: { interval: "PT60S" }
+      use: 'base:IntervalTrigger'
+      params: { interval: 'PT60S' }
     run:
       id: do-something
-      use: "base:ExpressionPipe"
-      params: { expression: "Triggered run" }
+      use: 'base:ExpressionPipe'
+      params: { expression: 'Triggered run' }
 ```
 
 ---
 
 ## Short Notes
 
-* **registryKey** = what you put into `use`, e.g. `use: "base:FetchTicketsPipe"`.
-* **Accessing parent params:** Use `parent` for the **direct** parent’s params only (no multi-level
+- **registryKey** = what you put into `use`, e.g. `use: "base:FetchTicketsPipe"`.
+- **Accessing parent params:** Use `parent` for the **direct** parent’s params only (no multi-level
   chains).
 
 If you want, I’ll convert this into a VitePress page with the same structure.
@@ -511,7 +512,7 @@ Users write YAML with templates:
 
 ```yaml
 - id: my_custom_pipe
-  use: "mypackage:MyPipe"
+  use: 'mypackage:MyPipe'
   params:
     input_field: "{{ pipe_result('previous_step').data.output }}"
     threshold: "{{ env('THRESHOLD', '0.5') }}"
@@ -558,9 +559,9 @@ class FetchTicketsPipe(Pipe[FetchTicketsParams]):
 
 ```yaml
 - id: fetch_tickets
-  use: "mypackage:FetchTicketsPipe"
+  use: 'mypackage:FetchTicketsPipe'
   injects:
-    ticket_system: "otobo_system"  # References a service by ID
+    ticket_system: 'otobo_system' # References a service by ID
   params:
     limit: 100
 ```
@@ -646,7 +647,7 @@ Use the `if` field in YAML config:
 
 ```yaml
 - id: conditional_pipe
-  use: "mypackage:MyPipe"
+  use: 'mypackage:MyPipe'
   if: "{{ pipe_result('classifier').data.category == 'urgent' }}"
   params:
   # ...
@@ -658,13 +659,12 @@ Use the `depends_on` field:
 
 ```yaml
 - id: step2
-  use: "mypackage:Step2Pipe"
+  use: 'mypackage:Step2Pipe'
   depends_on:
     - step1
   params:
     input: "{{ pipe_result('step1').data.output }}"
 ```
-
 
 ## Best Practices
 

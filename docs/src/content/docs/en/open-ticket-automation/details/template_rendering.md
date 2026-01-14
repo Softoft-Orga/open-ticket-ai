@@ -56,7 +56,7 @@ specific entry. The helper raises a render error if the key does not exist.
 
 ```yaml
 params:
-  classification: "{{ get_pipe_result('classify') }}"  # reads the default `value`
+  classification: "{{ get_pipe_result('classify') }}" # reads the default `value`
   confidence: "{{ get_pipe_result('classify', 'confidence') }}"
 ```
 
@@ -93,7 +93,7 @@ Creates a special marker recognised by the Expression pipe. Returning this marke
 explicitly fail a pipe instead of raising an exception.
 
 ```yaml
-expression: "{{ fail() if confidence < 0.6 else result }}"
+expression: '{{ fail() if confidence < 0.6 else result }}'
 ```
 
 ## Template Context
@@ -177,7 +177,7 @@ Template rendering applies to string values in these configuration sections:
 ```yaml
 services:
   - id: api_client
-    use: "mypackage:APIClient"
+    use: 'mypackage:APIClient'
     params:
       base_url: "{{ get_env('API_BASE_URL') }}"
       api_key: "{{ get_env('API_KEY') }}"
@@ -193,9 +193,9 @@ orchestrator:
         threshold: 0.8
       pipes:
         - id: classify
-          use: "mypackage:Classifier"
+          use: 'mypackage:Classifier'
           params:
-            confidence_threshold: "{{ params.threshold }}"
+            confidence_threshold: '{{ params.threshold }}'
 ```
 
 ### Pipe Dependencies
@@ -203,13 +203,13 @@ orchestrator:
 ```yaml
 pipes:
   - id: fetch_data
-    use: "mypackage:Fetcher"
+    use: 'mypackage:Fetcher'
 
   - id: process_data
-    use: "mypackage:Processor"
+    use: 'mypackage:Processor'
     params:
       input: "{{ get_pipe_result('fetch_data') }}"
-    depends_on: [ fetch_data ]
+    depends_on: [fetch_data]
     if: "{{ not has_failed('fetch_data') }}"
 ```
 
@@ -218,12 +218,12 @@ pipes:
 ```yaml
 pipes:
   - id: composite
-    use: "mypackage:Composite"
+    use: 'mypackage:Composite'
     params:
       threshold: 0.75
     steps:
       - id: evaluate
-        use: "mypackage:Expression"
+        use: 'mypackage:Expression'
         params:
           expression: "{{ get_parent_param('threshold') > 0.7 }}"
 ```
@@ -233,7 +233,7 @@ pipes:
 ```yaml
 pipes:
   - id: evaluate
-    use: "mypackage:Expression"
+    use: 'mypackage:Expression'
     params:
       expression: "{{ fail() if get_pipe_result('validate', 'score') < 0.5 else 'ok' }}"
 ```

@@ -1,6 +1,6 @@
 ---
-title: "Ticket System Integration"
-description: "Integration of external ticketing platforms with Open Ticket AI using the TicketSystemService base class."
+title: 'Ticket System Integration'
+description: 'Integration of external ticketing platforms with Open Ticket AI using the TicketSystemService base class.'
 ---
 
 # Ticket System Integration
@@ -41,29 +41,29 @@ with native models retrieved directly from the upstream SDK.
 
 ```yaml
 services:
-  - id: "otobo"
-    use: "otobo-znuny:OTOBOZnunyTicketSystemService"
+  - id: 'otobo'
+    use: 'otobo-znuny:OTOBOZnunyTicketSystemService'
     params:
-      webservice_name: "GenericTicketConnector"
-      base_url: "https://helpdesk.example.com"
-      username: "agent"
-      password: "${{ secrets.OTOBO_PASSWORD }}"
+      webservice_name: 'GenericTicketConnector'
+      base_url: 'https://helpdesk.example.com'
+      username: 'agent'
+      password: '${{ secrets.OTOBO_PASSWORD }}'
 
 pipes:
-  - id: "fetch-open"
-    use: "otai_base:pipes.ticket_system_pipes.FetchTicketsPipe"
+  - id: 'fetch-open'
+    use: 'otai_base:pipes.ticket_system_pipes.FetchTicketsPipe'
     params:
       ticket_search_criteria:
         queue:
-          id: "5"
+          id: '5'
         limit: 20
 
-  - id: "create"
-    use: "my_plugin:CreateTicketPipe"
+  - id: 'create'
+    use: 'my_plugin:CreateTicketPipe'
     params:
       ticket_payload:
-        subject: "{{ context.subject }}"
-        body: "{{ context.body }}"
+        subject: '{{ context.subject }}'
+        body: '{{ context.body }}'
 ```
 
 The YAML snippets above render into keyword arguments that are passed directly

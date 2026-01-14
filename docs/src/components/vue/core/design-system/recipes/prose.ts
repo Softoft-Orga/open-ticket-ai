@@ -1,5 +1,5 @@
-import { tv, type VariantProps } from 'tailwind-variants'
-import type { Size } from '../tokens.ts'
+import { tv, type VariantProps } from 'tailwind-variants';
+import type { Size } from '../tokens.ts';
 
 /**
  * Prose recipe - MDX/Markdown content wrapper
@@ -22,7 +22,7 @@ export const prose = tv({
     'prose-ul:text-text-1 prose-ol:text-text-1',
     'prose-li:text-text-1 prose-li:marker:text-text-dim',
     'prose-img:rounded-lg prose-img:border prose-img:border-border-dark',
-    'prose-table:text-text-1'
+    'prose-table:text-text-1',
   ],
   variants: {
     size: {
@@ -31,27 +31,27 @@ export const prose = tv({
         'prose-headings:mb-3 prose-headings:mt-6',
         'prose-p:mb-3',
         'prose-ul:my-3 prose-ol:my-3',
-        'prose-li:my-1'
+        'prose-li:my-1',
       ],
       md: [
         'prose-base',
         'prose-headings:mb-4 prose-headings:mt-8',
         'prose-p:mb-4',
         'prose-ul:my-4 prose-ol:my-4',
-        'prose-li:my-1.5'
+        'prose-li:my-1.5',
       ],
       lg: [
         'prose-lg',
         'prose-headings:mb-5 prose-headings:mt-10',
         'prose-p:mb-5',
         'prose-ul:my-5 prose-ol:my-5',
-        'prose-li:my-2'
-      ]
-    } satisfies Record<Size, string>
+        'prose-li:my-2',
+      ],
+    } satisfies Record<Size, string>,
   },
   defaultVariants: {
-    size: 'md'
-  }
-})
+    size: 'md',
+  },
+});
 
-export type ProseVariants = VariantProps<typeof prose>
+export type ProseVariants = VariantProps<typeof prose>;

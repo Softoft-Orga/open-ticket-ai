@@ -7,8 +7,9 @@ description: "Understand Open Ticket AI's configuration lifecycle, template rend
 
 Open Ticket AI allows you to create dynamic configurations using **YAML** plus **Jinja2 template
 expressions** like
+
 <div class="pre">
-<code>{`{{ ... }}`}</code> without spaces
+  <code>{`{{ ... }}`}</code> without spaces
 </div>
 This lets you reuse values, read environment variables, and reference results from other pipes — all
 while keeping configuration clean and declarative.
@@ -24,7 +25,7 @@ in the system.
 ## Configuration Attributes
 
 | Attribute | Type             | Description                                                                                           | Example                            |
-|-----------|------------------|-------------------------------------------------------------------------------------------------------|------------------------------------|
+| --------- | ---------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------- |
 | `use`     | `TEXT`           | Identifies which component to create. Format: `plugin-name:ComponentName`                             | `"base:FetchTicketsPipe"`          |
 | `injects` | name:value pairs | Maps constructor parameter names to service IDs, connecting dependencies to this component            | `{ ticket_system: "otobo_znuny" }` |
 | `params`  | name:value pairs | Configuration parameters specific to this component. Each component type expects different parameters | `{ limit: 25, queue: "Support" }`  |
@@ -45,10 +46,10 @@ While both use `InjectableConfig`, they differ in usage:
 ```yaml
 services:
   otobo_znuny:
-    use: "otobo-znuny:OTOBOZnunyTicketSystemService"
-    injects: { }
+    use: 'otobo-znuny:OTOBOZnunyTicketSystemService'
+    injects: {}
     params:
-      base_url: "https://helpdesk.example.com"
+      base_url: 'https://helpdesk.example.com'
       password: "{{ get_env('OTOBO_PASSWORD') }}"
 ```
 
@@ -64,9 +65,9 @@ services:
 ```yaml
 steps:
   - id: fetch_tickets
-    use: "base:FetchTicketsPipe"
+    use: 'base:FetchTicketsPipe'
     injects:
-      ticket_system: "otobo_znuny"
+      ticket_system: 'otobo_znuny'
     params:
       ticket_search_criteria:
         limit: 25
@@ -92,7 +93,7 @@ params:
 Here is the Markdown table describing the **full config structure** clean and ready for your docs.
 
 | Path                                        | Type                              | Description                                                   | Example                                       |                      |
-|---------------------------------------------|-----------------------------------|---------------------------------------------------------------|-----------------------------------------------|----------------------|
+| ------------------------------------------- | --------------------------------- | ------------------------------------------------------------- | --------------------------------------------- | -------------------- |
 | `otai`                                      | `OpenTicketAIConfig`              | Main application config root.                                 |                                               |                      |
 | `otai.api_version`                          | `str`                             | API version for compatibility.                                | `"1"`                                         |                      |
 | `otai.plugins[]`                            | `list[str]`                       | Python module paths of plugins to load.                       | `"otai_hf_local"`                             |                      |
@@ -116,26 +117,27 @@ Here is the Markdown table describing the **full config structure** clean and re
 | `otai.orchestrator.params`                  | `dict[str,Any]`                   | Pipe parameters (templating allowed). (inherits)              | `{}`                                          |                      |
 
 **Tiny example**
+
 <div class="pre">
 
 ```yaml
 otai:
-  api_version: "1"
-  plugins: [ ]
+  api_version: '1'
+  plugins: []
   infrastructure:
     logging:
-      level: "INFO"
+      level: 'INFO'
   services:
     ticket-db:
-      use: "plugin_name:Database"
+      use: 'plugin_name:Database'
       params:
         url: "{{ get_env('DB_URL') }}"
   orchestrator:
-    id: "root"
-    use: "base:CompositePipe"
+    id: 'root'
+    use: 'base:CompositePipe'
     injects:
-      step1: "ticket-db"
-    params: { }
+      step1: 'ticket-db'
+    params: {}
 ```
 
 </div>
@@ -143,13 +145,13 @@ otai:
 ## Available helper functions (for `config.yml` templates)
 
 | Function           | Parameters                                          | Returns                                                          | Errors if…                    |
-|--------------------|-----------------------------------------------------|------------------------------------------------------------------|-------------------------------|
+| ------------------ | --------------------------------------------------- | ---------------------------------------------------------------- | ----------------------------- |
 | `at_path`          | `value: Any`, `path: text`                          | Nested value at `"a.b.c"` path; supports dicts + Pydantic models | Invalid path format           |
 | `has_failed`       | `pipe_id: text`                                     | `True` if the given pipe result is marked failed                 | Unknown pipe ID               |
 | `get_pipe_result`  | `pipe_id: text`, `data_key: text;default = "value"` | Value stored in previous pipe result under given `data_key`      | Pipe or key missing           |
 | `get_parent_param` | `param_key: text`                                   | Inherited parent parameter value                                 | Parent missing or key missing |
 | `get_env`          | `name: text`                                        | Value of environment variable                                    | Env var missing               |
-| `fail`             | *(none)*                                            | A “FailMarker” sentinel object to signal explicit failure paths  | —                             |
+| `fail`             | _(none)_                                            | A “FailMarker” sentinel object to signal explicit failure paths  | —                             |
 
 ---
 
@@ -160,7 +162,7 @@ otai:
 ```yaml
 api:
   token: "{{ get_env('API_TOKEN') }}"
-  baseUrl: "https://api.example.com"
+  baseUrl: 'https://api.example.com'
 ```
 
 ### Consume a previous pipe’s result
@@ -187,7 +189,7 @@ timeoutMs: "{{ get_parent_param('timeoutMs') }}"
 ### Emit an explicit failure marker
 
 ```yaml
-result: "{{ fail() }}"
+result: '{{ fail() }}'
 ```
 
 ### Access nested data (dict or Pydantic model)

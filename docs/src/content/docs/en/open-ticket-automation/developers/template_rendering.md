@@ -1,7 +1,8 @@
 ---
 title: Template Rendering
-description: "Template rendering guide using Jinja2 for dynamic configuration in Open Ticket AI with variables, conditionals, loops, and custom extensions."
+description: 'Template rendering guide using Jinja2 for dynamic configuration in Open Ticket AI with variables, conditionals, loops, and custom extensions.'
 ---
+
 # Template Rendering
 
 Open Ticket AI uses Jinja2 for dynamic template rendering in configuration files and text generation.
@@ -22,7 +23,7 @@ Use templates in YAML configuration:
 ```yaml
 pipes:
   - pipe_name: add_note
-    note_text: "Classified as {{ context.queue }} with priority {{ context.priority }}"
+    note_text: 'Classified as {{ context.queue }} with priority {{ context.priority }}'
 ```
 
 ## Custom Template Extensions

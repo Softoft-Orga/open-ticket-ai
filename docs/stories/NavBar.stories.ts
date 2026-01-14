@@ -1,5 +1,5 @@
-import NavBar from '../src/components/vue/core/navigation/NavBar.vue'
-import type { Meta, StoryObj } from '@storybook/vue3'
+import NavBar from '../src/components/vue/core/navigation/NavBar.vue';
+import type { Meta, StoryObj } from '@storybook/vue3';
 
 const meta: Meta<typeof NavBar> = {
   title: 'Navigation/NavBar',
@@ -9,9 +9,7 @@ const meta: Meta<typeof NavBar> = {
     layout: 'fullscreen',
     backgrounds: {
       default: 'dark',
-      values: [
-        { name: 'dark', value: '#0a0118' },
-      ],
+      values: [{ name: 'dark', value: '#0a0118' }],
     },
   },
   argTypes: {
@@ -32,16 +30,16 @@ const meta: Meta<typeof NavBar> = {
       description: 'URL for the logo image',
     },
   },
-}
-export default meta
+};
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { NavBar },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <div class="min-h-screen bg-slate-900">
@@ -52,7 +50,7 @@ export const Default: Story = {
           <p class="text-gray-400 mt-2">Desktop view shows all items inline. Mobile view uses a slide-in dropdown menu.</p>
         </div>
       </div>
-    `
+    `,
   }),
   args: {
     links: [
@@ -62,14 +60,14 @@ export const Default: Story = {
     ],
     ctaLabel: 'Get Started',
     ctaUrl: '/get-started/',
-  }
-}
+  },
+};
 
 export const CustomNavItems: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { NavBar },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <div class="min-h-screen bg-slate-900">
@@ -79,7 +77,7 @@ export const CustomNavItems: Story = {
           <p class="text-gray-400 mt-2">Navbar with custom navigation links and CTA button label.</p>
         </div>
       </div>
-    `
+    `,
   }),
   args: {
     links: [
@@ -90,14 +88,14 @@ export const CustomNavItems: Story = {
     ],
     ctaLabel: 'Try Demo',
     ctaUrl: '/demo/',
-  }
-}
+  },
+};
 
 export const WithoutCTA: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { NavBar },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <div class="min-h-screen bg-slate-900">
@@ -107,7 +105,7 @@ export const WithoutCTA: Story = {
           <p class="text-gray-400 mt-2">Navigation bar without a CTA button.</p>
         </div>
       </div>
-    `
+    `,
   }),
   args: {
     links: [
@@ -115,14 +113,14 @@ export const WithoutCTA: Story = {
       { label: 'Services', url: '/services/' },
       { label: 'Pricing', url: '/pricing/' },
     ],
-  }
-}
+  },
+};
 
 export const MobileView: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { NavBar },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <div class="min-h-screen bg-slate-900">
@@ -139,7 +137,7 @@ export const MobileView: Story = {
           </ul>
         </div>
       </div>
-    `
+    `,
   }),
   args: {
     links: [
@@ -152,16 +150,16 @@ export const MobileView: Story = {
   },
   parameters: {
     viewport: {
-      defaultViewport: 'mobile1'
-    }
-  }
-}
+      defaultViewport: 'mobile1',
+    },
+  },
+};
 
 export const KeyboardAccessibility: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { NavBar },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <div class="min-h-screen bg-slate-900">
@@ -176,7 +174,7 @@ export const KeyboardAccessibility: Story = {
           </ul>
         </div>
       </div>
-    `
+    `,
   }),
   args: {
     links: [
@@ -186,5 +184,5 @@ export const KeyboardAccessibility: Story = {
     ],
     ctaLabel: 'Get Started',
     ctaUrl: '/get-started/',
-  }
-}
+  },
+};

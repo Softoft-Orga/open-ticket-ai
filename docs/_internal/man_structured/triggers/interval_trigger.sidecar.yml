@@ -8,7 +8,7 @@ _category: scheduling
 
 _inputs:
   placement: flat
-  alongside: [ id, use ]
+  alongside: [id, use]
   params:
     milliseconds: Interval in milliseconds (default 0)
     seconds: Interval in seconds (default 0)
@@ -23,14 +23,14 @@ _defaults:
   days: 0
 
 _output:
-  state_enum: [ triggered ]
+  state_enum: [triggered]
   description: Trigger notifies observers when the interval elapses.
   payload_schema_ref: OpenTicketAI.Triggers.Interval.Result
   examples:
     triggered:
       state: triggered
       payload:
-        trigger_time: "2025-10-13T18:45:00Z"
+        trigger_time: '2025-10-13T18:45:00Z'
 
 _errors:
   fail:
@@ -39,7 +39,7 @@ _errors:
   break:
     - code: config_invalid
       when: Required config missing or invalid type
-  continue: [ ]
+  continue: []
 
 _engine_support:
   on_failure: false

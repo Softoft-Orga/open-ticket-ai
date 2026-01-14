@@ -1,11 +1,12 @@
 ---
 title: Installation Guide
-description: "Complete guide for installing Open Ticket AI with Docker, OTOBO/Znuny setup, and configuration."
+description: 'Complete guide for installing Open Ticket AI with Docker, OTOBO/Znuny setup, and configuration.'
 lang: en
 nav:
   group: Users
   order: 1
 ---
+
 # Installation Guide
 
 This guide will help you install Open Ticket AI on your server. We recommend using Docker Compose
@@ -13,8 +14,8 @@ for the easiest and most reliable installation.
 
 ## Installation Overview
 
-Most users should start with the **Docker Quick Start**. If Docker isn't installed yet, use the *
-*per-OS tabs** below.
+Most users should start with the **Docker Quick Start**. If Docker isn't installed yet, use the \*
+\*per-OS tabs\*\* below.
 
 ---
 
@@ -22,14 +23,13 @@ Most users should start with the **Docker Quick Start**. If Docker isn't install
 
 Complete this **before** starting automation:
 
-* Create user **`open_ticket_ai`** and store the password in `.env` as `OTAI_ZNUNY_PASSWORD`
-* Import the provided webservice YAML:
+- Create user **`open_ticket_ai`** and store the password in `.env` as `OTAI_ZNUNY_PASSWORD`
+- Import the provided webservice YAML:
   `deployment/ticket-systems/ticket_operations.yml`
-* Ensure required Queues & Priorities exist
-* Permissions needed: `ro`, `move_into`, `priority`, `note`
+- Ensure required Queues & Priorities exist
+- Permissions needed: `ro`, `move_into`, `priority`, `note`
 
 See **[OTOBO/Znuny Plugin Setup](./plugin-otobo-znuny/setup.md)** for details.
-
 
 ## 1) Check Hardware & OS
 
@@ -162,7 +162,6 @@ sudo chown "$USER":"$USER" /opt/open_ticket_ai -R
 cd /opt/open_ticket_ai
 ```
 
-
 ```bash
 cat > .env <<'EOF'
 OTAI_HF_TOKEN=your_hf_token_here
@@ -170,13 +169,12 @@ OTAI_ZNUNY_PASSWORD=your_secure_password_here
 EOF
 ```
 
-````bash
+```bash
 # Optional: keep secrets out of git
 echo ".env" >> .gitignore
-````
+```
 
 ### Create /opt/open-ticket-ai/config.yml
-
 
 :::caution
 This is an example! Adjust according to your ticket system setup, queues, priorities, and
@@ -187,109 +185,111 @@ This is an example! Adjust according to your ticket system setup, queues, priori
 
 ```yaml
 open_ticket_ai:
-    api_version: ">=1.0.0"
-    infrastructure:
-        logging:
-            level: "INFO"
-            log_to_file: false
-            log_file_path: null
+  api_version: '>=1.0.0'
+  infrastructure:
+    logging:
+      level: 'INFO'
+      log_to_file: false
+      log_file_path: null
 
-    services:
-        jinja_default:
-            use: "base:JinjaRenderer"
+  services:
+    jinja_default:
+      use: 'base:JinjaRenderer'
 
-        otobo_znuny:
-            use: "otobo-znuny:OTOBOZnunyTicketSystemService"
-            params:
-                base_url: "http://host.docker.internal/znuny/nph-genericinterface.pl"
-                password: "{{ get_env('OTAI_ZNUNY_PASSWORD') }}"
+    otobo_znuny:
+      use: 'otobo-znuny:OTOBOZnunyTicketSystemService'
+      params:
+        base_url: 'http://host.docker.internal/znuny/nph-genericinterface.pl'
+        password: "{{ get_env('OTAI_ZNUNY_PASSWORD') }}"
 
-        hf_local:
-            use: "hf-local:HFClassificationService"
-            params:
-                api_token: "{{ get_env('OTAI_HF_TOKEN') }}"
+    hf_local:
+      use: 'hf-local:HFClassificationService'
+      params:
+        api_token: "{{ get_env('OTAI_HF_TOKEN') }}"
 
-    orchestrator:
-        use: "base:SimpleSequentialOrchestrator"
-        params:
-            orchestrator_sleep: "PT5S"
-            steps:
-                -   id: runner
-                    use: "base:SimpleSequentialRunner"
+  orchestrator:
+    use: 'base:SimpleSequentialOrchestrator'
+    params:
+      orchestrator_sleep: 'PT5S'
+      steps:
+        - id: runner
+          use: 'base:SimpleSequentialRunner'
+          params:
+            on:
+              id: 'interval'
+              use: 'base:IntervalTrigger'
+              params:
+                interval: 'PT2S'
+            run:
+              id: 'pipeline'
+              use: 'base:CompositePipe'
+              params:
+                steps:
+                  - id: fetch
+                    use: 'base:FetchTicketsPipe'
+                    injects: { ticket_system: 'otobo_znuny' }
                     params:
-                        on:
-                            id: "interval"
-                            use: "base:IntervalTrigger"
-                            params:
-                                interval: "PT2S"
-                        run:
-                            id: "pipeline"
-                            use: "base:CompositePipe"
-                            params:
-                                steps:
-                                    -   id: fetch
-                                        use: "base:FetchTicketsPipe"
-                                        injects: { ticket_system: "otobo_znuny" }
-                                        params:
-                                            ticket_search_criteria:
-                                                queue: { name: "Anfrage an die IT" }
-                                                limit: 1
-                                    -   id: ticket
-                                        use: "base:ExpressionPipe"
-                                        params:
-                                            expression: "{{ get_pipe_result('fetch','fetched_tickets')[0] if (get_pipe_result('fetch','fetched_tickets')|length)>0 else fail() }}"
-                                    -   id: cls_queue
-                                        use: "base:ClassificationPipe"
-                                        injects: { classification_service: "hf_local" }
-                                        params:
-                                            text: "{{ get_pipe_result('ticket')['subject'] }} {{ get_pipe_result('ticket')['body'] }}"
-                                            model_name: "softoft/EHS_Queue_Prediction"
-                                    -   id: queue_final
-                                        use: "base:ExpressionPipe"
-                                        params:
-                                            expression: "{{ get_pipe_result('cls_queue','label') if get_pipe_result('cls_queue','confidence')>=0.8 else 'Unklassifiziert' }}"
-                                    -   id: update_queue
-                                        use: "base:UpdateTicketPipe"
-                                        injects: { ticket_system: "otobo_znuny" }
-                                        params:
-                                            ticket_id: "{{ get_pipe_result('ticket')['id'] }}"
-                                            updated_ticket:
-                                                queue: { name: "{{ get_pipe_result('queue_final') }}" }
+                      ticket_search_criteria:
+                        queue: { name: 'Anfrage an die IT' }
+                        limit: 1
+                  - id: ticket
+                    use: 'base:ExpressionPipe'
+                    params:
+                      expression: "{{ get_pipe_result('fetch','fetched_tickets')[0] if (get_pipe_result('fetch','fetched_tickets')|length)>0 else fail() }}"
+                  - id: cls_queue
+                    use: 'base:ClassificationPipe'
+                    injects: { classification_service: 'hf_local' }
+                    params:
+                      text: "{{ get_pipe_result('ticket')['subject'] }} {{ get_pipe_result('ticket')['body'] }}"
+                      model_name: 'softoft/EHS_Queue_Prediction'
+                  - id: queue_final
+                    use: 'base:ExpressionPipe'
+                    params:
+                      expression: "{{ get_pipe_result('cls_queue','label') if get_pipe_result('cls_queue','confidence')>=0.8 else 'Unklassifiziert' }}"
+                  - id: update_queue
+                    use: 'base:UpdateTicketPipe'
+                    injects: { ticket_system: 'otobo_znuny' }
+                    params:
+                      ticket_id: "{{ get_pipe_result('ticket')['id'] }}"
+                      updated_ticket:
+                        queue: { name: "{{ get_pipe_result('queue_final') }}" }
 ```
-</details>
 
+</details>
 
 For Testing set log level DEBUG and the interval to 5 seconds in production set interval to 10ms and
 log level to INFO.
 
-* Repo deployment directory:
+- Repo deployment directory:
   [https://github.com/Softoft-Orga/open-ticket-ai/tree/dev/deployment](https://github.com/Softoft-Orga/open-ticket-ai/tree/dev/deployment)
-* Znuny demo `config.yml`:
+- Znuny demo `config.yml`:
   [https://github.com/Softoft-Orga/open-ticket-ai/blob/dev/deployment/znuny_demo/config.yml](https://github.com/Softoft-Orga/open-ticket-ai/blob/dev/deployment/znuny_demo/config.yml)
-* Znuny demo `compose.yml`:
+- Znuny demo `compose.yml`:
   [https://github.com/Softoft-Orga/open-ticket-ai/blob/dev/deployment/znuny_demo/compose.yml](https://github.com/Softoft-Orga/open-ticket-ai/blob/dev/deployment/znuny_demo/compose.yml)
 
 ### Create opt/open-ticket-ai/compose.yml
+
 Check Versions on Github and Dockerhub
+
 ```yaml
 services:
-    open-ticket-ai:
-        image: openticketai/engine:1.4.19
-        restart: "always"
-        volumes:
-            - ./config.yml:/app/config.yml:ro
-        extra_hosts:
-            - "host.docker.internal:host-gateway"
-        environment:
-            - OTAI_HF_TOKEN
-            - OTAI_ZNUNY_PASSWORD
-            - HUGGING_FACE_HUB_TOKEN=${OTAI_HF_TOKEN}
-            - HF_TOKEN=${OTAI_HF_TOKEN}
-        logging:
-            driver: json-file
-            options:
-                max-size: "50m"
-                max-file: "3"
+  open-ticket-ai:
+    image: openticketai/engine:1.4.19
+    restart: 'always'
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      - OTAI_HF_TOKEN
+      - OTAI_ZNUNY_PASSWORD
+      - HUGGING_FACE_HUB_TOKEN=${OTAI_HF_TOKEN}
+      - HF_TOKEN=${OTAI_HF_TOKEN}
+    logging:
+      driver: json-file
+      options:
+        max-size: '50m'
+        max-file: '3'
 ```
 
 ### Check Configuration
@@ -302,10 +302,7 @@ services:
 - Required Queues & Priorities, Types, Services, Users, ... exist in ticket system
 - Permissions for user `open_ticket_ai`
 
-
-
 ### Start / Restart / Logs
-
 
 ```bash
 docker compose  up -d
@@ -375,3 +372,4 @@ After installation:
 - [First Pipeline](first_pipeline.md) - Create your first automation
 - [Configuration Reference](../details/config_reference.md) - Complete config documentation
 - [Plugin System](../users/plugins.mdx) - Understanding plugins
+```

@@ -1,7 +1,8 @@
 ---
 title: Testing Guide
-description: "Comprehensive testing guide for Open Ticket AI configurations, pipelines, and custom components with best practices and configExamples."
+description: 'Comprehensive testing guide for Open Ticket AI configurations, pipelines, and custom components with best practices and configExamples.'
 ---
+
 # Testing Guide
 
 Guide to testing Open Ticket AI configurations, pipelines, and custom components.
@@ -564,7 +565,7 @@ open-ticket-ai/
 ### Where to Place Tests
 
 | Test Type                     | Location                             | Purpose                                        |
-|-------------------------------|--------------------------------------|------------------------------------------------|
+| ----------------------------- | ------------------------------------ | ---------------------------------------------- |
 | **Package Unit**              | `packages/<name>/tests/unit/`        | Fast, isolated tests for package code          |
 | **Package Integration**       | `packages/<name>/tests/integration/` | Tests touching I/O or package boundaries       |
 | **Root Unit**                 | `tests/unit/`                        | Tests for root package (`src/open_ticket_ai/`) |
@@ -731,7 +732,7 @@ def sample_classification_config():
 Follow these naming patterns for consistency:
 
 | Pattern     | Purpose                 | Example                                         |
-|-------------|-------------------------|-------------------------------------------------|
+| ----------- | ----------------------- | ----------------------------------------------- |
 | `mock_*`    | Mock objects            | `mock_ticket_system_service`                    |
 | `sample_*`  | Sample data             | `sample_ticket`, `sample_classification_config` |
 | `tmp_*`     | Temporary resources     | `tmp_config`, `tmp_path`                        |

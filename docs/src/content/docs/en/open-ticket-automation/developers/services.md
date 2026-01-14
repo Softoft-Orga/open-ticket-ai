@@ -1,7 +1,8 @@
 ---
 title: Core Services
-description: "Core services documentation for Open Ticket AI covering ticket system adapters, business logic encapsulation, and dependency injection."
+description: 'Core services documentation for Open Ticket AI covering ticket system adapters, business logic encapsulation, and dependency injection.'
 ---
+
 # Core Services
 
 Services encapsulate business logic and provide reusable functionality to pipes. They are managed by the dependency
@@ -9,10 +10,10 @@ injection container.
 
 ## Service Classes vs. Configuration Entries
 
-Service *classes* are Python implementations that live in packages (for example `otai_base.ticket_system_integration.TicketSystemService` subclasses).
+Service _classes_ are Python implementations that live in packages (for example `otai_base.ticket_system_integration.TicketSystemService` subclasses).
 They become usable inside Open Ticket AI when you expose them through the plugin registry.
 
-Service *configuration entries* live in `open_ticket_ai.services` inside your YAML configuration. Each entry binds a
+Service _configuration entries_ live in `open_ticket_ai.services` inside your YAML configuration. Each entry binds a
 service class to an identifier, optional constructor parameters, and a dependency-injection scope. Multiple entries can
 reference the same class while providing different parameters.
 
@@ -22,18 +23,18 @@ reference the same class while providing different parameters.
 open_ticket_ai:
   services:
     jinja_default:
-      use: "base:JinjaRenderer"
+      use: 'base:JinjaRenderer'
 
     otobo_znuny:
-      use: "otobo-znuny:OTOBOZnunyTicketSystemService"
+      use: 'otobo-znuny:OTOBOZnunyTicketSystemService'
       params:
-        base_url: "http://example/otobo/nph-genericinterface.pl"
-        password: "${OTOBO_PASSWORD}"
+        base_url: 'http://example/otobo/nph-genericinterface.pl'
+        password: '${OTOBO_PASSWORD}'
 
     hf_local:
-      use: "hf-local:HFClassificationService"
+      use: 'hf-local:HFClassificationService'
       params:
-        model_name: "softoft/otai-queue-de-bert-v1"
+        model_name: 'softoft/otai-queue-de-bert-v1'
 ```
 
 In this configuration three independent services become available for injection. Pipes select the instance they need by
@@ -41,9 +42,9 @@ referencing the entry identifier, for example:
 
 ```yaml
 - id: fetch_otobo
-  use: "base:FetchTicketsPipe"
+  use: 'base:FetchTicketsPipe'
   injects:
-    ticket_system: "otobo_znuny"
+    ticket_system: 'otobo_znuny'
 ```
 
 ## Core Service Types
