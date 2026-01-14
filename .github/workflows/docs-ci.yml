@@ -6,6 +6,7 @@ on:
     paths:
       - 'docs/**'
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [dev]
     paths:
       - 'docs/**'
