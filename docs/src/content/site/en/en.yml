@@ -1,15 +1,13 @@
-slug: main
 meta:
   siteName: Open Ticket AI
-  tagline: Intelligente Automatisierung für OTRS, Znuny und Zammad. Deutsche Ingenieurskunst.
+  tagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
   logoUrl: /public/open-ticket-logo.png
 nav:
-  - label: Produkte
+  - label: Products
     url: products
-  - label: Dienstleistungen
+  - label: Services
     url: services
-
-  - label: Dokumentation
+  - label: Docs
     url: docs
   - label: Blog
     url: blog
@@ -18,21 +16,21 @@ footer:
   brandTagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
   socialHeading: Connect
   sections:
-    - title: Produkt
+    - title: Product
       links:
-        - label: Funktionen
+        - label: Features
           url: products
-        - label: Integrationen
+        - label: Integrations
           url: services
-        - label: Sicherheit
+        - label: Security
           url: docs
-    - title: Unternehmen
+    - title: Company
       links:
-        - label: Über uns
+        - label: About Us
           url: '#'
-        - label: Karriere
+        - label: Careers
           url: '#'
-        - label: Rechtliches
+        - label: Legal
           url: '#'
   social:
     - platform: github
@@ -42,32 +40,32 @@ footer:
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
   legal:
-    - label: Datenschutz
+    - label: Privacy Policy
       url: '#'
-    - label: Impressum
+    - label: Imprint
       url: '#'
-  copyright: Open Ticket AI UG. Alle Rechte vorbehalten.
+  copyright: Open Ticket AI UG. All rights reserved.
 
 popularResources:
-  title: Beliebte Ressourcen
+  title: Popular Resources
   groups:
-    - title: Automatisierungs-Engine
+    - title: Automation Engine
       items:
-        - docId: docs/de/guides/quick-start
+        - docId: docs/en/guides/quick-start
           icon: RocketLaunchIcon
-        - docId: docs/de/developers/config_rendering
+        - docId: docs/en/developers/config_rendering
           icon: CommandLineIcon
-        - docId: docs/de/developers/ticket_system_integration
+        - docId: docs/en/developers/ticket_system_integration
           icon: PuzzlePieceIcon
-        - docId: docs/de/developers/plugin_development
+        - docId: docs/en/developers/plugin_development
           icon: ArrowsRightLeftIcon
-    - title: Tagging-Engine
+    - title: Tagging Engine
       items:
-        - docId: docs/de/taxonomy-design
+        - docId: docs/en/taxonomy-design
           icon: Squares2x2Icon
-        - docId: docs/de/hardware-sizing
+        - docId: docs/en/hardware-sizing
           icon: CpuChipIcon
-        - docId: docs/de/using-model
+        - docId: docs/en/using-model
           icon: ArrowPathIcon
-        - docId: docs/de/tag-mapping
+        - docId: docs/en/tag-mapping
           icon: ChartBarIcon
