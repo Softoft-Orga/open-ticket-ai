@@ -171,23 +171,38 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 
 ### Using localized content collections
 
-**ALWAYS** use the localized collections
+**ALWAYS** filter content by the current locale when querying collections:
+
+**Important:** `Astro.currentLocale` is always defined (never null or undefined) due to the i18n configuration in `astro.config.mjs`. All content collection IDs start with the locale prefix followed by a slash (e.g., `en/`, `de/`).
 
 ```astro
 ---
-// ❌ DON'T use getCollection directly
 import { getCollection } from 'astro:content';
-const products = await getCollection('products');
 
-// ✅ DO use
-const services = await Astro.locals.content.getLocalizedCollection('services');
-const site = await Astro.locals.content.getLocalizedSingleton('site');
-const product = await Astro.locals.content.getLocalizedEntry('products', 'xyz');
+// Get current locale (always defined, no fallback needed)
+const currentLocale = Astro.currentLocale.toLowerCase();
+
+// For data collections (YAML) - filter by ID prefix with slash
+const allServices = await getCollection('services');
+const localizedServices = allServices.filter(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
+
+// For content collections (MD/MDX) - filter by locale prefix with slash
+const allDocs = await getCollection('docs');
+const localizedDocs = allDocs.filter(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
+
+// For singleton data collections - find the first matching entry
+const allSiteConfigs = await getCollection('site');
+const siteConfig = allSiteConfigs.find(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
 ---
 ```
 
-This ensures content is automatically filtered by locale. For non-localized collections (blog,
-docs), the helper returns all entries.
+This ensures content is automatically filtered by locale.
 
 ### Quick checklist
 

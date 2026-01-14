@@ -1,6 +1,7 @@
 ---
-import ModalTrigger from '../../components/vue/core/basic/ModalTrigger.vue';
-import ContactForm from '../../components/ContactForm.astro';
+import { getCollection } from 'astro:content';
+import ModalTrigger from '../components/vue/core/basic/ModalTrigger.vue';
+import ContactForm from '../components/ContactForm.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
@@ -28,7 +29,11 @@ const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
 
 // Get all services from the content collection for current locale
-const servicesEntries = await Astro.locals.content.getLocalizedCollection('services');
+const currentLocale = Astro.currentLocale.toLowerCase();
+const allServicesEntries = await getCollection('services');
+const servicesEntries = allServicesEntries.filter(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
 // Each entry's data is an array of services, so flatten them
 const allServices = servicesEntries.flatMap(entry => entry.data);
 

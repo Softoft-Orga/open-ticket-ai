@@ -1,13 +1,17 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Card from '../../components/vue/core/basic/Card.vue';
 import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.js';
+import Card from '../../components/vue/core/basic/Card.vue';
 
 const title = 'Documentation | Open Ticket AI';
 const description =
   'Choose the documentation you need. Explore API references, implementation guides, and best practices.';
 
-const siteConfig = await Astro.locals.content.getLocalizedSingleton('site');
+const currentLocale = Astro.currentLocale.toLowerCase();
+const allSiteConfigs = await getCollection('site');
+const siteConfig = allSiteConfigs.find(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
 const popularResources = siteConfig?.data.popularResources;
 
 const iconMap: Record<string, string> = {
