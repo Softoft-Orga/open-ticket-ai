@@ -13,14 +13,23 @@
       >
         <!-- Custom title slot -->
         <template #title="{ open }">
-          <slot name="title" :item="it" :index="i" :open="open">
+          <slot
+            name="title"
+            :item="it"
+            :index="i"
+            :open="open"
+          >
             <span class="text-lg font-semibold text-white">{{ it.title }}</span>
           </slot>
         </template>
 
         <!-- Content slot -->
         <template #default="{ open }">
-          <slot :item="it" :index="i" :open="open">
+          <slot
+            :item="it"
+            :index="i"
+            :open="open"
+          >
             {{ it.content }}
           </slot>
         </template>

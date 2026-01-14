@@ -1,6 +1,6 @@
-import ModalTrigger from '../src/components/vue/core/basic/ModalTrigger.vue'
-import Button from '../src/components/vue/core/basic/Button.vue'
-import type { Meta, StoryObj } from '@storybook/vue3'
+import ModalTrigger from '../src/components/vue/core/basic/ModalTrigger.vue';
+import Button from '../src/components/vue/core/basic/Button.vue';
+import type { Meta, StoryObj } from '@storybook/vue3';
 
 const meta: Meta<typeof ModalTrigger> = {
   title: 'Core/ModalTrigger',
@@ -9,99 +9,94 @@ const meta: Meta<typeof ModalTrigger> = {
   argTypes: {
     tone: {
       control: { type: 'select' },
-      options: ['neutral', 'primary', 'success', 'warning', 'danger', 'info']
+      options: ['neutral', 'primary', 'success', 'warning', 'danger', 'info'],
     },
     size: {
       control: { type: 'select' },
-      options: ['sm', 'md', 'lg']
-    },
-    buttonVariant: {
-      control: { type: 'select' },
-      options: ['surface', 'solid', 'outline', 'ghost', 'subtle']
-    },
-    buttonTone: {
-      control: { type: 'select' },
-      options: ['neutral', 'primary', 'success', 'warning', 'danger', 'info']
-    },
-    buttonSize: {
-      control: { type: 'select' },
-      options: ['sm', 'md', 'lg']
+      options: ['sm', 'md', 'lg'],
     },
     closeOnOverlay: {
-      control: { type: 'boolean' }
-    }
+      control: { type: 'boolean' },
+    },
   },
   parameters: {
     docs: {
       description: {
-        component: 'ModalTrigger component that manages its own modal state. Exposes an open() function via the #button slot, allowing custom trigger buttons while keeping state internal. No modal state leaks to parent components.'
-      }
-    }
-  }
-}
-export default meta
+        component:
+          'ModalTrigger component that manages its own modal state. Exposes an open() function via the #trigger slot, allowing custom trigger buttons while keeping state internal. No modal state leaks to parent components.',
+      },
+    },
+  },
+};
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: (args) => ({
-    components: { ModalTrigger },
+  render: args => ({
+    components: { ModalTrigger, Button },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <ModalTrigger v-bind="args">
+        <template #trigger="{ open }">
+          <Button variant="surface" tone="primary" @click="open">
+            Open Modal
+          </Button>
+        </template>
         <p>This is a default modal triggered by the ModalTrigger component.</p>
         <p class="mt-4">The component manages its own state internally, so no state management is needed in the parent.</p>
       </ModalTrigger>
-    `
+    `,
   }),
   args: {
     title: 'Modal Title',
-    buttonText: 'Open Modal',
     tone: 'neutral',
     size: 'md',
-    buttonVariant: 'surface',
-    buttonTone: 'primary',
-    buttonSize: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const CustomButtonSlot: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { ModalTrigger, Button },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <ModalTrigger v-bind="args">
-        <template #button="{ open }">
+        <template #trigger="{ open }">
           <Button variant="outline" tone="primary" @click="open">
             Custom Trigger Button
           </Button>
         </template>
-        <p>This modal is opened using a custom button provided via the #button slot.</p>
+        <p>This modal is opened using a custom button provided via the #trigger slot.</p>
         <p class="mt-4">The open() function is exposed via the slot props, allowing full control over when and how the modal opens.</p>
       </ModalTrigger>
-    `
+    `,
   }),
   args: {
     title: 'Custom Button Trigger',
     tone: 'neutral',
     size: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const WithCustomTitle: Story = {
-  render: (args) => ({
-    components: { ModalTrigger },
+  render: args => ({
+    components: { ModalTrigger, Button },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <ModalTrigger v-bind="args">
+        <template #trigger="{ open }">
+          <Button variant="surface" tone="primary" @click="open">
+            Open with Custom Title
+          </Button>
+        </template>
         <template #title>
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
@@ -114,27 +109,28 @@ export const WithCustomTitle: Story = {
         </template>
         <p>This modal demonstrates using the title slot for custom header content.</p>
       </ModalTrigger>
-    `
+    `,
   }),
   args: {
-    buttonText: 'Open with Custom Title',
     tone: 'primary',
     size: 'md',
-    buttonVariant: 'surface',
-    buttonTone: 'primary',
-    buttonSize: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const WithFooter: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { ModalTrigger, Button },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <ModalTrigger v-bind="args">
+        <template #trigger="{ open }">
+          <Button variant="surface" tone="primary" @click="open">
+            Open Modal with Footer
+          </Button>
+        </template>
         <p>This modal includes a footer slot for actions or additional information.</p>
         <template #footer>
           <div class="flex justify-end gap-3">
@@ -143,52 +139,54 @@ export const WithFooter: Story = {
           </div>
         </template>
       </ModalTrigger>
-    `
+    `,
   }),
   args: {
     title: 'Confirm Action',
-    buttonText: 'Open Modal with Footer',
     tone: 'neutral',
     size: 'md',
-    buttonVariant: 'surface',
-    buttonTone: 'primary',
-    buttonSize: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const PrimaryTone: Story = {
-  render: (args) => ({
-    components: { ModalTrigger },
+  render: args => ({
+    components: { ModalTrigger, Button },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <ModalTrigger v-bind="args">
+        <template #trigger="{ open }">
+          <Button variant="surface" tone="primary" @click="open">
+            Open Primary Modal
+          </Button>
+        </template>
         <p>This modal uses the primary tone, giving it a subtle primary color tint.</p>
       </ModalTrigger>
-    `
+    `,
   }),
   args: {
     title: 'Primary Modal',
-    buttonText: 'Open Primary Modal',
     tone: 'primary',
     size: 'md',
-    buttonVariant: 'surface',
-    buttonTone: 'primary',
-    buttonSize: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const DangerTone: Story = {
-  render: (args) => ({
+  render: args => ({
     components: { ModalTrigger, Button },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <ModalTrigger v-bind="args">
+        <template #trigger="{ open }">
+          <Button variant="surface" tone="danger" @click="open">
+            Delete
+          </Button>
+        </template>
         <p>This action cannot be undone. Are you sure you want to proceed?</p>
         <template #footer>
           <div class="flex justify-end gap-3">
@@ -197,52 +195,54 @@ export const DangerTone: Story = {
           </div>
         </template>
       </ModalTrigger>
-    `
+    `,
   }),
   args: {
     title: 'Confirm Deletion',
-    buttonText: 'Delete',
     tone: 'danger',
     size: 'md',
-    buttonVariant: 'surface',
-    buttonTone: 'danger',
-    buttonSize: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const SmallSize: Story = {
-  render: (args) => ({
-    components: { ModalTrigger },
+  render: args => ({
+    components: { ModalTrigger, Button },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <ModalTrigger v-bind="args">
+        <template #trigger="{ open }">
+          <Button variant="surface" tone="primary" @click="open">
+            Open Small Modal
+          </Button>
+        </template>
         <p>This is a small modal, great for quick confirmations.</p>
       </ModalTrigger>
-    `
+    `,
   }),
   args: {
     title: 'Small Modal',
-    buttonText: 'Open Small Modal',
     tone: 'neutral',
     size: 'sm',
-    buttonVariant: 'surface',
-    buttonTone: 'primary',
-    buttonSize: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const LargeSize: Story = {
-  render: (args) => ({
-    components: { ModalTrigger },
+  render: args => ({
+    components: { ModalTrigger, Button },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <ModalTrigger v-bind="args">
+        <template #trigger="{ open }">
+          <Button variant="surface" tone="primary" @click="open">
+            Open Large Modal
+          </Button>
+        </template>
         <p>This is a large modal, suitable for forms or detailed content.</p>
         <div class="mt-4 space-y-4">
           <p>It can contain multiple sections and longer content without feeling cramped.</p>
@@ -255,53 +255,61 @@ export const LargeSize: Story = {
           </ul>
         </div>
       </ModalTrigger>
-    `
+    `,
   }),
   args: {
     title: 'Large Modal',
-    buttonText: 'Open Large Modal',
     tone: 'neutral',
     size: 'lg',
-    buttonVariant: 'surface',
-    buttonTone: 'primary',
-    buttonSize: 'md',
-    closeOnOverlay: true
-  }
-}
+    closeOnOverlay: true,
+  },
+};
 
 export const MultipleModals: Story = {
-  render: (args) => ({
-    components: { ModalTrigger },
+  render: args => ({
+    components: { ModalTrigger, Button },
     setup() {
-      return { args }
+      return { args };
     },
     template: `
       <div class="flex gap-4">
         <ModalTrigger 
           title="First Modal" 
-          buttonText="Open First Modal"
           tone="primary"
         >
+          <template #trigger="{ open }">
+            <Button variant="surface" tone="primary" @click="open">
+              Open First Modal
+            </Button>
+          </template>
           <p>This is the first modal. Each ModalTrigger manages its own state independently.</p>
         </ModalTrigger>
         
         <ModalTrigger 
           title="Second Modal" 
-          buttonText="Open Second Modal"
           tone="success"
         >
+          <template #trigger="{ open }">
+            <Button variant="surface" tone="success" @click="open">
+              Open Second Modal
+            </Button>
+          </template>
           <p>This is the second modal. You can have multiple modals on the same page without state conflicts.</p>
         </ModalTrigger>
         
         <ModalTrigger 
           title="Third Modal" 
-          buttonText="Open Third Modal"
           tone="info"
         >
+          <template #trigger="{ open }">
+            <Button variant="surface" tone="info" @click="open">
+              Open Third Modal
+            </Button>
+          </template>
           <p>This is the third modal. All modals are completely independent.</p>
         </ModalTrigger>
       </div>
-    `
+    `,
   }),
-  args: {}
-}
+  args: {},
+};

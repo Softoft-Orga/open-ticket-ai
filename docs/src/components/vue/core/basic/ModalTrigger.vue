@@ -1,18 +1,9 @@
 <template>
   <div>
     <slot
-      name="button"
+      name="trigger"
       :open="open"
-    >
-      <Button
-        :variant="buttonVariant"
-        :tone="buttonTone"
-        :size="buttonSize"
-        @click="open"
-      >
-        {{ buttonText }}
-      </Button>
-    </slot>
+    />
 
     <Modal
       :open="isOpen"
@@ -42,20 +33,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import Button from './Button.vue'
-import Modal from './Modal.vue'
-import type { Tone, Size, Variant } from '../design-system/tokens.ts'
+import { ref } from 'vue';
+import Modal from './Modal.vue';
+import type { Tone, Size } from '../design-system/tokens.ts';
 
 interface Props {
-  title?: string
-  tone?: Tone
-  size?: Size
-  closeOnOverlay?: boolean
-  buttonText?: string
-  buttonVariant?: Variant
-  buttonTone?: Tone
-  buttonSize?: Size
+  title?: string;
+  tone?: Tone;
+  size?: Size;
+  closeOnOverlay?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
@@ -63,19 +49,15 @@ withDefaults(defineProps<Props>(), {
   tone: 'neutral',
   size: 'md',
   closeOnOverlay: true,
-  buttonText: 'Open',
-  buttonVariant: 'surface',
-  buttonTone: 'primary',
-  buttonSize: 'md'
-})
+});
 
-const isOpen = ref(false)
+const isOpen = ref(false);
 
 const open = () => {
-  isOpen.value = true
-}
+  isOpen.value = true;
+};
 
 const close = () => {
-  isOpen.value = false
-}
+  isOpen.value = false;
+};
 </script>

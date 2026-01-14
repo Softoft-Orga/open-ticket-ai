@@ -16,13 +16,22 @@
           </p>
         </div>
 
-        <div v-for="(section, index) in sections" :key="index">
+        <div
+          v-for="(section, index) in sections"
+          :key="index"
+        >
           <h4 class="mb-6 text-sm font-bold uppercase tracking-widest text-white">
             {{ section.title }}
           </h4>
           <ul class="space-y-4 text-sm text-slate-500">
-            <li v-for="(link, linkIndex) in section.links" :key="linkIndex">
-              <a :href="link.url" class="text-primary transition-colors hover:text-primary-light">{{
+            <li
+              v-for="(link, linkIndex) in section.links"
+              :key="linkIndex"
+            >
+              <a
+                :href="link.url"
+                class="text-primary transition-colors hover:text-primary-light"
+              >{{
                 link.label
               }}</a>
             </li>
@@ -41,8 +50,14 @@
               :aria-label="socialLink.ariaLabel"
               class="transition-colors hover:text-primary-light"
             >
-              <CodeBracketSquareIcon v-if="socialLink.platform === 'github'" class="h-6 w-6" />
-              <LinkIcon v-else-if="socialLink.platform === 'linkedin'" class="h-6 w-6" />
+              <CodeBracketSquareIcon
+                v-if="socialLink.platform === 'github'"
+                class="h-6 w-6"
+              />
+              <LinkIcon
+                v-else-if="socialLink.platform === 'linkedin'"
+                class="h-6 w-6"
+              />
             </a>
           </div>
         </div>
@@ -51,15 +66,19 @@
       <div
         class="flex flex-col items-center justify-between gap-6 border-t border-white/5 pt-8 md:flex-row"
       >
-        <div class="text-xs text-slate-600">© {{ year }} {{ copyright }}</div>
-        <div v-if="legal.length > 0" class="flex gap-8 text-xs text-primary">
+        <div class="text-xs text-slate-600">
+          © {{ year }} {{ copyright }}
+        </div>
+        <div
+          v-if="legal.length > 0"
+          class="flex gap-8 text-xs text-primary"
+        >
           <a
             v-for="(legalLink, index) in legal"
             :key="index"
             :href="legalLink.url"
             class="transition-colors hover:text-primary-light"
-            >{{ legalLink.label }}</a
-          >
+          >{{ legalLink.label }}</a>
         </div>
       </div>
     </div>
