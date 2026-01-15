@@ -48,10 +48,10 @@ const team = siteConfig?.data.team || [];
         </p>
 
         <div class="flex flex-wrap items-center justify-center gap-4">
-          <Button variant="surface" tone="primary" size="lg" client:load>
+          <Button variant="surface" tone="primary" size="lg" href="#mission" client:load>
             Explore Our Mission
           </Button>
-          <Button variant="outline" tone="neutral" size="lg" client:load>
+          <Button variant="outline" tone="neutral" size="lg" href="/en/docs/" client:load>
             View Documentation
           </Button>
         </div>
@@ -59,7 +59,7 @@ const team = siteConfig?.data.team || [];
     </section>
 
     <!-- Mission Section -->
-    <section class="mx-auto mb-24 max-w-6xl px-6">
+    <section id="mission" class="mx-auto mb-24 max-w-6xl px-6">
       <div class="overflow-hidden rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-900/40 to-purple-950/30">
         <div class="grid grid-cols-1 gap-8 p-12 lg:grid-cols-2 lg:gap-12">
           <div>
@@ -258,10 +258,10 @@ const team = siteConfig?.data.team || [];
         </p>
 
         <div class="flex flex-wrap items-center justify-center gap-4">
-          <Button variant="surface" tone="primary" size="lg" client:load>
+          <Button variant="surface" tone="primary" size="lg" href="/en/products/" client:load>
             Get Demo
           </Button>
-          <Button variant="outline" tone="neutral" size="lg" client:load>
+          <Button variant="outline" tone="neutral" size="lg" href="/en/services/" client:load>
             Contact Sales
           </Button>
         </div>
