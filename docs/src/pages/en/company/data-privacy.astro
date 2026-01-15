@@ -63,7 +63,11 @@ if (!dataPrivacy) {
             dataPrivacy.controller && (
               <div class="rounded-lg border border-surface-lighter bg-surface-dark p-8">
                 <div class="mb-4 flex items-center gap-3">
-                  <Icon name="heroicons:user-group" class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <Icon
+                    name="heroicons:user-group"
+                    class="h-6 w-6 text-primary"
+                    aria-hidden="true"
+                  />
                   <h2 class="font-display text-2xl font-bold text-white">
                     {dataPrivacy.controller.title}
                   </h2>
@@ -80,7 +84,11 @@ if (!dataPrivacy) {
             dataPrivacy.dataProcessing && (
               <div>
                 <div class="mb-6 flex items-center gap-3">
-                  <Icon name="heroicons:document-text" class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <Icon
+                    name="heroicons:document-text"
+                    class="h-6 w-6 text-primary"
+                    aria-hidden="true"
+                  />
                   <h2 class="font-display text-2xl font-bold text-white">
                     {dataPrivacy.dataProcessing.title}
                   </h2>
@@ -108,7 +116,11 @@ if (!dataPrivacy) {
             dataPrivacy.yourRights && (
               <div>
                 <div class="mb-6 flex items-center gap-3">
-                  <Icon name="heroicons:shield-check" class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <Icon
+                    name="heroicons:shield-check"
+                    class="h-6 w-6 text-primary"
+                    aria-hidden="true"
+                  />
                   <h2 class="font-display text-2xl font-bold text-white">
                     {dataPrivacy.yourRights.title}
                   </h2>
@@ -130,7 +142,11 @@ if (!dataPrivacy) {
             dataPrivacy.dataSecurity && (
               <div class="rounded-lg border border-surface-lighter bg-surface-dark p-8">
                 <div class="mb-4 flex items-center gap-3">
-                  <Icon name="heroicons:lock-closed" class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <Icon
+                    name="heroicons:lock-closed"
+                    class="h-6 w-6 text-primary"
+                    aria-hidden="true"
+                  />
                   <h2 class="font-display text-2xl font-bold text-white">
                     {dataPrivacy.dataSecurity.title}
                   </h2>
@@ -147,7 +163,11 @@ if (!dataPrivacy) {
             dataPrivacy.thirdPartyServices && (
               <div>
                 <div class="mb-6 flex items-center gap-3">
-                  <Icon name="heroicons:globe-alt" class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <Icon
+                    name="heroicons:globe-alt"
+                    class="h-6 w-6 text-primary"
+                    aria-hidden="true"
+                  />
                   <h2 class="font-display text-2xl font-bold text-white">
                     {dataPrivacy.thirdPartyServices.title}
                   </h2>
@@ -192,7 +212,9 @@ if (!dataPrivacy) {
                   </h2>
                 </div>
                 <div class="max-w-none">
-                  <pre class="whitespace-pre-wrap font-sans text-text-1">{dataPrivacy.contact.content}</pre>
+                  <pre class="whitespace-pre-wrap font-sans text-text-1">
+                    {dataPrivacy.contact.content}
+                  </pre>
                 </div>
               </div>
             )
