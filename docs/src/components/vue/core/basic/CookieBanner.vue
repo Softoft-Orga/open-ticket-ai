@@ -6,7 +6,13 @@
       <UiTransitionSlide direction="up">
         <div
           class="pointer-events-auto mx-auto max-w-4xl rounded-2xl border border-border-dark bg-surface-dark p-6 shadow-glow backdrop-blur-lg sm:p-8"
-          style="background: linear-gradient(135deg, rgba(166,13,242,0.6) 0%, rgba(29,16,35,0.98) 100%)"
+          style="
+            background: linear-gradient(
+              135deg,
+              rgba(166, 13, 242, 0.6) 0%,
+              rgba(29, 16, 35, 0.98) 100%
+            );
+          "
         >
           <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
             <div class="flex-1 space-y-3">

@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Card from '../../../components/vue/core/basic/Card.vue';
 import Badge from '../../../components/vue/core/basic/Badge.vue';
-import { ScaleIcon } from '@heroicons/vue/24/outline';
+import { Icon } from 'astro-icon/components';
 
 const title = 'Terms & Conditions - Open Ticket AI';
 const description = 'Terms and Conditions for Open Ticket AI products and services';
@@ -24,7 +24,7 @@ const legalInfo = siteConfig?.data.legalInfo;
         <div class="mb-8 text-center">
           <Badge variant="subtle" tone="info" size="sm" client:load>
             <span class="flex items-center gap-2">
-              <ScaleIcon class="h-3 w-3" aria-hidden="true" />
+              <Icon name="heroicons:scale" class="h-3 w-3" aria-hidden="true" />
               Legal Information
             </span>
           </Badge>

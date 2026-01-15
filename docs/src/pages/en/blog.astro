@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogOverview from '../../components/vue/domain/BlogOverview.vue';
-import { ArrowRightIcon, CalendarIcon } from '@heroicons/vue/24/outline';
+import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 import { getImage } from 'astro:assets';
 
@@ -117,7 +117,8 @@ const localizedSubFormAction = getRelativeLocaleUrl(
                     class="group flex h-14 items-center justify-center gap-3 rounded-lg bg-white px-8 text-lg font-bold text-background-dark transition-transform hover:-translate-y-1"
                   >
                     Read Article
-                    <ArrowRightIcon
+                    <Icon 
+                      name="heroicons:arrow-right"
                       class="h-6 w-6 transition-transform group-hover:translate-x-1"
                       aria-hidden="true"
                     />
@@ -134,7 +135,7 @@ const localizedSubFormAction = getRelativeLocaleUrl(
                 <div class="absolute bottom-8 left-8 right-8">
                   <div class="flex items-center justify-between text-sm text-text-2">
                     <span class="flex items-center gap-2">
-                      <CalendarIcon class="h-5 w-5" aria-hidden="true" />{' '}
+                      <Icon name="heroicons:calendar" class="h-5 w-5" aria-hidden="true" />
                       {formatDate(featuredPost.data.date)}
                     </span>
                   </div>

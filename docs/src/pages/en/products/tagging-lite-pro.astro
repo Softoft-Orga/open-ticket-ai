@@ -3,7 +3,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Button from '../../../components/vue/core/basic/Button.vue';
 import Card from '../../../components/vue/core/basic/Card.vue';
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { Icon } from 'astro-icon/components';
 
 const title = 'Tagging AI Lite Pro';
 const description =
@@ -20,7 +20,8 @@ const description =
           href={getRelativeLocaleUrl(Astro.currentLocale, 'products')}
           class="group inline-flex items-center gap-2 text-primary transition-colors hover:text-primary-light"
         >
-          <ArrowLeftIcon
+          <Icon 
+            name="heroicons:arrow-left"
             class="h-4 w-4 transition-transform group-hover:-translate-x-1"
             aria-hidden="true"
           />

@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { CalendarIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { Icon } from 'astro-icon/components';
 
 import { getLocalizedCatchAllStaticPaths } from '../../../utils/staticPaths.ts';
 
@@ -38,7 +38,7 @@ const formatDate = (date: Date) => {
             datetime={entry.data.date.toISOString()}
             class="flex items-center gap-2 text-sm text-text-dim"
           >
-            <CalendarIcon class="h-5 w-5" aria-hidden="true" />
+            <Icon name="heroicons:calendar" class="h-5 w-5" aria-hidden="true" />
             {formatDate(entry.data.date)}
           </time>
         </div>
@@ -98,7 +98,7 @@ const formatDate = (date: Date) => {
           href={getRelativeLocaleUrl(Astro.currentLocale, 'blog')}
           class="inline-flex items-center gap-2 text-primary-light transition-colors hover:text-primary"
         >
-          <ArrowLeftIcon class="h-5 w-5" aria-hidden="true" />
+          <Icon name="heroicons:arrow-left" class="h-5 w-5" aria-hidden="true" />
           Back to all posts
         </a>
       </footer>
