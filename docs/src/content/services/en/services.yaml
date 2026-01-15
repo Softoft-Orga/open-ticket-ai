@@ -104,32 +104,7 @@
   serviceGroup: Flexible
   serviceOrder: 30
   id: hourly-engineering
-- slug: integration-enterprise-custom
-  title: Integration Package - Enterprise / Custom
-  oneLiner: Enterprise / Custom Integration
-  description: "Extended integration package for Jira Service Management, Zendesk, Freshdesk, \nServiceNow, or custom systems. Includes everything in Standard Package plus \nadditional adapter work for non-standard APIs.\n"
-  outcomes:
-    - Everything in Standard Package
-    - Additional adapter work for non-standard APIs
-    - Extended testing for proprietary environments
-  startingPrice: 5000
-  serviceGroup: Integration
-  serviceOrder: 41
-  id: integration-enterprise-custom
-- slug: integration-standard-stack
-  title: Integration Package - Standard Stack
-  oneLiner: Standard Stack Integration
-  description: "Fixed-price package to connect Open Ticket AI with OTOBO, Znuny (OTRS stack), \nor Zammad ticket systems. Includes technical setup and basic testing.\n"
-  outcomes:
-    - Technical setup of Tagging AI service
-    - Connection to 1 ticket system instance
-    - Mapping tags to technical field logic
-    - One trigger setup (e.g. on creation)
-    - Basic testing + handover
-  startingPrice: 2000
-  serviceGroup: Integration
-  serviceOrder: 40
-  id: integration-standard-stack
+
 - slug: ongoing-support
   title: Ongoing Support
   oneLiner: Subscription-based support coverage
