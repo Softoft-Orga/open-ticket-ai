@@ -25,32 +25,25 @@ const siteConfig = allSiteConfigs.find(entry =>
 
 // Localize URLs from site config
 const navLinks = (siteConfig?.data.nav || []).map(link => ({
-  ...link,
-  url: getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
+    ...link,
+    url: getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
 }));
 
 const footerData = siteConfig?.data.footer
-  ? {
-      ...siteConfig.data.footer,
-      sections: siteConfig.data.footer.sections.map(section => ({
-        ...section,
-        links: section.links.map(link => ({
-          ...link,
-          url:
-            link.url.startsWith('#') || link.url.startsWith('http')
-              ? link.url
-              : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
+    ? {
+        ...siteConfig.data.footer,
+        sections: siteConfig.data.footer.sections.map(section => ({
+            ...section,
+            links: section.links.map(link => ({
+                ...link,
+                url:
+                    link.url.startsWith('#') || link.url.startsWith('http')
+                        ? link.url
+                        : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
+            })),
         })),
-      })),
-      legal: (siteConfig.data.footer.legal || []).map(link => ({
-        ...link,
-        url:
-          link.url.startsWith('#') || link.url.startsWith('http')
-            ? link.url
-            : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
-      })),
     }
-  : undefined;
+    : undefined;
 
 const logoUrl = siteConfig?.data.meta.logoUrl;
 const ctaLabel = 'Contact Sales';

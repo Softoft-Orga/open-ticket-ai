@@ -51,15 +51,6 @@
         class="flex flex-col items-center justify-between gap-6 border-t border-white/5 pt-8 md:flex-row"
       >
         <div class="text-xs text-slate-600">© {{ year }} {{ copyright }}</div>
-        <div v-if="legal.length > 0" class="flex gap-8 text-xs text-primary">
-          <a
-            v-for="(legalLink, index) in legal"
-            :key="index"
-            :href="legalLink.url"
-            class="transition-colors hover:text-primary-light"
-            >{{ legalLink.label }}</a
-          >
-        </div>
       </div>
     </div>
   </footer>
@@ -92,7 +83,7 @@ type FooterData = {
   socialHeading?: string;
   sections: FooterSection[];
   social: SocialLink[];
-  legal: FooterLink[];
+  legal?: FooterLink[];
   copyright: string;
 };
 
@@ -104,7 +95,6 @@ const props = defineProps<Props>();
 
 const sections = computed(() => props.footerData?.sections || []);
 const social = computed(() => props.footerData?.social || []);
-const legal = computed(() => props.footerData?.legal || []);
 const copyright = computed(
   () => props.footerData?.copyright || 'Open Ticket AI UG. All rights reserved.'
 );

@@ -52,10 +52,6 @@ export const Default: Story = {
           ariaLabel: 'LinkedIn',
         },
       ],
-      legal: [
-        { label: 'Privacy Policy', url: '#' },
-        { label: 'Imprint', url: '#' },
-      ],
       copyright: 'Open Ticket AI UG. All rights reserved.',
     },
   },
