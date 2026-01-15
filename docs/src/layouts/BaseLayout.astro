@@ -42,13 +42,6 @@ const footerData = siteConfig?.data.footer
               : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
         })),
       })),
-      legal: (siteConfig.data.footer.legal || []).map(link => ({
-        ...link,
-        url:
-          link.url.startsWith('#') || link.url.startsWith('http')
-            ? link.url
-            : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
-      })),
     }
   : undefined;
 

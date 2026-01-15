@@ -27,7 +27,7 @@ footer:
     - title: Company
       links:
         - label: About
-          url: '#'
+          url: 'company/about'
         - label: Data Privacy
           url: company/data-privacy
         - label: Legal Notice
