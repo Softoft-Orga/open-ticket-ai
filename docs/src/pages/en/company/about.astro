@@ -250,7 +250,10 @@ const team = siteConfig?.data.team || [];
                       {member.email && (
                         <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
                           <EnvelopeIcon class="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                          <a href={`mailto:${member.email}`} class="hover:text-primary">
+                          <a
+                            href={`mailto:${member.email}`}
+                            class="transition-colors hover:text-primary"
+                          >
                             {member.email}
                           </a>
                         </div>
@@ -258,7 +261,10 @@ const team = siteConfig?.data.team || [];
                       {member.phoneNumber && (
                         <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
                           <PhoneIcon class="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                          <a href={`tel:${member.phoneNumber}`} class="hover:text-primary">
+                          <a
+                            href={`tel:${member.phoneNumber}`}
+                            class="transition-colors hover:text-primary"
+                          >
                             {member.phoneNumber}
                           </a>
                         </div>
