@@ -69,6 +69,9 @@
     "@eslint/js": "^9.39.2",
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
+    "@iconify-json/heroicons": "^1.2.3",
+    "@iconify-json/simple-icons": "^1.2.66",
+    "astro-icon": "^1.1.5",
     "js-yaml": "^4.1.1",
     "tailwind-merge": "^3.4.0",
     "tailwind-variants": "^3.2.2"

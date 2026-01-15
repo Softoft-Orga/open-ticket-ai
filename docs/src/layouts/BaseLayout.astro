@@ -7,6 +7,7 @@ import CookieBanner from '../components/vue/core/basic/CookieBanner.vue';
 import '../styles/global.css';
 import ModalTrigger from '../components/vue/core/basic/ModalTrigger.vue';
 import ContactForm from '../components/ContactForm.astro';
+import Button from '../components/vue/core/basic/Button.vue';
 
 interface Props {
   title: string;
@@ -30,18 +31,18 @@ const navLinks = (siteConfig?.data.nav || []).map(link => ({
 }));
 
 const footerData = siteConfig?.data.footer
-  ? {
-      ...siteConfig.data.footer,
-      sections: siteConfig.data.footer.sections.map(section => ({
-        ...section,
-        links: section.links.map(link => ({
-          ...link,
-          url:
-            link.url.startsWith('#') || link.url.startsWith('http')
-              ? link.url
-              : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
+    ? {
+        ...siteConfig.data.footer,
+        sections: siteConfig.data.footer.sections.map(section => ({
+            ...section,
+            links: section.links.map(link => ({
+                ...link,
+                url:
+                    link.url.startsWith('#') || link.url.startsWith('http')
+                        ? link.url
+                        : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
+            })),
         })),
-      })),
     }
   : undefined;
 
