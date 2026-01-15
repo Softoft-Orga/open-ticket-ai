@@ -1,0 +1,215 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import {
+  ShieldCheckIcon,
+  UserGroupIcon,
+  DocumentTextIcon,
+  LockClosedIcon,
+  GlobeAltIcon,
+  EnvelopeIcon,
+} from '@heroicons/vue/24/outline';
+
+const pageTitle = 'Data Privacy Policy - Open Ticket AI';
+const pageDescription =
+  'Our commitment to protecting your personal data and respecting your privacy rights under GDPR.';
+
+// Load site configuration for current locale to get dataPrivacy content
+const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
+const allSiteConfigs = await getCollection('site');
+const siteConfig = allSiteConfigs.find(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
+
+const dataPrivacy = siteConfig?.data.dataPrivacy;
+
+if (!dataPrivacy) {
+  throw new Error('Data privacy information not found in site configuration');
+}
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="min-h-screen bg-background-dark">
+    <!-- Header Section -->
+    <section class="border-b border-surface-lighter bg-surface-dark py-20">
+      <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <div class="mb-6 inline-flex items-center justify-center rounded-full bg-primary/10 p-4">
+            <ShieldCheckIcon class="h-12 w-12 text-primary" aria-hidden="true" />
+          </div>
+          <h1 class="font-display text-5xl font-bold tracking-tight text-white sm:text-6xl">
+            Data Privacy Policy
+          </h1>
+          <p class="mt-6 text-xl leading-8 text-text-dim">
+            {pageDescription}
+          </p>
+          {
+            dataPrivacy.lastUpdated && (
+              <p class="mt-4 text-sm text-text-2">Last updated: {dataPrivacy.lastUpdated}</p>
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-16">
+      <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div class="space-y-12">
+          <!-- Introduction -->
+          {
+            dataPrivacy.introduction && (
+              <div class="prose prose-invert max-w-none">
+                <p class="text-lg leading-relaxed text-text-1">{dataPrivacy.introduction}</p>
+              </div>
+            )
+          }
+
+          <!-- Controller Information -->
+          {
+            dataPrivacy.controller && (
+              <div class="rounded-lg border border-surface-lighter bg-surface-dark p-8">
+                <div class="mb-4 flex items-center gap-3">
+                  <UserGroupIcon class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <h2 class="font-display text-2xl font-bold text-white">
+                    {dataPrivacy.controller.title}
+                  </h2>
+                </div>
+                <div class="prose prose-invert max-w-none">
+                  <pre class="whitespace-pre-wrap font-sans text-text-1">
+                    {dataPrivacy.controller.content}
+                  </pre>
+                </div>
+              </div>
+            )
+          }
+
+          <!-- Data Processing -->
+          {
+            dataPrivacy.dataProcessing && (
+              <div>
+                <div class="mb-6 flex items-center gap-3">
+                  <DocumentTextIcon class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <h2 class="font-display text-2xl font-bold text-white">
+                    {dataPrivacy.dataProcessing.title}
+                  </h2>
+                </div>
+                <div class="space-y-6">
+                  {dataPrivacy.dataProcessing.categories.map(category => (
+                    <div class="rounded-lg border border-surface-lighter bg-surface-dark p-6">
+                      <h3 class="mb-3 text-xl font-bold text-white">{category.title}</h3>
+                      <p class="mb-2 text-text-1">{category.description}</p>
+                      {category.legalBasis && (
+                        <p class="text-sm text-text-2">
+                          <span class="font-semibold text-primary">Legal Basis:</span>{' '}
+                          {category.legalBasis}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          }
+
+          <!-- Your Rights -->
+          {
+            dataPrivacy.yourRights && (
+              <div>
+                <div class="mb-6 flex items-center gap-3">
+                  <ShieldCheckIcon class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <h2 class="font-display text-2xl font-bold text-white">
+                    {dataPrivacy.yourRights.title}
+                  </h2>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  {dataPrivacy.yourRights.rights.map(right => (
+                    <div class="rounded-lg border border-surface-lighter bg-surface-dark p-6">
+                      <h3 class="mb-2 text-lg font-bold text-white">{right.title}</h3>
+                      <p class="text-sm text-text-1">{right.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          }
+
+          <!-- Data Security -->
+          {
+            dataPrivacy.dataSecurity && (
+              <div class="rounded-lg border border-surface-lighter bg-surface-dark p-8">
+                <div class="mb-4 flex items-center gap-3">
+                  <LockClosedIcon class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <h2 class="font-display text-2xl font-bold text-white">
+                    {dataPrivacy.dataSecurity.title}
+                  </h2>
+                </div>
+                <div class="prose prose-invert max-w-none">
+                  <p class="text-text-1">{dataPrivacy.dataSecurity.content}</p>
+                </div>
+              </div>
+            )
+          }
+
+          <!-- Third-Party Services -->
+          {
+            dataPrivacy.thirdPartyServices && (
+              <div>
+                <div class="mb-6 flex items-center gap-3">
+                  <GlobeAltIcon class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <h2 class="font-display text-2xl font-bold text-white">
+                    {dataPrivacy.thirdPartyServices.title}
+                  </h2>
+                </div>
+                <div class="space-y-4">
+                  {dataPrivacy.thirdPartyServices.services.map(service => (
+                    <div class="rounded-lg border border-surface-lighter bg-surface-dark p-6">
+                      <h3 class="mb-2 text-lg font-bold text-white">{service.name}</h3>
+                      <p class="mb-2 text-text-1">
+                        <span class="font-semibold">Purpose:</span> {service.purpose}
+                      </p>
+                      {service.provider && (
+                        <p class="mb-2 text-sm text-text-2">
+                          <span class="font-semibold">Provider:</span> {service.provider}
+                        </p>
+                      )}
+                      {service.privacyPolicy && (
+                        <a
+                          href={service.privacyPolicy}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-sm text-primary hover:underline"
+                        >
+                          View Privacy Policy →
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          }
+
+          <!-- Contact Information -->
+          {
+            dataPrivacy.contact && (
+              <div class="rounded-lg border border-primary/30 bg-surface-dark p-8">
+                <div class="mb-4 flex items-center gap-3">
+                  <EnvelopeIcon class="h-6 w-6 text-primary" aria-hidden="true" />
+                  <h2 class="font-display text-2xl font-bold text-white">
+                    {dataPrivacy.contact.title}
+                  </h2>
+                </div>
+                <div class="prose prose-invert max-w-none">
+                  <pre class="whitespace-pre-wrap font-sans text-text-1">
+                    {dataPrivacy.contact.content}
+                  </pre>
+                </div>
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

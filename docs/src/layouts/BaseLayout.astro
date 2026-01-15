@@ -1,56 +1,57 @@
 ---
-import {getCollection} from 'astro:content';
-import {getRelativeLocaleUrl} from 'astro:i18n';
+import { getCollection } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import NavBar from '../components/vue/core/navigation/NavBar.vue';
 import FooterComponent from '../components/vue/core/navigation/FooterComponent.vue';
 import '../styles/global.css';
-import ModalTrigger from "../components/vue/core/basic/ModalTrigger.vue";
-import ContactForm from "../components/ContactForm.astro";
-import Button from "../components/vue/core/basic/Button.vue";
+import ModalTrigger from '../components/vue/core/basic/ModalTrigger.vue';
+import ContactForm from '../components/ContactForm.astro';
+import Button from '../components/vue/core/basic/Button.vue';
 
 interface Props {
-    title: string;
-    description?: string;
+  title: string;
+  description?: string;
 }
 
-const {title, description} = Astro.props;
+const { title, description } = Astro.props;
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
 
 // Load site configuration for current locale
 const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
 const allSiteConfigs = await getCollection('site');
 const siteConfig = allSiteConfigs.find(entry =>
-    entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
 );
 
 // Localize URLs from site config
 const navLinks = (siteConfig?.data.nav || []).map(link => ({
-    ...link,
-    url: getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
+  ...link,
+  url: getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
 }));
 
 const footerData = siteConfig?.data.footer
-    ? {
-        ...siteConfig.data.footer,
-        sections: siteConfig.data.footer.sections.map(section => ({
-            ...section,
-            links: section.links.map(link => ({
-                ...link,
-                url:
-                    link.url.startsWith('#') || link.url.startsWith('http')
-                        ? link.url
-                        : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
-            })),
+  ? {
+      ...siteConfig.data.footer,
+      sections: siteConfig.data.footer.sections.map(section => ({
+        ...section,
+        links: section.links.map(link => ({
+          ...link,
+          url:
+            link.url.startsWith('#') || link.url.startsWith('http')
+              ? link.url
+              : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
         })),
-        legal: siteConfig.data.footer.legal.map(link => ({
-            ...link,
-            url:
-                link.url.startsWith('#') || link.url.startsWith('http')
-                    ? link.url
-                    : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
-        })),
+      })),
+      legal:
+        siteConfig.data.footer.legal?.map(link => ({
+          ...link,
+          url:
+            link.url.startsWith('#') || link.url.startsWith('http')
+              ? link.url
+              : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
+        })) || [],
     }
-    : undefined;
+  : undefined;
 
 const logoUrl = siteConfig?.data.meta.logoUrl;
 const ctaLabel = 'Contact Sales';
@@ -59,62 +60,61 @@ const ctaUrl = getRelativeLocaleUrl(Astro.currentLocale || 'en', 'products');
 
 <!doctype html>
 <html lang={Astro.currentLocale} data-locale={Astro.currentLocale}>
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-    {description &&
-        <meta name="description" content={description}/>}
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-    <meta name="generator" content={Astro.generator}/>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
 
     <!-- Google Analytics lazy loading -->
-    <script is:inline define:vars={{gaIds}}>
-        (() => {
-            let loaded = false;
+    <script is:inline define:vars={{ gaIds }}>
+      (() => {
+        let loaded = false;
 
-            function load() {
-                if (loaded) return;
-                loaded = true;
-                const s = document.createElement('script');
-                s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaIds[0];
-                s.async = true;
-                document.head.appendChild(s);
-                window.dataLayer = window.dataLayer || [];
+        function load() {
+          if (loaded) return;
+          loaded = true;
+          const s = document.createElement('script');
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaIds[0];
+          s.async = true;
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
 
-                function gtag(...args) {
-                    dataLayer.push(...args);
-                }
+          function gtag(...args) {
+            dataLayer.push(...args);
+          }
 
-                gtag('js', new Date());
-                gaIds.forEach(id => {
-                    gtag('config', id, {send_page_view: false});
-                });
-            }
+          gtag('js', new Date());
+          gaIds.forEach(id => {
+            gtag('config', id, { send_page_view: false });
+          });
+        }
 
-            if ('requestIdleCallback' in window) {
-                requestIdleCallback(load, {timeout: 4000});
-            } else {
-                setTimeout(load, 2000);
-            }
-            let fired = false;
-            ['scroll', 'pointerdown', 'keydown', 'touchstart'].forEach(ev => {
-                addEventListener(
-                    ev,
-                    function () {
-                        if (fired) return;
-                        fired = true;
-                        load();
-                    },
-                    {passive: true, once: true}
-                );
-            });
-        })();
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(load, { timeout: 4000 });
+        } else {
+          setTimeout(load, 2000);
+        }
+        let fired = false;
+        ['scroll', 'pointerdown', 'keydown', 'touchstart'].forEach(ev => {
+          addEventListener(
+            ev,
+            function () {
+              if (fired) return;
+              fired = true;
+              load();
+            },
+            { passive: true, once: true }
+          );
+        });
+      })();
     </script>
-</head>
-<body class="font-sans">
-<NavBar client:load links={navLinks} logoUrl={logoUrl} ctaUrl={ctaUrl}>
-    <ModalTrigger
+  </head>
+  <body class="font-sans">
+    <NavBar client:load links={navLinks} logoUrl={logoUrl} ctaUrl={ctaUrl}>
+      <ModalTrigger
         title="Contact Sales"
         tone="neutral"
         size="lg"
@@ -124,21 +124,21 @@ const ctaUrl = getRelativeLocaleUrl(Astro.currentLocale || 'en', 'products');
         button-size="md"
         button-block
         client:load
-    >
+      >
         <ContactForm
-            title="Contact Sales"
-            submitButtonText="Submit"
-            messageLabel="Message"
-            emailLabel="Email"
-            subjectLabel="Subject"
-            emailPlaceholder="your@email.com"
-            messagePlaceholder="How can we help you?"
-            successActionUrl="/success/contact-sales"
-            name="contact-sales"
+          title="Contact Sales"
+          submitButtonText="Submit"
+          messageLabel="Message"
+          emailLabel="Email"
+          subjectLabel="Subject"
+          emailPlaceholder="your@email.com"
+          messagePlaceholder="How can we help you?"
+          successActionUrl="/success/contact-sales"
+          name="contact-sales"
         />
-    </ModalTrigger>
-</NavBar>
-<slot/>
-<FooterComponent client:load footerData={footerData}/>
-</body>
+      </ModalTrigger>
+    </NavBar>
+    <slot />
+    <FooterComponent client:load footerData={footerData} />
+  </body>
 </html>
