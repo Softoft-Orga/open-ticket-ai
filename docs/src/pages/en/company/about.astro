@@ -185,7 +185,10 @@ const team = siteConfig?.data.team || [];
                       <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
                         Phone
                       </div>
-                      <a href={`tel:${legalInfo.phone}`} class="text-sm text-primary hover:underline">
+                      <a
+                        href={`tel:${legalInfo.phone}`}
+                        class="text-sm text-primary hover:underline"
+                      >
                         {legalInfo.phone}
                       </a>
                     </div>
@@ -239,10 +242,10 @@ const team = siteConfig?.data.team || [];
                   )}
 
                   <div class="mb-4">
-                    {member.name && <h3 class="mb-1 text-lg font-bold text-white">{member.name}</h3>}
-                    {member.role && (
-                      <p class="text-sm font-medium text-primary">{member.role}</p>
+                    {member.name && (
+                      <h3 class="mb-1 text-lg font-bold text-white">{member.name}</h3>
                     )}
+                    {member.role && <p class="text-sm font-medium text-primary">{member.role}</p>}
                   </div>
 
                   {(member.email || member.phoneNumber) && (
