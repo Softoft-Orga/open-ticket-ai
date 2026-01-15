@@ -1,0 +1,186 @@
+meta:
+  siteName: Open Ticket AI
+  tagline: Intelligente Automatisierung für OTRS, Znuny und Zammad. Deutsche Ingenieurskunst.
+  logoUrl: /public/open-ticket-logo.png
+nav:
+  - label: Produkte
+    url: products
+  - label: Dienstleistungen
+    url: services
+
+  - label: Dokumentation
+    url: docs
+  - label: Blog
+    url: blog
+footer:
+  brandName: Open Ticket AI
+  brandTagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
+  socialHeading: Connect
+  sections:
+    - title: Produkt
+      links:
+        - label: Funktionen
+          url: products
+        - label: Integrationen
+          url: services
+        - label: Sicherheit
+          url: docs
+    - title: Unternehmen
+      links:
+        - label: Über uns
+          url: 'company/about'
+        - label: Datenschutz
+          url: company/data-privacy
+        - label: Karriere
+          url: '#'
+        - label: Rechtliches
+          url: '#'
+  social:
+    - platform: linkedin
+      url: https://www.linkedin.com/company/open-ticket-ai
+      ariaLabel: LinkedIn
+    - platform: youtube
+      url: https://www.youtube.com/@openticketai
+      ariaLabel: YouTube
+    - platform: github
+      url: https://github.com/Softoft-Orga
+      ariaLabel: GitHub
+    - platform: huggingface
+      url: https://huggingface.co/openticketai
+      ariaLabel: Hugging Face
+    - platform: x
+      url: https://x.com/OpenTicketAI
+      ariaLabel: X (Twitter)
+  legal:
+    - label: AGB
+      url: terms
+  copyright: Open Ticket AI UG. Alle Rechte vorbehalten.
+
+popularResources:
+  title: Beliebte Ressourcen
+  groups:
+    - title: Automatisierungs-Engine
+      basePath: docs/open-ticket-automation
+      items:
+        - docId: /guides/quick_start
+          icon: RocketLaunchIcon
+        - docId: /developers/config_rendering
+          icon: CommandLineIcon
+        - docId: /developers/ticket_system_integration
+          icon: PuzzlePieceIcon
+        - docId: /developers/plugin_development
+          icon: ArrowsRightLeftIcon
+    - title: Tagging-Engine
+      basePath: docs/ticket-tagging
+      items:
+        - docId: /taxonomy-design
+          icon: Squares2x2Icon
+        - docId: /hardware-sizing
+          icon: CpuChipIcon
+        - docId: /using-model
+          icon: ArrowPathIcon
+        - docId: /tag-mapping
+          icon: ChartBarIcon
+
+legalInfo:
+  companyName: Open Ticket AI UG
+  ceo: Constanze Krishnartne
+  address:
+    street: Viktoriastraße 14
+    city: Mannheim
+    zip: '68159'
+    country: Deutschland
+  legalForm: UG (haftungsbeschränkt)
+  vatId: DE123456789
+  registerInfo: Amtsgericht Mannheim, HRB 123456
+  email: info@openticketai.com
+  phone: +49 621 12345678
+team:
+  - name: Constanze Krishnartne
+    role: CEO
+    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=CK
+    email: constanze.krishnaratne@openticketai.com
+    phoneNumber: +49 621 12345678
+  - name: Tobias Bueck
+    role: CTO
+    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=TB
+    email: tobias.bueck@openticketai.com
+    phoneNumber: +49 621 12345679
+
+dataPrivacy:
+  introduction: |
+    Die Open Ticket AI UG (im Folgenden "wir" oder "uns") verpflichtet sich, Ihre persönlichen Daten zu schützen und Ihre Datenschutzrechte gemäß der Datenschutz-Grundverordnung (DSGVO) und anderen geltenden Datenschutzgesetzen zu respektieren. Diese Datenschutzerklärung erläutert, wie wir Ihre persönlichen Informationen sammeln, verwenden, verarbeiten und schützen, wenn Sie unsere Dienste nutzen.
+  controller:
+    title: Verantwortlicher
+    content: |
+      Open Ticket AI UG
+      Viktoriastraße 14
+      68159 Mannheim, Deutschland
+      E-Mail: info@openticketai.com
+      Telefon: +49 621 12345678
+  dataProcessing:
+    title: Von uns erhobene und verarbeitete Daten
+    categories:
+      - title: Kontaktinformationen
+        description: Wenn Sie uns kontaktieren oder Informationen über unsere Dienste anfordern, erfassen wir Ihren Namen, Ihre E-Mail-Adresse, Telefonnummer und Firmeninformationen.
+        legalBasis: Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) oder unser berechtigtes Interesse an der Beantwortung von Anfragen (Art. 6 Abs. 1 lit. f DSGVO)
+      - title: Website-Nutzungsdaten
+        description: Wir erfassen technische Informationen wie IP-Adresse, Browsertyp, Geräteinformationen und besuchte Seiten über Cookies und Analysetools.
+        legalBasis: Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) für Cookies und unser berechtigtes Interesse an der Verbesserung unserer Website (Art. 6 Abs. 1 lit. f DSGVO)
+      - title: Dienstleistungsdaten
+        description: Bei der Nutzung unserer Dienste verarbeiten wir zur Dienstleistungserbringung erforderliche Daten, einschließlich Ticketsystemdaten, Konfigurationseinstellungen und Nutzungsmetriken.
+        legalBasis: Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO)
+      - title: Kommunikationsdaten
+        description: Wir speichern Korrespondenz und Kommunikation mit Ihnen, einschließlich E-Mail-Austausch und Support-Tickets.
+        legalBasis: Unser berechtigtes Interesse an der Pflege von Kundenbeziehungen (Art. 6 Abs. 1 lit. f DSGVO)
+  yourRights:
+    title: Ihre Rechte gemäß DSGVO
+    rights:
+      - title: Auskunftsrecht
+        description: Sie haben das Recht, eine Kopie der von uns gespeicherten personenbezogenen Daten anzufordern.
+      - title: Recht auf Berichtigung
+        description: Sie können die Korrektur unrichtiger oder unvollständiger personenbezogener Daten verlangen.
+      - title: Recht auf Löschung
+        description: Sie haben das Recht, unter bestimmten Umständen die Löschung Ihrer personenbezogenen Daten zu verlangen.
+      - title: Recht auf Einschränkung
+        description: Sie können in bestimmten Situationen die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten verlangen.
+      - title: Recht auf Datenübertragbarkeit
+        description: Sie haben das Recht, Ihre personenbezogenen Daten in einem strukturierten, gängigen Format zu erhalten und an einen anderen Verantwortlichen zu übermitteln.
+      - title: Widerspruchsrecht
+        description: Sie können der Verarbeitung Ihrer personenbezogenen Daten aufgrund berechtigter Interessen oder für Direktmarketingzwecke widersprechen.
+      - title: Recht auf Widerruf der Einwilligung
+        description: Wenn die Verarbeitung auf Einwilligung basiert, können Sie Ihre Einwilligung jederzeit widerrufen.
+      - title: Beschwerderecht
+        description: Sie haben das Recht, bei einer Aufsichtsbehörde Beschwerde einzulegen, wenn Sie der Ansicht sind, dass Ihre Datenschutzrechte verletzt wurden.
+  dataSecurity:
+    title: Datensicherheit
+    content: |
+      Wir setzen angemessene technische und organisatorische Sicherheitsmaßnahmen zum Schutz Ihrer personenbezogenen Daten vor unbefugtem Zugriff, Änderung, Offenlegung oder Zerstörung um. Diese Maßnahmen umfassen Verschlüsselung, Zugriffskontrollen, regelmäßige Sicherheitsbewertungen und Schulungen der Mitarbeiter zu Datenschutzpraktiken. Wir überprüfen und aktualisieren unsere Sicherheitsmaßnahmen kontinuierlich, um den fortlaufenden Schutz Ihrer Daten zu gewährleisten.
+  thirdPartyServices:
+    title: Drittanbieterdienste
+    services:
+      - name: Google Analytics
+        purpose: Website-Analyse und Leistungsüberwachung
+        provider: Google LLC
+        privacyPolicy: https://policies.google.com/privacy
+      - name: GitHub
+        purpose: Code-Repository und Versionskontrolle
+        provider: GitHub, Inc.
+        privacyPolicy: https://docs.github.com/de/site-policy/privacy-policies/github-privacy-statement
+      - name: Netlify
+        purpose: Website-Hosting und Content-Delivery
+        provider: Netlify, Inc.
+        privacyPolicy: https://www.netlify.com/privacy/
+      - name: Streak CRM
+        purpose: Kundenbeziehungsmanagement
+        provider: Streak, Inc.
+        privacyPolicy: https://www.streak.com/privacy
+  contact:
+    title: Kontakt für Datenschutzanfragen
+    content: |
+      Wenn Sie Fragen zu dieser Datenschutzerklärung haben oder Ihre Rechte ausüben möchten, kontaktieren Sie uns bitte unter:
+
+      E-Mail: info@openticketai.com
+      Telefon: +49 621 12345678
+      Adresse: Open Ticket AI UG, Viktoriastraße 14, 68159 Mannheim, Deutschland
+  lastUpdated: Januar 2026

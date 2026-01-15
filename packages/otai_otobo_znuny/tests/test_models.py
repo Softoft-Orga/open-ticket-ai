@@ -1,6 +1,7 @@
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 from packages.otai_otobo_znuny.src.otai_otobo_znuny.models import (
+    OTOBOZnunyTSServiceParams,
     _to_unified_entity,
     otobo_article_to_unified_note,
     otobo_ticket_to_unified_ticket,
@@ -39,3 +40,30 @@ def test_ticket_adapter():
     assert adapter.priority.id == "3"
     assert len(adapter.notes) == 1
     assert adapter.body == "First body"
+
+
+def test_otobo_znuny_params_with_string_password():
+    params = OTOBOZnunyTSServiceParams(
+        password="my_secure_password",
+        base_url="http://localhost:8081/otrs/nph-genericinterface.pl",
+    )
+    assert params.password == "my_secure_password"
+    assert params.base_url == "http://localhost:8081/otrs/nph-genericinterface.pl"
+
+
+def test_otobo_znuny_params_with_numeric_password():
+    params = OTOBOZnunyTSServiceParams(
+        password=1234567890123456,
+        base_url="http://localhost:8081/otrs/nph-genericinterface.pl",
+    )
+    assert params.password == "1234567890123456"
+    assert isinstance(params.password, str)
+
+
+def test_otobo_znuny_params_with_float_password():
+    params = OTOBOZnunyTSServiceParams(
+        password=123.456,
+        base_url="http://localhost:8081/otrs/nph-genericinterface.pl",
+    )
+    assert params.password == "123.456"
+    assert isinstance(params.password, str)

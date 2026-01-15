@@ -230,3 +230,9 @@ config.schema.json
 /docs/package-lock.json
 /docs/.vitepress/cache/
 
+# Astro build artifacts
+/docs/dist/
+/docs/.astro/
+/docs/pagefind/
+
+!/docs/storybook-static/index.json

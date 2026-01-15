@@ -1,0 +1,205 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getLocalizedCatchAllStaticPaths } from '../../../utils/staticPaths.ts';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs');
+
+type Props = {
+  entry: CollectionEntry<'docs'>;
+};
+
+const { entry } = Astro.props;
+const { Content, headings } = await entry.render();
+const title = entry.data.title;
+const description = entry.data.description;
+
+// Generate breadcrumbs from the slug (removing locale prefix)
+const slugParts = entry.id
+  .replace(/^[a-z]{2}\//, '')
+  .replace(/\.(md|mdx)$/, '')
+  .split('/');
+const breadcrumbs = [
+  { label: 'Documentation', href: '/docs/' },
+  ...slugParts.slice(0, -1).map((part, index) => ({
+    label: part
+      .split('-')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' '),
+    href: '/docs/' + slugParts.slice(0, index + 1).join('/') + '/',
+  })),
+  { label: title },
+];
+
+// Extract TOC from headings (h2 and h3 only)
+const toc = headings
+  .filter(h => h.depth === 2 || h.depth === 3)
+  .map(h => ({
+    label: h.text,
+    id: h.slug,
+  }));
+
+// Generate sidebar from docs collection - filter by current locale
+const currentLocale = Astro.currentLocale.toLowerCase();
+const allDocsRaw = await getCollection('docs');
+const allDocs = allDocsRaw.filter(entry => entry.id.toLowerCase().startsWith(`${currentLocale}/`));
+
+// Group docs by nav.group and sort by nav.order
+type SidebarSection = {
+  label: string;
+  items: { label: string; link: string; active: boolean }[];
+};
+
+const groupedDocs = allDocs
+  .filter(doc => !doc.data.draft && !doc.data.nav?.hidden)
+  .reduce(
+    (acc, doc) => {
+      const group = doc.data.nav?.group || 'General';
+      if (!acc[group]) {
+        acc[group] = [];
+      }
+      acc[group].push(doc);
+      return acc;
+    },
+    {} as Record<string, CollectionEntry<'docs'>[]>
+  );
+
+const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
+  .map(([label, docs]) => ({
+    label,
+    items: docs
+      .sort((a, b) => (a.data.nav?.order || 999) - (b.data.nav?.order || 999))
+      .map(doc => {
+        const docSlug = doc.id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
+        const link = `/docs/${docSlug}/`;
+        return {
+          label: doc.data.title,
+          link,
+          active: doc.id === entry.id,
+        };
+      }),
+  }))
+  .sort((a, b) => {
+    const order = ['Guides', 'Products', 'Developers', 'General'];
+    const aIdx = order.indexOf(a.label);
+    const bIdx = order.indexOf(b.label);
+    if (aIdx === -1 && bIdx === -1) return a.label.localeCompare(b.label);
+    if (aIdx === -1) return 1;
+    if (bIdx === -1) return -1;
+    return aIdx - bIdx;
+  });
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="min-h-screen bg-background-dark">
+    <!-- Breadcrumbs Header -->
+    {
+      breadcrumbs.length > 0 && (
+        <div class="sticky top-16 z-40 border-b border-white/5 bg-[#0f0814]/50 shadow-sm backdrop-blur-sm">
+          <div class="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:px-6">
+            <div class="flex items-center gap-2 overflow-hidden text-xs">
+              {breadcrumbs.map((crumb, i) => (
+                <>
+                  {crumb.href ? (
+                    <a
+                      href={getRelativeLocaleUrl(Astro.currentLocale, crumb.href)}
+                      class="whitespace-nowrap text-slate-500 transition-colors hover:text-white"
+                    >
+                      {crumb.label}
+                    </a>
+                  ) : (
+                    <span class="truncate font-bold text-primary-light">{crumb.label}</span>
+                  )}
+                  {i < breadcrumbs.length - 1 && <span class="text-xs text-slate-700">›</span>}
+                </>
+              ))}
+            </div>
+            <div class="hidden items-center gap-4 sm:flex">
+              <a
+                href="https://github.com/Softoft-Orga/open-ticket-ai"
+                target="_blank"
+                class="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-white"
+              >
+                <span class="text-sm">⚡</span>
+                GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    <div class="mx-auto flex max-w-7xl flex-col gap-12 px-4 py-12 sm:px-6 lg:flex-row">
+      <!-- Desktop Sidebar - Left -->
+      <aside
+        class="sticky top-32 hidden h-[calc(100vh-160px)] w-72 flex-shrink-0 overflow-y-auto pr-4 lg:block"
+        style="scrollbar-width: thin; scrollbar-color: #374151 transparent;"
+      >
+        <nav>
+          {
+            sidebarSections.map(section => (
+              <div class="mb-6">
+                <h3 class="mb-2 px-3 text-[11px] font-black uppercase tracking-widest text-slate-500">
+                  {section.label}
+                </h3>
+                <ul class="space-y-1">
+                  {section.items.map(item => (
+                    <li>
+                      <a
+                        href={getRelativeLocaleUrl(Astro.currentLocale, item.link)}
+                        class:list={[
+                          'block rounded-md px-3 py-1.5 text-xs transition-all',
+                          item.active
+                            ? 'bg-white/10 font-semibold text-white'
+                            : 'text-slate-400 hover:bg-white/5 hover:text-white',
+                        ]}
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </nav>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="min-w-0 flex-1">
+        <div class="mx-auto max-w-4xl">
+          <article
+            class="prose prose-lg prose-invert max-w-none prose-headings:text-white prose-h1:mb-6 prose-h1:mt-0 prose-h1:text-4xl prose-h1:font-bold prose-h2:mb-4 prose-h2:mt-8 prose-h2:text-2xl prose-h2:font-bold prose-h3:mb-3 prose-h3:mt-6 prose-h3:text-xl prose-h3:font-bold prose-p:mb-4 prose-p:leading-relaxed prose-p:text-gray-300 prose-a:text-primary-light prose-a:no-underline hover:prose-a:text-primary hover:prose-a:underline prose-blockquote:my-4 prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-400 prose-strong:font-semibold prose-strong:text-white prose-code:rounded prose-code:bg-surface-lighter prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-sm prose-code:text-primary-light prose-pre:mb-4 prose-pre:overflow-x-auto prose-pre:rounded-lg prose-pre:border prose-pre:border-white/10 prose-pre:bg-surface-lighter prose-pre:p-4 prose-ol:mb-4 prose-ol:ml-6 prose-ol:list-decimal prose-ol:space-y-2 prose-ul:mb-4 prose-ul:ml-6 prose-ul:list-disc prose-ul:space-y-2 prose-li:leading-relaxed prose-li:text-gray-300 prose-table:my-6 prose-table:w-full prose-table:border-collapse prose-th:border prose-th:border-white/10 prose-th:bg-surface-dark prose-th:p-3 prose-th:font-semibold prose-th:text-white prose-td:border prose-td:border-white/10 prose-td:p-3 prose-td:text-gray-300 prose-img:my-6 prose-img:rounded-lg"
+          >
+            <h1>{title}</h1>
+            {description && <p class="mb-8 text-xl leading-relaxed text-gray-400">{description}</p>}
+            <Content />
+          </article>
+        </div>
+      </main>
+
+      <!-- Table of Contents - Right -->
+      {
+        toc.length > 0 && (
+          <aside class="sticky top-32 hidden h-fit w-56 flex-shrink-0 xl:block">
+            <h4 class="mb-6 px-4 text-[10px] font-black uppercase tracking-widest text-slate-500">
+              On this page
+            </h4>
+            <nav class="flex flex-col gap-1 border-l border-white/5">
+              {toc.map(item => (
+                <a
+                  href={`#${item.id}`}
+                  class="border-l-2 border-transparent px-4 py-1.5 text-[11px] font-medium text-slate-400 transition-all hover:border-primary hover:text-white"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>

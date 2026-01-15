@@ -72,6 +72,19 @@ request is merged.
 
 Full documentation: https://open-ticket-ai.com
 
+### Running Documentation Locally
+
+The documentation is built with Astro (custom layouts, no Starlight).
+
+```bash
+cd docs
+npm install
+npm run docs:dev  # Start development server at http://localhost:4321
+npm run docs:build # Build for production
+```
+
+Note: Starlight has been removed in favor of custom Astro layouts for better control and simplicity.
+
 ## Contributing
 
 The easiest way to extend Open Ticket AI is by creating a plugin. Explore the developer documentation to learn how to

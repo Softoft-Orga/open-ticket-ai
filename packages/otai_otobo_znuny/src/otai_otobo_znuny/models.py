@@ -1,10 +1,12 @@
+from typing import Any
+
 from open_ticket_ai import StrictBaseModel
 from open_ticket_ai.core.ticket_system_integration.unified_models import UnifiedEntity, UnifiedNote, UnifiedTicket
 from otobo_znuny.domain_models.basic_auth_model import BasicAuth
 from otobo_znuny.domain_models.otobo_client_config import ClientConfig
 from otobo_znuny.domain_models.ticket_models import Article, IdName, Ticket
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
-from pydantic import ConfigDict, Field, SecretStr
+from pydantic import ConfigDict, Field, SecretStr, field_validator
 
 
 def _to_unified_entity(id_name: IdName | None) -> UnifiedEntity | None:
@@ -60,6 +62,11 @@ class OTOBOZnunyTSServiceParams(StrictBaseModel):
         },
         description="Mapping of ticket operation names to their corresponding API endpoint paths.",
     )
+
+    @field_validator("password", mode="before")
+    @classmethod
+    def _convert_password_to_str(cls, v: Any) -> str:
+        return str(v)
 
     @property
     def operation_url_map(self) -> dict[TicketOperation, str]:

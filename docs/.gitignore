@@ -1,0 +1,7 @@
+storybook-static/
+node_modules/
+dist/
+broken-links.log
+test-results/
+playwright-report/
+playwright/.cache/

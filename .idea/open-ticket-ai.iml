@@ -7,6 +7,10 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/packages/otai_base/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/packages/otai_zammad/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/otai_base" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/otai_hf_local" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/otai_otobo_znuny" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/otai_zammad" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/otobo" />
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress_docs/docs_src/de" />
@@ -31,7 +35,6 @@
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress/docs_src/fr" />
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress/netlify" />
       <excludeFolder url="file://$MODULE_DIR$/docs/vitepress/stories" />
-      <excludeFolder url="file://$MODULE_DIR$/docs/.storybook" />
       <excludeFolder url="file://$MODULE_DIR$/docs/.vitepress/dist" />
       <excludeFolder url="file://$MODULE_DIR$/docs/.vitepress/cache" />
       <excludeFolder url="file://$MODULE_DIR$/deployment/otobo_demo/.venv" />

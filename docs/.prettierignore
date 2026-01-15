@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+.astro/
+storybook-static/
+build/
+
+# Cache
+.vitepress/cache/
+.vitepress/dist/
+.storybook/cache/
+coverage/
+
+# Public assets (often optimized already)
+public/
+
+# Config files that might have specific formatting
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Logs
+*.log
+broken-links.log
+
+# Playwright
+playwright-report/
+test-results/

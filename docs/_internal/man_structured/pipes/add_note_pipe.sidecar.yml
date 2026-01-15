@@ -8,7 +8,7 @@ _category: ticket-system
 
 _inputs:
   placement: flat
-  alongside: [ id, use ]
+  alongside: [id, use]
   params:
     ticket_system_id: Target ticket system ID from registry
     ticket_id: Target ticket ID
@@ -17,7 +17,7 @@ _defaults:
   note.visibility: internal
 
 _output:
-  state_enum: [ ok, skipped, failed ]
+  state_enum: [ok, skipped, failed]
   description: Pipe returns a state and optional payload.
   payload_schema_ref: OpenTicketAI.Pipes.AddNote.Result
   examples:

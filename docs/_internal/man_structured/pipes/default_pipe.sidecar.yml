@@ -8,23 +8,23 @@ _category: utility
 
 _inputs:
   placement: flat
-  alongside: [ id, use ]
-  params: { }
-_defaults: { }
+  alongside: [id, use]
+  params: {}
+_defaults: {}
 
 _output:
-  state_enum: [ ok ]
+  state_enum: [ok]
   description: Pipe always returns ok state with empty payload.
   payload_schema_ref: OpenTicketAI.Pipes.Default.Result
   examples:
     ok:
       state: ok
-      payload: { }
+      payload: {}
 
 _errors:
-  fail: [ ]
-  break: [ ]
-  continue: [ ]
+  fail: []
+  break: []
+  continue: []
 
 _engine_support:
   on_failure: false

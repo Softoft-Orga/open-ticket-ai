@@ -1,7 +1,5 @@
 [build]
 base = "docs"
-command = "npm run docs:build"
-publish = ".vitepress/dist"
 functions = "netlify/functions"
 
 # --- API function (keep above catch-alls) ---
@@ -10,11 +8,165 @@ from = "/api/german_prediction/v1/classify"
 to = "/.netlify/functions/classify"
 status = 200
 
+[[edge_functions]]
+path = "/*"
+function = "i18n-redirect"
+
+
 [[redirects]]
 from = "https://ticket-classification.softoft.de/*"
 to = "https://open-ticket-ai.com/:splat"
 status = 301
 force = true
+
+# URL structure migration redirects
+
+# Blog redirects
+[[redirects]]
+from = "/en/blog"
+to = "/en/blog/"
+status = 301
+
+# Details section redirects (moved to docs/open-ticket-automation/details)
+[[redirects]]
+from = "/en/details/_config_reference"
+to = "/en/docs/open-ticket-automation/details/config_reference/"
+status = 301
+
+[[redirects]]
+from = "/en/details/_predefined-pipes"
+to = "/en/docs/open-ticket-automation/details/predefined-pipes/"
+status = 301
+
+[[redirects]]
+from = "/en/details/_template_rendering"
+to = "/en/docs/open-ticket-automation/details/template_rendering/"
+status = 301
+
+# Developers section redirects (moved to docs/open-ticket-automation/developers)
+[[redirects]]
+from = "/en/developers/_config_rendering"
+to = "/en/docs/open-ticket-automation/developers/config_rendering/"
+status = 301
+
+[[redirects]]
+from = "/en/developers/_logging"
+to = "/en/docs/open-ticket-automation/developers/logging/"
+status = 301
+
+[[redirects]]
+from = "/en/developers/_pipeline_code"
+to = "/en/docs/open-ticket-automation/developers/pipeline_code/"
+status = 301
+
+[[redirects]]
+from = "/en/developers/dependency_injection"
+to = "/en/docs/open-ticket-automation/developers/dependency_injection/"
+status = 301
+
+[[redirects]]
+from = "/en/developers/plugin_development"
+to = "/en/docs/open-ticket-automation/developers/plugin_development/"
+status = 301
+
+[[redirects]]
+from = "/en/developers/services"
+to = "/en/docs/open-ticket-automation/developers/services/"
+status = 301
+
+[[redirects]]
+from = "/en/developers/template_rendering"
+to = "/en/docs/open-ticket-automation/developers/template_rendering/"
+status = 301
+
+[[redirects]]
+from = "/en/developers/testing"
+to = "/en/docs/open-ticket-automation/developers/testing/"
+status = 301
+
+[[redirects]]
+from = "/en/developers/ticket_system_integration"
+to = "/en/docs/open-ticket-automation/developers/ticket_system_integration/"
+status = 301
+
+# Guides section redirects (moved to docs/open-ticket-automation/guides)
+[[redirects]]
+from = "/en/guides/first_pipeline"
+to = "/en/docs/open-ticket-automation/guides/first_pipeline/"
+status = 301
+
+[[redirects]]
+from = "/en/guides/plan-ticket-automation-project"
+to = "/en/docs/open-ticket-automation/guides/plan-ticket-automation-project/"
+status = 301
+
+[[redirects]]
+from = "/en/guides/quick_start"
+to = "/en/docs/open-ticket-automation/guides/quick_start/"
+status = 301
+
+# Users section redirects (moved to docs/open-ticket-automation/users)
+[[redirects]]
+from = "/en/users/config_examples"
+to = "/en/docs/open-ticket-automation/users/config_examples/"
+status = 301
+
+[[redirects]]
+from = "/en/users/config_rendering"
+to = "/en/docs/open-ticket-automation/users/config_rendering/"
+status = 301
+
+[[redirects]]
+from = "/en/users/installation"
+to = "/en/docs/open-ticket-automation/users/installation/"
+status = 301
+
+[[redirects]]
+from = "/en/users/pipeline"
+to = "/en/docs/open-ticket-automation/users/pipeline/"
+status = 301
+
+[[redirects]]
+from = "/en/users/plugin-marketplace"
+to = "/en/docs/open-ticket-automation/users/plugin-marketplace/"
+status = 301
+
+[[redirects]]
+from = "/en/users/plugin-otobo-znuny/setup"
+to = "/en/docs/open-ticket-automation/users/otobo-znuny-plugin-setup/"
+status = 301
+
+[[redirects]]
+from = "/en/users/plugins"
+to = "/en/docs/open-ticket-automation/users/plugins/"
+status = 301
+
+# Products section redirects
+[[redirects]]
+from = "/en/products/overview"
+to = "/en/products/"
+status = 301
+
+[[redirects]]
+from = "/en/products/prediction-api/overview"
+to = "/en/docs/ticket-tagging/"
+status = 301
+
+[[redirects]]
+from = "/en/products/synthetic-data/synthetic-data-generation"
+to = "/en/products/"
+status = 301
+
+[[redirects]]
+from = "/en/products/synthetic-data/ticket-dataset"
+to = "/en/products/"
+status = 301
+
+# Other page redirects
+[[redirects]]
+from = "/en/multiTagDemo/demo"
+to = "/en/products/"
+status = 301
 
 
 [[headers]]
@@ -42,17 +194,3 @@ from = "/assets/*"
 to = "/assets/:splat"
 status = 200
 
-# --- Root language redirects ---
-
-[[redirects]]
-from = "/"
-to = "/en"
-status = 302
-conditions = { Language = ["en"] }
-
-
-# Fallback for other languages -> English
-[[redirects]]
-from = "/"
-to = "/en"
-status = 302

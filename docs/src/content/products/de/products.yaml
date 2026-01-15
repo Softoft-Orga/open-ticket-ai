@@ -1,0 +1,40 @@
+- slug: open-ticket-ai-lite
+  title: Open Ticket AI Lite
+  tagline: Starten Sie mit der Automatisierung Ihrer Tickets mit KI
+  description: |
+    Open Ticket AI Lite ist der perfekte Einstiegspunkt für kleine Teams, die ihre
+    Ticket-Klassifizierung und -Weiterleitung automatisieren möchten. On-Premises-Bereitstellung
+    mit voller Kontrolle über Ihre Daten.
+  features:
+    - Automatische Ticket-Klassifizierung
+    - Queue-Zuweisung
+    - Prioritätserkennung
+    - On-Premises-Bereitstellung
+    - Community-Support
+  tier: lite
+  nav:
+    group: Produkte
+    order: 1
+    hidden: false
+  image: https://picsum.photos/1000/1000?blur=5
+
+- slug: open-ticket-ai-pro
+  title: Open Ticket AI Pro
+  tagline: Fortgeschrittene KI für wachsende Teams
+  description: |
+    Open Ticket AI Pro liefert KI-Funktionen auf Unternehmensniveau für mittlere bis
+    große Support-Teams. Erhalten Sie erweiterte Analysen, benutzerdefiniertes Modelltraining
+    und vorrangigen Support.
+  features:
+    - Alles aus Lite
+    - Benutzerdefiniertes Modelltraining
+    - Erweiterte Analysen und Berichte
+    - Mehrsprachige Unterstützung
+    - Vorrangiger E-Mail-Support
+    - SLA-Garantien
+  tier: pro
+  nav:
+    group: Produkte
+    order: 2
+    hidden: false
+  image: https://picsum.photos/800/400

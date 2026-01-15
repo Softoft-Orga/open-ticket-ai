@@ -8,20 +8,20 @@ _category: utility
 
 _inputs:
   placement: flat
-  alongside: [ id, use ]
+  alongside: [id, use]
   params:
     expression: Any value or Jinja template expression to evaluate
-_defaults: { }
+_defaults: {}
 
 _output:
-  state_enum: [ ok, failed ]
+  state_enum: [ok, failed]
   description: Pipe returns the evaluated expression value in the payload.
   payload_schema_ref: OpenTicketAI.Pipes.JinjaExpression.Result
   examples:
     ok:
       state: ok
       payload:
-        value: "evaluated_result"
+        value: 'evaluated_result'
     failed:
       state: failed
       error: expression_evaluation_failed
@@ -35,7 +35,7 @@ _errors:
   break:
     - code: config_invalid
       when: Required expression parameter missing
-  continue: [ ]
+  continue: []
 
 _engine_support:
   on_failure: false

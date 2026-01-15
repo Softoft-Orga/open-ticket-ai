@@ -1,0 +1,38 @@
+name: Web Feature / Website Change
+description: Suggest a new web feature or website change (Astro/Vue)
+title: "[Web] "
+labels: [ "web", "frontend" ]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the feature or change.
+      placeholder: "Explain what needs to be changed..."
+    validations:
+      required: true
+  - type: textarea
+    id: implementation-details
+    attributes:
+      label: Implementation Ideas
+      description: How should this be implemented? (Components, styling, etc.)
+      placeholder: "Which Vue components or layouts need modification?"
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected Area
+      options:
+        - Marketing Pages
+        - Documentation Hub
+        - UI Components
+        - Other
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Required Checks
+      options:
+        - label: Matches Design (Purple/Cyan glow, Glassy surfaces)
+        - label: Storybook stories updated/added
+        - label: Responsive check (Mobile/Desktop)
+        - label: Verified via Astro build (npm run docs:build)
+
