@@ -31,7 +31,7 @@ footer:
         - label: Data Privacy
           url: company/data-privacy
         - label: Legal Notice
-          url: '#'
+          url: 'company/legal-notice'
         - label: Terms & Conditions
           url: '#'
   social:
