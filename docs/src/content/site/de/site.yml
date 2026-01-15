@@ -28,7 +28,7 @@ footer:
     - title: Unternehmen
       links:
         - label: Über uns
-          url: '#'
+          url: 'company/about'
         - label: Datenschutz
           url: company/data-privacy
         - label: Karriere
