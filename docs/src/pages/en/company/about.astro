@@ -4,6 +4,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Button from '../../../components/vue/core/basic/Button.vue';
 import Badge from '../../../components/vue/core/basic/Badge.vue';
 import { Icon } from 'astro-icon/components';
+import ModalTrigger from '../../../components/vue/core/basic/ModalTrigger.vue';
+import ContactForm from '../../../components/ContactForm.astro';
 
 const title = 'About Us - Open Ticket AI';
 const description = 'Learn about Open Ticket AI, our team, and our mission';
@@ -278,9 +280,26 @@ const team = siteConfig?.data.team || [];
           <Button variant="surface" tone="primary" size="lg" href="/en/products/" client:load>
             Get Demo
           </Button>
-          <Button variant="outline" tone="neutral" size="lg" href="/en/services/" client:load>
-            Contact Sales
-          </Button>
+          <ModalTrigger
+            title="Contact Us"
+            tone="neutral"
+            size="lg"
+            buttonText="Contact Us"
+            buttonVariant="outline"
+            buttonTone="neutral"
+            buttonSize="lg"
+            client:load
+          >
+            <ContactForm
+              title="Contact Us"
+              submitButtonText="Submit"
+              messageLabel="Message"
+              emailLabel="Email"
+              subjectLabel="Subject"
+              emailPlaceholder="your@email.com"
+              messagePlaceholder="Tell us about your requirements..."
+            />
+          </ModalTrigger>
         </div>
       </div>
     </section>
