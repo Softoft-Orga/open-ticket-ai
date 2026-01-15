@@ -72,7 +72,7 @@ type FooterSection = {
 };
 
 type SocialLink = {
-  platform: 'github' | 'linkedin' | 'youtube' | 'huggingface';
+  platform: string;
   url: string;
   ariaLabel: string;
 };
