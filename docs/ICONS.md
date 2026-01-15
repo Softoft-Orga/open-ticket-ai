@@ -8,7 +8,7 @@ Import the `Icon` component from `astro-icon/components`:
 
 ```astro
 ---
-import { Icon } from 'astro-icon/components'
+import { Icon } from 'astro-icon/components';
 ---
 
 <!-- Using Iconify (automatically fetches/bundles) -->
@@ -40,6 +40,5 @@ Example: `docs/src/icons/my-icon.svg` -> `<Icon name="local:my-icon" />`
 You can style icons using standard CSS or Tailwind classes:
 
 ```astro
-<Icon name="mdi:home" class="w-6 h-6 text-primary" />
+<Icon name="mdi:home" class="h-6 w-6 text-primary" />
 ```
-

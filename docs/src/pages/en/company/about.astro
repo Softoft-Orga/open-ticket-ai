@@ -3,12 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Button from '../../../components/vue/core/basic/Button.vue';
 import Badge from '../../../components/vue/core/basic/Badge.vue';
-import {
-  SparklesIcon,
-  ShieldCheckIcon,
-  CodeBracketIcon,
-  GlobeAltIcon,
-} from '@heroicons/vue/24/outline';
+import { Icon } from 'astro-icon/components';
 
 const title = 'About Us - Open Ticket AI';
 const description = 'Learn about Open Ticket AI, our team, and our mission';
@@ -32,7 +27,7 @@ const team = siteConfig?.data.team || [];
         <div class="mb-6">
           <Badge variant="subtle" tone="primary" size="sm" client:load>
             <span class="flex items-center gap-2">
-              <SparklesIcon class="h-3 w-3" aria-hidden="true" />
+              <Icon name="heroicons:sparkles" class="h-3 w-3" aria-hidden="true" />
               STRICTLY ON-PREMISE AI
             </span>
           </Badge>
@@ -89,7 +84,7 @@ const team = siteConfig?.data.team || [];
               class="relative flex h-64 w-64 items-center justify-center rounded-2xl border border-purple-500/30 bg-purple-900/20"
             >
               <div class="absolute inset-0 flex items-center justify-center">
-                <ShieldCheckIcon class="h-32 w-32 text-purple-400/40" aria-hidden="true" />
+                <Icon name="heroicons:shield-check" class="h-32 w-32 text-purple-400/40" aria-hidden="true" />
               </div>
               <div
                 class="relative rounded-xl border border-purple-500/40 bg-purple-950/60 px-6 py-4"
@@ -165,7 +160,7 @@ const team = siteConfig?.data.team || [];
         >
           <div class="mb-6">
             <div class="inline-flex rounded-xl bg-purple-500/20 p-3">
-              <SparklesIcon class="h-6 w-6 text-purple-400" aria-hidden="true" />
+              <Icon name="heroicons:sparkles" class="h-6 w-6 text-purple-400" aria-hidden="true" />
             </div>
           </div>
           <h3 class="mb-3 text-xl font-bold text-white">German Engineering</h3>
@@ -180,7 +175,7 @@ const team = siteConfig?.data.team || [];
         >
           <div class="mb-6">
             <div class="inline-flex rounded-xl bg-purple-500/20 p-3">
-              <ShieldCheckIcon class="h-6 w-6 text-purple-400" aria-hidden="true" />
+              <Icon name="heroicons:shield-check" class="h-6 w-6 text-purple-400" aria-hidden="true" />
             </div>
           </div>
           <h3 class="mb-3 text-xl font-bold text-white">Privacy First</h3>
@@ -195,7 +190,7 @@ const team = siteConfig?.data.team || [];
         >
           <div class="mb-6">
             <div class="inline-flex rounded-xl bg-purple-500/20 p-3">
-              <CodeBracketIcon class="h-6 w-6 text-purple-400" aria-hidden="true" />
+              <Icon name="heroicons:code-bracket" class="h-6 w-6 text-purple-400" aria-hidden="true" />
             </div>
           </div>
           <h3 class="mb-3 text-xl font-bold text-white">Open Source Roots</h3>
@@ -223,13 +218,13 @@ const team = siteConfig?.data.team || [];
               <div class="mb-6 flex items-center gap-4">
                 <Badge variant="subtle" tone="success" size="sm" client:load>
                   <span class="flex items-center gap-2">
-                    <ShieldCheckIcon class="h-3 w-3" aria-hidden="true" />
+                    <Icon name="heroicons:shield-check" class="h-3 w-3" aria-hidden="true" />
                     GDPR Compliant
                   </span>
                 </Badge>
                 <Badge variant="subtle" tone="primary" size="sm" client:load>
                   <span class="flex items-center gap-2">
-                    <GlobeAltIcon class="h-3 w-3" aria-hidden="true" />
+                    <Icon name="heroicons:globe-alt" class="h-3 w-3" aria-hidden="true" />
                     Data Sovereignty
                   </span>
                 </Badge>

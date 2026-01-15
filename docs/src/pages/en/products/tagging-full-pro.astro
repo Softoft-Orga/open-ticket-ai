@@ -4,7 +4,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Button from '../../../components/vue/core/basic/Button.vue';
 import Card from '../../../components/vue/core/basic/Card.vue';
 import Badge from '../../../components/vue/core/basic/Badge.vue';
-import { ArrowLeftIcon, RocketLaunchIcon } from '@heroicons/vue/24/outline';
+import { Icon } from 'astro-icon/components';
 
 const title = 'Full Pro - Advanced Enterprise Tagging AI';
 const description =
@@ -21,7 +21,8 @@ const description =
           href={getRelativeLocaleUrl(Astro.currentLocale, 'products')}
           class="group inline-flex items-center gap-2 text-primary transition-colors hover:text-primary-light"
         >
-          <ArrowLeftIcon
+          <Icon 
+            name="heroicons:arrow-left"
             class="h-4 w-4 transition-transform group-hover:-translate-x-1"
             aria-hidden="true"
           />
@@ -272,7 +273,7 @@ const description =
           <div
             class="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary shadow-xl shadow-primary/40"
           >
-            <RocketLaunchIcon class="h-8 w-8 text-white" aria-hidden="true" />
+            <Icon name="heroicons:rocket-launch" class="h-8 w-8 text-white" aria-hidden="true" />
           </div>
         </div>
         <h2 class="font-display mb-4 text-4xl font-black text-white">
