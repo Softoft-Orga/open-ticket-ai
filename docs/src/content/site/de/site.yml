@@ -43,11 +43,14 @@ footer:
       url: https://www.youtube.com/@openticketai
       ariaLabel: YouTube
     - platform: github
-      url: https://github.com/openticketai
+      url: https://github.com/Softoft-Orga
       ariaLabel: GitHub
     - platform: huggingface
       url: https://huggingface.co/openticketai
       ariaLabel: Hugging Face
+    - platform: x
+      url: https://x.com/OpenTicketAI
+      ariaLabel: X (Twitter)
   legal:
     - label: AGB
       url: terms
@@ -81,23 +84,28 @@ popularResources:
 
 legalInfo:
   companyName: Open Ticket AI UG
-  ceo: John Doe
+  ceo: Constanze Krishnartne
   address:
-    street: Beispielstraße 123
-    city: Berlin
-    zip: '10115'
+    street: Viktoriastraße 14
+    city: Mannheim
+    zip: '68159'
     country: Deutschland
   legalForm: UG (haftungsbeschränkt)
   vatId: DE123456789
-  registerInfo: Amtsgericht Berlin (Charlottenburg), HRB 123456 B
-  email: info@open-ticket-ai.com
-  phone: +49 30 12345678
+  registerInfo: Amtsgericht Mannheim, HRB 123456
+  email: info@openticketai.com
+  phone: +49 621 12345678
 team:
-  - name: Jane Smith
-    role: Lead Developer
-    pictureUrl: /images/team/jane-smith.png
-    email: jane.smith@open-ticket-ai.com
-    phoneNumber: +49 30 12345679
+  - name: Constanze Krishnartne
+    role: CEO
+    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=CK
+    email: constanze.krishnaratne@openticketai.com
+    phoneNumber: +49 621 12345678
+  - name: Tobias Bueck
+    role: CTO
+    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=TB
+    email: tobias.bueck@openticketai.com
+    phoneNumber: +49 621 12345679
 
 dataPrivacy:
   introduction: |
@@ -106,10 +114,10 @@ dataPrivacy:
     title: Verantwortlicher
     content: |
       Open Ticket AI UG
-      Beispielstraße 123
-      10115 Berlin, Deutschland
-      E-Mail: info@open-ticket-ai.com
-      Telefon: +49 30 12345678
+      Viktoriastraße 14
+      68159 Mannheim, Deutschland
+      E-Mail: info@openticketai.com
+      Telefon: +49 621 12345678
   dataProcessing:
     title: Von uns erhobene und verarbeitete Daten
     categories:
@@ -163,12 +171,16 @@ dataPrivacy:
         purpose: Website-Hosting und Content-Delivery
         provider: Netlify, Inc.
         privacyPolicy: https://www.netlify.com/privacy/
+      - name: Streak CRM
+        purpose: Kundenbeziehungsmanagement
+        provider: Streak, Inc.
+        privacyPolicy: https://www.streak.com/privacy
   contact:
     title: Kontakt für Datenschutzanfragen
     content: |
       Wenn Sie Fragen zu dieser Datenschutzerklärung haben oder Ihre Rechte ausüben möchten, kontaktieren Sie uns bitte unter:
 
-      E-Mail: info@open-ticket-ai.com
-      Telefon: +49 30 12345678
-      Adresse: Open Ticket AI UG, Beispielstraße 123, 10115 Berlin, Deutschland
+      E-Mail: info@openticketai.com
+      Telefon: +49 621 12345678
+      Adresse: Open Ticket AI UG, Viktoriastraße 14, 68159 Mannheim, Deutschland
   lastUpdated: Januar 2026

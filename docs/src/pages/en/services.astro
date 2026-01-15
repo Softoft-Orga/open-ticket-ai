@@ -28,10 +28,6 @@ const extensions = allServices
   .filter(s => s.serviceGroup === 'Extensions')
   .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
 
-const integrationServices = allServices
-  .filter(s => s.serviceGroup === 'Integration')
-  .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
-
 const automationServices = allServices
   .filter(s => s.serviceGroup === 'Automation')
   .sort((a, b) => (a.serviceOrder || 0) - (b.serviceOrder || 0));
@@ -53,21 +49,6 @@ function formatPrice(price: number | undefined): string {
 // Helper function to determine if highlighted (middle service)
 function isHighlighted(index: number, total: number): boolean {
   return total === 3 && index === 1;
-}
-
-// Helper function to get integration service display info
-function getIntegrationServiceInfo(slug: string): { subtitle: string; systems: string } {
-  const mapping: Record<string, { subtitle: string; systems: string }> = {
-    'integration-standard-stack': {
-      subtitle: 'Standard Stack',
-      systems: 'OTOBO, Znuny (OTRS stack), Zammad',
-    },
-    'integration-enterprise-custom': {
-      subtitle: 'Enterprise / Custom',
-      systems: 'Jira Service Management, Zendesk, Freshdesk, ServiceNow, Custom',
-    },
-  };
-  return mapping[slug] || { subtitle: '', systems: '' };
 }
 
 // Map icon names to heroicons icon names for astro-icon
@@ -334,101 +315,6 @@ const typicalScopeItems = [
           }
         </div>
       </Card>
-    </section>
-
-    <!-- Integration Services -->
-    <section class="mx-auto mb-32 max-w-7xl px-6">
-      <div class="mb-16 text-center">
-        <h2 class="mb-6 text-5xl font-black text-white">Integration Services</h2>
-        <p class="text-lg text-slate-400">
-          Fixed-price packages to connect Open Ticket AI with your existing ecosystem.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        {
-          integrationServices.map((service, index) => {
-            const info = getIntegrationServiceInfo(service.slug);
-            const highlighted = index === 1;
-            return (
-              <Card
-                variant={highlighted ? 'surface' : 'outline'}
-                tone={highlighted ? 'primary' : 'neutral'}
-                size="md"
-                radius="2xl"
-                elevation="none"
-                actionsSticky
-                client:load
-              >
-                <div class="mb-6 flex items-start justify-between">
-                  <div>
-                    <h4 class="text-xl font-bold text-white">Integration Package</h4>
-                    <p class="mt-1 text-xs font-bold uppercase tracking-widest text-primary">
-                      {info.subtitle}
-                    </p>
-                  </div>
-                  <div class="text-right">
-                    <div class="text-2xl font-bold text-white">
-                      {formatPrice(service.startingPrice)}
-                    </div>
-                    <div class="text-[10px] uppercase text-slate-500">One-time fee</div>
-                  </div>
-                </div>
-
-                <div class="mb-6">
-                  <div class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                    Supported Systems
-                  </div>
-                  <div class="text-sm font-medium text-slate-200">{info.systems}</div>
-                </div>
-
-                <ul class="mb-8 flex-grow space-y-2.5">
-                  {(service.outcomes || []).map(feature => (
-                    <li class="flex items-start gap-2 text-sm text-slate-400">
-                      <Icon
-                        name="heroicons:check"
-                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary"
-                        aria-hidden="true"
-                      />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div slot="actions">
-                  <ModalTrigger
-                    title="Contact Sales"
-                    tone="neutral"
-                    size="lg"
-                    button-text={index === 1 ? 'Get Demo' : 'Contact Sales'}
-                    button-variant={highlighted ? 'surface' : 'outline'}
-                    button-tone={highlighted ? 'primary' : 'neutral'}
-                    button-size="md"
-                    button-block
-                    client:load
-                  >
-                    <ContactForm
-                      title={service.title}
-                      submitButtonText="Submit"
-                      messageLabel="Message"
-                      emailLabel="Email"
-                      subjectLabel="Subject"
-                      emailPlaceholder="your@email.com"
-                      messagePlaceholder="How can we help you?"
-                    />
-                  </ModalTrigger>
-                </div>
-              </Card>
-            );
-          })
-        }
-      </div>
-      <div class="mt-8 rounded-xl border border-red-500/10 bg-red-500/5 py-3 text-center">
-        <p class="text-xs font-bold uppercase tracking-widest text-red-500/60">
-          Out of Scope <span class="text-red-500">(Billed Hourly):</span> Multi-instance rollouts, complex
-          field transformations, custom UI work, deep customization, and bespoke workflows.
-        </p>
-      </div>
     </section>
 
     <!-- Automation Services (OTA) -->

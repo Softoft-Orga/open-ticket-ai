@@ -1,12 +1,16 @@
 ---
-title: 'Open Source Ticket Systems, AI, and Automation: The Ultimate 2025 Guide to Transforming Support Workflows'
-description: 'Bridge the intelligence gap in open-source help desks like osTicket & Zammad. This guide shows how to use AI to automate ticket classification and workflows.'
+title: 'Open Source Ticket Systems + AI Automation: 2025 Complete Integration Guide'
+description: 'Bridge the intelligence gap in osTicket, Zammad, and FreeScout with AI automation. Complete guide to transforming open-source help desks with intelligent classification.'
 lang: en
-date: 2024-12-15
+date: 2025-12-18
 tags:
-  - open-source
-  - automation
-  - integration
+  - open-source-ticketing
+  - ai-automation
+  - osticket
+  - zammad
+  - help-desk-integration
+  - self-hosted-ai
+  - support-workflows
 category: Guide
 draft: false
 image: '../../../assets/images/ticket-system-ai-on-premise-platform.png'
