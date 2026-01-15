@@ -76,8 +76,6 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
 
 ### core/navigation
 
-- **FooterComponent.vue** — Footer navigation sections. Props: `sections`, `locale`. Slots: _none_.
-  Story: `stories/FooterComponent.stories.ts`.
 - **NavBar.vue** — Simplified top navigation bar with logo, links, and primary CTA. Props:
   `navItems` (array of {href, label}), `currentPath` (string), `ctaLabel` (string). Slots: _none_.
   Uses Headless UI Dialog for mobile menu. Story: `stories/NavBar.stories.ts`.
