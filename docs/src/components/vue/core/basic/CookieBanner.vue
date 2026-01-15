@@ -5,18 +5,19 @@
     >
       <UiTransitionSlide direction="up">
         <div
-          class="pointer-events-auto mx-auto max-w-4xl rounded-xl border border-neutral-200 bg-white p-6 shadow-lg sm:p-8 dark:border-neutral-700 dark:bg-neutral-900"
+          class="pointer-events-auto mx-auto max-w-4xl rounded-2xl border border-border-dark bg-surface-dark p-6 shadow-glow backdrop-blur-sm sm:p-8"
+          style="background: linear-gradient(135deg, rgba(166,13,242,0.1) 0%, rgba(29,16,35,1) 100%)"
         >
           <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
             <div class="flex-1 space-y-3">
-              <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-50">
+              <h3 class="text-lg font-semibold text-text-1">
                 {{ title }}
               </h3>
-              <p class="text-sm text-neutral-600 dark:text-neutral-400">
+              <p class="text-sm text-text-2">
                 {{ description }}
                 <a
                   :href="privacyPolicyUrl"
-                  class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium underline"
+                  class="font-medium text-primary-light underline transition-colors hover:text-primary"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
