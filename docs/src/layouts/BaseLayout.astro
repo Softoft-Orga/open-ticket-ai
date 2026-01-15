@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import NavBar from '../components/vue/core/navigation/NavBar.vue';
-import FooterComponent from '../components/vue/core/navigation/FooterComponent.vue';
+import FooterComponent from '../components/FooterComponent.astro';
 import CookieBanner from '../components/vue/core/basic/CookieBanner.vue';
 import '../styles/global.css';
 import ModalTrigger from '../components/vue/core/basic/ModalTrigger.vue';
@@ -31,18 +31,18 @@ const navLinks = (siteConfig?.data.nav || []).map(link => ({
 }));
 
 const footerData = siteConfig?.data.footer
-    ? {
-        ...siteConfig.data.footer,
-        sections: siteConfig.data.footer.sections.map(section => ({
-            ...section,
-            links: section.links.map(link => ({
-                ...link,
-                url:
-                    link.url.startsWith('#') || link.url.startsWith('http')
-                        ? link.url
-                        : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
-            })),
+  ? {
+      ...siteConfig.data.footer,
+      sections: siteConfig.data.footer.sections.map(section => ({
+        ...section,
+        links: section.links.map(link => ({
+          ...link,
+          url:
+            link.url.startsWith('#') || link.url.startsWith('http')
+              ? link.url
+              : getRelativeLocaleUrl(Astro.currentLocale || 'en', link.url),
         })),
+      })),
     }
   : undefined;
 
@@ -163,7 +163,7 @@ const privacyPolicyUrl = getRelativeLocaleUrl(Astro.currentLocale || 'en', 'comp
       </ModalTrigger>
     </NavBar>
     <slot />
-    <FooterComponent client:load footerData={footerData} />
+    <FooterComponent footerData={footerData} />
     <CookieBanner
       client:load
       title={cookieTexts.title}
