@@ -1,13 +1,16 @@
 ---
-title: 'Labeling 10,000 Tickets Efficiently: Semi-Automated Labeling Strategies'
-description: 'Save time labeling thousands of tickets. Learn a semi-automated workflow using GPT for zero-shot pre-labeling and Label Studio for efficient review.'
+title: 'Labeling 10,000 Tickets Efficiently: AI-Powered Semi-Automated Strategies That Scale'
+description: 'Master efficient ticket labeling at scale using GPT-powered zero-shot classification, Label Studio workflows, and proven annotation techniques that reduce manual effort by 80%.'
 lang: en
-date: 2024-10-15
+date: 2025-09-25
 tags:
-  - ai
-  - machine-learning
-  - automation
-  - labeling
+  - ai-labeling
+  - data-annotation
+  - gpt-classification
+  - label-studio
+  - zero-shot-learning
+  - ml-training
+  - automation-workflow
 category: Tutorial
 draft: false
 image: ../../../assets/images/ticket-list-classified-automation.png

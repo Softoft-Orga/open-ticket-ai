@@ -1,12 +1,15 @@
 ---
-title: Zammad Integration for Open Ticket AI
-description: 'Integrate Open Ticket AI with Zammad using the built-in OTAI Zammad plugin. The adapter exists but is not fully tested yet.'
+title: 'Zammad Integration for Open Ticket AI: AI-Powered Ticket Automation via REST API'
+description: 'Integrate Open Ticket AI with Zammad using the official plugin for automated classification, routing, and prioritization through REST API integration.'
 lang: en
-date: 2024-07-25
+date: 2025-07-28
 tags:
-  - integration
-  - zammad
-  - api
+  - zammad-integration
+  - rest-api
+  - plugin-system
+  - ai-automation
+  - ticket-classification
+  - open-source-integration
 category: Integration
 draft: false
 image: ../../../assets/images/ai-solves-many-tickets-data-connected-systems.png

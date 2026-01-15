@@ -1,13 +1,16 @@
 ---
-title: How to Fine-Tune an AI Model with Your Own Ticket Data
-description: 'Fine-tune an AI model on your ticket data for accurate, automated classification. This guide shows how to prepare datasets and train with Hugging Face or a REST API.'
+title: 'How to Fine-Tune an AI Model with Your Own Ticket Data: Complete Training Guide'
+description: 'Learn to fine-tune transformer models on custom ticket data using Hugging Face and Open Ticket AI. Step-by-step guide for domain-specific classification with Python.'
 lang: en
-date: 2024-09-20
+date: 2025-08-18
 tags:
-  - ai
-  - machine-learning
-  - fine-tuning
-  - training
+  - ai-fine-tuning
+  - model-training
+  - transformer-models
+  - huggingface
+  - bert-training
+  - custom-ai-models
+  - ticket-classification
 category: Tutorial
 draft: false
 image: ../../../assets/images/ai-brain-connected-statistics-dark-blue.png

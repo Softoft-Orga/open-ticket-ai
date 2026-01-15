@@ -1,12 +1,15 @@
 ---
-title: Freshdesk Integration for Open Ticket AI
-description: 'Integrate on-premise Open Ticket AI with Freshdesk for automated ticket routing and classification. Build a custom OTAI plugin that updates Freshdesk tickets via REST.'
+title: 'Freshdesk Integration for Open Ticket AI: On-Premise AI Classification via REST API'
+description: 'Integrate self-hosted Open Ticket AI with Freshdesk using custom plugins. Automate ticket routing, priority assignment, and queue classification via REST API.'
 lang: en
-date: 2024-08-10
+date: 2025-08-12
 tags:
-  - integration
-  - freshdesk
-  - api
+  - freshdesk-integration
+  - api-integration
+  - plugin-development
+  - ticket-automation
+  - on-premise-ai
+  - rest-api
 category: Integration
 draft: false
 image: ../../../assets/images/connecting-multiple-services-integration.png
