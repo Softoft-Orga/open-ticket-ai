@@ -175,6 +175,56 @@ const site = defineCollection({
         })
       )
       .optional(),
+    dataPrivacy: z
+      .object({
+        introduction: z.string(),
+        controller: z.object({
+          title: z.string(),
+          content: z.string(),
+        }),
+        dataProcessing: z.object({
+          title: z.string(),
+          categories: z.array(
+            z.object({
+              title: z.string(),
+              description: z.string(),
+              legalBasis: z.string().optional(),
+            })
+          ),
+        }),
+        yourRights: z.object({
+          title: z.string(),
+          rights: z.array(
+            z.object({
+              title: z.string(),
+              description: z.string(),
+            })
+          ),
+        }),
+        dataSecurity: z.object({
+          title: z.string(),
+          content: z.string(),
+        }),
+        thirdPartyServices: z
+          .object({
+            title: z.string(),
+            services: z.array(
+              z.object({
+                name: z.string(),
+                purpose: z.string(),
+                provider: z.string().optional(),
+                privacyPolicy: z.string().optional(),
+              })
+            ),
+          })
+          .optional(),
+        contact: z.object({
+          title: z.string(),
+          content: z.string(),
+        }),
+        lastUpdated: z.string(),
+      })
+      .optional(),
   }),
 });
 

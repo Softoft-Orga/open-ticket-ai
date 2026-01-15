@@ -29,18 +29,27 @@ footer:
         - label: About
           url: 'company/about'
         - label: Data Privacy
-          url: '#'
+          url: company/data-privacy
         - label: Legal Notice
-          url: '#'
+          url: 'company/legal-notice'
         - label: Terms & Conditions
-          url: '#'
+          url: terms
   social:
-    - platform: github
-      url: https://github.com/openticketai
-      ariaLabel: GitHub
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
+    - platform: youtube
+      url: https://www.youtube.com/@openticketai
+      ariaLabel: YouTube
+    - platform: github
+      url: https://github.com/openticketai
+      ariaLabel: GitHub
+    - platform: huggingface
+      url: https://huggingface.co/openticketai
+      ariaLabel: Hugging Face
+  legal:
+    - label: Terms & Conditions
+      url: terms
   copyright: Open Ticket AI UG. All rights reserved.
 
 popularResources:
@@ -88,3 +97,77 @@ team:
     pictureUrl: /images/team/jane-smith.png
     email: jane.smith@open-ticket-ai.com
     phoneNumber: +49 30 12345679
+
+dataPrivacy:
+  introduction: |
+    Open Ticket AI UG (hereinafter "we" or "us") is committed to protecting your personal data and respecting your privacy rights in accordance with the General Data Protection Regulation (GDPR) and other applicable data protection laws. This Data Privacy Policy explains how we collect, use, process, and protect your personal information when you use our services.
+  controller:
+    title: Data Controller
+    content: |
+      Open Ticket AI UG
+      Example Street 123
+      10115 Berlin, Germany
+      Email: info@open-ticket-ai.com
+      Phone: +49 30 12345678
+  dataProcessing:
+    title: Data We Collect and Process
+    categories:
+      - title: Contact Information
+        description: When you contact us or request information about our services, we collect your name, email address, phone number, and company information.
+        legalBasis: Your consent (Art. 6(1)(a) GDPR) or our legitimate interest in responding to inquiries (Art. 6(1)(f) GDPR)
+      - title: Website Usage Data
+        description: We collect technical information such as IP address, browser type, device information, and pages visited through cookies and analytics tools.
+        legalBasis: Your consent (Art. 6(1)(a) GDPR) for cookies, and our legitimate interest in improving our website (Art. 6(1)(f) GDPR)
+      - title: Service Data
+        description: When you use our services, we process data necessary for service delivery, including ticket system data, configuration settings, and usage metrics.
+        legalBasis: Performance of contract (Art. 6(1)(b) GDPR)
+      - title: Communication Data
+        description: We store correspondence and communications with you, including email exchanges and support tickets.
+        legalBasis: Our legitimate interest in maintaining customer relationships (Art. 6(1)(f) GDPR)
+  yourRights:
+    title: Your Rights Under GDPR
+    rights:
+      - title: Right to Access
+        description: You have the right to request a copy of the personal data we hold about you.
+      - title: Right to Rectification
+        description: You can request that we correct any inaccurate or incomplete personal data.
+      - title: Right to Erasure
+        description: You have the right to request deletion of your personal data under certain circumstances.
+      - title: Right to Restriction
+        description: You can request that we restrict the processing of your personal data in certain situations.
+      - title: Right to Data Portability
+        description: You have the right to receive your personal data in a structured, commonly used format and transfer it to another controller.
+      - title: Right to Object
+        description: You can object to the processing of your personal data based on legitimate interests or for direct marketing purposes.
+      - title: Right to Withdraw Consent
+        description: Where processing is based on consent, you can withdraw your consent at any time.
+      - title: Right to Lodge a Complaint
+        description: You have the right to lodge a complaint with a supervisory authority if you believe your data protection rights have been violated.
+  dataSecurity:
+    title: Data Security
+    content: |
+      We implement appropriate technical and organizational security measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction. These measures include encryption, access controls, regular security assessments, and staff training on data protection practices. We continuously review and update our security measures to ensure the ongoing protection of your data.
+  thirdPartyServices:
+    title: Third-Party Services
+    services:
+      - name: Google Analytics
+        purpose: Website analytics and performance monitoring
+        provider: Google LLC
+        privacyPolicy: https://policies.google.com/privacy
+      - name: GitHub
+        purpose: Code repository and version control
+        provider: GitHub, Inc.
+        privacyPolicy: https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement
+      - name: Netlify
+        purpose: Website hosting and content delivery
+        provider: Netlify, Inc.
+        privacyPolicy: https://www.netlify.com/privacy/
+  contact:
+    title: Contact for Data Privacy Inquiries
+    content: |
+      If you have any questions about this Data Privacy Policy or wish to exercise your rights, please contact us at:
+
+      Email: info@open-ticket-ai.com
+      Phone: +49 30 12345678
+      Address: Open Ticket AI UG, Example Street 123, 10115 Berlin, Germany
+  lastUpdated: January 2026
