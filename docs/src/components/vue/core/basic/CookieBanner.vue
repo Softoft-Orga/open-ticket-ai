@@ -5,15 +5,15 @@
     >
       <UiTransitionSlide direction="up">
         <div
-          class="pointer-events-auto mx-auto max-w-4xl rounded-2xl border border-border-dark bg-surface-dark p-6 shadow-glow backdrop-blur-sm sm:p-8"
-          style="background: linear-gradient(135deg, rgba(166,13,242,0.1) 0%, rgba(29,16,35,1) 100%)"
+          class="pointer-events-auto mx-auto max-w-4xl rounded-2xl border border-border-dark bg-surface-dark p-6 shadow-glow backdrop-blur-lg sm:p-8"
+          style="background: linear-gradient(135deg, rgba(166,13,242,0.6) 0%, rgba(29,16,35,0.98) 100%)"
         >
           <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
             <div class="flex-1 space-y-3">
               <h3 class="text-lg font-semibold text-text-1">
                 {{ title }}
               </h3>
-              <p class="text-sm text-text-2">
+              <p class="text-sm text-text-1">
                 {{ description }}
                 <a
                   :href="privacyPolicyUrl"
@@ -29,7 +29,7 @@
               <Button variant="outline" tone="neutral" size="md" @click="handleDecline">
                 {{ declineText }}
               </Button>
-              <Button variant="solid" tone="primary" size="md" @click="handleAccept">
+              <Button size="md" tone="primary" variant="surface" @click="handleAccept">
                 {{ acceptText }}
               </Button>
             </div>
