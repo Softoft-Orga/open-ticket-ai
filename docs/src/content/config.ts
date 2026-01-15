@@ -125,6 +125,7 @@ const site = defineCollection({
           platform: z.string(),
           url: z.string(),
           ariaLabel: z.string(),
+          iconName: z.string(),
         })
       ),
       copyright: z.string(),
