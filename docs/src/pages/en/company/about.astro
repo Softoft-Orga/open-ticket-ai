@@ -1,13 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Card from '../../../components/vue/core/basic/Card.vue';
 import Badge from '../../../components/vue/core/basic/Badge.vue';
 import {
   BuildingOfficeIcon,
   EnvelopeIcon,
   PhoneIcon,
-  MapPinIcon,
   UserGroupIcon,
   SparklesIcon,
 } from '@heroicons/vue/24/outline';
@@ -74,128 +72,101 @@ const team = siteConfig?.data.team || [];
           </div>
 
           <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Card
-              variant="surface"
-              tone="neutral"
-              size="md"
-              radius="xl"
-              class="border-primary/10 bg-gradient-to-br from-purple-900/20 to-purple-950/10"
-              client:load
-            >
+            <div class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-950/20 p-8">
+              <div class="mb-6 flex items-center gap-3">
+                <div class="rounded-lg bg-purple-500/20 p-2">
+                  <BuildingOfficeIcon class="h-5 w-5 text-purple-400" aria-hidden="true" />
+                </div>
+                <h3 class="text-lg font-bold text-white">Legal Information</h3>
+              </div>
+
               <div class="space-y-4">
-                <div class="mb-6 flex items-center gap-3">
-                  <div class="rounded-lg bg-primary/20 p-2">
-                    <BuildingOfficeIcon class="h-5 w-5 text-primary" aria-hidden="true" />
+                <div>
+                  <div class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Company Name
                   </div>
-                  <h3 class="text-lg font-bold text-white">Legal Information</h3>
+                  <div class="text-sm text-slate-200">{legalInfo.companyName}</div>
                 </div>
 
-                <div class="space-y-3">
-                  <div>
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
-                      Company Name
-                    </div>
-                    <div class="text-sm text-slate-200">{legalInfo.companyName}</div>
+                <div>
+                  <div class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Legal Form
                   </div>
+                  <div class="text-sm text-slate-200">{legalInfo.legalForm}</div>
+                </div>
 
+                <div>
+                  <div class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">CEO</div>
+                  <div class="text-sm text-slate-200">{legalInfo.ceo}</div>
+                </div>
+
+                {legalInfo.vatId && (
                   <div>
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
-                      Legal Form
+                    <div class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      VAT ID
                     </div>
-                    <div class="text-sm text-slate-200">{legalInfo.legalForm}</div>
+                    <div class="text-sm text-slate-200">{legalInfo.vatId}</div>
                   </div>
+                )}
 
+                {legalInfo.registerInfo && (
                   <div>
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500">CEO</div>
-                    <div class="text-sm text-slate-200">{legalInfo.ceo}</div>
+                    <div class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Register
+                    </div>
+                    <div class="text-sm text-slate-200">{legalInfo.registerInfo}</div>
                   </div>
+                )}
+              </div>
+            </div>
 
-                  {legalInfo.vatId && (
-                    <div>
-                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
-                        VAT ID
-                      </div>
-                      <div class="text-sm text-slate-200">{legalInfo.vatId}</div>
-                    </div>
-                  )}
+            <div class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-950/20 p-8">
+              <div class="mb-6 flex items-center gap-3">
+                <div class="rounded-lg bg-purple-500/20 p-2">
+                  <EnvelopeIcon class="h-5 w-5 text-purple-400" aria-hidden="true" />
+                </div>
+                <h3 class="text-lg font-bold text-white">Contact Information</h3>
+              </div>
 
-                  {legalInfo.registerInfo && (
-                    <div>
-                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
-                        Register
-                      </div>
-                      <div class="text-sm text-slate-200">{legalInfo.registerInfo}</div>
-                    </div>
-                  )}
+              <div class="space-y-4">
+                <div>
+                  <div class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Address
+                  </div>
+                  <div class="text-sm text-slate-200">
+                    {legalInfo.address.street}
+                    <br />
+                    {legalInfo.address.zip} {legalInfo.address.city}
+                    <br />
+                    {legalInfo.address.country}
+                  </div>
+                </div>
+
+                <div>
+                  <div class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Email
+                  </div>
+                  <a
+                    href={`mailto:${legalInfo.email}`}
+                    class="text-sm text-purple-400 transition-colors hover:text-purple-300"
+                  >
+                    {legalInfo.email}
+                  </a>
+                </div>
+
+                <div>
+                  <div class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Phone
+                  </div>
+                  <a
+                    href={`tel:${legalInfo.phone}`}
+                    class="text-sm text-purple-400 transition-colors hover:text-purple-300"
+                  >
+                    {legalInfo.phone}
+                  </a>
                 </div>
               </div>
-            </Card>
-
-            <Card
-              variant="surface"
-              tone="neutral"
-              size="md"
-              radius="xl"
-              class="border-primary/10 bg-gradient-to-br from-purple-900/20 to-purple-950/10"
-              client:load
-            >
-              <div class="space-y-4">
-                <div class="mb-6 flex items-center gap-3">
-                  <div class="rounded-lg bg-primary/20 p-2">
-                    <EnvelopeIcon class="h-5 w-5 text-primary" aria-hidden="true" />
-                  </div>
-                  <h3 class="text-lg font-bold text-white">Contact Information</h3>
-                </div>
-
-                <div class="space-y-3">
-                  <div class="flex items-start gap-3">
-                    <MapPinIcon class="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                    <div class="flex-1">
-                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
-                        Address
-                      </div>
-                      <div class="text-sm text-slate-200">
-                        {legalInfo.address.street}
-                        <br />
-                        {legalInfo.address.zip} {legalInfo.address.city}
-                        <br />
-                        {legalInfo.address.country}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="flex items-start gap-3">
-                    <EnvelopeIcon class="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                    <div class="flex-1">
-                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
-                        Email
-                      </div>
-                      <a
-                        href={`mailto:${legalInfo.email}`}
-                        class="text-sm text-primary hover:underline"
-                      >
-                        {legalInfo.email}
-                      </a>
-                    </div>
-                  </div>
-
-                  <div class="flex items-start gap-3">
-                    <PhoneIcon class="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
-                    <div class="flex-1">
-                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
-                        Phone
-                      </div>
-                      <a
-                        href={`tel:${legalInfo.phone}`}
-                        class="text-sm text-primary hover:underline"
-                      >
-                        {legalInfo.phone}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
+            </div>
           </div>
         </section>
       )
@@ -222,17 +193,10 @@ const team = siteConfig?.data.team || [];
 
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {team.map(member => (
-              <Card
-                variant="surface"
-                tone="neutral"
-                size="md"
-                radius="xl"
-                class="border-primary/10 bg-gradient-to-br from-purple-900/20 to-purple-950/10"
-                client:load
-              >
+              <div class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-950/20 p-6">
                 <div class="flex flex-col items-center text-center">
                   {member.pictureUrl && (
-                    <div class="mb-4 overflow-hidden rounded-full border-2 border-primary/30">
+                    <div class="mb-4 overflow-hidden rounded-full border-2 border-purple-500/40">
                       <img
                         src={member.pictureUrl}
                         alt={member.name || 'Team Member'}
@@ -245,28 +209,30 @@ const team = siteConfig?.data.team || [];
                     {member.name && (
                       <h3 class="mb-1 text-lg font-bold text-white">{member.name}</h3>
                     )}
-                    {member.role && <p class="text-sm font-medium text-primary">{member.role}</p>}
+                    {member.role && (
+                      <p class="text-sm font-medium text-purple-400">{member.role}</p>
+                    )}
                   </div>
 
                   {(member.email || member.phoneNumber) && (
-                    <div class="w-full space-y-2 border-t border-slate-700/50 pt-4">
+                    <div class="w-full space-y-2 border-t border-purple-500/20 pt-4">
                       {member.email && (
-                        <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
-                          <EnvelopeIcon class="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                        <div class="flex items-center justify-center gap-2 text-xs">
+                          <EnvelopeIcon class="h-3.5 w-3.5 text-purple-400" aria-hidden="true" />
                           <a
                             href={`mailto:${member.email}`}
-                            class="transition-colors hover:text-primary"
+                            class="text-purple-400 transition-colors hover:text-purple-300"
                           >
                             {member.email}
                           </a>
                         </div>
                       )}
                       {member.phoneNumber && (
-                        <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
-                          <PhoneIcon class="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                        <div class="flex items-center justify-center gap-2 text-xs">
+                          <PhoneIcon class="h-3.5 w-3.5 text-purple-400" aria-hidden="true" />
                           <a
                             href={`tel:${member.phoneNumber}`}
-                            class="transition-colors hover:text-primary"
+                            class="text-purple-400 transition-colors hover:text-purple-300"
                           >
                             {member.phoneNumber}
                           </a>
@@ -275,7 +241,7 @@ const team = siteConfig?.data.team || [];
                     </div>
                   )}
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         </section>
@@ -284,17 +250,10 @@ const team = siteConfig?.data.team || [];
 
     <!-- Mission Statement Section -->
     <section class="mx-auto mb-20 max-w-5xl px-6">
-      <Card
-        variant="surface"
-        tone="neutral"
-        size="lg"
-        radius="2xl"
-        class="border-primary/10 bg-gradient-to-br from-purple-900/30 to-purple-950/20"
-        client:load
-      >
-        <div class="py-8 text-center">
+      <div class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/40 to-purple-950/30 p-12">
+        <div class="text-center">
           <div
-            class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600"
+            class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-purple-700"
           >
             <SparklesIcon class="h-8 w-8 text-white" aria-hidden="true" />
           </div>
@@ -308,7 +267,7 @@ const team = siteConfig?.data.team || [];
             to focus on what truly matters.
           </p>
         </div>
-      </Card>
+      </div>
     </section>
   </div>
 </BaseLayout>
