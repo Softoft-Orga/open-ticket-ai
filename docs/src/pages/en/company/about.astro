@@ -60,7 +60,9 @@ const team = siteConfig?.data.team || [];
 
     <!-- Mission Section -->
     <section id="mission" class="mx-auto mb-24 max-w-6xl px-6">
-      <div class="overflow-hidden rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-900/40 to-purple-950/30">
+      <div
+        class="overflow-hidden rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-900/40 to-purple-950/30"
+      >
         <div class="grid grid-cols-1 gap-8 p-12 lg:grid-cols-2 lg:gap-12">
           <div>
             <h2 class="mb-6 text-4xl font-bold text-white">Our Mission</h2>
@@ -132,7 +134,9 @@ const team = siteConfig?.data.team || [];
 
                 <div>
                   {member.name && <h3 class="mb-1 text-lg font-bold text-white">{member.name}</h3>}
-                  {member.role && <p class="mb-3 text-sm font-medium text-purple-400">{member.role}</p>}
+                  {member.role && (
+                    <p class="mb-3 text-sm font-medium text-purple-400">{member.role}</p>
+                  )}
                   <p class="text-xs leading-relaxed text-slate-400">
                     {member.role === 'Lead Developer'
                       ? 'Former AI researcher at MIT & Stanford. Ph.D. in Neural Networks.'
@@ -156,7 +160,9 @@ const team = siteConfig?.data.team || [];
       </div>
 
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-950/20 p-8">
+        <div
+          class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-950/20 p-8"
+        >
           <div class="mb-6">
             <div class="inline-flex rounded-xl bg-purple-500/20 p-3">
               <SparklesIcon class="h-6 w-6 text-purple-400" aria-hidden="true" />
@@ -169,7 +175,9 @@ const team = siteConfig?.data.team || [];
           </p>
         </div>
 
-        <div class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-950/20 p-8">
+        <div
+          class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-950/20 p-8"
+        >
           <div class="mb-6">
             <div class="inline-flex rounded-xl bg-purple-500/20 p-3">
               <ShieldCheckIcon class="h-6 w-6 text-purple-400" aria-hidden="true" />
@@ -182,7 +190,9 @@ const team = siteConfig?.data.team || [];
           </p>
         </div>
 
-        <div class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-950/20 p-8">
+        <div
+          class="rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/30 to-purple-950/20 p-8"
+        >
           <div class="mb-6">
             <div class="inline-flex rounded-xl bg-purple-500/20 p-3">
               <CodeBracketIcon class="h-6 w-6 text-purple-400" aria-hidden="true" />
@@ -234,9 +244,7 @@ const team = siteConfig?.data.team || [];
             </div>
 
             <div class="flex items-center justify-center">
-              <div
-                class="flex h-64 w-full items-center justify-center rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/20 to-purple-950/10"
-              >
+              <div class="flex h-64 w-full items-center justify-center rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/20 to-purple-950/10">
                 <div class="text-center">
                   <div class="mb-2 text-2xl font-bold text-white">Berlin</div>
                   <div class="text-sm text-slate-400">Germany</div>
@@ -250,7 +258,9 @@ const team = siteConfig?.data.team || [];
 
     <!-- Partner CTA Section -->
     <section class="mx-auto mb-24 max-w-6xl px-6">
-      <div class="rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-900/40 to-purple-950/30 p-12 text-center">
+      <div
+        class="rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-900/40 to-purple-950/30 p-12 text-center"
+      >
         <h2 class="mb-4 text-4xl font-bold text-white">Partner with us</h2>
         <p class="mx-auto mb-8 max-w-2xl text-base text-slate-400">
           Ready to deploy secure AI automation in your infrastructure? Let's discuss your
