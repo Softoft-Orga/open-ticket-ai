@@ -28,10 +28,6 @@ const iconMap: Record<string, string> = {
   ChartBarIcon: 'heroicons:chart-bar',
 };
 
-function getDocUrl(docId: string): string {
-  return docId;
-}
-
 async function getDocTitle(docId: string): Promise<string> {
   try {
     const parts = docId.split('/');

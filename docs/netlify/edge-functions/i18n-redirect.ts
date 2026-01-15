@@ -1,4 +1,4 @@
-export default async (request: Request, context: any) => {
+export default async (request: Request, context: { next: () => Response | Promise<Response> }) => {
   const url = new URL(request.url);
   const path = url.pathname;
 
