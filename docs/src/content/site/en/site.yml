@@ -33,7 +33,7 @@ footer:
         - label: Legal Notice
           url: 'company/legal-notice'
         - label: Terms & Conditions
-          url: '#'
+          url: terms
   social:
     - platform: github
       url: https://github.com/openticketai
@@ -41,6 +41,9 @@ footer:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
+  legal:
+    - label: Terms & Conditions
+      url: terms
   copyright: Open Ticket AI UG. All rights reserved.
 
 popularResources:

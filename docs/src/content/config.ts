@@ -127,6 +127,14 @@ const site = defineCollection({
           ariaLabel: z.string(),
         })
       ),
+      legal: z
+        .array(
+          z.object({
+            label: z.string(),
+            url: z.string(),
+          })
+        )
+        .optional(),
       copyright: z.string(),
     }),
     popularResources: z

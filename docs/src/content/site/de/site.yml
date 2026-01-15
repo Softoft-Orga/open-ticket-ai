@@ -42,6 +42,9 @@ footer:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
+  legal:
+    - label: AGB
+      url: terms
   copyright: Open Ticket AI UG. Alle Rechte vorbehalten.
 
 popularResources:
