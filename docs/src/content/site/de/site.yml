@@ -36,12 +36,18 @@ footer:
         - label: Rechtliches
           url: '#'
   social:
-    - platform: github
-      url: https://github.com/openticketai
-      ariaLabel: GitHub
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
+    - platform: youtube
+      url: https://www.youtube.com/@openticketai
+      ariaLabel: YouTube
+    - platform: github
+      url: https://github.com/openticketai
+      ariaLabel: GitHub
+    - platform: huggingface
+      url: https://huggingface.co/openticketai
+      ariaLabel: Hugging Face
   legal:
     - label: AGB
       url: terms
