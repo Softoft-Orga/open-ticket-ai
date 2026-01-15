@@ -184,7 +184,11 @@ const typicalScopeItems = [
           </div>
           <Card variant="outline" size="sm" radius="xl" client:load>
             <div class="flex items-start gap-4">
-              <Icon name="heroicons:server" class="h-6 w-6 flex-shrink-0 text-primary" aria-hidden="true" />
+              <Icon
+                name="heroicons:server"
+                class="h-6 w-6 flex-shrink-0 text-primary"
+                aria-hidden="true"
+              />
               <div>
                 <h4 class="text-sm font-bold text-white">Self-Hosted</h4>
                 <p class="text-[11px] leading-tight text-slate-500">
@@ -195,7 +199,7 @@ const typicalScopeItems = [
           </Card>
           <Card variant="outline" size="sm" radius="xl" client:load>
             <div class="flex items-start gap-4">
-              <Icon 
+              <Icon
                 name="heroicons:arrow-path-rounded-square"
                 class="h-6 w-6 flex-shrink-0 text-primary"
                 aria-hidden="true"
@@ -262,7 +266,7 @@ const typicalScopeItems = [
                 <ul class="mb-10 flex-grow space-y-3">
                   {(service.outcomes || []).map(feature => (
                     <li class="flex items-start gap-2.5 text-sm text-slate-300">
-                      <Icon 
+                      <Icon
                         name="heroicons:check"
                         class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary"
                         aria-hidden="true"
@@ -381,7 +385,8 @@ const typicalScopeItems = [
                 <ul class="mb-8 flex-grow space-y-2.5">
                   {(service.outcomes || []).map(feature => (
                     <li class="flex items-start gap-2 text-sm text-slate-400">
-                      <Icon name="heroicons:check"
+                      <Icon
+                        name="heroicons:check"
                         class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary"
                         aria-hidden="true"
                       />
@@ -453,7 +458,11 @@ const typicalScopeItems = [
                 'Triggering Tasks',
               ].map(item => (
                 <li class="flex items-center gap-3 font-bold text-slate-300">
-                  <Icon name="heroicons:arrow-right" class="h-5 w-5 text-primary" aria-hidden="true" />
+                  <Icon
+                    name="heroicons:arrow-right"
+                    class="h-5 w-5 text-primary"
+                    aria-hidden="true"
+                  />
                   {item}
                 </li>
               ))
@@ -491,7 +500,8 @@ const typicalScopeItems = [
                   <ul class="space-y-3">
                     {(service.outcomes || []).map(item => (
                       <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                        <Icon name="heroicons:check"
+                        <Icon
+                          name="heroicons:check"
                           class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                           aria-hidden="true"
                         />
@@ -583,7 +593,8 @@ const typicalScopeItems = [
                     <ul class="space-y-3">
                       {typicalScopeItems.map(item => (
                         <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                          <Icon name="heroicons:check"
+                          <Icon
+                            name="heroicons:check"
                             class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                             aria-hidden="true"
                           />
@@ -650,7 +661,8 @@ const typicalScopeItems = [
                   <ul class="space-y-3">
                     {(service.outcomes || []).map(item => (
                       <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                        <Icon name="heroicons:check"
+                        <Icon
+                          name="heroicons:check"
                           class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                           aria-hidden="true"
                         />
@@ -736,7 +748,8 @@ const typicalScopeItems = [
                 <ul class="space-y-3">
                   {typicalScopeItems.map(item => (
                     <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                      <Icon name="heroicons:check"
+                      <Icon
+                        name="heroicons:check"
                         class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                         aria-hidden="true"
                       />
