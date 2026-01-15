@@ -33,7 +33,7 @@ footer:
         - label: Legal Notice
           url: 'company/legal-notice'
         - label: Terms & Conditions
-          url: terms
+          url: 'company/terms'
   social:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
