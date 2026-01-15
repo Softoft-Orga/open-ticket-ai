@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 import rehypeMermaid from 'rehype-mermaid';
 import astroBrokenLinksChecker from 'astro-broken-links-checker';
 import icon from 'astro-icon';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://openticketai.com',
@@ -47,6 +48,7 @@ export default defineConfig({
     },
   },
   integrations: [
+    sitemap(),
     icon({
       collections: {
         local: './src/icons',
