@@ -3,6 +3,7 @@ import vue from '@astrojs/vue';
 import mdx from '@astrojs/mdx';
 import rehypeMermaid from 'rehype-mermaid';
 import astroBrokenLinksChecker from 'astro-broken-links-checker';
+import icon from 'astro-icon';
 
 export default defineConfig({
   site: 'https://openticketai.com',
@@ -46,6 +47,11 @@ export default defineConfig({
     },
   },
   integrations: [
+    icon({
+      collections: {
+        local: './src/icons',
+      },
+    }),
     vue({
       appEntrypoint: '/src/vue-app.js',
     }),
