@@ -41,8 +41,7 @@
               :aria-label="socialLink.ariaLabel"
               class="transition-colors hover:text-primary-light"
             >
-              <CodeBracketSquareIcon v-if="socialLink.platform === 'github'" class="h-6 w-6" />
-              <LinkIcon v-else-if="socialLink.platform === 'linkedin'" class="h-6 w-6" />
+              <SocialIcon :platform="socialLink.platform" />
             </a>
           </div>
         </div>
@@ -68,7 +67,8 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { TicketIcon, CodeBracketSquareIcon, LinkIcon } from '@heroicons/vue/24/outline';
+import { TicketIcon } from '@heroicons/vue/24/outline';
+import SocialIcon from '../icons/SocialIcon.vue';
 
 type FooterLink = {
   label: string;
@@ -81,7 +81,7 @@ type FooterSection = {
 };
 
 type SocialLink = {
-  platform: string;
+  platform: 'github' | 'linkedin' | 'youtube' | 'huggingface';
   url: string;
   ariaLabel: string;
 };
