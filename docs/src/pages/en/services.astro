@@ -5,25 +5,7 @@ import ContactForm from '../../components/ContactForm.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
-import {
-  CubeTransparentIcon,
-  ServerIcon,
-  ArrowPathRoundedSquareIcon,
-  CircleStackIcon,
-  ArchiveBoxIcon,
-  SparklesIcon,
-  ArrowRightIcon,
-  CheckIcon,
-  CpuChipIcon,
-  WrenchScrewdriverIcon,
-  ChartBarIcon,
-  Cog6ToothIcon,
-  ArrowPathIcon,
-  CpuChipIcon as CpuIcon,
-  CubeTransparentIcon as CubeIcon,
-  CheckBadgeIcon,
-  RocketLaunchIcon,
-} from '@heroicons/vue/24/outline';
+import { Icon } from 'astro-icon/components';
 
 const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
@@ -88,16 +70,16 @@ function getIntegrationServiceInfo(slug: string): { subtitle: string; systems: s
   return mapping[slug] || { subtitle: '', systems: '' };
 }
 
-// Map icon names for extensions to Heroicon components
-const iconComponentMap: Record<string, any> = {
-  tune: WrenchScrewdriverIcon,
-  analytics: ChartBarIcon,
-  integration_instructions: Cog6ToothIcon,
-  update: ArrowPathIcon,
-  psychology: CpuIcon,
-  hub: CubeIcon,
-  verified: CheckBadgeIcon,
-  rocket_launch: RocketLaunchIcon,
+// Map icon names to heroicons icon names for astro-icon
+const iconNameMap: Record<string, string> = {
+  tune: 'heroicons:wrench-screwdriver',
+  analytics: 'heroicons:chart-bar',
+  integration_instructions: 'heroicons:cog-6-tooth',
+  update: 'heroicons:arrow-path',
+  psychology: 'heroicons:cpu-chip',
+  hub: 'heroicons:cube-transparent',
+  verified: 'heroicons:check-badge',
+  rocket_launch: 'heroicons:rocket-launch',
 };
 
 const extensionIcons: Record<string, string> = {
@@ -168,7 +150,7 @@ const typicalScopeItems = [
         <div class="lg:w-2/3">
           <div class="mb-6 flex items-center gap-3">
             <div class="rounded-lg bg-primary/10 p-2 text-primary">
-              <CubeTransparentIcon class="h-8 w-8" aria-hidden="true" />
+              <Icon name="heroicons:cube-transparent" class="h-8 w-8" aria-hidden="true" />
             </div>
             <h2 class="text-3xl font-bold text-white">Ticket Tagging AI Model</h2>
           </div>
@@ -202,7 +184,7 @@ const typicalScopeItems = [
           </div>
           <Card variant="outline" size="sm" radius="xl" client:load>
             <div class="flex items-start gap-4">
-              <ServerIcon class="h-6 w-6 flex-shrink-0 text-primary" aria-hidden="true" />
+              <Icon name="heroicons:server" class="h-6 w-6 flex-shrink-0 text-primary" aria-hidden="true" />
               <div>
                 <h4 class="text-sm font-bold text-white">Self-Hosted</h4>
                 <p class="text-[11px] leading-tight text-slate-500">
@@ -213,7 +195,8 @@ const typicalScopeItems = [
           </Card>
           <Card variant="outline" size="sm" radius="xl" client:load>
             <div class="flex items-start gap-4">
-              <ArrowPathRoundedSquareIcon
+              <Icon 
+                name="heroicons:arrow-path-rounded-square"
                 class="h-6 w-6 flex-shrink-0 text-primary"
                 aria-hidden="true"
               />
@@ -235,7 +218,7 @@ const typicalScopeItems = [
         <div class="mb-6">
           <Badge variant="subtle" tone="info" size="sm" client:load>
             <span class="flex items-center gap-2">
-              <CircleStackIcon class="h-3 w-3" aria-hidden="true" />
+              <Icon name="heroicons:circle-stack" class="h-3 w-3" aria-hidden="true" />
               Data Generation
             </span>
           </Badge>
@@ -279,7 +262,8 @@ const typicalScopeItems = [
                 <ul class="mb-10 flex-grow space-y-3">
                   {(service.outcomes || []).map(feature => (
                     <li class="flex items-start gap-2.5 text-sm text-slate-300">
-                      <CheckIcon
+                      <Icon 
+                        name="heroicons:check"
                         class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary"
                         aria-hidden="true"
                       />
@@ -319,7 +303,7 @@ const typicalScopeItems = [
       <!-- Common Extensions -->
       <Card variant="surface" tone="neutral" size="md" radius="2xl" elevation="none" client:load>
         <div slot="header" class="flex items-center gap-3">
-          <ArchiveBoxIcon class="h-6 w-6 text-slate-500" aria-hidden="true" />
+          <Icon name="heroicons:archive-box" class="h-6 w-6 text-slate-500" aria-hidden="true" />
           <h3 class="text-sm font-bold uppercase tracking-widest text-slate-400">
             Common Extensions <span class="font-normal text-slate-600">(Add-ons)</span>
           </h3>
@@ -327,12 +311,12 @@ const typicalScopeItems = [
         <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           {
             extensions.map(extension => {
-              const iconName = extensionIcons[extension.slug] || 'tune';
-              const IconComponent = iconComponentMap[iconName] || WrenchScrewdriverIcon;
+              const iconKey = extensionIcons[extension.slug] || 'tune';
+              const iconName = iconNameMap[iconKey] || 'heroicons:wrench-screwdriver';
               return (
                 <div class="flex items-start gap-4">
                   <div class="mt-0.5 text-primary">
-                    <IconComponent class="h-6 w-6" aria-hidden="true" />
+                    <Icon name={iconName} class="h-6 w-6" aria-hidden="true" />
                   </div>
                   <div>
                     <h5 class="mb-1 text-sm font-bold text-white">{extension.title}</h5>
@@ -397,7 +381,7 @@ const typicalScopeItems = [
                 <ul class="mb-8 flex-grow space-y-2.5">
                   {(service.outcomes || []).map(feature => (
                     <li class="flex items-start gap-2 text-sm text-slate-400">
-                      <CheckIcon
+                      <Icon name="heroicons:check"
                         class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary"
                         aria-hidden="true"
                       />
@@ -449,7 +433,7 @@ const typicalScopeItems = [
           <div class="mb-6">
             <Badge variant="subtle" tone="primary" size="sm" client:load>
               <span class="flex items-center gap-2">
-                <SparklesIcon class="h-3 w-3" aria-hidden="true" />
+                <Icon name="heroicons:sparkles" class="h-3 w-3" aria-hidden="true" />
                 Automation Engine
               </span>
             </Badge>
@@ -469,7 +453,7 @@ const typicalScopeItems = [
                 'Triggering Tasks',
               ].map(item => (
                 <li class="flex items-center gap-3 font-bold text-slate-300">
-                  <ArrowRightIcon class="h-5 w-5 text-primary" aria-hidden="true" />
+                  <Icon name="heroicons:arrow-right" class="h-5 w-5 text-primary" aria-hidden="true" />
                   {item}
                 </li>
               ))
@@ -507,7 +491,7 @@ const typicalScopeItems = [
                   <ul class="space-y-3">
                     {(service.outcomes || []).map(item => (
                       <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                        <CheckIcon
+                        <Icon name="heroicons:check"
                           class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                           aria-hidden="true"
                         />
@@ -553,7 +537,7 @@ const typicalScopeItems = [
         <div class="mb-6">
           <Badge variant="subtle" tone="primary" size="sm" client:load>
             <span class="flex items-center gap-2">
-              <CpuChipIcon class="h-3 w-3" aria-hidden="true" />
+              <Icon name="heroicons:cpu-chip" class="h-3 w-3" aria-hidden="true" />
               Intelligence Layer
             </span>
           </Badge>
@@ -599,7 +583,7 @@ const typicalScopeItems = [
                     <ul class="space-y-3">
                       {typicalScopeItems.map(item => (
                         <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                          <CheckIcon
+                          <Icon name="heroicons:check"
                             class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                             aria-hidden="true"
                           />
@@ -666,7 +650,7 @@ const typicalScopeItems = [
                   <ul class="space-y-3">
                     {(service.outcomes || []).map(item => (
                       <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                        <CheckIcon
+                        <Icon name="heroicons:check"
                           class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                           aria-hidden="true"
                         />
@@ -712,7 +696,7 @@ const typicalScopeItems = [
         <div class="mb-6">
           <Badge variant="subtle" tone="info" size="sm" client:load>
             <span class="flex items-center gap-2">
-              <SparklesIcon class="h-3 w-3" aria-hidden="true" />
+              <Icon name="heroicons:sparkles" class="h-3 w-3" aria-hidden="true" />
               Flexible Services
             </span>
           </Badge>
@@ -752,7 +736,7 @@ const typicalScopeItems = [
                 <ul class="space-y-3">
                   {typicalScopeItems.map(item => (
                     <li class="flex items-start gap-2.5 text-xs text-slate-400">
-                      <CheckIcon
+                      <Icon name="heroicons:check"
                         class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                         aria-hidden="true"
                       />
