@@ -45,6 +45,11 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
   outline' | 'subtle'), `tone` (Tone), `size` (Size), `radius` (Radius), `elevation` (Elevation),
   `hoverable`,`actionsSticky`. Slots: `image`, `header`, `title`, default (content), `actions`, `footer`. Story:
   `stories/Card.stories.ts`.
+- **CookieBanner.vue** — GDPR-compliant cookie consent banner. Props: `title` (string), `description`
+  (string), `acceptText` (string), `declineText` (string), `privacyPolicyText` (string),
+  `privacyPolicyUrl` (string), `storageKey` (string, default: 'cookie-consent'). Emits: `accept`,
+  `decline`. Automatically shows/hides based on localStorage consent state. Uses UiTransitionSlide
+  for smooth slide-up animation. Triggers 'cookie-consent-changed' custom event on consent change.
 - **Link.vue** — Simple link component. Props: `to`. Slots: default (link text). Story:
   `stories/Link.stories.ts`.
 - **Modal.vue** — Accessible modal dialog. Props: `open` (boolean), `title` (string), `tone` (
