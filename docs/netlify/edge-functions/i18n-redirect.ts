@@ -3,7 +3,12 @@ export default async (request: Request) => {
   const path = url.pathname;
 
   const supported = ['de', 'en'] as const;
-  const defaultLocale = 'de';
+  const defaultLocale = 'en';
+
+  // Skip redirect for paths that should not be localized
+  if (shouldSkipRedirect(path)) {
+    return fetch(request);
+  }
 
   const hasLocale = supported.some(l => path === `/${l}` || path.startsWith(`/${l}/`));
   if (hasLocale) return fetch(request);
@@ -14,6 +19,24 @@ export default async (request: Request) => {
   url.pathname = `/${pick}${path}`;
   return Response.redirect(url.toString(), 302);
 };
+
+function shouldSkipRedirect(path: string): boolean {
+  // Skip redirect for static assets and special paths
+  return (
+    // Static asset directories
+    path.startsWith('/assets/') ||
+    path.startsWith('/images/') ||
+    path.startsWith('/icons/') ||
+    path.startsWith('/diagrams/') ||
+    path.startsWith('/configExamples/') ||
+    // API endpoints
+    path.startsWith('/api/') ||
+    // Netlify internal paths
+    path.startsWith('/.netlify/') ||
+    // Files with extensions (except .html which might need locale)
+    (path.includes('.') && !path.endsWith('.html') && !path.endsWith('/'))
+  );
+}
 
 function pickLocaleFromAcceptLanguage(
   header: string,
