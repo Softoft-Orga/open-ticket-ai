@@ -29,14 +29,9 @@ const team = siteConfig?.data.team || [];
 <BaseLayout title={title} description={description}>
   <div class="min-h-screen bg-background-dark pb-32">
     <!-- Hero Section -->
-    <section class="relative overflow-hidden pb-20 pt-24">
-      <div class="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-primary/10 blur-[120px]">
-      </div>
-      <div class="absolute -left-32 bottom-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-[120px]">
-      </div>
-
-      <div class="relative mx-auto max-w-7xl px-6">
-        <div class="mb-8 text-center">
+    <section class="relative overflow-hidden pb-16 pt-32">
+      <div class="relative mx-auto max-w-4xl px-6">
+        <div class="mb-6 text-center">
           <Badge variant="subtle" tone="primary" size="sm" client:load>
             <span class="flex items-center gap-2">
               <SparklesIcon class="h-3 w-3" aria-hidden="true" />
@@ -45,30 +40,23 @@ const team = siteConfig?.data.team || [];
           </Badge>
         </div>
 
-        <!-- Logo and Company Name -->
-        <div class="mb-12 flex flex-col items-center gap-8">
+        <div class="flex flex-col items-center gap-6 text-center">
           {
             meta?.logoUrl && (
-              <div class="flex items-center justify-center">
-                <img
-                  src={meta.logoUrl}
-                  alt={`${meta.siteName} Logo`}
-                  class="h-auto w-48 drop-shadow-2xl"
-                />
-              </div>
+              <img
+                src={meta.logoUrl}
+                alt={`${meta.siteName} Logo`}
+                class="h-32 w-32 drop-shadow-2xl"
+              />
             )
           }
 
-          <div class="text-center">
-            <h1
-              class="mb-6 text-6xl font-black tracking-tighter text-white sm:text-7xl lg:text-8xl"
-            >
-              {meta?.siteName}
-            </h1>
-            <p class="mx-auto max-w-3xl text-2xl font-medium leading-relaxed text-slate-400">
-              {meta?.tagline}
-            </p>
-          </div>
+          <h1 class="text-5xl font-black tracking-tight text-white md:text-6xl">
+            {meta?.siteName}
+          </h1>
+          <p class="max-w-2xl text-lg leading-relaxed text-slate-400">
+            {meta?.tagline}
+          </p>
         </div>
       </div>
     </section>
@@ -76,131 +64,131 @@ const team = siteConfig?.data.team || [];
     <!-- Company Information Section -->
     {
       legalInfo && (
-        <section class="mx-auto mb-32 max-w-7xl px-6">
-          <div class="mb-16 text-center">
-            <h2 class="mb-6 text-5xl font-black tracking-tight text-white">Company Information</h2>
-            <p class="mx-auto max-w-3xl text-lg leading-relaxed text-slate-400">
+        <section class="mx-auto mb-20 max-w-5xl px-6">
+          <div class="mb-12 text-center">
+            <h2 class="mb-4 text-4xl font-bold text-white">Company Information</h2>
+            <p class="text-base text-slate-400">
               Building the future of intelligent helpdesk automation with German engineering
               precision.
             </p>
           </div>
 
-          <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Card
               variant="surface"
               tone="neutral"
               size="md"
-              radius="2xl"
-              elevation="md"
+              radius="xl"
+              class="border-primary/10 bg-gradient-to-br from-purple-900/20 to-purple-950/10"
               client:load
             >
-              <div slot="header" class="flex items-center gap-3">
-                <BuildingOfficeIcon class="h-6 w-6 text-primary" aria-hidden="true" />
-                <h3 class="text-xl font-bold text-white">Legal Information</h3>
-              </div>
-
               <div class="space-y-4">
-                <div>
-                  <div class="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">
-                    Company Name
+                <div class="mb-6 flex items-center gap-3">
+                  <div class="rounded-lg bg-primary/20 p-2">
+                    <BuildingOfficeIcon class="h-5 w-5 text-primary" aria-hidden="true" />
                   </div>
-                  <div class="text-base font-medium text-slate-200">{legalInfo.companyName}</div>
+                  <h3 class="text-lg font-bold text-white">Legal Information</h3>
                 </div>
 
-                <div>
-                  <div class="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">
-                    Legal Form
-                  </div>
-                  <div class="text-base font-medium text-slate-200">{legalInfo.legalForm}</div>
-                </div>
-
-                <div>
-                  <div class="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">
-                    CEO
-                  </div>
-                  <div class="text-base font-medium text-slate-200">{legalInfo.ceo}</div>
-                </div>
-
-                {legalInfo.vatId && (
+                <div class="space-y-3">
                   <div>
-                    <div class="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">
-                      VAT ID
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Company Name
                     </div>
-                    <div class="text-base font-medium text-slate-200">{legalInfo.vatId}</div>
+                    <div class="text-sm text-slate-200">{legalInfo.companyName}</div>
                   </div>
-                )}
 
-                {legalInfo.registerInfo && (
                   <div>
-                    <div class="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">
-                      Register
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Legal Form
                     </div>
-                    <div class="text-base font-medium text-slate-200">{legalInfo.registerInfo}</div>
+                    <div class="text-sm text-slate-200">{legalInfo.legalForm}</div>
                   </div>
-                )}
+
+                  <div>
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500">CEO</div>
+                    <div class="text-sm text-slate-200">{legalInfo.ceo}</div>
+                  </div>
+
+                  {legalInfo.vatId && (
+                    <div>
+                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        VAT ID
+                      </div>
+                      <div class="text-sm text-slate-200">{legalInfo.vatId}</div>
+                    </div>
+                  )}
+
+                  {legalInfo.registerInfo && (
+                    <div>
+                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        Register
+                      </div>
+                      <div class="text-sm text-slate-200">{legalInfo.registerInfo}</div>
+                    </div>
+                  )}
+                </div>
               </div>
             </Card>
 
             <Card
               variant="surface"
-              tone="primary"
+              tone="neutral"
               size="md"
-              radius="2xl"
-              elevation="md"
+              radius="xl"
+              class="border-primary/10 bg-gradient-to-br from-purple-900/20 to-purple-950/10"
               client:load
             >
-              <div slot="header" class="flex items-center gap-3">
-                <EnvelopeIcon class="h-6 w-6 text-primary" aria-hidden="true" />
-                <h3 class="text-xl font-bold text-white">Contact Information</h3>
-              </div>
-
               <div class="space-y-4">
-                <div class="flex items-start gap-3">
-                  <MapPinIcon class="mt-1 h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true" />
-                  <div>
-                    <div class="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">
-                      Address
-                    </div>
-                    <div class="text-base leading-relaxed text-slate-200">
-                      {legalInfo.address.street}
-                      <br />
-                      {legalInfo.address.zip} {legalInfo.address.city}
-                      <br />
-                      {legalInfo.address.country}
-                    </div>
+                <div class="mb-6 flex items-center gap-3">
+                  <div class="rounded-lg bg-primary/20 p-2">
+                    <EnvelopeIcon class="h-5 w-5 text-primary" aria-hidden="true" />
                   </div>
+                  <h3 class="text-lg font-bold text-white">Contact Information</h3>
                 </div>
 
-                <div class="flex items-start gap-3">
-                  <EnvelopeIcon
-                    class="mt-1 h-5 w-5 flex-shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  <div>
-                    <div class="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">
-                      Email
+                <div class="space-y-3">
+                  <div class="flex items-start gap-3">
+                    <MapPinIcon class="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
+                    <div class="flex-1">
+                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        Address
+                      </div>
+                      <div class="text-sm text-slate-200">
+                        {legalInfo.address.street}
+                        <br />
+                        {legalInfo.address.zip} {legalInfo.address.city}
+                        <br />
+                        {legalInfo.address.country}
+                      </div>
                     </div>
-                    <a
-                      href={`mailto:${legalInfo.email}`}
-                      class="text-base text-primary transition-colors hover:text-primary-light"
-                    >
-                      {legalInfo.email}
-                    </a>
                   </div>
-                </div>
 
-                <div class="flex items-start gap-3">
-                  <PhoneIcon class="mt-1 h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true" />
-                  <div>
-                    <div class="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">
-                      Phone
+                  <div class="flex items-start gap-3">
+                    <EnvelopeIcon class="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
+                    <div class="flex-1">
+                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        Email
+                      </div>
+                      <a
+                        href={`mailto:${legalInfo.email}`}
+                        class="text-sm text-primary hover:underline"
+                      >
+                        {legalInfo.email}
+                      </a>
                     </div>
-                    <a
-                      href={`tel:${legalInfo.phone}`}
-                      class="text-base text-primary transition-colors hover:text-primary-light"
-                    >
-                      {legalInfo.phone}
-                    </a>
+                  </div>
+
+                  <div class="flex items-start gap-3">
+                    <PhoneIcon class="mt-0.5 h-4 w-4 text-primary" aria-hidden="true" />
+                    <div class="flex-1">
+                      <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        Phone
+                      </div>
+                      <a href={`tel:${legalInfo.phone}`} class="text-sm text-primary hover:underline">
+                        {legalInfo.phone}
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -213,9 +201,9 @@ const team = siteConfig?.data.team || [];
     <!-- Team Section -->
     {
       team.length > 0 && (
-        <section class="mx-auto mb-32 max-w-7xl px-6">
-          <div class="mb-16 text-center">
-            <div class="mb-6">
+        <section class="mx-auto mb-20 max-w-5xl px-6">
+          <div class="mb-12 text-center">
+            <div class="mb-4">
               <Badge variant="subtle" tone="success" size="sm" client:load>
                 <span class="flex items-center gap-2">
                   <UserGroupIcon class="h-3 w-3" aria-hidden="true" />
@@ -223,64 +211,54 @@ const team = siteConfig?.data.team || [];
                 </span>
               </Badge>
             </div>
-            <h2 class="mb-6 text-5xl font-black tracking-tight text-white">Meet Our Team</h2>
-            <p class="mx-auto max-w-3xl text-lg leading-relaxed text-slate-400">
+            <h2 class="mb-4 text-4xl font-bold text-white">Meet Our Team</h2>
+            <p class="text-base text-slate-400">
               The people behind the innovation, dedicated to transforming helpdesk automation.
             </p>
           </div>
 
-          <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {team.map(member => (
               <Card
-                variant="outline"
+                variant="surface"
                 tone="neutral"
                 size="md"
-                radius="2xl"
-                hoverable={true}
+                radius="xl"
+                class="border-primary/10 bg-gradient-to-br from-purple-900/20 to-purple-950/10"
                 client:load
               >
                 <div class="flex flex-col items-center text-center">
                   {member.pictureUrl && (
-                    <div class="mb-6 overflow-hidden rounded-full border-4 border-primary/20">
+                    <div class="mb-4 overflow-hidden rounded-full border-2 border-primary/30">
                       <img
                         src={member.pictureUrl}
                         alt={member.name || 'Team Member'}
-                        class="h-40 w-40 object-cover"
+                        class="h-24 w-24 object-cover"
                       />
                     </div>
                   )}
 
                   <div class="mb-4">
-                    {member.name && (
-                      <h3 class="mb-2 text-xl font-bold text-white">{member.name}</h3>
-                    )}
+                    {member.name && <h3 class="mb-1 text-lg font-bold text-white">{member.name}</h3>}
                     {member.role && (
-                      <p class="text-sm font-medium uppercase tracking-wider text-primary">
-                        {member.role}
-                      </p>
+                      <p class="text-sm font-medium text-primary">{member.role}</p>
                     )}
                   </div>
 
                   {(member.email || member.phoneNumber) && (
-                    <div class="mt-4 w-full space-y-2 border-t border-slate-700 pt-4">
+                    <div class="w-full space-y-2 border-t border-slate-700/50 pt-4">
                       {member.email && (
-                        <div class="flex items-center justify-center gap-2 text-sm text-slate-400">
-                          <EnvelopeIcon class="h-4 w-4" aria-hidden="true" />
-                          <a
-                            href={`mailto:${member.email}`}
-                            class="transition-colors hover:text-primary"
-                          >
+                        <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
+                          <EnvelopeIcon class="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                          <a href={`mailto:${member.email}`} class="hover:text-primary">
                             {member.email}
                           </a>
                         </div>
                       )}
                       {member.phoneNumber && (
-                        <div class="flex items-center justify-center gap-2 text-sm text-slate-400">
-                          <PhoneIcon class="h-4 w-4" aria-hidden="true" />
-                          <a
-                            href={`tel:${member.phoneNumber}`}
-                            class="transition-colors hover:text-primary"
-                          >
+                        <div class="flex items-center justify-center gap-2 text-xs text-slate-400">
+                          <PhoneIcon class="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                          <a href={`tel:${member.phoneNumber}`} class="hover:text-primary">
                             {member.phoneNumber}
                           </a>
                         </div>
@@ -296,25 +274,24 @@ const team = siteConfig?.data.team || [];
     }
 
     <!-- Mission Statement Section -->
-    <section class="mx-auto mb-32 max-w-7xl px-6">
+    <section class="mx-auto mb-20 max-w-5xl px-6">
       <Card
         variant="surface"
-        tone="primary"
+        tone="neutral"
         size="lg"
-        radius="3xl"
-        elevation="lg"
-        class="bg-gradient-to-br from-primary/10 via-surface-dark to-cyan-500/5"
+        radius="2xl"
+        class="border-primary/10 bg-gradient-to-br from-purple-900/30 to-purple-950/20"
         client:load
       >
-        <div class="text-center">
+        <div class="py-8 text-center">
           <div
-            class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-cyan-500"
+            class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600"
           >
-            <SparklesIcon class="h-10 w-10 text-white" aria-hidden="true" />
+            <SparklesIcon class="h-8 w-8 text-white" aria-hidden="true" />
           </div>
 
-          <h2 class="mb-6 text-4xl font-bold text-white md:text-5xl">Our Mission</h2>
-          <p class="mx-auto max-w-3xl text-xl leading-relaxed text-slate-300">
+          <h2 class="mb-6 text-3xl font-bold text-white">Our Mission</h2>
+          <p class="mx-auto max-w-2xl text-base leading-relaxed text-slate-300">
             We believe in the power of intelligent automation to transform how organizations handle
             support requests. Our mission is to provide enterprise-grade AI solutions that are
             transparent, secure, and built with German engineering precision. We're committed to
