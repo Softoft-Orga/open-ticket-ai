@@ -1,12 +1,15 @@
 ---
-title: Open Ticket AI 1.4 Release - The First Major Production Release
-description: 'Discover Open Ticket AI 1.4, the first production-ready release featuring powerful'
+title: 'Open Ticket AI 1.4 Release: Production-Ready AI Automation for Modern Help Desks'
+description: 'Explore Open Ticket AI 1.4—the first production release with enterprise plugins, flexible pipelines, Jinja2 configuration, and seamless Docker deployment for OTOBO, Znuny, and Zammad.'
 lang: en
-date: 2024-10-28
+date: 2025-10-30
 tags:
-  - release
-  - product-update
-  - announcement
+  - product-release
+  - version-1-4
+  - plugin-architecture
+  - docker-deployment
+  - huggingface-integration
+  - production-ready
 category: Product Update
 draft: false
 image: ../../../assets/images/laptop-ai-ticketsystem.png

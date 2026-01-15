@@ -1,13 +1,16 @@
 ---
-title: 'Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter'
-description: 'Learn to evaluate AI ticket classifiers on real, imbalanced data. Discover why accuracy is misleading and focus on metrics that matter: precision, recall & F1-score.'
+title: 'Evaluating AI Ticket Classifiers: Essential Metrics for Imbalanced Data Performance'
+description: 'Master AI classifier evaluation with precision, recall, F1-score, and confusion matrix analysis. Learn why accuracy misleads on imbalanced ticket datasets.'
 lang: en
-date: 2024-11-05
+date: 2025-11-08
 tags:
-  - ai
-  - machine-learning
-  - metrics
-  - evaluation
+  - ai-metrics
+  - model-evaluation
+  - precision-recall
+  - f1-score
+  - imbalanced-data
+  - confusion-matrix
+  - classification-performance
 category: Technology
 draft: false
 image: ../../../assets/images/statistics-reporting-ticketsystem.png
