@@ -1,0 +1,39 @@
+# Configuration for auto-translate tool
+# This example translates English docs to German
+
+# List of directory mappings (source → target)
+mappings:
+  - from_dir: /docs/src/content/en
+    to_dir: /docs/src/content/de
+  - from_dir: /docs/src/pages/en
+    to_dir: /docs/src/pages/de
+
+# File extensions to include (translate)
+include_ext:
+  - .astro
+  - .yml
+  - .yaml
+  - .md
+  - .mdx
+
+# Directory names to exclude (skip recursively)
+exclude_dir_names:
+  - node_modules
+  - .git
+  - dist
+  - build
+  - .astro
+
+# Path to Jinja2 prompt template (relative to this config file)
+prompt_template_path: prompt.j2
+
+# Languages
+base_language: English
+target_language: German
+
+# OpenAI settings
+model: gpt-4
+temperature: 0.3
+
+# Concurrency (number of parallel API requests)
+max_concurrency: 5
