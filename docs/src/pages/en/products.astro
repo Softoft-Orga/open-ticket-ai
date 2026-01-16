@@ -1,5 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import Button from '../../components/vue/core/basic/Button.vue';
@@ -7,6 +8,19 @@ import Card from '../../components/vue/core/basic/Card.vue';
 import ModalTrigger from '../../components/vue/core/basic/ModalTrigger.vue';
 import ContactForm from '../../components/ContactForm.astro';
 import { Icon } from 'astro-icon/components';
+
+// Get current locale and fetch products data
+const currentLocale = Astro.currentLocale.toLowerCase();
+const allProducts = await getCollection('products');
+const productsData = allProducts.find((entry) =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
+
+if (!productsData) {
+  throw new Error(`Products data not found for locale: ${currentLocale}`);
+}
+
+const { page } = productsData.data;
 
 const title = 'Products - Open Ticket AI';
 ---
@@ -24,7 +38,7 @@ const title = 'Products - Open Ticket AI';
       </div>
       <div class="mx-auto w-full max-w-7xl">
         <div class="mb-8">
-          <Badge tone="primary" client:load>● LIVE CLASSIFICATION ENGINE v2.0</Badge>
+          <Badge tone="primary" client:load>{page.hero.badge}</Badge>
         </div>
 
         <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
@@ -33,17 +47,24 @@ const title = 'Products - Open Ticket AI';
             <h1
               class="font-display text-5xl font-black leading-tight text-white md:text-6xl lg:text-7xl"
             >
-              Automated,<br />
-              Consistent Ticket<br />
-              Classification<br />
-              <span class="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent">
-                In Real Time.
-              </span>
+              {
+                page.hero.heading.split('\n').map((line, index, array) =>
+                  index === array.length - 1 ? (
+                    <span class="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent">
+                      {line}
+                    </span>
+                  ) : (
+                    <>
+                      {line}
+                      <br />
+                    </>
+                  )
+                )
+              }
             </h1>
 
             <p class="max-w-xl text-xl leading-relaxed text-text-dim">
-              Analyze incoming tickets and assign structured, hierarchical tags instantly. No rules
-              to maintain. Fully automated.
+              {page.hero.subheading}
             </p>
 
             <div class="flex flex-wrap gap-4 pt-4">
@@ -151,63 +172,31 @@ const title = 'Products - Open Ticket AI';
     <section class="w-full bg-surface-dark/30 px-4 py-24 md:px-10 lg:px-20 xl:px-40">
       <div class="mx-auto w-full max-w-7xl">
         <div class="mb-16 text-center">
-          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">Core Capabilities</h2>
+          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">{page.coreCapabilities.heading}</h2>
           <p class="mx-auto max-w-2xl text-lg text-text-dim">
-            Built for enterprise scale and precision.
+            {page.coreCapabilities.subheading}
           </p>
         </div>
 
         <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <!-- Fully Automated Classification -->
-          <Card variant="outline" hoverable={true} radius="2xl" client:load>
-            <div class="flex flex-col gap-4">
-              <div class="flex items-center gap-3">
-                <Icon
-                  name="heroicons:cpu-chip"
-                  class="h-10 w-10 text-primary transition-transform group-hover:scale-110"
-                />
-              </div>
-              <h3 class="text-2xl font-bold text-white">Fully Automated Classification</h3>
-              <p class="text-base leading-relaxed text-text-dim">
-                Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly
-                on new tickets and historical backlogs without human intervention.
-              </p>
-            </div>
-          </Card>
-
-          <!-- Hierarchical, Not Flat -->
-          <Card variant="outline" hoverable={true} radius="2xl" client:load>
-            <div class="flex flex-col gap-4">
-              <div class="flex items-center gap-3">
-                <Icon
-                  name="heroicons:squares-2x2"
-                  class="h-10 w-10 text-primary transition-transform group-hover:scale-110"
-                />
-              </div>
-              <h3 class="text-2xl font-bold text-white">Hierarchical, Not Flat</h3>
-              <p class="text-base leading-relaxed text-text-dim">
-                A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for
-                operational precision. Enables deep, multi-level analytics.
-              </p>
-            </div>
-          </Card>
-
-          <!-- 10 Quadrillion Combinations -->
-          <Card variant="outline" hoverable={true} radius="2xl" client:load>
-            <div class="flex flex-col gap-4">
-              <div class="flex items-center gap-3">
-                <Icon
-                  name="heroicons:cube-transparent"
-                  class="h-10 w-10 text-primary transition-transform group-hover:scale-110"
-                />
-              </div>
-              <h3 class="text-2xl font-bold text-white">10 Quadrillion Combinations</h3>
-              <p class="text-base leading-relaxed text-text-dim">
-                Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion
-                possible combinations to fit any specific workflow or industry.
-              </p>
-            </div>
-          </Card>
+          {
+            page.coreCapabilities.capabilities.map((capability) => (
+              <Card variant="outline" hoverable={true} radius="2xl" client:load>
+                <div class="flex flex-col gap-4">
+                  <div class="flex items-center gap-3">
+                    <Icon
+                      name={capability.icon}
+                      class="h-10 w-10 text-primary transition-transform group-hover:scale-110"
+                    />
+                  </div>
+                  <h3 class="text-2xl font-bold text-white">{capability.title}</h3>
+                  <p class="text-base leading-relaxed text-text-dim">
+                    {capability.description}
+                  </p>
+                </div>
+              </Card>
+            ))
+          }
         </div>
       </div>
     </section>
@@ -216,9 +205,9 @@ const title = 'Products - Open Ticket AI';
     <section class="w-full bg-surface-dark/30 px-4 py-24 md:px-10 lg:px-20 xl:px-40">
       <div class="mx-auto w-full max-w-7xl">
         <div class="mb-16 text-center">
-          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">Flexible Editions</h2>
+          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">{page.editions.heading}</h2>
           <p class="mx-auto max-w-2xl text-lg text-text-dim">
-            Choose the model complexity that fits your operational needs.
+            {page.editions.subheading}
           </p>
         </div>
 
@@ -227,72 +216,38 @@ const title = 'Products - Open Ticket AI';
           <Card variant="outline" radius="2xl" hoverable={true} size="lg" client:load>
             <div class="flex h-full flex-col">
               <div class="flex-1">
-                <h3 class="mb-2 text-2xl font-bold text-white">Lite Free</h3>
-                <p class="mb-6 text-sm text-muted">Evaluation & Testing</p>
+                <h3 class="mb-2 text-2xl font-bold text-white">{page.editions.liteFree.title}</h3>
+                <p class="mb-6 text-sm text-muted">{page.editions.liteFree.tagline}</p>
 
                 <div class="mb-8">
                   <div class="mb-2 text-5xl font-bold text-white">
-                    0 €
-                    <span class="text-lg font-normal text-muted">/one-time</span>
+                    {page.editions.liteFree.price}
+                    <span class="text-lg font-normal text-muted">{page.editions.liteFree.priceNote}</span>
                   </div>
                 </div>
 
                 <ul class="mb-8 space-y-3">
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Model: 0.5B Parameters</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">150+ Tags</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Accuracy: ~0.82</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">ROI: from 15 tickets/day</span>
-                  </li>
+                  {
+                    page.editions.liteFree.features.map((feature) => (
+                      <li class="flex items-start gap-3">
+                        <svg
+                          class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        <span class="text-text-1">{feature}</span>
+                      </li>
+                    ))
+                  }
                 </ul>
 
-                <p class="mb-6 text-sm text-muted">Available 18.01</p>
+                <p class="mb-6 text-sm text-muted">{page.editions.liteFree.availability}</p>
               </div>
 
               <Button
@@ -305,7 +260,7 @@ const title = 'Products - Open Ticket AI';
                 )}
                 client:load
               >
-                Explore Lite Free
+                {page.editions.liteFree.buttonText}
               </Button>
             </div>
           </Card>
@@ -313,7 +268,7 @@ const title = 'Products - Open Ticket AI';
           <!-- Lite Pro - BEST VALUE -->
           <div class="relative">
             <div class="absolute -top-4 left-1/2 z-10 -translate-x-1/2">
-              <Badge tone="primary" client:load>BEST VALUE</Badge>
+              <Badge tone="primary" client:load>{page.editions.litePro.badge}</Badge>
             </div>
 
             <Card
@@ -328,72 +283,38 @@ const title = 'Products - Open Ticket AI';
             >
               <div class="flex h-full flex-col">
                 <div class="flex-1">
-                  <h3 class="mb-2 text-2xl font-bold text-white">Lite Pro</h3>
-                  <p class="mb-6 text-sm text-primary-light">Production Ready</p>
+                  <h3 class="mb-2 text-2xl font-bold text-white">{page.editions.litePro.title}</h3>
+                  <p class="mb-6 text-sm text-primary-light">{page.editions.litePro.tagline}</p>
 
                   <div class="mb-8">
                     <div class="mb-2 text-5xl font-bold text-white">
-                      2,500 €
-                      <span class="text-lg font-normal text-text-dim">/one-time</span>
+                      {page.editions.litePro.price}
+                      <span class="text-lg font-normal text-text-dim">{page.editions.litePro.priceNote}</span>
                     </div>
                   </div>
 
                   <ul class="mb-8 space-y-3">
-                    <li class="flex items-start gap-3">
-                      <svg
-                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="font-medium text-white">Model: 4B Parameters</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                      <svg
-                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="font-medium text-white">150+ Tags</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                      <svg
-                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="font-medium text-white">Accuracy: ~0.90</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                      <svg
-                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="font-medium text-white">Focus: Routing & Reporting</span>
-                    </li>
+                    {
+                      page.editions.litePro.features.map((feature) => (
+                        <li class="flex items-start gap-3">
+                          <svg
+                            class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                          <span class="font-medium text-white">{feature}</span>
+                        </li>
+                      ))
+                    }
                   </ul>
 
-                  <p class="mb-6 text-sm text-primary-light">Available 18.01</p>
+                  <p class="mb-6 text-sm text-primary-light">{page.editions.litePro.availability}</p>
                 </div>
 
                 <Button
@@ -406,7 +327,7 @@ const title = 'Products - Open Ticket AI';
                   )}
                   client:load
                 >
-                  Explore Lite Pro
+                  {page.editions.litePro.buttonText}
                 </Button>
               </div>
             </Card>
@@ -416,72 +337,38 @@ const title = 'Products - Open Ticket AI';
           <Card variant="outline" radius="2xl" hoverable={true} size="lg" client:load>
             <div class="flex h-full flex-col">
               <div class="flex-1">
-                <h3 class="mb-2 text-2xl font-bold text-white">Full Pro</h3>
-                <p class="mb-6 text-sm text-muted">Advanced Enterprise</p>
+                <h3 class="mb-2 text-2xl font-bold text-white">{page.editions.fullPro.title}</h3>
+                <p class="mb-6 text-sm text-muted">{page.editions.fullPro.tagline}</p>
 
                 <div class="mb-8">
                   <div class="mb-2 text-5xl font-bold text-white">
-                    6,000 €
-                    <span class="text-lg font-normal text-muted">/one-time</span>
+                    {page.editions.fullPro.price}
+                    <span class="text-lg font-normal text-muted">{page.editions.fullPro.priceNote}</span>
                   </div>
                 </div>
 
                 <ul class="mb-8 space-y-3">
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Model: 8B Parameters</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">250+ Tags</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Accuracy: ~0.92</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Focus: Maximum Detail</span>
-                  </li>
+                  {
+                    page.editions.fullPro.features.map((feature) => (
+                      <li class="flex items-start gap-3">
+                        <svg
+                          class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                        <span class="text-text-1">{feature}</span>
+                      </li>
+                    ))
+                  }
                 </ul>
 
-                <p class="mb-6 text-sm text-muted">IN DEVELOPMENT</p>
+                <p class="mb-6 text-sm text-muted">{page.editions.fullPro.availability}</p>
               </div>
 
               <Button
@@ -494,7 +381,7 @@ const title = 'Products - Open Ticket AI';
                 )}
                 client:load
               >
-                Explore Full Pro
+                {page.editions.fullPro.buttonText}
               </Button>
             </div>
           </Card>
@@ -507,7 +394,7 @@ const title = 'Products - Open Ticket AI';
             class="group inline-flex items-center gap-3 rounded-xl border border-primary/50 bg-surface-dark px-8 py-4 transition-all hover:bg-primary/10"
           >
             <Icon name="heroicons:rocket-launch" class="h-6 w-6 text-primary" />
-            <span class="text-lg font-bold text-white">TRY THE ROI SIMULATOR</span>
+            <span class="text-lg font-bold text-white">{page.editions.roiSimulatorText}</span>
           </a>
         </div>
       </div>
@@ -518,52 +405,29 @@ const title = 'Products - Open Ticket AI';
       <div class="mx-auto w-full max-w-7xl">
         <div class="mb-16">
           <h2 class="mb-6 text-4xl font-bold text-white md:text-5xl">
-            Deployment & Hardware Flexibility
+            {page.deployment.heading}
           </h2>
           <p class="max-w-3xl text-lg text-text-dim">
-            Secure by design. Optimized for your infrastructure.
+            {page.deployment.subheading}
           </p>
         </div>
 
         <div class="mb-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card variant="outline" radius="xl" client:load>
-            <div class="flex items-start gap-3">
-              <Icon name="heroicons:server" class="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
-              <div>
-                <h4 class="mb-1 font-bold text-white">ON-PREMISE OR PRIVATE CLOUD</h4>
-              </div>
-            </div>
-          </Card>
-
-          <Card variant="outline" radius="xl" client:load>
-            <div class="flex items-start gap-3">
-              <Icon name="heroicons:shield-check" class="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
-              <div>
-                <h4 class="mb-1 font-bold text-white">NO DATA LEAVES INFRASTRUCTURE</h4>
-              </div>
-            </div>
-          </Card>
-
-          <Card variant="outline" radius="xl" client:load>
-            <div class="flex items-start gap-3">
-              <Icon
-                name="heroicons:cube-transparent"
-                class="mt-1 h-6 w-6 flex-shrink-0 text-cyan-400"
-              />
-              <div>
-                <h4 class="mb-1 font-bold text-white">INT8, BF16, FP16 QUANTIZATIONS</h4>
-              </div>
-            </div>
-          </Card>
-
-          <Card variant="outline" radius="xl" client:load>
-            <div class="flex items-start gap-3">
-              <Icon name="heroicons:cpu-chip" class="mt-1 h-6 w-6 flex-shrink-0 text-cyan-400" />
-              <div>
-                <h4 class="mb-1 font-bold text-white">OPTIMIZED FOR CPU & GPU</h4>
-              </div>
-            </div>
-          </Card>
+          {
+            page.deployment.features.map((feature) => (
+              <Card variant="outline" radius="xl" client:load>
+                <div class="flex items-start gap-3">
+                  <Icon
+                    name={feature.icon}
+                    class={`mt-1 h-6 w-6 flex-shrink-0 ${feature.icon.includes('cube') || feature.icon.includes('cpu') ? 'text-cyan-400' : 'text-primary'}`}
+                  />
+                  <div>
+                    <h4 class="mb-1 font-bold text-white">{feature.title}</h4>
+                  </div>
+                </div>
+              </Card>
+            ))
+          }
         </div>
 
         <!-- Large CTA -->
@@ -583,20 +447,30 @@ const title = 'Products - Open Ticket AI';
             </div>
 
             <h2 class="mb-6 text-4xl font-bold text-white md:text-6xl">
-              Turn Raw Tickets into<br />
-              <span class="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent">
-                Operational Intelligence.
-              </span>
+              {
+                page.finalCta.heading.split('\n').map((line, index, array) =>
+                  index === array.length - 1 ? (
+                    <span class="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent">
+                      {line}
+                    </span>
+                  ) : (
+                    <>
+                      {line}
+                      <br />
+                    </>
+                  )
+                )
+              }
             </h2>
 
             <p class="mx-auto mb-10 max-w-3xl text-xl text-text-dim">
-              Join forward-thinking support teams automating their workflow today.
+              {page.finalCta.subheading}
             </p>
 
             <div class="flex flex-wrap justify-center gap-4">
               <ModalTrigger
                 title="Contact Sales"
-                buttonText="CONTACT SALES"
+                buttonText={page.finalCta.primaryButtonText}
                 buttonVariant="surface"
                 buttonTone="primary"
                 buttonSize="lg"
@@ -620,7 +494,7 @@ const title = 'Products - Open Ticket AI';
                 size="lg"
                 client:load
               >
-                View Docs
+                {page.finalCta.secondaryButtonText}
               </Button>
             </div>
           </div>

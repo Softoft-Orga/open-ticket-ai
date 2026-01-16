@@ -1,129 +1,211 @@
-- slug: open-ticket-ai-lite
-  title: Open Ticket AI Lite
-  tagline: Start automating your tickets with AI
-  description: |
-    Open Ticket AI Lite is the perfect entry point for small teams looking to
-    automate their ticket classification and routing. Deploy on-premises with
-    full control over your data.
-  features:
-    - Automatic ticket classification
-    - Queue assignment
-    - Priority detection
-    - On-premises deployment
-    - Community support
-  tier: lite
-  nav:
-    group: Products
-    order: 1
-    hidden: false
-  image: https://picsum.photos/1000/1000?blur=5
+page:
+  hero:
+    badge: "● LIVE CLASSIFICATION ENGINE v2.0"
+    heading: "Automated,\nConsistent Ticket\nClassification\nIn Real Time."
+    subheading: "Analyze incoming tickets and assign structured, hierarchical tags instantly. No rules to maintain. Fully automated."
+  
+  coreCapabilities:
+    heading: "Core Capabilities"
+    subheading: "Built for enterprise scale and precision."
+    capabilities:
+      - icon: "heroicons:cpu-chip"
+        title: "Fully Automated Classification"
+        description: "Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly on new tickets and historical backlogs without human intervention."
+      - icon: "heroicons:squares-2x2"
+        title: "Hierarchical, Not Flat"
+        description: "A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for operational precision. Enables deep, multi-level analytics."
+      - icon: "heroicons:cube-transparent"
+        title: "10 Quadrillion Combinations"
+        description: "Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry."
+  
+  editions:
+    heading: "Flexible Editions"
+    subheading: "Choose the model complexity that fits your operational needs."
+    liteFree:
+      title: "Lite Free"
+      tagline: "Evaluation & Testing"
+      price: "0 €"
+      priceNote: "/one-time"
+      features:
+        - "Model: 0.5B Parameters"
+        - "150+ Tags"
+        - "Accuracy: ~0.82"
+        - "ROI: from 15 tickets/day"
+      availability: "Available 18.01"
+      buttonText: "Explore Lite Free"
+    litePro:
+      title: "Lite Pro"
+      tagline: "Production Ready"
+      badge: "BEST VALUE"
+      price: "2,500 €"
+      priceNote: "/one-time"
+      features:
+        - "Model: 4B Parameters"
+        - "150+ Tags"
+        - "Accuracy: ~0.90"
+        - "Focus: Routing & Reporting"
+      availability: "Available 18.01"
+      buttonText: "Explore Lite Pro"
+    fullPro:
+      title: "Full Pro"
+      tagline: "Advanced Enterprise"
+      price: "6,000 €"
+      priceNote: "/one-time"
+      features:
+        - "Model: 8B Parameters"
+        - "250+ Tags"
+        - "Accuracy: ~0.92"
+        - "Focus: Maximum Detail"
+      availability: "IN DEVELOPMENT"
+      buttonText: "Explore Full Pro"
+    roiSimulatorText: "TRY THE ROI SIMULATOR"
+  
+  deployment:
+    heading: "Deployment & Hardware Flexibility"
+    subheading: "Secure by design. Optimized for your infrastructure."
+    features:
+      - icon: "heroicons:server"
+        title: "ON-PREMISE OR PRIVATE CLOUD"
+      - icon: "heroicons:shield-check"
+        title: "NO DATA LEAVES INFRASTRUCTURE"
+      - icon: "heroicons:cube-transparent"
+        title: "INT8, BF16, FP16 QUANTIZATIONS"
+      - icon: "heroicons:cpu-chip"
+        title: "OPTIMIZED FOR CPU & GPU"
+  
+  finalCta:
+    heading: "Turn Raw Tickets into\nOperational Intelligence."
+    subheading: "Join forward-thinking support teams automating their workflow today."
+    primaryButtonText: "CONTACT SALES"
+    secondaryButtonText: "View Docs"
 
-- slug: open-ticket-ai-pro
-  title: Open Ticket AI Pro
-  tagline: Advanced AI for growing teams
-  description: |
-    Open Ticket AI Pro delivers enterprise-grade AI capabilities for medium to
-    large support teams. Get advanced analytics, custom model training, and
-    priority support.
-  features:
-    - Everything in Lite
-    - Custom model training
-    - Advanced analytics and reporting
-    - Multi-language support
-    - Priority email support
-    - SLA guarantees
-  tier: pro
-  nav:
-    group: Products
-    order: 2
-    hidden: false
-  image: https://picsum.photos/800/400
+products:
+  - slug: open-ticket-ai-lite
+    title: Open Ticket AI Lite
+    tagline: Start automating your tickets with AI
+    description: |
+      Open Ticket AI Lite is the perfect entry point for small teams looking to
+      automate their ticket classification and routing. Deploy on-premises with
+      full control over your data.
+    features:
+      - Automatic ticket classification
+      - Queue assignment
+      - Priority detection
+      - On-premises deployment
+      - Community support
+    tier: lite
+    nav:
+      group: Products
+      order: 1
+      hidden: false
+    image: https://picsum.photos/1000/1000?blur=5
 
-- slug: prediction-api
-  title: Prediction API
-  tagline: Cloud-hosted AI predictions for your tickets
-  description: |
-    Access powerful ticket classification and prediction capabilities through our
-    hosted API. No infrastructure to manage, instant scaling, and pay-as-you-go
-    pricing.
-  features:
-    - REST API access
-    - Pre-trained models
-    - Automatic scaling
-    - 99.9% uptime SLA
-    - Usage-based pricing
-    - API key management
-  tier: enterprise
-  nav:
-    group: Products
-    order: 3
-    hidden: false
-  image: https://picsum.photos/600/300
+  - slug: open-ticket-ai-pro
+    title: Open Ticket AI Pro
+    tagline: Advanced AI for growing teams
+    description: |
+      Open Ticket AI Pro delivers enterprise-grade AI capabilities for medium to
+      large support teams. Get advanced analytics, custom model training, and
+      priority support.
+    features:
+      - Everything in Lite
+      - Custom model training
+      - Advanced analytics and reporting
+      - Multi-language support
+      - Priority email support
+      - SLA guarantees
+    tier: pro
+    nav:
+      group: Products
+      order: 2
+      hidden: false
+    image: https://picsum.photos/800/400
 
-- slug: tagging-ai
-  title: Tagging AI
-  tagline: Automated classification with military-grade privacy
-  description: |
-    Automated classification with military-grade privacy. Deploy local LLMs to
-    categorize tickets instantly without data leaving your perimeter.
-  features:
-    - Automated ticket classification
-    - Local LLM deployment
-    - Military-grade privacy
-    - On-premises/Private cloud deployment
-    - Multilingual support
-    - No data leaves your perimeter
-  tier: enterprise
-  nav:
-    group: Products
-    order: 4
-    hidden: false
-  status: Coming Soon
-  badges:
-    - Coming Soon
-    - On-Prem / Private Cloud
-    - Multilingual
-  image: https://picsum.photos/1000/1000?blur=5
+  - slug: prediction-api
+    title: Prediction API
+    tagline: Cloud-hosted AI predictions for your tickets
+    description: |
+      Access powerful ticket classification and prediction capabilities through our
+      hosted API. No infrastructure to manage, instant scaling, and pay-as-you-go
+      pricing.
+    features:
+      - REST API access
+      - Pre-trained models
+      - Automatic scaling
+      - 99.9% uptime SLA
+      - Usage-based pricing
+      - API key management
+    tier: enterprise
+    nav:
+      group: Products
+      order: 3
+      hidden: false
+    image: https://picsum.photos/600/300
 
-- slug: open-ticket-automation-core
-  title: Open Ticket Automation Core
-  tagline: The core engine for ticket automation
-  description: |
-    The renamed core engine. A secure API gateway that routes tickets between
-    your helpdesk (Znuny/OTOBO) and our AI models. Built for high-throughput
-    environments.
-  features:
-    - Secure API gateway
-    - Routes tickets to AI models
-    - Znuny/OTOBO integration
-    - High-throughput performance
-    - Enterprise-grade reliability
-  tier: pro
-  nav:
-    group: Products
-    order: 5
-    hidden: false
-  icon: heroicons:cube-transparent
-  image: https://picsum.photos/800/400
+  - slug: tagging-ai
+    title: Tagging AI
+    tagline: Automated classification with military-grade privacy
+    description: |
+      Automated classification with military-grade privacy. Deploy local LLMs to
+      categorize tickets instantly without data leaving your perimeter.
+    features:
+      - Automated ticket classification
+      - Local LLM deployment
+      - Military-grade privacy
+      - On-premises/Private cloud deployment
+      - Multilingual support
+      - No data leaves your perimeter
+    tier: enterprise
+    nav:
+      group: Products
+      order: 4
+      hidden: false
+    status: Coming Soon
+    badges:
+      - Coming Soon
+      - On-Prem / Private Cloud
+      - Multilingual
+    image: https://picsum.photos/1000/1000?blur=5
 
-- slug: synthetic-data-generator
-  title: Synthetic Data Generator
-  tagline: Privacy-compliant datasets for model training
-  description: |
-    Generate privacy-compliant datasets to train your models without using real
-    customer data. Perfect for staging environments.
-  features:
-    - Privacy-compliant data generation
-    - No real customer data needed
-    - Perfect for staging environments
-    - Train models safely
-    - GDPR compliant
-  tier: pro
-  nav:
-    group: Products
-    order: 6
-    hidden: false
-  status: In Development
-  badges:
-    - In Development
-  image: https://picsum.photos/600/300
+  - slug: open-ticket-automation-core
+    title: Open Ticket Automation Core
+    tagline: The core engine for ticket automation
+    description: |
+      The renamed core engine. A secure API gateway that routes tickets between
+      your helpdesk (Znuny/OTOBO) and our AI models. Built for high-throughput
+      environments.
+    features:
+      - Secure API gateway
+      - Routes tickets to AI models
+      - Znuny/OTOBO integration
+      - High-throughput performance
+      - Enterprise-grade reliability
+    tier: pro
+    nav:
+      group: Products
+      order: 5
+      hidden: false
+    icon: heroicons:cube-transparent
+    image: https://picsum.photos/800/400
+
+  - slug: synthetic-data-generator
+    title: Synthetic Data Generator
+    tagline: Privacy-compliant datasets for model training
+    description: |
+      Generate privacy-compliant datasets to train your models without using real
+      customer data. Perfect for staging environments.
+    features:
+      - Privacy-compliant data generation
+      - No real customer data needed
+      - Perfect for staging environments
+      - Train models safely
+      - GDPR compliant
+    tier: pro
+    nav:
+      group: Products
+      order: 6
+      hidden: false
+    status: In Development
+    badges:
+      - In Development
+    image: https://picsum.photos/600/300

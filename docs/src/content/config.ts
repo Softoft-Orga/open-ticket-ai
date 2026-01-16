@@ -46,22 +46,91 @@ const products = defineCollection({
     base: './src/content/products',
     pattern: '*/products.{yml,yaml}',
   }),
-  schema: z.array(
-    z.object({
-      slug: z.string(),
-      title: z.string(),
-      tagline: z.string().optional(),
-      description: z.string().optional(),
-      features: z.array(z.string()).optional(),
-      tier: z.enum(['lite', 'pro', 'enterprise']).optional(),
-      lang: z.string().default('en'),
-      nav: navSchema,
-      status: z.string().optional(),
-      badges: z.array(z.string()).optional(),
-      image: z.string().optional(),
-      icon: z.string().optional(),
-    })
-  ),
+  schema: z.object({
+    page: z.object({
+      hero: z.object({
+        badge: z.string(),
+        heading: z.string(),
+        subheading: z.string(),
+      }),
+      coreCapabilities: z.object({
+        heading: z.string(),
+        subheading: z.string(),
+        capabilities: z.array(
+          z.object({
+            icon: z.string(),
+            title: z.string(),
+            description: z.string(),
+          })
+        ),
+      }),
+      editions: z.object({
+        heading: z.string(),
+        subheading: z.string(),
+        liteFree: z.object({
+          title: z.string(),
+          tagline: z.string(),
+          price: z.string(),
+          priceNote: z.string(),
+          features: z.array(z.string()),
+          availability: z.string(),
+          buttonText: z.string(),
+        }),
+        litePro: z.object({
+          title: z.string(),
+          tagline: z.string(),
+          badge: z.string(),
+          price: z.string(),
+          priceNote: z.string(),
+          features: z.array(z.string()),
+          availability: z.string(),
+          buttonText: z.string(),
+        }),
+        fullPro: z.object({
+          title: z.string(),
+          tagline: z.string(),
+          price: z.string(),
+          priceNote: z.string(),
+          features: z.array(z.string()),
+          availability: z.string(),
+          buttonText: z.string(),
+        }),
+        roiSimulatorText: z.string(),
+      }),
+      deployment: z.object({
+        heading: z.string(),
+        subheading: z.string(),
+        features: z.array(
+          z.object({
+            icon: z.string(),
+            title: z.string(),
+          })
+        ),
+      }),
+      finalCta: z.object({
+        heading: z.string(),
+        subheading: z.string(),
+        primaryButtonText: z.string(),
+        secondaryButtonText: z.string(),
+      }),
+    }),
+    products: z.array(
+      z.object({
+        slug: z.string(),
+        title: z.string(),
+        tagline: z.string().optional(),
+        description: z.string().optional(),
+        features: z.array(z.string()).optional(),
+        tier: z.enum(['lite', 'pro', 'enterprise']).optional(),
+        lang: z.string().default('en'),
+        nav: navSchema,
+        status: z.string().optional(),
+        badges: z.array(z.string()).optional(),
+        image: z.string().optional(),
+        icon: z.string().optional(),
+      })
+    ),
+  }),
 });
 
 // 4️⃣ services collection - data collection (YAML)

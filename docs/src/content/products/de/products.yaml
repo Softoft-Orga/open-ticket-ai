@@ -1,129 +1,211 @@
-- slug: open-ticket-ai-lite
-  title: Open Ticket AI Lite
-  tagline: Starten Sie mit der Automatisierung Ihrer Tickets mit KI
-  description: |
-    Open Ticket AI Lite ist der perfekte Einstiegspunkt für kleine Teams, die
-    ihre Ticket-Klassifizierung und -Weiterleitung automatisieren möchten. On-Premises-Bereitstellung mit
-    vollständiger Kontrolle über Ihre Daten.
-  features:
-    - Automatische Ticket-Klassifizierung
-    - Warteschlangenzuweisung
-    - Prioritätserkennung
-    - On-Premises-Bereitstellung
-    - Community-Support
-  tier: lite
-  nav:
-    group: Products
-    order: 1
-    hidden: false
-  image: https://picsum.photos/1000/1000?blur=5
+page:
+  hero:
+    badge: "● LIVE CLASSIFICATION ENGINE v2.0"
+    heading: "Automatisierte,\nKonsistente Ticket-\nKlassifizierung\nIn Echtzeit."
+    subheading: "Analysieren Sie eingehende Tickets und weisen Sie strukturierte, hierarchische Tags sofort zu. Keine Regeln zu pflegen. Vollständig automatisiert."
+  
+  coreCapabilities:
+    heading: "Kernfunktionen"
+    subheading: "Für Enterprise-Maßstab und Präzision entwickelt."
+    capabilities:
+      - icon: "heroicons:cpu-chip"
+        title: "Vollautomatische Klassifizierung"
+        description: "Weist Tags für Intent, Dringlichkeit, Auswirkung, Benutzerrolle und Stimmung zu. Funktioniert nahtlos bei neuen Tickets und historischen Backlogs ohne menschliches Eingreifen."
+      - icon: "heroicons:squares-2x2"
+        title: "Hierarchisch, nicht flach"
+        description: "Ein echter Taxonomiebaum. Übergeordnete Knoten für hochaggregierte Ansichten, Blatt-Tags für operative Präzision. Ermöglicht tiefgehende, mehrstufige Analysen."
+      - icon: "heroicons:cube-transparent"
+        title: "10 Billiarden Kombinationen"
+        description: "Ordnen Sie unsere feste, hochwertige Taxonomie Ihren benutzerdefinierten Feldern zu. Über 10 Billiarden mögliche Kombinationen, die zu jedem spezifischen Workflow oder jeder Branche passen."
+  
+  editions:
+    heading: "Flexible Editionen"
+    subheading: "Wählen Sie die Modellkomplexität, die Ihren operativen Anforderungen entspricht."
+    liteFree:
+      title: "Lite Free"
+      tagline: "Evaluation & Testing"
+      price: "0 €"
+      priceNote: "/einmalig"
+      features:
+        - "Model: 0.5B Parameter"
+        - "150+ Tags"
+        - "Genauigkeit: ~0.82"
+        - "ROI: ab 15 Tickets/Tag"
+      availability: "Verfügbar 18.01"
+      buttonText: "Lite Free erkunden"
+    litePro:
+      title: "Lite Pro"
+      tagline: "Production Ready"
+      badge: "BEST VALUE"
+      price: "2.500 €"
+      priceNote: "/einmalig"
+      features:
+        - "Model: 4B Parameter"
+        - "150+ Tags"
+        - "Genauigkeit: ~0.90"
+        - "Fokus: Routing & Reporting"
+      availability: "Verfügbar 18.01"
+      buttonText: "Lite Pro erkunden"
+    fullPro:
+      title: "Full Pro"
+      tagline: "Advanced Enterprise"
+      price: "6.000 €"
+      priceNote: "/einmalig"
+      features:
+        - "Model: 8B Parameter"
+        - "250+ Tags"
+        - "Genauigkeit: ~0.92"
+        - "Fokus: Maximale Detailtiefe"
+      availability: "IN ENTWICKLUNG"
+      buttonText: "Full Pro erkunden"
+    roiSimulatorText: "ROI-SIMULATOR AUSPROBIEREN"
+  
+  deployment:
+    heading: "Bereitstellung & Hardware-Flexibilität"
+    subheading: "Sicherheit durch Design. Optimiert für Ihre Infrastruktur."
+    features:
+      - icon: "heroicons:server"
+        title: "ON-PREMISE ODER PRIVATE CLOUD"
+      - icon: "heroicons:shield-check"
+        title: "KEINE DATEN VERLASSEN DIE INFRASTRUKTUR"
+      - icon: "heroicons:cube-transparent"
+        title: "INT8, BF16, FP16 QUANTIZATIONS"
+      - icon: "heroicons:cpu-chip"
+        title: "OPTIMIERT FÜR CPU & GPU"
+  
+  finalCta:
+    heading: "Verwandeln Sie rohe Tickets in\nOperative Intelligenz."
+    subheading: "Schließen Sie sich zukunftsorientierten Support-Teams an, die ihren Workflow heute automatisieren."
+    primaryButtonText: "KONTAKTIEREN SIE DEN VERTRIEB"
+    secondaryButtonText: "Dokumentation ansehen"
 
-- slug: open-ticket-ai-pro
-  title: Open Ticket AI Pro
-  tagline: Fortgeschrittene KI für wachsende Teams
-  description: |
-    Open Ticket AI Pro bietet KI-Fähigkeiten auf Enterprise-Niveau für mittlere bis
-    große Support-Teams. Erhalten Sie erweiterte Analysen, individuelles Modelltraining und
-    Prioritäts-Support.
-  features:
-    - Alles aus Lite
-    - Individuelles Modelltraining
-    - Erweiterte Analysen und Berichte
-    - Mehrsprachiger Support
-    - Prioritäts-E-Mail-Support
-    - SLA-Garantien
-  tier: pro
-  nav:
-    group: Products
-    order: 2
-    hidden: false
-  image: https://picsum.photos/800/400
+products:
+  - slug: open-ticket-ai-lite
+    title: Open Ticket AI Lite
+    tagline: Starten Sie mit der Automatisierung Ihrer Tickets mit KI
+    description: |
+      Open Ticket AI Lite ist der perfekte Einstiegspunkt für kleine Teams, die
+      ihre Ticket-Klassifizierung und -Weiterleitung automatisieren möchten. On-Premises-Bereitstellung mit
+      vollständiger Kontrolle über Ihre Daten.
+    features:
+      - Automatische Ticket-Klassifizierung
+      - Warteschlangenzuweisung
+      - Prioritätserkennung
+      - On-Premises-Bereitstellung
+      - Community-Support
+    tier: lite
+    nav:
+      group: Products
+      order: 1
+      hidden: false
+    image: https://picsum.photos/1000/1000?blur=5
 
-- slug: prediction-api
-  title: Prediction API
-  tagline: Cloud-gehostete KI-Vorhersagen für Ihre Tickets
-  description: |
-    Greifen Sie über unsere gehostete API auf leistungsstarke Ticket-Klassifizierungs- und Vorhersagefähigkeiten zu.
-    Keine eigene Infrastruktur zu verwalten, sofortige Skalierung und Pay-as-you-go
-    Preisgestaltung.
-  features:
-    - REST API-Zugriff
-    - Vorgefertigte Modelle
-    - Automatische Skalierung
-    - 99,9 % Uptime-SLA
-    - Nutzungsbasierte Preisgestaltung
-    - API-Schlüsselverwaltung
-  tier: enterprise
-  nav:
-    group: Products
-    order: 3
-    hidden: false
-  image: https://picsum.photos/600/300
+  - slug: open-ticket-ai-pro
+    title: Open Ticket AI Pro
+    tagline: Fortgeschrittene KI für wachsende Teams
+    description: |
+      Open Ticket AI Pro bietet KI-Fähigkeiten auf Enterprise-Niveau für mittlere bis
+      große Support-Teams. Erhalten Sie erweiterte Analysen, individuelles Modelltraining und
+      Prioritäts-Support.
+    features:
+      - Alles aus Lite
+      - Individuelles Modelltraining
+      - Erweiterte Analysen und Berichte
+      - Mehrsprachiger Support
+      - Prioritäts-E-Mail-Support
+      - SLA-Garantien
+    tier: pro
+    nav:
+      group: Products
+      order: 2
+      hidden: false
+    image: https://picsum.photos/800/400
 
-- slug: tagging-ai
-  title: Tagging AI
-  tagline: Automatisierte Klassifizierung mit militärischer Datenschutzstufe
-  description: |
-    Automatisierte Klassifizierung mit militärischer Datenschutzstufe. Stellen Sie lokale LLMs bereit, um
-    Tickets sofort zu kategorisieren, ohne dass Daten Ihr Netzwerk verlassen.
-  features:
-    - Automatisierte Ticket-Klassifizierung
-    - Lokale LLM-Bereitstellung
-    - Militärische Datenschutzstufe
-    - On-Premises-/Private-Cloud-Bereitstellung
-    - Mehrsprachiger Support
-    - Keine Daten verlassen Ihr Netzwerk
-  tier: enterprise
-  nav:
-    group: Products
-    order: 4
-    hidden: false
-  status: Coming Soon
-  badges:
-    - Coming Soon
-    - On-Prem / Private Cloud
-    - Multilingual
-  image: https://picsum.photos/1000/1000?blur=5
+  - slug: prediction-api
+    title: Prediction API
+    tagline: Cloud-gehostete KI-Vorhersagen für Ihre Tickets
+    description: |
+      Greifen Sie über unsere gehostete API auf leistungsstarke Ticket-Klassifizierungs- und Vorhersagefähigkeiten zu.
+      Keine eigene Infrastruktur zu verwalten, sofortige Skalierung und Pay-as-you-go
+      Preisgestaltung.
+    features:
+      - REST API-Zugriff
+      - Vorgefertigte Modelle
+      - Automatische Skalierung
+      - 99,9 % Uptime-SLA
+      - Nutzungsbasierte Preisgestaltung
+      - API-Schlüsselverwaltung
+    tier: enterprise
+    nav:
+      group: Products
+      order: 3
+      hidden: false
+    image: https://picsum.photos/600/300
 
-- slug: open-ticket-automation-core
-  title: Open Ticket Automation Core
-  tagline: Die Kern-Engine für Ticket-Automatisierung
-  description: |
-    Die umbenannte Kern-Engine. Ein sicheres API-Gateway, das Tickets zwischen
-    Ihrem Helpdesk (Znuny/OTOBO) und unseren KI-Modellen weiterleitet. Entwickelt für Hochdurchsatz-
-    Umgebungen.
-  features:
-    - Sicheres API-Gateway
-    - Leitet Tickets an KI-Modelle weiter
-    - Znuny/OTOBO-Integration
-    - Hochdurchsatz-Leistung
-    - Zuverlässigkeit auf Enterprise-Niveau
-  tier: pro
-  nav:
-    group: Products
-    order: 5
-    hidden: false
-  icon: heroicons:cube-transparent
-  image: https://picsum.photos/800/400
+  - slug: tagging-ai
+    title: Tagging AI
+    tagline: Automatisierte Klassifizierung mit militärischer Datenschutzstufe
+    description: |
+      Automatisierte Klassifizierung mit militärischer Datenschutzstufe. Stellen Sie lokale LLMs bereit, um
+      Tickets sofort zu kategorisieren, ohne dass Daten Ihr Netzwerk verlassen.
+    features:
+      - Automatisierte Ticket-Klassifizierung
+      - Lokale LLM-Bereitstellung
+      - Militärische Datenschutzstufe
+      - On-Premises-/Private-Cloud-Bereitstellung
+      - Mehrsprachiger Support
+      - Keine Daten verlassen Ihr Netzwerk
+    tier: enterprise
+    nav:
+      group: Products
+      order: 4
+      hidden: false
+    status: Coming Soon
+    badges:
+      - Coming Soon
+      - On-Prem / Private Cloud
+      - Multilingual
+    image: https://picsum.photos/1000/1000?blur=5
 
-- slug: synthetic-data-generator
-  title: Synthetic Data Generator
-  tagline: Datenschutzkonforme Datensätze für das Modelltraining
-  description: |
-    Generieren Sie datenschutzkonforme Datensätze, um Ihre Modelle zu trainieren, ohne echte
-    Kundendaten zu verwenden. Perfekt für Staging-Umgebungen.
-  features:
-    - Datenschutzkonforme Datengenerierung
-    - Keine echten Kundendaten erforderlich
-    - Perfekt für Staging-Umgebungen
-    - Trainieren Sie Modelle sicher
-    - DSGVO-konform
-  tier: pro
-  nav:
-    group: Products
-    order: 6
-    hidden: false
-  status: In Development
-  badges:
-    - In Development
-  image: https://picsum.photos/600/300
+  - slug: open-ticket-automation-core
+    title: Open Ticket Automation Core
+    tagline: Die Kern-Engine für Ticket-Automatisierung
+    description: |
+      Die umbenannte Kern-Engine. Ein sicheres API-Gateway, das Tickets zwischen
+      Ihrem Helpdesk (Znuny/OTOBO) und unseren KI-Modellen weiterleitet. Entwickelt für Hochdurchsatz-
+      Umgebungen.
+    features:
+      - Sicheres API-Gateway
+      - Leitet Tickets an KI-Modelle weiter
+      - Znuny/OTOBO-Integration
+      - Hochdurchsatz-Leistung
+      - Zuverlässigkeit auf Enterprise-Niveau
+    tier: pro
+    nav:
+      group: Products
+      order: 5
+      hidden: false
+    icon: heroicons:cube-transparent
+    image: https://picsum.photos/800/400
+
+  - slug: synthetic-data-generator
+    title: Synthetic Data Generator
+    tagline: Datenschutzkonforme Datensätze für das Modelltraining
+    description: |
+      Generieren Sie datenschutzkonforme Datensätze, um Ihre Modelle zu trainieren, ohne echte
+      Kundendaten zu verwenden. Perfekt für Staging-Umgebungen.
+    features:
+      - Datenschutzkonforme Datengenerierung
+      - Keine echten Kundendaten erforderlich
+      - Perfekt für Staging-Umgebungen
+      - Trainieren Sie Modelle sicher
+      - DSGVO-konform
+    tier: pro
+    nav:
+      group: Products
+      order: 6
+      hidden: false
+    status: In Development
+    badges:
+      - In Development
+    image: https://picsum.photos/600/300
