@@ -55,8 +55,12 @@
         </TransitionChild>
         <TransitionChild as="template" v-bind="slideLeft">
           <div class="fixed inset-0 z-10 flex">
-            <div class="flex h-full w-full flex-col bg-surface-dark">
-              <div class="flex h-16 items-center justify-between border-b border-border-dark px-4">
+            <div
+              class="flex h-full w-full flex-col border-4 border-primary/30 bg-surface-dark shadow-[0_0_40px_rgba(166,13,242,0.3)]"
+            >
+              <div
+                class="flex h-16 items-center justify-between border-b border-primary/20 bg-surface-lighter px-4"
+              >
                 <div class="flex items-center gap-3">
                   <img :src="logoSrc" alt="Company logo" class="size-10 object-contain" />
                   <span
@@ -89,14 +93,19 @@
                 >
                   {{ link.label }}
                 </a>
-              </nav>
-
-              <div v-if="ctaLabel" class="border-t border-border-dark p-4">
-                <Button :href="ctaUrl" block size="lg" tone="primary" variant="subtle">
+                <Button
+                  v-if="ctaLabel"
+                  :href="ctaUrl"
+                  block
+                  size="lg"
+                  tone="primary"
+                  variant="subtle"
+                  class="mt-1"
+                >
                   {{ ctaLabel }}
                 </Button>
-              </div>
-              <slot v-else></slot>
+                <slot v-else></slot>
+              </nav>
             </div>
           </div>
         </TransitionChild>
