@@ -23,12 +23,12 @@ Die Hardware-Anforderungen für die Ticket-Klassifizierung hängen von mehreren 
 
 ## Schnellreferenz
 
-| Skalierung | Tickets/Tag     | Min. RAM | Min. CPU | GPU         | Modelltyp         |
-| ---------- | --------------- | -------- | -------- | ----------- | ----------------- |
-| Klein      | <1.000          | 512 MB   | 1 Kern   | Nein        | Simple ML         |
-| Mittel     | 1.000-10.000    | 2 GB     | 2 Kerne  | Optional    | BERT-basiert      |
-| Groß       | 10.000-100.000  | 8 GB     | 4 Kerne  | Empfohlen   | BERT/Large        |
-| Enterprise | >100.000        | 16+ GB   | 8+ Kerne | Erforderlich| Custom/Fine-tuned |
+| Skalierung | Tickets/Tag    | Min. RAM | Min. CPU | GPU          | Modelltyp         |
+| ---------- | -------------- | -------- | -------- | ------------ | ----------------- |
+| Klein      | <1.000         | 512 MB   | 1 Kern   | Nein         | Simple ML         |
+| Mittel     | 1.000-10.000   | 2 GB     | 2 Kerne  | Optional     | BERT-basiert      |
+| Groß       | 10.000-100.000 | 8 GB     | 4 Kerne  | Empfohlen    | BERT/Large        |
+| Enterprise | >100.000       | 16+ GB   | 8+ Kerne | Erforderlich | Custom/Fine-tuned |
 
 ## Bereitstellungsmodelle
 
@@ -379,14 +379,14 @@ curl -w "@curl-format.txt" -o /dev/null -s http://localhost:8080/classify
 
 ### Leistungsziele
 
-| Metrik       | Ziel      | Messung               |
-| ------------ | --------- | --------------------- |
-| Latenz P50   | <200ms    | Median-Antwortzeit    |
-| Latenz P95   | <500ms    | 95. Perzentil         |
-| Latenz P99   | <1000ms   | 99. Perzentil         |
-| Durchsatz    | >100/min  | Klassifizierte Tickets|
-| CPU-Auslastung | <80%    | Durchschnittliche Auslastung |
-| Speicherauslastung | <80% | Spitzenauslastung     |
+| Metrik             | Ziel     | Messung                      |
+| ------------------ | -------- | ---------------------------- |
+| Latenz P50         | <200ms   | Median-Antwortzeit           |
+| Latenz P95         | <500ms   | 95. Perzentil                |
+| Latenz P99         | <1000ms  | 99. Perzentil                |
+| Durchsatz          | >100/min | Klassifizierte Tickets       |
+| CPU-Auslastung     | <80%     | Durchschnittliche Auslastung |
+| Speicherauslastung | <80%     | Spitzenauslastung            |
 
 ## Fehlerbehebung
 

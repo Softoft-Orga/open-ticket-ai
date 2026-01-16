@@ -1,4 +1,5 @@
 #file: noinspection YAMLSchemaValidation
+companyImage: '../../../assets/images/open_ticket_ai_mannheim.png'
 meta:
   siteName: Open Ticket AI
   tagline: Private, on‑premise AI for ticket automation.

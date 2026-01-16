@@ -74,12 +74,12 @@ Open Ticket AI kann nur Aktionen ausführen, die dem Benutzer erlaubt sind.
 
 Je nach Automatisierungspipeline müssen Sie gewähren:
 
-| Automatisierungstyp    | Erforderliche Berechtigungen                 |
-| ---------------------- | -------------------------------------------- |
-| Queue Classification   | **ro**, **move_into**                        |
-| Priority Classification| **ro**, **priority**                         |
-| Note creation          | **ro**, **note**                             |
-| Ticket updates         | **ro**, **move_into**, **priority**, **note**|
+| Automatisierungstyp     | Erforderliche Berechtigungen                  |
+| ----------------------- | --------------------------------------------- |
+| Queue Classification    | **ro**, **move_into**                         |
+| Priority Classification | **ro**, **priority**                          |
+| Note creation           | **ro**, **note**                              |
+| Ticket updates          | **ro**, **move_into**, **priority**, **note** |
 
 ---
 
@@ -179,7 +179,7 @@ ValueMap:
       .*: open_ticket_ai
 ```
 
-Dies zwingt *jede* eingehende Anfrage, sich als `open_ticket_ai` zu authentifizieren
+Dies zwingt _jede_ eingehende Anfrage, sich als `open_ticket_ai` zu authentifizieren
 – selbst wenn ein Angreifer beliebige Benutzernamen sendet.
 
 Dies verhindert:

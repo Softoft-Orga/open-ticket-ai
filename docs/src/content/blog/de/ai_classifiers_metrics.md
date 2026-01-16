@@ -32,7 +32,7 @@ Diese Anwendungsfälle zeigen, warum die Evaluation herausfordernd ist: Reale Ti
 
 **Genauigkeit (Accuracy)** ist definiert als die Anzahl der korrekten Vorhersagen geteilt durch alle Vorhersagen:
 $ \text{Genauigkeit} = \frac{TP + TN}{TP + TN + FP + FN} $
-In Formelausdrücken: Genauigkeit = (TP + TN)/(alle Stichproben). Obwohl einfach, versagt die Genauigkeit bei unausgewogenen Daten dramatisch. Wenn beispielsweise 80 % der Tickets zur Klasse A gehören, erreicht ein einfältiger Klassifikator, der *immer* A vorhersagt, standardmäßig 80 % Genauigkeit – ignoriert dabei aber die anderen 20 % der Tickets vollständig. In Extremfällen (z. B. 99 % vs. 1 % Klassenaufteilung) ergibt die ständige Vorhersage der Mehrheitsklasse 99 % Genauigkeit, obwohl kein echtes Lernen stattfindet. Kurz gesagt, eine hohe Genauigkeit kann einfach die Klassenverteilung widerspiegeln, nicht die tatsächliche Leistung.
+In Formelausdrücken: Genauigkeit = (TP + TN)/(alle Stichproben). Obwohl einfach, versagt die Genauigkeit bei unausgewogenen Daten dramatisch. Wenn beispielsweise 80 % der Tickets zur Klasse A gehören, erreicht ein einfältiger Klassifikator, der _immer_ A vorhersagt, standardmäßig 80 % Genauigkeit – ignoriert dabei aber die anderen 20 % der Tickets vollständig. In Extremfällen (z. B. 99 % vs. 1 % Klassenaufteilung) ergibt die ständige Vorhersage der Mehrheitsklasse 99 % Genauigkeit, obwohl kein echtes Lernen stattfindet. Kurz gesagt, eine hohe Genauigkeit kann einfach die Klassenverteilung widerspiegeln, nicht die tatsächliche Leistung.
 
 > \*\*"... Genauigkeit ist kein geeignetes Maß mehr [für unausgewogene Datensätze], da sie nicht zwischen der Anzahl korrekt klassifizierter Beispiele verschiedener Klassen unterscheidet. Daher kann sie zu falschen Schlussfolgerungen führen ...".
 
@@ -40,8 +40,8 @@ In Formelausdrücken: Genauigkeit = (TP + TN)/(alle Stichproben). Obwohl einfach
 
 Um Klassifikatoren bei unausgewogenen Daten zu bewerten, verlassen wir uns auf **Präzision, Trefferquote (Recall) und den F1-Score**, die sich auf Fehler in Minderheitsklassen konzentrieren. Diese leiten sich aus der Konfusionsmatrix ab, z. B. für binäre Klassifikation:
 
-|                     | Vorhergesagt Positiv | Vorhergesagt Negativ |
-| ------------------- | -------------------- | -------------------- |
+|                         | Vorhergesagt Positiv | Vorhergesagt Negativ |
+| ----------------------- | -------------------- | -------------------- |
 | **Tatsächlich Positiv** | True Positive (TP)   | False Negative (FN)  |
 | **Tatsächlich Negativ** | False Positive (FP)  | True Negative (TN)   |
 
@@ -62,16 +62,16 @@ gibt Präzision, Trefferquote, F1 (und Support) für jede Ticket-Klasse aus.
 
 Bei Mehrklassenproblemen können Metriken auf verschiedene Arten gemittelt werden. **Mikro-Mittelung** fasst alle Klassen zusammen, indem globale TP, FP, FN summiert und dann Metriken berechnet werden – effektiv gewichtet nach der Häufigkeit jeder Klasse. **Makro-Mittelung** berechnet die Metrik für jede Klasse separat und bildet dann den ungewichteten Durchschnitt. Mit anderen Worten, Makro behandelt alle Klassen gleich (seltene Klassen zählen also genauso viel wie häufige), während Mikro die Leistung bei häufigen Klassen bevorzugt. Verwenden Sie **Makro-Mittelung**, wenn Minderheitsklassen kritisch sind (z. B. Erkennung eines seltenen dringenden Tickets), und **Mikro-Mittelung**, wenn die Gesamtgenauigkeit über alle Tickets wichtiger ist.
 
-| Mittelung | Wie sie berechnet wird                                          | Wann zu verwenden                                      |
-| --------- | --------------------------------------------------------------- | ------------------------------------------------------ |
-| **Mikro** | Globale Zählungen von TP, FP, FN über alle Klassen              | Gibt Gesamtleistung wieder (bevorzugt große Klassen)   |
+| Mittelung | Wie sie berechnet wird                                              | Wann zu verwenden                                        |
+| --------- | ------------------------------------------------------------------- | -------------------------------------------------------- |
+| **Mikro** | Globale Zählungen von TP, FP, FN über alle Klassen                  | Gibt Gesamtleistung wieder (bevorzugt große Klassen)     |
 | **Makro** | Durchschnitt der Metrik jeder Klasse (jede Klasse gleich gewichtet) | Stellt sicher, dass kleine/seltene Klassen gleich zählen |
 
 ## Herausforderungen bei Mehrfach-Labels
 
 Helpdesk-Tickets tragen oft mehrere Labels gleichzeitig (z. B. kann ein Ticket sowohl ein **Warteschlangen-** als auch ein **Prioritäts-**Label haben). Bei Mehrfach-Label-Setups gelten zusätzliche Metriken:
 
-- **Teilmengen-Genauigkeit (Exact Match)** – Anteil der Stichproben, bei denen *alle* vorhergesagten Labels genau mit der wahren Menge der Labels übereinstimmen. Dies ist sehr streng: Ein falsches Label bedeutet Fehler.
+- **Teilmengen-Genauigkeit (Exact Match)** – Anteil der Stichproben, bei denen _alle_ vorhergesagten Labels genau mit der wahren Menge der Labels übereinstimmen. Dies ist sehr streng: Ein falsches Label bedeutet Fehler.
 - **Hamming-Verlust** – der Anteil der einzelnen Label-Vorhersagen, die falsch sind. Hamming-Verlust ist nachsichtiger: Jedes Label wird unabhängig beurteilt. Ein niedrigerer Hamming-Verlust (nahe 0) ist besser.
 - **Label-Ranking-Verlust** – misst, wie viele Label-Paare durch das Vertrauen falsch geordnet sind. Er ist relevant, wenn das Modell für jedes Label Scores ausgibt und wir uns um die Rangfolge der Labels für jedes Ticket kümmern.
 
