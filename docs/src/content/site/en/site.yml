@@ -89,7 +89,7 @@ popularResources:
 
 legalInfo:
   companyName: Open Ticket AI UG
-  ceo: Constanze Krishnartne
+  ceo: Constanze Krishnaratne
   address:
     street: Viktoriastraße 14
     city: Mannheim
@@ -101,18 +101,20 @@ legalInfo:
   email: info@openticketai.com
   phone: +49 621 12345678
 team:
-  - name: Constanze Krishnartne
+  - name: Constanze Krishnaratne
     role: CEO
-    description: Driving the vision for privacy-focused AI solutions in enterprise environments.
-    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=CK
+    description: Leading Open Ticket AI's strategy and product direction with a focus on transparency, trust, and operational impact.
+    pictureUrl: team_constanze_krishnaratne
     email: constanze.krishnaratne@openticketai.com
     phoneNumber: +49 621 12345678
+    linkedInUrl: https://www.linkedin.com/in/constanze-krishnaratne
   - name: Tobias Bueck
     role: CTO
-    description: Leading technical innovation and architecture for on-premise AI systems.
-    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=TB
+    description: Developing AI models for ticket automation and ensuring reliable on-premise deployments with measurable impact.
+    pictureUrl: team_tobias_bueck
     email: tobias.bueck@openticketai.com
     phoneNumber: +49 621 12345679
+    linkedInUrl: https://www.linkedin.com/in/tobias-bueck
 
 dataPrivacy:
   introduction: |

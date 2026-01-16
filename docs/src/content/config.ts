@@ -174,6 +174,7 @@ const site = defineCollection({
           pictureUrl: z.string().optional(),
           email: z.string().optional(),
           phoneNumber: z.string().optional(),
+          linkedInUrl: z.string().optional(),
         })
       )
       .optional(),
