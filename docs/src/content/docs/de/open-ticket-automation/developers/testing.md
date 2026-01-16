@@ -731,13 +731,13 @@ def sample_classification_config():
 
 Folge diesen Namensmustern für Konsistenz:
 
-| Pattern     | Purpose                 | Example                                         |
-| ----------- | ----------------------- | ----------------------------------------------- |
-| `mock_*`    | Mock-Objekte            | `mock_ticket_system_service`                    |
-| `sample_*`  | Beispieldaten           | `sample_ticket`, `sample_classification_config` |
-| `tmp_*`     | Temporäre Ressourcen    | `tmp_config`, `tmp_path`                        |
-| `empty_*`   | Leere/minimale Instanzen| `empty_pipeline_context`                        |
-| `*_factory` | Factory-Funktionen      | `pipe_config_factory`                           |
+| Pattern     | Purpose                  | Example                                         |
+| ----------- | ------------------------ | ----------------------------------------------- |
+| `mock_*`    | Mock-Objekte             | `mock_ticket_system_service`                    |
+| `sample_*`  | Beispieldaten            | `sample_ticket`, `sample_classification_config` |
+| `tmp_*`     | Temporäre Ressourcen     | `tmp_config`, `tmp_path`                        |
+| `empty_*`   | Leere/minimale Instanzen | `empty_pipeline_context`                        |
+| `*_factory` | Factory-Funktionen       | `pipe_config_factory`                           |
 
 ### Fixture Scope
 

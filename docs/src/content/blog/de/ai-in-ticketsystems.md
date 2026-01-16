@@ -58,13 +58,13 @@ KI-gestütztes Ticketing eliminiert menschliche Agenten nicht – es verbessert 
 
 ### **Schnelle Statistiken**
 
-| Metrik                                     |          Auswirkung mit KI-Ticketing          |
-| ------------------------------------------ | :-------------------------------------------: |
-| Kundenerwartung an Antwort                 | 66 % erwarten Antwort innerhalb von 5 Minuten |
-| Bedeutung schneller Antwort                |   75 % bewerten sie als wichtigsten CX-Faktor    |
-| Kostenreduktion durch KI-Automatisierung   |               Bis zu 40 %                |
-| Verbesserung der Kundenzufriedenheit       |               Bis zu 20 %                |
-| Support-Verfügbarkeit                      |         24/7 ohne Ausfallzeiten          |
+| Metrik                                   |          Auswirkung mit KI-Ticketing          |
+| ---------------------------------------- | :-------------------------------------------: |
+| Kundenerwartung an Antwort               | 66 % erwarten Antwort innerhalb von 5 Minuten |
+| Bedeutung schneller Antwort              |  75 % bewerten sie als wichtigsten CX-Faktor  |
+| Kostenreduktion durch KI-Automatisierung |                  Bis zu 40 %                  |
+| Verbesserung der Kundenzufriedenheit     |                  Bis zu 20 %                  |
+| Support-Verfügbarkeit                    |            24/7 ohne Ausfallzeiten            |
 
 Durch die Automatisierung zentraler Workflows – vom Ticket-Logging und der Klassifizierung bis hin zu Echtzeit-Antwortvorschlägen – sind KI-Ticketsysteme keine Option mehr. Sie sind grundlegende Werkzeuge für Unternehmen, die skalieren wollen, ohne die Servicequalität zu beeinträchtigen.
 
@@ -123,17 +123,17 @@ Dies schafft eine reaktive Supportkultur – wo Unternehmen erst reagieren, nach
 
 Nachfolgend ein detaillierter Vergleich, der zeigt, wie KI die Grenzen traditioneller Ticketsysteme in Chancen für operative Effizienz verwandelt.
 
-| **Merkmal**                  | **Traditionelles Ticketing**                                         | **KI-Ticketing**                                                                          |
-| ---------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| **Antwortzeit**              | Manuelle Priorisierung verursacht Verzögerungen, besonders bei hohem Volumen.        | Automatisiert Sortierung und Klassifizierung, ermöglicht nahezu sofortige Antworten.                    |
-| **Ticket-Weiterleitung**     | Verlässt sich auf starre Regeln und Agenteneingaben, führt zu Fehlleitungen.     | Nutzt NLP und LLMs, um Tickets intelligent zu klassifizieren und an das richtige Team weiterzuleiten.          |
-| **Priorisierung**            | Alle Tickets werden gleich behandelt, es sei denn, sie werden manuell gekennzeichnet.          | Priorisiert automatisch basierend auf Dringlichkeit, Stimmung und Geschäftskontext.              |
-| **Self-Service-Optionen**    | Minimaler oder passiver Self-Service – Kunden müssen warten.            | Bietet Chatbots und dynamische FAQs, die repetitive Probleme rund um die Uhr lösen.                     |
-| **Workload des Supportteams**| Hoch aufgrund repetitiver Ticketbearbeitung und Klassifizierungsaufgaben.  | Entlastet von repetitiven Tickets, sodass Agenten sich auf strategische, komplexe Probleme konzentrieren können.             |
-| **Kontextbewusstsein**       | Agenten müssen manuell nach Historie und vorherigen Kontaktpunkten suchen. | KI erinnert sich in Echtzeit an die vollständige Interaktionshistorie und Kundensimmung.                  |
-| **Skalierbarkeit**           | Skalierung erfordert Einstellung und Einarbeitung neuer Support-Agenten.        | Skaliert sofort ohne Personalaufstockung, bearbeitet Tausende Tickets parallel. |
-| **Betriebskosten**           | Hoch aufgrund arbeitsintensiver Prozesse.                            | Reduzierte Kosten durch Automatisierung – bis zu 40 % niedrigere Supportkosten.                      |
-| **Kundenerlebnis (CX)**      | Inkonsistent und langsamer, besonders während Spitzenzeiten.           | Schneller, personalisierter und rund um die Uhr verfügbar – führt zu bis zu 20 % höherer CSAT.         |
+| **Merkmal**                   | **Traditionelles Ticketing**                                                          | **KI-Ticketing**                                                                                                 |
+| ----------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Antwortzeit**               | Manuelle Priorisierung verursacht Verzögerungen, besonders bei hohem Volumen.         | Automatisiert Sortierung und Klassifizierung, ermöglicht nahezu sofortige Antworten.                             |
+| **Ticket-Weiterleitung**      | Verlässt sich auf starre Regeln und Agenteneingaben, führt zu Fehlleitungen.          | Nutzt NLP und LLMs, um Tickets intelligent zu klassifizieren und an das richtige Team weiterzuleiten.            |
+| **Priorisierung**             | Alle Tickets werden gleich behandelt, es sei denn, sie werden manuell gekennzeichnet. | Priorisiert automatisch basierend auf Dringlichkeit, Stimmung und Geschäftskontext.                              |
+| **Self-Service-Optionen**     | Minimaler oder passiver Self-Service – Kunden müssen warten.                          | Bietet Chatbots und dynamische FAQs, die repetitive Probleme rund um die Uhr lösen.                              |
+| **Workload des Supportteams** | Hoch aufgrund repetitiver Ticketbearbeitung und Klassifizierungsaufgaben.             | Entlastet von repetitiven Tickets, sodass Agenten sich auf strategische, komplexe Probleme konzentrieren können. |
+| **Kontextbewusstsein**        | Agenten müssen manuell nach Historie und vorherigen Kontaktpunkten suchen.            | KI erinnert sich in Echtzeit an die vollständige Interaktionshistorie und Kundensimmung.                         |
+| **Skalierbarkeit**            | Skalierung erfordert Einstellung und Einarbeitung neuer Support-Agenten.              | Skaliert sofort ohne Personalaufstockung, bearbeitet Tausende Tickets parallel.                                  |
+| **Betriebskosten**            | Hoch aufgrund arbeitsintensiver Prozesse.                                             | Reduzierte Kosten durch Automatisierung – bis zu 40 % niedrigere Supportkosten.                                  |
+| **Kundenerlebnis (CX)**       | Inkonsistent und langsamer, besonders während Spitzenzeiten.                          | Schneller, personalisierter und rund um die Uhr verfügbar – führt zu bis zu 20 % höherer CSAT.                   |
 
 Legacy-Ticketsysteme wurden für Stabilität, nicht für Agilität gebaut. In der heutigen Echtzeit-Umgebung mit hohen Erwartungen fallen diese Systeme bei Geschwindigkeit, Skalierbarkeit und Intelligenz zu kurz. Die Automatisierung von Ticketsystemen durch KI löst diese Grenzen – optimiert Workflows, reduziert Kosten und hebt das Kundenerlebnis.
 

@@ -84,12 +84,12 @@ orchestrator:
 
 ### Modellvergleich
 
-| Modelltyp    | Genauigkeit | Einrichtungszeit | Kosten | Am besten geeignet für       |
-| ------------ | ----------- | ---------------- | ------ | ---------------------------- |
-| Pre-trained  | 60-75%      | Minuten          | Niedrig | Schneller Start, Tests       |
-| Fine-tuned   | 80-95%      | Tage-Wochen      | Mittel | Produktiveinsatz             |
-| Custom       | 85-98%      | Wochen-Monate    | Hoch   | Spezialisierte Anforderungen |
-| Ensemble     | 90-99%      | Wochen           | Hoch   | Maximale Genauigkeit         |
+| Modelltyp   | Genauigkeit | Einrichtungszeit | Kosten  | Am besten geeignet für       |
+| ----------- | ----------- | ---------------- | ------- | ---------------------------- |
+| Pre-trained | 60-75%      | Minuten          | Niedrig | Schneller Start, Tests       |
+| Fine-tuned  | 80-95%      | Tage-Wochen      | Mittel  | Produktiveinsatz             |
+| Custom      | 85-98%      | Wochen-Monate    | Hoch    | Spezialisierte Anforderungen |
+| Ensemble    | 90-99%      | Wochen           | Hoch    | Maximale Genauigkeit         |
 
 ## Konfiguration
 
@@ -318,12 +318,12 @@ Leiten Sie basierend auf der Konfidenz unterschiedlich weiter:
 
 ### Schwellenwert-Richtlinien
 
-| Konfidenz   | Aktion                     | Anwendungsfall                     |
-| ----------- | -------------------------- | ---------------------------------- |
-| >0.95       | Automatische Zuweisung     | Klassifizierungen mit hoher Sicherheit |
-| 0.80-0.95   | Automatische Zuweisung mit Kennzeichnung | Standard-Klassifizierungen         |
-| 0.60-0.80   | Agenten vorschlagen        | Geringe Sicherheit - Überprüfung erforderlich |
-| <0.60       | Manuelle Klassifizierung   | Zu unsicher                       |
+| Konfidenz | Aktion                                   | Anwendungsfall                                |
+| --------- | ---------------------------------------- | --------------------------------------------- |
+| >0.95     | Automatische Zuweisung                   | Klassifizierungen mit hoher Sicherheit        |
+| 0.80-0.95 | Automatische Zuweisung mit Kennzeichnung | Standard-Klassifizierungen                    |
+| 0.60-0.80 | Agenten vorschlagen                      | Geringe Sicherheit - Überprüfung erforderlich |
+| <0.60     | Manuelle Klassifizierung                 | Zu unsicher                                   |
 
 ## Multi-Label-Klassifizierung
 

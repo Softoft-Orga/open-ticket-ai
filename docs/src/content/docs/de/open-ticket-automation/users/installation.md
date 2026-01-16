@@ -322,28 +322,28 @@ Möglicherweise müssen Sie Ihren ContentType ändern, wenn ContentType invalid 
 Ändern Sie daher die params des AddNotePipe in Ihrer config.yml wie folgt:
 
 ```yaml
--   id: add_note
-    use: "base:AddNotePipe"
-    injects: { ticket_system: "otobo_znuny" }
-    params:
-        ticket_id: "{{ get_pipe_result('ticket')['id'] }}"
-        note:
-            subject: "This is a note added by Open Ticket AI."
-            body: "Automated note content."
-            content_type: "text/plain; charset=utf8"
+- id: add_note
+  use: 'base:AddNotePipe'
+  injects: { ticket_system: 'otobo_znuny' }
+  params:
+    ticket_id: "{{ get_pipe_result('ticket')['id'] }}"
+    note:
+      subject: 'This is a note added by Open Ticket AI.'
+      body: 'Automated note content.'
+      content_type: 'text/plain; charset=utf8'
 ```
 
 ---
 
 ## Verifikations-Checkliste
 
-* `.env` enthält `OTAI_HF_TOKEN` und `OTAI_ZNUNY_PASSWORD`
-* `deployment/compose.yml` verwendet `image: openticketai/engine:1.4.19`
-* OTOBO/Znuny-Webservice importiert; Benutzer `open_ticket_ai` existiert
-* Queues & Prioritäten im Ticket-System vorhanden
-* Ausführen: `docker compose -f deployment/compose.yml up -d`
-* Logs prüfen: `docker compose -f deployment/compose.yml logs -f open-ticket-ai`
-* Optional: `open-ticket-ai verify-connection` im Container ausführen (falls verfügbar)
+- `.env` enthält `OTAI_HF_TOKEN` und `OTAI_ZNUNY_PASSWORD`
+- `deployment/compose.yml` verwendet `image: openticketai/engine:1.4.19`
+- OTOBO/Znuny-Webservice importiert; Benutzer `open_ticket_ai` existiert
+- Queues & Prioritäten im Ticket-System vorhanden
+- Ausführen: `docker compose -f deployment/compose.yml up -d`
+- Logs prüfen: `docker compose -f deployment/compose.yml logs -f open-ticket-ai`
+- Optional: `open-ticket-ai verify-connection` im Container ausführen (falls verfügbar)
 
 ### Hilfe erhalten
 

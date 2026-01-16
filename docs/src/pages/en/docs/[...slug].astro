@@ -23,12 +23,11 @@ const slugParts = entry.id
   .split('/');
 const breadcrumbs = [
   { label: 'Documentation', href: '/docs/' },
-  ...slugParts.slice(0, -1).map((part, index) => ({
+  ...slugParts.slice(0, -1).map(part => ({
     label: part
       .split('-')
       .map(w => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' '),
-    href: '/docs/' + slugParts.slice(0, index + 1).join('/') + '/',
   })),
   { label: title },
 ];
