@@ -1,4 +1,8 @@
-export default async (request: Request, context: { next: () => Response | Promise<Response> }) => {
+interface Context {
+  next: () => Promise<Response>;
+}
+
+export default async (request: Request, context: Context) => {
   const url = new URL(request.url);
   const path = url.pathname;
 

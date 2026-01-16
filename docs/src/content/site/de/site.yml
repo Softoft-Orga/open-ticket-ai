@@ -39,18 +39,23 @@ footer:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
+      iconName: simple-icons:linkedin
     - platform: youtube
       url: https://www.youtube.com/@openticketai
       ariaLabel: YouTube
+      iconName: simple-icons:youtube
     - platform: github
       url: https://github.com/Softoft-Orga
       ariaLabel: GitHub
+      iconName: simple-icons:github
     - platform: huggingface
       url: https://huggingface.co/openticketai
       ariaLabel: Hugging Face
+      iconName: simple-icons:huggingface
     - platform: x
       url: https://x.com/OpenTicketAI
       ariaLabel: X (Twitter)
+      iconName: simple-icons:x
   legal:
     - label: AGB
       url: terms
