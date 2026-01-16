@@ -42,9 +42,11 @@
         <Bars3Icon class="h-6 w-6" />
       </button>
     </div>
+  </header>
 
+  <Teleport to="body">
     <TransitionRoot :show="mobileMenuOpen" as="template">
-      <div class="md:hidden">
+      <div class="fixed inset-0 z-50 md:hidden">
         <TransitionChild as="template" v-bind="fade">
           <div
             class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm"
@@ -52,7 +54,7 @@
           />
         </TransitionChild>
         <TransitionChild as="template" v-bind="slideLeft">
-          <div class="fixed inset-y-0 right-0 flex w-full max-w-sm">
+          <div class="fixed inset-y-0 right-0 z-10 flex w-full max-w-sm">
             <div class="h-full w-full border-l border-border-dark bg-surface-dark p-6 shadow-2xl">
               <div class="mb-8 flex items-center justify-between">
                 <p class="text-lg font-bold text-text-1">Menu</p>
@@ -93,7 +95,7 @@
         </TransitionChild>
       </div>
     </TransitionRoot>
-  </header>
+  </Teleport>
 </template>
 
 <script lang="ts" setup>
