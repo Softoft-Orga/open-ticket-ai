@@ -1,11 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Button from '../../../components/vue/core/basic/Button.vue';
 import Badge from '../../../components/vue/core/basic/Badge.vue';
 import { Icon } from 'astro-icon/components';
 import ModalTrigger from '../../../components/vue/core/basic/ModalTrigger.vue';
 import ContactForm from '../../../components/ContactForm.astro';
+import teamConstanzeKrishnaratne from '../../../assets/images/team/team_constanze_krishnaratne.png';
+import teamTobiasBueck from '../../../assets/images/team/team_tobias_bueck.jpg';
 
 const title = 'About Us - Open Ticket AI';
 const description = 'Learn about Open Ticket AI, our team, and our mission';
@@ -19,6 +22,12 @@ const siteConfig = allSiteConfigs.find(entry =>
 const meta = siteConfig?.data.meta;
 const legalInfo = siteConfig?.data.legalInfo;
 const team = siteConfig?.data.team || [];
+
+// Map pictureUrl identifiers to imported images
+const teamImages = {
+  team_constanze_krishnaratne: teamConstanzeKrishnaratne,
+  team_tobias_bueck: teamTobiasBueck,
+};
 ---
 
 <BaseLayout title={title} description={description}>
@@ -121,13 +130,15 @@ const team = siteConfig?.data.team || [];
           <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {team.map(member => (
               <div class="text-center">
-                {member.pictureUrl && (
+                {member.pictureUrl && teamImages[member.pictureUrl] && (
                   <div class="mb-4 flex justify-center">
                     <div class="overflow-hidden rounded-full border-4 border-purple-500/30">
-                      <img
-                        src={member.pictureUrl}
+                      <Image
+                        src={teamImages[member.pictureUrl]}
                         alt={member.name || 'Team Member'}
                         class="h-32 w-32 object-cover"
+                        width={128}
+                        height={128}
                       />
                     </div>
                   </div>
