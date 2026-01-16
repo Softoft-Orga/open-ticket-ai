@@ -3,6 +3,7 @@ meta:
   siteName: Open Ticket AI
   tagline: Private, on‑premise KI für Ticket-Automatisierung.
   logoUrl: /images/open-ticket-ai-logo.png
+companyImage: '../../../assets/images/open_ticket_ai_mannheim.png'
 nav:
   - label: Produkte
     url: products
