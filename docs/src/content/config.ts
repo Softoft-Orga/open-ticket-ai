@@ -92,162 +92,163 @@ const site = defineCollection({
     base: './src/content/site',
     pattern: '*/*.{yml,yaml}',
   }),
-  schema: ({ image }) => z.object({
-    slug: z.string().optional(),
-    meta: z.object({
-      siteName: z.string(),
-      tagline: z.string().optional(),
-      logoUrl: z.string().optional(),
-    }),
-    nav: z.array(
-      z.object({
-        label: z.string(),
-        url: z.string(),
-      })
-    ),
-    footer: z.object({
-      brandName: z.string(),
-      brandTagline: z.string(),
-      socialHeading: z.string(),
-      sections: z.array(
+  schema: ({ image }) =>
+    z.object({
+      slug: z.string().optional(),
+      meta: z.object({
+        siteName: z.string(),
+        tagline: z.string().optional(),
+        logoUrl: z.string().optional(),
+      }),
+      nav: z.array(
         z.object({
-          title: z.string(),
-          links: z.array(
-            z.object({
-              label: z.string(),
-              url: z.string(),
-            })
-          ),
-        })
-      ),
-      social: z.array(
-        z.object({
-          platform: z.string(),
+          label: z.string(),
           url: z.string(),
-          ariaLabel: z.string(),
-          iconName: z.string(),
         })
       ),
-      copyright: z.string(),
-    }),
-    popularResources: z
-      .object({
-        title: z.string(),
-        groups: z.array(
+      footer: z.object({
+        brandName: z.string(),
+        brandTagline: z.string(),
+        socialHeading: z.string(),
+        sections: z.array(
           z.object({
             title: z.string(),
-            basePath: z.string(),
-            items: z.array(
+            links: z.array(
               z.object({
-                docId: z.string(),
-                icon: z.string(),
-                label: z.string().optional(),
+                label: z.string(),
+                url: z.string(),
               })
             ),
           })
         ),
-      })
-      .optional(),
-    legalInfo: z
-      .object({
-        companyName: z.string(),
-        ceo: z.string(),
-        address: z.object({
-          street: z.string(),
-          city: z.string(),
-          zip: z.string(),
-          country: z.string(),
-        }),
-        legalForm: z.string(),
-        vatId: z.string(),
-        registerInfo: z.string(),
-        email: z.string(),
-        phone: z.string(),
-      })
-      .optional(),
-    team: z
-      .array(
-        z.object({
-          name: z.string().optional(),
-          role: z.string().optional(),
-          description: z.string().optional(),
-          pictureUrl: image().optional(),
-          email: z.string().optional(),
-          phoneNumber: z.string().optional(),
-          linkedInUrl: z.string().optional(),
+        social: z.array(
+          z.object({
+            platform: z.string(),
+            url: z.string(),
+            ariaLabel: z.string(),
+            iconName: z.string(),
+          })
+        ),
+        copyright: z.string(),
+      }),
+      popularResources: z
+        .object({
+          title: z.string(),
+          groups: z.array(
+            z.object({
+              title: z.string(),
+              basePath: z.string(),
+              items: z.array(
+                z.object({
+                  docId: z.string(),
+                  icon: z.string(),
+                  label: z.string().optional(),
+                })
+              ),
+            })
+          ),
         })
-      )
-      .optional(),
-    dataPrivacy: z
-      .object({
-        introduction: z.string(),
-        controller: z.object({
-          title: z.string(),
-          content: z.string(),
-        }),
-        dataProcessing: z.object({
-          title: z.string(),
-          categories: z.array(
-            z.object({
-              title: z.string(),
-              description: z.string(),
-              legalBasis: z.string().optional(),
-            })
-          ),
-        }),
-        yourRights: z.object({
-          title: z.string(),
-          rights: z.array(
-            z.object({
-              title: z.string(),
-              description: z.string(),
-            })
-          ),
-        }),
-        dataSecurity: z.object({
-          title: z.string(),
-          content: z.string(),
-        }),
-        thirdPartyServices: z
-          .object({
+        .optional(),
+      legalInfo: z
+        .object({
+          companyName: z.string(),
+          ceo: z.string(),
+          address: z.object({
+            street: z.string(),
+            city: z.string(),
+            zip: z.string(),
+            country: z.string(),
+          }),
+          legalForm: z.string(),
+          vatId: z.string(),
+          registerInfo: z.string(),
+          email: z.string(),
+          phone: z.string(),
+        })
+        .optional(),
+      team: z
+        .array(
+          z.object({
+            name: z.string().optional(),
+            role: z.string().optional(),
+            description: z.string().optional(),
+            pictureUrl: image().optional(),
+            email: z.string().optional(),
+            phoneNumber: z.string().optional(),
+            linkedInUrl: z.string().optional(),
+          })
+        )
+        .optional(),
+      dataPrivacy: z
+        .object({
+          introduction: z.string(),
+          controller: z.object({
             title: z.string(),
-            services: z.array(
+            content: z.string(),
+          }),
+          dataProcessing: z.object({
+            title: z.string(),
+            categories: z.array(
               z.object({
-                name: z.string(),
-                purpose: z.string(),
-                provider: z.string().optional(),
-                privacyPolicy: z.string().optional(),
+                title: z.string(),
+                description: z.string(),
+                legalBasis: z.string().optional(),
               })
             ),
-          })
-          .optional(),
-        contact: z.object({
+          }),
+          yourRights: z.object({
+            title: z.string(),
+            rights: z.array(
+              z.object({
+                title: z.string(),
+                description: z.string(),
+              })
+            ),
+          }),
+          dataSecurity: z.object({
+            title: z.string(),
+            content: z.string(),
+          }),
+          thirdPartyServices: z
+            .object({
+              title: z.string(),
+              services: z.array(
+                z.object({
+                  name: z.string(),
+                  purpose: z.string(),
+                  provider: z.string().optional(),
+                  privacyPolicy: z.string().optional(),
+                })
+              ),
+            })
+            .optional(),
+          contact: z.object({
+            title: z.string(),
+            content: z.string(),
+          }),
+          lastUpdated: z.string(),
+        })
+        .optional(),
+      ui: z.object({
+        ctaLabel: z.string(),
+        cookieBanner: z.object({
           title: z.string(),
-          content: z.string(),
+          description: z.string(),
+          privacyPolicyText: z.string(),
+          acceptText: z.string(),
+          declineText: z.string(),
         }),
-        lastUpdated: z.string(),
-      })
-      .optional(),
-    ui: z.object({
-      ctaLabel: z.string(),
-      cookieBanner: z.object({
-        title: z.string(),
-        description: z.string(),
-        privacyPolicyText: z.string(),
-        acceptText: z.string(),
-        declineText: z.string(),
-      }),
-      contactForm: z.object({
-        title: z.string(),
-        submitButtonText: z.string(),
-        messageLabel: z.string(),
-        emailLabel: z.string(),
-        subjectLabel: z.string(),
-        emailPlaceholder: z.string(),
-        messagePlaceholder: z.string(),
+        contactForm: z.object({
+          title: z.string(),
+          submitButtonText: z.string(),
+          messageLabel: z.string(),
+          emailLabel: z.string(),
+          subjectLabel: z.string(),
+          emailPlaceholder: z.string(),
+          messagePlaceholder: z.string(),
+        }),
       }),
     }),
-  }),
 });
 
 // Export collections

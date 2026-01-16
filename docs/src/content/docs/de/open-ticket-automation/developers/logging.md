@@ -54,12 +54,12 @@ Das Logging-System wird über die YAML-Konfigurationsdatei der Anwendung im Absc
 
 `LoggingConfig` definiert die unterstützte Laufzeitkonfiguration:
 
-| Feld                   | Typ                                                               | Standard                                                  | Beschreibung                                                                        |
-| ----------------------- | ------------------------------------------------------------------ | -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `level`                 | Literal[`"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"`, `"CRITICAL"`] | `"INFO"`                                                 | Mindest-Schweregrad, der von Handlern erfasst wird.                                       |
-| `log_to_file`           | `bool`                                                             | `False`                                                  | Aktiviert die Ausgabe von Logs in eine Datei über einen File-Handler.                                      |
+| Feld                    | Typ                                                                | Standard                                                 | Beschreibung                                                                                     |
+| ----------------------- | ------------------------------------------------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `level`                 | Literal[`"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"`, `"CRITICAL"`] | `"INFO"`                                                 | Mindest-Schweregrad, der von Handlern erfasst wird.                                              |
+| `log_to_file`           | `bool`                                                             | `False`                                                  | Aktiviert die Ausgabe von Logs in eine Datei über einen File-Handler.                            |
 | `log_file_path`         | `str \| None`                                                      | `None`                                                   | Absoluter oder relativer Pfad für die Dateiausgabe. Erforderlich, wenn `log_to_file` `True` ist. |
-| `format.message_format` | `str`                                                              | `"%(asctime)s - %(name)s - %(levelname)s - %(message)s"` | Format-String, der an `logging.Formatter` übergeben wird.                                       |
+| `format.message_format` | `str`                                                              | `"%(asctime)s - %(name)s - %(levelname)s - %(message)s"` | Format-String, der an `logging.Formatter` übergeben wird.                                        |
 | `format.date_format`    | `str`                                                              | `"%Y-%m-%d %H:%M:%S"`                                    | Zeitstempel-Format, das vom Formatter verwendet wird.                                            |
 
 ## Logging-Implementierung

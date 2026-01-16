@@ -12,13 +12,13 @@ Open Ticket AI lädt seine YAML-Konfiguration in das `OpenTicketAIConfig`-Modell
 
 ## Grundstruktur der Konfiguration
 
-| Feld            | Typ                                             | Beschreibung                                                                                                                                                                   |
-| ---------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `api_version`    | `str`                                            | Optionale Versionszeichenkette, standardmäßig `"1"`. 【F:src/open_ticket_ai/core/config/config_models.py†L18-L21】                                                                 |
+| Feld             | Typ                                              | Beschreibung                                                                                                                                                                        |
+| ---------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `api_version`    | `str`                                            | Optionale Versionszeichenkette, standardmäßig `"1"`. 【F:src/open_ticket_ai/core/config/config_models.py†L18-L21】                                                                  |
 | `plugins`        | `list[str]`                                      | Python-Module, die Plugin-Einstiegspunkte bereitstellen. Jedes Plugin trägt zusätzliche Injectables zur Registry bei. 【F:src/open_ticket_ai/core/config/config_models.py†L22-L25】 |
-| `infrastructure` | [`InfrastructureConfig`](#infrastructure-config) | Logging und andere hostbezogene Angelegenheiten. 【F:src/open_ticket_ai/core/config/config_models.py†L26-L29】                                                                          |
-| `services`       | `dict[str, InjectableConfigBase]`                | Map von injizierbaren Service-Definitionen, die mit dem in Pipelines referenzierten Bezeichner versehen sind. 【F:src/open_ticket_ai/core/config/config_models.py†L30-L33】                  |
-| `orchestrator`   | [`PipeConfig`](#orchestrator-and-pipeconfig)     | Top-Level-Pipe (typischerweise ein Orchestrator), die von der Laufzeit ausgeführt wird. 【F:src/open_ticket_ai/core/config/config_models.py†L34-L36】                                             |
+| `infrastructure` | [`InfrastructureConfig`](#infrastructure-config) | Logging und andere hostbezogene Angelegenheiten. 【F:src/open_ticket_ai/core/config/config_models.py†L26-L29】                                                                      |
+| `services`       | `dict[str, InjectableConfigBase]`                | Map von injizierbaren Service-Definitionen, die mit dem in Pipelines referenzierten Bezeichner versehen sind. 【F:src/open_ticket_ai/core/config/config_models.py†L30-L33】         |
+| `orchestrator`   | [`PipeConfig`](#orchestrator-and-pipeconfig)     | Top-Level-Pipe (typischerweise ein Orchestrator), die von der Laufzeit ausgeführt wird. 【F:src/open_ticket_ai/core/config/config_models.py†L34-L36】                               |
 
 ### Infrastruktur-Konfiguration
 
@@ -30,11 +30,11 @@ src/open_ticket_ai/core/config/config_models.py†L10-L14】
 Alle Services teilen sich dasselbe Basisschema, da sie Instanzen von `InjectableConfigBase` sind. Jeder Eintrag befindet sich unter dem `services`-Dictionary und verwendet den Dictionary-Schlüssel als seinen Bezeichner. 【F:
 src/open_ticket_ai/core/config/config_models.py†L30-L43】
 
-| Feld     | Typ             | Beschreibung                                                                                                                                                                                               |
-| --------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `use`     | `str`            | Registry-Bezeichner der zu instanziierenden Injectable-Implementierung. Standardwert ist `"otai_base:CompositePipe"`. 【F:src/open_ticket_ai/core/injectables/injectable_models.py†L9-L15】                       |
+| Feld      | Typ              | Beschreibung                                                                                                                                                                                                 |
+| --------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `use`     | `str`            | Registry-Bezeichner der zu instanziierenden Injectable-Implementierung. Standardwert ist `"otai_base:CompositePipe"`. 【F:src/open_ticket_ai/core/injectables/injectable_models.py†L9-L15】                  |
 | `injects` | `dict[str, str]` | Optionale Zuordnung von Konstruktor-Parameternamen zu anderen Service-Bezeichnern. So verbinden Sie ein Injectable mit einem anderen. 【F:src/open_ticket_ai/core/injectables/injectable_models.py†L16-L20】 |
-| `params`  | `dict[str, Any]` | Beliebige Konfiguration, die als Keyword-Argumente an das Parametermodell des Injectables übergeben wird. 【F:src/open_ticket_ai/core/injectables/injectable_models.py†L21-L25】                                           |
+| `params`  | `dict[str, Any]` | Beliebige Konfiguration, die als Keyword-Argumente an das Parametermodell des Injectables übergeben wird. 【F:src/open_ticket_ai/core/injectables/injectable_models.py†L21-L25】                             |
 
 Wenn die Laufzeit Services materialisiert, wird der Dictionary-Schlüssel in das Modell integriert, wodurch der Bezeichner für Dependency-Injection-Consumer verfügbar wird. 【F:src/open_ticket_ai/core/config/config_models.py†L39-L43】
 
@@ -132,20 +132,20 @@ open_ticket_ai:
 
 Die Tabelle fasst die Kern-Injectables zusammen, die mit den Standard-Plugins ausgeliefert werden. Folgen Sie den Links für Details zu Parametern und Ausgaben.
 
-| Bezeichner                                  | Plugin             | Art              | Zusammenfassung                                                                                                       |
-| ------------------------------------------- | ------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------- |
-| `base:JinjaRenderer`                        | `otai_base`        | Template-Renderer | Asynchroner Jinja-Renderer mit Helfern für den Zugriff auf Pipe-Ausgaben. [Details](#basejinjarenderer)                    |
-| `base:SimpleSequentialOrchestrator`         | `otai_base`        | Orchestrator-Pipe | Durchläuft untergeordnete Pipes nach einem Zeitplan und wiederholt bei Fehlern. [Details](#basesimplesequentialorchestrator)    |
-| `base:SimpleSequentialRunner`               | `otai_base`        | Runner-Pipe       | Führt eine `run`-Pipe aus, wenn der `on`-Trigger erfolgreich ist. [Details](#basesimplesequentialrunner)                  |
-| `base:CompositePipe`                        | `otai_base`        | Composite-Pipe    | Wertet verschachtelte Pipes sequentiell aus und vereinigt ihre Ergebnisse. [Details](#basecompositepipe)                    |
+| Bezeichner                                  | Plugin             | Art               | Zusammenfassung                                                                                                              |
+| ------------------------------------------- | ------------------ | ----------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `base:JinjaRenderer`                        | `otai_base`        | Template-Renderer | Asynchroner Jinja-Renderer mit Helfern für den Zugriff auf Pipe-Ausgaben. [Details](#basejinjarenderer)                      |
+| `base:SimpleSequentialOrchestrator`         | `otai_base`        | Orchestrator-Pipe | Durchläuft untergeordnete Pipes nach einem Zeitplan und wiederholt bei Fehlern. [Details](#basesimplesequentialorchestrator) |
+| `base:SimpleSequentialRunner`               | `otai_base`        | Runner-Pipe       | Führt eine `run`-Pipe aus, wenn der `on`-Trigger erfolgreich ist. [Details](#basesimplesequentialrunner)                     |
+| `base:CompositePipe`                        | `otai_base`        | Composite-Pipe    | Wertet verschachtelte Pipes sequentiell aus und vereinigt ihre Ergebnisse. [Details](#basecompositepipe)                     |
 | `base:ExpressionPipe`                       | `otai_base`        | Utility-Pipe      | Gibt Literalwerte zurück oder schlägt fehl, wenn ein `FailMarker` erzeugt wird. [Details](#baseexpressionpipe)               |
-| `base:ClassificationPipe`                   | `otai_base`        | AI-Pipe           | Delegiert an einen `ClassificationService` und gibt die Modellausgabe zurück. [Details](#baseclassificationpipe)       |
-| `base:IntervalTrigger`                      | `otai_base`        | Trigger-Pipe      | Gibt Erfolg aus, wenn das konfigurierte Intervall abgelaufen ist. [Details](#baseintervaltrigger)                           |
-| `base:FetchTicketsPipe`                     | `otai_base`        | Ticket-Pipe       | Lädt Tickets über einen injizierten `TicketSystemService`. [Details](#basefetchticketspipe)                         |
-| `base:UpdateTicketPipe`                     | `otai_base`        | Ticket-Pipe       | Wendet Aktualisierungen auf ein Ticket über den injizierten Ticket-Service an. [Details](#baseupdateticketpipe)             |
-| `base:AddNotePipe`                          | `otai_base`        | Ticket-Pipe       | Fügt einem Ticket über den Ticket-Service eine Notiz an. [Details](#baseaddnotepipe)                              |
-| `hf-local:HFClassificationService`          | `otai_hf_local`    | Service           | Hugging Face Textklassifizierungs-Client mit optionalem Auth-Token. [Details](#hf-localhfclassificationservice) |
-| `otobo-znuny:OTOBOZnunyTicketSystemService` | `otai_otobo_znuny` | Service           | Asynchroner Ticket-Service, der auf der OTOBO/Znuny-API basiert. [Details](#otobo-znunyotoboznuny-ticketsystemservice)     |
+| `base:ClassificationPipe`                   | `otai_base`        | AI-Pipe           | Delegiert an einen `ClassificationService` und gibt die Modellausgabe zurück. [Details](#baseclassificationpipe)             |
+| `base:IntervalTrigger`                      | `otai_base`        | Trigger-Pipe      | Gibt Erfolg aus, wenn das konfigurierte Intervall abgelaufen ist. [Details](#baseintervaltrigger)                            |
+| `base:FetchTicketsPipe`                     | `otai_base`        | Ticket-Pipe       | Lädt Tickets über einen injizierten `TicketSystemService`. [Details](#basefetchticketspipe)                                  |
+| `base:UpdateTicketPipe`                     | `otai_base`        | Ticket-Pipe       | Wendet Aktualisierungen auf ein Ticket über den injizierten Ticket-Service an. [Details](#baseupdateticketpipe)              |
+| `base:AddNotePipe`                          | `otai_base`        | Ticket-Pipe       | Fügt einem Ticket über den Ticket-Service eine Notiz an. [Details](#baseaddnotepipe)                                         |
+| `hf-local:HFClassificationService`          | `otai_hf_local`    | Service           | Hugging Face Textklassifizierungs-Client mit optionalem Auth-Token. [Details](#hf-localhfclassificationservice)              |
+| `otobo-znuny:OTOBOZnunyTicketSystemService` | `otai_otobo_znuny` | Service           | Asynchroner Ticket-Service, der auf der OTOBO/Znuny-API basiert. [Details](#otobo-znunyotoboznuny-ticketsystemservice)       |
 
 ### `base:JinjaRenderer`
 

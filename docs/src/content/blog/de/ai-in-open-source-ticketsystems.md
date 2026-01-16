@@ -28,12 +28,12 @@ In der Landschaft des Kunden- und IT-Supports ist das Ticket-System das zentrale
 
 ### Wichtige Open-Source-Plattformen
 
-| System        | Kernstärken                                                                                  |
-| ------------- | ----------------------------------------------------------------------------------------------- |
+| System        | Kernstärken                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------- |
 | **osTicket**  | Erfahrene Plattform; hochgradig anpassbare Ticket-Schemata; große Community; GPL-lizenziert.            |
-| **Zammad**    | Moderne UI/UX; Omnichannel-Konsolidierung (E-Mail, Social, Chat); starke Integrationsfähigkeiten. |
-| **FreeScout** | Superleichtgewichtig; unbegrenzte Agents/Tickets/Mailboxen; einfache Bereitstellung auf Shared Hosting.       |
-| **UVDesk**    | E-Commerce-Fokus; PHP-basiert; Multi-Channel-Support; Agenten-Leistungsüberwachung.               |
+| **Zammad**    | Moderne UI/UX; Omnichannel-Konsolidierung (E-Mail, Social, Chat); starke Integrationsfähigkeiten.       |
+| **FreeScout** | Superleichtgewichtig; unbegrenzte Agents/Tickets/Mailboxen; einfache Bereitstellung auf Shared Hosting. |
+| **UVDesk**    | E-Commerce-Fokus; PHP-basiert; Multi-Channel-Support; Agenten-Leistungsüberwachung.                     |
 
 > **Versteckte Kosten**: Implementierung, Wartung, Sicherheits-Patches, individuelle Entwicklung, nur Community-Support können sich summieren.
 > **Abwägung**: Freiheit vs. "Enterprise-Grade"-Support-Garantien und eingebaute KI/Automatisierung.
@@ -42,13 +42,13 @@ In der Landschaft des Kunden- und IT-Supports ist das Ticket-System das zentrale
 
 ## Feature-Vergleich
 
-| Feature                  | osTicket                                        | Zammad                                   | FreeScout                                      | UVDesk                                               |
-| ------------------------ | ----------------------------------------------- | ---------------------------------------- | ---------------------------------------------- | ---------------------------------------------------- |
-| **UI/UX**                | Funktional, aber veraltet; nicht mobil-responsiv     | Sauber, modern, intuitiv                 | Minimalistisch, E-Mail-ähnlich                         | Benutzerfreundlich, sauber                                 |
-| **Kernfunktionen**         | Benutzerdefinierte Felder/Warteschlangen, SLA, vorgefertigte Antworten, Wissensdatenbank | Omnichannel, Wissensdatenbank, Textmodule, Berichterstattung | Unbegrenzte Mailboxen, Auto-Antworten, Notizen, Tags | Multi-Channel, Wissensdatenbank, Workflow-Automatisierung, Formular-Builder |
-| **Native Automatisierung/KI** | Grundlegendes Routing/Auto-Antwort; kein Workflow-Builder   | Trigger & Regeln; keine fortgeschrittene KI         | E-Mail-Workflows; erweiterte kostenpflichtige Module         | Workflow-Automatisierung; keine Basis-KI                      |
-| **API-Integration**      | Grundlegende API; begrenzt/schlecht dokumentiert            | Robuste REST API                          | REST API; Zapier, Slack, WooCommerce Module   | REST API; E-Commerce- & CMS-Integrationen              |
-| **Idealer Anwendungsfall**       | Stabiles Kernsystem; bereit, UI zu übersehen      | Moderne UX + Multi-Channel; self-hosted   | Schnell, kostenlos, Shared-Inbox-Feeling                  | E-Commerce-Unternehmen (Shopify, Magento)             |
+| Feature                       | osTicket                                                                                 | Zammad                                                       | FreeScout                                            | UVDesk                                                                      |
+| ----------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------- |
+| **UI/UX**                     | Funktional, aber veraltet; nicht mobil-responsiv                                         | Sauber, modern, intuitiv                                     | Minimalistisch, E-Mail-ähnlich                       | Benutzerfreundlich, sauber                                                  |
+| **Kernfunktionen**            | Benutzerdefinierte Felder/Warteschlangen, SLA, vorgefertigte Antworten, Wissensdatenbank | Omnichannel, Wissensdatenbank, Textmodule, Berichterstattung | Unbegrenzte Mailboxen, Auto-Antworten, Notizen, Tags | Multi-Channel, Wissensdatenbank, Workflow-Automatisierung, Formular-Builder |
+| **Native Automatisierung/KI** | Grundlegendes Routing/Auto-Antwort; kein Workflow-Builder                                | Trigger & Regeln; keine fortgeschrittene KI                  | E-Mail-Workflows; erweiterte kostenpflichtige Module | Workflow-Automatisierung; keine Basis-KI                                    |
+| **API-Integration**           | Grundlegende API; begrenzt/schlecht dokumentiert                                         | Robuste REST API                                             | REST API; Zapier, Slack, WooCommerce Module          | REST API; E-Commerce- & CMS-Integrationen                                   |
+| **Idealer Anwendungsfall**    | Stabiles Kernsystem; bereit, UI zu übersehen                                             | Moderne UX + Multi-Channel; self-hosted                      | Schnell, kostenlos, Shared-Inbox-Feeling             | E-Commerce-Unternehmen (Shopify, Magento)                                   |
 
 ---
 
@@ -153,13 +153,13 @@ Open Ticket AI überbrückt die Intelligenzlücke, indem es einen KI-"Copiloten"
 
 ## Der strategische Vorteil: Open Source + KI vs. proprietäre Giganten
 
-| Metrik                        | Hybride Open Source (Zammad + OTO)                  | Enterprise SaaS (Zendesk, Freshdesk)           |
-| ----------------------------- | -------------------------------------------------- | ---------------------------------------------- |
-| **Kostenmodell**                | Einmalig/Abo + Hosting; keine Gebühren pro Agent    | Hohe Kosten pro Agent/Monat + obligatorische KI-Add-ons    |
-| **Geschätzte TCO (10 Agents)** | Niedrig, vorhersehbar, skaliert wirtschaftlich              | Hoch, variabel, steigt mit Agents & Volumen |
-| **Datenschutz & Kontrolle**    | Volle Souveränität, self-hosted                      | Anbieter-Cloud, externen Richtlinien unterworfen     |
-| **Anpassbarkeit**             | Quellcode-Ebene                                  | Begrenzt auf Anbieter-APIs                         |
-| **Kern-KI-Fähigkeit**        | Self-hosted Engine via API                         | Native, aber hinter teuren Tarifen eingeschlossen       |
+| Metrik                         | Hybride Open Source (Zammad + OTO)               | Enterprise SaaS (Zendesk, Freshdesk)                    |
+| ------------------------------ | ------------------------------------------------ | ------------------------------------------------------- |
+| **Kostenmodell**               | Einmalig/Abo + Hosting; keine Gebühren pro Agent | Hohe Kosten pro Agent/Monat + obligatorische KI-Add-ons |
+| **Geschätzte TCO (10 Agents)** | Niedrig, vorhersehbar, skaliert wirtschaftlich   | Hoch, variabel, steigt mit Agents & Volumen             |
+| **Datenschutz & Kontrolle**    | Volle Souveränität, self-hosted                  | Anbieter-Cloud, externen Richtlinien unterworfen        |
+| **Anpassbarkeit**              | Quellcode-Ebene                                  | Begrenzt auf Anbieter-APIs                              |
+| **Kern-KI-Fähigkeit**          | Self-hosted Engine via API                       | Native, aber hinter teuren Tarifen eingeschlossen       |
 
 ---
 
