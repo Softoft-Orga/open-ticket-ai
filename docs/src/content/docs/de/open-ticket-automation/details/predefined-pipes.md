@@ -92,14 +92,14 @@ pipe:
 
 ## Katalog-Ideen
 
-| Pipe Name                    | Gelöstes Problem                                        | Wichtige Schritte                                                   | Anmerkungen                       |
-| ---------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------- |
-| `triage-basic`               | Klassifizierung und Einreihung neuer Tickets            | Normalisierung → Klassifizierung → SLA-Erinnerung                   | Basis für alle Teams              |
-| `triage-advanced`            | Mehrsprachige Klassifizierung mit Übersetzungs-Fallback | Spracherkennung → Übersetzung → Klassifizierung → Routing           | Erfordert Übersetzungs-Guthaben   |
-| `auto-escalate`              | Eskalation dringender Tickets                           | Schweregrad-Erkennung → Benachrichtigung Senior Engineer → Incident-Logging | Integriert mit Bereitschaftsplänen |
-| `knowledge-base-suggest`     | Vorschlag von KB-Artikeln für Agents                    | Vektoreinbettung → Ähnlichkeitssuche → Vorschlagspost               | Verbraucht Search-API-Quota       |
-| `customer-sentiment-monitor` | Verfolgung von Sentiment-Drift über Gesprächslebensdauer | Konversationsaggregation → Sentiment-Bewertung → Trend-Alerting     | Funktioniert am besten mit stündlichem Cron |
-| `bug-report-digest`          | Aggregation von Bug-bezogenen Tickets                   | Label-Filter → Deduplizierung → wöchentlicher Digest-Email          | Verknüpft mit Product Board        |
+| Pipe Name                    | Gelöstes Problem                                         | Wichtige Schritte                                                           | Anmerkungen                                 |
+| ---------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------- |
+| `triage-basic`               | Klassifizierung und Einreihung neuer Tickets             | Normalisierung → Klassifizierung → SLA-Erinnerung                           | Basis für alle Teams                        |
+| `triage-advanced`            | Mehrsprachige Klassifizierung mit Übersetzungs-Fallback  | Spracherkennung → Übersetzung → Klassifizierung → Routing                   | Erfordert Übersetzungs-Guthaben             |
+| `auto-escalate`              | Eskalation dringender Tickets                            | Schweregrad-Erkennung → Benachrichtigung Senior Engineer → Incident-Logging | Integriert mit Bereitschaftsplänen          |
+| `knowledge-base-suggest`     | Vorschlag von KB-Artikeln für Agents                     | Vektoreinbettung → Ähnlichkeitssuche → Vorschlagspost                       | Verbraucht Search-API-Quota                 |
+| `customer-sentiment-monitor` | Verfolgung von Sentiment-Drift über Gesprächslebensdauer | Konversationsaggregation → Sentiment-Bewertung → Trend-Alerting             | Funktioniert am besten mit stündlichem Cron |
+| `bug-report-digest`          | Aggregation von Bug-bezogenen Tickets                    | Label-Filter → Deduplizierung → wöchentlicher Digest-Email                  | Verknüpft mit Product Board                 |
 
 ## Validierungs-Checkliste
 
