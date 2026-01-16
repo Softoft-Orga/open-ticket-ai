@@ -1,9 +1,9 @@
 backend:
   name: github
   repo: Softoft-Orga/open-ticket-ai
-  branch: dev
+  branch: main
 
-media_folder: "docs/public/uploads"
+media_folder: "docs/public/"
 public_folder: "/uploads"
 
 slug:
@@ -16,7 +16,7 @@ collections:
     label: "Docs"
     folder: "docs/src/content/docs/en"
     create: true
-    extension: "mdx"
+    extension: "md"
     format: "frontmatter"
     editor:
       preview: true
