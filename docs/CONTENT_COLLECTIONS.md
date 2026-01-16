@@ -86,6 +86,7 @@ const siteConfig = allSiteConfigs.find(entry =>
 
 - `slug`: string (Optional - omit to use file path as ID)
 - `meta`: `{ siteName, tagline, logoUrl }`
+- `companyImage`: image() (Optional) - Company office/location image (e.g., `'../../../assets/images/open_ticket_ai_mannheim.png'`)
 - `nav`: Array of `{ label, url }`
 - `footer`: `{ brandName, sections, social, legal, copyright }`
 - `ui`: UI strings for components (Required)
