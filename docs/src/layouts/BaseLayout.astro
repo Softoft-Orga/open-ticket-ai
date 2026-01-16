@@ -90,6 +90,9 @@ const contactFormTexts = siteConfig?.data.ui.contactForm || {
     <!-- Organization Schema - Site-wide -->
     <Schema item={getOrganizationSchema()} />
 
+    <!-- Additional head content from pages -->
+    <slot name="head" />
+
     <!-- Google Analytics - only loads after cookie consent -->
     {(() => {
       const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];

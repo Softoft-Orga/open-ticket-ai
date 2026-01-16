@@ -7,6 +7,8 @@ import Badge from '../../../components/vue/core/basic/Badge.vue';
 import { Icon } from 'astro-icon/components';
 import ModalTrigger from '../../../components/vue/core/basic/ModalTrigger.vue';
 import ContactForm from '../../../components/ContactForm.astro';
+import { Schema } from 'astro-seo-schema';
+import type { AboutPage, WithContext } from 'schema-dts';
 
 const title = 'About Us - Open Ticket AI';
 const description = 'Learn about Open Ticket AI, our team, and our mission';
@@ -20,9 +22,28 @@ const siteConfig = allSiteConfigs.find(entry =>
 const meta = siteConfig?.data.meta;
 const legalInfo = siteConfig?.data.legalInfo;
 const team = siteConfig?.data.team || [];
+
+// AboutPage schema
+const aboutPageSchema: WithContext<AboutPage> = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: title,
+  description: description,
+  url: 'https://openticketai.com/en/company/about/',
+  inLanguage: 'en',
+  mainEntity: {
+    '@type': 'Organization',
+    name: 'Open Ticket AI',
+    url: 'https://openticketai.com',
+  },
+};
 ---
 
 <BaseLayout title={title} description={description}>
+  <div slot="head">
+    <!-- AboutPage Schema -->
+    <Schema item={aboutPageSchema} />
+  </div>
   <div class="min-h-screen bg-background-dark pb-32">
     <!-- Hero Section -->
     <section class="relative overflow-hidden pb-24 pt-32">
