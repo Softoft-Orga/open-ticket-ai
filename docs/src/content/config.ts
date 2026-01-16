@@ -226,6 +226,25 @@ const site = defineCollection({
         lastUpdated: z.string(),
       })
       .optional(),
+    ui: z.object({
+      ctaLabel: z.string(),
+      cookieBanner: z.object({
+        title: z.string(),
+        description: z.string(),
+        privacyPolicyText: z.string(),
+        acceptText: z.string(),
+        declineText: z.string(),
+      }),
+      contactForm: z.object({
+        title: z.string(),
+        submitButtonText: z.string(),
+        messageLabel: z.string(),
+        emailLabel: z.string(),
+        subjectLabel: z.string(),
+        emailPlaceholder: z.string(),
+        messagePlaceholder: z.string(),
+      }),
+    }),
   }),
 });
 

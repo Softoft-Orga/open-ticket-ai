@@ -16,7 +16,7 @@ interface Props {
 const { title, description } = Astro.props;
 // noinspection JSUnusedGlobalSymbols
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
-console.debug(gaIds)
+console.debug(gaIds);
 // Load site configuration for current locale
 const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
 const allSiteConfigs = await getCollection('site');
@@ -47,32 +47,28 @@ const footerData = siteConfig?.data.footer
   : undefined;
 
 const logoUrl = siteConfig?.data.meta.logoUrl;
-const ctaLabel = 'Contact Sales';
+const ctaLabel = siteConfig?.data.ui.ctaLabel || 'Contact Sales';
 const ctaUrl = getRelativeLocaleUrl(Astro.currentLocale || 'en', 'products');
 
-// Cookie banner localization
-const cookieBannerTexts = {
-  en: {
-    title: 'We value your privacy',
-    description:
-      'We use cookies and analytics to improve your experience and understand how you use our website. For more information, please read our',
-    privacyPolicyText: 'Privacy Policy',
-    acceptText: 'Accept',
-    declineText: 'Decline',
-  },
-  de: {
-    title: 'Wir schätzen Ihre Privatsphäre',
-    description:
-      'Wir verwenden Cookies und Analytics, um Ihre Erfahrung zu verbessern und zu verstehen, wie Sie unsere Website nutzen. Weitere Informationen finden Sie in unserer',
-    privacyPolicyText: 'Datenschutzerklärung',
-    acceptText: 'Akzeptieren',
-    declineText: 'Ablehnen',
-  },
+const cookieTexts = siteConfig?.data.ui.cookieBanner || {
+  title: 'We value your privacy',
+  description:
+    'We use cookies and analytics to improve your experience and understand how you use our website. For more information, please read our',
+  privacyPolicyText: 'Privacy Policy',
+  acceptText: 'Accept',
+  declineText: 'Decline',
 };
-
-const cookieTexts =
-  cookieBannerTexts[currentLocale as keyof typeof cookieBannerTexts] || cookieBannerTexts.en;
 const privacyPolicyUrl = getRelativeLocaleUrl(Astro.currentLocale || 'en', 'company/data-privacy');
+
+const contactFormTexts = siteConfig?.data.ui.contactForm || {
+  title: 'Contact Sales',
+  submitButtonText: 'Submit',
+  messageLabel: 'Message',
+  emailLabel: 'Email',
+  subjectLabel: 'Subject',
+  emailPlaceholder: 'your@email.com',
+  messagePlaceholder: 'How can we help you?',
+};
 ---
 
 <!doctype html>
@@ -143,7 +139,7 @@ const privacyPolicyUrl = getRelativeLocaleUrl(Astro.currentLocale || 'en', 'comp
   <body class="font-sans">
     <NavBar client:load links={navLinks} logoUrl={logoUrl} ctaUrl={ctaUrl}>
       <ModalTrigger
-        title="Contact Sales"
+        title={contactFormTexts.title}
         tone="neutral"
         size="lg"
         button-text={ctaLabel}
@@ -154,13 +150,13 @@ const privacyPolicyUrl = getRelativeLocaleUrl(Astro.currentLocale || 'en', 'comp
         client:load
       >
         <ContactForm
-          title="Contact Sales"
-          submitButtonText="Submit"
-          messageLabel="Message"
-          emailLabel="Email"
-          subjectLabel="Subject"
-          emailPlaceholder="your@email.com"
-          messagePlaceholder="How can we help you?"
+          title={contactFormTexts.title}
+          submitButtonText={contactFormTexts.submitButtonText}
+          messageLabel={contactFormTexts.messageLabel}
+          emailLabel={contactFormTexts.emailLabel}
+          subjectLabel={contactFormTexts.subjectLabel}
+          emailPlaceholder={contactFormTexts.emailPlaceholder}
+          messagePlaceholder={contactFormTexts.messagePlaceholder}
           successActionUrl="/success/contact-sales"
           name="contact-sales"
         />

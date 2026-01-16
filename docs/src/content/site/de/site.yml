@@ -189,3 +189,20 @@ dataPrivacy:
       Telefon: +49 621 12345678
       Adresse: Open Ticket AI UG, Viktoriastraße 14, 68159 Mannheim, Deutschland
   lastUpdated: Januar 2026
+
+ui:
+  ctaLabel: Vertrieb kontaktieren
+  cookieBanner:
+    title: Wir schätzen Ihre Privatsphäre
+    description: Wir verwenden Cookies und Analytics, um Ihre Erfahrung zu verbessern und zu verstehen, wie Sie unsere Website nutzen. Weitere Informationen finden Sie in unserer
+    privacyPolicyText: Datenschutzerklärung
+    acceptText: Akzeptieren
+    declineText: Ablehnen
+  contactForm:
+    title: Vertrieb kontaktieren
+    submitButtonText: Absenden
+    messageLabel: Nachricht
+    emailLabel: E-Mail
+    subjectLabel: Betreff
+    emailPlaceholder: ihre@email.com
+    messagePlaceholder: Wie können wir Ihnen helfen?
