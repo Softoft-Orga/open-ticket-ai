@@ -104,14 +104,14 @@ team:
   - name: Constanze Krishnaratne
     role: CEO
     description: Leitet die Strategie und Produktausrichtung von Open Ticket AI mit Fokus auf Transparenz, Vertrauen und operative Wirkung.
-    pictureUrl: team_constanze_krishnaratne
+    pictureUrl: ../../../assets/images/team/constanze_krishnaratne.png
     email: constanze.krishnaratne@openticketai.com
     phoneNumber: +49 621 12345678
     linkedInUrl: https://www.linkedin.com/in/constanze-krishnaratne
   - name: Tobias Bueck
     role: CTO
     description: Entwickelt KI-Modelle für Ticket-Automatisierung und gewährleistet zuverlässige On-Premise-Deployments mit messbarer Wirkung.
-    pictureUrl: team_tobias_bueck
+    pictureUrl: ../../../assets/images/team/tobias_bueck.jpg
     email: tobias.bueck@openticketai.com
     phoneNumber: +49 621 12345679
     linkedInUrl: https://www.linkedin.com/in/tobias-bueck
