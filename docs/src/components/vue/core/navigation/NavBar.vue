@@ -93,19 +93,14 @@
                 >
                   {{ link.label }}
                 </a>
-                <Button
-                  v-if="ctaLabel"
-                  :href="ctaUrl"
-                  block
-                  size="lg"
-                  tone="primary"
-                  variant="subtle"
-                  class="mt-1"
-                >
+              </nav>
+
+              <div v-if="ctaLabel" class="border-t border-primary/20 p-4">
+                <Button :href="ctaUrl" block size="lg" tone="primary" variant="subtle">
                   {{ ctaLabel }}
                 </Button>
-                <slot v-else></slot>
-              </nav>
+              </div>
+              <slot v-else></slot>
             </div>
           </div>
         </TransitionChild>
