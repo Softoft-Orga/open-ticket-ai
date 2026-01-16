@@ -68,24 +68,24 @@ popularResources:
       basePath: docs/open-ticket-automation
       items:
         - docId: /guides/quick_start
-          icon: RocketLaunchIcon
+          icon: heroicons:rocket-launch
         - docId: /developers/config_rendering
-          icon: CommandLineIcon
+          icon: heroicons:command-line
         - docId: /developers/ticket_system_integration
-          icon: PuzzlePieceIcon
+          icon: heroicons:puzzle-piece
         - docId: /developers/plugin_development
-          icon: ArrowsRightLeftIcon
+          icon: heroicons:arrows-right-left
     - title: Tagging-Engine
       basePath: docs/ticket-tagging
       items:
         - docId: /taxonomy-design
-          icon: Squares2x2Icon
+          icon: heroicons:squares-2x2
         - docId: /hardware-sizing
-          icon: CpuChipIcon
+          icon: heroicons:cpu-chip
         - docId: /using-model
-          icon: ArrowPathIcon
+          icon: heroicons:arrow-path
         - docId: /tag-mapping
-          icon: ChartBarIcon
+          icon: heroicons:chart-bar
 
 legalInfo:
   companyName: Open Ticket AI UG
@@ -96,7 +96,7 @@ legalInfo:
     zip: '68159'
     country: Germany
   legalForm: UG (haftungsbeschränkt)
-  vatId: ""
+  vatId: ''
   registerInfo: Amtsgericht Mannheim, HRB
   email: info@openticketai.com
   phone: +49 621 12345678

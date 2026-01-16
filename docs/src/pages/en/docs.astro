@@ -17,17 +17,6 @@ const siteConfig = allSiteConfigs.find(entry =>
 );
 const popularResources = siteConfig?.data.popularResources;
 
-const iconMap: Record<string, string> = {
-  RocketLaunchIcon: 'heroicons:rocket-launch',
-  CommandLineIcon: 'heroicons:command-line',
-  PuzzlePieceIcon: 'heroicons:puzzle-piece',
-  ArrowsRightLeftIcon: 'heroicons:arrows-right-left',
-  Squares2x2Icon: 'heroicons:squares-2x2',
-  CpuChipIcon: 'heroicons:cpu-chip',
-  ArrowPathIcon: 'heroicons:arrow-path',
-  ChartBarIcon: 'heroicons:chart-bar',
-};
-
 async function getDocTitle(docId: string): Promise<string> {
   try {
     const parts = docId.split('/');
@@ -68,7 +57,7 @@ const enrichedGroups = popularResources
             label: item.label,
             url: posix.join(group.basePath, item.docId),
             title: item.label || (await getDocTitle(item.docId)),
-            iconName: iconMap[item.icon] || iconMap['RocketLaunchIcon'],
+            iconName: item.icon,
           }))
         ),
       }))
