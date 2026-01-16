@@ -2,6 +2,7 @@ backend:
   name: github
   repo: Softoft-Orga/open-ticket-ai
   branch: main
+publish_mode: editorial_workflow
 
 media_folder: "docs/public/"
 public_folder: "/uploads"
@@ -17,6 +18,27 @@ collections:
     folder: "docs/src/content/docs/en"
     create: true
     extension: "md"
+    format: "frontmatter"
+    editor:
+      preview: true
+    fields:
+      - { name: "title", label: "Title", widget: "string" }
+      - { name: "description", label: "Description", widget: "string", required: false }
+      - name: "nav"
+        label: "Nav"
+        widget: "object"
+        required: false
+        fields:
+          - { name: "group", label: "Group", widget: "string", required: false }
+          - { name: "order", label: "Order", widget: "number", required: false, value_type: "int", min: 0 }
+          - { name: "hidden", label: "Hidden", widget: "boolean", required: false, default: false }
+      - { name: "draft", label: "Draft", widget: "boolean", required: false, default: false }
+      - { name: "body", label: "Body", widget: "markdown" }
+  - name: "docs_mdx"
+    label: "Docs MDX"
+    folder: "docs/src/content/docs/en"
+    create: true
+    extension: "mdx"
     format: "frontmatter"
     editor:
       preview: true
