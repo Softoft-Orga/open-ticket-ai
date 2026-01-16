@@ -13,11 +13,12 @@ const description = 'Professional services for Open Ticket AI integration and su
 // Get all services from the content collection for current locale
 const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
 const allServicesEntries = await getCollection('services');
+
 const servicesEntries = allServicesEntries.filter(entry =>
   entry.id.toLowerCase().startsWith(`${currentLocale}/`)
 );
-// Each entry's data is an array of services, so flatten them
-const allServices = servicesEntries.flatMap(entry => entry.data);
+
+const allServices = servicesEntries.flatMap(entry => entry.data.items);
 
 // Filter services by group
 const syntheticDataServices = allServices

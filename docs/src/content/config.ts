@@ -1,89 +1,94 @@
-import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
+import {defineCollection, z} from 'astro:content';
+import {glob} from 'astro/loaders';
 
 // Navigation schema shared across collections
 const navSchema = z
-  .object({
-    group: z.string().optional(),
-    order: z.number().optional(),
-    hidden: z.boolean().optional(),
-  })
-  .optional();
+    .object({
+        group: z.string().optional(),
+        order: z.number().optional(),
+        hidden: z.boolean().optional(),
+    })
+    .optional();
 
 // 1️⃣ docs collection - content collection (MD/MDX)
 const docs = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    lang: z.string().default('en'),
-    nav: navSchema,
-    draft: z.boolean().optional(),
-  }),
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        lang: z.string().default('en'),
+        nav: navSchema,
+        draft: z.boolean().optional(),
+    }),
 });
 
 // 2️⃣ blog collection - content collection (MD/MDX)
 // noinspection TypeScriptUnresolvedReference
 const blog = defineCollection({
-  type: 'content',
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      description: z.string().optional(),
-      lang: z.string().default('en'),
-      nav: navSchema,
-      draft: z.boolean().optional(),
-      date: z.date(),
-      tags: z.array(z.string()).optional(),
-      category: z.string().optional(),
-      image: image().optional(),
-    }),
+    type: 'content',
+    schema: ({image}) =>
+        z.object({
+            title: z.string(),
+            description: z.string().optional(),
+            lang: z.string().default('en'),
+            nav: navSchema,
+            draft: z.boolean().optional(),
+            date: z.date(),
+            tags: z.array(z.string()).optional(),
+            category: z.string().optional(),
+            image: image().optional(),
+        }),
 });
 
 // 3️⃣ products collection - data collection (YAML)
 const products = defineCollection({
-  loader: glob({
-    base: './src/content/products',
-    pattern: '*/products.{yml,yaml}',
-  }),
-  schema: z.array(
-    z.object({
-      slug: z.string(),
-      title: z.string(),
-      tagline: z.string().optional(),
-      description: z.string().optional(),
-      features: z.array(z.string()).optional(),
-      tier: z.enum(['lite', 'pro', 'enterprise']).optional(),
-      lang: z.string().default('en'),
-      nav: navSchema,
-      status: z.string().optional(),
-      badges: z.array(z.string()).optional(),
-      image: z.string().optional(),
-      icon: z.string().optional(),
+        loader: glob({
+            base: './src/content/products',
+            pattern: '*/products.{yml,yaml}',
+        }),
+        schema: z.object({
+            items: z.array(
+                z.object({
+                    slug: z.string(),
+                    title: z.string(),
+                    tagline: z.string().optional(),
+                    description: z.string().optional(),
+                    features: z.array(z.string()).optional(),
+                    tier: z.enum(['lite', 'pro', 'enterprise']).optional(),
+                    lang: z.string().default('en'),
+                    nav: navSchema,
+                    status: z.string().optional(),
+                    badges: z.array(z.string()).optional(),
+                    image: z.string().optional(),
+                    icon: z.string().optional(),
+                })
+            ),
+        }),
     })
-  ),
-});
+;
 
 // 4️⃣ services collection - data collection (YAML)
 const services = defineCollection({
-  loader: glob({
-    base: './src/content/services',
-    pattern: '*/services.{yml,yaml}',
-  }),
-  schema: z.array(
-    z.object({
-      slug: z.string(),
-      title: z.string(),
-      oneLiner: z.string().optional(),
-      description: z.string().optional(),
-      outcomes: z.array(z.string()).optional(),
-      startingPrice: z.number().optional(),
-      lang: z.string().default('en'),
-      serviceGroup: z.string(),
-      serviceOrder: z.number().optional(),
-      hidden: z.boolean().optional(),
-    })
-  ),
+    loader: glob({
+        base: './src/content/services',
+        pattern: '*/services.{yml,yaml}',
+    }),
+    schema: z.object({
+        items: z.array(
+            z.object({
+                slug: z.string(),
+                title: z.string(),
+                oneLiner: z.string().optional(),
+                description: z.string().optional(),
+                outcomes: z.array(z.string()).optional(),
+                startingPrice: z.number().optional(),
+                lang: z.string().default('en'),
+                serviceGroup: z.string(),
+                serviceOrder: z.number().optional(),
+                hidden: z.boolean().optional(),
+            })
+        ),
+    }),
 });
 
 // 5️⃣ site collection - data collection (YAML)
