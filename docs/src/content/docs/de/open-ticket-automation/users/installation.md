@@ -157,3 +157,4 @@ Verwenden Sie diese, wenn Sie bereit sind, Dateien unter `/opt/open_ticket_ai` (
 ```bash
 sudo mkdir -p /opt/open_ticket_ai
 sudo chown "$USER":"
+```

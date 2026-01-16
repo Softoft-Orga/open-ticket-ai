@@ -11,9 +11,20 @@ import ContactForm from '../components/ContactForm.astro';
 interface Props {
   title: string;
   description?: string;
+  keywords?: string;
+  ogImage?: string;
+  ogType?: string;
+  canonical?: string;
+  schema?: object[];
 }
 
-const { title, description } = Astro.props;
+const { title, description, keywords, ogImage, ogType, canonical, schema } = Astro.props;
+
+// Get the full URL for canonical and OG tags
+const siteUrl = 'https://openticketai.com';
+const canonicalUrl = canonical || Astro.url.pathname;
+const fullCanonicalUrl = new URL(canonicalUrl, siteUrl).href;
+const defaultOgImage = new URL('/assets/og-image.png', siteUrl).href;
 // noinspection JSUnusedGlobalSymbols
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
 console.debug(gaIds);
@@ -76,16 +87,45 @@ const contactFormTexts = siteConfig?.data.ui.contactForm || {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={fullCanonicalUrl} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={ogType || 'website'} />
+    <meta property="og:url" content={fullCanonicalUrl} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:image" content={ogImage || defaultOgImage} />
+    <meta property="og:site_name" content="Open Ticket AI" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={fullCanonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImage || defaultOgImage} />
+    
+    <!-- Structured Data / Schema.org -->
+    {schema && schema.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
+    
+    <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="generator" content={Astro.generator} />
 
     <!-- Google Analytics - only loads after cookie consent -->
+    <!-- prettier-ignore -->
     {(() => {
       const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
       return (

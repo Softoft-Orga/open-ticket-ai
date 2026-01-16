@@ -28,3 +28,6 @@ broken-links.log
 # Playwright
 playwright-report/
 test-results/
+
+# Temporary ignore BaseLayout due to inline script formatting issues
+src/layouts/BaseLayout.astro
