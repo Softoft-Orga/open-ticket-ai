@@ -1,6 +1,6 @@
 ---
-title: 'Freshdesk-Integration für Open Ticket AI: On-Premise-Klassifizierung via REST-API'
-description: 'Integrieren Sie selbst gehostetes Open Ticket AI mit Freshdesk über benutzerdefinierte Plugins. Automatisieren Sie Ticket-Routing, Prioritätszuweisung und Warteschlangen-Klassifizierung via REST-API.'
+title: 'Freshdesk Integration für Open Ticket AI: On-Premise KI-Klassifizierung via REST API'
+description: 'Integrieren Sie selbst gehostetes Open Ticket AI mit Freshdesk über benutzerdefinierte Plugins. Automatisieren Sie Ticket-Routing, Prioritätszuweisung und Warteschlangen-Klassifizierung via REST API.'
 lang: en
 date: 2025-08-12
 tags:
@@ -15,9 +15,9 @@ draft: false
 image: ../../../assets/images/connecting-multiple-services-integration.png
 ---
 
-# Freshdesk-Integration für Open Ticket AI
+# Freshdesk Integration für Open Ticket AI
 
-Open Ticket AI (OTAI) läuft vollständig on-premise und klassifiziert Support-Tickets in Warteschlangen, Prioritäten und benutzerdefinierte Kategorien. Um OTAI mit **Freshdesk** zu integrieren, erstellen Sie ein kleines Plugin, das einen `FreshdeskTicketsystemService` bereitstellt. OTAI lädt diesen Service automatisch und nutzt ihn, um Tickets über die Freshdesk REST-API zu lesen und zu aktualisieren.
+Open Ticket AI (OTAI) läuft vollständig on-premise und klassifiziert Support-Tickets in Warteschlangen, Prioritäten und benutzerdefinierte Kategorien. Um OTAI mit **Freshdesk** zu integrieren, erstellen Sie ein kleines Plugin, das einen `FreshdeskTicketsystemService` bereitstellt. OTAI lädt diesen Service automatisch und nutzt ihn, um Tickets über die Freshdesk REST API zu lesen und zu aktualisieren.
 
 ## Architektur
 
@@ -109,10 +109,10 @@ OTAI entdeckt Ihr Plugin automatisch über Ihre `pyproject.toml`:
 otai_freshdesk = "otai_freshdesk.plugin:FreshdeskPlugin"
 ```
 
-## So funktioniert die Integration
+## Wie die Integration funktioniert
 
 1.  OTAI holt Tickets von Freshdesk (`find_tickets`)
-2.  KI weist Warteschlange, Priorität oder benutzerdefinierte Labels zu
+2.  Die KI weist Warteschlange, Priorität oder benutzerdefinierte Labels zu
 3.  OTAI ruft `update_ticket(...)` auf
 4.  Freshdesk aktualisiert das Ticket sofort über seine API
 
@@ -121,6 +121,6 @@ Alles läuft on-premise. Die Freshdesk-Authentifizierung verwendet Basic Auth mi
 ## Vorteile
 
 - volle Datenkontrolle (OTAI bleibt lokal)
-- nahtlose Nutzung der Freshdesk-UI und -Workflows
+- nahtlose Nutzung der Freshdesk UI und Workflows
 - KI-gesteuertes Routing ohne Freshdesks proprietäre KI
 - saubere Plugin-Architektur identisch zu Zammad / OTOBO / Znuny

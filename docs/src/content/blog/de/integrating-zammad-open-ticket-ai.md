@@ -1,6 +1,6 @@
 ---
-title: 'Zammad Integration für Open Ticket AI: KI-gestützte Ticket-Automatisierung via REST API'
-description: 'Integrieren Sie Open Ticket AI mit Zammad über das offizielle Plugin für automatisierte Klassifizierung, Routing und Priorisierung durch REST API Integration.'
+title: 'Zammad Integration für Open Ticket AI: KI-gestützte Ticket-Automatisierung über REST API'
+description: 'Integrieren Sie Open Ticket AI mit Zammad über das offizielle Plugin für automatisierte Klassifizierung, Routing und Priorisierung durch REST API-Integration.'
 lang: en
 date: 2025-07-28
 tags:
@@ -17,12 +17,12 @@ image: ../../../assets/images/ai-solves-many-tickets-data-connected-systems.png
 
 # Zammad Integration für Open Ticket AI
 
-Open Ticket AI (OTAI) enthält ein Plugin für **Zammad**, das es OTAI ermöglicht, Tickets über die Zammad REST API zu lesen und zu aktualisieren. Dies ermöglicht KI-gestütztes Routing, Priorisierung und Kategorisierung direkt innerhalb von Zammad.
+Open Ticket AI (OTAI) enthält ein Plugin für **Zammad**, das es OTAI ermöglicht, Tickets über die Zammad REST API zu lesen und zu aktualisieren. Dies ermöglicht KI-gesteuertes Routing, Priorisierung und Kategorisierung direkt in Zammad.
 Die aktuelle Implementierung funktioniert, ist jedoch **noch nicht vollständig getestet** und kann in realen Installationen Anpassungen erfordern.
 
 ## Architektur
 
-Die Integration folgt dem Standard-OTAI-Plugin-Muster:
+Die Integration folgt dem standardmäßigen OTAI Plugin-Muster:
 
 - ein separates Plugin-Paket: `otai_zammad`
 - ein `ZammadTicketsystemService` (Injectable)
@@ -30,9 +30,9 @@ Die Integration folgt dem Standard-OTAI-Plugin-Muster:
 - Konfiguration in `config.yml`
 - OTAI schreibt Vorhersagen über REST-Aufrufe des Services zurück in Zammad
 
-Diese Struktur ist identisch zu allen OTAI-Ticketsystem-Plugins (z.B. OTOBO/Znuny, Freshdesk, OTRS).
+Diese Struktur ist identisch mit allen OTAI Ticket-System-Plugins (z.B. OTOBO/Znuny, Freshdesk, OTRS).
 
-## Zammad Plugin Struktur
+## Zammad Plugin-Struktur
 
 ```
 
@@ -99,13 +99,13 @@ otai_zammad = "otai_zammad.plugin:ZammadPlugin"
 
 ## Wie OTAI den Zammad Service nutzt
 
-1. OTAI ruft neue oder aktualisierte Zammad-Tickets ab
+1. OTAI holt neue oder aktualisierte Zammad-Tickets
 2. KI-Modelle klassifizieren Queue, Priorität oder benutzerdefinierte Labels
 3. OTAI ruft `update_ticket(...)` auf der Zammad API auf
 4. Zammad aktualisiert das Ticket
-5. Agents setzen ihren normalen Zammad-Workflow fort, jetzt unterstützt durch OTAI
+5. Agents setzen ihren normalen Zammad-Workflow fort, nun unterstützt durch OTAI
 
-Der Prozess ist identisch zu OTOBO/Znuny, Freshdesk, OTRS oder jedem anderen OTAI-Ticketsystem-Plugin.
+Der Prozess ist identisch mit OTOBO/Znuny, Freshdesk, OTRS oder jedem anderen OTAI Ticket-System-Plugin.
 
 ## Aktueller Status
 
@@ -114,13 +114,13 @@ Die Zammad-Integration ist **implementiert**, jedoch:
 - ist sie **nicht vollständig getestet**
 - die API-Abdeckung kann unvollständig sein
 - reale Zammad-Setups können zusätzliche Anpassungen erfordern
-- Leistungsmerkmale (Paginierung, Such-Endpoints, große Ergebnismengen) müssen noch bewertet werden
+- Leistungsmerkmale (Paginierung, Such-Endpunkte, große Ergebnismengen) müssen noch gebenchmarkt werden
 
 Sie können das Plugin bereits für Prototyping und interne Tests nutzen, aber der Produktiveinsatz sollte bis zur weiteren Validierung warten.
 
 ## Vorteile
 
 - KI-Klassifizierung vollständig On-Premise
-- keine Zammad Cloud Extensions oder externe KI erforderlich
+- keine Zammad Cloud-Erweiterungen oder externe KI erforderlich
 - integriert sich sauber in bestehende OTAI-Workflows
-- gleiche Plugin-Architektur wie alle anderen OTAI-Services
+- gleiche Plugin-Architektur wie alle anderen OTAI Services

@@ -1,5 +1,5 @@
 ---
-title: Using Model
+title: Modell verwenden
 description: 'Konfigurieren, bereitstellen und verwenden Sie Klassifizierungsmodelle für die automatische Ticket-Kennzeichnung und -Kategorisierung.'
 lang: en
 nav:
@@ -7,17 +7,17 @@ nav:
   order: 3
 ---
 
-# Using Model
+# Modell verwenden
 
 Erfahren Sie, wie Sie Klassifizierungsmodelle für die automatische Ticket-Kennzeichnung konfigurieren, bereitstellen und verwenden.
 
-## Übersicht
+## Überblick
 
 Open Ticket AI unterstützt mehrere Modellquellen und -typen für die Ticket-Klassifizierung:
 
-- **HuggingFace Models**: Vorab trainierte und feinabgestimmte Transformer-Modelle
-- **Custom Models**: Ihre eigenen trainierten Modelle
-- **Ensemble Models**: Kombinieren Sie mehrere Modelle für eine höhere Genauigkeit
+- **HuggingFace-Modelle**: Vorab trainierte und feinabgestimmte Transformer
+- **Eigene Modelle**: Ihre eigenen trainierten Modelle
+- **Ensemble-Modelle**: Kombinieren Sie mehrere Modelle für eine höhere Genauigkeit
 
 ## Modellauswahl
 
@@ -45,7 +45,7 @@ orchestrator:
 
 **Vorteile**:
 
-- Schnelle Bereitstellung
+- Schnell bereitzustellen
 - Kein Training erforderlich
 - Funktioniert sofort
 
@@ -79,17 +79,17 @@ orchestrator:
 **Nachteile**:
 
 - Erfordert Trainingsdaten
-- Feinabstimmung benötigt Zeit
-- Möglicherweise periodische Nachschulung erforderlich
+- Feinabstimmung dauert Zeit
+- Möglicherweise periodische Neuanpassung erforderlich
 
 ### Modellvergleich
 
-| Modelltyp    | Genauigkeit | Einrichtungszeit | Kosten | Am besten geeignet für       |
-| ------------ | ----------- | ---------------- | ------ | ---------------------------- |
-| Pre-trained  | 60-75%      | Minuten          | Niedrig | Schneller Start, Tests       |
-| Fine-tuned   | 80-95%      | Tage-Wochen      | Mittel | Produktiveinsatz             |
-| Custom       | 85-98%      | Wochen-Monate    | Hoch   | Spezialisierte Anforderungen |
-| Ensemble     | 90-99%      | Wochen           | Hoch   | Maximale Genauigkeit         |
+| Modelltyp    | Genauigkeit | Einrichtungszeit | Kosten   | Am besten geeignet für      |
+| ------------ | ----------- | ---------------- | -------- | --------------------------- |
+| Vorab trainiert | 60-75%      | Minuten          | Niedrig  | Schneller Start, Tests      |
+| Feinabgestimmt  | 80-95%      | Tage-Wochen      | Mittel   | Produktive Nutzung          |
+| Eigenes Modell | 85-98%      | Wochen-Monate    | Hoch     | Spezialisierte Anforderungen |
+| Ensemble     | 90-99%      | Wochen           | Hoch     | Maximale Genauigkeit        |
 
 ## Konfiguration
 
@@ -118,7 +118,7 @@ open_ticket_ai:
               id: 'interval'
               use: 'base:IntervalTrigger'
               params:
-                interval: 'PT60S' # Alle 60 Sekunden ausführen
+                interval: 'PT60S' # Run every 60 seconds
             run:
               id: 'pipeline'
               use: 'base:CompositePipe'
@@ -154,8 +154,8 @@ steps:
       text: '{{ ticket.subject }} {{ ticket.body }}'
       model_name: 'your-org/ticket-category-classifier'
       options:
-        top_k: 3 # Top-3-Vorhersagen zurückgeben
-        threshold: 0.7 # Mindest-Konfidenzschwelle
+        top_k: 3 # Return top 3 predictions
+        threshold: 0.7 # Minimum confidence threshold
 
   - id: classify_priority
     use: 'base:ClassificationPipe'
@@ -175,11 +175,11 @@ steps:
         }}
 ```
 
-## Modellladen
+## Modellladung
 
-### Lokales Modellladen
+### Lokale Modellladung
 
-Modelle werden automatisch heruntergeladen und gecached:
+Modelle werden automatisch heruntergeladen und zwischengespeichert:
 
 ```yaml
 services:
@@ -187,16 +187,16 @@ services:
     use: 'hf-local:HFClassificationService'
     params:
       api_token: "{{ get_env('OTAI_HF_TOKEN') }}"
-      cache_dir: '/app/models' # Optional: Cache-Verzeichnis angeben
+      cache_dir: '/app/models' # Optional: specify cache location
 ```
 
 **Erster Lauf**:
 
 - Modell wird von HuggingFace heruntergeladen
-- Lokal gecached (5-10 Sekunden für kleine Modelle, 30-60s für große)
+- Lokal zwischengespeichert (5-10 Sekunden für kleine Modelle, 30-60s für große)
 - Bereit für Inferenz
 
-**Nachfolgende Läufe**:
+**Folgeläufe**:
 
 - Modell wird aus dem Cache geladen
 - Schneller Start (1-5 Sekunden)
@@ -204,13 +204,13 @@ services:
 ### Modell-Cache-Verwaltung
 
 ```bash
-# Cache-Größe prüfen
+# Check cache size
 du -sh /app/models
 
-# Cache leeren (erfordert Neustart)
+# Clear cache (requires restart)
 rm -rf /app/models/*
 
-# Modell vorab herunterladen
+# Pre-download model
 python -c "from transformers import AutoModel; AutoModel.from_pretrained('model-name')"
 ```
 
@@ -245,7 +245,7 @@ params:
 
 ### Textbereinigung
 
-Bereinigen Sie Eingabetexte für bessere Ergebnisse:
+Bereinigen Sie den Eingabetext für bessere Ergebnisse:
 
 ```yaml
 - id: clean_text
@@ -268,7 +268,7 @@ Bereinigen Sie Eingabetexte für bessere Ergebnisse:
 
 ## Konfidenzschwellenwerte
 
-### Schwellenwerte festlegen
+### Schwellenwerte setzen
 
 Verwenden Sie Konfidenzscores, um die Qualität sicherzustellen:
 
@@ -322,7 +322,7 @@ Leiten Sie basierend auf der Konfidenz unterschiedlich weiter:
 | ----------- | -------------------------- | ---------------------------------- |
 | >0.95       | Automatische Zuweisung     | Klassifizierungen mit hoher Sicherheit |
 | 0.80-0.95   | Automatische Zuweisung mit Kennzeichnung | Standard-Klassifizierungen         |
-| 0.60-0.80   | Agenten vorschlagen        | Geringe Sicherheit - Überprüfung erforderlich |
+| 0.60-0.80   | Dem Agenten vorschlagen    | Geringe Sicherheit - Überprüfung erforderlich |
 | <0.60       | Manuelle Klassifizierung   | Zu unsicher                       |
 
 ## Multi-Label-Klassifizierung
@@ -354,7 +354,7 @@ Klassifizieren Sie Tickets in mehrere Kategorien:
 
 ## Modellleistung
 
-### Vorhersagen überwachen
+### Überwachung von Vorhersagen
 
 Verfolgen Sie die Modellleistung:
 
@@ -378,7 +378,7 @@ Verfolgen Sie die Modellleistung:
 
 Überwachen Sie diese Metriken:
 
-- **Konfidenzverteilung**: Sind die meisten Vorhersagen hochkonfident?
+- **Konfidenzverteilung**: Sind die meisten Vorhersagen hoch konfident?
 - **Kategorieverteilung**: Wird eine Kategorie über-/unterrepräsentiert?
 - **Manuelle Überschreibungen**: Wie oft ändern Agenten die Klassifizierung?
 - **Verarbeitungszeit**: Wie lange dauert die Klassifizierung?
@@ -386,10 +386,10 @@ Verfolgen Sie die Modellleistung:
 ### Leistungsanalyse
 
 ```bash
-# Klassifizierungsprotokolle anzeigen
+# View classification logs
 docker compose logs open-ticket-ai | grep "Classified ticket"
 
-# Nach Konfidenzniveau zählen
+# Count by confidence level
 docker compose logs open-ticket-ai | grep -oP 'Confidence: \K[0-9.]+' | awk '{
   if ($1 >= 0.9) high++
   else if ($1 >= 0.7) medium++
@@ -416,7 +416,7 @@ END {
 4. Überprüfen Sie die Internetverbindung
 
 ```bash
-# Modellzugriff testen
+# Test model access
 python -c "from transformers import AutoModel; AutoModel.from_pretrained('model-name')"
 ```
 
@@ -426,9 +426,9 @@ python -c "from transformers import AutoModel; AutoModel.from_pretrained('model-
 
 **Lösungen**:
 
-1. Verwenden Sie ein für Ihre Domäne feinabgestimmtes Modell
+1. Verwenden Sie ein feinabgestimmtes Modell für Ihre Domäne
 2. Kombinieren Sie mehr Ticket-Felder im Eingabetext
-3. Erhöhen Sie die Trainingsdaten bei Verwendung eines benutzerdefinierten Modells
+3. Erhöhen Sie die Trainingsdaten bei Verwendung eines eigenen Modells
 4. Passen Sie den Konfidenzschwellenwert an
 5. Erwägen Sie einen Ensemble-Ansatz
 
@@ -440,9 +440,9 @@ python -c "from transformers import AutoModel; AutoModel.from_pretrained('model-
 
 1. Verwenden Sie eine kleinere Modellvariante (z.B. DistilBERT vs BERT)
 2. Aktivieren Sie GPU-Beschleunigung
-3. Reduzieren Sie die Länge des Eingabetextes
+3. Reduzieren Sie die Länge des Eingabetexts
 4. Erhöhen Sie die Hardware-Ressourcen
-5. Implementieren Sie Batch-Verarbeitung
+5. Implementieren Sie Stapelverarbeitung
 
 ### Hohe Speichernutzung
 
@@ -452,11 +452,11 @@ python -c "from transformers import AutoModel; AutoModel.from_pretrained('model-
 
 1. Verwenden Sie ein kleineres Modell
 2. Erhöhen Sie das Speicherlimit des Containers
-3. Reduzieren Sie die Batch-Größe
+3. Reduzieren Sie die Stapelgröße
 4. Löschen Sie den Modell-Cache regelmäßig
 
 ```yaml
-# Speicher in docker-compose.yml erhöhen
+# Increase memory in docker-compose.yml
 services:
   open-ticket-ai:
     deploy:
@@ -470,10 +470,10 @@ services:
 ### DO ✅
 
 - Beginnen Sie mit einem kleinen, schnellen Modell zum Testen
-- Überwachen Sie Konfidenzscores kontinuierlich
-- Legen Sie angemessene Konfidenzschwellenwerte fest
-- Kombinieren Sie mehrere Ticket-Felder für besseren Kontext
-- Feinabstimmung von Modellen auf Ihre Daten für die Produktion
+- Überwachen Sie kontinuierlich die Konfidenzscores
+- Setzen Sie angemessene Konfidenzschwellenwerte
+- Kombinieren Sie mehrere Ticket-Felder für einen besseren Kontext
+- Feinabstimmung der Modelle auf Ihre Daten für die Produktion
 - Verfolgen und analysieren Sie Fehlklassifizierungen
 - Implementieren Sie einen Fallback für Vorhersagen mit geringer Konfidenz
 
@@ -540,14 +540,14 @@ services:
 
 Nach der Konfiguration Ihres Modells:
 
-1. **Klassifizierungen testen**: Anhand von Beispiel-Tickets validieren
-2. **Konfidenzschwellenwerte festlegen**: Basierend auf Ihrer Risikotoleranz
+1. **Klassifizierungen testen**: Validieren Sie anhand von Beispiel-Tickets
+2. **Konfidenzschwellenwerte setzen**: Basierend auf Ihrer Risikotoleranz
 3. **Leistung überwachen**: Genauigkeit verfolgen und anpassen
 4. **Modell feinabstimmen**: Mit Ihren Daten verbessern
 5. **Bereitstellung skalieren**: Mehr Tickets verarbeiten
 
 ## Verwandte Dokumentation
 
-- [Taxonomy Design](taxonomy-design.md) - Entwerfen Sie Ihre Klassifizierungskategorien
-- [Tag Mapping](tag-mapping.md) - Klassifizierungen auf Ticket-Felder abbilden
-- [Hardware Sizing](hardware-sizing.md) - Infrastrukturanforderungen
+- [Taxonomie-Design](taxonomy-design.md) - Entwerfen Sie Ihre Klassifizierungskategorien
+- [Tag-Mapping](tag-mapping.md) - Klassifizierungen auf Ticket-Felder abbilden
+- [Hardware-Dimensionierung](hardware-sizing.md) - Infrastrukturanforderungen

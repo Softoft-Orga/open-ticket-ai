@@ -18,17 +18,17 @@ Die Hardware-Anforderungen für die Ticket-Klassifizierung hängen von mehreren 
 - Modellgröße und -komplexität
 - Anzahl der verarbeiteten Tickets
 - Klassifizierungshäufigkeit
-- Antwortzeit-Anforderungen
+- Anforderungen an die Antwortzeit
 - Budgetbeschränkungen
 
 ## Schnellreferenz
 
-| Skalierung | Tickets/Tag     | Min. RAM | Min. CPU | GPU         | Modelltyp         |
-| ---------- | --------------- | -------- | -------- | ----------- | ----------------- |
-| Klein      | <1.000          | 512 MB   | 1 Kern   | Nein        | Simple ML         |
-| Mittel     | 1.000-10.000    | 2 GB     | 2 Kerne  | Optional    | BERT-basiert      |
-| Groß       | 10.000-100.000  | 8 GB     | 4 Kerne  | Empfohlen   | BERT/Large        |
-| Enterprise | >100.000        | 16+ GB   | 8+ Kerne | Erforderlich| Custom/Fine-tuned |
+| Skalierung  | Tickets/Tag     | Min. RAM | Min. CPU | GPU         | Modelltyp         |
+| ----------- | --------------- | -------- | -------- | ----------- | ----------------- |
+| Klein       | <1.000          | 512 MB   | 1 Kern   | Nein        | Einfaches ML      |
+| Mittel      | 1.000-10.000    | 2 GB     | 2 Kerne  | Optional    | BERT-basiert      |
+| Groß        | 10.000-100.000  | 8 GB     | 4 Kerne  | Empfohlen   | BERT/Large        |
+| Enterprise  | >100.000        | 16+ GB   | 8+ Kerne | Erforderlich| Benutzerdefiniert/Feinabgestimmt |
 
 ## Bereitstellungsmodelle
 
@@ -43,24 +43,24 @@ Die Hardware-Anforderungen für die Ticket-Klassifizierung hängen von mehreren 
 **Empfohlene Spezifikationen**:
 
 ```yaml
-Small Scale:
+Kleine Skalierung:
   CPU: 1-2 Kerne (2.0+ GHz)
   RAM: 512 MB - 2 GB
-  Storage: 5 GB
-  Network: Standard
+  Speicher: 5 GB
+  Netzwerk: Standard
 
-Medium Scale:
+Mittlere Skalierung:
   CPU: 2-4 Kerne (2.5+ GHz)
   RAM: 2-4 GB
-  Storage: 10 GB
-  Network: Standard
+  Speicher: 10 GB
+  Netzwerk: Standard
 ```
 
 **Erwartete Leistung**:
 
 - Klassifizierungszeit: 200-500ms pro Ticket
 - Durchsatz: 100-500 Tickets/Minute
-- Modell-Ladezeit: 5-30 Sekunden
+- Modellladezeit: 5-30 Sekunden
 
 ### GPU-beschleunigte Bereitstellung
 
@@ -69,31 +69,31 @@ Medium Scale:
 - Große Ticketvolumen (>10.000/Tag)
 - Echtzeit-Klassifizierungsanforderungen
 - Große Transformer-Modelle
-- Fine-tuning und Retraining
+- Feinabstimmung und erneutes Training
 
 **Empfohlene Spezifikationen**:
 
 ```yaml
-Medium-Large Scale:
+Mittel-Große Skalierung:
   CPU: 4-8 Kerne
   RAM: 8-16 GB
   GPU: NVIDIA T4 oder besser (16 GB VRAM)
-  Storage: 20 GB SSD
-  Network: Hohe Bandbreite
+  Speicher: 20 GB SSD
+  Netzwerk: Hohe Bandbreite
 
-Enterprise Scale:
+Enterprise-Skalierung:
   CPU: 8-16 Kerne
   RAM: 16-32 GB
   GPU: NVIDIA A10/A100 (24-80 GB VRAM)
-  Storage: 50+ GB NVMe SSD
-  Network: Hohe Bandbreite, niedrige Latenz
+  Speicher: 50+ GB NVMe SSD
+  Netzwerk: Hohe Bandbreite, niedrige Latenz
 ```
 
 **Erwartete Leistung**:
 
 - Klassifizierungszeit: 10-50ms pro Ticket
 - Durchsatz: 1.000-10.000 Tickets/Minute
-- Modell-Ladezeit: 2-10 Sekunden
+- Modellladezeit: 2-10 Sekunden
 
 ## Auswirkung der Modellgröße
 
@@ -123,7 +123,7 @@ Enterprise Scale:
 
 - BERT-base
 - RoBERTa-base
-- Custom fine-tuned models
+- Benutzerdefinierte feinabgestimmte Modelle
 
 **Anforderungen**:
 
@@ -134,7 +134,7 @@ Enterprise Scale:
 **Anwendungsfälle**:
 
 - Die meisten Produktionsbereitstellungen
-- Ausgewogenes Verhältnis Genauigkeit/Leistung
+- Ausgewogene Genauigkeit/Leistung
 - Standard-Ticketvolumen
 
 ### Große Modelle (1-5 GB)
@@ -144,7 +144,7 @@ Enterprise Scale:
 - BERT-large
 - RoBERTa-large
 - GPT-basierte Modelle
-- Custom ensemble models
+- Benutzerdefinierte Ensemble-Modelle
 
 **Anforderungen**:
 
@@ -206,15 +206,15 @@ spec:
 Überwachen Sie diese Metriken:
 
 - **CPU-Auslastung**: Sollte im Durchschnitt <80% sein
-- **Speicherauslastung**: Sollte 20% Puffer haben
-- **Klassifizierungslatenz**: P95-Latenz unter Zielwert
+- **Speicherauslastung**: Sollte 20% Spielraum haben
+- **Klassifizierungslatenz**: P95-Latenz unter dem Zielwert
 - **Warteschlangentiefe**: Tickets, die auf Klassifizierung warten
 
 ## Skalierungsstrategien
 
 ### Vertikale Skalierung
 
-Ressourcen auf einer einzelnen Instanz erhöhen:
+Erhöhen Sie die Ressourcen auf einer einzelnen Instanz:
 
 ```yaml
 # Start
@@ -230,14 +230,14 @@ RAM: 8 GB, CPU: 8 Kerne
 **Vorteile**:
 
 - Einfach zu implementieren
-- Keine Code-Änderungen erforderlich
+- Keine Codeänderungen erforderlich
 - Einfach zu verwalten
 
 **Nachteile**:
 
-- Durch Hardware-Maxima begrenzt
+- Begrenzt durch Hardware-Maxima
 - Single Point of Failure
-- Potenziell teuer
+- Möglicherweise teuer
 
 ### Horizontale Skalierung
 
@@ -262,9 +262,9 @@ Mehrere Instanzen bereitstellen:
 - Erfordert Load Balancer
 - Überlegungen zum gemeinsamen Zustand
 
-### Auto-Scaling
+### Automatische Skalierung
 
-Dynamische Skalierung basierend auf Last:
+Dynamische Skalierung basierend auf der Last:
 
 ```yaml
 # Kubernetes HPA
@@ -293,14 +293,14 @@ spec:
 ### Modellspeicher
 
 - **Basismodelle**: 100 MB - 5 GB
-- **Fine-tuned models**: +100-500 MB
+- **Feinabgestimmte Modelle**: +100-500 MB
 - **Cache**: 1-5 GB
 - **Logs**: 100 MB - 1 GB/Tag
 
 ### Empfohlene Einrichtung
 
 ```
-Disk Layout:
+Festplattenlayout:
 ├── /models/ (10-20 GB, SSD)
 ├── /cache/ (5 GB, SSD)
 ├── /logs/ (rotierend, 10 GB)
@@ -311,15 +311,15 @@ Disk Layout:
 
 ### Bandbreite
 
-- **Modelldownloads**: Anfänglich 1-5 GB, dann minimal
+- **Modell-Downloads**: Anfänglich 1-5 GB, dann minimal
 - **API-Verkehr**: 1-10 KB pro Ticket
-- **Monitoring**: 1-5 MB/Stunde
+- **Überwachung**: 1-5 MB/Stunde
 
 ### Latenz
 
 - **Intern**: <10ms ideal
 - **Externe APIs**: <100ms akzeptabel
-- **Model Serving**: <50ms Ziel
+- **Modellbereitstellung**: <50ms Ziel
 
 ## Kostenoptimierung
 
@@ -328,11 +328,11 @@ Disk Layout:
 Minimale Kosten-Einrichtung für Tests:
 
 ```yaml
-Cloud Instance:
-  Type: t3.small (AWS) / e2-small (GCP)
+Cloud-Instanz:
+  Typ: t3.small (AWS) / e2-small (GCP)
   vCPU: 2
   RAM: 2 GB
-  Cost: ~$15-20/month
+  Kosten: ~$15-20/Monat
 ```
 
 ### Produktion Kleine Skalierung
@@ -340,11 +340,11 @@ Cloud Instance:
 Kosteneffektive Produktion:
 
 ```yaml
-Cloud Instance:
-  Type: t3.medium (AWS) / e2-medium (GCP)
+Cloud-Instanz:
+  Typ: t3.medium (AWS) / e2-medium (GCP)
   vCPU: 2
   RAM: 4 GB
-  Cost: ~$30-40/month
+  Kosten: ~$30-40/Monat
 ```
 
 ### Produktion Große Skalierung
@@ -352,12 +352,12 @@ Cloud Instance:
 Hochleistungs-Produktion:
 
 ```yaml
-Cloud Instance:
-  Type: c5.2xlarge (AWS) / c2-standard-8 (GCP)
+Cloud-Instanz:
+  Typ: c5.2xlarge (AWS) / c2-standard-8 (GCP)
   vCPU: 8
   RAM: 16 GB
   GPU: Optional T4
-  Cost: ~$150-300/month (CPU) or ~$400-600/month (GPU)
+  Kosten: ~$150-300/Monat (CPU) oder ~$400-600/Monat (GPU)
 ```
 
 ## Leistungstests
@@ -379,13 +379,13 @@ curl -w "@curl-format.txt" -o /dev/null -s http://localhost:8080/classify
 
 ### Leistungsziele
 
-| Metrik       | Ziel      | Messung               |
-| ------------ | --------- | --------------------- |
-| Latenz P50   | <200ms    | Median-Antwortzeit    |
-| Latenz P95   | <500ms    | 95. Perzentil         |
-| Latenz P99   | <1000ms   | 99. Perzentil         |
-| Durchsatz    | >100/min  | Klassifizierte Tickets|
-| CPU-Auslastung | <80%    | Durchschnittliche Auslastung |
+| Metrik       | Ziel     | Messung               |
+| ------------ | -------- | --------------------- |
+| Latenz P50   | <200ms   | Median-Antwortzeit    |
+| Latenz P95   | <500ms   | 95. Perzentil         |
+| Latenz P99   | <1000ms  | 99. Perzentil         |
+| Durchsatz    | >100/min | Klassifizierte Tickets|
+| CPU-Auslastung | <80%   | Durchschnittliche Auslastung |
 | Speicherauslastung | <80% | Spitzenauslastung     |
 
 ## Fehlerbehebung
@@ -416,7 +416,7 @@ Container killed (OOMKilled)
 **Lösungen**:
 
 1. GPU-Beschleunigung aktivieren
-2. Modelldistillation verwenden
+2. Modell-Distillation verwenden
 3. Batch-Verarbeitung optimieren
 4. Mehr Replikate hinzufügen
 
@@ -430,7 +430,7 @@ Container killed (OOMKilled)
 **Lösungen**:
 
 1. Mehr CPU-Kerne hinzufügen
-2. Modellinferenz optimieren
+2. Modell-Inferenz optimieren
 3. Request-Queuing implementieren
 4. Horizontal skalieren
 
@@ -439,17 +439,17 @@ Container killed (OOMKilled)
 ### DO ✅
 
 - Beginnen Sie mit Nur-CPU für Tests
-- Überwachen Sie die Ressourcennutzung kontinuierlich
-- Legen Sie angemessene Ressourcenlimits fest
-- Planen Sie für die 2-fache aktuelle Last
-- Verwenden Sie Caching, wo möglich
-- Implementieren Sie Health Checks
+- Ressourcennutzung kontinuierlich überwachen
+- Angemessene Ressourcenlimits setzen
+- Für die 2-fache aktuelle Last planen
+- Caching wo möglich nutzen
+- Health Checks implementieren
 
 ### DON'T ❌
 
 - Speicher unterdimensionieren (verursacht OOM)
 - Leistungstests überspringen
-- Monitoring-Metriken ignorieren
+- Überwachungsmetriken ignorieren
 - Unnötig überdimensionieren
 - Produktions- und Entwicklungslasten vermischen
 
@@ -460,7 +460,7 @@ Nach der Dimensionierung Ihrer Hardware:
 1. **Infrastruktur bereitstellen**: Server/Container einrichten
 2. **Modell installieren**: Klassifizierungsmodell herunterladen und konfigurieren
 3. **Leistungstest**: Gegen Ihre Anforderungen validieren
-4. **Überwachen**: Metriken und Alerting einrichten
+4. **Überwachen**: Metriken und Alarmierung einrichten
 
 ## Verwandte Dokumentation
 

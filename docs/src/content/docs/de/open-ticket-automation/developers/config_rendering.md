@@ -1,11 +1,11 @@
 ---
-title: Config Rendering
+title: Konfigurations-Rendering
 ---
 
 ```mermaid
 flowchart TB
 %% ===================== PLUGIN LOADING =====================
-    subgraph PLUGIN["🔌 Plugin Loading Phase"]
+    subgraph PLUGIN["🔌 Plugin-Lade-Phase"]
         direction TB
         EntryPoints["Entry Points"]
         PluginLoader["PluginLoader"]:::critical
@@ -15,16 +15,16 @@ flowchart TB
     end
 
 %% ===================== COMPONENT REGISTRY =====================
-    subgraph REGISTRY["📦 Component Registry Phase"]
+    subgraph REGISTRY["📦 Komponenten-Registrierungs-Phase"]
         direction TB
         ComponentRegistry["ComponentRegistry"]:::critical
-        Injectables["Registered Injectables"]
+        Injectables["Registrierte Injectables"]
         Plugins -->|plugin . on_load| ComponentRegistry
         ComponentRegistry -->|Store by identifier| Injectables
     end
 
 %% ===================== CONFIGURATION LOADING =====================
-    subgraph LOAD["📁 Configuration Loading"]
+    subgraph LOAD["📁 Konfigurations-Laden"]
         direction TB
         YAML["config.yml"]
         RawConfig["OpenTicketAIConfig"]
@@ -40,16 +40,16 @@ flowchart TB
     end
 
 %% ===================== SERVICE RENDERING PHASE =====================
-    subgraph RENDER["🎨 Service Rendering Phase"]
+    subgraph RENDER["🎨 Service-Rendering-Phase"]
         direction TB
         Factory["PipeFactory"]
-        ServiceDefs["Service Definitions"]
+        ServiceDefs["Service-Definitionen"]
         TemplateRenderer -.->|Injected| Factory
         ServiceDefs --> Factory
     end
 
 %% ===================== RUNTIME OBJECTS =====================
-    subgraph RUNTIME["⚡ Runtime Objects"]
+    subgraph RUNTIME["⚡ Runtime-Objekte"]
         direction TB
         Orchestrator["Orchestrator"]
         Factory -->|Render & instantiate| Orchestrator

@@ -5,13 +5,11 @@ description: "Erfahren Sie mehr über das Plugin-System von Open Ticket AI – w
 
 # Plugins
 
-Plugins erweitern Open Ticket AI um zusätzliche Funktionen. Jedes Plugin stellt Services und Pipes
-bereit, die Sie in Ihrer Konfiguration verwenden können, um sich mit verschiedenen Ticketsystemen zu verbinden,
-ML-Modelle auszuführen oder benutzerdefinierte Verarbeitungslogik hinzuzufügen.
+Plugins erweitern Open Ticket AI mit zusätzlichen Funktionen. Jedes Plugin stellt Services und Pipes bereit, die Sie in Ihrer Konfiguration verwenden können, um sich mit verschiedenen Ticketsystemen zu verbinden, ML-Modelle auszuführen oder benutzerdefinierte Verarbeitungslogik hinzuzufügen.
 
 ## Was ist ein Plugin?
 
-Ein **Plugin** ist ein Python-Paket, das Open Ticket AI neue Funktionalität hinzufügt:
+Ein **Plugin** ist ein Python-Paket, das neue Funktionalität zu Open Ticket AI hinzufügt:
 
 - **Services**: Verbindung zu Ticketsystemen (OTOBO, Znuny), ML-Modellen oder externen APIs
 - **Pipes**: Tickets abrufen, Inhalte klassifizieren, Felder aktualisieren, Notizen hinzufügen oder benutzerdefinierte Logik ausführen
@@ -29,13 +27,11 @@ uv add otai-otobo-znuny
 uv add otai-otobo-znuny otai-hf-local
 ```
 
-Das war's! Nach der Installation sind die Services und Pipes des Plugins automatisch in Ihrer
-Konfiguration verfügbar.
+Das war's! Nach der Installation sind die Services und Pipes des Plugins automatisch in Ihrer Konfiguration verfügbar.
 
 ## So verwenden Sie Plugins in der Konfiguration
 
-Plugins stellen Services und Pipes bereit, die Sie in Ihrer YAML-Konfiguration im Format
-`plugin-name:ComponentName` referenzieren.
+Plugins stellen Services und Pipes bereit, die Sie in Ihrer YAML-Konfiguration im Format `plugin-name:ComponentName` referenzieren.
 
 ### Beispiel: Kompletter Workflow mit Plugins
 
@@ -133,7 +129,7 @@ uv add otai-otobo-znuny
 
 - Vollständige Integration mit OTOBO, Znuny und OTRS
 - Ticket-Abruf, -Aktualisierung und -Notizverwaltung
-- Verwaltung von Queues, Prioritäten und Status
+- Queue-, Prioritäts- und Statusverwaltung
 
 **Beispielkonfiguration:**
 
@@ -163,7 +159,7 @@ orchestrator:
 
 **Paket**: `otai-hf-local`
 
-Führen Sie maschinelle Lern-Klassifikationsmodelle lokal mit HuggingFace Transformers aus.
+Führen Sie Machine-Learning-Klassifizierungsmodelle lokal mit HuggingFace Transformers aus.
 
 **Installation:**
 
@@ -174,8 +170,8 @@ uv add otai-hf-local
 **Was es bietet:**
 
 - Lokale ML-Modell-Inferenz (keine externen API-Aufrufe)
-- Textklassifikation für Ticketinhalte
-- Unterstützung für jedes HuggingFace-Textklassifikationsmodell
+- Textklassifizierung für Ticketinhalte
+- Unterstützung für jedes HuggingFace-Textklassifizierungsmodell
 
 **Beispielkonfiguration:**
 
@@ -203,21 +199,21 @@ orchestrator:
 
 **Installieren Sie nur, was Sie brauchen:**
 
-- Verwenden Sie OTOBO nicht? Installieren Sie das OTOBO-Plugin nicht.
-- Führen Sie Klassifikation in der Cloud aus? Überspringen Sie das HuggingFace-Plugin.
-- Hält Ihre Installation schlank.
+- Verwenden Sie OTOBO nicht? Installieren Sie das OTOBO-Plugin nicht
+- Führen Sie Klassifizierung in der Cloud aus? Überspringen Sie das HuggingFace-Plugin
+- Hält Ihre Installation schlank
 
 **Kombinieren und anpassen:**
 
-- Verwenden Sie das OTOBO-Plugin mit HuggingFace-Modellen.
-- Kombinieren Sie mehrere Ticketsysteme in einem Setup.
-- Fügen Sie Community-Plugins hinzu, sobald sie verfügbar sind.
+- Verwenden Sie das OTOBO-Plugin mit HuggingFace-Modellen
+- Kombinieren Sie mehrere Ticketsysteme in einem Setup
+- Fügen Sie Community-Plugins hinzu, sobald sie verfügbar sind
 
 **Unabhängige Updates:**
 
-- Aktualisieren Sie Plugins ohne das Core-System zu aktualisieren.
-- Erhalten Sie neue Funktionen schneller.
-- Rollen Sie einzelne Plugins bei Bedarf zurück.
+- Aktualisieren Sie Plugins ohne das Core-System zu aktualisieren
+- Erhalten Sie neue Funktionen schneller
+- Rollen Sie einzelne Plugins bei Bedarf zurück
 
 ## Plugin-Namenskonvention
 

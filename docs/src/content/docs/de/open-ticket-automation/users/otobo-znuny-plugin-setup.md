@@ -5,11 +5,11 @@ title: OTOBO / Znuny Setup Guide
 # OTOBO / Znuny Setup Guide
 
 Open Ticket AI verbindet sich mit OTOBO/Znuny über einen eingeschränkten WebService und einen dedizierten technischen Benutzer.
-Folgen Sie diesen Schritten genau, um einen zuverlässigen und sicheren Betrieb der Automatisierung zu gewährleisten.
+Befolgen Sie diese Schritte genau, damit die Automatisierung zuverlässig und sicher funktioniert.
 
 ---
 
-## 1. Benutzer `open_ticket_ai` erstellen
+## 1. Benutzer `open_ticket_ai` anlegen
 
 Dieser Benutzer wird ausschließlich von der Open Ticket AI Engine verwendet.
 Er **darf keine** Admin-Berechtigungen haben.
@@ -17,7 +17,7 @@ Er muss **genau und nur die Berechtigungen** haben, die für Ihre Automatisierun
 
 ### Schritt 1: Gehen Sie zu Admin → Agents
 
-Nutzen Sie die OTOBO Admin-Navigation:
+Nutzen Sie die OTOBO Admin Navigation:
 
 ![](/assets/otobo-admin.png)
 
@@ -56,7 +56,7 @@ openssl rand -base64 32 | cut -c1-16
 
 ### Schritt 3: Passwort als Umgebungsvariable speichern
 
-Setzen Sie das Passwort je nach Ihrer Deployment-Umgebung als Umgebungsvariable:
+Setzen Sie das Passwort je nach Deployment als Umgebungsvariable:
 
 ```
 OTAI_ZNUNY_PASSWORD=your_generated_password_here
@@ -74,12 +74,12 @@ Open Ticket AI kann nur Aktionen ausführen, die dem Benutzer erlaubt sind.
 
 Je nach Automatisierungspipeline müssen Sie gewähren:
 
-| Automatisierungstyp    | Erforderliche Berechtigungen                 |
-| ---------------------- | -------------------------------------------- |
-| Queue Classification   | **ro**, **move_into**                        |
-| Priority Classification| **ro**, **priority**                         |
-| Note creation          | **ro**, **note**                             |
-| Ticket updates         | **ro**, **move_into**, **priority**, **note**|
+| Automatisierungstyp      | Erforderliche Berechtigungen                 |
+| ------------------------ | -------------------------------------------- |
+| Queue Classification     | **ro**, **move_into**                        |
+| Priority Classification  | **ro**, **priority**                         |
+| Notiz-Erstellung         | **ro**, **note**                             |
+| Ticket-Updates           | **ro**, **move_into**, **priority**, **note** |
 
 ---
 
@@ -93,12 +93,12 @@ Gehen Sie zu:
 
 Wählen Sie den Agent **open_ticket_ai** und vergeben Sie Berechtigungen wie:
 
-| Berechtigung | Bedeutung                   |
-| ------------ | --------------------------- |
-| ro           | Ticket lesen                |
-| move_into    | Ticket in Queue verschieben |
-| priority     | Priorität ändern            |
-| note         | Interne Notizen hinzufügen  |
+| Berechtigung | Bedeutung                     |
+| ------------ | ----------------------------- |
+| ro           | Ticket lesen                  |
+| move_into    | Ticket in Queue verschieben   |
+| priority     | Priorität ändern              |
+| note         | Interne Notizen hinzufügen    |
 
 ## rw, wenn Sie ein Ticket erstellen müssen.
 
@@ -124,14 +124,14 @@ Ihre Automatisierungspipeline bezieht sich auf bestimmte Namen wie:
 
 ✅ Jede Queue in Ihrer `config.yml` existiert
 ✅ Jede Priorität, die Ihr ML-Modell vorhersagt, existiert
-✅ Wenn Sie "note"-Aktionen verwenden → Agent hat Berechtigung
+✅ Falls Sie "note"-Aktionen verwenden → Agent hat Berechtigung
 ✅ Ticket-Typen, auf die in der Automatisierung verwiesen wird, existieren
 
 Wenn der Name falsch ist, schlägt das WebService-Update fehl.
 
 ---
 
-## 4. WebService „OpenTicketAI“ erstellen
+## 4. WebService „OpenTicketAI“ anlegen
 
 Gehen Sie zu:
 
@@ -155,7 +155,7 @@ Verwenden Sie die mit Open Ticket AI mitgelieferte Vorlage:
 
 [Open Ticket Ai yaml](https://raw.githubusercontent.com/Softoft-Orga/open-ticket-ai/refs/heads/dev/deployment/znuny_demo/OpenTicketAI.yml)
 
-Laden Sie die Datei mit dem Button **Import web service** hoch.
+Laden Sie die Datei mit der Schaltfläche **Import web service** hoch.
 
 Dies erstellt:
 
@@ -164,7 +164,7 @@ Dies erstellt:
 - `/ticket-search`
 - `/ticket-create`
 
-Alle sind so eingeschränkt, dass **nur der Benutzer `open_ticket_ai` sie verwenden darf**.
+Alle so eingeschränkt, dass **nur der Benutzer `open_ticket_ai` sie verwenden darf**.
 
 ---
 
@@ -186,19 +186,19 @@ Dies verhindert:
 
 - Passwort-Brute-Force-Angriffe
 - API-Missbrauch
-- Unautorisierte Ticket-Manipulation
+- Unbefugte Ticket-Manipulation
 
 Mit einem **16-stelligen Zufallspasswort** ist Brute-Force selbst unter extremer Last unmöglich.
 
 ---
 
-## 6. Überprüfen, ob der WebService aktiv ist
+## 6. Prüfen, ob der WebService aktiv ist
 
-Nach dem Import sollte Ihre Liste zeigen:
+Nach dem Import sollte Ihre Liste anzeigen:
 
 ![](/assets/webservice_overview.png)
 
-Prüfen Sie:
+Achten Sie auf:
 
 ✅ Name: **OpenTicketAI**
 ✅ Provider Transport: **HTTP::REST**

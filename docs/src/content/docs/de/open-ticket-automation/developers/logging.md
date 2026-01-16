@@ -1,7 +1,7 @@
 ---
-title: Logging System
+title: Logging-System
 description: 'Entwicklerhandbuch zur Verwendung des Logging-Systems in Open Ticket AI mit abstrakten Schnittstellen und Dependency Injection.'
-lang: de
+lang: en
 nav:
   group: Entwickler
   order: 7
@@ -15,7 +15,7 @@ Open Ticket AI verwendet eine abstrakte Logging-Schnittstelle, die es Entwickler
 
 Das Logging-System bietet:
 
-- **Abstrakte Schnittstellen**: `AppLogger`- und `LoggerFactory`-Protokolle
+- **Abstrakte Schnittstellen**: Die Protokolle `AppLogger` und `LoggerFactory`
 - **Standardbibliotheks-Implementierung**: `StdlibLoggerFactory`
 - **Dependency Injection**: `AppModule` stellt `LoggerFactory` für die automatische Einrichtung bereit
 - **Kontextbindung**: Strukturierten Kontext an Log-Nachrichten anhängen, über die Logger-API
@@ -24,11 +24,11 @@ Das Logging-System bietet:
 
 ### Verwendung mit Dependency Injection
 
-Services können die `LoggerFactory` injizieren und verwenden, um Logger mit gebundenem Kontext zu erstellen. Die Factory gibt Instanzen von `StdlibLogger` zurück, die an `logging.getLogger` delegieren.
+Services können die `LoggerFactory` injizieren und verwenden, um Logger mit gebundenem Kontext zu erstellen. Die Factory gibt Instanzen von `StdlibLogger` zurück, die an `logging.getLogger` weiterleiten.
 
 ### Direkte Verwendung (ohne DI)
 
-Der Standardbibliotheks-Adapter kann direkt ohne den Dependency-Injection-Container konfiguriert und verwendet werden. Konfigurieren Sie das Logging-System beim Start der Anwendung und erstellen Sie Logger nach Bedarf.
+Der Standardbibliotheks-Adapter kann direkt konfiguriert und verwendet werden, ohne den Dependency-Injection-Container. Konfigurieren Sie das Logging-System beim Start der Anwendung und erstellen Sie Logger nach Bedarf.
 
 ```python
 from open_ticket_ai.core.logging.logging_models import LoggingConfig
@@ -48,7 +48,7 @@ logger.info("Application started")
 
 ### Laufzeitkonfiguration
 
-Das Logging-System wird über die YAML-Konfigurationsdatei der Anwendung im Abschnitt `infrastructure.logging` konfiguriert, der vom `AppModule` während der Dependency-Injection-Einrichtung geladen wird.
+Das Logging-System wird über die YAML-Konfigurationsdatei der Anwendung im Abschnitt `infrastructure.logging` konfiguriert, der während der Dependency-Injection-Einrichtung durch das `AppModule` geladen wird.
 
 ### LoggingConfig-Felder
 
@@ -57,8 +57,8 @@ Das Logging-System wird über die YAML-Konfigurationsdatei der Anwendung im Absc
 | Feld                   | Typ                                                               | Standard                                                  | Beschreibung                                                                        |
 | ----------------------- | ------------------------------------------------------------------ | -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | `level`                 | Literal[`"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"`, `"CRITICAL"`] | `"INFO"`                                                 | Mindest-Schweregrad, der von Handlern erfasst wird.                                       |
-| `log_to_file`           | `bool`                                                             | `False`                                                  | Aktiviert die Ausgabe von Logs in eine Datei über einen File-Handler.                                      |
-| `log_file_path`         | `str \| None`                                                      | `None`                                                   | Absoluter oder relativer Pfad für die Dateiausgabe. Erforderlich, wenn `log_to_file` `True` ist. |
+| `log_to_file`           | `bool`                                                             | `False`                                                  | Aktiviert das Schreiben der Log-Ausgabe in einen File Handler.                                      |
+| `log_file_path`         | `str \| None`                                                      | `None`                                                   | Absoluter oder relativer Pfad für File-Logging. Erforderlich, wenn `log_to_file` `True` ist. |
 | `format.message_format` | `str`                                                              | `"%(asctime)s - %(name)s - %(levelname)s - %(message)s"` | Format-String, der an `logging.Formatter` übergeben wird.                                       |
 | `format.date_format`    | `str`                                                              | `"%Y-%m-%d %H:%M:%S"`                                    | Zeitstempel-Format, das vom Formatter verwendet wird.                                            |
 
@@ -66,7 +66,7 @@ Das Logging-System wird über die YAML-Konfigurationsdatei der Anwendung im Absc
 
 ### Stdlib (Python-Standardbibliothek)
 
-Der Standardbibliotheks-Adapter kapselt das eingebaute `logging`-Modul von Python.
+Der Standardbibliotheks-Adapter umschließt das eingebaute `logging`-Modul von Python.
 
 **Merkmale:**
 
@@ -80,64 +80,64 @@ Der Standardbibliotheks-Adapter kapselt das eingebaute `logging`-Modul von Pytho
 2025-10-11 00:21:14 - my_module - INFO - Application started
 ```
 
-### Handler-Verknüpfung
+### Handler-Verkabelung
 
 `create_logger_factory` bereitet den globalen Logging-Zustand vor:
 
-1. Hole den Root-Logger und setze sein Level aus `LoggingConfig.level`.
-2. Entferne alle zuvor registrierten Handler, um doppelte Nachrichten zu vermeiden.
-3. Erstelle einen `logging.Formatter` mit `log_format` und `date_format`.
-4. Füge einen `StreamHandler` hinzu, der nach `sys.stdout` schreibt, konfiguriert mit dem gewählten Level und Formatter.
-5. Optional: Füge einen `FileHandler` hinzu, wenn `log_to_file` `True` ist und `log_file_path` angegeben ist.
-6. Gib eine `StdlibLoggerFactory` zurück, die `StdlibLogger`-Instanzen erstellt, die an benannte Logger gebunden sind.
+1. Den Root-Logger abrufen und sein Level aus `LoggingConfig.level` setzen.
+2. Alle zuvor registrierten Handler entfernen, um doppelte Nachrichten zu vermeiden.
+3. Einen `logging.Formatter` mit `log_format` und `date_format` erstellen.
+4. Einen `StreamHandler` anhängen, der nach `sys.stdout` schreibt, konfiguriert mit dem gewählten Level und Formatter.
+5. Optional einen `FileHandler` anhängen, wenn `log_to_file` `True` ist und `log_file_path` angegeben ist.
+6. Eine `StdlibLoggerFactory` zurückgeben, die `StdlibLogger`-Instanzen erstellt, die an benannte Logger gebunden sind.
 
 ## Kontextbindung
 
-Die Kontextbindung ermöglicht es, strukturierte Daten an Log-Nachrichten anzuhängen. Erstellen Sie einen Basis-Logger mit Service-Kontext und binden Sie dann anforderungsspezifischen Kontext. Alle nachfolgenden Log-Nachrichten von diesem Logger enthalten automatisch den gebundenen Kontext.
+Die Kontextbindung ermöglicht es, strukturierte Daten an Log-Nachrichten anzuhängen. Erstellen Sie einen Basis-Logger mit Service-Kontext und binden Sie dann anforderungsspezifischen Kontext. Alle nachfolgenden Log-Nachrichten von diesem Logger enthalten den gebundenen Kontext automatisch.
 
 ## Logger-Methoden
 
 Das `AppLogger`-Protokoll definiert die folgenden Methoden:
 
-- **`bind(**kwargs)`\*\*: Erstellt einen neuen Logger mit zusätzlichem Kontext
-- **`debug(message, **kwargs)`\*\*: Loggt Debug-Informationen
-- **`info(message, **kwargs)`\*\*: Loggt Informationsmeldungen
-- **`warning(message, **kwargs)`\*\*: Loggt Warnungen
-- **`error(message, **kwargs)`\*\*: Loggt Fehler
-- **`exception(message, **kwargs)`\*\*: Loggt Exceptions mit Traceback
+- **`bind(**kwargs)`\*\*: Einen neuen Logger mit zusätzlichem Kontext erstellen
+- **`debug(message, **kwargs)`\*\*: Debug-Informationen loggen
+- **`info(message, **kwargs)`\*\*: Informative Nachrichten loggen
+- **`warning(message, **kwargs)`\*\*: Warnungen loggen
+- **`error(message, **kwargs)`\*\*: Fehler loggen
+- **`exception(message, **kwargs)`\*\*: Exceptions mit Traceback loggen
 
 ## Best Practices
 
-### 1. Verwenden Sie Dependency Injection
+### 1. Dependency Injection verwenden
 
-Injizieren Sie immer die `LoggerFactory`, anstatt Logger direkt zu erstellen. Dies erleichtert das Testen und die Konfigurationsverwaltung.
+Immer die `LoggerFactory` injizieren, anstatt Logger direkt zu erstellen. Dies erleichtert das Testen und die Konfigurationsverwaltung.
 
-### 2. Binden Sie Kontext frühzeitig
+### 2. Kontext früh binden
 
-Erstellen Sie scoped Logger mit gebundenem Kontext für bessere Nachverfolgbarkeit. Binden Sie Kontextdaten wie Request-IDs, Benutzer-IDs oder Operationsnamen frühzeitig, damit alle nachfolgenden Logs diese Informationen enthalten.
+Erstellen Sie scoped Logger mit gebundenem Kontext für bessere Nachverfolgbarkeit. Binden Sie Kontextdaten wie Request-IDs, Benutzer-IDs oder Operationsnamen früh, damit alle nachfolgenden Logs diese Informationen enthalten.
 
-### 3. Verwenden Sie angemessene Log-Level
+### 3. Angemessene Log-Level verwenden
 
 - **DEBUG**: Detaillierte Diagnoseinformationen
-- **INFO**: Allgemeine Informationsmeldungen
+- **INFO**: Allgemeine informative Nachrichten
 - **WARNING**: Warnmeldungen für potenziell problematische Situationen
 - **ERROR**: Fehlerereignisse, die es der App möglicherweise noch erlauben, fortzufahren
 - **EXCEPTION**: Wie ERROR, aber inklusive Exception-Traceback
 
-### 4. Fügen Sie relevanten Kontext hinzu
+### 4. Relevanten Kontext einbeziehen
 
 Fügen Sie Kontext hinzu, der beim Debuggen und Monitoring hilft, wie z.B.:
 
 - Abfrageausführungszeit
 - Anzahl betroffener Zeilen
 - Tabellen- oder Ressourcennamen
-- Operations-Identifikatoren
+- Operations-IDs
 
-### 5. Loggen Sie keine sensiblen Daten
+### 5. Keine sensiblen Daten loggen
 
-Loggen Sie niemals Passwörter, Tokens oder persönliche Informationen. Loggen Sie immer Identifikatoren anstelle sensibler Werte.
+Loggen Sie niemals Passwörter, Tokens oder persönliche Informationen. Loggen Sie immer IDs anstelle sensibler Werte.
 
-## Testen mit Logging
+## Logging in Tests
 
 Beim Schreiben von Tests können Sie das Logging-Verhalten überprüfen, indem Sie die Log-Ausgabe erfassen und die Nachrichten und Kontextdaten überprüfen.
 
@@ -149,7 +149,7 @@ Ersetzen Sie die direkte Verwendung des Python-Logging-Moduls durch die Dependen
 
 ### Von `AppConfig.get_logger()`
 
-Ersetzen Sie Verwendungen von Legacy-Factory-Helfern durch Dependency-Injected-Instanzen von `LoggerFactory`, die von `create_logger_factory` erstellt werden.
+Ersetzen Sie Verwendungen von Legacy-Factory-Helfern durch Dependency-injected Instanzen der `LoggerFactory`, die von `create_logger_factory` erstellt werden.
 
 ## Zukünftige Roadmap
 

@@ -1,7 +1,7 @@
 ---
 title: First Pipeline Tutorial
 description: 'Erstellen Sie Ihre erste Open Ticket AI Pipeline von Anfang bis Ende mit Orchestrierung und Klassifizierung.'
-lang: de
+lang: en
 nav:
   group: Guides
   order: 2
@@ -9,11 +9,11 @@ nav:
 
 # Erstellen Ihrer ersten Pipeline
 
-Diese Anleitung führt Sie durch den Aufbau einer funktionierenden Ticket-Klassifizierungs-Pipeline auf Basis des aktuellen Open Ticket AI Konfigurationsschemas. Sie lernen, wie Plugin-Module geladen werden, wie Services über ihre Kennung registriert werden und wie der Orchestrator vollständig aus verschachtelten `PipeConfig`-Definitionen zusammengesetzt wird.
+Diese Anleitung führt Sie durch den Aufbau einer funktionierenden Ticket-Klassifizierungs-Pipeline auf Basis des neuesten Open Ticket AI Konfigurationsschemas. Sie lernen, wie Plugin-Module geladen werden, wie Services über ihre Kennung registriert werden und wie der Orchestrator vollständig aus verschachtelten `PipeConfig`-Definitionen zusammengesetzt wird.
 
 ## Konfigurationsbausteine
 
-Die gesamte Konfiguration befindet sich unter dem Top-Level-Schlüssel `open_ticket_ai`. Jedes darunterliegende Objekt wird von Pydantic-Modellen validiert, bevor der Orchestrator startet, daher ist die Einhaltung des Schemas entscheidend.
+Die gesamte Konfiguration befindet sich unter dem obersten Schlüssel `open_ticket_ai`. Jedes darunterliegende Objekt wird von Pydantic-Modellen validiert, bevor der Orchestrator startet, daher ist die Einhaltung des Schemas entscheidend.
 
 ### Plugin-Module (`open_ticket_ai.plugins`)
 
@@ -25,7 +25,7 @@ Services werden in einem Dictionary definiert, das durch ihre Kennung indiziert 
 
 ### Orchestrator (`open_ticket_ai.orchestrator`)
 
-Der Orchestrator selbst ist eine `PipeConfig`. Sie wählen eine Orchestrator-Implementierung via `use` (z.B. `base:SimpleSequentialOrchestrator`) und konfigurieren sie via `params`. Im sequenziellen Orchestrator ist `params.steps` eine Liste verschachtelter `PipeConfig`-Objekte. Jeder Schritt kann eine beliebige Pipe sein – einschließlich Runner wie `SimpleSequentialRunner`, anderer Orchestratoren oder konkreter Business-Logic-Pipes.
+Der Orchestrator selbst ist eine `PipeConfig`. Sie wählen eine Orchestrator-Implementierung via `use` (z.B. `base:SimpleSequentialOrchestrator`) und konfigurieren sie via `params`. Im sequenziellen Orchestrator ist `params.steps` eine Liste verschachtelter `PipeConfig`-Objekte. Jeder Schritt kann eine beliebige Pipe sein – einschließlich Runner wie `SimpleSequentialRunner`, anderen Orchestratoren oder konkreten Business-Logic-Pipes.
 
 Die folgende minimale Konfiguration zeigt die Struktur und validiert gegen das aktuelle Schema:
 
@@ -44,7 +44,7 @@ open_ticket_ai:
       steps: []
 ```
 
-## Aufbau einer minimalen Ticket-Routing-Pipeline
+## Eine minimale Ticket-Routing-Pipeline aufbauen
 
 Wir werden das obige Skelett zu einer lauffähigen Pipeline erweitern, die Tickets von OTOBO/Znuny abruft, die Queue mit einem Hugging Face-Modell klassifiziert, das Ticket aktualisiert und eine Notiz speichert. Jeder Abschnitt erklärt, wie die Konfiguration auf konkrete Klassen im Codebase abgebildet wird.
 
@@ -64,13 +64,13 @@ Definieren Sie Services, die durch ihre ID indiziert sind:
 
 - `default_renderer` instanziiert `base:JinjaRenderer` und erfüllt die Anforderung, dass genau ein `TemplateRenderer` existiert.
 - `otobo_znuny` verweist auf `otobo-znuny:OTOBOZnunyTicketSystemService` und übergibt Verbindungsdaten innerhalb von `params`.
-- `hf_classifier` wird aufgelöst zu `hf-local:HFClassificationService` mit einem optionalen API-Token.
+- `hf_classifier` wird auf `hf-local:HFClassificationService` aufgelöst, mit einem optionalen API-Token.
 
 Diese IDs (z.B. `otobo_znuny` und `hf_classifier`) werden später aus den `injects`-Abschnitten der Pipes referenziert.
 
 ### Schritt 3: Orchestrator und Runner konfigurieren
 
-Verwenden Sie `base:SimpleSequentialOrchestrator` für eine kontinuierlich laufende Event-Schleife. Sein `params.orchestrator_sleep` steuert die Leerlaufzeit zwischen den Zyklen. Innerhalb von `params.steps` fügen Sie einen einzelnen `SimpleSequentialRunner` hinzu. Dieser Runner erwartet zwei verschachtelte `PipeConfig`-Definitionen unter `params`:
+Verwenden Sie `base:SimpleSequentialOrchestrator` für eine kontinuierlich laufende Event-Schleife. Sein `params.orchestrator_sleep` steuert die Leerlaufzeit zwischen den Zyklen. Fügen Sie innerhalb von `params.steps` einen einzelnen `SimpleSequentialRunner` hinzu. Dieser Runner erwartet zwei verschachtelte `PipeConfig`-Definitionen unter `params`:
 
 - `on` – eine Trigger-Pipe; wir verwenden `base:IntervalTrigger` mit einem `timedelta`-Intervall (`PT60S` läuft einmal pro Minute).
 - `run` – die Pipeline, die ausgeführt wird, wenn der Trigger erfolgreich ist. Hier referenzieren wir `base:CompositePipe`, die ihre eigenen `params.steps` sequenziell verarbeitet.
@@ -85,7 +85,7 @@ Innerhalb der Composite-Pipe ist jedes Element in `params.steps` eine weitere `P
 4. **`update_queue`** (`base:UpdateTicketPipe`) schreibt die neue Queue-Auswahl zurück zu OTOBO/Znuny.
 5. **`add_classification_note`** (`base:AddNotePipe`) erstellt einen Audit-Trail der automatisierten Klassifizierung.
 
-Alle Parameter referenzieren frühere Ergebnisse mithilfe von Hilfsfunktionen, die vom Jinja-Renderer bereitgestellt werden (`get_pipe_result`, `fail`, `get_env`, etc.).
+Alle Parameter referenzieren frühere Ergebnisse mithilfe von Hilfsfunktionen, die der Jinja-Renderer bereitstellt (`get_pipe_result`, `fail`, `get_env`, etc.).
 
 ### Vollständige Konfiguration
 
@@ -172,7 +172,7 @@ open_ticket_ai:
                           Confidence: {{ (get_pipe_result('queue_classifier','confidence') * 100) | round(1) }}%
 ```
 
-## Ausführen und Überprüfen der Pipeline
+## Pipeline ausführen und verifizieren
 
 1. Installieren Sie die erforderlichen Pakete (Core plus die oben aufgeführten Plugins).
 2. Stellen Sie die in der Konfiguration referenzierten Anmeldedaten über Umgebungsvariablen bereit (z.B. `OTOBO_API_TOKEN`, `HF_TOKEN`).
@@ -183,4 +183,4 @@ open_ticket_ai:
    uv run python -m open_ticket_ai.main
    ```
 
-`AppConfig` validiert die YAML beim Start gegen das Schema. Wenn ein Abschnitt fehlt oder ein Parametername falsch ist, beendet sich die Anwendung mit einer beschreibenden Validierungsfehlermeldung, bevor Tickets verarbeitet werden. Sobald die Pipeline läuft, führt der Orchestrator den `SimpleSequentialRunner` jede Minute aus, wendet die verschachtelten `CompositePipe`-Schritte an und protokolliert den Fortschritt über die konfigurierten Services.
+`AppConfig` validiert die YAML-Datei beim Start gegen das Schema. Wenn ein Abschnitt fehlt oder ein Parametername falsch ist, beendet sich die Anwendung mit einer beschreibenden Validierungsfehlermeldung, bevor Tickets verarbeitet werden. Sobald die Pipeline läuft, führt der Orchestrator den `SimpleSequentialRunner` jede Minute aus, wendet die verschachtelten `CompositePipe`-Schritte an und protokolliert den Fortschritt über die konfigurierten Services.

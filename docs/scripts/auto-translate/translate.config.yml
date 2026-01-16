@@ -34,5 +34,6 @@ target_language: de
 
 model: deepseek/deepseek-v3.2
 temperature: 0.1
-max_concurrency: 24
+max_concurrency: 64
+force: true
 

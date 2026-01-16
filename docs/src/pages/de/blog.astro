@@ -11,7 +11,7 @@ const pageTitle = 'Open Ticket AI Blog';
 const pageDescription =
   'Neueste Updates, Einblicke und Neuigkeiten über Open Ticket AI und autonome Support-Automatisierung.';
 
-// Fetch blog posts from the content collection for current locale
+// Blogbeiträge aus der Content Collection für die aktuelle Sprache abrufen
 const currentLocale = Astro.currentLocale!.toLowerCase();
 const allBlogPosts = await getCollection('blog');
 const localizedBlogPosts = allBlogPosts.filter(entry =>
@@ -19,15 +19,15 @@ const localizedBlogPosts = allBlogPosts.filter(entry =>
 );
 const publishedPosts = localizedBlogPosts.filter(({ data }) => !data.draft);
 
-// Sort posts by date (newest first)
+// Beiträge nach Datum sortieren (neueste zuerst)
 const sortedBlogPosts = publishedPosts.sort((a, b) => {
   return b.data.date.getTime() - a.data.date.getTime();
 });
 
-// Get the featured post (most recent)
+// Den vorgestellten Beitrag abrufen (aktuellster)
 const featuredPost = sortedBlogPosts[0];
 
-// Get remaining posts for the grid (all posts except featured)
+// Die verbleibenden Beiträge für das Grid abrufen (alle außer dem vorgestellten)
 
 interface BlogPost {
   id: string;
@@ -72,18 +72,18 @@ const gridPosts: BlogPost[] = await Promise.all(
     };
   })
 );
-// Helper function to format date
+// Hilfsfunktion zum Formatieren des Datums
 const formatDate = (date: Date) => {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
-// Helper function to get blog post URL (strip locale prefix and extension from id)
+// Hilfsfunktion zum Abrufen der Blog-URL (Sprachpräfix und Erweiterung aus der ID entfernen)
 const getBlogUrl = (id: string) => {
   const canonicalPath = id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
   return getRelativeLocaleUrl(Astro.currentLocale!, `blog/${canonicalPath}`);
 };
 
-// Localized URLs for BlogOverview component
+// Lokalisierte URLs für die BlogOverview-Komponente
 const localizedBlogBaseURL = getRelativeLocaleUrl(Astro.currentLocale!, 'blog');
 const localizedSubFormAction = getRelativeLocaleUrl(
   Astro.currentLocale!,

@@ -30,7 +30,7 @@ class Config:
     force: bool = False
 
     @classmethod
-    def from_yaml(cls, path: Path, force: bool = False) -> "Config":
+    def from_yaml(cls, path: Path) -> "Config":
         """Load configuration from YAML file."""
         with path.open() as f:
             data = yaml.safe_load(f)
@@ -52,7 +52,7 @@ class Config:
             model=data.get("model", "gpt-4"),
             temperature=data.get("temperature", 0.3),
             max_concurrency=data.get("max_concurrency", 5),
-            force=force,
+            force=data.get("force", False),
         )
 
 

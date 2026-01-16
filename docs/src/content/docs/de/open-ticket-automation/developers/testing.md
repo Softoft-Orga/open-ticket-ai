@@ -64,7 +64,7 @@ def test_path_with_double_dots():
 # ✅ Gut: Kernverhalten mit aussagekräftigen Fällen
 def test_path_processing():
     assert process("a.b.c") == {"a": {"b": {"c": "value"}}}
-    assert process("") == "value"  # Relevanter Edge Case
+    assert process("") == "value"  # Edge Case, der wichtig ist
 ```
 
 ## Testing Overview
@@ -123,7 +123,7 @@ from unittest.mock import Mock, patch
 
 
 def test_pipe_with_mock():
-    # Externen Service mocken
+    # Mock external service
     mock_service = Mock()
     mock_service.classify.return_value = {"queue": "billing"}
 
@@ -552,7 +552,7 @@ open-ticket-ai/
 - ❌ `src/**/test_*.py`
 - ✅ `tests/` oder `packages/*/tests/`
 
-**Testdateinamen**:
+**Testdateibenennung**:
 
 - ✅ `test_*.py`
 - ❌ `*_test.py`
@@ -616,7 +616,7 @@ packages/*/tests/conftest.py   # Package-Level
 1. Testdatei selbst
 2. Nächstgelegenes conftest.py (gleiches Verzeichnis)
 3. Übergeordnete conftest.py-Dateien (den Baum hinauf)
-4. pytest eingebaute Fixtures
+4. Pytest eingebaute Fixtures
 
 ### Workspace-Level Fixtures (tests/conftest.py)
 
@@ -790,7 +790,7 @@ def test_with_custom_config(pipe_config_factory):
 
 ### Fixture Cleanup
 
-Verwende `yield` für Fixtures, die Bereinigung benötigen:
+Verwende `yield` für Fixtures, die Cleanup benötigen:
 
 ```python
 @pytest.fixture
@@ -861,10 +861,10 @@ def ticket_system_pipe_config():
 Alle verfügbaren Fixtures für einen Test auflisten:
 
 ```bash
-# Fixtures anzeigen, die für Unit-Tests verfügbar sind
+# Show fixtures available to unit tests
 uv run -m pytest tests/unit/ --fixtures
 
-# Spezifische Fixture-Details anzeigen
+# Show specific fixture details
 uv run -m pytest tests/unit/ --fixtures -v | grep mock_ticket
 ```
 
@@ -951,7 +951,7 @@ uv run -m pytest --collect-only -v
 
 ## Pytest Configuration
 
-Das Projekt konfiguriert pytest in `pyproject.toml`:
+Die `pyproject.toml` des Projekts konfiguriert pytest:
 
 ```toml
 [tool.pytest.ini_options]
@@ -1020,4 +1020,4 @@ Tests laufen automatisch bei Push/PR über GitHub Actions. Prüfe `.github/workf
 - [Configuration Examples](../details/configuration/examples.md)
 - [Plugin Development](plugin_development.mdx)
 - [Custom Adapters](../integration/custom_adapters.md)
-- [AGENTS.md](../../../../AGENTS.md) - Verbindliche Teststrukturregeln
+- [AGENTS.md](../../../../AGENTS.md) - Autoritative Teststrukturregeln

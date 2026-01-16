@@ -1,11 +1,11 @@
 ---
 title: Pipeline Code Development
-description: 'Entwicklerleitfaden zur Implementierung benutzerdefinierter Pipes in Open Ticket AI mit dem dict[str, Any]-Muster für die Parameter-Validierung.'
+description: 'Entwicklerhandbuch zur Implementierung benutzerdefinierter Pipes in Open Ticket AI mit dem dict[str, Any]-Muster für die Parameter-Validierung.'
 ---
 
 # Pipeline Code Development
 
-Dieser Leitfaden erklärt, wie benutzerdefinierte Pipes mit dem aktuellen Parameter-Validierungsmuster implementiert werden.
+Dieses Handbuch erklärt, wie benutzerdefinierte Pipes mit dem aktuellen Parameter-Validierungsmuster implementiert werden.
 
 ## Pipe-Typen
 
@@ -87,36 +87,36 @@ flowchart TB
 **Merkmale:**
 
 - Enthält `steps`-Liste von Child-Pipe-Konfigurationen
-- Verwendet `PipeFactory`, um Child-Pipes zu erstellen
+- Verwendet `PipeFactory` zum Erstellen von Child-Pipes
 - Führt Child-Pipes sequenziell aus
-- Führt Ergebnisse über `PipeResult.union()` zusammen
+- Führt Ergebnisse via `PipeResult.union()` zusammen
 - Child-Pipes können über `parent.params` auf Parent-Parameter zugreifen
 
 **Composite-Ausführung:**
 
-1. **Initialisierung**: Vorbereitung zur Iteration durch die `steps`-Liste
-2. **Für jeden Schritt**:
-   - **Zusammenführen**: Parent-Parameter mit Schritt-Parametern kombinieren (Schritt überschreibt)
-   - **Erstellen**: Factory verwenden, um Child-Pipe-Instanz zu erstellen
-   - **Ausführen**: `child.process(context)` aufrufen → aktualisiert Kontext
-   - **Sammeln**: Child-Ergebnis in `context.pipes[child_id]` gespeichert
-   - **Weiter**: Zum nächsten Schritt gehen
-3. **Finalisierung**:
-   - **Union**: Alle Child-Ergebnisse mit `PipeResult.union()` zusammenführen
-   - **Speichern**: Composite-Ergebnis im Kontext speichern
-   - **Zurückgeben**: Finalen aktualisierten Kontext zurückgeben
+1.  **Initialisierung**: Vorbereitung zum Durchlaufen der `steps`-Liste
+2.  **Für jeden Schritt**:
+    - **Merge**: Kombiniert Parent-Parameter mit Schritt-Parametern (Schritt überschreibt)
+    - **Build**: Verwendet Factory, um Child-Pipe-Instanz zu erstellen
+    - **Execute**: Ruft `child.process(context)` auf → aktualisiert Kontext
+    - **Collect**: Child-Ergebnis wird in `context.pipes[child_id]` gespeichert
+    - **Loop**: Fährt mit dem nächsten Schritt fort
+3.  **Finalisierung**:
+    - **Union**: Führt alle Child-Ergebnisse mit `PipeResult.union()` zusammen
+    - **Save**: Speichert Composite-Ergebnis im Kontext
+    - **Return**: Gibt den final aktualisierten Kontext zurück
 
 **Feld-Details:**
 
 - **`pipes`**: Enthält Ergebnisse aller zuvor ausgeführten Pipes, nach Pipe-ID geordnet
   - Wird akkumuliert, wenn jede Pipe abgeschlossen ist
   - In CompositePipe: zusammengeführte Ergebnisse aller Child-Schritte
-  - Zugriff über `pipe_result('pipe_id')` in Templates
+  - Zugriff via `pipe_result('pipe_id')` in Templates
 
 - **`params`**: Parameter der aktuellen Pipe
   - Wird gesetzt, wenn die Pipe erstellt wird
-  - Zugänglich über `params.*` in Templates
-  - Für verschachtelte Pipes kann über `parent.params` auf den Parent verwiesen werden
+  - Zugänglich via `params.*` in Templates
+  - Für verschachtelte Pipes kann via `parent.params` auf den Parent verwiesen werden
 
 - **`parent`**: Referenz auf den Parent-Kontext (wenn innerhalb einer CompositePipe)
   - Ermöglicht Zugriff auf Parent-Scope-Variablen
@@ -147,7 +147,7 @@ Kleine, fokussierte Schritte. Beispiele:
 
 ### Expression Pipe (speziell)
 
-Rendert einen Ausdruck und gibt diesen Wert zurück. Wenn er zu einem FailMarker gerendert wird, schlägt die Pipe fehl.
+Rendert einen Ausdruck und gibt diesen Wert zurück. Wenn es zu einem FailMarker gerendert wird, schlägt die Pipe fehl.
 `registryKey: base:ExpressionPipe`
 
 ```yaml
@@ -162,7 +162,7 @@ Rendert einen Ausdruck und gibt diesen Wert zurück. Wenn er zu einem FailMarker
 
 ### Composite Pipes
 
-Führen mehrere Child-Pipes der Reihe nach aus und geben die **Union** ihrer Ergebnisse zurück.
+Führt mehrere Child-Pipes in Reihenfolge aus und gibt die **Vereinigung** ihrer Ergebnisse zurück.
 `registryKey: base:CompositePipe`
 
 ```mermaid
@@ -280,12 +280,12 @@ ansonsten wird es übersprungen. `registryKey: base:SimpleSequentialRunner`
 ## Kurze Hinweise
 
 - **registryKey** = was Sie in `use` eintragen, z.B. `use: "base:FetchTicketsPipe"`.
-- **Auf Parent-Parameter zugreifen:** Verwenden Sie `parent` nur für die **direkten** Parent-Parameter (keine mehrstufigen
+- **Zugriff auf Parent-Parameter:** Verwenden Sie `parent` nur für die Parameter des **direkten** Parents (keine mehrstufigen
   Ketten).
 
-Wenn Sie möchten, konvertiere ich dies in eine VitePress-Seite mit derselben Struktur.
+Wenn Sie möchten, konvertiere ich dies in eine VitePress-Seite mit der gleichen Struktur.
 
-## Pipe-Ausführungsablauf
+## Pipe-Ausführungsfluss
 
 ```mermaid
 %%{init:{
@@ -453,7 +453,7 @@ class MyPipe(Pipe[MyPipeParams]):
             self,
             pipe_config: PipeConfig[MyPipeParams],
             logger_factory: LoggerFactory,
-            # Hier injizierte Services hinzufügen
+            # Injected Services hier hinzufügen
             *args: Any,
             **kwargs: Any,
     ) -> None:
@@ -485,9 +485,9 @@ class MyPipe(Pipe[MyPipeParams]):
 
 ## Parameter-Validierungsmuster
 
-### Funktionsweise
+### Wie es funktioniert
 
-Die Parameter-Validierung erfolgt automatisch in der `Pipe`-Basisklasse:
+Die Parameter-Validierung geschieht automatisch in der `Pipe`-Basisklasse:
 
 ```python
 # In Pipe.__init__ (src/open_ticket_ai/core/pipes/pipe.py:27-30)
@@ -501,9 +501,9 @@ else:
 
 1. YAML-Konfiguration geladen und Templates gerendert → erzeugt `dict[str, Any]`
 2. Dict wird als `pipe_config.params` an Pipe-Konstruktor übergeben
-3. Basisklasse prüft, ob params ein Dict ist
-4. Wenn Dict: Validierung mit `params_class.model_validate()`
-5. Wenn bereits typisiert: wird unverändert verwendet
+3. Basisklasse prüft, ob params ein dict ist
+4. Wenn dict: validiert mit `params_class.model_validate()`
+5. Wenn bereits typisiert: verwendet es unverändert
 6. Ergebnis: `self.params` ist immer das validierte Pydantic-Modell
 
 ### YAML-Konfigurationsbeispiel
@@ -522,9 +522,9 @@ Benutzer schreiben YAML mit Templates:
 **Was passiert:**
 
 1. Templates gerendert: `input_field` erhält Wert von vorheriger Pipe, `threshold` von env
-2. Ergebnis als Dict: `{"input_field": "some_value", "threshold": "0.5", "max_items": 50}`
+2. Ergebnis ist dict: `{"input_field": "some_value", "threshold": "0.5", "max_items": 50}`
 3. Wird an `MyPipe.__init__` übergeben
-4. Validierung zu `MyPipeParams`: Typen werden konvertiert (threshold: str → float)
+4. Wird zu `MyPipeParams` validiert: Typen werden konvertiert (threshold: str → float)
 5. Verfügbar als `self.params.threshold` (float 0.5)
 
 ## Dependency Injection
@@ -540,7 +540,7 @@ class FetchTicketsPipe(Pipe[FetchTicketsParams]):
 
     def __init__(
             self,
-            ticket_system: TicketSystemService,  # Automatisch injiziert
+            ticket_system: TicketSystemService,  # Wird automatisch injected
             pipe_config: PipeConfig[FetchTicketsParams],
             logger_factory: LoggerFactory,
             *args: Any,
@@ -561,7 +561,7 @@ class FetchTicketsPipe(Pipe[FetchTicketsParams]):
 - id: fetch_tickets
   use: 'mypackage:FetchTicketsPipe'
   injects:
-    ticket_system: 'otobo_system' # Referenziert einen Service per ID
+    ticket_system: 'otobo_system' # Verweist auf einen Service per ID
   params:
     limit: 100
 ```
@@ -589,7 +589,7 @@ async def _process(self) -> PipeResult[MyPipeResultData]:
         )
 ```
 
-**Hinweis:** Nicht behandelte Exceptions werden von der Basisklasse abgefangen und führen zu einem fehlgeschlagenen PipeResult.
+**Hinweis:** Unbehandelte Exceptions werden von der Basisklasse abgefangen und führen zu einem fehlgeschlagenen PipeResult.
 
 ## Testen benutzerdefinierter Pipes
 
@@ -601,7 +601,7 @@ from open_ticket_ai.core.pipes.pipe_models import PipeConfig
 
 @pytest.mark.asyncio
 async def test_my_pipe_processes_correctly(logger_factory):
-    # Parameter als Dict erstellen (simuliert YAML-Rendering)
+    # Parameter als dict erstellen (simuliert YAML-Rendering)
     params = {
         "input_field": "test_value",
         "threshold": 0.7,
@@ -629,12 +629,12 @@ async def test_my_pipe_processes_correctly(logger_factory):
 
 ## Häufige Muster
 
-### Zugriff auf vorherige Pipe-Ergebnisse
+### Zugriff auf Ergebnisse vorheriger Pipes
 
 ```python
 async def _process(self) -> PipeResult[MyPipeResultData]:
-    # Zugriff über pipe_config context (falls benötigt)
-    # Normalerweise über Templates in YAML, kann aber auch im Code erfolgen
+    # Zugriff via pipe_config context (falls benötigt)
+    # Normalerweise via Templates in YAML, kann aber auch im Code erfolgen
 
     # self.params verwenden, die aus Templates gesetzt wurden
     input_data = self._config.input_field  # Bereits aus Template aufgelöst
@@ -671,25 +671,25 @@ Verwenden Sie das `depends_on`-Feld:
 **TUN:**
 
 - ✅ Immer `params_class` als Klassenattribut definieren
-- ✅ Parameter-Validierung durch den Parent-`__init__` durchführen lassen
+- ✅ Eltern-`__init__` die Parameter-Validierung überlassen
 - ✅ Beschreibende Parameternamen verwenden
-- ✅ Sinnvolle Defaults im Parametermodell angeben
+- ✅ Sinnvolle Defaults im Parameter-Modell angeben
 - ✅ Klare Fehlermeldungen in PipeResult zurückgeben
 - ✅ Wichtige Schritte und Entscheidungen loggen
 - ✅ `_process()` fokussiert und testbar halten
 
 **NICHT TUN:**
 
-- ❌ `model_validate()` nicht manuell in Ihrem `__init__` aufrufen
-- ❌ Den `params_class`-Mechanismus nicht umgehen
-- ❌ Schwere Logik nicht in `__init__` einfügen
+- ❌ Nicht manuell `model_validate()` in Ihrem `__init__` aufrufen
+- ❌ Nicht den params_class-Mechanismus umgehen
+- ❌ Keine aufwändige Logik in `__init__` einbauen
 - ❌ Nicht alle Exceptions abfangen und verstecken
-- ❌ Nicht auf unvalidierte `pipe_config.params` direkt zugreifen
+- ❌ Nicht direkt auf unvalidierte `pipe_config.params` zugreifen
 - ❌ Nicht vergessen, `super().__init__()` aufzurufen
 
 ## Verwandte Dokumentation
 
-- [Configuration and Template Rendering](../users/config_rendering.mdx) - Den Rendering-Ablauf verstehen
+- [Configuration and Template Rendering](../users/config_rendering.mdx) - Den Rendering-Flow verstehen
 - [Configuration Reference](../details/config_reference.md) - YAML-Konfigurationssyntax
 - [Testing Guide](./testing.md) - Teststrategien für Pipes
 - [Dependency Injection](./dependency_injection.md) - Service-Injection-Muster

@@ -1,9 +1,9 @@
 ---
 title: Taxonomie-Design
-description: 'Entwerfen und strukturieren Sie Ihre Ticket-Klassifizierungstaxonomie für effektives automatisches Tagging und Kategorisierung.'
-lang: de
+description: 'Entwerfen und strukturieren Sie Ihre Ticket-Klassifizierungstaxonomie für effektive automatische Tagging und Kategorisierung.'
+lang: en
 nav:
-  group: Ticket-Tagging
+  group: Ticket Tagging
   order: 1
 ---
 
@@ -29,19 +29,19 @@ Beginnen Sie mit einer überschaubaren Anzahl von Kategorien:
 
 Kategorien sollten klar voneinander abgegrenzt sein:
 
-- Vermeiden Sie sich überschneidende Definitionen
+- Vermeiden Sie überlappende Definitionen
 - Verwenden Sie klare, beschreibende Namen
 - Definieren Sie einen expliziten Geltungsbereich für jede Kategorie
-- Dokumentieren Sie Grenzfälle und Randbedingungen
+- Dokumentieren Sie Randfälle und Grenzbedingungen
 
-### Passen Sie es an Geschäftsprozesse an
+### An Geschäftsprozesse anpassen
 
-Ihre Taxonomie sollte widerspiegeln, wie Ihre Organisation arbeitet:
+Ihre Taxonomie sollte der Arbeitsweise Ihrer Organisation entsprechen:
 
-- Reflektieren Sie bestehende Teamstrukturen
-- Ordnen Sie Support-Warteschlangen oder Abteilungen zu
-- Berücksichtigen Sie SLA-Anforderungen
-- Berücksichtigen Sie Eskalationspfade
+- Bestehende Teamstrukturen widerspiegeln
+- Auf Support-Queues oder Abteilungen abbilden
+- SLA-Anforderungen berücksichtigen
+- Eskalationspfade einbeziehen
 
 ## Taxonomie-Struktur
 
@@ -50,19 +50,19 @@ Ihre Taxonomie sollte widerspiegeln, wie Ihre Organisation arbeitet:
 Organisieren Sie Kategorien in einer Baumstruktur:
 
 ```
-IT-Support
+IT Support
 ├── Hardware
-│   ├── Desktop-Probleme
-│   ├── Laptop-Probleme
-│   └── Peripheriegeräte
+│   ├── Desktop Issues
+│   ├── Laptop Issues
+│   └── Peripherals
 ├── Software
-│   ├── Anwendungsfehler
-│   ├── Lizenzanfragen
-│   └── Installationssupport
-└── Netzwerk
-    ├── Verbindungsprobleme
-    ├── VPN-Zugang
-    └── WLAN-Probleme
+│   ├── Application Errors
+│   ├── License Requests
+│   └── Installation Support
+└── Network
+    ├── Connectivity Issues
+    ├── VPN Access
+    └── WiFi Problems
 ```
 
 **Vorteile**:
@@ -82,14 +82,14 @@ IT-Support
 Einzelstufige Kategorien:
 
 ```
-- Hardware-Probleme
-- Software-Fehler
-- Netzwerk-Probleme
-- Zugriffsanfragen
-- Passwort-Zurücksetzungen
-- Kontoverwaltung
-- E-Mail-Probleme
-- Drucker-Support
+- Hardware Issues
+- Software Errors
+- Network Problems
+- Access Requests
+- Password Resets
+- Account Management
+- Email Issues
+- Printer Support
 ```
 
 **Vorteile**:
@@ -105,62 +105,62 @@ Einzelstufige Kategorien:
 
 ## Kategorien definieren
 
-### Kategoriendefinitions-Vorlage
+### Vorlage für Kategoriendefinition
 
 Dokumentieren Sie für jede Kategorie:
 
 ```markdown
-## Kategoriename: [Name]
+## Category Name: [Name]
 
-**Beschreibung**: [Kurze Beschreibung, was in diese Kategorie gehört]
+**Description**: [Kurze Beschreibung, was in diese Kategorie gehört]
 
-**Geltungsbereich**: [Was ist enthalten]
+**Scope**: [Was ist enthalten]
 
-**Beispiele**:
+**Examples**:
 
 - Beispiel-Ticket 1
 - Beispiel-Ticket 2
 - Beispiel-Ticket 3
 
-**Ausschlüsse**: [Was ist NICHT enthalten]
+**Exclusions**: [Was ist NICHT enthalten]
 
-**Schlüsselwörter**: [Häufige Begriffe, die mit dieser Kategorie verbunden sind]
+**Keywords**: [Häufige Begriffe, die mit dieser Kategorie verbunden sind]
 
-**Priorität**: [Typische Prioritätsstufe]
+**Priority**: [Typische Prioritätsstufe]
 
-**Ziel-Warteschlange/Team**: [Wohin diese Tickets geroutet werden sollen]
+**Target Queue/Team**: [Wohin diese Tickets weitergeleitet werden sollen]
 ```
 
-### Beispiel-Kategoriendefinition
+### Beispiel für eine Kategoriendefinition
 
 ```markdown
-## Kategoriename: Passwort-Zurücksetzung
+## Category Name: Password Reset
 
-**Beschreibung**: Anfragen zum Zurücksetzen vergessener Passwörter oder Entsperren gesperrter Konten
+**Description**: Anfragen zum Zurücksetzen vergessener Passwörter oder Entsperren gesperrter Konten
 
-**Geltungsbereich**:
+**Scope**:
 
 - Anfragen für vergessene Passwörter
 - Kontosperrungen aufgrund fehlgeschlagener Login-Versuche
 - Probleme mit abgelaufenen Passwörtern
 
-**Beispiele**:
+**Examples**:
 
 - "Ich habe mein Passwort vergessen und kann mich nicht einloggen"
 - "Mein Konto ist nach zu vielen fehlgeschlagenen Versuchen gesperrt"
 - "Ich muss mein Passwort für das Kundenportal zurücksetzen"
 
-**Ausschlüsse**:
+**Exclusions**:
 
-- Erstellung neuer Konten (→ Kontoverwaltung)
-- Änderungen von Berechtigungen/Zugriffsebenen (→ Zugriffsanfragen)
-- Fragen zur Passwortrichtlinie (→ Allgemeiner IT-Support)
+- Erstellung neuer Konten (→ Account Management)
+- Änderungen von Berechtigungen/Zugriffsebenen (→ Access Requests)
+- Fragen zur Passwortrichtlinie (→ General IT Support)
 
-**Schlüsselwörter**: Passwort, zurücksetzen, gesperrt, entsperren, vergessen, Login, Zugriff
+**Keywords**: password, reset, locked, unlock, forgot, login, access
 
-**Priorität**: Mittel (beeinträchtigt die Produktivität)
+**Priority**: Medium (beeinträchtigt die Produktivität)
 
-**Ziel-Warteschlange/Team**: IT-Helpdesk
+**Target Queue/Team**: IT Help Desk
 ```
 
 ## Ihre Taxonomie testen
@@ -172,7 +172,7 @@ Testen Sie Ihre Taxonomie vor der Automatisierung manuell:
 1. **Stichprobenauswahl**: Wählen Sie 100-200 aktuelle Tickets aus
 2. **Mehrere Prüfer**: Lassen Sie 2-3 Personen dieselben Tickets klassifizieren
 3. **Übereinstimmung messen**: Berechnen Sie die Inter-Rater-Übereinstimmung
-4. **Ziel-Übereinstimmung**: Streben Sie >80% Übereinstimmung zwischen den Prüfern an
+4. **Zielübereinstimmung**: Streben Sie >80% Übereinstimmung zwischen den Prüfern an
 
 ### Häufige Probleme
 
@@ -184,8 +184,8 @@ Testen Sie Ihre Taxonomie vor der Automatisierung manuell:
 
 **Mittlere Übereinstimmung** (60-80%):
 
-- Einige Grenzfälle müssen geklärt werden
-- Möglicherweise müssen ähnliche Kategorien zusammengeführt werden
+- Einige Randfälle müssen geklärt werden
+- Ähnliche Kategorien müssen möglicherweise zusammengeführt werden
 - Verfeinerung der Kategoriengrenzen erforderlich
 
 **Hohe Übereinstimmung** (>80%):
@@ -202,15 +202,15 @@ Beginnen Sie mit Kernkategorien:
 ```
 Phase 1 (Woche 1-2):
 - 5-7 häufigste Tickettypen
-- Deckung von 60-70% des Ticketvolumens
+- 60-70% des Ticketaufkommens abdecken
 
 Phase 2 (Woche 3-4):
-- Fügen Sie 5-7 weitere Kategorien hinzu
-- Ziel: 80-90% Abdeckung
+- 5-7 weitere Kategorien hinzufügen
+- 80-90% Abdeckung anstreben
 
 Phase 3 (Monat 2+):
-- Feinabstimmung und Hinzufügen von Grenzfällen
-- Erreichen Sie >90% Abdeckung
+- Feintuning und Hinzufügen von Randfällen
+- >90% Abdeckung erreichen
 ```
 
 ### Überwachen und anpassen
@@ -218,9 +218,9 @@ Phase 3 (Monat 2+):
 Überwachen Sie nach dem Deployment kontinuierlich:
 
 - **Klassifizierungsgenauigkeit**: Nach Kategorie
-- **Konfidenzscores**: Identifizieren Sie unsichere Klassifizierungen
-- **Fehlklassifizierungen**: Suchen Sie nach Mustern
-- **Neue Tickettypen**: Identifizieren Sie Lücken in der Taxonomie
+- **Konfidenzscores**: Unsichere Klassifizierungen identifizieren
+- **Fehlklassifizierungen**: Nach Mustern suchen
+- **Neue Tickettypen**: Lücken in der Taxonomie identifizieren
 
 ### Wann Kategorien aufgeteilt werden sollten
 
@@ -242,21 +242,21 @@ Erwägen Sie eine Zusammenführung, wenn:
 
 ## Best Practices
 
-### TUN ✅
+### DO ✅
 
-- Beginnen Sie mit geschäftsgetriebenen Kategorien
-- Dokumentieren Sie jede Kategorie klar
-- Testen Sie manuell vor der Automatisierung
-- Iterieren Sie basierend auf Feedback
-- Überwachen Sie die Leistung kontinuierlich
+- Mit geschäftsgetriebenen Kategorien beginnen
+- Jede Kategorie klar dokumentieren
+- Vor der Automatisierung manuell testen
+- Basierend auf Feedback iterieren
+- Leistung kontinuierlich überwachen
 
-### NICHT TUN ❌
+### DON'T ❌
 
-- Erstellen Sie anfangs nicht zu viele Kategorien
-- Verwenden Sie keine vagen oder sich überschneidenden Definitionen
-- Überspringen Sie keine manuelle Validierung
-- Setzen und vergessen Sie nicht - Taxonomien entwickeln sich weiter
-- Ignorieren Sie keine Vorhersagen mit geringer Konfidenz
+- Anfangs zu viele Kategorien erstellen
+- Vage oder überlappende Definitionen verwenden
+- Manuelle Validierung überspringen
+- Einmal einrichten und vergessen - Taxonomien entwickeln sich weiter
+- Niedrige Konfidenzvorhersagen ignorieren
 
 ## Tools und Ressourcen
 
@@ -277,22 +277,22 @@ docs/
 
 ### Überprüfungsplan
 
-- **Wöchentlich**: Überprüfen Sie Fehlklassifizierungen
-- **Monatlich**: Analysieren Sie die Kategorieverteilung
+- **Wöchentlich**: Fehlklassifizierungen überprüfen
+- **Monatlich**: Kategorieverteilung analysieren
 - **Vierteljährlich**: Hauptüberprüfung der Taxonomie
-- **Jährlich**: Prüfung einer kompletten Taxonomie-Neugestaltung
+- **Jährlich**: Erwägung einer vollständigen Taxonomie-Neugestaltung
 
 ## Nächste Schritte
 
 Nach dem Entwurf Ihrer Taxonomie:
 
-1. **Trainingsdaten vorbereiten**: Sammeln und labeln Sie historische Tickets
-2. **Modell konfigurieren**: Richten Sie das Klassifizierungsmodell mit Ihren Kategorien ein
-3. **Klassifizierung testen**: Validieren Sie mit Hold-out-Daten
-4. **Leistung überwachen**: Verfolgen Sie die Genauigkeit und passen Sie sie bei Bedarf an
+1. **Trainingsdaten vorbereiten**: Historische Tickets sammeln und labeln
+2. **Modell konfigurieren**: Klassifizierungsmodell mit Ihren Kategorien einrichten
+3. **Klassifizierung testen**: Mit Hold-out-Daten validieren
+4. **Leistung überwachen**: Genauigkeit verfolgen und bei Bedarf anpassen
 
 ## Verwandte Dokumentation
 
-- [Tag-Mapping](tag-mapping.md) - Klassifizierungen auf Ticket-Felder abbilden
-- [Modell verwenden](using-model.md) - Klassifizierungsmodelle konfigurieren und verwenden
-- [Hardware-Dimensionierung](hardware-sizing.md) - Infrastrukturanforderungen für die Klassifizierung
+- [Tag Mapping](tag-mapping.md) - Klassifizierungen auf Ticket-Felder abbilden
+- [Using Model](using-model.md) - Klassifizierungsmodelle konfigurieren und verwenden
+- [Hardware Sizing](hardware-sizing.md) - Infrastrukturanforderungen für die Klassifizierung

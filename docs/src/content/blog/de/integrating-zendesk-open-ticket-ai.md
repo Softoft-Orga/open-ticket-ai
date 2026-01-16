@@ -1,6 +1,6 @@
 ---
-title: 'Zendesk Integration for Open Ticket AI: Self-Hosted AI Ticket Classification'
-description: 'Verbinden Sie Open Ticket AI mit Zendesk für automatisierte, On-Premise-Ticket-Weiterleitung und -Klassifizierung. Erstellen Sie benutzerdefinierte Plugins mit REST API-Integration für intelligente Support-Automatisierung.'
+title: 'Zendesk Integration für Open Ticket AI: Self-Hosted AI-Ticket-Klassifizierung'
+description: 'Verbinden Sie Open Ticket AI mit Zendesk für automatisierte, On-Premise-Ticket-Weiterleitung und -Klassifizierung. Erstellen Sie benutzerdefinierte Plugins mit REST-API-Integration für intelligente Support-Automatisierung.'
 lang: en
 date: 2025-08-05
 tags:
@@ -17,7 +17,7 @@ image: ../../../assets/images/ticketsystem-integration-ai-dark-blue.png
 
 # Zendesk Integration für Open Ticket AI
 
-Open Ticket AI (OTAI) läuft vollständig On-Premise und klassifiziert Support-Tickets in Warteschlangen, Prioritäten und benutzerdefinierte Labels. Um OTAI mit **Zendesk** zu integrieren, erstellen Sie ein kleines Plugin, das einen `ZendeskTicketsystemService` bereitstellt. OTAI lädt diesen Service automatisch und nutzt ihn, um Zendesk-Tickets über die REST API zu lesen und zu aktualisieren.
+Open Ticket AI (OTAI) läuft vollständig on-premise und klassifiziert Support-Tickets in Queues, Prioritäten und benutzerdefinierte Labels. Um OTAI mit **Zendesk** zu integrieren, erstellen Sie ein kleines Plugin, das einen `ZendeskTicketsystemService` bereitstellt. OTAI lädt diesen Service automatisch und nutzt ihn, um Zendesk-Tickets über die REST-API zu lesen und zu aktualisieren.
 
 ## Architektur
 
@@ -29,7 +29,7 @@ Eine Zendesk-Integration folgt dem gleichen OTAI-Muster:
 - Konfiguration in `config.yml`
 - OTAI ruft den Service am Ende der Pipeline auf und schreibt Vorhersagen zurück in Zendesk
 
-Dies ist identisch zur Funktionsweise der Zammad-, OTOBO/Znuny-, Freshdesk- und anderer OTAI-Adapter.
+Dies ist identisch zur Funktionsweise der Adapter für Zammad, OTOBO/Znuny, Freshdesk und andere OTAI-Adapter.
 
 ## Plugin-Struktur (`otai_zendesk`)
 
@@ -116,7 +116,7 @@ ticket_systems:
 Die Zendesk-Authentifizierung verwendet Basic Auth:
 `email/token` als Benutzername und das API-Token als Passwort.
 
-OTAI entdeckt das Plugin über Ihr `pyproject.toml`:
+OTAI entdeckt das Plugin über Ihre `pyproject.toml`:
 
 ```toml
 [project.entry-points."otai.plugins"]
@@ -125,13 +125,13 @@ otai_zendesk = "otai_zendesk.plugin:ZendeskPlugin"
 
 ## Wie die Integration funktioniert
 
-1. OTAI holt Zendesk-Tickets über REST ab
-2. KI weist Warteschlange / Priorität / benutzerdefinierte Labels zu
+1. OTAI holt Zendesk-Tickets via REST ab
+2. KI weist Queue / Priorität / benutzerdefinierte Labels zu
 3. OTAI ruft `update_ticket(...)` auf
 4. Zendesk aktualisiert das Ticket
-5. Agenten arbeiten weiterhin in Zendesk mit KI-unterstützter Weiterleitung
+5. Agents arbeiten in Zendesk mit KI-unterstützter Weiterleitung weiter
 
-Alles läuft On-Premise, ohne Zendesks eigene KI-Module.
+Alles läuft on-premise, ohne Zendesks eigene KI-Module.
 
 ## Vorteile
 

@@ -82,7 +82,7 @@ params:
 
 ### `fail()`
 
-Erzeugt eine spezielle Markierung, die vom Expression Pipe erkannt wird. Die Rückgabe dieser Markierung ermöglicht es einem Template-Ausdruck, einen Pipe explizit fehlschlagen zu lassen, anstatt eine Exception auszulösen.
+Erzeugt eine spezielle Markierung, die vom Expression-Pipe erkannt wird. Die Rückgabe dieser Markierung ermöglicht es einem Template-Ausdruck, einen Pipe explizit fehlschlagen zu lassen, anstatt eine Exception auszulösen.
 
 ```yaml
 expression: '{{ fail() if confidence < 0.6 else result }}'
@@ -90,7 +90,7 @@ expression: '{{ fail() if confidence < 0.6 else result }}'
 
 ## Template-Kontext
 
-Templates erhalten ein Kontext-Dictionary, das je nach Rendering-Stufe variiert. Die Schlüssel erscheinen direkt im Template (globale Objekte benötigen kein `context.`-Präfix).
+Templates erhalten ein Kontext-Dictionary, das je nach Rendering-Phase variiert. Die Schlüssel erscheinen direkt im Template (globale Objekte benötigen kein `context.`-Präfix).
 
 ### Globaler Kontext (immer verfügbar)
 
@@ -99,14 +99,14 @@ Templates erhalten ein Kontext-Dictionary, das je nach Rendering-Stufe variiert.
 
 ### Pipeline-Kontext
 
-Beim Rendering der Pipeline-Konfiguration:
+Beim Rendern der Pipeline-Konfiguration:
 
 - `params`: Pipeline-Parameter, definiert in `orchestrator.pipelines[].params`
 - `pipe_results`: Historische Ausführungsergebnisse, nach Pipe-ID geordnet, sofern verfügbar
 
 ### Pipe-Kontext
 
-Beim Rendering einzelner Pipes während der Ausführung:
+Beim Rendern einzelner Pipes während der Ausführung:
 
 - `params`: An den aktuellen Pipe übergebene Parameter
 - `pipe_results`: Ergebnisse von zuvor ausgeführten Pipes in derselben Pipeline
@@ -114,21 +114,21 @@ Beim Rendering einzelner Pipes während der Ausführung:
 
 Übergeordnete Parameter werden jetzt automatisch für verschachtelte Pipelines befüllt, sodass komposite Pipes mit ihren untergeordneten Pipes mithilfe von `get_parent_param()` oder durch direktes Lesen aus `parent_params` koordinieren können. Service-Instanzen werden derzeit **nicht** in Templates injiziert. Wir planen, Service-Injection in Zukunft zu untersuchen, aber diese Dokumentation spiegelt das derzeit implementierte Verhalten wider.
 
-## Wann Rendering stattfindet
+## Wann das Rendering stattfindet
 
 Verschiedene Teile Ihrer Konfiguration werden zu unterschiedlichen Zeitpunkten gerendert:
 
 ### Service-Instanziierung
 
-Services im Abschnitt `services` werden gerendert, wenn die Anwendung startet, bevor irgendwelche Pipelines ausgeführt werden. Sie haben nur Zugriff auf den globalen Kontext, der für die Service-Erstellung bereitgestellt wird.
+Services im Abschnitt `services` werden beim Start der Anwendung gerendert, bevor irgendwelche Pipelines ausgeführt werden. Sie haben nur Zugriff auf den globalen Kontext, der für die Service-Erstellung bereitgestellt wird.
 
 ### Pipeline-Erstellung
 
-Pipeline-Definitionen werden gerendert, wenn Pipelines erstellt werden. Sie haben Zugriff auf den globalen Kontext, Pipeline-Parameter und (sofern verfügbar) vorherige Pipeline-Ergebnisse.
+Pipeline-Definitionen werden erstellt, wenn Pipelines erzeugt werden. Sie haben Zugriff auf den globalen Kontext, Pipeline-Parameter und (sofern verfügbar) vorherige Pipeline-Ergebnisse.
 
 ### Pipe-Ausführung
 
-Einzelne Pipes werden kurz vor der Ausführung gerendert. Sie haben Zugriff auf globale Daten, Pipeline-Parameter, vorherige Pipe-Ergebnisse und übergeordnete Parameter, wenn der Pipe verschachtelt ist.
+Einzelne Pipes werden kurz vor der Ausführung gerendert. Sie haben Zugriff auf globale Daten, Pipeline-Parameter, Ergebnisse vorheriger Pipes und übergeordnete Parameter, wenn der Pipe verschachtelt ist.
 
 ## Was gerendert wird
 
@@ -137,7 +137,7 @@ Template Rendering wird auf String-Werte in diesen Konfigurationsabschnitten ang
 ### Services
 
 - `params`-Werte
-- `injects`-Schlüssel und -Werte
+- `injects`-Schlüssel und Werte
 
 ### Orchestrator
 
@@ -152,7 +152,7 @@ Template Rendering wird auf String-Werte in diesen Konfigurationsabschnitten ang
 - Bedingte Ausdrücke
 - Abhängigkeitsspezifikationen
 
-> Die Template-Renderer-Konfiguration selbst (`infrastructure.template_renderer_config`) wird niemals gerendert – sie wird als Roh-Eingabe verwendet, um das Rendering-System zu initialisieren. Das Rendering dieser Konfiguration würde eine zirkuläre Abhängigkeit erzeugen, da sie benötigt wird, um den Renderer selbst zu initialisieren.
+> Die Template-Renderer-Konfiguration selbst (`infrastructure.template_renderer_config`) wird niemals gerendert – sie wird als Roh-Eingabe verwendet, um das Rendering-System zu initialisieren. Das Rendern dieser Konfiguration würde eine zirkuläre Abhängigkeit erzeugen, da sie benötigt wird, um den Renderer selbst zu initialisieren.
 
 ## Beispiele
 

@@ -1,13 +1,13 @@
 ---
-title: Pipe-System
+title: Pipe System
 description: 'Erfahren Sie, wie Open Ticket AI Pipes Daten durch sequentielle Ausführung, Kontextweitergabe, Abhängigkeiten und bedingte Logik verarbeiten.'
 ---
 
-# Pipe-System
+# Pipe System
 
 Pipes sind die grundlegenden Verarbeitungseinheiten in Open Ticket AI. Jede Pipe führt eine spezifische Aufgabe aus,
 empfängt Kontext von
-vorherigen Pipes, führt ihre Logik aus und gibt den aktualisierten Kontext weiter.
+vorherigen Pipes, führt ihre Logik aus und leitet den aktualisierten Kontext weiter.
 
 ## Grundlegender Pipeline-Ablauf
 
@@ -16,10 +16,10 @@ Eine Pipeline ist eine Sequenz von Pipes, die nacheinander ausgeführt werden:
 ```mermaid
 flowchart TD
     Start([Start])
-    Pipe1["Pipe 1 - Tickets abrufen"]
-    Pipe2["Pipe 2 - Tickets klassifizieren"]
-    Pipe3["Pipe 3 - Tickets aktualisieren"]
-    End([Fertig])
+    Pipe1["Pipe 1 - Fetch Tickets"]
+    Pipe2["Pipe 2 - Classify Tickets"]
+    Pipe3["Pipe 3 - Update Tickets"]
+    End([Complete])
     Start --> Pipe1
     Pipe1 --> Pipe2
     Pipe2 --> Pipe3
@@ -28,7 +28,7 @@ flowchart TD
 
 Jede Pipe:
 
-1. Empfängt den `PipeContext` (enthält Ergebnisse vorheriger Pipes)
+1. Empfängt den `PipeContext` (enthält Ergebnisse von vorherigen Pipes)
 2. Führt ihre spezifische Aufgabe aus
 3. Erstellt ein `PipeResult` mit Ausgabedaten
 
@@ -36,9 +36,9 @@ Jede Pipe:
 
 Eine **Pipe** ist eine eigenständige Verarbeitungseinheit, die:
 
-- Spezifische Geschäftslogik implementiert (Daten abrufen, klassifizieren, aktualisieren usw.)
+- Spezifische Geschäftslogik implementiert (Daten abrufen, klassifizieren, aktualisieren, etc.)
 - Eingabe über `PipeContext` erhält
-- Ausgabe als `PipeResult` erzeugt
+- Ausgabe als `PipeResult` produziert
 
 ```mermaid
 flowchart LR
@@ -60,7 +60,7 @@ flowchart LR
 
 Atomare Verarbeitungseinheiten, die spezifische Geschäftslogik implementieren:
 
-#### YAML-Beispiel
+#### Yaml-Beispiel
 
 ```yaml
 - id: fetch_tickets
@@ -90,7 +90,7 @@ Atomare Verarbeitungseinheiten, die spezifische Geschäftslogik implementieren:
 Rendert einen Ausdruck und gibt diesen Wert zurück. Wenn es zu einem FailMarker gerendert wird, schlägt die Pipe fehl.
 `registryKey: base:ExpressionPipe`
 
-#### YAML-Beispiel
+#### Yaml-Beispiel
 
 ```yaml
 - id: check_any_tickets
@@ -114,14 +114,14 @@ flowchart TB
         A["Pipe #1"] --> B["Pipe #2"] --> C["Pipe #3"]
     end
 
-    A --> U["Ergebnis #1"]
-    B --> U["Ergebnis #2"]
-    C --> U["Ergebnis #3"]
-    U["union(Ergebnisse #1, #2 #3)"]
+    A --> U["Result #1"]
+    B --> U["Result #2"]
+    C --> U["Result #3"]
+    U["union(Results #1, #2 #3)"]
     U --> CR["PipeResult"]
 ```
 
-#### YAML-Beispiel
+#### Yaml-Beispiel
 
 <details>
 <summary>Beispiel für zusammengesetzte Pipe</summary>
@@ -169,7 +169,7 @@ flowchart TB
 
 1. **Für jeden Schritt**:
    - **Rendern**: Rendert Parameter mit Jinja2 unter Verwendung des aktuellen Kontexts
-   - **Ausführen**: Führt die nächste Kind-Pipe mit gerenderten Parametern aus
+   - **Ausführen**: Führt nächste Kind-Pipe mit gerenderten Parametern aus
    - **Schleife**: Fährt mit dem nächsten Schritt fort
 2. **Finalisierung**:
    - **Vereinigung**: Führt alle Kindergebnisse zusammen unter Verwendung von
@@ -177,20 +177,21 @@ flowchart TB
 
 ### SimpleSequentialOrchestrator (speziell)
 
-Führt seine `steps` **in einer Endlosschleife** aus. Es ist für Hintergrund-artige Zyklen gedacht. Es macht die Ergebnisse der Kind-Pipes **nicht** als ein einzelnes Pipe-Ergebnis verfügbar. `registryKey: base:SimpleSequentialOrchestrator`
+Führt seine `steps` **in einer Endlosschleife** aus. Dient für Hintergrund-artige Zyklen. Er macht die
+Ergebnisse der Kind-Pipes **nicht** als ein einzelnes Pipe-Ergebnis verfügbar. `registryKey: base:SimpleSequentialOrchestrator`
 
 #### Flussdiagramm
 
 ```mermaid
 flowchart TB
     subgraph SimpleSequentialOrchestrator
-        S1["Schritt #1"] --> S2["Schritt #2"] --> S3["Schritt #3"]
+        S1["step #1"] --> S2["step #2"] --> S3["step #3"]
     end
-    S3 --> Z(("schlafen"))
-    Z -->|Schleife| S1
+    S3 --> Z(("sleep"))
+    Z -->|loop| S1
 ```
 
-#### YAML-Beispiel
+#### Yaml-Beispiel
 
 <details>
 <summary>SimpleSequentialOrchestrator Beispiel</summary>
@@ -219,20 +220,21 @@ flowchart TB
 
 ### SimpleSequentialRunner (speziell)
 
-Hat zwei Parameter: `on` und `run` (beides sind Pipe-Konfigurationen). Wenn `on` **erfolgreich** ist, führt es `run` aus; andernfalls wird es übersprungen. `registryKey: base:SimpleSequentialRunner`
+Hat zwei Parameter: `on` und `run` (beides sind Pipe-Konfigurationen). Wenn `on` **erfolgreich** ist, führt es `run` aus;
+ansonsten wird es übersprungen. `registryKey: base:SimpleSequentialRunner`
 
 #### Flussdiagramm
 
 ```mermaid
 flowchart TB
     subgraph SimpleSequentialRunner
-        ON{"on (Trigger) erfolgreich ?"} -->|ja| RUN["run (Aktion)"]
-        ON -.->|nein| SKIP["übersprungen"]
+        ON{"on (trigger) succeded ?"} -->|yes| RUN["run (action)"]
+        ON -.->|no| SKIP["skipped"]
     end
 
 ```
 
-#### YAML-Beispiel
+#### Yaml-Beispiel
 
 ```yaml
 - id: run-when-triggered
@@ -245,7 +247,7 @@ flowchart TB
     run:
       id: do-something
       use: 'base:ExpressionPipe'
-      params: { expression: 'Ausgelöster Lauf' }
+      params: { expression: 'Triggered run' }
 ```
 
 ## Kontextweitergabe zwischen Pipes
@@ -260,9 +262,9 @@ flowchart TB
 - **`params`**: Parameter der aktuellen Pipe
   - Wird gesetzt, wenn die Pipe erstellt wird
   - Zugänglich über `params.*` in Templates
-  - Für verschachtelte Pipes kann über `parent` auf die Elternreferenz verwiesen werden
+  - Für verschachtelte Pipes kann über `parent` auf die Eltern-Pipe verwiesen werden
 
-- **`parent`**: Referenz auf Eltern-Parameter
+- **`parent`**: Verweis auf Eltern-Parameter
 
 ## PipeResult-Struktur
 
@@ -275,14 +277,15 @@ Jede Pipe erzeugt ein `PipeResult`, das Ausführungsstatus und Daten enthält:
 | _was_skipped_  | true/false        | Ob die Pipe aufgrund fehlgeschlagener Abhängigkeiten oder bedingter Ausführung übersprungen wurde |
 | _message_      | TEXT              | Menschenlesbare Nachricht, die das Ergebnis oder Probleme beschreibt              |
 
-Sie greifen auf diese Ergebnisse in den Parametern einer anderen Pipe mit diesen Funktionen zu. Derzeit gibt es keine Möglichkeit, was_skipped oder message zu lesen;
+Auf diese Ergebnisse greift man in den Parametern einer anderen Pipe mit diesen Funktionen zu. Derzeit gibt es keine
+Möglichkeit, was_skipped oder message zu lesen;
 
-| Funktion          | Parameter                                         | Rückgabewert                                                     | Fehler, wenn…          |
-| ----------------- | ------------------------------------------------- | --------------------------------------------------------------- | ---------------------- |
-| `has_failed`      | `pipe_id: text`                                   | `True`, wenn das gegebene Pipe-Ergebnis als fehlgeschlagen markiert ist | Unbekannte Pipe-ID     |
+| Funktion          | Parameter                                         | Rückgabewert                                                     | Fehler wenn…          |
+| ----------------- | -------------------------------------------------- | ----------------------------------------------------------- | ------------------- |
+| `has_failed`      | `pipe_id: text`                                    | `True`, wenn das gegebene Pipe-Ergebnis als fehlgeschlagen markiert ist            | Unbekannte Pipe-ID     |
 | `get_pipe_result` | `pipe_id: text`, `data_key: text; default = value` | Wert, der im vorherigen Pipe-Ergebnis unter dem gegebenen `data_key` gespeichert ist | Pipe oder Schlüssel fehlt |
 
-Wenn das Pipe-Ergebnis also beispielsweise ist:
+Wenn das Piperesult also beispielsweise ist:
 
 ```yaml
 - id: ticket_fetcher
@@ -291,9 +294,9 @@ Wenn das Pipe-Ergebnis also beispielsweise ist:
     data:
       fetched_tickets:
         - id: 123
-          subject: 'Hilfe!'
+          subject: 'Help me!'
         - id: 124
-          subject: 'Ein weiteres Ticket'
+          subject: 'Another ticket'
 ```
 
 Um auf die abgerufenen Tickets zuzugreifen, würden Sie verwenden:
@@ -302,13 +305,13 @@ Um auf die abgerufenen Tickets zuzugreifen, würden Sie verwenden:
 { { get_pipe_result('ticket_fetcher', 'fetched_tickets') } }
 ```
 
-Zurückgegeben wird:
+Gibt zurück:
 
 ```yaml
 - id: 123
-  subject: 'Hilfe!'
+  subject: 'Help me!'
 - id: 124
-  subject: 'Ein weiteres Ticket'
+  subject: 'Another ticket'
 ```
 
 Um auf den Betreff des ersten Tickets zuzugreifen, würden Sie verwenden:
@@ -317,10 +320,10 @@ Um auf den Betreff des ersten Tickets zuzugreifen, würden Sie verwenden:
 { { (get_pipe_result('ticket_fetcher', 'fetched_tickets') | first)[ 'subject' ] }
 ```
 
-Zurückgegeben wird:
+Gibt zurück:
 
 ```
-Hilfe!
+Help me!
 ```
 
 Um zu prüfen, ob die ticket_fetcher Pipe fehlgeschlagen ist, würden Sie verwenden:
@@ -329,7 +332,7 @@ Um zu prüfen, ob die ticket_fetcher Pipe fehlgeschlagen ist, würden Sie verwen
 { { has_failed('ticket_fetcher') } }
 ```
 
-Zurückgegeben wird:
+Gibt zurück:
 
 ```
 false
@@ -345,7 +348,7 @@ Die Erfolgsprüfung kann in Kombination mit fail() verwendet werden, um Wächter
       {{ fail() if has_failed('ticket_fetcher' else 'ok' }}
 ```
 
-Die Pipeline/der Flow würde an diesem Punkt die Ausführung stoppen, wenn die ticket_fetcher Pipe fehlgeschlagen ist.
+Die Pipeline/der Flow würde an dieser Stelle die Ausführung stoppen, wenn die ticket_fetcher Pipe fehlgeschlagen ist.
 
 ## Pipe-Registry-Übersicht
 
@@ -361,7 +364,7 @@ Die Pipeline/der Flow würde an diesem Punkt die Ausführung stoppen, wenn die t
 | SimpleSequentialOrchestrator | `base:SimpleSequentialOrchestrator` | orchestrator_sleep, exception_sleep, always_retry, steps |
 | CompositePipe                | `base:CompositePipe`                | steps                                                    |
 
-> Verwenden Sie diese Werte in Ihrem YAML als: `use: "<registryKey>"`.
+> Verwenden Sie diese Werte in Ihrer YAML als: `use: "<registryKey>"`.
 
 ---
 
@@ -379,18 +382,18 @@ Um sie zu "verwenden", setzen Sie `use` auf diesen registryKey.
 - id: 'my-add_note_pipe'
   use: 'base:AddNotePipe'
   params:
-    ticket_id: '<Ticket-ID>'
+    ticket_id: '<ticket id>'
     note:
-      subject: '<Betreff>'
-      body: '<Text>'
+      subject: '<subject>'
+      body: '<body>'
 ```
 
 ---
 
 ### FetchTicketsPipe
 
-Die Pipe `FetchTicketsPipe` fragt Tickets vom Ticket-System unter Verwendung eines einheitlichen
-`TicketSearchCriteria` (Queue, Limit, Offset usw.) ab und gibt sie als `fetched_tickets` zurück.
+Die Pipe `FetchTicketsPipe` fragt Tickets vom Ticket-System unter Verwendung eines vereinheitlichten
+`TicketSearchCriteria` (Queue, Limit, Offset, etc.) ab und gibt sie als `fetched_tickets` zurück.
 
 **registryKey:** `base:FetchTicketsPipe`
 
@@ -408,7 +411,7 @@ Die Pipe `FetchTicketsPipe` fragt Tickets vom Ticket-System unter Verwendung ein
 
 ### UpdateTicketPipe
 
-Die Pipe `UpdateTicketPipe` aktualisiert ein bestehendes Ticket anhand der ID unter Verwendung einer einheitlichen `UnifiedTicket`-
+Die Pipe `UpdateTicketPipe` aktualisiert ein bestehendes Ticket anhand der ID unter Verwendung einer vereinheitlichten `UnifiedTicket`
 Nutzlast (z.B. Queue, Priorität, Felder). Gibt den Erfolgsstatus vom Ticket-System zurück.
 
 **registryKey:** `base:UpdateTicketPipe`
@@ -417,7 +420,7 @@ Nutzlast (z.B. Queue, Priorität, Felder). Gibt den Erfolgsstatus vom Ticket-Sys
 - id: 'my-update_ticket'
   use: 'base:UpdateTicketPipe'
   params:
-    ticket_id: '<Ticket-ID>'
+    ticket_id: '<ticket id>'
     updated_ticket:
       queue:
         name: '<QueueName>'
@@ -446,7 +449,7 @@ Modells und gibt Label, Konfidenz und Scores (falls verfügbar) zurück.
 
 ### ExpressionPipe
 
-Die Pipe `ExpressionPipe` gibt den Wert von `expression` zurück; wenn er zu einem `FailMarker` ausgewertet wird, schlägt die
+Die Pipe `ExpressionPipe` gibt den Wert von `expression` zurück; wenn dieser zu einem `FailMarker` ausgewertet wird, schlägt die
 Pipe fehl (nützlich für Kontrollfluss/Wächter).
 
 **registryKey:** `base:ExpressionPipe`
@@ -478,7 +481,7 @@ Intervall seit dem letzten Trigger vergangen ist, andernfalls schlägt sie fehl.
 
 ### SimpleSequentialRunner
 
-Die Pipe `SimpleSequentialRunner` führt `on` aus und nur, wenn es erfolgreich ist, führt es `run` aus. Es ist ein minimaler
+Die Pipe `SimpleSequentialRunner` führt `on` aus und nur, wenn dies erfolgreich ist, führt es `run` aus. Es ist ein minimaler
 Zwei-Schritt-Kontroll-Runner.
 
 **registryKey:** `base:SimpleSequentialRunner`
@@ -494,14 +497,14 @@ Zwei-Schritt-Kontroll-Runner.
     run:
       id: 'do-something'
       use: 'base:ExpressionPipe'
-      params: { expression: 'los!' }
+      params: { expression: 'go!' }
 ```
 
 ---
 
 ### SimpleSequentialOrchestrator
 
-Die Pipe `SimpleSequentialOrchestrator` läuft endlos in einer Schleife und führt `steps` in jeder Runde der Reihe nach aus; sie
+Die Pipe `SimpleSequentialOrchestrator` läuft endlos in einer Schleife und führt `steps` in jeder Runde der Reihe nach aus; er
 schläft optional zwischen den Runden und bei Ausnahmen und kann automatisch wiederholen.
 
 **registryKey:** `base:SimpleSequentialOrchestrator`
@@ -537,8 +540,8 @@ Für `CompositePipe` müssen Sie keine Parameter setzen, da alle Attribute optio
     steps:
       - id: 'one'
         use: 'base:ExpressionPipe'
-        params: { expression: 'erster' }
+        params: { expression: 'first' }
       - id: 'two'
         use: 'base:ExpressionPipe'
-        params: { expression: 'zweiter' }
+        params: { expression: 'second' }
 ```

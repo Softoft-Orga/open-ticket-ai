@@ -1,6 +1,6 @@
 ---
 title: Tag Mapping
-description: 'Klassifikationsergebnisse auf Ticket-System-Felder, Warteschlangen, Prioritäten und benutzerdefinierte Attribute abbilden.'
+description: 'Klassifikationsergebnisse auf Ticket-System-Felder, Queues, Prioritäten und benutzerdefinierte Attribute abbilden.'
 lang: en
 nav:
   group: Ticket Tagging
@@ -9,23 +9,23 @@ nav:
 
 # Tag Mapping
 
-Erfahren Sie, wie Sie Klassifikationsergebnisse auf die Felder, Warteschlangen, Prioritäten und benutzerdefinierten Attribute Ihres Ticket-Systems abbilden.
+Erfahren Sie, wie Sie Klassifikationsergebnisse auf die Felder, Queues, Prioritäten und benutzerdefinierten Attribute Ihres Ticket-Systems abbilden.
 
 ## Überblick
 
 Tag Mapping verbindet die Ausgabe Ihres Klassifikationsmodells mit umsetzbaren Änderungen in Ihrem Ticket-System:
 
-- **Warteschlangenzuweisung**: Tickets an das richtige Team weiterleiten
-- **Prioritätseinstellung**: Angemessene Dringlichkeitsstufen festlegen
-- **Statusaktualisierungen**: Ticketzustände basierend auf der Klassifikation ändern
+- **Queue-Zuweisung**: Tickets an das richtige Team weiterleiten
+- **Prioritätsfestlegung**: Angemessene Dringlichkeitsstufen setzen
+- **Status-Updates**: Ticketstatus basierend auf der Klassifikation ändern
 - **Benutzerdefinierte Felder**: Metadaten und Tags befüllen
 - **Multi-Feld-Updates**: Mehrere Felder aus einer einzigen Klassifikation aktualisieren
 
 ## Grundlegendes Mapping
 
-### Einfache Warteschlangenzuordnung
+### Einfaches Queue-Mapping
 
-Klassifikations-Labels direkt auf Warteschlangennamen abbilden:
+Klassifikationslabels direkt auf Queue-Namen abbilden:
 
 ```yaml
 - id: classify
@@ -46,10 +46,10 @@ Klassifikations-Labels direkt auf Warteschlangennamen abbilden:
 
 **Anforderungen**:
 
-- Warteschlangennamen im Ticket-System stimmen exakt mit den Klassifikations-Labels überein
-- Das Modell gibt gültige Warteschlangennamen aus
+- Queue-Namen im Ticket-System stimmen exakt mit den Klassifikationslabels überein
+- Das Modell gibt gültige Queue-Namen aus
 
-### Prioritätszuordnung
+### Prioritäts-Mapping
 
 Klassifikation auf Prioritätsstufen abbilden:
 
@@ -165,7 +165,7 @@ Mehrere Felder basierend auf der Klassifikation aktualisieren:
 
 ### Konfidenzbasiertes Mapping
 
-Verschiedene Zuordnungen basierend auf der Konfidenz:
+Verschiedene Mappings basierend auf der Konfidenz:
 
 ```yaml
 - id: classify
@@ -278,7 +278,7 @@ Tags basierend auf der Klassifikation hinzufügen:
           value: "{{ get_pipe_result('generate_tags') }}"
 ```
 
-### Benutzerdefinierte Attributbefüllung
+### Benutzerdefinierte Attribut-Befüllung
 
 Auf benutzerdefinierte Felder in Ihrem Ticket-System abbilden:
 
@@ -313,9 +313,9 @@ Auf benutzerdefinierte Felder in Ihrem Ticket-System abbilden:
 
 ## Hierarchisches Mapping
 
-### Eltern-Kind-Warteschlangenstruktur
+### Parent-Child-Queue-Struktur
 
-Auf hierarchische Warteschlangenstrukturen abbilden:
+Auf hierarchische Queue-Strukturen abbilden:
 
 ```yaml
 - id: classify_department
@@ -570,48 +570,48 @@ Alle Mapping-Entscheidungen protokollieren:
 
 ### DO ✅
 
-- Validieren Sie, ob Warteschlangen-/Feldnamen existieren, bevor Sie bereitstellen
-- Verwenden Sie Fallback-Mappings für unbekannte Klassifikationen
-- Protokollieren Sie alle Klassifikationsentscheidungen zur Überwachung
-- Testen Sie Mappings zuerst an Beispieldaten
-- Dokumentieren Sie Ihre Mapping-Logik
-- Behandeln Sie Randfälle explizit
-- Überwachen Sie die Mapping-Genauigkeit über die Zeit
+- Vor dem Deployment prüfen, ob Queue-/Feldnamen existieren
+- Fallback-Mappings für unbekannte Klassifikationen verwenden
+- Alle Klassifikationsentscheidungen zur Nachverfolgung protokollieren
+- Mappings zuerst mit Beispieldaten testen
+- Ihre Mapping-Logik dokumentieren
+- Randfälle explizit behandeln
+- Mapping-Genauigkeit überwachen
 
 ### DON'T ❌
 
-- Gehen Sie davon aus, dass Klassifikations-Labels exakt mit Warteschlangennamen übereinstimmen
-- Überspringen Sie die Validierung der abgebildeten Werte
-- Stellen Sie ohne Tests an echten Tickets bereit
-- Hartkodieren Sie Werte, die sich ändern könnten
-- Ignorieren Sie Klassifikationen mit niedriger Konfidenz
-- Vergessen Sie, nicht abgebildete Labels zu behandeln
-- Weisen Sie kritische Prioritäten ohne Überprüfung automatisch zu
+- Annehmen, dass Klassifikationslabels exakt mit Queue-Namen übereinstimmen
+- Validierung der abgebildeten Werte überspringen
+- Ohne Tests mit echten Tickets deployen
+- Werte hartkodieren, die sich ändern könnten
+- Klassifikationen mit niedriger Konfidenz ignorieren
+- Vergessen, nicht abgebildete Labels zu behandeln
+- Kritische Prioritäten ohne Überprüfung automatisch zuweisen
 
 ## Häufige Muster
 
 ### Muster 1: Direktes Mapping
 
 ```yaml
-Klassifikation → Warteschlangenname
+Klassifikation → Queue-Name
 ```
 
-Verwenden, wenn: Labels exakt mit Warteschlangennamen übereinstimmen
+Verwenden, wenn: Labels exakt mit Queue-Namen übereinstimmen
 
 ### Muster 2: Lookup-Tabelle
 
 ```yaml
-Klassifikation → Mapping-Tabelle → Warteschlange/Priorität/etc.
+Klassifikation → Mapping-Tabelle → Queue/Priorität/etc
 ```
 
-Verwenden, wenn: Labels sich von Warteschlangennamen unterscheiden
+Verwenden, wenn: Labels sich von Queue-Namen unterscheiden
 
 ### Muster 3: Mehrstufig
 
 ```yaml
 Klassifikation 1 → Kategorie
 Klassifikation 2 → Unterkategorie
-Kombinieren → Endgültige Warteschlange
+Kombinieren → Finale Queue
 ```
 
 Verwenden, wenn: Hierarchische Kategorisierung benötigt wird
@@ -622,19 +622,19 @@ Verwenden, wenn: Hierarchische Kategorisierung benötigt wird
 Klassifikation + Konfidenz → Entscheidungslogik → Aktion
 ```
 
-Verwenden, wenn: Unterschiedliche Aktionen für verschiedene Konfidenzniveaus
+Verwenden, wenn: Unterschiedliche Aktionen für verschiedene Konfidenzstufen
 
 ## Nächste Schritte
 
-Nachdem Sie das Tag Mapping eingerichtet haben:
+Nach dem Einrichten des Tag Mappings:
 
-1. **Mappings testen**: An Beispieldaten validieren
+1. **Mappings testen**: Anhand von Beispiel-Tickets validieren
 2. **Genauigkeit überwachen**: Korrekte vs. falsche Mappings verfolgen
 3. **Logik verfeinern**: Basierend auf realen Ergebnissen anpassen
 4. **Änderungen dokumentieren**: Mapping-Dokumentation aktuell halten
 
 ## Verwandte Dokumentation
 
-- [Taxonomy Design](taxonomy-design.md) - Entwerfen Sie Ihre Klassifikationsstruktur
+- [Taxonomy Design](taxonomy-design.md) - Ihre Klassifikationsstruktur entwerfen
 - [Using Model](using-model.md) - Klassifikationsmodelle konfigurieren
 - [Hardware Sizing](hardware-sizing.md) - Infrastrukturanforderungen

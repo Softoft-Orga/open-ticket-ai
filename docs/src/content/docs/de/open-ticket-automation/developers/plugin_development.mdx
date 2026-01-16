@@ -1,19 +1,19 @@
 ---
 title: Plugin-Entwicklungsleitfaden
-description: 'Vollständiger Leitfaden zur Entwicklung benutzerdefinierter Plugins für Open Ticket AI inklusive Projektstruktur, Einstiegspunkten und Best Practices.'
+description: 'Vollständiger Leitfaden zur Entwicklung benutzerdefinierter Plugins für Open Ticket AI, einschließlich Projektstruktur, Einstiegspunkten und Best Practices.'
 ---
 
 # Plugin-Entwicklungsleitfaden
 
 Erfahren Sie, wie Sie benutzerdefinierte Plugins erstellen, um die Funktionalität von Open Ticket AI zu erweitern.
 
-## Paketierung & Namensanforderungen
+## Paketierungs- & Namensanforderungen
 
 Open Ticket AI entdeckt Plugins anhand ihres Python-Paketnamens und Projektmetadaten.
 
-- **Distributions-/Projektname**: muss mit `otai-` beginnen. Dies entspricht dem `AppConfig.PLUGIN_NAME_PREFIX` (`otai-`), den die Laufzeitumgebung bei der Berechnung von Registry-Schlüsseln verwendet.
+- **Distributions-/Projektname**: muss mit `otai-` beginnen. Dies entspricht dem `AppConfig.PLUGIN_NAME_PREFIX` (`otai-`), den die Runtime bei der Berechnung von Registry-Keys verwendet.
 - **Python-Paketname**: verwenden Sie dieselben Wörter wie im Distributionsnamen, aber mit Unterstrichen (`otai_my_plugin`). Der Loader konvertiert den Top-Level-Modulnamen automatisch in Kebab-Case, sodass `otai_my_plugin` intern zu `otai-my-plugin` wird.
-- **Registry-Präfix**: wenn ein Plugin Injectables registriert, entfernt es das globale Präfix (`otai-`) und behält den Rest (z.B. `otai-my-plugin` → `my-plugin`). Dieser Teil wird zum Registry-Schlüsselpräfix, kombiniert mit dem Injectable-Namen, z.B. `my-plugin:MyPipe`.
+- **Registry-Präfix**: Wenn ein Plugin Injectables registriert, entfernt es das globale Präfix (`otai-`) und behält den Rest (z.B. `otai-my-plugin` → `my-plugin`). Dieser Teil wird zum Registry-Key-Präfix, wenn er mit dem Injectable-Namen kombiniert wird, z.B. `my-plugin:MyPipe`.
 
 ## Empfohlene Projektstruktur
 
@@ -33,9 +33,9 @@ otai-my-plugin/
         └── test_my_plugin.py
 ```
 
-## Einstiegspunkt-Vertrag
+## Entry Point Vertrag
 
-Open Ticket AI lädt Plugins über die Entry-Point-Gruppe `open_ticket_ai.plugins`. Der Einstiegspunkt muss zu einem Aufrufbaren aufgelöst werden, das eine `AppConfig`-Instanz akzeptiert und ein `Plugin` zurückgibt. Das Ableiten von `Plugin` erfüllt diesen Vertrag bereits, daher können Sie Ihre Unterklasse direkt verfügbar machen.
+Open Ticket AI lädt Plugins über die Entry-Point-Gruppe `open_ticket_ai.plugins`. Der Entry Point muss zu einem Callable aufgelöst werden, das eine `AppConfig`-Instanz akzeptiert und ein `Plugin` zurückgibt. Das Ableiten von `Plugin` erfüllt diesen Vertrag bereits, daher können Sie Ihre Unterklasse direkt verfügbar machen.
 
 ```toml
 [project.entry-points."open_ticket_ai.plugins"]
@@ -44,8 +44,8 @@ my_plugin = "otai_my_plugin.plugin_factory:PluginFactory"
 
 ### Warum auf die Klasse verweisen?
 
-- Der Loader ruft das Ziel wie eine Factory auf. Das Verweisen auf die Unterklasse hält die Verkabelung deklarativ – keine Wrapper-Funktion erforderlich.
-- Der Klassenname verdeutlicht, dass die Instanziierung des Plugins Abhängigkeitsverkabelung beinhalten kann (z.B. können Konstruktorparameter über `AppConfig` hinaus durch den IoC-Container injiziert werden).
+- Der Loader ruft das Ziel wie eine Factory auf. Das Referenzieren der Unterklasse hält die Verkabelung deklarativ – keine Wrapper-Funktion erforderlich.
+- Der Klassenname verdeutlicht, dass die Instanziierung des Plugins Abhängigkeitsverkabelung beinhalten kann (z.B. können Konstruktorparameter jenseits von `AppConfig` durch den IoC-Container injiziert werden).
 
 ## Implementierung der PluginFactory-Klasse
 
@@ -53,7 +53,7 @@ Alle Plugins erben von `open_ticket_ai.core.plugins.plugin.Plugin`. Die Basiskla
 
 1. Akzeptiert `AppConfig` (vom Loader injiziert) in ihrem Konstruktor.
 2. Verwendet den Top-Level-Modulnamen, um den Plugin-Namen und Registry-Präfix abzuleiten.
-3. Ruft `_get_all_injectables()` während `on_load` auf und registriert jedes `Injectable` automatisch bei der `ComponentRegistry` nach dem Muster `<plugin-prefix>:<injectable-registry-name>`.
+3. Ruft `_get_all_injectables()` während `on_load` auf und registriert jedes `Injectable` automatisch mit der `ComponentRegistry` nach dem Muster `<plugin-prefix>:<injectable-registry-name>`.
 
 Das Trennzeichen zwischen dem Präfix und dem Injectable-Namen ist `AppConfig.REGISTRY_IDENTIFIER_SEPERATOR`, standardmäßig `:`.
 
@@ -81,19 +81,19 @@ class PluginFactory(Plugin):
 
 Wenn der Loader `PluginFactory` instanziiert, wird die Basisimplementierung:
 
-1. Das Registry-Präfix berechnen (`my-plugin` in diesem Beispiel).
+1. Den Registry-Präfix berechnen (`my-plugin` in diesem Beispiel).
 2. `MyPipe.get_registry_name()` und `MyService.get_registry_name()` aufrufen.
-3. Jedes Injectable als `my-plugin:<registry-name>` bei der gemeinsamen `ComponentRegistry` registrieren.
+3. Jedes Injectable als `my-plugin:<registry-name>` mit der gemeinsamen `ComponentRegistry` registrieren.
 
 ### Injectables zurückgeben vs. manuelle Registrierung
 
 Frühere Implementierungen erforderten eine `setup(registry)`-Hilfsfunktion, die manuelle Registrierung durchführte. Mit dem obigen Factory-Pattern geben Sie einfach die Liste der Injectables zurück und lassen die Basisklasse den Rest erledigen. Dies hält die Registrierung konsistent und stellt sicher, dass Registry-Namen automatisch der `prefix:Injectable`-Konvention folgen.
 
-Wenn Sie das automatische Verhalten umgehen müssen – z.B. um zusätzliche Aliase zu registrieren – können Sie weiterhin innerhalb von `_get_all_injectables()` auf die Registry zugreifen, indem Sie `on_load` überschreiben. Für typische Anwendungsfälle ist das Zurückgeben der Liste ausreichend und bevorzugt.
+Wenn Sie sich von dem automatischen Verhalten abkoppeln müssen – z.B. um zusätzliche Aliase zu registrieren – können Sie innerhalb von `_get_all_injectables()` weiterhin auf die Registry zugreifen, indem Sie `on_load` überschreiben. Für typische Anwendungsfälle ist das Zurückgeben der Liste ausreichend und bevorzugt.
 
-## pyproject.toml-Essentials
+## pyproject.toml Grundlagen
 
-Stellen Sie sicher, dass die Metadaten mit den Namensregeln und dem Einstiegspunkt-Vertrag übereinstimmen:
+Stellen Sie sicher, dass die Metadaten mit den Namensregeln und dem Entry-Point-Vertrag übereinstimmen:
 
 ```toml
 [project]
@@ -109,9 +109,9 @@ dependencies = [
 my_plugin = "otai_my_plugin.plugin_factory:PluginFactory"
 ```
 
-Verwenden Sie den Distributionsnamen (`otai-my-plugin`), um sowohl das Modulpräfix (`otai_my_plugin`) als auch das Registry-Präfix (`my-plugin`) abzuleiten. Diese konsistent zu halten stellt sicher, dass der Loader Einstiegspunkte korrekt auflöst und vorhersehbare Registry-Schlüssel erzeugt.
+Verwenden Sie den Distributionsnamen (`otai-my-plugin`), um sowohl das Modulpräfix (`otai_my_plugin`) als auch das Registry-Präfix (`my-plugin`) abzuleiten. Diese konsistent zu halten, stellt sicher, dass der Loader Entry Points korrekt auflöst und vorhersehbare Registry-Keys erzeugt.
 
-## Paketierung, Distribution & Tests
+## Paketierung, Distribution & Testing
 
 ```
 uv build
@@ -128,7 +128,7 @@ Schreiben Sie Unit-Tests neben Ihrem Plugin-Code unter `tests/unit/` und führen
 
 ## Kommerzielle Plugins & Monetarisierung
 
-Open Ticket AI unterstützt vollständig die **Entwicklung kommerzieller Plugins** mit vollständiger Lizenzfreiheit. Sie können Plugins erstellen und verkaufen, ohne Einschränkungen durch das Kernprojekt.
+Open Ticket AI unterstützt die Entwicklung **kommerzieller Plugins** vollständig mit vollständiger Lizenzfreiheit. Sie können Plugins erstellen und verkaufen, ohne Einschränkungen durch das Kernprojekt.
 
 ### Entwicklerfreiheit
 
@@ -142,13 +142,13 @@ Open Ticket AI unterstützt vollständig die **Entwicklung kommerzieller Plugins
 
 - **Plugin-Listings**: Verfügbar auf der Dokumentationsseite
 - **Noch kein Marketplace**: Es gibt derzeit keinen offiziellen Plugin-Marketplace oder Store
-- **Zukunftspläne**: Eine dedizierte Plugins-Showcase-Seite ist geplant mit Suche, Kategorien und Community-Bewertungen
+- **Zukunftspläne**: Eine dedizierte Plugins-Vorstellungsseite ist mit Suche, Kategorien und Community-Bewertungen geplant
 
 ### Monetarisierungsstrategien
 
 #### Strategie 1: Privates PyPI + Lizenzschlüssel
 
-Hosten Sie Ihr kommerzielles Plugin auf einem privaten PyPI-Server (DevPI, Gemfury, AWS CodeArtifact), auf den Kunden mit Authentifizierungstokens zugreifen. Implementieren Sie Lizenzvalidierung in der Initialisierung Ihres Plugins:
+Hosten Sie Ihr kommerzielles Plugin auf einem privaten PyPI-Server (DevPI, Gemfury, AWS CodeArtifact), auf den Kunden mit Authentifizierungstokens zugreifen. Implementieren Sie eine Lizenzvalidierung in der Initialisierung Ihres Plugins:
 
 ```python
 import os
@@ -165,7 +165,7 @@ class MyCommercialPlugin(Plugin):
     """Kommerzielles Plugin mit Lizenzvalidierung."""
 
     def __init__(self, config):
-        # Lizenz validieren, bevor das Plugin initialisiert wird
+        # Lizenz vor Plugin-Initialisierung validieren
         license_key = os.getenv('MY_PLUGIN_LICENSE_KEY')
         if not license_key or not self._validate_license(license_key):
             raise LicenseError(
@@ -197,7 +197,7 @@ class MyCommercialPlugin(Plugin):
             )
             return response.status_code == 200 and response.json().get('valid')
         except Exception:
-            # Gnadenfrist bei Netzwerkausfällen in Betracht ziehen
+            # Gnadenfrist für Netzwerkausfälle in Betracht ziehen
             return False
 
     def _get_all_injectables(self) -> list[type[Injectable]]:
@@ -208,7 +208,7 @@ class MyCommercialPlugin(Plugin):
 
 - Volle Kontrolle über die Distribution
 - Sichere Plugin-Auslieferung
-- Kunden-spezifische Authentifizierung
+- Kundenspezifische Authentifizierung
 - Privates Code-Repository
 
 **Nachteile:**
@@ -217,9 +217,9 @@ class MyCommercialPlugin(Plugin):
 - Komplexere Installation für Kunden
 - Weniger auffindbar
 
-#### Strategie 2: Öffentliches PyPI + Laufzeit-Lizenzdurchsetzung
+#### Strategie 2: Öffentliches PyPI + Runtime-Lizenzdurchsetzung
 
-Veröffentlichen Sie Ihr Plugin auf öffentlichem PyPI für einfache Auffindbarkeit, implementieren Sie aber Laufzeit-Lizenzvalidierung. Die Installation ist kostenlos, die Nutzung erfordert jedoch eine gültige Lizenz:
+Veröffentlichen Sie Ihr Plugin auf öffentlichem PyPI für einfache Auffindbarkeit, implementieren Sie aber eine Runtime-Lizenzvalidierung. Die Installation ist kostenlos, die Nutzung erfordert jedoch eine gültige Lizenz:
 
 ```python
 import os
@@ -233,7 +233,7 @@ class LicenseError(Exception):
 
 
 class PublicCommercialPlugin(Plugin):
-    """Öffentlich verfügbares Plugin mit Laufzeit-Lizenzdurchsetzung."""
+    """Öffentlich verfügbares Plugin mit Runtime-Lizenzdurchsetzung."""
 
     def _get_all_injectables(self) -> list[type[Injectable]]:
         """Lizenz validieren, bevor Injectables verfügbar gemacht werden."""
@@ -249,28 +249,28 @@ class PublicCommercialPlugin(Plugin):
         if not self._verify_license(license_key):
             raise LicenseError(
                 "Ungültiger oder abgelaufener Lizenzschlüssel.\n"
-                "Besuchen Sie https://myplugin.com, um zu erneuern oder eine Lizenz zu kaufen."
+                "Besuchen Sie https://myplugin.com, um zu verlängern oder eine Lizenz zu kaufen."
             )
 
         return [MyService, MyPipe]
 
     def _verify_license(self, key: str) -> bool:
         """Ihre Lizenzverifizierungslogik."""
-        # Beispiel: Lizenzformat, Ablaufdatum, Signatur prüfen
+        # Beispiel: Lizenzformat, Ablauf, Signatur prüfen
         return self._check_license_signature(key)
 
     def _check_license_signature(self, key: str) -> bool:
-        """Lizenzschlüssel-Signatur verifizieren (Beispiel)."""
-        # Implementieren Sie kryptografische Signaturüberprüfung
-        # Dies ermöglicht Offline-Validierung
-        return True  # Ersetzen durch echte Verifizierung
+        """Lizenzschlüsselsignatur verifizieren (Beispiel)."""
+        # Kryptografische Signaturüberprüfung implementieren
+        # Ermöglicht Offline-Validierung
+        return True  # Durch tatsächliche Verifizierung ersetzen
 ```
 
 **Vorteile:**
 
 - Einfache Installation via `uv add otai-my-plugin`
 - Öffentliche Auffindbarkeit auf PyPI
-- Einfaches Onboarding für Kunden
+- Einfaches Kunden-Onboarding
 - Testversionen möglich (z.B. zeitlich begrenzte Gnadenfrist)
 
 **Nachteile:**
@@ -300,7 +300,7 @@ class FreemiumPlugin(Plugin):
             BasicService,
         ]
 
-        # Fügen Sie Premium-Funktionen hinzu, wenn lizenziert
+        # Premium-Funktionen hinzufügen, wenn lizenziert
         license_key = os.getenv('MY_PLUGIN_LICENSE_KEY')
         if license_key and self._verify_license(license_key):
             injectables.extend([
@@ -328,12 +328,12 @@ license_key = os.getenv('MY_PLUGIN_LICENSE_KEY')
 Benutzer setzen sie in ihrer Umgebung:
 
 ```bash
-export MY_PLUGIN_LICENSE_KEY="your-license-key-here"
+export MY_PLUGIN_LICENSE_KEY="ihr-lizenzschlüssel-hier"
 ```
 
 #### 2. Klare Fehlermeldungen
 
-Geben Sie umsetzbare Fehlermeldungen aus, die Benutzer zum Kauf von Lizenzen führen:
+Geben Sie handlungsorientierte Fehlermeldungen aus, die Benutzer zum Lizenzkauf führen:
 
 ```python
 if not license_key:
@@ -342,7 +342,7 @@ if not license_key:
         "\n"
         "Um dieses kommerzielle Plugin zu nutzen:\n"
         "1. Kaufen Sie eine Lizenz unter https://myplugin.com\n"
-        "2. Setzen Sie die Umgebungsvariable: MY_PLUGIN_LICENSE_KEY=<your-key>\n"
+        "2. Setzen Sie die Umgebungsvariable: MY_PLUGIN_LICENSE_KEY=<ihr-key>\n"
         "3. Starten Sie Open Ticket AI neu\n"
         "\n"
         "Bei Fragen kontaktieren Sie support@myplugin.com"
@@ -361,7 +361,7 @@ class MyPlugin(Plugin):
         super().__init__(config)
 
 
-# Schlecht: Scheitert, wenn die Pipe ausgeführt wird
+# Schlecht: Scheitert, wenn Pipe ausgeführt wird
 class BadPipe(Pipe):
     def run(self, context):
         self._validate_license()  # Zu spät!
@@ -402,22 +402,22 @@ def _verify_license(self, key: str) -> bool:
 
 #### 5. Gnadenfristen & Testversionen
 
-Erlauben Sie angemessene Testperioden oder Gnadenfenster:
+Erlauben Sie angemessene Testzeiträume oder Gnadenfenster:
 
 ```python
 def _verify_license(self, key: str) -> bool:
-    """Erlaube 14-tägige Testperiode."""
+    """14-tägige Testphase erlauben."""
     if key.startswith('TRIAL-'):
         # Teststartdatum aus Schlüssel extrahieren
         trial_start = self._parse_trial_date(key)
         days_elapsed = (datetime.now() - trial_start).days
 
         if days_elapsed <= 14:
-            print(f"Testmodus: {14 - days_elapsed} Tage verbleibend")
+            print(f"Testmodus: Noch {14 - days_elapsed} Tage verbleibend")
             return True
         else:
             raise LicenseError(
-                "Testperiode abgelaufen. Kaufen Sie eine Lizenz unter https://myplugin.com"
+                "Testphase abgelaufen. Kaufen Sie eine Lizenz unter https://myplugin.com"
             )
 
     return self._verify_paid_license(key)
@@ -427,17 +427,17 @@ def _verify_license(self, key: str) -> bool:
 
 Um Ihr Plugin auf der offiziellen Plugins-Seite auflisten zu lassen:
 
-1. **Veröffentlichen Sie auf PyPI** mit dem Präfix `otai-` (z.B. `otai-my-plugin`)
-2. **Erstellen Sie Dokumentation**, die Funktionen, Installation und Konfiguration beschreibt
-3. **Reichen Sie einen PR** im Open Ticket AI-Dokumentations-Repository ein mit:
+1. **Auf PyPI veröffentlichen** mit dem `otai-` Präfix (z.B. `otai-my-plugin`)
+2. **Dokumentation erstellen**, die Funktionen, Installation und Konfiguration beschreibt
+3. **Einen PR einreichen** zum Open Ticket AI Dokumentations-Repository mit:
    - Plugin-Name und Beschreibung
    - Installationsanweisungen
    - Preismodell (kostenlos, kommerziell, Freemium)
    - Link zur Dokumentation
    - Support-Kontaktinformationen
-4. **Spezifizieren Sie die Lizenz** klar im README Ihres Plugins und in den PyPI-Metadaten
+4. **Lizenzierung klar angeben** in der README Ihres Plugins und den PyPI-Metadaten
 
-### Beispiel: Vollständige kommerzielle Plugin-Struktur
+### Beispiel: Komplette kommerzielle Plugin-Struktur
 
 ```
 otai-my-commercial-plugin/
@@ -469,16 +469,16 @@ Als kommerzieller Plugin-Entwickler sollten Sie beachten:
 
 - **Dokumentation**: Umfassende Anleitungen für Installation, Konfiguration, Fehlerbehebung
 - **Support-Kanäle**: E-Mail, Issue-Tracker, Discord/Slack-Community
-- **Updates**: Regelmäßige Releases für Fehlerbehebungen und neue Funktionen
-- **Kompatibilität**: Testen gegen neue Open Ticket AI-Versionen
-- **Migrationsleitfäden**: Helfen Sie Benutzern beim Upgrade zwischen Versionen
+- **Updates**: Regelmäßige Releases für Bugfixes und neue Funktionen
+- **Kompatibilität**: Gegen neue Open Ticket AI-Versionen testen
+- **Migrationsleitfäden**: Benutzern beim Upgrade zwischen Versionen helfen
 
 ### Rechtliche Überlegungen
 
-- **Lizenzvereinbarung**: Stellen Sie klare Nutzungsbedingungen bereit
-- **Datenschutzrichtlinie**: Wenn Sie Daten sammeln (Lizenzvalidierungsaufrufe, Analysen)
-- **Compliance**: Stellen Sie sicher, dass Ihr Plugin relevanten Vorschriften entspricht (DSGVO, etc.)
-- **Geistiges Eigentum**: Schützen Sie Ihren Code und Ihre Marken angemessen
+- **Lizenzvereinbarung**: Klare Nutzungsbedingungen bereitstellen
+- **Datenschutzerklärung**: Wenn Daten gesammelt werden (Lizenzvalidierungsaufrufe, Analytics)
+- **Compliance**: Sicherstellen, dass Ihr Plugin relevanten Vorschriften entspricht (DSGVO, etc.)
+- **Geistiges Eigentum**: Ihren Code und Ihre Marken angemessen schützen
 
 ## Zusätzliche Ressourcen
 

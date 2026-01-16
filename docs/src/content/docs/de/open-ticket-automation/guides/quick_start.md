@@ -1,15 +1,15 @@
 ---
 title: Schnellstart-Anleitung
-description: 'Starten Sie in 5 Minuten mit Open Ticket AI durch. Schnelle Einrichtungsanleitung für Python 3.13+ mit OTOBO-, Znuny- oder OTRS-Ticketsystem-Integration.'
+description: 'Starten Sie mit Open Ticket AI in 5 Minuten. Schnelle Einrichtungsanleitung für Python 3.13+ mit OTOBO-, Znuny- oder OTRS-Ticketsystem-Integration.'
 lang: en
 nav:
-  group: Guides
+  group: Anleitungen
   order: 1
 ---
 
 # Schnellstart-Anleitung
 
-Starten Sie in 5 Minuten mit Open Ticket AI durch.
+Starten Sie mit Open Ticket AI in 5 Minuten.
 
 ## Voraussetzungen
 
@@ -82,7 +82,7 @@ orchestrator:
 ## Ihre erste Pipeline ausführen
 
 ```bash
-# Pipeline ausführen
+# Die Pipeline ausführen
 open-ticket-ai run --config config.yml
 
 # Oder mit ausführlicher Protokollierung
@@ -132,10 +132,10 @@ orchestrator:
 Sehen Sie sich vollständige Beispiele an:
 
 ```bash
-# Verfügbare configExamples auflisten
+# Verfügbare Konfigurationsbeispiele auflisten
 ls docs/raw_en_docs/config_examples/
 
-# Queue-Klassifizierungsbeispiel ausprobieren
+# Das Queue-Klassifizierungsbeispiel ausprobieren
 cp docs/raw_en_docs/config_examples/queue_classification.yml config.yml
 open-ticket-ai run --config config.yml
 ```
@@ -191,4 +191,4 @@ Jetzt, da Open Ticket AI läuft:
 2. **Weitere Pipes hinzufügen**: Funktionalität erweitern
 3. **Leistung überwachen**: Klassifizierungsgenauigkeit verfolgen
 4. **Hochskalieren**: Mehr Tickets verarbeiten
-5. **Beitragen**: Teilen Sie Ihre Erfahrungen und Verbesserungen
+5. **Mitwirken**: Teilen Sie Ihre Erfahrungen und Verbesserungen

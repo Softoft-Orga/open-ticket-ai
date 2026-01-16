@@ -6,14 +6,14 @@ import Badge from '../../components/vue/core/basic/Badge.vue';
 import Button from '../../components/vue/core/basic/Button.vue';
 import { Icon } from 'astro-icon/components';
 
-const pageTitle = 'Open Ticket AI - Automated Ticket Tagging, On-Premise';
+const pageTitle = 'Open Ticket AI - Automatisches Ticket-Tagging, On-Premise';
 const pageDescription =
-  'Enterprise-grade ticket automation with AI-powered tagging. Process tickets locally with our on-premise solution—no cloud dependency, maximum data privacy.';
+  'Enterprise-Ticket-Automatisierung mit KI-gestütztem Tagging. Verarbeiten Sie Tickets lokal mit unserer On-Premise-Lösung – keine Cloud-Abhängigkeit, maximale Datenschutz-Compliance.';
 
 const taggingFeatures = [
   {
     title: 'Echtzeit-Klassifizierung',
-    description: 'Sofortige Kategorisierung von Tickets bei Eingang in Ihr Helpdesk',
+    description: 'Sofortige Ticket-Kategorisierung bei Eingang in Ihr Helpdesk-System',
     icon: 'heroicons:bolt',
   },
   {
@@ -28,6 +28,7 @@ const taggingFeatures = [
   },
   {
     title: 'Backlog-Verarbeitung',
+    description: 'Taggen Sie historische Tickets in großen Mengen, um Ihre gesamte Ticket-Datenbank zu organisieren',
     icon: 'heroicons:clock',
   },
   {
@@ -37,7 +38,7 @@ const taggingFeatures = [
   },
   {
     title: 'Qualitätsanalysen',
-    description: 'Integrierte Konfidenzbewertung und Qualitätsmetriken für kontinuierliche Verbesserung',
+    description: 'Integrierte Konfidenz-Bewertung und Qualitätsmetriken für kontinuierliche Verbesserung',
     icon: 'heroicons:chart-bar',
   },
 ];
@@ -51,14 +52,14 @@ const privacyFeatures = [
   {
     title: 'DSGVO-konform durch Design',
     description:
-      'Kundendaten bleiben innerhalb Ihrer Jurisdiktion und erfüllen strengste Datenschutzvorschriften',
+      'Kundendaten verbleiben in Ihrer Jurisdiktion und erfüllen die strengsten Datenschutzvorschriften',
   },
   {
-    title: 'Air-Gap kompatibel',
+    title: 'Air-Gap-kompatibel',
     description: 'Funktioniert in komplett isolierten Umgebungen ohne Internetzugang',
   },
   {
-    title: 'Vollständiger Prüfpfad',
+    title: 'Vollständiger Audit-Trail',
     description: 'Umfassende Protokollierung und Zugriffskontrolle für Compliance- und Sicherheitsteams',
   },
 ];
@@ -88,15 +89,15 @@ const privacyFeatures = [
         <h1
           class="font-display max-w-5xl text-5xl font-bold leading-tight tracking-tight text-white md:text-6xl lg:text-7xl"
         >
-          Enterprise Ticket-Automatisierung.<br />
+          Enterprise-Ticket-Automatisierung.<br />
           <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
             >100% Auf Ihrer Infrastruktur.</span
           >
         </h1>
 
         <p class="max-w-4xl text-xl leading-relaxed text-text-dim md:text-2xl">
-          Wir bieten KI-gestützte Ticket-Tagging und Workflow-Automatisierung, die vollständig
-          on-premise läuft. Ihre Ticket-Daten verlassen nie Ihr Netzwerk – Sie behalten die Kontrolle und
+          Wir bieten KI-gestütztes Ticket-Tagging und Workflow-Automatisierung, die vollständig
+          on-premise läuft. Ihre Ticket-Daten verlassen niemals Ihr Netzwerk – Sie behalten die Kontrolle und
           bleiben konform.
         </p>
 
@@ -129,11 +130,11 @@ const privacyFeatures = [
         <div class="mb-16 text-center">
           <Badge variant="subtle" tone="primary" size="md" client:load> Wer wir sind </Badge>
           <h2 class="font-display mb-6 mt-6 text-4xl font-bold text-white md:text-5xl">
-            Gebaut für Teams, die Datenschutz schätzen
+            Entwickelt für Teams, die Datenschutz schätzen
           </h2>
           <p class="mx-auto max-w-3xl text-lg leading-relaxed text-text-dim md:text-xl">
-            Wir sind spezialisiert auf On-Premise AI-Lösungen für Helpdesk-Automatisierung. Unsere Mission ist es,
-            Enterprise-grade Ticket-Intelligenz ohne Kompromisse bei der Datensouveränität zu bringen.
+            Wir sind spezialisiert auf On-Premise-AI-Lösungen für Helpdesk-Automatisierung. Unsere Mission ist es,
+            Enterprise-Ticket-Intelligenz ohne Kompromisse bei der Datensouveränität zu bringen.
           </p>
         </div>
 
@@ -148,7 +149,7 @@ const privacyFeatures = [
               <h3 class="mb-3 text-xl font-bold text-white">Datenschutz zuerst</h3>
               <p class="leading-relaxed text-text-dim">
                 Keine externen Cloud-Dienste. Die gesamte Verarbeitung erfolgt auf Ihren Servern und gewährleistet
-                vollständige Datenschutz- und Compliance-Anforderungen.
+                vollständigen Datenschutz und regulatorische Compliance.
               </p>
             </div>
           </Card>
@@ -162,8 +163,8 @@ const privacyFeatures = [
               </div>
               <h3 class="mb-3 text-xl font-bold text-white">Schnelle Bereitstellung</h3>
               <p class="leading-relaxed text-text-dim">
-                Gehen Sie in Tagen, nicht Monaten, von der Installation in die Produktion. Unser optimierter Bereitstellungsprozess
-                bringt Sie schnell zum Tagging von Tickets.
+                Gehen Sie von der Installation in wenigen Tagen in die Produktion, nicht in Monaten. Unser optimierter Bereitstellungsprozess
+                ermöglicht Ihnen schnelles Ticket-Tagging.
               </p>
             </div>
           </Card>
@@ -177,7 +178,7 @@ const privacyFeatures = [
               </div>
               <h3 class="mb-3 text-xl font-bold text-white">Enterprise-ready</h3>
               <p class="leading-relaxed text-text-dim">
-                Gebaut für groß angelegte Operationen mit Unterstützung für mehrsprachige Tickets, komplexe
+                Entwickelt für groß angelegte Operationen mit Unterstützung für mehrsprachige Tickets, komplexe
                 Workflows und Hochvolumen-Verarbeitung.
               </p>
             </div>
@@ -195,8 +196,8 @@ const privacyFeatures = [
             Tagging AI: Intelligente Klassifizierung im großen Maßstab
           </h2>
           <p class="mx-auto max-w-3xl text-lg leading-relaxed text-text-dim md:text-xl">
-            Unsere führende KI-Engine kategorisiert automatisch Support-Tickets mit Enterprise-grade
-            Genauigkeit. Gebaut für komplexe Taxonomien und mehrsprachige Umgebungen.
+            Unsere führende AI-Engine kategorisiert Support-Tickets automatisch mit Enterprise-Genauigkeit.
+            Entwickelt für komplexe Taxonomien und mehrsprachige Umgebungen.
           </p>
         </div>
 
@@ -260,8 +261,8 @@ const privacyFeatures = [
                 </h2>
 
                 <p class="text-lg leading-relaxed text-text-dim">
-                  Im Gegensatz zu Cloud-basierten Wettbewerbern bringen wir die KI direkt zu Ihrer Infrastruktur. Das
-                  ist nicht nur eine Bereitstellungsoption – es ist unsere Kernphilosophie und was uns auszeichnet.
+                  Im Gegensatz zu Cloud-basierten Wettbewerbern bringen wir die AI direkt zu Ihrer Infrastruktur. Das
+                  ist nicht nur eine Bereitstellungsoption – es ist unsere Kernphilosophie und das, was uns auszeichnet.
                 </p>
 
                 <div class="mt-4 flex flex-col gap-4">
@@ -362,7 +363,7 @@ const privacyFeatures = [
                           ></path>
                         </svg>
                         <div>
-                          <div class="font-bold text-white">Tagging AI Verarbeitung</div>
+                          <div class="font-bold text-white">Tagging AI-Verarbeitung</div>
                           <div class="text-sm text-text-dim">Alles lokal, keine Cloud-Aufrufe</div>
                         </div>
                       </div>
@@ -400,7 +401,7 @@ const privacyFeatures = [
                         </svg>
                         <div>
                           <div class="font-bold text-white">Getaggte Tickets</div>
-                          <div class="text-sm text-text-dim">Bereit für Automatisierung</div>
+                          <div class="text-sm text-text-dim">Bereit für die Automatisierung</div>
                         </div>
                       </div>
                     </div>
@@ -421,7 +422,7 @@ const privacyFeatures = [
             Professionelle Services
           </Badge>
           <h2 class="font-display mb-6 mt-6 text-4xl font-bold text-white md:text-5xl">
-            Wir bieten auch Implementierungsservices an
+            Wir bieten auch Implementierungs-Services an
           </h2>
           <p class="mx-auto max-w-3xl text-lg leading-relaxed text-text-dim md:text-xl">
             Vom ersten Setup bis zu individuellen Integrationen hilft Ihnen unser Team, Open
@@ -450,7 +451,7 @@ const privacyFeatures = [
               </div>
               <h3 class="mb-2 text-lg font-bold text-white">Integrationspakete</h3>
               <p class="text-sm text-text-dim">
-                Verbinden Sie sich mit Ihrer bestehenden Helpdesk- und IT-Infrastruktur
+                Verbinden Sie sich mit Ihrem bestehenden Helpdesk und Ihrer IT-Infrastruktur
               </p>
             </div>
           </Card>
@@ -501,7 +502,7 @@ const privacyFeatures = [
                 </svg>
               </div>
               <h3 class="mb-2 text-lg font-bold text-white">Training & Support</h3>
-              <p class="text-sm text-text-dim">Team-Onboarding und fortlaufende technische Unterstützung</p>
+              <p class="text-sm text-text-dim">Team-Onboarding und laufende technische Unterstützung</p>
             </div>
           </Card>
         </div>
@@ -534,7 +535,7 @@ const privacyFeatures = [
               Bereit, Ihre Ticket-Daten privat zu halten?
             </h2>
             <p class="relative mx-auto mb-8 max-w-2xl text-lg text-text-dim">
-              Schließen Sie sich Organisationen an, die On-Premise AI für ihre Helpdesk-Automatisierung vertrauen. Beginnen Sie mit
+              Schließen Sie sich Organisationen an, die On-Premise-AI für ihre Helpdesk-Automatisierung vertrauen. Beginnen Sie mit
               unserer Dokumentation oder sprechen Sie mit unserem Team.
             </p>
             <div class="relative flex flex-wrap justify-center gap-4">
@@ -554,7 +555,7 @@ const privacyFeatures = [
                 href={getRelativeLocaleUrl(Astro.currentLocale, 'services')}
                 client:load
               >
-                Mit Vertrieb sprechen
+                Mit dem Vertrieb sprechen
               </Button>
             </div>
           </div>

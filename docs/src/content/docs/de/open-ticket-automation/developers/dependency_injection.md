@@ -1,9 +1,9 @@
 ---
 title: Dependency Injection
 description: 'Erfahren Sie, wie Open Ticket AI Dependency Injection verwendet, um Services zu verwalten, Abhängigkeiten aufzulösen und Testbarkeit mit loser Kopplung zu ermöglichen.'
-lang: en
+lang: de
 nav:
-  group: Developers
+  group: Entwickler
   order: 1
 ---
 
@@ -15,14 +15,14 @@ die Abhängigkeiten zur Laufzeit auflösen.
 
 ## Grundlagen der Komponentenregistrierung
 
-`ComponentRegistry` verfolgt jedes Injectable, das die Laufzeit konstruieren kann. Pipes und Services werden
-in separaten Dictionaries gespeichert, damit die Registry klarere Fehlermeldungen und Typ-
-Erwartungen während der Suche durchsetzen kann.【F:
+`ComponentRegistry` verfolgt jedes injizierbare Objekt, das die Laufzeit konstruieren kann. Pipes und Services werden
+in separaten Wörterbüchern gespeichert, damit die Registry klarere Fehlermeldungen und Typenerwartungen
+während der Suche durchsetzen kann.【F:
 src/open_ticket_ai/core/dependency_injection/component_registry.py†L12-L41】
 
-- `register()` untersucht die Klasse, die registriert wird. Pipes (Unterklassen von `Pipe`) werden in
-  `_pipes` gespeichert, während andere Unterklassen von `Injectable` in `_services` gespeichert werden.
-- Wenn eine Suche fehlschlägt, enthält `InjectableNotFoundError` die Kennungen, die derzeit geladen sind,
+- `register()` untersucht die Klasse, die registriert wird. Pipes (Unterklassen von `Pipe`) werden
+  in `_pipes` gespeichert, während andere Unterklassen von `Injectable` in `_services` gespeichert werden.
+- Wenn eine Suche fehlschlägt, enthält `InjectableNotFoundError` die Bezeichner, die aktuell geladen sind,
   um Konfigurationsprobleme leichter zu diagnostizieren.【F:
   src/open_ticket_ai/core/dependency_injection/component_registry.py†L23-L40】【F:
   src/open_ticket_ai/core/config/errors.py†L26-L34】
@@ -33,30 +33,29 @@ src/open_ticket_ai/core/dependency_injection/component_registry.py†L12-L41】
 ### Wie Plugins die Registry füllen
 
 Jedes Plugin implementiert `Plugin._get_all_injectables()` und gibt jede Service- und Pipe-Klasse zurück, die
-entdeckbar sein soll. Während des Anwendungsstarts sucht der `PluginLoader` nach Entry Points in der
+entdeckbar sein soll. Während des Anwendungsstarts findet der `PluginLoader` Entry Points in der
 Gruppe `open_ticket_ai.plugins`, instanziiert das Plugin und ruft `on_load()` mit der gemeinsamen
 Registry auf.【F:src/open_ticket_ai/core/plugins/plugin_loader.py†L19-L51】
 
-`Plugin.on_load()` erstellt eine Registry-Kennung für jedes Injectable. Das Präfix wird vom
-Plugin-Modulnamen abgeleitet (wobei das globale `otai-` Plugin-Präfix entfernt wird) und mit der
-eigenen `get_registry_name()` des Injectables unter Verwendung von `:` als Trennzeichen kombiniert. Dies stellt sicher, dass Registry-IDs global eindeutig bleiben, während sie dennoch lesbar sind (z.B. `base:MyService`).【F:
+`Plugin.on_load()` erstellt einen Registry-Bezeichner für jedes injizierbare Objekt. Das Präfix wird vom
+Plugin-Modulnamen abgeleitet (wobei das globale `otai-` Plugin-Präfix entfernt wird) und mit dem
+eigenen `get_registry_name()` des injizierbaren Objekts unter Verwendung von `:` als Trennzeichen kombiniert. Dies stellt sicher, dass Registry-IDs global eindeutig bleiben und dennoch lesbar sind (z.B. `base:MyService`).【F:
 src/open_ticket_ai/core/plugins/plugin.py†L13-L44】【F:
 src/open_ticket_ai/core/config/app_config.py†L13-L23】
 
 ## Container-Bootstrap-Sequenz
 
-`AppModule` ist das Injector-Modul, das die Laufzeit verkabelt. Sein Konstruktor erstellt eifrig
-mehrere Singletons:
+`AppModule` ist das Injector-Modul, das die Laufzeit verkabelt. Sein Konstruktor erstellt eifrig mehrere Singletons:
 
 1. `AppConfig` lädt Umgebungs-, `.env`- und `config.yml`-Einstellungen und stellt das Workspace-
    Konfigurationsmodell bereit.【F:src/open_ticket_ai/core/dependency_injection/container.py†L22-L25】【F:
    src/open_ticket_ai/core/config/app_config.py†L5-L37】
 2. `ComponentRegistry` wird instanziiert und in das Modul, den Plugin-Loader, die Pipe-Factory
    und Tests injiziert.【F:src/open_ticket_ai/core/dependency_injection/container.py†L25-L28】
-3. `LoggerFactory` wird von `create_logger_factory()` erzeugt, damit jedes Injectable
+3. `LoggerFactory` wird von `create_logger_factory()` erzeugt, damit jedes injizierbare Objekt
    strukturierte Logger erhalten kann.【F:src/open_ticket_ai/core/dependency_injection/container.py†L26-L28】【F:
    src/open_ticket_ai/core/logging/stdlib_logging_adapter.py†L1-L45】
-4. `PluginLoader` erhält die Registry, Logger-Factory und Konfiguration. `load_plugins()` wird
+4. `PluginLoader` erhält die Registry, die Logger-Factory und die Konfiguration. `load_plugins()` wird
    sofort ausgeführt, damit Pipes und Services von Plugins verfügbar sind, bevor der Injector andere
    Bindungen auflöst.【F:src/open_ticket_ai/core/dependency_injection/container.py†L27-L34】
 
@@ -83,7 +82,7 @@ src/open_ticket_ai/core/dependency_injection/service_registry_util.py†L1-L17�
   src/open_ticket_ai/core/config/errors.py†L41-L50】
 
 Nach der Validierung wird die Registry nach der konkreten Renderer-Klasse gefragt, die mit ihren
-gerenderten Parametern instanziiert und als Singleton-TemplateRenderer für die Anwendung zurückgegeben wird.【F:
+Rendering-Parametern instanziiert und als Singleton-TemplateRenderer für die Anwendung zurückgegeben wird.【F:
 src/open_ticket_ai/core/dependency_injection/container.py†L72-L78】【F:
 src/open_ticket_ai/core/template_rendering/template_renderer.py†L1-L52】
 
@@ -92,7 +91,7 @@ src/open_ticket_ai/core/template_rendering/template_renderer.py†L1-L52】
 Die Laufzeit-Abhängigkeitsauflösung wird von `PipeFactory` orchestriert:
 
 - Wenn eine Pipe erstellt wird, löst die Factory jeden `injects`-Eintrag in der Pipe-Konfiguration auf. Jede
-  Zuordnung verknüpft einen Konstruktorparameter (wie `ticket_client`) mit der Kennung eines
+  Zuordnung verknüpft ein Konstruktorargument (wie `ticket_client`) mit dem Bezeichner eines
   konfigurierten Services. Die Factory holt die Service-Konfiguration, rendert ihre Parameter,
   instanziiert den Service und übergibt ihn an den Pipe-Konstruktor.【F:
   src/open_ticket_ai/core/pipes/pipe_factory.py†L19-L74】
@@ -104,14 +103,14 @@ Die Laufzeit-Abhängigkeitsauflösung wird von `PipeFactory` orchestriert:
   Ziele in der Konfiguration deklarieren. Dies stellt sicher, dass die Factory die richtige Klasse nachschlagen kann (z.B.
   `base:HttpTicketPipe`).【F:src/open_ticket_ai/core/plugins/plugin.py†L25-L44】
 
-Pipes erhalten ihre Parameter vor der Instanziierung durch Templating. `PipeFactory` rendert den
+Pipes erhalten ihre Parameter durch Templating vor der Instanziierung. `PipeFactory` rendert den
 `params`-Block mit dem aktiven `TemplateRenderer`, konstruiert dann die Pipe mit den gerenderten
 `PipeConfig`, dem `PipeContext`, Referenzen auf sich selbst (zum Erstellen verschachtelter Pipes) und allen injizierten
 Services.【F:src/open_ticket_ai/core/pipes/pipe_factory.py†L31-L61】
 
 Services folgen demselben Muster: Sobald ausgewählt, rendert die Factory die Service-Konfiguration
-gegen einen leeren Scope und baut das Injectable. Da jeder Service von `Injectable` abgeleitet ist,
-parsen sie automatisch typisierte Parameter über ihr `ParamsModel` und erhalten einen Logger, der nach ihrer
+gegen einen leeren Scope und baut das injizierbare Objekt. Da jeder Service von `Injectable` abgeleitet ist,
+parsen sie automatisch typisierte Parameter über ihr `ParamsModel` und erhalten einen Logger, der nach ihrem
 Konfigurations-ID benannt ist.【F:src/open_ticket_ai/core/pipes/pipe_factory.py†L62-L74】【F:
 src/open_ticket_ai/core/injectables/injectable.py†L11-L24】
 
@@ -120,13 +119,12 @@ src/open_ticket_ai/core/injectables/injectable.py†L11-L24】
 - Definieren Sie ein beschreibendes `ParamsModel` für Ihre Pipe- oder Service-Unterklasse, damit die Konfiguration
   während der Konstruktion automatisch validiert wird.【F:
   src/open_ticket_ai/core/injectables/injectable.py†L9-L24】
-- Halten Sie Inject-IDs konsistent über Konfiguration und Laufzeit hinweg, indem Sie das oben beschriebene Registry-Präfix
-  wiederverwenden.
-- Wenn Sie neue Plugins erstellen, geben Sie alle Injectable-Klassen aus `_get_all_injectables()` zurück, damit sie
-  sich während des Bootstraps automatisch registrieren.【F:src/open_ticket_ai/core/plugins/plugin.py†L37-L44】
+- Halten Sie Inject-IDs konsistent über Konfiguration und Laufzeit hinweg, indem Sie das oben beschriebene Registry-Präfix wiederverwenden.
+- Wenn Sie neue Plugins erstellen, geben Sie alle injizierbaren Klassen aus `_get_all_injectables()` zurück, damit sie
+  während des Bootstraps automatisch registriert werden.【F:src/open_ticket_ai/core/plugins/plugin.py†L37-L44】
 - Wenn eine Pipe eine andere Pipe benötigt, injizieren Sie `PipeFactory` und rufen Sie
   `await pipe_factory.create_pipe(...)` auf, anstatt sie direkt zu instanziieren. Die Factory wird
-  Templating, Logging und Abhängigkeitsauflösung für verschachtelte Pipes handhaben.【F:
+  dann Templating, Logging und Abhängigkeitsauflösung für verschachtelte Pipes handhaben.【F:
   src/open_ticket_ai/core/pipes/pipe_factory.py†L19-L61】
 
 ## Verwandte Dokumentation
