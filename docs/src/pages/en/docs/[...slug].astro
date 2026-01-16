@@ -23,6 +23,8 @@ const slugParts = entry.id
   .split('/');
 const breadcrumbs = [
   { label: 'Documentation', href: '/docs/' },
+  // Intermediate breadcrumbs are intentionally non-clickable (no href)
+  // to avoid broken links to non-existent pages
   ...slugParts.slice(0, -1).map(part => ({
     label: part
       .split('-')
