@@ -107,10 +107,14 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
             <div class="flex items-center gap-2 overflow-hidden text-xs">
               {breadcrumbs.map((crumb, i) => (
                 <>
-                  <span class:list={[
-                    'whitespace-nowrap',
-                    i === breadcrumbs.length - 1 ? 'truncate font-bold text-primary-light' : 'text-slate-500'
-                  ]}>
+                  <span
+                    class:list={[
+                      'whitespace-nowrap',
+                      i === breadcrumbs.length - 1
+                        ? 'truncate font-bold text-primary-light'
+                        : 'text-slate-500',
+                    ]}
+                  >
                     {crumb.label}
                   </span>
                   {i < breadcrumbs.length - 1 && <span class="text-xs text-slate-700">›</span>}

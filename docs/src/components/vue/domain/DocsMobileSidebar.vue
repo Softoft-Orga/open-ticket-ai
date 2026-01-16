@@ -1,10 +1,11 @@
 <template>
   <div>
     <!-- Mobile Sidebar Toggle Button - Only visible on mobile/tablet -->
+    <!-- eslint-disable-next-line vue/no-restricted-syntax -->
     <button
-      @click="isOpen = true"
       class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg transition-transform hover:scale-110 active:scale-95 lg:hidden"
       aria-label="Open sidebar menu"
+      @click="isOpen = true"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -14,13 +15,17 @@
         stroke="currentColor"
         class="h-6 w-6 text-white"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+        />
       </svg>
     </button>
 
     <!-- Mobile Sidebar Dialog -->
     <TransitionRoot :show="isOpen" as="template">
-      <Dialog @close="isOpen = false" class="relative z-50 lg:hidden">
+      <Dialog class="relative z-50 lg:hidden" @close="isOpen = false">
         <!-- Backdrop -->
         <TransitionChild
           as="template"
@@ -45,14 +50,17 @@
             leave-from="translate-x-0"
             leave-to="translate-x-full"
           >
-            <DialogPanel class="relative flex h-full w-full max-w-sm flex-col bg-[#0f0814] shadow-xl">
+            <DialogPanel
+              class="relative flex h-full w-full max-w-sm flex-col bg-[#0f0814] shadow-xl"
+            >
               <!-- Header -->
               <div class="flex items-center justify-between border-b border-white/5 px-6 py-4">
                 <DialogTitle class="text-lg font-bold text-white">Documentation</DialogTitle>
+                <!-- eslint-disable-next-line vue/no-restricted-syntax -->
                 <button
-                  @click="isOpen = false"
                   class="rounded-md p-2 text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
                   aria-label="Close sidebar"
+                  @click="isOpen = false"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -68,9 +76,14 @@
               </div>
 
               <!-- Scrollable Navigation -->
-              <nav class="flex-1 overflow-y-auto px-4 py-6" style="scrollbar-width: thin; scrollbar-color: #374151 transparent;">
+              <nav
+                class="flex-1 overflow-y-auto px-4 py-6"
+                style="scrollbar-width: thin; scrollbar-color: #374151 transparent"
+              >
                 <div v-for="section in sidebarSections" :key="section.label" class="mb-6">
-                  <h3 class="mb-2 px-3 text-[11px] font-black uppercase tracking-widest text-slate-500">
+                  <h3
+                    class="mb-2 px-3 text-[11px] font-black uppercase tracking-widest text-slate-500"
+                  >
                     {{ section.label }}
                   </h3>
                   <ul class="space-y-1">
