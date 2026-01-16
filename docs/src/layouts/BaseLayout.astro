@@ -14,8 +14,9 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+// noinspection JSUnusedGlobalSymbols
 const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
-
+console.debug(gaIds)
 // Load site configuration for current locale
 const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
 const allSiteConfigs = await getCollection('site');

@@ -1,6 +1,7 @@
+#file: noinspection YAMLSchemaValidation
 meta:
   siteName: Open Ticket AI
-  tagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
+  tagline: Private, on‑premise AI for ticket automation.
   logoUrl: /images/open-ticket-ai-logo.png
 nav:
   - label: Products
@@ -13,7 +14,7 @@ nav:
     url: blog
 footer:
   brandName: Open Ticket AI
-  brandTagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
+  brandTagline: Private, on‑premise AI for ticket automation.
   socialHeading: Connect
   sections:
     - title: Product
@@ -95,8 +96,8 @@ legalInfo:
     zip: '68159'
     country: Germany
   legalForm: UG (haftungsbeschränkt)
-  vatId: DE123456789
-  registerInfo: Amtsgericht Mannheim, HRB 123456
+  vatId: ""
+  registerInfo: Amtsgericht Mannheim, HRB
   email: info@openticketai.com
   phone: +49 621 12345678
 team:
