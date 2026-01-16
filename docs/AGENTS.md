@@ -124,6 +124,7 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 
 ## Workflow expectations
 
+- **CRITICAL: NEVER edit German content**: Files under `docs/src/pages/de/**` and `docs/src/content/*/de/**` must never be edited under any circumstances. Only work on English (`en`) content.
 - **Always format code after each task**: Run `npm run format` to format all files with Prettier
   after completing any task or making changes. This ensures consistent code style across the
   project.
