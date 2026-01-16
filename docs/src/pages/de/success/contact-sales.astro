@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SuccessfullFormSubmisionCard from '../../../components/vue/domain/SuccessfullFormSubmisionCard.vue';
+
+const pageTitle = 'Vielen Dank - Vertrieb kontaktieren';
+const pageDescription =
+  'Ihre Nachricht wurde erfolgreich empfangen. Wir werden uns bald bei Ihnen melden.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="min-h-screen bg-gradient-to-b from-background-dark to-surface-dark px-4 py-16">
+    <div class="mx-auto max-w-2xl">
+      <SuccessfullFormSubmisionCard
+        title="Vielen Dank!"
+        description="Ihre Nachricht wurde erfolgreich empfangen. Unser Vertriebsteam wird sich in Kürze bei Ihnen melden."
+        secondaryButtonText="Produkte ansehen"
+        secondaryButtonHref="/products/"
+        client:load
+      />
+    </div>
+  </div>
+</BaseLayout>

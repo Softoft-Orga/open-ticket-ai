@@ -42,20 +42,33 @@
         <Bars3Icon class="h-6 w-6" />
       </button>
     </div>
+  </header>
 
+  <Teleport to="body">
     <TransitionRoot :show="mobileMenuOpen" as="template">
-      <div class="md:hidden">
+      <div class="fixed inset-0 z-50 md:hidden">
         <TransitionChild as="template" v-bind="fade">
           <div
-            class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm"
+            class="fixed inset-0 bg-background-dark/95 backdrop-blur-md"
             @click="closeMobileMenu"
           />
         </TransitionChild>
         <TransitionChild as="template" v-bind="slideLeft">
-          <div class="fixed inset-y-0 right-0 flex w-full max-w-sm">
-            <div class="h-full w-full border-l border-border-dark bg-surface-dark p-6 shadow-2xl">
-              <div class="mb-8 flex items-center justify-between">
-                <p class="text-lg font-bold text-text-1">Menu</p>
+          <div class="fixed inset-0 z-10 flex">
+            <div
+              class="flex h-full w-full flex-col border-4 border-primary/30 bg-surface-dark shadow-[0_0_40px_rgba(166,13,242,0.3)]"
+            >
+              <div
+                class="flex h-16 items-center justify-between border-b border-primary/20 bg-surface-lighter px-4"
+              >
+                <div class="flex items-center gap-3">
+                  <img :src="logoSrc" alt="Company logo" class="size-10 object-contain" />
+                  <span
+                    class="font-display bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-lg font-bold tracking-tight text-transparent"
+                  >
+                    Open Ticket AI
+                  </span>
+                </div>
                 <button
                   aria-label="Close menu"
                   class="rounded-lg p-2 text-text-2 transition-colors hover:text-text-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
@@ -65,15 +78,15 @@
                 </button>
               </div>
 
-              <nav class="flex flex-col gap-3">
+              <nav class="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
                 <a
                   v-for="link in navLinks"
                   :key="link.url"
                   :class="[
-                    'rounded-xl px-4 py-3 text-base font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+                    'rounded-xl px-5 py-4 text-lg font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
                     isActive(link.url)
-                      ? 'border border-primary/40 bg-primary/20 text-text-1'
-                      : 'text-text-2 hover:bg-surface-lighter',
+                      ? 'bg-primary/20 text-text-1'
+                      : 'text-text-2 hover:bg-surface-lighter hover:text-text-1',
                   ]"
                   :href="link.url"
                   @click="closeMobileMenu"
@@ -82,8 +95,8 @@
                 </a>
               </nav>
 
-              <div v-if="ctaLabel" class="mt-8 border-t border-border-dark pt-6">
-                <Button :href="ctaUrl" block size="md" tone="primary" variant="subtle">
+              <div v-if="ctaLabel" class="border-t border-primary/20 p-4">
+                <Button :href="ctaUrl" block size="lg" tone="primary" variant="subtle">
                   {{ ctaLabel }}
                 </Button>
               </div>
@@ -93,7 +106,7 @@
         </TransitionChild>
       </div>
     </TransitionRoot>
-  </header>
+  </Teleport>
 </template>
 
 <script lang="ts" setup>

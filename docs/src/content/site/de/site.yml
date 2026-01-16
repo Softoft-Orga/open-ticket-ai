@@ -1,21 +1,21 @@
+#file: noinspection YAMLSchemaValidation
 meta:
   siteName: Open Ticket AI
-  tagline: Intelligente Automatisierung für OTRS, Znuny und Zammad. Deutsche Ingenieurskunst.
-  logoUrl: /public/open-ticket-logo.png
+  tagline: Private, on‑premise KI für Ticket-Automatisierung.
+  logoUrl: /images/open-ticket-ai-logo.png
 nav:
   - label: Produkte
     url: products
-  - label: Dienstleistungen
+  - label: Services
     url: services
-
   - label: Dokumentation
     url: docs
   - label: Blog
     url: blog
 footer:
   brandName: Open Ticket AI
-  brandTagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
-  socialHeading: Connect
+  brandTagline: Private, on‑premise KI für Ticket-Automatisierung.
+  socialHeading: Verbinden
   sections:
     - title: Produkt
       links:
@@ -31,85 +31,94 @@ footer:
           url: 'company/about'
         - label: Datenschutz
           url: company/data-privacy
-        - label: Karriere
-          url: '#'
-        - label: Rechtliches
-          url: '#'
+        - label: Impressum
+          url: 'company/legal-notice'
+        - label: Allgemeine Geschäftsbedingungen
+          url: 'company/terms'
   social:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
+      iconName: simple-icons:linkedin
     - platform: youtube
       url: https://www.youtube.com/@openticketai
       ariaLabel: YouTube
+      iconName: simple-icons:youtube
     - platform: github
       url: https://github.com/Softoft-Orga
       ariaLabel: GitHub
+      iconName: simple-icons:github
     - platform: huggingface
       url: https://huggingface.co/openticketai
       ariaLabel: Hugging Face
+      iconName: simple-icons:huggingface
     - platform: x
       url: https://x.com/OpenTicketAI
       ariaLabel: X (Twitter)
+      iconName: simple-icons:x
   legal:
-    - label: AGB
+    - label: Allgemeine Geschäftsbedingungen
       url: terms
   copyright: Open Ticket AI UG. Alle Rechte vorbehalten.
 
 popularResources:
   title: Beliebte Ressourcen
   groups:
-    - title: Automatisierungs-Engine
+    - title: Automation Engine
       basePath: docs/open-ticket-automation
       items:
         - docId: /guides/quick_start
-          icon: RocketLaunchIcon
+          icon: heroicons:rocket-launch
         - docId: /developers/config_rendering
-          icon: CommandLineIcon
+          icon: heroicons:command-line
         - docId: /developers/ticket_system_integration
-          icon: PuzzlePieceIcon
+          icon: heroicons:puzzle-piece
         - docId: /developers/plugin_development
-          icon: ArrowsRightLeftIcon
+          icon: heroicons:arrows-right-left
     - title: Tagging-Engine
       basePath: docs/ticket-tagging
       items:
         - docId: /taxonomy-design
-          icon: Squares2x2Icon
+          icon: heroicons:squares-2x2
         - docId: /hardware-sizing
-          icon: CpuChipIcon
+          icon: heroicons:cpu-chip
         - docId: /using-model
-          icon: ArrowPathIcon
+          icon: heroicons:arrow-path
         - docId: /tag-mapping
-          icon: ChartBarIcon
+          icon: heroicons:chart-bar
 
 legalInfo:
   companyName: Open Ticket AI UG
-  ceo: Constanze Krishnartne
+  ceo: Constanze Krishnaratne
   address:
     street: Viktoriastraße 14
     city: Mannheim
     zip: '68159'
     country: Deutschland
   legalForm: UG (haftungsbeschränkt)
-  vatId: DE123456789
-  registerInfo: Amtsgericht Mannheim, HRB 123456
+  vatId: ''
+  registerInfo: Amtsgericht Mannheim, HRB
   email: info@openticketai.com
-  phone: +49 621 12345678
+  phone: '+49 1512 0102724'
 team:
-  - name: Constanze Krishnartne
+  - name: Constanze Krishnaratne
     role: CEO
-    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=CK
+    description: Leitet die Strategie und Produktausrichtung von Open Ticket AI mit Fokus auf Transparenz, Vertrauen und operative Wirkung.
+    pictureUrl: '../../../assets/images/team/constanze_krishnaratne.png'
     email: constanze.krishnaratne@openticketai.com
-    phoneNumber: +49 621 12345678
+    phoneNumber: '+49 1512 0102724'
+    linkedInUrl: https://www.linkedin.com/in/constanze-krishnaratne
   - name: Tobias Bueck
     role: CTO
-    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=TB
+    description: Entwickelt KI-Modelle für die Ticket-Automatisierung und gewährleistet zuverlässige On-Premise-Implementierungen mit messbarer Wirkung.
+    pictureUrl: '../../../assets/images/team/tobias_bueck.jpg'
     email: tobias.bueck@openticketai.com
-    phoneNumber: +49 621 12345679
+    phoneNumber: ''
+    linkedInUrl: https://www.linkedin.com/in/tobias-bueck
 
 dataPrivacy:
   introduction: |
-    Die Open Ticket AI UG (im Folgenden "wir" oder "uns") verpflichtet sich, Ihre persönlichen Daten zu schützen und Ihre Datenschutzrechte gemäß der Datenschutz-Grundverordnung (DSGVO) und anderen geltenden Datenschutzgesetzen zu respektieren. Diese Datenschutzerklärung erläutert, wie wir Ihre persönlichen Informationen sammeln, verwenden, verarbeiten und schützen, wenn Sie unsere Dienste nutzen.
+    Die Open Ticket AI UG (im Folgenden "wir" oder "uns") ist dem Schutz Ihrer personenbezogenen Daten und der Achtung Ihrer Privatsphärenrechte gemäß der Datenschutz-Grundverordnung (DSGVO) und anderen anwendbaren Datenschutzgesetzen verpflichtet. Diese Datenschutzerklärung erläutert, wie wir Ihre personenbezogenen Informationen erfassen, nutzen, verarbeiten und schützen, wenn Sie unsere Dienste in Anspruch nehmen.
   controller:
     title: Verantwortlicher
     content: |
@@ -117,9 +126,9 @@ dataPrivacy:
       Viktoriastraße 14
       68159 Mannheim, Deutschland
       E-Mail: info@openticketai.com
-      Telefon: +49 621 12345678
+      Telefon: +49 1512 0102724
   dataProcessing:
-    title: Von uns erhobene und verarbeitete Daten
+    title: Daten, die wir erfassen und verarbeiten
     categories:
       - title: Kontaktinformationen
         description: Wenn Sie uns kontaktieren oder Informationen über unsere Dienste anfordern, erfassen wir Ihren Namen, Ihre E-Mail-Adresse, Telefonnummer und Firmeninformationen.
@@ -127,37 +136,37 @@ dataPrivacy:
       - title: Website-Nutzungsdaten
         description: Wir erfassen technische Informationen wie IP-Adresse, Browsertyp, Geräteinformationen und besuchte Seiten über Cookies und Analysetools.
         legalBasis: Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) für Cookies und unser berechtigtes Interesse an der Verbesserung unserer Website (Art. 6 Abs. 1 lit. f DSGVO)
-      - title: Dienstleistungsdaten
-        description: Bei der Nutzung unserer Dienste verarbeiten wir zur Dienstleistungserbringung erforderliche Daten, einschließlich Ticketsystemdaten, Konfigurationseinstellungen und Nutzungsmetriken.
+      - title: Dienstbezogene Daten
+        description: Bei Nutzung unserer Dienste verarbeiten wir die für die Dienstleistungserbringung notwendigen Daten, einschließlich Ticket-System-Daten, Konfigurationseinstellungen und Nutzungsmetriken.
         legalBasis: Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO)
       - title: Kommunikationsdaten
         description: Wir speichern Korrespondenz und Kommunikation mit Ihnen, einschließlich E-Mail-Austausch und Support-Tickets.
-        legalBasis: Unser berechtigtes Interesse an der Pflege von Kundenbeziehungen (Art. 6 Abs. 1 lit. f DSGVO)
+        legalBasis: Unser berechtigtes Interesse an der Aufrechterhaltung von Kundenbeziehungen (Art. 6 Abs. 1 lit. f DSGVO)
   yourRights:
     title: Ihre Rechte gemäß DSGVO
     rights:
       - title: Auskunftsrecht
-        description: Sie haben das Recht, eine Kopie der von uns gespeicherten personenbezogenen Daten anzufordern.
+        description: Sie haben das Recht, eine Kopie der personenbezogenen Daten, die wir über Sie gespeichert haben, anzufordern.
       - title: Recht auf Berichtigung
-        description: Sie können die Korrektur unrichtiger oder unvollständiger personenbezogener Daten verlangen.
+        description: Sie können verlangen, dass wir unrichtige oder unvollständige personenbezogene Daten berichtigen.
       - title: Recht auf Löschung
-        description: Sie haben das Recht, unter bestimmten Umständen die Löschung Ihrer personenbezogenen Daten zu verlangen.
-      - title: Recht auf Einschränkung
-        description: Sie können in bestimmten Situationen die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten verlangen.
+        description: Sie haben unter bestimmten Umständen das Recht, die Löschung Ihrer personenbezogenen Daten zu verlangen.
+      - title: Recht auf Einschränkung der Verarbeitung
+        description: Sie können verlangen, dass wir die Verarbeitung Ihrer personenbezogenen Daten in bestimmten Situationen einschränken.
       - title: Recht auf Datenübertragbarkeit
         description: Sie haben das Recht, Ihre personenbezogenen Daten in einem strukturierten, gängigen Format zu erhalten und an einen anderen Verantwortlichen zu übermitteln.
       - title: Widerspruchsrecht
-        description: Sie können der Verarbeitung Ihrer personenbezogenen Daten aufgrund berechtigter Interessen oder für Direktmarketingzwecke widersprechen.
+        description: Sie können der Verarbeitung Ihrer personenbezogenen Daten, die auf berechtigten Interessen oder zu Direktwerbezwecken beruht, widersprechen.
       - title: Recht auf Widerruf der Einwilligung
-        description: Wenn die Verarbeitung auf Einwilligung basiert, können Sie Ihre Einwilligung jederzeit widerrufen.
+        description: Soweit die Verarbeitung auf einer Einwilligung beruht, können Sie Ihre Einwilligung jederzeit widerrufen.
       - title: Beschwerderecht
         description: Sie haben das Recht, bei einer Aufsichtsbehörde Beschwerde einzulegen, wenn Sie der Ansicht sind, dass Ihre Datenschutzrechte verletzt wurden.
   dataSecurity:
     title: Datensicherheit
     content: |
-      Wir setzen angemessene technische und organisatorische Sicherheitsmaßnahmen zum Schutz Ihrer personenbezogenen Daten vor unbefugtem Zugriff, Änderung, Offenlegung oder Zerstörung um. Diese Maßnahmen umfassen Verschlüsselung, Zugriffskontrollen, regelmäßige Sicherheitsbewertungen und Schulungen der Mitarbeiter zu Datenschutzpraktiken. Wir überprüfen und aktualisieren unsere Sicherheitsmaßnahmen kontinuierlich, um den fortlaufenden Schutz Ihrer Daten zu gewährleisten.
+      Wir setzen angemessene technische und organisatorische Sicherheitsmaßnahmen um, um Ihre personenbezogenen Daten vor unbefugtem Zugriff, Veränderung, Offenlegung oder Zerstörung zu schützen. Diese Maßnahmen umfassen Verschlüsselung, Zugangskontrollen, regelmäßige Sicherheitsbewertungen und Schulungen der Mitarbeiter zu Datenschutzpraktiken. Wir überprüfen und aktualisieren unsere Sicherheitsmaßnahmen kontinuierlich, um den fortlaufenden Schutz Ihrer Daten sicherzustellen.
   thirdPartyServices:
-    title: Drittanbieterdienste
+    title: Drittanbieter-Dienste
     services:
       - name: Google Analytics
         purpose: Website-Analyse und Leistungsüberwachung
@@ -166,13 +175,13 @@ dataPrivacy:
       - name: GitHub
         purpose: Code-Repository und Versionskontrolle
         provider: GitHub, Inc.
-        privacyPolicy: https://docs.github.com/de/site-policy/privacy-policies/github-privacy-statement
+        privacyPolicy: https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement
       - name: Netlify
-        purpose: Website-Hosting und Content-Delivery
+        purpose: Website-Hosting und Content Delivery
         provider: Netlify, Inc.
         privacyPolicy: https://www.netlify.com/privacy/
       - name: Streak CRM
-        purpose: Kundenbeziehungsmanagement
+        purpose: Customer Relationship Management
         provider: Streak, Inc.
         privacyPolicy: https://www.streak.com/privacy
   contact:
@@ -181,6 +190,23 @@ dataPrivacy:
       Wenn Sie Fragen zu dieser Datenschutzerklärung haben oder Ihre Rechte ausüben möchten, kontaktieren Sie uns bitte unter:
 
       E-Mail: info@openticketai.com
-      Telefon: +49 621 12345678
+      Telefon: +49 1512 0102724
       Adresse: Open Ticket AI UG, Viktoriastraße 14, 68159 Mannheim, Deutschland
   lastUpdated: Januar 2026
+
+ui:
+  ctaLabel: Vertrieb kontaktieren
+  cookieBanner:
+    title: Wir schätzen Ihre Privatsphäre
+    description: Wir verwenden Cookies und Analysen, um Ihre Erfahrung zu verbessern und zu verstehen, wie Sie unsere Website nutzen. Weitere Informationen finden Sie in unserer
+    privacyPolicyText: Datenschutzerklärung
+    acceptText: Akzeptieren
+    declineText: Ablehnen
+  contactForm:
+    title: Vertrieb kontaktieren
+    submitButtonText: Absenden
+    messageLabel: Nachricht
+    emailLabel: E-Mail
+    subjectLabel: Betreff
+    emailPlaceholder: ihre@email.de
+    messagePlaceholder: Wie können wir Ihnen helfen?

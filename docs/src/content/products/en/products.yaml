@@ -103,7 +103,7 @@
     group: Products
     order: 5
     hidden: false
-  icon: hub
+  icon: heroicons:cube-transparent
   image: https://picsum.photos/800/400
 
 - slug: synthetic-data-generator

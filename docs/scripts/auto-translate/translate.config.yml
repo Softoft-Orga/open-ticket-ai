@@ -1,0 +1,39 @@
+mappings:
+  - from_dir: ../../src/pages/en
+    to_dir: ../../src/pages/de
+
+  - from_dir: ../../src/content/blog/en
+    to_dir: ../../src/content/blog/de
+  - from_dir: ../../src/content/docs/en
+    to_dir: ../../src/content/docs/de
+  - from_dir: ../../src/content/products/en
+    to_dir: ../../src/content/products/de
+  - from_dir: ../../src/content/services/en
+    to_dir: ../../src/content/services/de
+  - from_dir: ../../src/content/site/en
+    to_dir: ../../src/content/site/de
+
+include_ext:
+  - .astro
+  - .md
+  - .mdx
+  - .yml
+  - .yaml
+
+exclude_dir_names:
+  - .git
+  - node_modules
+  - dist
+  - build
+  - .astro
+
+prompt_template_path: prompt.j2
+
+base_language: en
+target_language: de
+
+model: deepseek/deepseek-v3.2
+temperature: 0.1
+max_concurrency: 64
+force: true
+

@@ -1,6 +1,7 @@
+#file: noinspection YAMLSchemaValidation
 meta:
   siteName: Open Ticket AI
-  tagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
+  tagline: Private, on‑premise AI for ticket automation.
   logoUrl: /images/open-ticket-ai-logo.png
 nav:
   - label: Products
@@ -13,7 +14,7 @@ nav:
     url: blog
 footer:
   brandName: Open Ticket AI
-  brandTagline: Intelligent automation for OTRS, Znuny, and Zammad. German Engineering.
+  brandTagline: Private, on‑premise AI for ticket automation.
   socialHeading: Connect
   sections:
     - title: Product
@@ -38,18 +39,23 @@ footer:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
       ariaLabel: LinkedIn
+      iconName: simple-icons:linkedin
     - platform: youtube
       url: https://www.youtube.com/@openticketai
       ariaLabel: YouTube
+      iconName: simple-icons:youtube
     - platform: github
       url: https://github.com/Softoft-Orga
       ariaLabel: GitHub
+      iconName: simple-icons:github
     - platform: huggingface
       url: https://huggingface.co/openticketai
       ariaLabel: Hugging Face
+      iconName: simple-icons:huggingface
     - platform: x
       url: https://x.com/OpenTicketAI
       ariaLabel: X (Twitter)
+      iconName: simple-icons:x
   legal:
     - label: Terms & Conditions
       url: terms
@@ -62,49 +68,53 @@ popularResources:
       basePath: docs/open-ticket-automation
       items:
         - docId: /guides/quick_start
-          icon: RocketLaunchIcon
+          icon: heroicons:rocket-launch
         - docId: /developers/config_rendering
-          icon: CommandLineIcon
+          icon: heroicons:command-line
         - docId: /developers/ticket_system_integration
-          icon: PuzzlePieceIcon
+          icon: heroicons:puzzle-piece
         - docId: /developers/plugin_development
-          icon: ArrowsRightLeftIcon
+          icon: heroicons:arrows-right-left
     - title: Tagging-Engine
       basePath: docs/ticket-tagging
       items:
         - docId: /taxonomy-design
-          icon: Squares2x2Icon
+          icon: heroicons:squares-2x2
         - docId: /hardware-sizing
-          icon: CpuChipIcon
+          icon: heroicons:cpu-chip
         - docId: /using-model
-          icon: ArrowPathIcon
+          icon: heroicons:arrow-path
         - docId: /tag-mapping
-          icon: ChartBarIcon
+          icon: heroicons:chart-bar
 
 legalInfo:
   companyName: Open Ticket AI UG
-  ceo: Constanze Krishnartne
+  ceo: Constanze Krishnaratne
   address:
     street: Viktoriastraße 14
     city: Mannheim
     zip: '68159'
     country: Germany
   legalForm: UG (haftungsbeschränkt)
-  vatId: DE123456789
-  registerInfo: Amtsgericht Mannheim, HRB 123456
+  vatId: ''
+  registerInfo: Amtsgericht Mannheim, HRB
   email: info@openticketai.com
-  phone: +49 621 12345678
+  phone: '+49 1512 0102724'
 team:
-  - name: Constanze Krishnartne
+  - name: Constanze Krishnaratne
     role: CEO
-    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=CK
+    description: Leading Open Ticket AI's strategy and product direction with a focus on transparency, trust, and operational impact.
+    pictureUrl: '../../../assets/images/team/constanze_krishnaratne.png'
     email: constanze.krishnaratne@openticketai.com
-    phoneNumber: +49 621 12345678
+    phoneNumber: '+49 1512 0102724'
+    linkedInUrl: https://www.linkedin.com/in/constanze-krishnaratne
   - name: Tobias Bueck
     role: CTO
-    pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=TB
+    description: Developing AI models for ticket automation and ensuring reliable on-premise deployments with measurable impact.
+    pictureUrl: '../../../assets/images/team/tobias_bueck.jpg'
     email: tobias.bueck@openticketai.com
-    phoneNumber: +49 621 12345679
+    phoneNumber: ''
+    linkedInUrl: https://www.linkedin.com/in/tobias-bueck
 
 dataPrivacy:
   introduction: |
@@ -116,7 +126,7 @@ dataPrivacy:
       Viktoriastraße 14
       68159 Mannheim, Germany
       Email: info@openticketai.com
-      Phone: +49 621 12345678
+      Phone: +49 1512 0102724
   dataProcessing:
     title: Data We Collect and Process
     categories:
@@ -180,6 +190,23 @@ dataPrivacy:
       If you have any questions about this Data Privacy Policy or wish to exercise your rights, please contact us at:
 
       Email: info@openticketai.com
-      Phone: +49 621 12345678
+      Phone: +49 1512 0102724
       Address: Open Ticket AI UG, Viktoriastraße 14, 68159 Mannheim, Germany
   lastUpdated: January 2026
+
+ui:
+  ctaLabel: Contact Sales
+  cookieBanner:
+    title: We value your privacy
+    description: We use cookies and analytics to improve your experience and understand how you use our website. For more information, please read our
+    privacyPolicyText: Privacy Policy
+    acceptText: Accept
+    declineText: Decline
+  contactForm:
+    title: Contact Sales
+    submitButtonText: Submit
+    messageLabel: Message
+    emailLabel: Email
+    subjectLabel: Subject
+    emailPlaceholder: your@email.com
+    messagePlaceholder: How can we help you?

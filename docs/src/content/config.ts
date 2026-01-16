@@ -92,7 +92,7 @@ const site = defineCollection({
     base: './src/content/site',
     pattern: '*/*.{yml,yaml}',
   }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     slug: z.string().optional(),
     meta: z.object({
       siteName: z.string(),
@@ -125,6 +125,7 @@ const site = defineCollection({
           platform: z.string(),
           url: z.string(),
           ariaLabel: z.string(),
+          iconName: z.string(),
         })
       ),
       copyright: z.string(),
@@ -169,9 +170,11 @@ const site = defineCollection({
         z.object({
           name: z.string().optional(),
           role: z.string().optional(),
-          pictureUrl: z.string().optional(),
+          description: z.string().optional(),
+          pictureUrl: image().optional(),
           email: z.string().optional(),
           phoneNumber: z.string().optional(),
+          linkedInUrl: z.string().optional(),
         })
       )
       .optional(),
@@ -225,6 +228,25 @@ const site = defineCollection({
         lastUpdated: z.string(),
       })
       .optional(),
+    ui: z.object({
+      ctaLabel: z.string(),
+      cookieBanner: z.object({
+        title: z.string(),
+        description: z.string(),
+        privacyPolicyText: z.string(),
+        acceptText: z.string(),
+        declineText: z.string(),
+      }),
+      contactForm: z.object({
+        title: z.string(),
+        submitButtonText: z.string(),
+        messageLabel: z.string(),
+        emailLabel: z.string(),
+        subjectLabel: z.string(),
+        emailPlaceholder: z.string(),
+        messagePlaceholder: z.string(),
+      }),
+    }),
   }),
 });
 

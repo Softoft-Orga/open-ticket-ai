@@ -12,7 +12,7 @@ const pageDescription =
   'Latest updates, insights, and news about Open Ticket AI and autonomous support automation.';
 
 // Fetch blog posts from the content collection for current locale
-const currentLocale = Astro.currentLocale.toLowerCase();
+const currentLocale = Astro.currentLocale!.toLowerCase();
 const allBlogPosts = await getCollection('blog');
 const localizedBlogPosts = allBlogPosts.filter(entry =>
   entry.id.toLowerCase().startsWith(`${currentLocale}/`)
@@ -54,7 +54,7 @@ const gridPosts: BlogPost[] = await Promise.all(
       ? await getImage({
           src: img,
           width: 1200,
-          format: 'webp',
+          format: 'avif',
         })
       : null;
 
@@ -80,13 +80,13 @@ const formatDate = (date: Date) => {
 // Helper function to get blog post URL (strip locale prefix and extension from id)
 const getBlogUrl = (id: string) => {
   const canonicalPath = id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
-  return getRelativeLocaleUrl(Astro.currentLocale, `blog/${canonicalPath}`);
+  return getRelativeLocaleUrl(Astro.currentLocale!, `blog/${canonicalPath}`);
 };
 
 // Localized URLs for BlogOverview component
-const localizedBlogBaseURL = getRelativeLocaleUrl(Astro.currentLocale, 'blog');
+const localizedBlogBaseURL = getRelativeLocaleUrl(Astro.currentLocale!, 'blog');
 const localizedSubFormAction = getRelativeLocaleUrl(
-  Astro.currentLocale,
+  Astro.currentLocale!,
   'success/blog-subscription'
 );
 ---

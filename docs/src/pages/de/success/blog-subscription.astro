@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SuccessfullFormSubmisionCard from '../../../components/vue/domain/SuccessfullFormSubmisionCard.vue';
+
+const pageTitle = 'Abonnement bestätigt';
+const pageDescription = 'Vielen Dank für Ihr Abonnement des Open Ticket AI Blogs.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="flex min-h-screen items-center justify-center bg-background-dark px-4">
+    <div class="w-full max-w-2xl">
+      <SuccessfullFormSubmisionCard
+        title="Alles erledigt!"
+        description="Vielen Dank für Ihr Abonnement des Open Ticket AI Blogs. Wir halten Sie mit den neuesten Informationen zu KI-Automatisierung, Engineering-Einblicken und Produkt-Updates auf dem Laufenden."
+        primaryButtonText="Zurück zum Blog"
+        primaryButtonHref="/blog/"
+        secondaryButtonText="Zur Startseite"
+        secondaryButtonHref="/"
+        client:load
+      />
+    </div>
+  </div>
+</BaseLayout>

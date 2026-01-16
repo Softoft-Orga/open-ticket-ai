@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SuccessfullFormSubmisionCard from '../../../components/vue/domain/SuccessfullFormSubmisionCard.vue';
+
+const title = 'Vielen Dank!';
+const description = 'Ihre Anfrage für eine individuelle ROI-Analyse ist eingegangen.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div slot="head"></div>
+
+  <div class="flex min-h-screen items-center justify-center bg-bg-1 px-4 py-12">
+    <div class="w-full max-w-3xl">
+      <SuccessfullFormSubmisionCard
+        title="Anfrage erhalten!"
+        description="Vielen Dank für Ihr Interesse an einer individuellen ROI-Analyse."
+        primaryButtonText="Zurück zum ROI-Rechner"
+        primaryButtonHref="/products/roi-calculator"
+        secondaryButtonText="Zurück zur Startseite"
+        secondaryButtonHref="/"
+        client:load
+      >
+        <div class="bg-bg-2/50 mb-8 rounded-xl p-6 text-left">
+          <h2 class="mb-3 text-xl font-semibold text-text-1">Was passiert als Nächstes?</h2>
+          <ul class="space-y-3 text-text-2">
+            <li class="flex items-start">
+              <svg
+                class="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-primary-light"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Unser Team wird Ihre Informationen innerhalb von 1-2 Werktagen prüfen</span>
+            </li>
+            <li class="flex items-start">
+              <svg
+                class="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-primary-light"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Wir erstellen eine maßgeschneiderte ROI-Analyse basierend auf Ihrem Ticketvolumen</span>
+            </li>
+            <li class="flex items-start">
+              <svg
+                class="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-primary-light"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Ein Mitglied unseres Sales-Teams wird sich mit Ihnen in Verbindung setzen, um Ihre spezifischen Anforderungen zu besprechen</span>
+            </li>
+          </ul>
+        </div>
+      </SuccessfullFormSubmisionCard>
+    </div>
+  </div>
+</BaseLayout>
