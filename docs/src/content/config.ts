@@ -44,7 +44,7 @@ const blog = defineCollection({
 const products = defineCollection({
         loader: glob({
             base: './src/content/products',
-            pattern: '*/products.{yml,yaml}',
+            pattern: '*/products.yml',
         }),
         schema: z.object({
             items: z.array(
@@ -71,7 +71,7 @@ const products = defineCollection({
 const services = defineCollection({
     loader: glob({
         base: './src/content/services',
-        pattern: '*/services.{yml,yaml}',
+        pattern: '*/services.yml',
     }),
     schema: z.object({
         items: z.array(
