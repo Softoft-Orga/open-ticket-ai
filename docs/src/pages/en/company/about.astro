@@ -299,7 +299,7 @@ const companyImage = siteConfig?.data.companyImage;
                 <div class="overflow-hidden rounded-2xl border border-purple-500/20">
                   <Image
                     src={companyImage}
-                    alt={`${meta?.siteName} office in ${legalInfo.address.city}`}
+                    alt={`${meta?.siteName || 'Company'} office in ${legalInfo?.address?.city || 'Germany'}`}
                     class="h-64 w-full object-cover"
                     width={600}
                     height={256}
