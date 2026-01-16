@@ -170,6 +170,7 @@ const site = defineCollection({
         z.object({
           name: z.string().optional(),
           role: z.string().optional(),
+          description: z.string().optional(),
           pictureUrl: z.string().optional(),
           email: z.string().optional(),
           phoneNumber: z.string().optional(),

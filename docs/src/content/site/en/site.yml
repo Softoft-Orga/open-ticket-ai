@@ -96,18 +96,20 @@ legalInfo:
     zip: '68159'
     country: Germany
   legalForm: UG (haftungsbeschränkt)
-  vatId: ""
+  vatId: ''
   registerInfo: Amtsgericht Mannheim, HRB
   email: info@openticketai.com
   phone: +49 621 12345678
 team:
   - name: Constanze Krishnartne
     role: CEO
+    description: Driving the vision for privacy-focused AI solutions in enterprise environments.
     pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=CK
     email: constanze.krishnaratne@openticketai.com
     phoneNumber: +49 621 12345678
   - name: Tobias Bueck
     role: CTO
+    description: Leading technical innovation and architecture for on-premise AI systems.
     pictureUrl: https://via.placeholder.com/400x400/4F46E5/FFFFFF?text=TB
     email: tobias.bueck@openticketai.com
     phoneNumber: +49 621 12345679
