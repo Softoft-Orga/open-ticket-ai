@@ -150,8 +150,47 @@ const teamImages = {
                     <p class="mb-3 text-sm font-medium text-purple-400">{member.role}</p>
                   )}
                   {member.description && (
-                    <p class="text-xs leading-relaxed text-slate-400">{member.description}</p>
+                    <p class="mb-4 text-xs leading-relaxed text-slate-400">{member.description}</p>
                   )}
+
+                  {/* Contact Information */}
+                  <div class="mt-4 space-y-2 text-xs text-slate-400">
+                    {member.email && (
+                      <div class="flex items-center justify-center gap-2">
+                        <Icon name="heroicons:envelope" class="h-4 w-4" aria-hidden="true" />
+                        <a
+                          href={`mailto:${member.email}`}
+                          class="transition-colors hover:text-purple-400"
+                        >
+                          {member.email}
+                        </a>
+                      </div>
+                    )}
+                    {member.phoneNumber && (
+                      <div class="flex items-center justify-center gap-2">
+                        <Icon name="heroicons:phone" class="h-4 w-4" aria-hidden="true" />
+                        <a
+                          href={`tel:${member.phoneNumber}`}
+                          class="transition-colors hover:text-purple-400"
+                        >
+                          {member.phoneNumber}
+                        </a>
+                      </div>
+                    )}
+                    {member.linkedInUrl && (
+                      <div class="flex items-center justify-center gap-2">
+                        <Icon name="simple-icons:linkedin" class="h-4 w-4" aria-hidden="true" />
+                        <a
+                          href={member.linkedInUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="transition-colors hover:text-purple-400"
+                        >
+                          LinkedIn
+                        </a>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
