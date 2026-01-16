@@ -1,39 +1,38 @@
-# Configuration for auto-translate tool
-# This example translates English docs to German
-
-# List of directory mappings (source → target)
 mappings:
-  - from_dir: /docs/src/content/en
-    to_dir: /docs/src/content/de
   - from_dir: /docs/src/pages/en
     to_dir: /docs/src/pages/de
 
-# File extensions to include (translate)
+  - from_dir: /docs/src/content/blog/en
+    to_dir: /docs/src/content/blog/de
+  - from_dir: /docs/src/content/docs/en
+    to_dir: /docs/src/content/docs/de
+  - from_dir: /docs/src/content/products/en
+    to_dir: /docs/src/content/products/de
+  - from_dir: /docs/src/content/services/en
+    to_dir: /docs/src/content/services/de
+  - from_dir: /docs/src/content/site/en
+    to_dir: /docs/src/content/site/de
+
 include_ext:
   - .astro
-  - .yml
-  - .yaml
   - .md
   - .mdx
+  - .yml
+  - .yaml
 
-# Directory names to exclude (skip recursively)
 exclude_dir_names:
-  - node_modules
   - .git
+  - node_modules
   - dist
   - build
   - .astro
 
-# Path to Jinja2 prompt template (relative to this config file)
 prompt_template_path: prompt.j2
 
-# Languages
-base_language: English
-target_language: German
+base_language: en
+target_language: de
 
-# OpenAI settings
-model: gpt-4
-temperature: 0.3
+model: deepseek/deepseek-v3.2
+temperature: 0.1
+max_concurrency: 24
 
-# Concurrency (number of parallel API requests)
-max_concurrency: 5

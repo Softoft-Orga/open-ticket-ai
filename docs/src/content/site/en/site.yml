@@ -99,21 +99,21 @@ legalInfo:
   vatId: ''
   registerInfo: Amtsgericht Mannheim, HRB
   email: info@openticketai.com
-  phone: +49 621 12345678
+  phone: '+49 1512 0102724'
 team:
   - name: Constanze Krishnaratne
     role: CEO
     description: Leading Open Ticket AI's strategy and product direction with a focus on transparency, trust, and operational impact.
-    pictureUrl: team_constanze_krishnaratne
+    pictureUrl: '../../../assets/images/team/constanze_krishnaratne.png'
     email: constanze.krishnaratne@openticketai.com
-    phoneNumber: +49 621 12345678
+    phoneNumber: '+49 1512 0102724'
     linkedInUrl: https://www.linkedin.com/in/constanze-krishnaratne
   - name: Tobias Bueck
     role: CTO
     description: Developing AI models for ticket automation and ensuring reliable on-premise deployments with measurable impact.
-    pictureUrl: team_tobias_bueck
+    pictureUrl: '../../../assets/images/team/tobias_bueck.jpg'
     email: tobias.bueck@openticketai.com
-    phoneNumber: +49 621 12345679
+    phoneNumber: ''
     linkedInUrl: https://www.linkedin.com/in/tobias-bueck
 
 dataPrivacy:
@@ -126,7 +126,7 @@ dataPrivacy:
       Viktoriastraße 14
       68159 Mannheim, Germany
       Email: info@openticketai.com
-      Phone: +49 621 12345678
+      Phone: +49 1512 0102724
   dataProcessing:
     title: Data We Collect and Process
     categories:
@@ -190,7 +190,7 @@ dataPrivacy:
       If you have any questions about this Data Privacy Policy or wish to exercise your rights, please contact us at:
 
       Email: info@openticketai.com
-      Phone: +49 621 12345678
+      Phone: +49 1512 0102724
       Address: Open Ticket AI UG, Viktoriastraße 14, 68159 Mannheim, Germany
   lastUpdated: January 2026
 

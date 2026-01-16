@@ -92,7 +92,7 @@ const site = defineCollection({
     base: './src/content/site',
     pattern: '*/*.{yml,yaml}',
   }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     slug: z.string().optional(),
     meta: z.object({
       siteName: z.string(),
@@ -171,7 +171,7 @@ const site = defineCollection({
           name: z.string().optional(),
           role: z.string().optional(),
           description: z.string().optional(),
-          pictureUrl: z.string().optional(),
+          pictureUrl: image().optional(),
           email: z.string().optional(),
           phoneNumber: z.string().optional(),
           linkedInUrl: z.string().optional(),

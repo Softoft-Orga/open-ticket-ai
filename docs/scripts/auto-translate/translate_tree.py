@@ -190,8 +190,8 @@ async def main_async(args: argparse.Namespace) -> None:
     config_path = Path(args.config)
     config = Config.from_yaml(config_path, force=args.force)
 
-    api_key = args.api_key or os.getenv("OPENAI_API_KEY")
-    base_url = args.base_url or os.getenv("OPENAI_BASE_URL")
+    api_key = args.api_key or os.getenv("OPEN_ROUTER_API_KEY")
+    base_url = args.base_url
 
     client_kwargs: dict[str, Any] = {}
     if api_key:
