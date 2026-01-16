@@ -6,6 +6,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { Icon } from 'astro-icon/components';
 import { getLocalizedCatchAllStaticPaths } from '../../../utils/staticPaths.ts';
 import { prose } from '../../../components/vue/core/design-system/recipes/prose';
+import { Schema } from 'astro-seo-schema';
+import type { Article, WithContext } from 'schema-dts';
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('blog');
 
@@ -21,9 +23,45 @@ const proseClasses = prose({ size: 'lg' });
 const formatDate = (date: Date) => {
   return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 };
+
+// Article schema for blog post
+const articleSchema: WithContext<Article> = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: entry.data.title,
+  description: entry.data.description,
+  datePublished: entry.data.date.toISOString(),
+  author: {
+    '@type': 'Organization',
+    name: 'Open Ticket AI',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Open Ticket AI',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://openticketai.com/favicon.ico',
+    },
+  },
+  inLanguage: 'en',
+  ...(entry.data.image && {
+    image: {
+      '@type': 'ImageObject',
+      url: typeof entry.data.image === 'string' ? entry.data.image : entry.data.image.src,
+    },
+  }),
+  ...(entry.data.tags &&
+    entry.data.tags.length > 0 && {
+      keywords: entry.data.tags.join(', '),
+    }),
+};
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.description}>
+  <div slot="head">
+    <!-- Article Schema for Blog Post -->
+    <Schema item={articleSchema} />
+  </div>
   <div class="min-h-screen bg-background-dark">
     <article class="mx-auto max-w-4xl px-4 py-24 sm:px-6 lg:px-8">
       <!-- Article Header -->

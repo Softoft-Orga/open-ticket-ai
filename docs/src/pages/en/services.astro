@@ -6,9 +6,26 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import { Icon } from 'astro-icon/components';
+import { Schema } from 'astro-seo-schema';
+import type { WebPage, WithContext } from 'schema-dts';
 
 const title = 'Services - Open Ticket AI';
 const description = 'Professional services for Open Ticket AI integration and support';
+
+// WebPage schema
+const webPageSchema: WithContext<WebPage> = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description: description,
+  url: 'https://openticketai.com/en/services/',
+  inLanguage: 'en',
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Open Ticket AI',
+    url: 'https://openticketai.com',
+  },
+};
 
 // Get all services from the content collection for current locale
 const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
@@ -96,6 +113,11 @@ const typicalScopeItems = [
 ---
 
 <BaseLayout title={title} description={description}>
+  <div slot="head">
+    <!-- WebPage Schema -->
+    <Schema item={webPageSchema} />
+  </div>
+
   <div class="min-h-screen bg-background-dark pb-32">
     <!-- Hero -->
     <section class="relative pb-20 pt-24 text-center">
