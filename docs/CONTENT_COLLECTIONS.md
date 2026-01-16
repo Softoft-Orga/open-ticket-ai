@@ -85,6 +85,7 @@ const siteConfig = allSiteConfigs.find(entry =>
 ### 4. Site (YAML)
 
 - `slug`: string (Optional - omit to use file path as ID)
+- `companyImage`: image() (Optional) - Company office/location image displayed on the about page
 - `meta`: `{ siteName, tagline, logoUrl }`
 - `nav`: Array of `{ label, url }`
 - `footer`: `{ brandName, sections, social, legal, copyright }`
