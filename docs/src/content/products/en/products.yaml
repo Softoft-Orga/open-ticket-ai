@@ -1,83 +1,83 @@
 page:
   hero:
-    badge: "● LIVE CLASSIFICATION ENGINE v2.0"
+    badge: '● LIVE CLASSIFICATION ENGINE v2.0'
     heading: "Automated,\nConsistent Ticket\nClassification\nIn Real Time."
-    subheading: "Analyze incoming tickets and assign structured, hierarchical tags instantly. No rules to maintain. Fully automated."
-  
+    subheading: 'Analyze incoming tickets and assign structured, hierarchical tags instantly. No rules to maintain. Fully automated.'
+
   coreCapabilities:
-    heading: "Core Capabilities"
-    subheading: "Built for enterprise scale and precision."
+    heading: 'Core Capabilities'
+    subheading: 'Built for enterprise scale and precision.'
     capabilities:
-      - icon: "heroicons:cpu-chip"
-        title: "Fully Automated Classification"
-        description: "Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly on new tickets and historical backlogs without human intervention."
-      - icon: "heroicons:squares-2x2"
-        title: "Hierarchical, Not Flat"
-        description: "A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for operational precision. Enables deep, multi-level analytics."
-      - icon: "heroicons:cube-transparent"
-        title: "10 Quadrillion Combinations"
-        description: "Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry."
-  
+      - icon: 'heroicons:cpu-chip'
+        title: 'Fully Automated Classification'
+        description: 'Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly on new tickets and historical backlogs without human intervention.'
+      - icon: 'heroicons:squares-2x2'
+        title: 'Hierarchical, Not Flat'
+        description: 'A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for operational precision. Enables deep, multi-level analytics.'
+      - icon: 'heroicons:cube-transparent'
+        title: '10 Quadrillion Combinations'
+        description: 'Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry.'
+
   editions:
-    heading: "Flexible Editions"
-    subheading: "Choose the model complexity that fits your operational needs."
+    heading: 'Flexible Editions'
+    subheading: 'Choose the model complexity that fits your operational needs.'
     liteFree:
-      title: "Lite Free"
-      tagline: "Evaluation & Testing"
-      price: "0 €"
-      priceNote: "/one-time"
+      title: 'Lite Free'
+      tagline: 'Evaluation & Testing'
+      price: '0 €'
+      priceNote: '/one-time'
       features:
-        - "Model: 0.5B Parameters"
-        - "150+ Tags"
-        - "Accuracy: ~0.82"
-        - "ROI: from 15 tickets/day"
-      availability: "Available 18.01"
-      buttonText: "Explore Lite Free"
+        - 'Model: 0.5B Parameters'
+        - '150+ Tags'
+        - 'Accuracy: ~0.82'
+        - 'ROI: from 15 tickets/day'
+      availability: 'Available 18.01'
+      buttonText: 'Explore Lite Free'
     litePro:
-      title: "Lite Pro"
-      tagline: "Production Ready"
-      badge: "BEST VALUE"
-      price: "2,500 €"
-      priceNote: "/one-time"
+      title: 'Lite Pro'
+      tagline: 'Production Ready'
+      badge: 'BEST VALUE'
+      price: '2,500 €'
+      priceNote: '/one-time'
       features:
-        - "Model: 4B Parameters"
-        - "150+ Tags"
-        - "Accuracy: ~0.90"
-        - "Focus: Routing & Reporting"
-      availability: "Available 18.01"
-      buttonText: "Explore Lite Pro"
+        - 'Model: 4B Parameters'
+        - '150+ Tags'
+        - 'Accuracy: ~0.90'
+        - 'Focus: Routing & Reporting'
+      availability: 'Available 18.01'
+      buttonText: 'Explore Lite Pro'
     fullPro:
-      title: "Full Pro"
-      tagline: "Advanced Enterprise"
-      price: "6,000 €"
-      priceNote: "/one-time"
+      title: 'Full Pro'
+      tagline: 'Advanced Enterprise'
+      price: '6,000 €'
+      priceNote: '/one-time'
       features:
-        - "Model: 8B Parameters"
-        - "250+ Tags"
-        - "Accuracy: ~0.92"
-        - "Focus: Maximum Detail"
-      availability: "IN DEVELOPMENT"
-      buttonText: "Explore Full Pro"
-    roiSimulatorText: "TRY THE ROI SIMULATOR"
-  
+        - 'Model: 8B Parameters'
+        - '250+ Tags'
+        - 'Accuracy: ~0.92'
+        - 'Focus: Maximum Detail'
+      availability: 'IN DEVELOPMENT'
+      buttonText: 'Explore Full Pro'
+    roiSimulatorText: 'TRY THE ROI SIMULATOR'
+
   deployment:
-    heading: "Deployment & Hardware Flexibility"
-    subheading: "Secure by design. Optimized for your infrastructure."
+    heading: 'Deployment & Hardware Flexibility'
+    subheading: 'Secure by design. Optimized for your infrastructure.'
     features:
-      - icon: "heroicons:server"
-        title: "ON-PREMISE OR PRIVATE CLOUD"
-      - icon: "heroicons:shield-check"
-        title: "NO DATA LEAVES INFRASTRUCTURE"
-      - icon: "heroicons:cube-transparent"
-        title: "INT8, BF16, FP16 QUANTIZATIONS"
-      - icon: "heroicons:cpu-chip"
-        title: "OPTIMIZED FOR CPU & GPU"
-  
+      - icon: 'heroicons:server'
+        title: 'ON-PREMISE OR PRIVATE CLOUD'
+      - icon: 'heroicons:shield-check'
+        title: 'NO DATA LEAVES INFRASTRUCTURE'
+      - icon: 'heroicons:cube-transparent'
+        title: 'INT8, BF16, FP16 QUANTIZATIONS'
+      - icon: 'heroicons:cpu-chip'
+        title: 'OPTIMIZED FOR CPU & GPU'
+
   finalCta:
     heading: "Turn Raw Tickets into\nOperational Intelligence."
-    subheading: "Join forward-thinking support teams automating their workflow today."
-    primaryButtonText: "CONTACT SALES"
-    secondaryButtonText: "View Docs"
+    subheading: 'Join forward-thinking support teams automating their workflow today.'
+    primaryButtonText: 'CONTACT SALES'
+    secondaryButtonText: 'View Docs'
 
 products:
   - slug: open-ticket-ai-lite

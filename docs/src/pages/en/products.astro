@@ -12,7 +12,7 @@ import { Icon } from 'astro-icon/components';
 // Get current locale and fetch products data
 const currentLocale = Astro.currentLocale.toLowerCase();
 const allProducts = await getCollection('products');
-const productsData = allProducts.find((entry) =>
+const productsData = allProducts.find(entry =>
   entry.id.toLowerCase().startsWith(`${currentLocale}/`)
 );
 
@@ -172,7 +172,9 @@ const title = 'Products - Open Ticket AI';
     <section class="w-full bg-surface-dark/30 px-4 py-24 md:px-10 lg:px-20 xl:px-40">
       <div class="mx-auto w-full max-w-7xl">
         <div class="mb-16 text-center">
-          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">{page.coreCapabilities.heading}</h2>
+          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">
+            {page.coreCapabilities.heading}
+          </h2>
           <p class="mx-auto max-w-2xl text-lg text-text-dim">
             {page.coreCapabilities.subheading}
           </p>
@@ -180,7 +182,7 @@ const title = 'Products - Open Ticket AI';
 
         <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
           {
-            page.coreCapabilities.capabilities.map((capability) => (
+            page.coreCapabilities.capabilities.map(capability => (
               <Card variant="outline" hoverable={true} radius="2xl" client:load>
                 <div class="flex flex-col gap-4">
                   <div class="flex items-center gap-3">
@@ -190,9 +192,7 @@ const title = 'Products - Open Ticket AI';
                     />
                   </div>
                   <h3 class="text-2xl font-bold text-white">{capability.title}</h3>
-                  <p class="text-base leading-relaxed text-text-dim">
-                    {capability.description}
-                  </p>
+                  <p class="text-base leading-relaxed text-text-dim">{capability.description}</p>
                 </div>
               </Card>
             ))
@@ -222,13 +222,15 @@ const title = 'Products - Open Ticket AI';
                 <div class="mb-8">
                   <div class="mb-2 text-5xl font-bold text-white">
                     {page.editions.liteFree.price}
-                    <span class="text-lg font-normal text-muted">{page.editions.liteFree.priceNote}</span>
+                    <span class="text-lg font-normal text-muted"
+                      >{page.editions.liteFree.priceNote}</span
+                    >
                   </div>
                 </div>
 
                 <ul class="mb-8 space-y-3">
                   {
-                    page.editions.liteFree.features.map((feature) => (
+                    page.editions.liteFree.features.map(feature => (
                       <li class="flex items-start gap-3">
                         <svg
                           class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
@@ -289,13 +291,15 @@ const title = 'Products - Open Ticket AI';
                   <div class="mb-8">
                     <div class="mb-2 text-5xl font-bold text-white">
                       {page.editions.litePro.price}
-                      <span class="text-lg font-normal text-text-dim">{page.editions.litePro.priceNote}</span>
+                      <span class="text-lg font-normal text-text-dim"
+                        >{page.editions.litePro.priceNote}</span
+                      >
                     </div>
                   </div>
 
                   <ul class="mb-8 space-y-3">
                     {
-                      page.editions.litePro.features.map((feature) => (
+                      page.editions.litePro.features.map(feature => (
                         <li class="flex items-start gap-3">
                           <svg
                             class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
@@ -314,7 +318,9 @@ const title = 'Products - Open Ticket AI';
                     }
                   </ul>
 
-                  <p class="mb-6 text-sm text-primary-light">{page.editions.litePro.availability}</p>
+                  <p class="mb-6 text-sm text-primary-light">
+                    {page.editions.litePro.availability}
+                  </p>
                 </div>
 
                 <Button
@@ -343,13 +349,15 @@ const title = 'Products - Open Ticket AI';
                 <div class="mb-8">
                   <div class="mb-2 text-5xl font-bold text-white">
                     {page.editions.fullPro.price}
-                    <span class="text-lg font-normal text-muted">{page.editions.fullPro.priceNote}</span>
+                    <span class="text-lg font-normal text-muted"
+                      >{page.editions.fullPro.priceNote}</span
+                    >
                   </div>
                 </div>
 
                 <ul class="mb-8 space-y-3">
                   {
-                    page.editions.fullPro.features.map((feature) => (
+                    page.editions.fullPro.features.map(feature => (
                       <li class="flex items-start gap-3">
                         <svg
                           class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
@@ -414,7 +422,7 @@ const title = 'Products - Open Ticket AI';
 
         <div class="mb-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {
-            page.deployment.features.map((feature) => (
+            page.deployment.features.map(feature => (
               <Card variant="outline" radius="xl" client:load>
                 <div class="flex items-start gap-3">
                   <Icon

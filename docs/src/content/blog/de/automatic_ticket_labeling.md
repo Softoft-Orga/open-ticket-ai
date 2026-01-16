@@ -18,7 +18,7 @@ image: ../../../assets/images/ticket-list-classified-automation.png
 
 # 10.000 Tickets effizient labeln: Semi-automatisierte Labeling-Strategien
 
-Tausende Support-Tickets manuell zu labeln ist zeitaufwändig und teuer. Ein **semi-automatisierter Workflow** nutzt große Sprachmodelle (LLMs) wie GPT, um Tickets **vorzulabeln** (mit Zero-Shot-/Few-Shot-Prompts), und setzt dann menschliche Annotatoren ein, um diese Labels zu **überprüfen und zu korrigieren**. Dieser hybride Ansatz reduziert den Annotationsaufwand drastisch: Eine Fallstudie fand beispielsweise heraus, dass GPT-generierte "Vor-Annotationen" _"gut genug waren, um unseren Labeling-Prozess zu beschleunigen"_. In der Praxis können *minimale Labels* vom Modell Zeit und Kosten der Annotation reduzieren. In diesem Artikel erklären wir, wie man eine solche Pipeline einrichtet, zeigen Python-Beispiele (mit GPT über OpenRouter oder OpenAI) und diskutieren Tools wie Label Studio für die Überprüfung.
+Tausende Support-Tickets manuell zu labeln ist zeitaufwändig und teuer. Ein **semi-automatisierter Workflow** nutzt große Sprachmodelle (LLMs) wie GPT, um Tickets **vorzulabeln** (mit Zero-Shot-/Few-Shot-Prompts), und setzt dann menschliche Annotatoren ein, um diese Labels zu **überprüfen und zu korrigieren**. Dieser hybride Ansatz reduziert den Annotationsaufwand drastisch: Eine Fallstudie fand beispielsweise heraus, dass GPT-generierte "Vor-Annotationen" _"gut genug waren, um unseren Labeling-Prozess zu beschleunigen"_. In der Praxis können _minimale Labels_ vom Modell Zeit und Kosten der Annotation reduzieren. In diesem Artikel erklären wir, wie man eine solche Pipeline einrichtet, zeigen Python-Beispiele (mit GPT über OpenRouter oder OpenAI) und diskutieren Tools wie Label Studio für die Überprüfung.
 
 ## GPT für Zero-Shot-/Few-Shot-Vor-Labeling nutzen
 
@@ -124,7 +124,7 @@ Wichtige öffentliche Tools, die diesen Ansatz unterstützen, sind:
 
 ## Beispiel mit Dummy-Ticket-Daten
 
-Zur Veranschaulichung hier einige *Dummy-Ticket-Daten*, mit denen du arbeiten könntest:
+Zur Veranschaulichung hier einige _Dummy-Ticket-Daten_, mit denen du arbeiten könntest:
 
 ```python
 tickets = [
@@ -153,7 +153,7 @@ Angenommen, GPT gibt `"Bug"`, `"Question"`, `"Feature"`, `"Bug"` zurück. Nach d
 ]
 ```
 
-Diese Labels würden dann in die Überprüfungsoberfläche geladen werden. Selbst wenn einige falsch sind (z.B. könnte GPT einen kniffligen Bug fälschlicherweise als Feature labeln), muss der Annotator sie nur *korrigieren*, anstatt von Grund auf zu beginnen. Empirisch erreichen GPT-generierte Labels oft eine Genauigkeit von \~80–90 %, daher ist die Überprüfung viel schneller als vollständiges Labeling.
+Diese Labels würden dann in die Überprüfungsoberfläche geladen werden. Selbst wenn einige falsch sind (z.B. könnte GPT einen kniffligen Bug fälschlicherweise als Feature labeln), muss der Annotator sie nur _korrigieren_, anstatt von Grund auf zu beginnen. Empirisch erreichen GPT-generierte Labels oft eine Genauigkeit von \~80–90 %, daher ist die Überprüfung viel schneller als vollständiges Labeling.
 
 ## Ergebnisse und Erkenntnisse
 

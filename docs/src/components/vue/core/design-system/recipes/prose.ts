@@ -1,5 +1,5 @@
-import { tv, type VariantProps } from 'tailwind-variants'
-import type { Size } from '../tokens.ts'
+import { tv, type VariantProps } from 'tailwind-variants';
+import type { Size } from '../tokens.ts';
 
 export const prose = tv({
   base: [
@@ -44,6 +44,6 @@ export const prose = tv({
   defaultVariants: {
     size: 'md',
   },
-})
+});
 
-export type ProseVariants = VariantProps<typeof prose>
+export type ProseVariants = VariantProps<typeof prose>;
