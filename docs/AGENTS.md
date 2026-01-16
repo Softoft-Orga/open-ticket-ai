@@ -134,7 +134,7 @@ Results are deterministic and CI-friendly. See `scripts/tests/site-tests.mjs` fo
 - Use Playwright MCP to visually check UI changes (Astro on :4321, Storybook on :6006) when tweaking
   design-sensitive components.
 - Prefer MCP-driven Storybook checks/screenshots over manual eyeballing when validating regressions.
-- Use Context7 for getting the newest Documentation for our packages: like astro, vue and other
+- Use Context7 for getting the Documentation for our packages: like astro, vue and other
   libaries/frameworks
 - Whenever core components or story configs change, update the corresponding Storybook stories in
   `docs/stories/**` to reflect new props, variants, and states.
@@ -209,6 +209,8 @@ This ensures content is automatically filtered by locale.
 Before finalizing component or content changes:
 
 - Formatting: Run `npm run format` to format all files with Prettier
+- Linting: `npm run lint` passes (no errors or warnings)
+- Testing: `npm run test:site` and `npm run test:playwright` pass
 - Core Components: `COMPONENTS.md` updated + Storybook story exists + story renders, when a core
   component was changed not if a Domain Component changes!
 - Content: `CONTENT_COLLECTIONS.md` accurate + schema valid + pages render

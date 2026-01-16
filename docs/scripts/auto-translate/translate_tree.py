@@ -219,4 +219,18 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    config_path = Path("./translate.config.yml")
+    config = Config.from_yaml(config_path)
+
+    api_key = os.getenv("OPEN_ROUTER_API_KEY")
+    base_url = "https://openrouter.ai/api/v1"
+
+    client_kwargs: dict[str, Any] = {
+        "api_key": api_key,
+        "base_url": base_url,
+    }
+
+    client = AsyncOpenAI(**client_kwargs)
+
+    translator = TreeTranslator(config, client=client)
+    asyncio.run(translator.translate_all())

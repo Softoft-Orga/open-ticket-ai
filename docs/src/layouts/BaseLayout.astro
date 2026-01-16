@@ -86,55 +86,60 @@ const contactFormTexts = siteConfig?.data.ui.contactForm || {
     <meta name="generator" content={Astro.generator} />
 
     <!-- Google Analytics - only loads after cookie consent -->
-    <script is:inline define:vars={{ gaIds }}>
-      (() => {
-        const CONSENT_STORAGE_KEY = 'cookie-consent';
-        const CONSENT_ACCEPTED = 'accepted';
-        let loaded = false;
+    {(() => {
+      const gaIds = ['AW-474755810', 'G-FBWC3JDZJ4'];
+      return (
+        <script is:inline define:vars={{ gaIds }}>
+          (() => {
+            const CONSENT_STORAGE_KEY = 'cookie-consent';
+            const CONSENT_ACCEPTED = 'accepted';
+            let loaded = false;
 
-        function loadGoogleAnalytics() {
-          if (loaded) return;
-          loaded = true;
+            function loadGoogleAnalytics() {
+              if (loaded) return;
+              loaded = true;
 
-          const s = document.createElement('script');
-          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaIds[0];
-          s.async = true;
-          document.head.appendChild(s);
+              const s = document.createElement('script');
+              s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaIds[0];
+              s.async = true;
+              document.head.appendChild(s);
 
-          window.dataLayer = window.dataLayer || [];
+              window.dataLayer = window.dataLayer || [];
 
-          function gtag(...args) {
-            dataLayer.push(...args);
-          }
+              function gtag(...args) {
+                dataLayer.push(...args);
+              }
 
-          gtag('js', new Date());
-          gaIds.forEach(id => {
-            gtag('config', id, { send_page_view: false });
-          });
-        }
-
-        function checkConsentAndLoad() {
-          try {
-            const consent = localStorage.getItem(CONSENT_STORAGE_KEY);
-            if (consent === CONSENT_ACCEPTED) {
-              loadGoogleAnalytics();
+              gtag('js', new Date());
+              gaIds.forEach(id => {
+                gtag('config', id, { send_page_view: false });
+              });
             }
-          } catch (error) {
-            console.error('Failed to check cookie consent:', error);
-          }
-        }
 
-        // Check consent on page load
-        checkConsentAndLoad();
+            function checkConsentAndLoad() {
+              try {
+                const consent = localStorage.getItem(CONSENT_STORAGE_KEY);
+                if (consent === CONSENT_ACCEPTED) {
+                  loadGoogleAnalytics();
+                }
+              } catch (error) {
+                console.error('Failed to check cookie consent:', error);
+              }
+            }
 
-        // Listen for consent changes
-        window.addEventListener('cookie-consent-changed', function (event) {
-          if (event.detail && event.detail.consent === CONSENT_ACCEPTED) {
-            loadGoogleAnalytics();
-          }
-        });
-      })();
-    </script>
+            // Check consent on page load
+            checkConsentAndLoad();
+
+            // Listen for consent changes
+            window.addEventListener('cookie-consent-changed', function (event) {
+              if (event.detail && event.detail.consent === CONSENT_ACCEPTED) {
+                loadGoogleAnalytics();
+              }
+            });
+          })();
+        </script>
+      );
+    })()}
   </head>
   <body class="font-sans">
     <NavBar client:load links={navLinks} logoUrl={logoUrl} ctaUrl={ctaUrl}>

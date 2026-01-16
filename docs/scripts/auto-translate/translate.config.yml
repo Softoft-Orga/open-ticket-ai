@@ -1,17 +1,17 @@
 mappings:
-  - from_dir: /docs/src/pages/en
-    to_dir: /docs/src/pages/de
+  - from_dir: ../../src/pages/en
+    to_dir: ../../src/pages/de
 
-  - from_dir: /docs/src/content/blog/en
-    to_dir: /docs/src/content/blog/de
-  - from_dir: /docs/src/content/docs/en
-    to_dir: /docs/src/content/docs/de
-  - from_dir: /docs/src/content/products/en
-    to_dir: /docs/src/content/products/de
-  - from_dir: /docs/src/content/services/en
-    to_dir: /docs/src/content/services/de
-  - from_dir: /docs/src/content/site/en
-    to_dir: /docs/src/content/site/de
+  - from_dir: ../../src/content/blog/en
+    to_dir: ../../src/content/blog/de
+  - from_dir: ../../src/content/docs/en
+    to_dir: ../../src/content/docs/de
+  - from_dir: ../../src/content/products/en
+    to_dir: ../../src/content/products/de
+  - from_dir: ../../src/content/services/en
+    to_dir: ../../src/content/services/de
+  - from_dir: ../../src/content/site/en
+    to_dir: ../../src/content/site/de
 
 include_ext:
   - .astro

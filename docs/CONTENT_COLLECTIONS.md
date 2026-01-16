@@ -2,6 +2,10 @@
 
 All collections are defined in `src/content/config.ts`.
 
+## Astro
+
+Use Context7 to get the Information about how content collections in Astro work !
+
 ## Accessing Localized Content
 
 **ALWAYS** filter content by the current locale when querying collections. Use Astro's native `getCollection` function and filter the results:

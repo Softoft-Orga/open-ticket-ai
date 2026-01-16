@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
 
 type FooterLink = {
   label: string;
@@ -54,6 +55,8 @@ const year = new Date().getFullYear();
             src="/images/open-ticket-ai-logo.png"
             alt="Company logo"
             class="size-10 object-contain"
+            width={40}
+            height={40}
           />
           <span
             class="font-display bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-lg font-bold tracking-tight text-transparent"

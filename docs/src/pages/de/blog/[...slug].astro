@@ -1,0 +1,107 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { Icon } from 'astro-icon/components';
+
+import { getLocalizedCatchAllStaticPaths } from '../../../utils/staticPaths.ts';
+
+export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('blog');
+
+type Props = {
+  entry: CollectionEntry<'blog'>;
+};
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+};
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description}>
+  <div class="min-h-screen bg-background-dark">
+    <article class="mx-auto max-w-4xl px-4 py-24 sm:px-6 lg:px-8">
+      <!-- Artikel-Header -->
+      <header class="mb-12 border-b border-surface-lighter pb-12">
+        <div class="mb-6 flex flex-wrap items-center gap-4">
+          {
+            entry.data.category && (
+              <span class="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-bold uppercase tracking-wider text-primary-light">
+                {entry.data.category}
+              </span>
+            )
+          }
+          <time
+            datetime={entry.data.date.toISOString()}
+            class="flex items-center gap-2 text-sm text-text-dim"
+          >
+            <Icon name="heroicons:calendar" class="h-5 w-5" aria-hidden="true" />
+            {formatDate(entry.data.date)}
+          </time>
+        </div>
+
+        <h1 class="font-display mb-6 text-5xl font-bold leading-tight tracking-tight text-text-1">
+          {entry.data.title}
+        </h1>
+
+        {
+          entry.data.description && (
+            <p class="text-xl leading-relaxed text-text-2">{entry.data.description}</p>
+          )
+        }
+
+        {
+          entry.data.tags && entry.data.tags.length > 0 && (
+            <div class="mt-6 flex flex-wrap gap-2">
+              {entry.data.tags.map(tag => (
+                <span class="inline-block rounded-lg bg-surface-dark px-3 py-1 text-xs font-medium text-text-2">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )
+        }
+
+        {
+          entry.data.image && (
+            <div class="-mx-4 mt-8 sm:-mx-6 lg:-mx-8">
+              <div class="relative aspect-[21/9] w-full overflow-hidden rounded-xl bg-surface-lighter shadow-2xl ring-1 ring-surface-lighter/50">
+                <Image
+                  src={entry.data.image}
+                  alt={entry.data.title}
+                  width={1200}
+                  height={514}
+                  class="h-full w-full object-cover"
+                  loading="eager"
+                  decoding="async"
+                  format="avif"
+                />
+              </div>
+            </div>
+          )
+        }
+      </header>
+
+      <!-- Artikelinhalt -->
+      <div
+        class="space-y-6 text-lg leading-relaxed text-text-1 [&_a]:text-primary-light [&_a]:no-underline hover:[&_a]:text-primary hover:[&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-text-2 [&_code]:rounded [&_code]:bg-surface-dark [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-primary-light [&_h1]:mb-4 [&_h1]:mt-8 [&_h1]:text-4xl [&_h1]:font-bold [&_h1]:text-text-1 [&_h2]:mb-3 [&_h2]:mt-6 [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:text-text-1 [&_h3]:mb-3 [&_h3]:mt-6 [&_h3]:text-2xl [&_h3]:font-bold [&_h3]:text-text-1 [&_h4]:mb-2 [&_h4]:mt-4 [&_h4]:text-xl [&_h4]:font-bold [&_h4]:text-text-1 [&_h5]:mb-2 [&_h5]:mt-4 [&_h5]:text-lg [&_h5]:font-bold [&_h5]:text-text-1 [&_h6]:mb-2 [&_h6]:mt-4 [&_h6]:text-base [&_h6]:font-bold [&_h6]:text-text-1 [&_img]:my-6 [&_img]:rounded-lg [&_li]:text-text-1 [&_ol]:ml-6 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:text-text-1 [&_p]:mb-4 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:border-surface-lighter [&_pre]:bg-surface-dark [&_pre]:p-4 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_strong]:font-semibold [&_strong]:text-text-1 [&_table]:my-6 [&_table]:w-full [&_table]:border-collapse [&_td]:border [&_td]:border-surface-lighter [&_td]:p-3 [&_td]:text-text-1 [&_th]:border [&_th]:border-surface-lighter [&_th]:bg-surface-dark [&_th]:p-3 [&_th]:font-semibold [&_th]:text-text-1 [&_ul]:ml-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:text-text-1"
+      >
+        <Content />
+      </div>
+
+      <!-- Zurück zum Blog -->
+      <footer class="mt-16 border-t border-surface-lighter pt-12">
+        <a
+          href={getRelativeLocaleUrl(Astro.currentLocale, 'blog')}
+          class="inline-flex items-center gap-2 text-primary-light transition-colors hover:text-primary"
+        >
+          <Icon name="heroicons:arrow-left" class="h-5 w-5" aria-hidden="true" />
+          Zurück zu allen Beiträgen
+        </a>
+      </footer>
+    </article>
+  </div>
+</BaseLayout>
