@@ -84,6 +84,22 @@ const siteConfig = allSiteConfigs.find(entry =>
 - `meta`: `{ siteName, tagline, logoUrl }`
 - `nav`: Array of `{ label, url }`
 - `footer`: `{ brandName, sections, social, legal, copyright }`
+- `ui`: UI strings for components (Required)
+  - `ctaLabel`: string - Call-to-action button label (e.g., "Contact Sales")
+  - `cookieBanner`: Cookie consent banner text
+    - `title`: string - Banner heading
+    - `description`: string - Description text
+    - `privacyPolicyText`: string - Privacy policy link text
+    - `acceptText`: string - Accept button text
+    - `declineText`: string - Decline button text
+  - `contactForm`: Contact form labels and placeholders
+    - `title`: string - Form modal title
+    - `submitButtonText`: string - Submit button text
+    - `messageLabel`: string - Message field label
+    - `emailLabel`: string - Email field label
+    - `subjectLabel`: string - Subject field label
+    - `emailPlaceholder`: string - Email field placeholder
+    - `messagePlaceholder`: string - Message field placeholder
 
 **Important**: Site collection files should be named with locale codes (e.g., `en.yml`, `de.yml`) and placed in locale-specific directories (`src/content/site/en/`, `src/content/site/de/`). Do not include a `slug` field - the glob loader will use the file path to generate unique IDs per locale.
 

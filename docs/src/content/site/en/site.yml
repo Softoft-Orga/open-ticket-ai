@@ -96,7 +96,7 @@ legalInfo:
     zip: '68159'
     country: Germany
   legalForm: UG (haftungsbeschränkt)
-  vatId: ""
+  vatId: ''
   registerInfo: Amtsgericht Mannheim, HRB
   email: info@openticketai.com
   phone: +49 621 12345678
@@ -189,3 +189,20 @@ dataPrivacy:
       Phone: +49 621 12345678
       Address: Open Ticket AI UG, Viktoriastraße 14, 68159 Mannheim, Germany
   lastUpdated: January 2026
+
+ui:
+  ctaLabel: Contact Sales
+  cookieBanner:
+    title: We value your privacy
+    description: We use cookies and analytics to improve your experience and understand how you use our website. For more information, please read our
+    privacyPolicyText: Privacy Policy
+    acceptText: Accept
+    declineText: Decline
+  contactForm:
+    title: Contact Sales
+    submitButtonText: Submit
+    messageLabel: Message
+    emailLabel: Email
+    subjectLabel: Subject
+    emailPlaceholder: your@email.com
+    messagePlaceholder: How can we help you?
