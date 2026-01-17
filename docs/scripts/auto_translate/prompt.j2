@@ -90,7 +90,7 @@ Then:
 
 ---
 
-{% if file_type == "astro" %}
+{% if file_ext == ".astro" %}
 
 ### File type: Astro component
 
@@ -109,7 +109,7 @@ Rules for Astro files:
 * Do NOT translate URLs, paths, identifiers
 * Maintain exact formatting and indentation
 
-{% elif file_type == "yaml" %}
+{% elif file_ext == ".yml" or file_ext == ".yaml" %}
 
 ### File type: YAML configuration
 
@@ -124,7 +124,7 @@ Rules for YAML files:
   * URLs or file paths
 * Preserve indentation, structure, lists, and special YAML syntax exactly
 
-{% elif file_type == "markdown" %}
+{% elif file_ext == ".md" %}
 
 ### File type: Markdown
 
@@ -142,7 +142,7 @@ Rules for Markdown files:
   * blockquotes
 * Maintain line breaks and formatting
 
-{% elif file_type == "mdx" %}
+{% elif file_ext == ".mdx" %}
 
 ### File type: MDX
 
@@ -157,7 +157,7 @@ Rules for MDX files:
 
 {% else %}
 
-### File type: {{ file_type }}
+### File type: {{ file_ext }}
 
 Rules:
 
@@ -172,7 +172,7 @@ Rules:
 
 Before responding:
 
-* Ensure the output is valid {{ file_type }}
+* Ensure the output is valid {{ file_ext }}
 * Ensure NO extra text is added
 * Ensure formatting matches the source exactly
 

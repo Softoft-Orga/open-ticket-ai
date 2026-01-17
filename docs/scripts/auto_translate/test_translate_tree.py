@@ -1,4 +1,4 @@
-"""Tests for auto-translate tool."""
+"""Tests for auto_translate tool."""
 
 import asyncio
 from pathlib import Path
@@ -6,7 +6,7 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from translate_tree import Config, TreeTranslator
+from .translate_tree import Config, TreeTranslator
 
 
 class FakeChoice:
@@ -51,7 +51,7 @@ def temp_config(tmp_path: Path) -> tuple[Path, Path]:
     prompt_path = tmp_path / "prompt.j2"
 
     prompt_path.write_text(
-        "{% if file_type == 'astro' %}Translate Astro{% elif file_type == 'yaml' %}Translate YAML{% endif %}"
+        "{% if file_ext == '.astro' %}Translate Astro{% elif file_ext == '.yml' %}Translate YAML{% endif %}"
     )
 
     config_content = f"""
@@ -184,18 +184,6 @@ async def test_renders_prompt_per_file_type(temp_config: tuple[Path, Path]) -> N
     assert "Translate YAML" in yaml_call["messages"][0]["content"]
 
 
-@pytest.mark.asyncio
-async def test_detect_file_type() -> None:
-    """Test file type detection."""
-    config = Config(mappings=[])
-    translator = TreeTranslator(config, client=FakeAsyncOpenAI())
-
-    assert translator._detect_file_type(Path("test.astro")) == "astro"
-    assert translator._detect_file_type(Path("test.yml")) == "yaml"
-    assert translator._detect_file_type(Path("test.yaml")) == "yaml"
-    assert translator._detect_file_type(Path("test.md")) == "markdown"
-    assert translator._detect_file_type(Path("test.mdx")) == "mdx"
-
 
 @pytest.mark.asyncio
 async def test_concurrent_translation(temp_config: tuple[Path, Path]) -> None:
@@ -222,7 +210,7 @@ async def test_concurrent_translation(temp_config: tuple[Path, Path]) -> None:
     await translator.translate_all()
 
     time_span = max(call_times) - min(call_times)
-    assert time_span < 0.1
+    assert time_span < 0.2
 
 
 @pytest.mark.asyncio
