@@ -270,19 +270,19 @@ flowchart TB
 
 Jede Pipe erzeugt ein `PipeResult`, das Ausführungsstatus und Daten enthält:
 
-| Attribut      | Datentyp        | Beschreibung                                                                                      |
-| ------------- | --------------- | ------------------------------------------------------------------------------------------------- |
-| **succeeded** | true/false      | Ob die Pipe erfolgreich ohne Fehler abgeschlossen wurde                                           |
-| **data**      | Name:Wert-Paare | Ausgabedaten, die von der Pipe für nachfolgende Pipes oder externe Systeme erzeugt wurden         |
-| _was_skipped_ | true/false      | Ob die Pipe aufgrund fehlgeschlagener Abhängigkeiten oder bedingter Ausführung übersprungen wurde |
-| _message_     | TEXT            | Menschenlesbare Nachricht, die das Ergebnis oder Probleme beschreibt                              |
+| Attribut       | Datentyp          | Beschreibung                                                                      |
+| -------------- | ----------------- | --------------------------------------------------------------------------------- |
+| **succeeded**  | true/false        | Ob die Pipe erfolgreich ohne Fehler abgeschlossen wurde                           |
+| **data**       | Name:Wert-Paare   | Ausgabedaten, die von der Pipe für nachfolgende Pipes oder externe Systeme erzeugt wurden |
+| _was_skipped_  | true/false        | Ob die Pipe aufgrund fehlgeschlagener Abhängigkeiten oder bedingter Ausführung übersprungen wurde |
+| _message_      | TEXT              | Menschenlesbare Nachricht, die das Ergebnis oder Probleme beschreibt              |
 
 Auf diese Ergebnisse greift man in den Parametern einer anderen Pipe mit diesen Funktionen zu. Derzeit gibt es keine
 Möglichkeit, was_skipped oder message zu lesen;
 
-| Funktion          | Parameter                                          | Rückgabewert                                                                         | Fehler wenn…              |
-| ----------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------- |
-| `has_failed`      | `pipe_id: text`                                    | `True`, wenn das gegebene Pipe-Ergebnis als fehlgeschlagen markiert ist              | Unbekannte Pipe-ID        |
+| Funktion          | Parameter                                         | Rückgabewert                                                     | Fehler wenn…          |
+| ----------------- | -------------------------------------------------- | ----------------------------------------------------------- | ------------------- |
+| `has_failed`      | `pipe_id: text`                                    | `True`, wenn das gegebene Pipe-Ergebnis als fehlgeschlagen markiert ist            | Unbekannte Pipe-ID     |
 | `get_pipe_result` | `pipe_id: text`, `data_key: text; default = value` | Wert, der im vorherigen Pipe-Ergebnis unter dem gegebenen `data_key` gespeichert ist | Pipe oder Schlüssel fehlt |
 
 Wenn das Piperesult also beispielsweise ist:
@@ -352,7 +352,7 @@ Die Pipeline/der Flow würde an dieser Stelle die Ausführung stoppen, wenn die 
 
 ## Pipe-Registry-Übersicht
 
-| Name                         | registryKey                         | Parameter (Namen, kommagetrennt)                         |
+| Name                         | registryKey                         | Parameter (Namen, kommagetrennt)                          |
 | ---------------------------- | ----------------------------------- | -------------------------------------------------------- |
 | AddNotePipe                  | `base:AddNotePipe`                  | ticket_id, note                                          |
 | FetchTicketsPipe             | `base:FetchTicketsPipe`             | ticket_search_criteria                                   |

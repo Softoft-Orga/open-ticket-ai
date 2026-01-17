@@ -1,6 +1,6 @@
 ---
 title: Konfiguration & Template-Rendering
-description: 'Verstehen Sie den Konfigurationslebenszyklus von Open Ticket AI, das Template-Rendering mit Jinja2, Dependency Injection und wie YAML in Laufzeitobjekte transformiert wird.'
+description: "Verstehen Sie den Konfigurationslebenszyklus von Open Ticket AI, das Template-Rendering mit Jinja2, Dependency Injection und wie YAML in Laufzeitobjekte transformiert wird."
 ---
 
 # Konfiguration & Template-Rendering
@@ -10,9 +10,7 @@ Open Ticket AI ermöglicht es Ihnen, dynamische Konfigurationen mit **YAML** plu
 <div class="pre">
   <code>{`{{ ... }}`}</code> ohne Leerzeichen
 </div>
-zu erstellen. Dies erlaubt es Ihnen, Werte wiederzuverwenden, Umgebungsvariablen auszulesen und
-Ergebnisse anderer Pipes zu referenzieren – und dabei die Konfiguration sauber und deklarativ zu
-halten.
+zu erstellen. Dies erlaubt es Ihnen, Werte wiederzuverwenden, Umgebungsvariablen auszulesen und Ergebnisse anderer Pipes zu referenzieren – und dabei die Konfiguration sauber und deklarativ zu halten.
 
 ## Schlüsselkonzepte
 
@@ -22,11 +20,11 @@ Sowohl **Services** als auch **Pipes** in Open Ticket AI verwenden die gleiche K
 
 ## Konfigurationsattribute
 
-| Attribut  | Typ              | Beschreibung                                                                                                      | Beispiel                           |
-| --------- | ---------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `use`     | `TEXT`           | Identifiziert, welche Komponente erstellt werden soll. Format: `plugin-name:ComponentName`                        | `"base:FetchTicketsPipe"`          |
-| `injects` | name:value-Paare | Ordnet Konstruktorparameternamen Service-IDs zu, um Abhängigkeiten mit dieser Komponente zu verbinden             | `{ ticket_system: "otobo_znuny" }` |
-| `params`  | name:value-Paare | Konfigurationsparameter, die spezifisch für diese Komponente sind. Jeder Komponententyp erwartet andere Parameter | `{ limit: 25, queue: "Support" }`  |
+| Attribut | Typ               | Beschreibung                                                                                           | Beispiel                            |
+| -------- | ----------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------- |
+| `use`    | `TEXT`            | Identifiziert, welche Komponente erstellt werden soll. Format: `plugin-name:ComponentName`             | `"base:FetchTicketsPipe"`           |
+| `injects`| name:value-Paare  | Ordnet Konstruktorparameternamen Service-IDs zu, um Abhängigkeiten mit dieser Komponente zu verbinden  | `{ ticket_system: "otobo_znuny" }`  |
+| `params` | name:value-Paare  | Konfigurationsparameter, die spezifisch für diese Komponente sind. Jeder Komponententyp erwartet andere Parameter | `{ limit: 25, queue: "Support" }`   |
 
 ## Wichtige Unterschiede: Services vs. Pipes
 
@@ -90,29 +88,29 @@ params:
 
 Hier ist die Markdown-Tabelle, die die **vollständige Konfigurationsstruktur** sauber und bereit für Ihre Dokumentation beschreibt.
 
-| Pfad                                        | Typ                               | Beschreibung                                                              | Beispiel                                      |                      |
-| ------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------- | --------------------------------------------- | -------------------- |
-| `otai`                                      | `OpenTicketAIConfig`              | Hauptanwendungskonfigurationswurzel.                                      |                                               |                      |
-| `otai.api_version`                          | `str`                             | API-Version für Kompatibilität.                                           | `"1"`                                         |                      |
-| `otai.plugins[]`                            | `list[str]`                       | Python-Modulpfade der zu ladenden Plugins.                                | `"otai_hf_local"`                             |                      |
-| `otai.infrastructure`                       | `InfrastructureConfig`            | Infrastruktur-Level-Einstellungen.                                        |                                               |                      |
-| `otai.infrastructure.logging`               | `LoggingConfig`                   | Logging-Konfiguration.                                                    |                                               |                      |
-| `otai.infrastructure.logging.level`         | `str`                             | Minimaler Log-Level.                                                      | `"INFO"`                                      |                      |
-| `otai.infrastructure.logging.log_to_file`   | `bool`                            | Datei-Logging aktivieren.                                                 | `false`                                       |                      |
-| `otai.infrastructure.logging.log_file_path` | `str                              | None`                                                                     | Log-Dateipfad, wenn aktiviert.                | `"/var/log/app.log"` |
-| `otai.infrastructure.logging.log_format`    | `str`                             | Python-Logging-Format-String.                                             | `"%(asctime)s - %(levelname)s - %(message)s"` |                      |
-| `otai.infrastructure.logging.date_format`   | `str`                             | Datumsformat für Logs.                                                    | `"%Y-%m-%d %H:%M:%S"`                         |                      |
-| `otai.services`                             | `dict[str, InjectableConfigBase]` | Map von Service-ID → DI-Konfiguration.                                    |                                               |                      |
-| `otai.services.<id>`                        | `InjectableConfigBase`            | Eine Service-Definition.                                                  |                                               |                      |
-| `otai.services.<id>.use`                    | `str`                             | Python-Klassenpfad zum Instanziieren.                                     | `"pkg.mod.Class"`                             |                      |
-| `otai.services.<id>.injects`                | `dict[str,str]`                   | DI-Bindings: Konstruktor-Param → Service-ID.                              | `{ "db": "ticket-db" }`                       |                      |
-| `otai.services.<id>.params`                 | `dict[str,Any]`                   | Konstruktorparameter (Templating erlaubt).                                | `{ "url": "{\{ get_env('DB_URL') }\}" }`      |                      |
+| Pfad                                        | Typ                              | Beschreibung                                                   | Beispiel                                       |                      |
+| ------------------------------------------- | --------------------------------- | ------------------------------------------------------------- | --------------------------------------------- | -------------------- |
+| `otai`                                      | `OpenTicketAIConfig`              | Hauptanwendungskonfigurationswurzel.                          |                                               |                      |
+| `otai.api_version`                          | `str`                             | API-Version für Kompatibilität.                               | `"1"`                                         |                      |
+| `otai.plugins[]`                            | `list[str]`                       | Python-Modulpfade der zu ladenden Plugins.                    | `"otai_hf_local"`                             |                      |
+| `otai.infrastructure`                       | `InfrastructureConfig`            | Infrastruktur-Level-Einstellungen.                            |                                               |                      |
+| `otai.infrastructure.logging`               | `LoggingConfig`                   | Logging-Konfiguration.                                         |                                               |                      |
+| `otai.infrastructure.logging.level`         | `str`                             | Minimaler Log-Level.                                           | `"INFO"`                                      |                      |
+| `otai.infrastructure.logging.log_to_file`   | `bool`                            | Datei-Logging aktivieren.                                      | `false`                                       |                      |
+| `otai.infrastructure.logging.log_file_path` | `str                              | None`                                                         | Log-Dateipfad, wenn aktiviert.                | `"/var/log/app.log"` |
+| `otai.infrastructure.logging.log_format`    | `str`                             | Python-Logging-Format-String.                                 | `"%(asctime)s - %(levelname)s - %(message)s"` |                      |
+| `otai.infrastructure.logging.date_format`   | `str`                             | Datumsformat für Logs.                                         | `"%Y-%m-%d %H:%M:%S"`                         |                      |
+| `otai.services`                             | `dict[str, InjectableConfigBase]` | Map von Service-ID → DI-Konfiguration.                         |                                               |                      |
+| `otai.services.<id>`                        | `InjectableConfigBase`            | Eine Service-Definition.                                       |                                               |                      |
+| `otai.services.<id>.use`                    | `str`                             | Python-Klassenpfad zum Instanziieren.                         | `"pkg.mod.Class"`                             |                      |
+| `otai.services.<id>.injects`                | `dict[str,str]`                   | DI-Bindings: Konstruktor-Param → Service-ID.                   | `{ "db": "ticket-db" }`                       |                      |
+| `otai.services.<id>.params`                 | `dict[str,Any]`                   | Konstruktorparameter (Templating erlaubt).                     | `{ "url": "{\{ get_env('DB_URL') }\}" }`      |                      |
 | `otai.services.<id>.id`                     | `str`                             | Optionaler expliziter Bezeichner (bei Verwendung von `InjectableConfig`). | `"ticket-db"`                                 |                      |
-| `otai.orchestrator`                         | `PipeConfig`                      | Orchestrator-Pipeline-Wurzel.                                             |                                               |                      |
-| `otai.orchestrator.id`                      | `str`                             | Pipe-Bezeichner (für Referenzierung). (geerbt)                            | `"root"`                                      |                      |
-| `otai.orchestrator.use`                     | `str`                             | Python-Klassenpfad der Pipe. (geerbt)                                     | `"project.pipes.CompositePipe"`               |                      |
-| `otai.orchestrator.injects`                 | `dict[str,str]`                   | DI zu Sub-Pipes/Services. (geerbt)                                        | `{ "step1": "ticket-db" }`                    |                      |
-| `otai.orchestrator.params`                  | `dict[str,Any]`                   | Pipe-Parameter (Templating erlaubt). (geerbt)                             | `{}`                                          |                      |
+| `otai.orchestrator`                         | `PipeConfig`                      | Orchestrator-Pipeline-Wurzel.                                  |                                               |                      |
+| `otai.orchestrator.id`                      | `str`                             | Pipe-Bezeichner (für Referenzierung). (geerbt)                 | `"root"`                                      |                      |
+| `otai.orchestrator.use`                     | `str`                             | Python-Klassenpfad der Pipe. (geerbt)                          | `"project.pipes.CompositePipe"`               |                      |
+| `otai.orchestrator.injects`                 | `dict[str,str]`                   | DI zu Sub-Pipes/Services. (geerbt)                             | `{ "step1": "ticket-db" }`                    |                      |
+| `otai.orchestrator.params`                  | `dict[str,Any]`                   | Pipe-Parameter (Templating erlaubt). (geerbt)                  | `{}`                                          |                      |
 
 **Kleines Beispiel**
 
@@ -142,14 +140,14 @@ otai:
 
 ## Verfügbare Hilfsfunktionen (für `config.yml`-Templates)
 
-| Funktion           | Parameter                                           | Rückgabewert                                                                         | Fehler, wenn…                     |
-| ------------------ | --------------------------------------------------- | ------------------------------------------------------------------------------------ | --------------------------------- |
-| `at_path`          | `value: Any`, `path: text`                          | Verschachtelter Wert am Pfad `"a.b.c"`; unterstützt Dicts + Pydantic-Modelle         | Ungültiges Pfadformat             |
-| `has_failed`       | `pipe_id: text`                                     | `True`, wenn das gegebene Pipe-Ergebnis als fehlgeschlagen markiert ist              | Unbekannte Pipe-ID                |
-| `get_pipe_result`  | `pipe_id: text`, `data_key: text;default = "value"` | Wert, der im vorherigen Pipe-Ergebnis unter dem gegebenen `data_key` gespeichert ist | Pipe oder Schlüssel fehlt         |
-| `get_parent_param` | `param_key: text`                                   | Geerbter Elternparameterwert                                                         | Eltern fehlt oder Schlüssel fehlt |
-| `get_env`          | `name: text`                                        | Wert der Umgebungsvariable                                                           | Env-Var fehlt                     |
-| `fail`             | _(keine)_                                           | Ein "FailMarker"-Sentinel-Objekt, um explizite Fehlerpfade zu signalisieren          | —                                 |
+| Funktion           | Parameter                                          | Rückgabewert                                                          | Fehler, wenn…                    |
+| ------------------ | --------------------------------------------------- | --------------------------------------------------------------------- | -------------------------------- |
+| `at_path`          | `value: Any`, `path: text`                          | Verschachtelter Wert am Pfad `"a.b.c"`; unterstützt Dicts + Pydantic-Modelle | Ungültiges Pfadformat            |
+| `has_failed`       | `pipe_id: text`                                     | `True`, wenn das gegebene Pipe-Ergebnis als fehlgeschlagen markiert ist | Unbekannte Pipe-ID               |
+| `get_pipe_result`  | `pipe_id: text`, `data_key: text;default = "value"` | Wert, der im vorherigen Pipe-Ergebnis unter dem gegebenen `data_key` gespeichert ist | Pipe oder Schlüssel fehlt        |
+| `get_parent_param` | `param_key: text`                                   | Geerbter Elternparameterwert                                          | Eltern fehlt oder Schlüssel fehlt |
+| `get_env`          | `name: text`                                        | Wert der Umgebungsvariable                                            | Env-Var fehlt                    |
+| `fail`             | _(keine)_                                           | Ein "FailMarker"-Sentinel-Objekt, um explizite Fehlerpfade zu signalisieren | —                                |
 
 ---
 

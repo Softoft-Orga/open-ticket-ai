@@ -6,49 +6,9 @@ import Badge from '../../components/vue/core/basic/Badge.vue';
 import Button from '../../components/vue/core/basic/Button.vue';
 import { Icon } from 'astro-icon/components';
 
-const pageTitle = 'Ticket AI - Enterprise On-Premise Ticket Automation & Classification Software';
+const pageTitle = 'Open Ticket AI - Automated Ticket Tagging, On-Premise';
 const pageDescription =
-  'Open Ticket AI: Leading on-premise ticket AI software for automated classification, routing & tagging. Self-hosted solution with 90%+ accuracy. GDPR compliant. Try our ticket AI system today.';
-const pageKeywords =
-  'ticket ai, ai ticket system, ticket automation ai, ai-powered ticketing, ticket classification ai, automated ticket tagging, on-premise ticket ai';
-
-// Schema.org structured data for SEO
-const organizationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Open Ticket AI',
-  alternateName: 'Ticket AI',
-  url: 'https://openticketai.com',
-  logo: 'https://openticketai.com/logo.png',
-  description:
-    'Enterprise-grade on-premise ticket AI software for automated classification, routing and tagging',
-  sameAs: ['https://github.com/Softoft-Orga/open-ticket-ai'],
-};
-
-const softwareSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'Open Ticket AI',
-  applicationCategory: 'BusinessApplication',
-  applicationSubCategory: 'Help Desk Software',
-  description:
-    'On-premise AI-powered ticket classification and automation software with self-hosted deployment. Supports OTOBO, Znuny, Zammad, Freshdesk, and Zendesk.',
-  operatingSystem: 'Linux, Docker',
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-    description: 'Open source with enterprise support available',
-  },
-  featureList: [
-    'AI-powered ticket classification',
-    'On-premise deployment',
-    'Multi-language support',
-    'GDPR compliant',
-    '90%+ classification accuracy',
-    'Zero cloud dependency',
-  ],
-};
+  'Enterprise-grade ticket automation with AI-powered tagging. Process tickets locally with our on-premise solution—no cloud dependency, maximum data privacy.';
 
 const taggingFeatures = [
   {
@@ -105,15 +65,7 @@ const privacyFeatures = [
 ];
 ---
 
-<BaseLayout
-  title={pageTitle}
-  description={pageDescription}
-  keywords={pageKeywords}
-  ogImage="https://openticketai.com/assets/og-ticket-ai.png"
-  ogType="website"
-  canonical="https://openticketai.com/en/"
-  schema={[organizationSchema, softwareSchema]}
->
+<BaseLayout title={pageTitle} description={pageDescription}>
   <div slot="head"></div>
 
   <div class="w-full bg-background-dark text-white antialiased">
@@ -137,17 +89,16 @@ const privacyFeatures = [
         <h1
           class="font-display max-w-5xl text-5xl font-bold leading-tight tracking-tight text-white md:text-6xl lg:text-7xl"
         >
-          Ticket AI: Enterprise Automation.<br />
+          Enterprise Ticket Automation.<br />
           <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
             >100% On Your Infrastructure.</span
           >
         </h1>
 
         <p class="max-w-4xl text-xl leading-relaxed text-text-dim md:text-2xl">
-          Open Ticket AI is the leading on-premise ticket AI software for enterprises that
-          prioritize data privacy. Our AI-powered ticket automation system runs entirely on your
-          infrastructure, delivering intelligent ticket classification, routing, and tagging without
-          cloud dependency.
+          We provide AI-powered ticket tagging and workflow automation that runs entirely
+          on-premise. Your ticket data never leaves your network—keeping you in control and
+          compliant.
         </p>
 
         <div class="flex flex-wrap justify-center gap-4 pt-4">
@@ -242,12 +193,11 @@ const privacyFeatures = [
         <div class="mb-16 text-center">
           <Badge variant="surface" tone="primary" size="md" client:load> Core Technology </Badge>
           <h2 class="font-display mb-6 mt-6 text-4xl font-bold text-white md:text-5xl">
-            Ticket AI Classification: Smart Tagging at Scale
+            Tagging AI: Smart Classification at Scale
           </h2>
           <p class="mx-auto max-w-3xl text-lg leading-relaxed text-text-dim md:text-xl">
-            Our flagship ticket AI engine automatically categorizes support tickets with
-            enterprise-grade accuracy. Built for complex taxonomies and multi-language environments,
-            our AI-powered classification delivers intelligent ticket automation at scale.
+            Our flagship AI engine automatically categorizes support tickets with enterprise-grade
+            accuracy. Built for complex taxonomies and multi-language environments.
           </p>
         </div>
 
@@ -582,12 +532,11 @@ const privacyFeatures = [
             </div>
 
             <h2 class="font-display relative mb-6 text-3xl font-bold text-white md:text-4xl">
-              Ready to Experience Ticket AI On-Premise?
+              Ready to Keep Your Ticket Data Private?
             </h2>
             <p class="relative mx-auto mb-8 max-w-2xl text-lg text-text-dim">
-              Join organizations that trust on-premise ticket AI for their helpdesk automation. Our
-              ticket AI software keeps your data private while delivering intelligent classification
-              and routing. Start with our documentation or talk to our team.
+              Join organizations that trust on-premise AI for their helpdesk automation. Start with
+              our documentation or talk to our team.
             </p>
             <div class="relative flex flex-wrap justify-center gap-4">
               <Button

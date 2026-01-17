@@ -9,10 +9,10 @@ Services kapseln Geschäftslogik und stellen wiederverwendbare Funktionalität f
 
 ## Service-Klassen vs. Konfigurationseinträge
 
-Service-_Klassen_ sind Python-Implementierungen, die in Paketen leben (z. B. Unterklassen von `otai_base.ticket_system_integration.TicketSystemService`).
+Service-*Klassen* sind Python-Implementierungen, die in Paketen leben (z. B. Unterklassen von `otai_base.ticket_system_integration.TicketSystemService`).
 Sie werden innerhalb von Open Ticket AI nutzbar, wenn Sie sie über das Plugin-Registry verfügbar machen.
 
-Service-_Konfigurationseinträge_ leben in `open_ticket_ai.services` innerhalb Ihrer YAML-Konfiguration. Jeder Eintrag bindet eine
+Service-*Konfigurationseinträge* leben in `open_ticket_ai.services` innerhalb Ihrer YAML-Konfiguration. Jeder Eintrag bindet eine
 Service-Klasse an einen Bezeichner, optionale Konstruktorparameter und einen Dependency-Injection-Scope. Mehrere Einträge können
 auf dieselbe Klasse verweisen, während sie unterschiedliche Parameter liefern.
 

@@ -15,7 +15,6 @@ A Python tool that automatically translates Astro documentation trees (including
 ## Requirements
 
 Dependencies (install via `pip` or `uv`):
-
 - `openai` - OpenAI Python SDK for Chat Completions API
 - `tenacity` - Retry library with exponential backoff
 - `jinja2` - Template engine for prompts
@@ -24,7 +23,6 @@ Dependencies (install via `pip` or `uv`):
 - `pytest-asyncio` - Async test support (for tests only)
 
 Install dependencies:
-
 ```bash
 pip install openai tenacity jinja2 pyyaml pytest pytest-asyncio
 ```
@@ -157,7 +155,6 @@ Rules for YAML files:
 ```
 
 Variables available in template:
-
 - `file_type`: "astro", "yaml", "markdown", or "mdx"
 - `base_language`: Source language name
 - `target_language`: Target language name
@@ -185,13 +182,11 @@ All tests use mocked OpenAI client and require no API keys. Tests verify:
 ### Class Design
 
 **Config** (dataclass):
-
 - Loads settings from YAML
 - Validates paths and extensions
 - Provides defaults
 
 **TreeTranslator**:
-
 - Accepts AsyncOpenAI client via dependency injection (for testing)
 - Renders Jinja2 prompt template per file type
 - Walks source directories with pathlib
@@ -203,7 +198,6 @@ All tests use mocked OpenAI client and require no API keys. Tests verify:
 ### File Type Detection
 
 Supported extensions map to file types:
-
 - `.astro` → "astro"
 - `.yml`, `.yaml` → "yaml"
 - `.md` → "markdown"
@@ -223,7 +217,6 @@ Each file type receives a different system prompt via template conditionals.
 ### Preserved Elements
 
 Never translated:
-
 - URLs and file paths
 - Code blocks and inline code
 - Variable names and identifiers
@@ -239,7 +232,6 @@ python translate_tree.py --config translate.config.yml
 ```
 
 Before:
-
 ```
 /docs/src/pages/en/
   ├── index.astro
@@ -249,7 +241,6 @@ Before:
 ```
 
 After:
-
 ```
 /docs/src/pages/de/
   ├── index.astro       # Translated

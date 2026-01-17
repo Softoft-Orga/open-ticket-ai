@@ -74,12 +74,12 @@ Open Ticket AI kann nur Aktionen ausführen, die dem Benutzer erlaubt sind.
 
 Je nach Automatisierungspipeline müssen Sie gewähren:
 
-| Automatisierungstyp     | Erforderliche Berechtigungen                  |
-| ----------------------- | --------------------------------------------- |
-| Queue Classification    | **ro**, **move_into**                         |
-| Priority Classification | **ro**, **priority**                          |
-| Notiz-Erstellung        | **ro**, **note**                              |
-| Ticket-Updates          | **ro**, **move_into**, **priority**, **note** |
+| Automatisierungstyp      | Erforderliche Berechtigungen                 |
+| ------------------------ | -------------------------------------------- |
+| Queue Classification     | **ro**, **move_into**                        |
+| Priority Classification  | **ro**, **priority**                         |
+| Notiz-Erstellung         | **ro**, **note**                             |
+| Ticket-Updates           | **ro**, **move_into**, **priority**, **note** |
 
 ---
 
@@ -93,12 +93,12 @@ Gehen Sie zu:
 
 Wählen Sie den Agent **open_ticket_ai** und vergeben Sie Berechtigungen wie:
 
-| Berechtigung | Bedeutung                   |
-| ------------ | --------------------------- |
-| ro           | Ticket lesen                |
-| move_into    | Ticket in Queue verschieben |
-| priority     | Priorität ändern            |
-| note         | Interne Notizen hinzufügen  |
+| Berechtigung | Bedeutung                     |
+| ------------ | ----------------------------- |
+| ro           | Ticket lesen                  |
+| move_into    | Ticket in Queue verschieben   |
+| priority     | Priorität ändern              |
+| note         | Interne Notizen hinzufügen    |
 
 ## rw, wenn Sie ein Ticket erstellen müssen.
 
@@ -179,7 +179,7 @@ ValueMap:
       .*: open_ticket_ai
 ```
 
-Dies zwingt _jede_ eingehende Anfrage, sich als `open_ticket_ai` zu authentifizieren
+Dies zwingt *jede* eingehende Anfrage, sich als `open_ticket_ai` zu authentifizieren
 – selbst wenn ein Angreifer beliebige Benutzernamen sendet.
 
 Dies verhindert:
