@@ -1,0 +1,129 @@
+# Products Page Content
+hero:
+  badge: '● LIVE CLASSIFICATION ENGINE v2.0'
+  title:
+    line1: 'Automatisiert,'
+    line2: 'Konsistentes Ticket'
+    line3: 'Klassifizierung'
+    highlight: 'In Echtzeit.'
+  description: 'Analysieren Sie eingehende Tickets und weisen Sie sofort strukturierte, hierarchische Tags zu. Keine Regeln zu pflegen. Vollständig automatisiert.'
+  cta:
+    primary: 'VERTRIEB KONTAKTIEREN'
+    secondary: 'ROI-Rechner anzeigen'
+
+  demo:
+    title: 'processor_v2.exe'
+    input:
+      label: 'ROHE EINGABE'
+      subject: 'Login erneut fehlgeschlagen?'
+      body: |
+        Hi support, I'm trying to access
+        the dashboard but getting error
+        503. This is blocking the payroll
+        run. Please fix
+    output:
+      label: 'KI STRUKTURIERTE AUSGABE'
+      tags:
+        - key: 'INTENT'
+          value: 'access_issue'
+          color: 'primary'
+        - key: 'SYSTEM'
+          value: 'dashboard_main'
+          color: 'secondary'
+        - key: 'URGENCY'
+          value: 'critical'
+          color: 'danger'
+
+capabilities:
+  title: 'Kernfunktionen'
+  subtitle: 'Entwickelt für Unternehmensskalierung und Präzision.'
+  items:
+    - icon: 'heroicons:cpu-chip'
+      title: 'Vollautomatisierte Klassifizierung'
+      description: 'Weist Tags für Intent, Urgency, Impact, User Role und Sentiment zu. Funktioniert nahtlos bei neuen Tickets und historischen Rückständen ohne menschliches Eingreifen.'
+    - icon: 'heroicons:squares-2x2'
+      title: 'Hierarchisch, nicht flach'
+      description: 'Ein echter Taxonomiebaum. Elternknoten für hochrangige Aggregation, Blatt-Tags für operative Präzision. Ermöglicht tiefe, mehrstufige Analysen.'
+    - icon: 'heroicons:cube-transparent'
+      title: '10 Quadrillionen Kombinationen'
+      description: 'Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry.'
+
+editions:
+  title: 'Flexible Editionen'
+  subtitle: 'Wählen Sie die Modellkomplexität, die Ihren betrieblichen Anforderungen entspricht.'
+  items:
+    - slug: 'tagging-lite-free'
+      name: 'Lite Free'
+      subtitle: 'Evaluation & Testing'
+      price: 0
+      priceUnit: '/one-time'
+      currency: '€'
+      badge: null
+      features:
+        - 'Modell: 0.5B Parameter'
+        - '150+ Tags'
+        - 'Genauigkeit: ~0.82'
+        - 'ROI: ab 15 Tickets/Tag'
+      availability: 'Verfügbar 18.01'
+      ctaText: 'Lite Free erkunden'
+      highlighted: false
+
+    - slug: 'tagging-lite-pro'
+      name: 'Lite Pro'
+      subtitle: 'Production Ready'
+      price: 2500
+      priceUnit: '/one-time'
+      currency: '€'
+      badge: 'BEST VALUE'
+      features:
+        - 'Modell: 4B Parameter'
+        - '150+ Tags'
+        - 'Genauigkeit: ~0.90'
+        - 'Fokus: Routing & Reporting'
+      availability: 'Verfügbar 18.01'
+      ctaText: 'Lite Pro erkunden'
+      highlighted: true
+
+    - slug: 'tagging-full-pro'
+      name: 'Full Pro'
+      subtitle: 'Advanced Enterprise'
+      price: 6000
+      priceUnit: '/one-time'
+      currency: '€'
+      badge: null
+      features:
+        - 'Modell: 8B Parameter'
+        - '250+ Tags'
+        - 'Genauigkeit: ~0.92'
+        - 'Fokus: Maximum Detail'
+      availability: 'IN ENTWICKLUNG'
+      ctaText: 'Full Pro erkunden'
+      highlighted: false
+
+  roiCta:
+    icon: 'heroicons:rocket-launch'
+    text: 'ROI-Simulator testen'
+    url: '/products/roi-calculator'
+
+deployment:
+  title: 'Bereitstellung & Hardware-Flexibilität'
+  subtitle: 'Sicher nach Design. Optimiert für Ihre Infrastruktur.'
+  features:
+    - icon: 'heroicons:server'
+      title: 'ON-PREMISE OR PRIVATE CLOUD'
+    - icon: 'heroicons:shield-check'
+      title: 'NO DATA LEAVES INFRASTRUCTURE'
+    - icon: 'heroicons:cube-transparent'
+      title: 'INT8, BF16, FP16 QUANTIZATIONS'
+    - icon: 'heroicons:cpu-chip'
+      title: 'OPTIMIZED FOR CPU & GPU'
+
+finalCta:
+  icon: 'heroicons:rocket-launch'
+  title:
+    line1: 'Roh-Tickets umwandeln in'
+    highlight: 'Operative Intelligenz.'
+  subtitle: 'Schließen Sie sich zukunftsorientierten Support-Teams an, die ihren Workflow heute automatisieren.'
+  buttons:
+    primary: 'VERTRIEB KONTAKTIEREN'
+    secondary: 'Dokumentation anzeigen'

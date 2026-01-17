@@ -1,0 +1,220 @@
+#file: noinspection YAMLSchemaValidation
+meta:
+  siteName: Open Ticket AI
+  tagline: Private, on‑premise KI für Ticketautomatisierung.
+  logoUrl: /images/open-ticket-ai-logo.png
+companyImage: '../../../assets/images/open_ticket_ai_mannheim.png'
+nav:
+  - label: Produkte
+    url: products
+    children:
+      - label: Funktionen
+        url: products
+      - label: ROI‑Rechner
+        url: roi-calculator
+      - label: Preise
+        url: pricing
+  - label: Dienstleistungen
+    url: services
+  - label: Dokumentation
+    url: docs
+  - label: Blog
+    url: blog
+footer:
+  brandName: Open Ticket AI
+  brandTagline: Private, on‑premise KI für Ticketautomatisierung.
+  socialHeading: Verbinden
+  sections:
+    - title: Produkt
+      links:
+        - label: Funktionen
+          url: products
+        - label: Integrationen
+          url: services
+        - label: Sicherheit
+          url: docs
+    - title: Unternehmen
+      links:
+        - label: Über uns
+          url: 'company/about'
+        - label: Datenschutz
+          url: company/data-privacy
+        - label: Impressum
+          url: 'company/legal-notice'
+        - label: AGB
+          url: 'company/terms'
+  social:
+    - platform: linkedin
+      url: https://www.linkedin.com/company/open-ticket-ai
+      ariaLabel: LinkedIn
+      iconName: simple-icons:linkedin
+    - platform: youtube
+      url: https://www.youtube.com/@openticketai
+      ariaLabel: YouTube
+      iconName: simple-icons:youtube
+    - platform: github
+      url: https://github.com/Softoft-Orga
+      ariaLabel: GitHub
+      iconName: simple-icons:github
+    - platform: huggingface
+      url: https://huggingface.co/openticketai
+      ariaLabel: Hugging Face
+      iconName: simple-icons:huggingface
+    - platform: x
+      url: https://x.com/OpenTicketAI
+      ariaLabel: X (Twitter)
+      iconName: simple-icons:x
+  legal:
+    - label: AGB
+      url: terms
+  copyright: Open Ticket AI UG. Alle Rechte vorbehalten.
+
+popularResources:
+  title: Beliebte Ressourcen
+  groups:
+    - title: Automatisierungs‑Engine
+      basePath: docs/open-ticket-automation
+      items:
+        - docId: /guides/quick_start
+          icon: heroicons:rocket-launch
+        - docId: /developers/config_rendering
+          icon: heroicons:command-line
+        - docId: /developers/ticket_system_integration
+          icon: heroicons:puzzle-piece
+        - docId: /developers/plugin_development
+          icon: heroicons:arrows-right-left
+    - title: Tagging-Engine
+      basePath: docs/ticket-tagging
+      items:
+        - docId: /taxonomy-design
+          icon: heroicons:squares-2x2
+        - docId: /hardware-sizing
+          icon: heroicons:cpu-chip
+        - docId: /using-model
+          icon: heroicons:arrow-path
+        - docId: /tag-mapping
+          icon: heroicons:chart-bar
+
+legalInfo:
+  companyName: Open Ticket AI UG
+  ceo: Constanze Krishnaratne
+  address:
+    street: Viktoriastraße 14
+    city: Mannheim
+    zip: '68159'
+    country: Germany
+  legalForm: UG (haftungsbeschränkt)
+  vatId: ''
+  registerInfo: Amtsgericht Mannheim, HRB
+  email: info@openticketai.com
+  phone: '+49 1512 0102724'
+team:
+  - name: Constanze Krishnaratne
+    role: CEO
+    description: Leitet die Strategie und Produktentwicklung von Open Ticket AI mit Fokus auf Transparenz, Vertrauen und operative Wirkung.
+    pictureUrl: '../../../assets/images/team/constanze_krishnaratne.png'
+    email: constanze.krishnaratne@openticketai.com
+    phoneNumber: '+49 1512 0102724'
+    linkedInUrl: https://www.linkedin.com/in/constanze-krishnaratne
+  - name: Tobias Bueck
+    role: CTO
+    description: Entwickelt KI-Modelle für die Ticketautomatisierung und sorgt für zuverlässige On-Premise‑Bereitstellungen mit messbarer Wirkung.
+    pictureUrl: '../../../assets/images/team/tobias_bueck.jpg'
+    email: tobias.bueck@openticketai.com
+    phoneNumber: ''
+    linkedInUrl: https://www.linkedin.com/in/tobias-bueck
+
+dataPrivacy:
+  introduction: |
+    Open Ticket AI UG (im Folgenden „wir“ oder „uns“) verpflichtet sich, Ihre personenbezogenen Daten zu schützen und Ihre Privatsphäre‑Rechte gemäß der Datenschutz‑Grundverordnung (DSGVO) und anderer anwendbarer Datenschutzgesetze zu respektieren. Diese Datenschutzerklärung erklärt, wie wir Ihre personenbezogenen Daten erfassen, nutzen, verarbeiten und schützen, wenn Sie unsere Dienste nutzen.
+  controller:
+    title: Datenverantwortlicher
+    content: |
+      Open Ticket AI UG
+      Viktoriastraße 14
+      68159 Mannheim, Germany
+      Email: info@openticketai.com
+      Phone: +49 1512 0102724
+  dataProcessing:
+    title: Daten, die wir erfassen und verarbeiten
+    categories:
+      - title: Kontaktinformationen
+        description: Wenn Sie uns kontaktieren oder Informationen zu unseren Diensten anfordern, erfassen wir Ihren Namen, Ihre E‑Mail‑Adresse, Telefonnummer und Unternehmensinformationen.
+        legalBasis: Ihre Einwilligung (Art. 6(1)(a) DSGVO) oder unser berechtigtes Interesse an der Beantwortung von Anfragen (Art. 6(1)(f) DSGVO)
+      - title: Nutzungsdaten der Website
+        description: Wir erfassen technische Informationen wie IP‑Adresse, Browsertyp, Geräteinformationen und besuchte Seiten mittels Cookies und Analyse‑Tools.
+        legalBasis: Ihre Einwilligung (Art. 6(1)(a) DSGVO) für Cookies und unser berechtigtes Interesse an der Verbesserung unserer Website (Art. 6(1)(f) DSGVO)
+      - title: Servicedaten
+        description: Wenn Sie unsere Dienste nutzen, verarbeiten wir für die Servicebereitstellung notwendige Daten, einschließlich Ticket‑System‑Daten, Konfigurationseinstellungen und Nutzungsmetriken.
+        legalBasis: Erfüllung des Vertrags (Art. 6(1)(b) DSGVO)
+      - title: Kommunikationsdaten
+        description: Wir speichern Korrespondenz und Kommunikation mit Ihnen, einschließlich E‑Mail‑Austausch und Support‑Tickets.
+        legalBasis: Unser berechtigtes Interesse an der Pflege von Kundenbeziehungen (Art. 6(1)(f) DSGVO)
+  yourRights:
+    title: Ihre Rechte gemäß DSGVO
+    rights:
+      - title: Recht auf Auskunft
+        description: Sie haben das Recht, eine Kopie der über Sie gespeicherten personenbezogenen Daten anzufordern.
+      - title: Recht auf Berichtigung
+        description: Sie können verlangen, dass wir unrichtige oder unvollständige personenbezogene Daten korrigieren.
+      - title: Recht auf Löschung
+        description: Sie haben das Recht, die Löschung Ihrer personenbezogenen Daten unter bestimmten Umständen zu verlangen.
+      - title: Recht auf Einschränkung
+        description: Sie können verlangen, dass wir die Verarbeitung Ihrer personenbezogenen Daten in bestimmten Situationen einschränken.
+      - title: Recht auf Datenübertragbarkeit
+        description: Sie haben das Recht, Ihre personenbezogenen Daten in einem strukturierten, gängigen Format zu erhalten und an einen anderen Verantwortlichen zu übertragen.
+      - title: Recht auf Widerspruch
+        description: Sie können der Verarbeitung Ihrer personenbezogenen Daten aus Gründen des berechtigten Interesses oder für Direktmarketingzwecke widersprechen.
+      - title: Recht auf Widerruf der Einwilligung
+        description: Wenn die Verarbeitung auf Ihrer Einwilligung beruht, können Sie diese jederzeit widerrufen.
+      - title: Recht auf Beschwerde
+        description: Sie haben das Recht, bei einer Aufsichtsbehörde Beschwerde einzulegen, wenn Sie der Ansicht sind, dass Ihre Datenschutzrechte verletzt wurden.
+  dataSecurity:
+    title: Datensicherheit
+    content: |
+      Wir setzen geeignete technische und organisatorische Sicherheitsmaßnahmen ein, um Ihre personenbezogenen Daten vor unbefugtem Zugriff, Veränderung, Offenlegung oder Zerstörung zu schützen. Diese Maßnahmen umfassen Verschlüsselung, Zugriffskontrollen, regelmäßige Sicherheitsbewertungen und Schulungen des Personals zu Datenschutzpraktiken. Wir überprüfen und aktualisieren unsere Sicherheitsmaßnahmen kontinuierlich, um den fortlaufenden Schutz Ihrer Daten zu gewährleisten.
+  thirdPartyServices:
+    title: Drittanbieter‑Dienste
+    services:
+      - name: Google Analytics
+        purpose: Website-Analyse und Leistungsüberwachung
+        provider: Google LLC
+        privacyPolicy: https://policies.google.com/privacy
+      - name: GitHub
+        purpose: Code‑Repository und Versionskontrolle
+        provider: GitHub, Inc.
+        privacyPolicy: https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement
+      - name: Netlify
+        purpose: Website‑Hosting und Content‑Delivery
+        provider: Netlify, Inc.
+        privacyPolicy: https://www.netlify.com/privacy/
+      - name: Streak CRM
+        purpose: Kundenbeziehungs‑Management
+        provider: Streak, Inc.
+        privacyPolicy: https://www.streak.com/privacy
+  contact:
+    title: Kontakt für Datenschutzanfragen
+    content: |
+      Wenn Sie Fragen zu dieser Datenschutzerklärung haben oder Ihre Rechte ausüben möchten, kontaktieren Sie uns bitte unter:
+
+      Email: info@openticketai.com
+      Phone: +49 1512 0102724
+      Address: Open Ticket AI UG, Viktoriastraße 14, 68159 Mannheim, Germany
+  lastUpdated: January 2026
+
+ui:
+  ctaLabel: Vertrieb kontaktieren
+  cookieBanner:
+    title: Wir schätzen Ihre Privatsphäre
+    description: Wir verwenden Cookies und Analysen, um Ihre Erfahrung zu verbessern und zu verstehen, wie Sie unsere Website nutzen. Für weitere Informationen lesen Sie bitte unsere
+    privacyPolicyText: Datenschutzerklärung
+    acceptText: Akzeptieren
+    declineText: Ablehnen
+  contactForm:
+    title: Vertrieb kontaktieren
+    submitButtonText: Absenden
+    messageLabel: Nachricht
+    emailLabel: E‑Mail
+    subjectLabel: Betreff
+    emailPlaceholder: your@email.com
+    messagePlaceholder: Wie können wir Ihnen helfen?

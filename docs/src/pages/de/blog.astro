@@ -1,0 +1,160 @@
+---
+import { getCollection } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogOverview from '../../components/vue/domain/BlogOverview.vue';
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
+import { filterPublishedBlogPosts } from '../../utils/staticPaths.ts';
+
+const pageTitle = 'Open Ticket AI Blog';
+const pageDescription =
+  'Neueste Updates, Einblicke und Neuigkeiten über Open Ticket AI und autonome Support-Automatisierung.';
+
+// Fetch blog posts from the content collection for current locale
+const currentLocale = Astro.currentLocale!.toLowerCase();
+const allBlogPosts = await getCollection('blog');
+const localizedBlogPosts = allBlogPosts.filter(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
+const publishedPosts = filterPublishedBlogPosts(localizedBlogPosts);
+
+// Sort posts by date (newest first)
+const sortedBlogPosts = publishedPosts.sort((a, b) => {
+  return b.data.date.getTime() - a.data.date.getTime();
+});
+
+// Get the featured post (most recent)
+const featuredPost = sortedBlogPosts[0];
+
+// Get remaining posts for the grid (all posts except featured)
+
+interface BlogPost {
+  id: string;
+  data: {
+    title: string;
+    description?: string;
+    date: Date;
+    futureReleaseDate?: Date;
+    category?: string;
+    image?: string;
+    draft?: boolean;
+    tags?: string[];
+  };
+}
+
+const gridPostsRaw = sortedBlogPosts.slice(1) as Array<{
+  id: string;
+  data: Omit<BlogPost['data'], 'image'> & { image?: any };
+}>;
+
+const gridPosts: BlogPost[] = await Promise.all(
+  gridPostsRaw.map(async post => {
+    const img = post.data.image;
+    const optimized = img
+      ? await getImage({
+          src: img,
+          width: 1200,
+          format: 'avif',
+        })
+      : null;
+
+    return {
+      id: post.id,
+      data: {
+        title: post.data.title,
+        description: post.data.description,
+        date: post.data.date,
+        category: post.data.category,
+        image: optimized?.src,
+        draft: post.data.draft,
+        tags: post.data.tags,
+      },
+    };
+  })
+);
+// Helper function to format date
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+};
+
+// Helper function to get blog post URL (strip locale prefix and extension from id)
+const getBlogUrl = (id: string) => {
+  const canonicalPath = id.replace(/^[a-z]{2}\//, '').replace(/\.(md|mdx)$/, '');
+  return getRelativeLocaleUrl(Astro.currentLocale!, `blog/${canonicalPath}`);
+};
+
+// Localized URLs for BlogOverview component
+const localizedBlogBaseURL = getRelativeLocaleUrl(Astro.currentLocale!, 'blog');
+const localizedSubFormAction = getRelativeLocaleUrl(
+  Astro.currentLocale!,
+  'success/blog-subscription'
+);
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="min-h-screen bg-background-dark">
+    <!-- Featured Header -->
+    {
+      featuredPost && (
+        <section class="relative w-full overflow-hidden border-b border-surface-lighter bg-surface-dark py-20">
+          <div class="absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-background-dark to-transparent opacity-50 blur-3xl" />
+          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid gap-16 lg:grid-cols-2 lg:items-center">
+              <div class="flex flex-col gap-8">
+                <div class="inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary-light">
+                  <span class="size-2 animate-pulse rounded-full bg-primary" />
+                  {featuredPost.data.category || 'Featured Post'}
+                </div>
+                <h1 class="font-display text-5xl font-bold leading-tight tracking-tight text-white lg:text-7xl">
+                  {featuredPost.data.title}
+                </h1>
+                <p class="max-w-xl text-xl leading-relaxed text-text-dim">
+                  {featuredPost.data.description}
+                </p>
+                <div class="flex flex-wrap gap-4 pt-4">
+                  <a
+                    href={getBlogUrl(featuredPost.id)}
+                    class="group flex h-14 items-center justify-center gap-3 rounded-lg bg-white px-8 text-lg font-bold text-background-dark transition-transform hover:-translate-y-1"
+                  >
+                    Artikel lesen
+                    <Icon
+                      name="heroicons:arrow-right"
+                      class="h-6 w-6 transition-transform group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
+                  </a>
+                </div>
+              </div>
+              <div class="relative aspect-square w-full overflow-hidden rounded-2xl border border-surface-lighter bg-surface-lighter shadow-2xl">
+                <Image
+                  src={featuredPost.data.image}
+                  alt={featuredPost.data.title}
+                  class="h-full w-full object-cover opacity-60 transition-transform duration-700 hover:scale-105"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 via-transparent to-transparent" />
+                <div class="absolute bottom-8 left-8 right-8">
+                  <div class="flex items-center justify-between text-sm text-text-2">
+                    <span class="flex items-center gap-2">
+                      <Icon name="heroicons:calendar" class="h-5 w-5" aria-hidden="true" />
+                      {formatDate(featuredPost.data.date)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Blog Overview Component -->
+    <BlogOverview
+      posts={gridPosts}
+      localizedBlogBaseURL={localizedBlogBaseURL}
+      localizedSubFormAction={localizedSubFormAction}
+      client:load
+    />
+  </div>
+</BaseLayout>
