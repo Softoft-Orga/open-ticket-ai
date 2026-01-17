@@ -44,11 +44,11 @@ const blog = defineCollection({
 const products = defineCollection({
   loader: glob({
     base: './src/content/products',
-    pattern: '*/products.yml',
+    pattern: '*/products.{yml,yaml}',
   }),
   schema: z.object({
     hero: z.object({
-      badge: z.string(),
+      badge: z.string().optional(),
       title: z.object({
         line1: z.string(),
         line2: z.string(),

@@ -17,29 +17,11 @@ collections:
     label: "Docs"
     folder: "docs/src/content/docs/en"
     create: true
-    extension: "md"
-    format: "frontmatter"
-    editor:
-      preview: true
-    fields:
-      - { name: "title", label: "Title", widget: "string" }
-      - { name: "description", label: "Description", widget: "string", required: false }
-      - name: "nav"
-        label: "Nav"
-        widget: "object"
-        required: false
-        fields:
-          - { name: "group", label: "Group", widget: "string", required: false }
-          - { name: "order", label: "Order", widget: "number", required: false, value_type: "int", min: 0 }
-          - { name: "hidden", label: "Hidden", widget: "boolean", required: false, default: false }
-      - { name: "draft", label: "Draft", widget: "boolean", required: false, default: false }
-      - { name: "body", label: "Body", widget: "markdown" }
-  - name: "docs_mdx"
-    label: "Docs MDX"
-    folder: "docs/src/content/docs/en"
-    create: true
     extension: "mdx"
     format: "frontmatter"
+    nested:
+      depth: 10
+    path: "{{slug}}"
     editor:
       preview: true
     fields:
@@ -86,31 +68,128 @@ collections:
     label: "Products"
     files:
       - name: "products_en"
-        label: "Products"
+        label: "Products (EN)"
         file: "docs/src/content/products/en/products.yml"
-        fields:
-          - name: "items"
-            label: "Products"
-            widget: "list"
+        fields: &product_fields
+          - name: "hero"
+            label: "Hero"
+            widget: "object"
             fields:
-              - { name: "slug", label: "Slug", widget: "string" }
-              - { name: "title", label: "Title", widget: "string" }
-              - { name: "tagline", label: "Tagline", widget: "string", required: false }
-              - { name: "description", label: "Description", widget: "text", required: false }
-              - { name: "features", label: "Features", widget: "list", required: false, field: { name: "feature", label: "Feature", widget: "string" } }
-              - { name: "tier", label: "Tier", widget: "select", required: false, options: ["lite", "pro", "enterprise"] }
-              - name: "nav"
-                label: "Nav"
+              - { name: "badge", label: "Badge", widget: "string", required: false }
+              - name: "title"
+                label: "Title"
                 widget: "object"
-                required: false
                 fields:
-                  - { name: "group", label: "Group", widget: "string", required: false }
-                  - { name: "order", label: "Order", widget: "number", required: false, value_type: "int", min: 0 }
-                  - { name: "hidden", label: "Hidden", widget: "boolean", required: false, default: false }
-              - { name: "status", label: "Status", widget: "string", required: false }
-              - { name: "badges", label: "Badges", widget: "list", required: false, field: { name: "badge", label: "Badge", widget: "string" } }
-              - { name: "image", label: "Image", widget: "string", required: false }
-              - { name: "icon", label: "Icon", widget: "string", required: false }
+                  - { name: "line1", label: "Line 1", widget: "string" }
+                  - { name: "line2", label: "Line 2", widget: "string" }
+                  - { name: "line3", label: "Line 3", widget: "string" }
+                  - { name: "highlight", label: "Highlight", widget: "string" }
+              - { name: "description", label: "Description", widget: "text" }
+              - name: "cta"
+                label: "CTA"
+                widget: "object"
+                fields:
+                  - { name: "primary", label: "Primary", widget: "string" }
+                  - { name: "secondary", label: "Secondary", widget: "string" }
+              - name: "demo"
+                label: "Demo"
+                widget: "object"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - name: "input"
+                    label: "Input"
+                    widget: "object"
+                    fields:
+                      - { name: "label", label: "Label", widget: "string" }
+                      - { name: "subject", label: "Subject", widget: "string" }
+                      - { name: "body", label: "Body", widget: "text" }
+                  - name: "output"
+                    label: "Output"
+                    widget: "object"
+                    fields:
+                      - { name: "label", label: "Label", widget: "string" }
+                      - name: "tags"
+                        label: "Tags"
+                        widget: "list"
+                        fields:
+                          - { name: "key", label: "Key", widget: "string" }
+                          - { name: "value", label: "Value", widget: "string" }
+                          - { name: "color", label: "Color", widget: "string" }
+          - name: "capabilities"
+            label: "Capabilities"
+            widget: "object"
+            fields:
+              - { name: "title", label: "Title", widget: "string" }
+              - { name: "subtitle", label: "Subtitle", widget: "string" }
+              - name: "items"
+                label: "Items"
+                widget: "list"
+                fields:
+                  - { name: "icon", label: "Icon", widget: "string" }
+                  - { name: "title", label: "Title", widget: "string" }
+                  - { name: "description", label: "Description", widget: "text" }
+          - name: "editions"
+            label: "Editions"
+            widget: "object"
+            fields:
+              - { name: "title", label: "Title", widget: "string" }
+              - { name: "subtitle", label: "Subtitle", widget: "string" }
+              - name: "items"
+                label: "Items"
+                widget: "list"
+                fields:
+                  - { name: "slug", label: "Slug", widget: "string" }
+                  - { name: "name", label: "Name", widget: "string" }
+                  - { name: "subtitle", label: "Subtitle", widget: "string" }
+                  - { name: "price", label: "Price", widget: "number", value_type: "float" }
+                  - { name: "priceUnit", label: "Price Unit", widget: "string" }
+                  - { name: "currency", label: "Currency", widget: "string" }
+                  - { name: "badge", label: "Badge", widget: "string", required: false }
+                  - { name: "features", label: "Features", widget: "list", field: { name: "feature", label: "Feature", widget: "string" } }
+                  - { name: "availability", label: "Availability", widget: "string" }
+                  - { name: "ctaText", label: "CTA Text", widget: "string" }
+                  - { name: "highlighted", label: "Highlighted", widget: "boolean" }
+          - name: "roiCta"
+            label: "ROI CTA"
+            widget: "object"
+            fields:
+              - { name: "icon", label: "Icon", widget: "string" }
+              - { name: "text", label: "Text", widget: "string" }
+              - { name: "url", label: "URL", widget: "string" }
+          - name: "deployment"
+            label: "Deployment"
+            widget: "object"
+            fields:
+              - { name: "title", label: "Title", widget: "string" }
+              - { name: "subtitle", label: "Subtitle", widget: "string" }
+              - name: "features"
+                label: "Features"
+                widget: "list"
+                fields:
+                  - { name: "icon", label: "Icon", widget: "string" }
+                  - { name: "title", label: "Title", widget: "string" }
+          - name: "finalCta"
+            label: "Final CTA"
+            widget: "object"
+            fields:
+              - { name: "icon", label: "Icon", widget: "string" }
+              - name: "title"
+                label: "Title"
+                widget: "object"
+                fields:
+                  - { name: "line1", label: "Line 1", widget: "string" }
+                  - { name: "highlight", label: "Highlight", widget: "string" }
+              - { name: "subtitle", label: "Subtitle", widget: "string" }
+              - name: "buttons"
+                label: "Buttons"
+                widget: "object"
+                fields:
+                  - { name: "primary", label: "Primary", widget: "string" }
+                  - { name: "secondary", label: "Secondary", widget: "string" }
+      - name: "products_de"
+        label: "Products (DE)"
+        file: "docs/src/content/products/de/products.yml"
+        fields: *product_fields
 
   - name: "services"
     label: "Services"
