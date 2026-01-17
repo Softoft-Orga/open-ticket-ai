@@ -8,6 +8,8 @@ import Card from '../../components/vue/core/basic/Card.vue';
 import ModalTrigger from '../../components/vue/core/basic/ModalTrigger.vue';
 import ContactForm from '../../components/ContactForm.astro';
 import { Icon } from 'astro-icon/components';
+import { Schema } from 'astro-seo-schema';
+import type { CollectionPage, WithContext } from 'schema-dts';
 
 const title = 'Products - Open Ticket AI';
 
@@ -23,13 +25,29 @@ if (!productsEntry) {
 }
 
 const { hero, capabilities, editions, deployment, finalCta } = productsEntry.data;
+const description = 'Open Ticket AI Product Suite - Automated Ticket Classification';
+
+// CollectionPage schema for products listing
+const collectionPageSchema: WithContext<CollectionPage> = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: title,
+  description: description,
+  url: 'https://openticketai.com/en/products/',
+  inLanguage: 'en',
+  about: {
+    '@type': 'ProductGroup',
+    name: 'Open Ticket AI Product Suite',
+    description: 'AI-powered ticket classification and automation products',
+  },
+};
 ---
 
-<BaseLayout
-  title={title}
-  description="Open Ticket AI Product Suite - Automated Ticket Classification"
->
-  <div slot="head"></div>
+<BaseLayout title={title} description={description}>
+  <div slot="head">
+    <!-- CollectionPage Schema -->
+    <Schema item={collectionPageSchema} />
+  </div>
 
   <div class="min-h-screen bg-background-dark">
     <!-- Hero Section - Live Classification Engine -->

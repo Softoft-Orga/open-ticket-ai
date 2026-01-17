@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { prose } from '../../../components/vue/core/design-system/recipes/prose';
+import DocsMobileSidebar from '../../../components/vue/domain/DocsMobileSidebar.vue';
 
 export const getStaticPaths = () => getLocalizedCatchAllStaticPaths('docs');
 
@@ -20,18 +21,19 @@ const description = entry.data.description;
 const proseClasses = prose({ size: 'lg' });
 
 // Generate breadcrumbs from the slug (removing locale prefix)
+// Note: Breadcrumbs are now plain text only (no links) because the URL structure
+// doesn't always match the nav.group structure, causing broken links
 const slugParts = entry.id
   .replace(/^[a-z]{2}\//, '')
   .replace(/\.(md|mdx)$/, '')
   .split('/');
 const breadcrumbs = [
-  { label: 'Documentation', href: '/docs/' },
-  ...slugParts.slice(0, -1).map((part, index) => ({
+  { label: 'Documentation' },
+  ...slugParts.slice(0, -1).map(part => ({
     label: part
       .split('-')
       .map(w => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' '),
-    href: '/docs/' + slugParts.slice(0, index + 1).join('/') + '/',
   })),
   { label: title },
 ];
@@ -105,16 +107,16 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
             <div class="flex items-center gap-2 overflow-hidden text-xs">
               {breadcrumbs.map((crumb, i) => (
                 <>
-                  {'href' in crumb && crumb.href ? (
-                    <a
-                      href={getRelativeLocaleUrl(Astro.currentLocale || 'en', crumb.href)}
-                      class="whitespace-nowrap text-slate-500 transition-colors hover:text-white"
-                    >
-                      {crumb.label}
-                    </a>
-                  ) : (
-                    <span class="truncate font-bold text-primary-light">{crumb.label}</span>
-                  )}
+                  <span
+                    class:list={[
+                      'whitespace-nowrap',
+                      i === breadcrumbs.length - 1
+                        ? 'truncate font-bold text-primary-light'
+                        : 'text-slate-500',
+                    ]}
+                  >
+                    {crumb.label}
+                  </span>
                   {i < breadcrumbs.length - 1 && <span class="text-xs text-slate-700">›</span>}
                 </>
               ))}
@@ -202,5 +204,8 @@ const sidebarSections: SidebarSection[] = Object.entries(groupedDocs)
         )
       }
     </div>
+
+    <!-- Mobile Sidebar - Only visible on mobile/tablet -->
+    <DocsMobileSidebar sidebarSections={sidebarSections} client:load />
   </div>
 </BaseLayout>
