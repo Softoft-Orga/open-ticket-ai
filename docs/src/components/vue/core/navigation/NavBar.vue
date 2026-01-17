@@ -18,11 +18,18 @@
       <nav class="hidden flex-1 justify-center gap-8 text-sm font-medium md:flex">
         <template v-for="link in navLinks" :key="link.url">
           <!-- Nav item with dropdown -->
-          <Menu v-if="link.children && link.children.length > 0" v-slot="{ open }" as="div" class="relative">
+          <Menu
+            v-if="link.children && link.children.length > 0"
+            v-slot="{ open }"
+            as="div"
+            class="relative"
+          >
             <MenuButton
               :class="[
                 'flex items-center gap-1 rounded-lg px-2 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
-                isActive(link.url) || isAnyChildActive(link.children) ? 'text-text-1' : 'text-text-2 hover:text-text-1'
+                isActive(link.url) || isAnyChildActive(link.children)
+                  ? 'text-text-1'
+                  : 'text-text-2 hover:text-text-1',
               ]"
             >
               {{ link.label }}
@@ -42,11 +49,7 @@
                 class="absolute left-0 mt-2 w-56 origin-top-left rounded-lg border border-border-dark bg-surface-dark shadow-lg ring-1 ring-black/5 focus:outline-none"
               >
                 <div class="p-1">
-                  <MenuItem
-                    v-for="child in link.children"
-                    :key="child.url"
-                    v-slot="{ active }"
-                  >
+                  <MenuItem v-for="child in link.children" :key="child.url" v-slot="{ active }">
                     <a
                       :href="child.url"
                       :class="[
@@ -157,7 +160,10 @@
                       leave-from-class="transform translate-y-0 opacity-100"
                       leave-to-class="transform -translate-y-2 opacity-0"
                     >
-                      <div v-if="mobileDropdownOpen[link.url]" class="ml-4 flex flex-col gap-1 border-l-2 border-primary/30 pl-4">
+                      <div
+                        v-if="mobileDropdownOpen[link.url]"
+                        class="ml-4 flex flex-col gap-1 border-l-2 border-primary/30 pl-4"
+                      >
                         <a
                           v-for="child in link.children"
                           :key="child.url"
@@ -209,13 +215,20 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/vue/24/outline';
-import { TransitionChild, TransitionRoot, Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
+import {
+  TransitionChild,
+  TransitionRoot,
+  Menu,
+  MenuButton,
+  MenuItems,
+  MenuItem,
+} from '@headlessui/vue';
 import Button from '../basic/Button.vue';
 import { fade, slideLeft } from '../transitions/presets';
 
-type NavLink = { 
-  label: string; 
-  url: string; 
+type NavLink = {
+  label: string;
+  url: string;
   children?: { label: string; url: string }[];
 };
 

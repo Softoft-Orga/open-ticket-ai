@@ -83,14 +83,14 @@ export const WithDropdowns: Story = {
   }),
   args: {
     links: [
-      { 
-        label: 'Products', 
+      {
+        label: 'Products',
         url: '/products/',
         children: [
           { label: 'Features', url: '/products/' },
           { label: 'ROI Calculator', url: '/roi-calculator/' },
           { label: 'Pricing', url: '/pricing/' },
-        ]
+        ],
       },
       { label: 'Services', url: '/services/' },
       { label: 'Docs', url: '/docs/' },
@@ -120,23 +120,23 @@ export const MixedNavigation: Story = {
   }),
   args: {
     links: [
-      { 
-        label: 'Products', 
+      {
+        label: 'Products',
         url: '/products/',
         children: [
           { label: 'Features', url: '/products/' },
           { label: 'ROI Calculator', url: '/roi-calculator/' },
           { label: 'Pricing', url: '/pricing/' },
-        ]
+        ],
       },
-      { 
-        label: 'Company', 
+      {
+        label: 'Company',
         url: '/company/',
         children: [
           { label: 'About', url: '/company/about/' },
           { label: 'Careers', url: '/company/careers/' },
           { label: 'Contact', url: '/company/contact/' },
-        ]
+        ],
       },
       { label: 'Docs', url: '/docs/' },
       { label: 'Blog', url: '/blog/' },
@@ -225,14 +225,14 @@ export const MobileView: Story = {
   }),
   args: {
     links: [
-      { 
-        label: 'Products', 
+      {
+        label: 'Products',
         url: '/products/',
         children: [
           { label: 'Features', url: '/products/' },
           { label: 'ROI Calculator', url: '/roi-calculator/' },
           { label: 'Pricing', url: '/pricing/' },
-        ]
+        ],
       },
       { label: 'Services', url: '/services/' },
       { label: 'Pricing', url: '/pricing/' },
@@ -271,14 +271,14 @@ export const KeyboardAccessibility: Story = {
   }),
   args: {
     links: [
-      { 
-        label: 'Products', 
+      {
+        label: 'Products',
         url: '/products/',
         children: [
           { label: 'Features', url: '/products/' },
           { label: 'ROI Calculator', url: '/roi-calculator/' },
           { label: 'Pricing', url: '/pricing/' },
-        ]
+        ],
       },
       { label: 'Services', url: '/services/' },
       { label: 'Pricing', url: '/pricing/' },
