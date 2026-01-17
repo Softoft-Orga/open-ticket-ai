@@ -1,0 +1,250 @@
+---
+title: Plugins
+description: "Erfahren Sie mehr über das Plugin-System von Open Ticket AI – was Plugins sind, wie man sie installiert und welche Plugins für Ihre Automatisierungs‑Workflows verfügbar sind."
+---
+
+# Plugins
+
+Plugins erweitern Open Ticket AI um zusätzliche Fähigkeiten. Jeder Plugin stellt Services und Pipes bereit, die Sie in Ihrer Konfiguration nutzen können, um sich mit verschiedenen Ticket‑Systemen zu verbinden, ML‑Modelle auszuführen oder benutzerdefinierte Verarbeitungslogik hinzuzufügen.
+
+## Was ist ein Plugin?
+
+Ein **plugin** ist ein Python‑Paket, das neue Funktionalität zu Open Ticket AI hinzufügt:
+
+- **Services**: Verbindung zu Ticket‑Systemen (OTOBO, Znuny), ML‑Modellen oder externen APIs
+- **Pipes**: Tickets abrufen, Inhalte klassifizieren, Felder aktualisieren, Notizen hinzufügen oder benutzerdefinierte Logik ausführen
+- **Bereit zur Nutzung**: Einfach installieren, konfigurieren und in Ihrem YAML referenzieren.
+
+## Wie man Plugins installiert
+
+Installieren Sie Plugins mit dem `uv`‑Paketmanager:
+
+```bash
+# Install a single plugin
+uv add otai-otobo-znuny
+
+# Install multiple plugins at once
+uv add otai-otobo-znuny otai-hf-local
+```
+
+Das war's! Sobald installiert, stehen die Services und Pipes des Plugins automatisch in Ihrer Konfiguration zur Verfügung.
+
+## Wie man Plugins in der Konfiguration verwendet
+
+Plugins stellen Services und Pipes bereit, die Sie in Ihrer YAML‑Konfiguration im Format `plugin-name:ComponentName` referenzieren.
+
+### Beispiel: Vollständiger Workflow mit Plugins
+
+```yaml
+# Define services from plugins
+services:
+  ticket_system:
+    use: 'otobo-znuny:OTOBOZnunyTicketSystemService'
+    params:
+      base_url: "{{ get_env('OTOBO_URL') }}"
+      username: "{{ get_env('OTOBO_USER') }}"
+      password: "{{ get_env('OTOBO_PASSWORD') }}"
+
+  classifier:
+    use: 'hf-local:HuggingFaceLocalTextClassificationService'
+    params:
+      model_name: 'distilbert-base-uncased-finetuned-sst-2-english'
+
+# Use plugin pipes in your pipeline
+orchestrator:
+  runners:
+    - run:
+        id: fetch_tickets
+        use: 'base:FetchTicketsPipe'
+        injects:
+          ticket_system: 'ticket_system'
+        params:
+          ticket_search_criteria:
+            queue_name: 'Support'
+            state: 'new'
+            limit: 25
+
+    - run:
+        id: classify_tickets
+        use: 'hf-local:TextClassificationPipe'
+        injects:
+          classifier: 'classifier'
+        params:
+          tickets: "{{ get_pipe_result('fetch_tickets', 'fetched_tickets') }}"
+
+    - run:
+        id: update_tickets
+        use: 'base:UpdateTicketPipe'
+        injects:
+          ticket_system: 'ticket_system'
+        params:
+          ticket_id: '{{ ticket.id }}'
+          queue: '{{ classification.label }}'
+```
+
+## Verfügbare Plugins
+
+### Base Plugin
+
+**Package**: `otai-base` (automatisch mit Open Ticket AI installiert)
+
+Das Base‑Plugin bietet Kernfunktionalität, die mit jedem Ticket‑System funktioniert:
+
+**Pipes:**
+
+- `base:FetchTicketsPipe` – Tickets aus Ihrem Ticket‑System abrufen
+- `base:UpdateTicketPipe` – Ticket‑Felder aktualisieren (Queue, Priorität, Status usw.)
+- `base:AddNotePipe` – Notizen oder Kommentare zu Tickets hinzufügen
+- `base:ExpressionPipe` – Dynamische Ausdrücke und bedingte Logik auswerten
+
+**Beispiel:**
+
+```yaml
+orchestrator:
+  runners:
+    - run:
+        id: fetch_new_tickets
+        use: 'base:FetchTicketsPipe'
+        injects:
+          ticket_system: 'my_ticket_system'
+        params:
+          ticket_search_criteria:
+            state: 'new'
+            limit: 50
+```
+
+### OTOBO/Znuny Plugin
+
+**Package**: `otai-otobo-znuny`
+
+Verbindung zu OTOBO-, Znuny- und OTRS‑Ticket‑Systemen.
+
+**Installation:**
+
+```bash
+uv add otai-otobo-znuny
+```
+
+**Was es bietet:**
+
+- Vollständige Integration mit OTOBO, Znuny und OTRS
+- Ticket‑Abruf, -Aktualisierung und Notizverwaltung
+- Verwaltung von Queue, Priorität und Status
+
+**Beispielkonfiguration:**
+
+```yaml
+services:
+  otobo:
+    use: 'otobo-znuny:OTOBOZnunyTicketSystemService'
+    params:
+      base_url: 'https://helpdesk.example.com'
+      username: "{{ get_env('OTOBO_USER') }}"
+      password: "{{ get_env('OTOBO_PASSWORD') }}"
+
+orchestrator:
+  runners:
+    - run:
+        id: fetch
+        use: 'base:FetchTicketsPipe'
+        injects:
+          ticket_system: 'otobo'
+        params:
+          ticket_search_criteria:
+            queue_name: 'IT Support'
+            state: 'new'
+```
+
+### HuggingFace Local Plugin
+
+**Package**: `otai-hf-local`
+
+Führen Sie Machine‑Learning‑Klassifizierungsmodelle lokal mit HuggingFace‑Transformern aus.
+
+**Installation:**
+
+```bash
+uv add otai-hf-local
+```
+
+**Was es bietet:**
+
+- Lokale ML‑Modell‑Inference (keine externen API‑Aufrufe)
+- Textklassifizierung für Ticket‑Inhalte
+- Unterstützung für jedes HuggingFace‑Textklassifizierungsmodell
+
+**Beispielkonfiguration:**
+
+```yaml
+services:
+  ml_classifier:
+    use: 'hf-local:HuggingFaceLocalTextClassificationService'
+    params:
+      model_name: 'distilbert-base-uncased-finetuned-sst-2-english'
+      # Or use your custom fine-tuned model
+      # model_name: "my-org/custom-ticket-classifier"
+
+orchestrator:
+  runners:
+    - run:
+        id: classify
+        use: 'hf-local:TextClassificationPipe'
+        injects:
+          classifier: 'ml_classifier'
+        params:
+          text: '{{ ticket.title }} {{ ticket.body }}'
+```
+
+## Vorteile des Plugin‑Systems
+
+**Nur das installieren, was Sie benötigen:**
+
+- Verwenden Sie OTOBO nicht? Installieren Sie das OTOBO‑Plugin nicht
+- Führen Sie die Klassifizierung in der Cloud aus? Überspringen Sie das HuggingFace‑Plugin
+- Hält Ihre Installation leichtgewichtig
+
+**Kombinieren und Anpassen:**
+
+- Verwenden Sie das OTOBO‑Plugin mit HuggingFace‑Modellen
+- Kombinieren Sie mehrere Ticket‑Systeme in einer Einrichtung
+- Fügen Sie Community‑Plugins hinzu, sobald sie verfügbar sind
+
+**Unabhängige Updates:**
+
+- Plugins aktualisieren, ohne den Kern zu aktualisieren
+- Neue Funktionen schneller erhalten
+- Einzelne Plugins bei Bedarf zurückrollen
+
+## Plugin‑Namenskonvention
+
+Wenn Sie Plugins in der Konfiguration verwenden, lautet das Format:
+
+```
+plugin-name:ComponentName
+```
+
+**Beispiele:**
+
+- `base:FetchTicketsPipe` – FetchTicketsPipe aus dem Base‑Plugin
+- `otobo-znuny:OTOBOZnunyTicketSystemService` – Service aus dem otobo-znuny‑Plugin
+- `hf-local:TextClassificationPipe` – Pipe aus dem hf-local‑Plugin
+
+Der Plugin‑Name wird aus dem Paketnamen abgeleitet, indem das Präfix `otai-` entfernt wird.
+
+## Für Entwickler
+
+Möchten Sie Ihr eigenes Plugin erstellen? Egal ob kostenlos oder kommerziell, Sie haben völlige Freiheit!
+
+Siehe den [Plugin Development Guide](../developers/plugin_development.mdx) für:
+
+- Wie man benutzerdefinierte Plugins erstellt
+- Veröffentlichung auf PyPI
+- Monetarisierungsstrategien für kommerzielle Plugins
+- Ihr Plugin listen zu lassen
+
+## Verwandte Dokumentation
+
+- [Plugin Development](../developers/plugin_development.mdx)
+- [Dependency Injection](../developers/dependency_injection.md)
+- [Pipe System](pipeline.mdx)
+- [Configuration](../details/config_reference.md)

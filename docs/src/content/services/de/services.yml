@@ -1,0 +1,174 @@
+items:
+  - slug: complex-use-cases
+    title: Komplexe Anwendungsfälle
+    oneLiner: Enterprise-Strategie
+    description: "100k–500k+ Tickets-Datensatz mit striktem Balancing & Constraints, \nrealistischer Rauschmodellierung und optionalen Agenten-Antworten. Enthält vollständige \nDokumentation und Splits für Enterprise-Level-Strategien.\n"
+    outcomes:
+      - 100k–500k+ Tickets-Datensatz
+      - Striktes Balancing & Constraints
+      - Realistische Rauschmodellierung
+      - Optionale Agenten-Antworten
+      - Vollständige Dokumentation & Splits
+    startingPrice: 15000
+    serviceGroup: Synthetic Data Creation
+    serviceOrder: 12
+    id: complex-use-cases
+  - slug: custom-development
+    title: Kundenspezifische Entwicklung
+    oneLiner: Spezielle Anforderungen
+    description: "Alles über die Tag-Model-Erstellung hinaus: spezielle Architekturen, Constraints, \non-prem Performance-Ziele, mehrsprachige Anforderungen, erweiterte Evaluation, \nlangfristige Trainingsprogramme.\n"
+    outcomes:
+      - Spezielle Architekturen und Constraints
+      - On-prem Performance-Optimierung
+      - Erweiterte mehrsprachige Anforderungen
+      - Langfristige Trainingsprogramme
+      - Kundenspezifische Evaluierungs-Frameworks
+    startingPrice: 0
+    serviceGroup: Model Development
+    serviceOrder: 62
+    id: custom-development
+  - slug: custom-tag-model-real-data
+    title: Kundenspezifisches Tag-Model
+    oneLiner: Training mit Realen Daten
+    description: "Training hauptsächlich mit Ihren historischen Ticketdaten. Erfordert 10k-50k+ gelabelte \nBeispiele. Enthält umfassende Datensatzvorbereitung und Evaluation für \nmaximale Genauigkeit mit Ihren spezifischen Mustern.\n"
+    outcomes:
+      - Training hauptsächlich mit Ihren historischen Ticketdaten
+      - Erfordert 10k–50k+ gelabelte Beispiele
+      - Enthält umfassende Datensatzvorbereitung und Evaluation
+    startingPrice: 30000
+    serviceGroup: Model Development
+    serviceOrder: 61
+    id: custom-tag-model-real-data
+  - slug: custom-tags-model-synthetic
+    title: Kundenspezifisches Tags-Model
+    oneLiner: Synthetic Training Fokus
+    description: "Benutzerdefinierte Tag-Definition, hauptsächlich trainiert über unseren Synthetic Data Generator. \nKann optional mit begrenzten Kundendaten hybridisiert werden für spezialisierte \nTagging-Anforderungen.\n"
+    outcomes:
+      - Benutzerdefinierte Tag-Definition (oder Ihre + unsere Ergänzungen)
+      - Hauptsächlich trainiert über unseren Synthetic Data Generator
+      - Kann optional mit begrenzten Kundendaten hybridisiert werden
+    startingPrice: 20000
+    serviceGroup: Model Development
+    serviceOrder: 60
+    id: custom-tags-model-synthetic
+  - slug: evaluation-report
+    title: Evaluierungsbericht
+    oneLiner: Umfassende Leistungskennzahlen
+    description: "Umfassender Kennzahlenbericht zur Modellleistung anhand des Datensatzes. \nErhalten Sie detaillierte Einblicke in Genauigkeit, Präzision, Recall und andere \nwichtige Leistungsindikatoren.\n"
+    outcomes:
+      - Umfassender Kennzahlenbericht
+      - Analyse von Genauigkeit und Präzision
+      - Leistungsvisualisierungen
+      - Empfehlungen zur Verbesserung
+    startingPrice: 1500
+    serviceGroup: Extensions
+    serviceOrder: 21
+    id: evaluation-report
+  - slug: fine-tuned-model
+    title: Feinabgestimmtes Modell
+    oneLiner: Benutzerdefinierte KI-Modell-Trainingserweiterung
+    description: "Liefern Sie ein Tagging-Modell, das speziell auf den generierten Datensatz feinabgestimmt ist. \nDiese Erweiterung stellt Ihnen ein einsatzbereites Modell bereit, das für \nIhren spezifischen Anwendungsfall optimiert ist.\n"
+    outcomes:
+      - Benutzerdefiniertes feinabgestimmtes Tagging-Modell
+      - Optimiert für Ihren Datensatz
+      - Bereit für den Einsatz
+      - Leistungsbenchmarks enthalten
+    startingPrice: 2500
+    serviceGroup: Extensions
+    serviceOrder: 20
+    id: fine-tuned-model
+  - slug: high-volume-training
+    title: Training mit hohem Volumen
+    oneLiner: Produktionsreif
+    description: "50k–100k Tickets-Datensatz mit benutzerdefiniertem Schema (Queues, SLAs), kontrollierten \nLabel-Verteilungen und mehrsprachiger Erweiterung. Enthält 1 Revisionsrunde \nfür produktionsreife Datensätze.\n"
+    outcomes:
+      - 50k–100k Tickets-Datensatz
+      - Benutzerdefiniertes Schema (Queues, SLAs)
+      - Kontrollierte Label-Verteilungen
+      - Mehrsprachige Erweiterung
+      - 1 Revisionsrunde enthalten
+    startingPrice: 7500
+    serviceGroup: Synthetic Data Creation
+    serviceOrder: 11
+    id: high-volume-training
+  - slug: hourly-engineering
+    title: Stundenbasierte Engineering
+    oneLiner: Flexibler Engineering-Support
+    description: "Für zusätzliche Änderungen außerhalb des Paketumfangs, benutzerdefinierte Features/Workflows, \nFehlerbehebung und Migrationen. Erhalten Sie Experten-Engineering-Support nach \nBedarf.\n"
+    outcomes:
+      - Entwicklung benutzerdefinierter Features
+      - Workflow-Anpassung
+      - Fehlerbehebungsunterstützung
+      - Migrationsunterstützung
+      - Technische Beratung
+    startingPrice: 200
+    serviceGroup: Flexible
+    serviceOrder: 30
+    id: hourly-engineering
+
+  - slug: ongoing-support
+    title: Laufender Support
+    oneLiner: Abonnementbasierte Support-Abdeckung
+    description: "Best-Effort-Abonnement für zuverlässige Abdeckung. Enthält asynchronen Support \nvia Ticket/E-Mail und kleinere Fehlerbehebungen. Stellen Sie sicher, dass Ihr Team kontinuierlichen \nZugang zu Expertenunterstützung hat.\n"
+    outcomes:
+      - Asynchroner Support via Ticket/E-Mail
+      - Kleinere Bugfixes enthalten
+      - Best-Effort-Antwortzeiten
+      - Kontinuierliche Abdeckung
+      - Technische Anleitung
+    startingPrice: 400
+    serviceGroup: Flexible
+    serviceOrder: 31
+    id: ongoing-support
+  - slug: ongoing-updates
+    title: Laufende Updates
+    oneLiner: Periodische Datensatz-Aktualisierungen
+    description: "Periodische Datensatz-Aktualisierungen, um sich an die sich entwickelnde Geschäftslogik anzupassen. Halten Sie Ihre \nKI-Modelle mit den neuesten Mustern und Anforderungen Ihrer Organisation auf dem neuesten Stand.\n"
+    outcomes:
+      - Periodische Datensatz-Updates
+      - Abstimmung mit Geschäftsänderungen
+      - Kontinuierliche Verbesserung
+      - Versionsverfolgung und Dokumentation
+    startingPrice: 1000
+    serviceGroup: Extensions
+    serviceOrder: 23
+    id: ongoing-updates
+  - slug: ota-automation-pack
+    title: OTA Automation Pack
+    oneLiner: Implementierung von 3 Kernautomatisierungen
+    description: "Open Ticket Automation (OTA) ist unsere Open-Source-Schicht, die AI Tags \nin konkrete Aktionen übersetzt. Dieses Paket beinhaltet die Konfiguration von 3 Automatisierungen basierend \nauf Ihren Regeln, Tests mit realen Ticketbeispielen und Übergabedokumentation.\n"
+    outcomes:
+      - Konfiguration von 3 Automatisierungen basierend auf Ihren Regeln
+      - Tests mit realen Ticketbeispielen
+      - Übergabedokumentation
+    startingPrice: 3000
+    serviceGroup: Automation
+    serviceOrder: 50
+    id: ota-automation-pack
+  - slug: standard-stack
+    title: Standard Stack
+    oneLiner: Evaluation & Testing
+    description: "Bis zu 20.000 Synthetic Tickets mit gewichteter mehrsprachiger Generierung, \nEinrichtung der Kern-Ticket-Felder und realistischen Verteilungen. Perfekt für \nEvaluation und Testing Ihrer KI-Modelle.\n"
+    outcomes:
+      - Bis zu 20.000 Synthetic Tickets
+      - Gewichtete mehrsprachige Generierung
+      - Einrichtung der Kern-Ticket-Felder
+      - Realistische Verteilungen
+      - JSONL oder CSV Lieferung
+    startingPrice: 3000
+    serviceGroup: Synthetic Data Creation
+    serviceOrder: 10
+    id: standard-stack
+  - slug: system-tuning
+    title: System Tuning
+    oneLiner: Plattformspezifische Formatoptimierung
+    description: "Spezifische Formatabstimmung für den Import in OTOBO-, Znuny- oder Zammad-Systeme. \nSicherstellen einer nahtlosen Integration mit Ihrer bestehenden Helpdesk-Plattform.\n"
+    outcomes:
+      - OTOBO-Formatoptimierung
+      - Znuny-Integrationsunterstützung
+      - Zammad-Kompatibilität
+      - Importvalidierung und -testing
+    startingPrice: 2000
+    serviceGroup: Extensions
+    serviceOrder: 22
+    id: system-tuning

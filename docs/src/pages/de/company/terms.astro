@@ -1,0 +1,342 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Card from '../../../components/vue/core/basic/Card.vue';
+import Badge from '../../../components/vue/core/basic/Badge.vue';
+import { Icon } from 'astro-icon/components';
+
+const title = 'Terms & Conditions - Open Ticket AI';
+const description = 'Terms and Conditions for Open Ticket AI products and services';
+
+const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
+const allSiteConfigs = await getCollection('site');
+const siteConfig = allSiteConfigs.find(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
+
+const legalInfo = siteConfig?.data.legalInfo;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="min-h-screen bg-background-dark pb-32">
+    <section class="relative pb-20 pt-24">
+      <div class="mx-auto max-w-5xl px-6">
+        <div class="mb-8 text-center">
+          <Badge variant="subtle" tone="info" size="sm" client:load>
+            <span class="flex items-center gap-2">
+              <Icon name="heroicons:scale" class="h-3 w-3" aria-hidden="true" />
+              Rechtliche Informationen
+            </span>
+          </Badge>
+        </div>
+        <h1
+          class="mb-8 text-center text-6xl font-black leading-tight tracking-tighter text-white sm:text-7xl"
+        >
+          Allgemeine Geschäftsbedingungen
+        </h1>
+        <p class="mx-auto mb-16 max-w-3xl text-center text-xl text-slate-400">
+          Bitte lesen Sie diese Allgemeinen Geschäftsbedingungen sorgfältig, bevor Sie unsere Produkte und Dienstleistungen nutzen.
+        </p>
+
+        {
+          legalInfo && (
+            <Card
+              variant="surface"
+              tone="neutral"
+              size="lg"
+              radius="2xl"
+              elevation="sm"
+              client:load
+            >
+              <div slot="header">
+                <h2 class="text-2xl font-bold text-white">Unternehmensinformationen</h2>
+              </div>
+
+              <div class="space-y-6">
+                <div>
+                  <h3 class="mb-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+                    Unternehmensname
+                  </h3>
+                  <p class="text-lg text-white">{legalInfo.companyName}</p>
+                  <p class="text-sm text-slate-400">{legalInfo.legalForm}</p>
+                </div>
+
+                <div>
+                  <h3 class="mb-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+                    Geschäftsführung
+                  </h3>
+                  <p class="text-lg text-white">CEO: {legalInfo.ceo}</p>
+                </div>
+
+                <div>
+                  <h3 class="mb-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+                    Adresse
+                  </h3>
+                  <p class="text-lg text-white">{legalInfo.address.street}</p>
+                  <p class="text-lg text-white">
+                    {legalInfo.address.zip} {legalInfo.address.city}
+                  </p>
+                  <p class="text-lg text-white">{legalInfo.address.country}</p>
+                </div>
+
+                <div class="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <h3 class="mb-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+                      Kontakt
+                    </h3>
+                    <p class="text-white">
+                      <span class="text-slate-500">E‑Mail:</span>{' '}
+                      <a href={`mailto:${legalInfo.email}`} class="text-primary hover:underline">
+                        {legalInfo.email}
+                      </a>
+                    </p>
+                    <p class="text-white">
+                      <span class="text-slate-500">Telefon:</span>{' '}
+                      <a href={`tel:${legalInfo.phone}`} class="text-primary hover:underline">
+                        {legalInfo.phone}
+                      </a>
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 class="mb-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+                      Registrierung
+                    </h3>
+                    <p class="text-white">{legalInfo.registerInfo}</p>
+                    <p class="text-white">
+                      <span class="text-slate-500">VAT ID:</span> {legalInfo.vatId}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )
+        }
+
+        <div class="mt-12 space-y-8">
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">1. Allgemeine Geschäftsbedingungen</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Diese Allgemeinen Geschäftsbedingungen regeln Ihre Nutzung der Open Ticket AI Produkte und Dienstleistungen (zusammen die „Services“). Durch den Zugriff auf oder die Nutzung unserer Services erklären Sie sich mit diesen Bedingungen einverstanden.
+              </p>
+              <p class="text-slate-300">
+                Wenn Sie diesen Bedingungen nicht zustimmen, nutzen Sie bitte unsere Services nicht.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">2. Beschreibung der Services</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Open Ticket AI bietet intelligente Automatisierungslösungen für Helpdesk-Ticketingsysteme einschließlich OTRS, Znuny und Zammad. Unsere Services umfassen:
+              </p>
+              <ul class="list-disc space-y-2 pl-6 text-slate-300">
+                <li>AI-gestützte Ticketklassifizierungs- und Tagging-Modelle</li>
+                <li>Automatisierungs-Engine für Workflow-Automatisierung</li>
+                <li>Integrationsservices für bestehende Ticketsysteme</li>
+                <li>Entwicklung und Training von benutzerdefinierten Modellen</li>
+                <li>Generierung synthetischer Daten für das AI-Training</li>
+                <li>Professionelle Beratungs- und Support-Services</li>
+              </ul>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">3. Lizenz- und Nutzungsrechte</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Vorbehaltlich dieser Bedingungen und der Zahlung der anfallenden Gebühren gewähren wir Ihnen eine eingeschränkte, nicht-exklusive, nicht übertragbare Lizenz zur Nutzung unserer Services für Ihre internen Geschäftsziele.
+              </p>
+              <p class="text-slate-300">
+                Open-Source-Komponenten unserer Plattform sind unter ihren jeweiligen Open-Source-Lizenzen lizenziert. Benutzerdefinierte KI-Modelle und proprietäre Integrationen werden separat gemäß Ihrem Servicevertrag lizenziert.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">4. Datenschutz und Sicherheit</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">Wir verpflichten uns, Ihre Daten und Ihre Privatsphäre zu schützen:</p>
+              <ul class="list-disc space-y-2 pl-6 text-slate-300">
+                <li>Selbstgehostete Bereitstellung stellt sicher, dass Ihre Daten innerhalb Ihrer Infrastruktur bleiben</li>
+                <li>Wir erfüllen die GDPR und andere geltende Datenschutzvorschriften</li>
+                <li>
+                  Die Generierung synthetischer Daten verwendet keine echten Kundendaten, sofern Sie nicht ausdrücklich welche bereitstellen
+                </li>
+                <li>
+                  Datenverarbeitungsvereinbarungen sind auf Anfrage für Enterprise-Kunden erhältlich
+                </li>
+              </ul>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">5. Preise und Zahlung</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Die Preisgestaltung für unsere Services ist auf unserer Website und in einzelnen Serviceverträgen verfügbar. Sofern nicht anders angegeben:
+              </p>
+              <ul class="list-disc space-y-2 pl-6 text-slate-300">
+                <li>Alle Preise werden in Euro (EUR) angegeben und verstehen sich zzgl. der anfallenden Steuern</li>
+                <li>Zahlungsbedingungen sind netto 30 Tage ab Rechnungsdatum</li>
+                <li>Integrations- und Entwicklungsservices werden als einmalige Gebühren abgerechnet</li>
+                <li>
+                  Laufender Support und Wartung werden gemäß dem Servicevertrag abgerechnet
+                </li>
+              </ul>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">6. Support und Wartung</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Supportstufen und Reaktionszeiten variieren je nach Service-Level und sind in Ihrem Servicevertrag definiert. Die regulären Geschäftszeiten sind Montag‑Freitag, 9:00‑17:00 CET, ausgenommen deutsche Feiertage.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">7. Garantien und Haftungsausschlüsse</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Wir garantieren, dass unsere Services im Wesentlichen gemäß der bereitgestellten Dokumentation funktionieren. AI-basierte Services werden jedoch „wie besehen“ bereitgestellt und die Ergebnisse können je nach Ihren Daten, Ihrer Konfiguration und Ihrem Anwendungsfall variieren.
+              </p>
+              <p class="text-slate-300">
+                Wir garantieren keine spezifischen Genauigkeitsraten oder Erfolgsquoten der Automatisierung, da diese von Faktoren abhängen, die außerhalb unserer Kontrolle liegen.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">8. Haftungsbeschränkung</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Im größtmöglichen gesetzlich zulässigen Umfang haftet unser Gesamthaftungsbetrag für Ansprüche aus diesen Bedingungen oder Ihrer Nutzung unserer Services nicht mehr als die von Ihnen in den zwölf (12) Monaten vor dem Anspruch gezahlten Gebühren.
+              </p>
+              <p class="text-slate-300">
+                Wir haften nicht für indirekte, zufällige, besondere, Folgeschäden oder Strafschadensersatz, einschließlich entgangener Gewinne, Daten oder Geschäftsmöglichkeiten.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">9. Geistiges Eigentum</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Alle Rechte an geistigem Eigentum an unseren Services, einschließlich Software, Modelle, Dokumentation und Marken, bleiben unser Eigentum bzw. das unserer Lizenzgeber.
+              </p>
+              <p class="text-slate-300">
+                Benutzerdefinierte Modelle, die speziell für Sie im Rahmen eines Servicevertrags entwickelt wurden, können Ihnen gemäß den Bedingungen dieses Vertrags lizenziert werden.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">10. Laufzeit und Kündigung</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Diese Bedingungen bleiben in Kraft, bis sie beendet werden. Jede Partei kann einen Servicevertrag mit einer Frist von 30 Tagen schriftlich kündigen, sofern nicht anders in Ihrem Servicevertrag festgelegt.
+              </p>
+              <p class="text-slate-300">
+                Nach Beendigung müssen Sie die Nutzung unserer Services einstellen und, falls zutreffend, vertrauliche Informationen zurückgeben oder vernichten.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">11. Anwendbares Recht und Gerichtsstand</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Diese Allgemeinen Geschäftsbedingungen unterliegen dem Recht der Bundesrepublik Deutschland. Alle Streitigkeiten, die sich aus diesen Bedingungen ergeben oder damit in Zusammenhang stehen, unterliegen der ausschließlichen Gerichtsbarkeit der Gerichte von Berlin, Deutschland.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">12. Änderungen der Bedingungen</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Wir werden Sie über wesentliche Änderungen per E‑Mail oder über unsere Website informieren. Ihre fortgesetzte Nutzung unserer Services nach solchen Änderungen gilt als Zustimmung zu den geänderten Bedingungen.
+              </p>
+            </div>
+          </Card>
+
+          <Card variant="outline" tone="neutral" size="lg" radius="2xl" client:load>
+            <div slot="header">
+              <h2 class="text-2xl font-bold text-white">13. Kontaktinformationen</h2>
+            </div>
+            <div class="prose prose-invert max-w-none">
+              <p class="text-slate-300">
+                Bei Fragen zu diesen Allgemeinen Geschäftsbedingungen kontaktieren Sie uns bitte unter:
+              </p>
+              {
+                legalInfo && (
+                  <div class="mt-4 rounded-lg border border-white/10 bg-white/5 p-6">
+                    <p class="text-white">
+                      <strong>{legalInfo.companyName}</strong>
+                    </p>
+                    <p class="text-slate-300">{legalInfo.address.street}</p>
+                    <p class="text-slate-300">
+                      {legalInfo.address.zip} {legalInfo.address.city}, {legalInfo.address.country}
+                    </p>
+                    <p class="mt-2 text-slate-300">
+                      Email:{' '}
+                      <a href={`mailto:${legalInfo.email}`} class="text-primary hover:underline">
+                        {legalInfo.email}
+                      </a>
+                    </p>
+                    <p class="text-slate-300">
+                      Phone:{' '}
+                      <a href={`tel:${legalInfo.phone}`} class="text-primary hover:underline">
+                        {legalInfo.phone}
+                      </a>
+                    </p>
+                  </div>
+                )
+              }
+            </div>
+          </Card>
+
+          <div class="mt-12 rounded-xl border border-slate-700/50 bg-slate-800/30 p-6 text-center">
+            <p class="text-sm text-slate-400">
+              Zuletzt aktualisiert: {
+                new Date().toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

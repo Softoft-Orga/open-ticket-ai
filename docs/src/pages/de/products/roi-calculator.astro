@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Card from '../../../components/vue/core/basic/Card.vue';
+import ModalTrigger from '../../../components/vue/core/basic/ModalTrigger.vue';
+import ContactForm from '../../../components/ContactForm.astro';
+
+const title = 'Preisgestaltung & ROI Rechner';
+const description =
+  'Berechnen Sie die Rendite für automatisiertes Ticket-Tagging in Ihrer Helpdesk-Umgebung.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div slot="head"></div>
+
+  <div class="min-h-screen bg-bg-1 py-12">
+    <div class="mx-auto max-w-7xl px-4 py-8">
+      <!-- Header -->
+      <div class="mb-12 text-center">
+        <h1 class="mb-4 text-4xl font-bold text-text-1 md:text-5xl">ROI-Analyse</h1>
+        <p class="mx-auto max-w-2xl text-lg text-text-2">
+          Verstehen Sie die potenzielle Rendite für automatisiertes Ticket-Tagging in Ihrer Helpdesk-Umgebung.
+        </p>
+      </div>
+
+      <!-- ROI Overview -->
+      <div class="mb-12 grid gap-6 md:grid-cols-3">
+        <Card client:load tone="primary" hoverable>
+          <div class="mb-2 text-sm font-semibold uppercase tracking-wider text-text-dim">
+            Zeitersparnis
+          </div>
+          <div class="mb-2 text-3xl font-bold text-text-1">40-60%</div>
+          <p class="text-sm text-text-dim">Durchschnittliche Reduzierung der manuellen Tagging-Zeit pro Ticket</p>
+        </Card>
+
+        <Card client:load tone="primary" hoverable>
+          <div class="mb-2 text-sm font-semibold uppercase tracking-wider text-text-dim">
+            Kostenreduktion
+          </div>
+          <div class="mb-2 text-3xl font-bold text-text-1">€2-5</div>
+          <p class="text-sm text-text-dim">Einsparungen pro Ticket durch Automatisierung</p>
+        </Card>
+
+        <Card client:load tone="primary" hoverable>
+          <div class="mb-2 text-sm font-semibold uppercase tracking-wider text-text-dim">
+            Amortisationszeit
+          </div>
+          <div class="mb-2 text-3xl font-bold text-text-1">3-6 months</div>
+          <p class="text-sm text-text-dim">Typische Zeit, um die Anfangsinvestition zurückzugewinnen</p>
+        </Card>
+      </div>
+
+      <!-- Example Scenarios -->
+      <Card client:load tone="primary" class="mb-12">
+        <h2 class="mb-6 text-2xl font-bold text-text-1">Beispiel-ROI-Szenarien</h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-border-1">
+                <th class="px-4 py-3 text-sm font-semibold uppercase tracking-wider text-text-2"
+                  >Szenario</th
+                >
+                <th class="px-4 py-3 text-sm font-semibold uppercase tracking-wider text-text-2"
+                  >Tägliche Tickets</th
+                >
+                <th class="px-4 py-3 text-sm font-semibold uppercase tracking-wider text-text-2"
+                  >Manuelle Kosten/Ticket</th
+                >
+                <th class="px-4 py-3 text-sm font-semibold uppercase tracking-wider text-text-2"
+                  >Jährliche Einsparungen</th
+                >
+                <th class="px-4 py-3 text-sm font-semibold uppercase tracking-wider text-text-2"
+                  >ROI</th
+                >
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border-1/30">
+              <tr>
+                <td class="px-4 py-4 font-medium text-text-1">Kleines Team</td>
+                <td class="px-4 py-4 text-text-1">100</td>
+                <td class="px-4 py-4 text-text-1">€3.00</td>
+                <td class="px-4 py-4 font-bold text-primary-light">€54,750</td>
+                <td class="px-4 py-4 font-bold text-cyan-glow">274%</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-4 font-medium text-text-1">Mittleres Unternehmen</td>
+                <td class="px-4 py-4 text-text-1">500</td>
+                <td class="px-4 py-4 text-text-1">€4.00</td>
+                <td class="px-4 py-4 font-bold text-primary-light">€365,000</td>
+                <td class="px-4 py-4 font-bold text-cyan-glow">1,825%</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-4 font-medium text-text-1">Großes Unternehmen</td>
+                <td class="px-4 py-4 text-text-1">2000</td>
+                <td class="px-4 py-4 text-text-1">€5.00</td>
+                <td class="px-4 py-4 font-bold text-primary-light">€1,825,000</td>
+                <td class="px-4 py-4 font-bold text-cyan-glow">9,125%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="mt-4 text-xs italic text-text-2">
+          * Die Berechnungen gehen von 50 % Zeitersparnis und 250 Arbeitstagen pro Jahr aus. Tatsächliche Ergebnisse können abweichen.
+        </p>
+      </Card>
+
+      <!-- Key Benefits -->
+      <div
+        class="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 to-cyan-glow/5 p-12 text-center"
+      >
+        <h2 class="mb-6 text-3xl font-bold text-text-1">Über reine Kosteneinsparungen</h2>
+        <div class="mb-8 grid gap-8 md:grid-cols-3">
+          <div>
+            <div class="mb-3 text-4xl">⚡</div>
+            <h3 class="mb-2 text-lg font-bold text-text-1">Schnellere Reaktionszeiten</h3>
+            <p class="text-sm text-text-2">
+              Automatisiertes Tagging ermöglicht sofortiges Routing und Priorisierung
+            </p>
+          </div>
+          <div>
+            <div class="mb-3 text-4xl">📊</div>
+            <h3 class="mb-2 text-lg font-bold text-text-1">Bessere Einblicke</h3>
+            <p class="text-sm text-text-2">
+              Konsistentes Tagging verbessert die Genauigkeit von Analysen und Berichten
+            </p>
+          </div>
+          <div>
+            <div class="mb-3 text-4xl">😊</div>
+            <h3 class="mb-2 text-lg font-bold text-text-1">Verbesserte Zufriedenheit</h3>
+            <p class="text-sm text-text-2">
+              Schnellere Lösungszeiten führen zu zufriedeneren Kunden und Agenten
+            </p>
+          </div>
+        </div>
+        <ModalTrigger
+          title="Individuelle ROI-Analyse-Anfrage"
+          buttonText="Vertrieb für individuelle Analyse kontaktieren"
+          buttonVariant="surface"
+          buttonTone="primary"
+          client:load
+        >
+          <ContactForm
+            title="Individuelle ROI-Analyse-Anfrage"
+            submitButtonText="Absenden"
+            messageLabel="Nachricht"
+            emailLabel="E-Mail"
+            subjectLabel="Betreff"
+            emailPlaceholder="your@email.com"
+            messagePlaceholder="Wie können wir Ihnen helfen?"
+            successActionUrl="/success/roi-calculator/"
+            name="roi-analysis-request"
+          />
+        </ModalTrigger>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
