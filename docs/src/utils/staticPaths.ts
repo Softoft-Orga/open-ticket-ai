@@ -15,7 +15,21 @@ export const getLocalizedCatchAllStaticPaths = async <T extends CollectionKey>(
 ): Promise<StaticPath<T>[]> => {
   const entries = await getCollection(collection);
 
-  return (entries as CollectionEntry<T>[]).map(entry => {
+  // Filter out future-dated blog posts
+  const filteredEntries = (entries as CollectionEntry<T>[]).filter(entry => {
+    // Only apply futureReleaseDate filtering to blog collection
+    if (collection === 'blog') {
+      const blogEntry = entry as CollectionEntry<'blog'>;
+      const now = new Date();
+      // Filter out posts with futureReleaseDate that is in the future
+      if (blogEntry.data.futureReleaseDate && blogEntry.data.futureReleaseDate > now) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  return filteredEntries.map(entry => {
     const cleanId = stripIndex(stripFileExtension(stripLocalePrefix(entry.id)));
     return {
       params: {

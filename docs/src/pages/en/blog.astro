@@ -17,7 +17,14 @@ const allBlogPosts = await getCollection('blog');
 const localizedBlogPosts = allBlogPosts.filter(entry =>
   entry.id.toLowerCase().startsWith(`${currentLocale}/`)
 );
-const publishedPosts = localizedBlogPosts.filter(({ data }) => !data.draft);
+const now = new Date();
+const publishedPosts = localizedBlogPosts.filter(({ data }) => {
+  // Filter out drafts
+  if (data.draft) return false;
+  // Filter out posts with futureReleaseDate that is in the future
+  if (data.futureReleaseDate && data.futureReleaseDate > now) return false;
+  return true;
+});
 
 // Sort posts by date (newest first)
 const sortedBlogPosts = publishedPosts.sort((a, b) => {

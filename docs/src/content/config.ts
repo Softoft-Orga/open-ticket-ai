@@ -34,6 +34,7 @@ const blog = defineCollection({
       nav: navSchema,
       draft: z.boolean().optional(),
       date: z.date(),
+      futureReleaseDate: z.date().optional(),
       tags: z.array(z.string()).optional(),
       category: z.string().optional(),
       image: image().optional(),

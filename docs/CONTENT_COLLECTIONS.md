@@ -65,6 +65,7 @@ const siteConfig = allSiteConfigs.find(entry =>
 - `nav`: `{ group: string, order: number, hidden: boolean }`
 - `draft`: boolean
 - `date`: Date (**Blogs only**, Required)
+- `futureReleaseDate`: Date (**Blogs only**, Optional) - When set to a future date, the blog post will not appear in the blog overview and its static path will not be generated until that date is reached
 - `tags`, `category`: (**Blogs only**)
 - `image`: string (**Blogs only**, Optional) - URL or path to blog post image
 
