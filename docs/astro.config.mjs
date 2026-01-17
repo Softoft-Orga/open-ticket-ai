@@ -5,19 +5,13 @@ import rehypeMermaid from 'rehype-mermaid';
 import astroBrokenLinksChecker from 'astro-broken-links-checker';
 import icon from 'astro-icon';
 import sitemap from '@astrojs/sitemap';
+import starlight from '@astrojs/starlight';
 
 export default defineConfig({
   site: 'https://openticketai.com',
   base: '/',
   outDir: './dist',
   trailingSlash: 'always',
-  i18n: {
-    locales: ['en', 'de'],
-    defaultLocale: 'en',
-    routing: {
-      prefixDefaultLocale: true,
-    },
-  },
   image: {
     // Configure image service with Sharp for optimization
     service: {
@@ -56,6 +50,31 @@ export default defineConfig({
     }),
     vue({
       appEntrypoint: '/src/vue-app.js',
+    }),
+    starlight({
+      title: 'Open Ticket AI Docs',
+      defaultLocale: 'en',
+      locales: {
+        en: {
+          label: 'English',
+          lang: 'en',
+        },
+        de: {
+          label: 'Deutsch',
+          lang: 'de',
+        },
+      },
+      customCss: ['./src/styles/starlight-custom.css'],
+      sidebar: [
+        {
+          label: 'Open Ticket Automation',
+          autogenerate: { directory: 'en/open-ticket-automation' },
+        },
+        {
+          label: 'Ticket Tagging',
+          autogenerate: { directory: 'en/ticket-tagging' },
+        },
+      ],
     }),
     mdx(),
     astroBrokenLinksChecker({

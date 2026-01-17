@@ -1,68 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
 import { Icon } from 'astro-icon/components';
-import { posix } from 'node:path';
 
 const title = 'Documentation | Open Ticket AI';
 const description =
   'Choose the documentation you need. Explore API references, implementation guides, and best practices.';
-
-const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
-const allSiteConfigs = await getCollection('site');
-const siteConfig = allSiteConfigs.find(entry =>
-  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
-);
-const popularResources = siteConfig?.data.popularResources;
-
-async function getDocTitle(docId: string): Promise<string> {
-  try {
-    const parts = docId.split('/');
-    if (parts.length >= 3 && parts[0] === 'docs') {
-      const slug = parts.slice(2).join('/');
-
-      const allDocs = await getCollection('docs');
-      const doc = allDocs.find(d => {
-        const docSlug = d.slug.replace(/^en\//, '');
-        return docSlug === slug;
-      });
-
-      if (doc) {
-        return doc.data.title;
-      }
-    }
-  } catch (e) {
-    console.error('Error fetching doc title:', e);
-  }
-
-  return (
-    docId
-      .split('/')
-      .pop()
-      ?.replace(/-/g, ' ')
-      .replace(/\b\w/g, l => l.toUpperCase()) || 'Documentation'
-  );
-}
-
-const enrichedGroups = popularResources
-  ? await Promise.all(
-      popularResources.groups.map(async group => ({
-        title: group.title,
-        items: await Promise.all(
-          group.items.map(async item => ({
-            docId: item.docId,
-            icon: item.icon,
-            label: item.label,
-            url: posix.join(group.basePath, item.docId),
-            title: item.label || (await getDocTitle(item.docId)),
-            iconName: item.icon,
-          }))
-        ),
-      }))
-    )
-  : [];
 ---
 
 <BaseLayout title={title} description={description}>
@@ -104,7 +48,7 @@ const enrichedGroups = popularResources
 
       <div class="mx-auto mb-24 grid max-w-5xl grid-cols-1 gap-10 md:grid-cols-2">
         <a
-          href={getRelativeLocaleUrl(Astro.currentLocale || 'en', 'docs/open-ticket-automation')}
+          href={getRelativeLocaleUrl(Astro.currentLocale || 'en', 'open-ticket-automation')}
           class="group relative block"
         >
           <Card variant="outline" radius="2xl" hoverable elevation="lg" actionsSticky client:load>
@@ -135,7 +79,7 @@ const enrichedGroups = popularResources
         </a>
 
         <a
-          href={getRelativeLocaleUrl(Astro.currentLocale || 'en', 'docs/ticket-tagging')}
+          href={getRelativeLocaleUrl(Astro.currentLocale || 'en', 'ticket-tagging')}
           class="group relative block"
         >
           <Card variant="outline" radius="2xl" hoverable elevation="lg" actionsSticky client:load>
@@ -165,39 +109,6 @@ const enrichedGroups = popularResources
           </Card>
         </a>
       </div>
-
-      {
-        enrichedGroups.length > 0 && (
-          <div class="mt-24 border-t border-slate-800 pt-16">
-            <h4 class="mb-12 text-center text-sm font-bold uppercase tracking-[0.2em] text-slate-500">
-              {popularResources?.title}
-            </h4>
-
-            <div class="space-y-12">
-              {enrichedGroups.map(group => (
-                <div>
-                  <h5 class="mb-6 text-lg font-bold text-slate-400">{group.title}</h5>
-                  <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
-                    {group.items.map(item => (
-                      <a
-                        href={getRelativeLocaleUrl(Astro.currentLocale || 'en', item.url)}
-                        class="group flex flex-col items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/30 p-6 transition-all duration-300 hover:border-primary/40 hover:bg-slate-900/50"
-                      >
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/5 transition-colors group-hover:bg-primary/10">
-                          <Icon name={item.iconName} class="h-6 w-6 text-primary" />
-                        </div>
-                        <span class="text-center text-sm font-medium text-slate-300 transition-colors group-hover:text-white">
-                          {item.title}
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )
-      }
     </div>
   </div>
 </BaseLayout>

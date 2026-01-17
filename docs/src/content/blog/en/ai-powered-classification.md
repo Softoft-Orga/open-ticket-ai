@@ -58,4 +58,4 @@ Organizations deploying AI-powered classification consistently report transforma
 
 ## Implementation Path
 
-Integrating AI classification into your existing infrastructure is straightforward. Explore our comprehensive [documentation](/docs/) to discover implementation strategies, integration patterns, and best practices for maximizing ROI from intelligent ticket automation.
+Integrating AI classification into your existing infrastructure is straightforward. Explore our comprehensive [documentation](/en/open-ticket-automation/) to discover implementation strategies, integration patterns, and best practices for maximizing ROI from intelligent ticket automation.
