@@ -6,6 +6,7 @@ import BlogOverview from '../../components/vue/domain/BlogOverview.vue';
 import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 import { getImage } from 'astro:assets';
+import { filterPublishedBlogPosts } from '../../utils/staticPaths.ts';
 
 const pageTitle = 'Open Ticket AI Blog';
 const pageDescription =
@@ -17,14 +18,7 @@ const allBlogPosts = await getCollection('blog');
 const localizedBlogPosts = allBlogPosts.filter(entry =>
   entry.id.toLowerCase().startsWith(`${currentLocale}/`)
 );
-const now = new Date();
-const publishedPosts = localizedBlogPosts.filter(({ data }) => {
-  // Entwürfe ausfiltern
-  if (data.draft) return false;
-  // Beiträge mit futureReleaseDate in der Zukunft ausfiltern
-  if (data.futureReleaseDate && data.futureReleaseDate > now) return false;
-  return true;
-});
+const publishedPosts = filterPublishedBlogPosts(localizedBlogPosts);
 
 // Beiträge nach Datum sortieren (neueste zuerst)
 const sortedBlogPosts = publishedPosts.sort((a, b) => {

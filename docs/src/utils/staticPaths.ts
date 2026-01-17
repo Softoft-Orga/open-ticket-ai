@@ -10,17 +10,33 @@ const stripLocalePrefix = (id: string) => id.replace(/^([a-z]{2}(?:-[A-Z]{2})?)\
 const stripFileExtension = (id: string) => id.replace(/\.(md|mdx)$/, '');
 const stripIndex = (id: string) => id.replace(/\/?index$/, '');
 
+/**
+ * Filters blog posts to exclude drafts and posts with future release dates
+ */
+export const filterPublishedBlogPosts = (
+  posts: CollectionEntry<'blog'>[]
+): CollectionEntry<'blog'>[] => {
+  const now = new Date();
+  return posts.filter(({ data }) => {
+    // Filter out drafts
+    if (data.draft) return false;
+    // Filter out posts with futureReleaseDate that is in the future
+    if (data.futureReleaseDate && data.futureReleaseDate > now) return false;
+    return true;
+  });
+};
+
 export const getLocalizedCatchAllStaticPaths = async <T extends CollectionKey>(
   collection: T
 ): Promise<StaticPath<T>[]> => {
   const entries = await getCollection(collection);
+  const now = new Date();
 
   // Filter out future-dated blog posts
   const filteredEntries = (entries as CollectionEntry<T>[]).filter(entry => {
     // Only apply futureReleaseDate filtering to blog collection
     if (collection === 'blog') {
       const blogEntry = entry as CollectionEntry<'blog'>;
-      const now = new Date();
       // Filter out posts with futureReleaseDate that is in the future
       if (blogEntry.data.futureReleaseDate && blogEntry.data.futureReleaseDate > now) {
         return false;
