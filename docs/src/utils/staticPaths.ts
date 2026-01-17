@@ -14,9 +14,9 @@ const stripIndex = (id: string) => id.replace(/\/?index$/, '');
  * Filters blog posts to exclude drafts and posts with future release dates
  */
 export const filterPublishedBlogPosts = (
-  posts: CollectionEntry<'blog'>[]
+  posts: CollectionEntry<'blog'>[],
+  now: Date = new Date()
 ): CollectionEntry<'blog'>[] => {
-  const now = new Date();
   return posts.filter(({ data }) => {
     // Filter out drafts
     if (data.draft) return false;
@@ -30,20 +30,18 @@ export const getLocalizedCatchAllStaticPaths = async <T extends CollectionKey>(
   collection: T
 ): Promise<StaticPath<T>[]> => {
   const entries = await getCollection(collection);
-  const now = new Date();
 
   // Filter out future-dated blog posts
-  const filteredEntries = (entries as CollectionEntry<T>[]).filter(entry => {
-    // Only apply futureReleaseDate filtering to blog collection
-    if (collection === 'blog') {
-      const blogEntry = entry as CollectionEntry<'blog'>;
-      // Filter out posts with futureReleaseDate that is in the future
-      if (blogEntry.data.futureReleaseDate && blogEntry.data.futureReleaseDate > now) {
-        return false;
-      }
-    }
-    return true;
-  });
+  let filteredEntries: CollectionEntry<T>[];
+  if (collection === 'blog') {
+    const now = new Date();
+    filteredEntries = filterPublishedBlogPosts(
+      entries as CollectionEntry<'blog'>[],
+      now
+    ) as CollectionEntry<T>[];
+  } else {
+    filteredEntries = entries as CollectionEntry<T>[];
+  }
 
   return filteredEntries.map(entry => {
     const cleanId = stripIndex(stripFileExtension(stripLocalePrefix(entry.id)));
