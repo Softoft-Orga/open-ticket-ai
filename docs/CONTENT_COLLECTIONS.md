@@ -12,33 +12,6 @@ Use Context7 to get the Information about how content collections in Astro work 
 
 **Important:** `Astro.currentLocale` is always defined (never null or undefined) due to the i18n configuration in `astro.config.mjs`. All content collection IDs start with the locale prefix followed by a slash (e.g., `en/`, `de/`).
 
-```astro
----
-import { getCollection } from 'astro:content';
-
-// Get current locale (always defined, no fallback needed)
-const currentLocale = Astro.currentLocale.toLowerCase();
-
-// For data collections (YAML) - filter by ID prefix with slash
-const allServices = await getCollection('services');
-const localizedServices = allServices.filter(entry =>
-  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
-);
-
-// For content collections (MD/MDX) - filter by locale prefix with slash
-const allDocs = await getCollection('docs');
-const localizedDocs = allDocs.filter(entry =>
-  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
-);
-
-// For singleton data collections - find the first matching entry
-const allSiteConfigs = await getCollection('site');
-const siteConfig = allSiteConfigs.find(entry =>
-  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
-);
----
-```
-
 ## i18n Strategy
 
 - **Data Collections (YAML)**: Stored in locale folders: `src/content/{collection}/{locale}/`.

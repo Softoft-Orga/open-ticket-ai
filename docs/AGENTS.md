@@ -33,20 +33,20 @@ The site uses `astro-broken-links-checker` to validate internal links during the
 ## Image handling
 
 - **Image storage locations**:
-    - **Local assets**: Store in `docs/src/assets/` for imported images that need optimization
-    - **Public images**: Store in `docs/public/assets/` or `docs/public/images/` for static images
-      served as-is
-    - **Subdirectories**: Organize by category (e.g., `public/assets/`, `public/images/`,
-      `public/icons/`)
+  - **Local assets**: Store in `docs/src/assets/` for imported images that need optimization
+  - **Public images**: Store in `docs/public/assets/` or `docs/public/images/` for static images
+    served as-is
+  - **Subdirectories**: Organize by category (e.g., `public/assets/`, `public/images/`,
+    `public/icons/`)
 - **Image optimization**: Configured in `docs/astro.config.mjs` using Sharp service
-    - Automatically optimizes images from `src/` directory
-    - Authorized domains: `astro.build`, `doc.otobo.org`, `softoft.sirv.com`
-    - Remote patterns allowed: `**.githubusercontent.com`, `**.sirv.com`
+  - Automatically optimizes images from `src/` directory
+  - Authorized domains: `astro.build`, `doc.otobo.org`, `softoft.sirv.com`
+  - Remote patterns allowed: `**.githubusercontent.com`, `**.sirv.com`
 - **Using images in Astro components/pages**:
-    - **Always** include `alt` attribute for accessibility
-    - Local imported images auto-generate width/height; public/remote images require explicit
-      dimensions
-    - The `<Image>` component automatically optimizes formats (WebP, AVIF) and sizes
+  - **Always** include `alt` attribute for accessibility
+  - Local imported images auto-generate width/height; public/remote images require explicit
+    dimensions
+  - The `<Image>` component automatically optimizes formats (WebP, AVIF) and sizes
 
 - **In Markdown/MDX content**: Use standard markdown syntax `![alt text](/images/file.png)` - Astro
   will optimize these automatically
@@ -75,8 +75,8 @@ like reactivity; then create an Astro Component instead of a Vue Component!
 - Core **Components**: Live under `docs/src/components/vue/core/**` and are showcased via Storybook
   stories in
   `docs/stories/**`.
-    - Inventory: See `COMPONENTS.md` for a complete list with brief descriptions
-    - Detailed docs: Check Storybook stories (`.stories.ts` files) for usage examples and props
+  - Inventory: See `COMPONENTS.md` for a complete list with brief descriptions
+  - Detailed docs: Check Storybook stories (`.stories.ts` files) for usage examples and props
 
 ## Testing
 
@@ -116,11 +116,11 @@ Only work on English (`en`) content.
 ## Testing
 
 - **Crash-smoke tests**: Run `npm run test:playwright` to verify pages load without errors
-    - Checks: no console.error, no pageerror events, response status OK
-    - Tests all key routes (/, /products/, /pricing/, /roi-calculator/, /blog/, /docs/)
-    - Auto-starts Astro dev server via Playwright's `webServer` config
-    - Stable, fast tests with no UI/snapshot dependencies
-    - Resource loading errors (404s for images/fonts) are filtered out
+  - Checks: no console.error, no pageerror events, response status OK
+  - Tests all key routes (/, /products/, /pricing/, /roi-calculator/, /blog/, /docs/)
+  - Auto-starts Astro dev server via Playwright's `webServer` config
+  - Stable, fast tests with no UI/snapshot dependencies
+  - Resource loading errors (404s for images/fonts) are filtered out
 
 ## Documentation update rules
 
