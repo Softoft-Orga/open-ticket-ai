@@ -21,13 +21,13 @@ jobs:
           python-version: "3.13"
 
       - run: pip install -r requirements.txt
-        working-directory: /docs/scripts/auto_translate
+        working-directory: /docs/scripts/auto-translate
 
       - name: Run translation
         env:
           OPEN_ROUTER_API_KEY: ${{ secrets.OPEN_ROUTER_API_KEY }}
         run: python translate_tree.py --config translate.config.yml
-        working-directory: /docs/scripts/auto_translate
+        working-directory: /docs/scripts/auto-translate
 
       - name: Commit translated files
         run: |
