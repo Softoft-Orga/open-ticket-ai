@@ -1,5 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import Button from '../../components/vue/core/basic/Button.vue';
@@ -9,6 +10,19 @@ import ContactForm from '../../components/ContactForm.astro';
 import { Icon } from 'astro-icon/components';
 
 const title = 'Products - Open Ticket AI';
+
+// Get current locale and fetch products content
+const currentLocale = Astro.currentLocale?.toLowerCase() || 'en';
+const allProducts = await getCollection('products');
+const productsEntry = allProducts.find(entry =>
+  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
+);
+
+if (!productsEntry) {
+  throw new Error(`Products content not found for locale: ${currentLocale}`);
+}
+
+const { hero, capabilities, editions, deployment, finalCta } = productsEntry.data;
 ---
 
 <BaseLayout
@@ -24,7 +38,7 @@ const title = 'Products - Open Ticket AI';
       </div>
       <div class="mx-auto w-full max-w-7xl">
         <div class="mb-8">
-          <Badge tone="primary" client:load>● LIVE CLASSIFICATION ENGINE v2.0</Badge>
+          <Badge tone="primary" client:load>{hero.badge}</Badge>
         </div>
 
         <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
@@ -33,22 +47,22 @@ const title = 'Products - Open Ticket AI';
             <h1
               class="font-display text-5xl font-black leading-tight text-white md:text-6xl lg:text-7xl"
             >
-              Automatisierte,<br />
-              Konsistente Ticket-<br />
-              Klassifizierung<br />
+              {hero.title.line1}<br />
+              {hero.title.line2}<br />
+              {hero.title.line3}<br />
               <span class="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent">
-                In Echtzeit.
+                {hero.title.highlight}
               </span>
             </h1>
 
             <p class="max-w-xl text-xl leading-relaxed text-text-dim">
-              Analysieren Sie eingehende Tickets und weisen Sie strukturierte, hierarchische Tags sofort zu. Keine Regeln zu pflegen. Vollständig automatisiert.
+              {hero.description}
             </p>
 
             <div class="flex flex-wrap gap-4 pt-4">
               <ModalTrigger
                 title="Contact Sales"
-                buttonText="KONTAKTIEREN SIE DEN VERTRIEB"
+                buttonText={hero.cta.primary}
                 buttonVariant="surface"
                 buttonTone="primary"
                 buttonSize="lg"
@@ -72,7 +86,7 @@ const title = 'Products - Open Ticket AI';
                 size="lg"
                 client:load
               >
-                ROI-Rechner ansehen
+                {hero.cta.secondary}
               </Button>
             </div>
           </div>
@@ -90,54 +104,48 @@ const title = 'Products - Open Ticket AI';
                   <div class="h-3 w-3 rounded-full bg-warning"></div>
                   <div class="h-3 w-3 rounded-full bg-success"></div>
                 </div>
-                <span class="ml-4 font-mono text-sm text-text-dim">processor_v2.exe</span>
+                <span class="ml-4 font-mono text-sm text-text-dim">{hero.demo.title}</span>
               </div>
 
               <div class="space-y-6 p-6 font-mono text-sm">
                 <div class="space-y-3">
-                  <div class="text-muted">ROHE EINGABE</div>
+                  <div class="text-muted">{hero.demo.input.label}</div>
                   <div class="rounded-lg border border-border-dark bg-surface-dark/50 p-4">
                     <p class="mb-2 text-text-1">
-                      <span class="text-cyan-glow">Betreff:</span> Login erneut fehlgeschlagen?
+                      <span class="text-cyan-glow">Subject:</span>
+                      {hero.demo.input.subject}
                     </p>
-                    <p class="text-text-1"><span class="text-cyan-glow">Text:</span></p>
-                    <p class="mt-1 text-xs leading-relaxed text-text-dim">
-                      Hallo Support, ich versuche auf<br />
-                      das Dashboard zuzugreifen,<br />
-                      aber erhalte Fehler 503. Das<br />
-                      blockiert die Gehaltsabrechnung.<br />
-                      Bitte beheben
+                    <p class="text-text-1"><span class="text-cyan-glow">Body:</span></p>
+                    <p
+                      class="mt-1 text-xs leading-relaxed text-text-dim"
+                      style="white-space: pre-line;"
+                    >
+                      {hero.demo.input.body}
                     </p>
                   </div>
                 </div>
 
                 <div class="space-y-3">
-                  <div class="font-bold text-primary">KI-STRUKTURIERTE AUSGABE</div>
+                  <div class="font-bold text-primary">{hero.demo.output.label}</div>
                   <div class="space-y-2">
-                    <div class="flex items-center gap-2">
-                      <span class="text-muted">INTENT:</span>
-                      <span
-                        class="rounded-md border border-primary/30 bg-primary/20 px-3 py-1 text-xs text-primary-light"
-                      >
-                        access_issue
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span class="text-muted">SYSTEM:</span>
-                      <span
-                        class="rounded-md border border-secondary/30 bg-secondary/20 px-3 py-1 text-xs text-cyan-glow"
-                      >
-                        dashboard_main
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span class="text-muted">URGENCY:</span>
-                      <span
-                        class="rounded-md border border-danger/30 bg-danger/20 px-3 py-1 text-xs text-danger"
-                      >
-                        critical
-                      </span>
-                    </div>
+                    {
+                      hero.demo.output.tags.map(tag => (
+                        <div class="flex items-center gap-2">
+                          <span class="text-muted">{tag.key}:</span>
+                          <span
+                            class={`rounded-md border px-3 py-1 text-xs ${
+                              tag.color === 'primary'
+                                ? 'border-primary/30 bg-primary/20 text-primary-light'
+                                : tag.color === 'secondary'
+                                  ? 'border-secondary/30 bg-secondary/20 text-cyan-glow'
+                                  : 'border-danger/30 bg-danger/20 text-danger'
+                            }`}
+                          >
+                            {tag.value}
+                          </span>
+                        </div>
+                      ))
+                    }
                   </div>
                 </div>
               </div>
@@ -151,60 +159,29 @@ const title = 'Products - Open Ticket AI';
     <section class="w-full bg-surface-dark/30 px-4 py-24 md:px-10 lg:px-20 xl:px-40">
       <div class="mx-auto w-full max-w-7xl">
         <div class="mb-16 text-center">
-          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">Kernfunktionen</h2>
+          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">{capabilities.title}</h2>
           <p class="mx-auto max-w-2xl text-lg text-text-dim">
-            Für Enterprise-Maßstab und Präzision entwickelt.
+            {capabilities.subtitle}
           </p>
         </div>
 
         <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <!-- Fully Automated Classification -->
-          <Card variant="outline" hoverable={true} radius="2xl" client:load>
-            <div class="flex flex-col gap-4">
-              <div class="flex items-center gap-3">
-                <Icon
-                  name="heroicons:cpu-chip"
-                  class="h-10 w-10 text-primary transition-transform group-hover:scale-110"
-                />
-              </div>
-              <h3 class="text-2xl font-bold text-white">Vollautomatische Klassifizierung</h3>
-              <p class="text-base leading-relaxed text-text-dim">
-                Weist Tags für Intent, Dringlichkeit, Auswirkung, Benutzerrolle und Stimmung zu. Funktioniert nahtlos bei neuen Tickets und historischen Backlogs ohne menschliches Eingreifen.
-              </p>
-            </div>
-          </Card>
-
-          <!-- Hierarchical, Not Flat -->
-          <Card variant="outline" hoverable={true} radius="2xl" client:load>
-            <div class="flex flex-col gap-4">
-              <div class="flex items-center gap-3">
-                <Icon
-                  name="heroicons:squares-2x2"
-                  class="h-10 w-10 text-primary transition-transform group-hover:scale-110"
-                />
-              </div>
-              <h3 class="text-2xl font-bold text-white">Hierarchisch, nicht flach</h3>
-              <p class="text-base leading-relaxed text-text-dim">
-                Ein echter Taxonomiebaum. Übergeordnete Knoten für hochaggregierte Ansichten, Blatt-Tags für operative Präzision. Ermöglicht tiefgehende, mehrstufige Analysen.
-              </p>
-            </div>
-          </Card>
-
-          <!-- 10 Quadrillion Combinations -->
-          <Card variant="outline" hoverable={true} radius="2xl" client:load>
-            <div class="flex flex-col gap-4">
-              <div class="flex items-center gap-3">
-                <Icon
-                  name="heroicons:cube-transparent"
-                  class="h-10 w-10 text-primary transition-transform group-hover:scale-110"
-                />
-              </div>
-              <h3 class="text-2xl font-bold text-white">10 Billiarden Kombinationen</h3>
-              <p class="text-base leading-relaxed text-text-dim">
-                Ordnen Sie unsere feste, hochwertige Taxonomie Ihren benutzerdefinierten Feldern zu. Über 10 Billiarden mögliche Kombinationen, die zu jedem spezifischen Workflow oder jeder Branche passen.
-              </p>
-            </div>
-          </Card>
+          {
+            capabilities.items.map(item => (
+              <Card variant="outline" hoverable={true} radius="2xl" client:load>
+                <div class="flex flex-col gap-4">
+                  <div class="flex items-center gap-3">
+                    <Icon
+                      name={item.icon}
+                      class="h-10 w-10 text-primary transition-transform group-hover:scale-110"
+                    />
+                  </div>
+                  <h3 class="text-2xl font-bold text-white">{item.title}</h3>
+                  <p class="text-base leading-relaxed text-text-dim">{item.description}</p>
+                </div>
+              </Card>
+            ))
+          }
         </div>
       </div>
     </section>
@@ -213,298 +190,149 @@ const title = 'Products - Open Ticket AI';
     <section class="w-full bg-surface-dark/30 px-4 py-24 md:px-10 lg:px-20 xl:px-40">
       <div class="mx-auto w-full max-w-7xl">
         <div class="mb-16 text-center">
-          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">Flexible Editionen</h2>
+          <h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">{editions.title}</h2>
           <p class="mx-auto max-w-2xl text-lg text-text-dim">
-            Wählen Sie die Modellkomplexität, die Ihren operativen Anforderungen entspricht.
+            {editions.subtitle}
           </p>
         </div>
 
         <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <!-- Lite Free -->
-          <Card variant="outline" radius="2xl" hoverable={true} size="lg" client:load>
-            <div class="flex h-full flex-col">
-              <div class="flex-1">
-                <h3 class="mb-2 text-2xl font-bold text-white">Lite Free</h3>
-                <p class="mb-6 text-sm text-muted">Evaluation & Testing</p>
-
-                <div class="mb-8">
-                  <div class="mb-2 text-5xl font-bold text-white">
-                    0 €
-                    <span class="text-lg font-normal text-muted">/einmalig</span>
-                  </div>
-                </div>
-
-                <ul class="mb-8 space-y-3">
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Model: 0.5B Parameter</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">150+ Tags</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Genauigkeit: ~0.82</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">ROI: ab 15 Tickets/Tag</span>
-                  </li>
-                </ul>
-
-                <p class="mb-6 text-sm text-muted">Verfügbar 18.01</p>
-              </div>
-
-              <Button
-                variant="outline"
-                size="md"
-                class="w-full"
-                href={getRelativeLocaleUrl(
-                  Astro.currentLocale || 'en',
-                  'products/tagging-lite-free'
-                )}
-                client:load
-              >
-                Lite Free erkunden
-              </Button>
-            </div>
-          </Card>
-
-          <!-- Lite Pro - BEST VALUE -->
-          <div class="relative">
-            <div class="absolute -top-4 left-1/2 z-10 -translate-x-1/2">
-              <Badge tone="primary" client:load>BEST VALUE</Badge>
-            </div>
-
-            <Card
-              variant="outline"
-              tone="primary"
-              radius="2xl"
-              hoverable={true}
-              size="lg"
-              elevation="lg"
-              client:load
-              class="scale-105 transform"
-            >
-              <div class="flex h-full flex-col">
-                <div class="flex-1">
-                  <h3 class="mb-2 text-2xl font-bold text-white">Lite Pro</h3>
-                  <p class="mb-6 text-sm text-primary-light">Production Ready</p>
-
-                  <div class="mb-8">
-                    <div class="mb-2 text-5xl font-bold text-white">
-                      2.500 €
-                      <span class="text-lg font-normal text-text-dim">/einmalig</span>
+          {
+            editions.items.map(edition =>
+              edition.highlighted ? (
+                <div class="relative">
+                  {edition.badge && (
+                    <div class="absolute -top-4 left-1/2 z-10 -translate-x-1/2">
+                      <Badge tone="primary" client:load>
+                        {edition.badge}
+                      </Badge>
                     </div>
-                  </div>
-
-                  <ul class="mb-8 space-y-3">
-                    <li class="flex items-start gap-3">
-                      <svg
-                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="font-medium text-white">Model: 4B Parameter</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                      <svg
-                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="font-medium text-white">150+ Tags</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                      <svg
-                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="font-medium text-white">Genauigkeit: ~0.90</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                      <svg
-                        class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="font-medium text-white">Fokus: Routing & Reporting</span>
-                    </li>
-                  </ul>
-
-                  <p class="mb-6 text-sm text-primary-light">Verfügbar 18.01</p>
-                </div>
-
-                <Button
-                  variant="surface"
-                  size="md"
-                  class="w-full"
-                  href={getRelativeLocaleUrl(
-                    Astro.currentLocale || 'en',
-                    'products/tagging-lite-pro'
                   )}
-                  client:load
-                >
-                  Lite Pro erkunden
-                </Button>
-              </div>
-            </Card>
-          </div>
 
-          <!-- Full Pro -->
-          <Card variant="outline" radius="2xl" hoverable={true} size="lg" client:load>
-            <div class="flex h-full flex-col">
-              <div class="flex-1">
-                <h3 class="mb-2 text-2xl font-bold text-white">Full Pro</h3>
-                <p class="mb-6 text-sm text-muted">Advanced Enterprise</p>
+                  <Card
+                    variant="outline"
+                    tone="primary"
+                    radius="2xl"
+                    hoverable={true}
+                    size="lg"
+                    elevation="lg"
+                    client:load
+                    class="scale-105 transform"
+                  >
+                    <div class="flex h-full flex-col">
+                      <div class="flex-1">
+                        <h3 class="mb-2 text-2xl font-bold text-white">{edition.name}</h3>
+                        <p class="mb-6 text-sm text-primary-light">{edition.subtitle}</p>
 
-                <div class="mb-8">
-                  <div class="mb-2 text-5xl font-bold text-white">
-                    6.000 €
-                    <span class="text-lg font-normal text-muted">/einmalig</span>
-                  </div>
+                        <div class="mb-8">
+                          <div class="mb-2 text-5xl font-bold text-white">
+                            {edition.price.toLocaleString()} {edition.currency}
+                            <span class="text-lg font-normal text-text-dim">
+                              {edition.priceUnit}
+                            </span>
+                          </div>
+                        </div>
+
+                        <ul class="mb-8 space-y-3">
+                          {edition.features.map(feature => (
+                            <li class="flex items-start gap-3">
+                              <svg
+                                class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                              <span class="font-medium text-white">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        <p class="mb-6 text-sm text-primary-light">{edition.availability}</p>
+                      </div>
+
+                      <Button
+                        variant="surface"
+                        size="md"
+                        class="w-full"
+                        href={getRelativeLocaleUrl(
+                          Astro.currentLocale || 'en',
+                          `products/${edition.slug}`
+                        )}
+                        client:load
+                      >
+                        {edition.ctaText}
+                      </Button>
+                    </div>
+                  </Card>
                 </div>
+              ) : (
+                <Card variant="outline" radius="2xl" hoverable={true} size="lg" client:load>
+                  <div class="flex h-full flex-col">
+                    <div class="flex-1">
+                      <h3 class="mb-2 text-2xl font-bold text-white">{edition.name}</h3>
+                      <p class="mb-6 text-sm text-muted">{edition.subtitle}</p>
 
-                <ul class="mb-8 space-y-3">
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Model: 8B Parameter</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">250+ Tags</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Genauigkeit: ~0.92</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="text-text-1">Fokus: Maximale Detailtiefe</span>
-                  </li>
-                </ul>
+                      <div class="mb-8">
+                        <div class="mb-2 text-5xl font-bold text-white">
+                          {edition.price.toLocaleString()} {edition.currency}
+                          <span class="text-lg font-normal text-muted">{edition.priceUnit}</span>
+                        </div>
+                      </div>
 
-                <p class="mb-6 text-sm text-muted">IN ENTWICKLUNG</p>
-              </div>
+                      <ul class="mb-8 space-y-3">
+                        {edition.features.map(feature => (
+                          <li class="flex items-start gap-3">
+                            <svg
+                              class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd"
+                              />
+                            </svg>
+                            <span class="text-text-1">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
 
-              <Button
-                variant="outline"
-                size="md"
-                class="w-full"
-                href={getRelativeLocaleUrl(
-                  Astro.currentLocale || 'en',
-                  'products/tagging-full-pro'
-                )}
-                client:load
-              >
-                Full Pro erkunden
-              </Button>
-            </div>
-          </Card>
+                      <p class="mb-6 text-sm text-muted">{edition.availability}</p>
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      size="md"
+                      class="w-full"
+                      href={getRelativeLocaleUrl(
+                        Astro.currentLocale || 'en',
+                        `products/${edition.slug}`
+                      )}
+                      client:load
+                    >
+                      {edition.ctaText}
+                    </Button>
+                  </div>
+                </Card>
+              )
+            )
+          }
         </div>
 
         <!-- ROI Simulator CTA -->
         <div class="mt-12 text-center">
           <a
-            href={getRelativeLocaleUrl(Astro.currentLocale || 'en', 'products/roi-calculator')}
+            href={getRelativeLocaleUrl(Astro.currentLocale || 'en', editions.roiCta.url)}
             class="group inline-flex items-center gap-3 rounded-xl border border-primary/50 bg-surface-dark px-8 py-4 transition-all hover:bg-primary/10"
           >
-            <Icon name="heroicons:rocket-launch" class="h-6 w-6 text-primary" />
-            <span class="text-lg font-bold text-white">ROI-SIMULATOR AUSPROBIEREN</span>
+            <Icon name={editions.roiCta.icon} class="h-6 w-6 text-primary" />
+            <span class="text-lg font-bold text-white">{editions.roiCta.text}</span>
           </a>
         </div>
       </div>
@@ -515,52 +343,26 @@ const title = 'Products - Open Ticket AI';
       <div class="mx-auto w-full max-w-7xl">
         <div class="mb-16">
           <h2 class="mb-6 text-4xl font-bold text-white md:text-5xl">
-            Bereitstellung & Hardware-Flexibilität
+            {deployment.title}
           </h2>
           <p class="max-w-3xl text-lg text-text-dim">
-            Sicherheit durch Design. Optimiert für Ihre Infrastruktur.
+            {deployment.subtitle}
           </p>
         </div>
 
         <div class="mb-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card variant="outline" radius="xl" client:load>
-            <div class="flex items-start gap-3">
-              <Icon name="heroicons:server" class="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
-              <div>
-                <h4 class="mb-1 font-bold text-white">ON-PREMISE ODER PRIVATE CLOUD</h4>
-              </div>
-            </div>
-          </Card>
-
-          <Card variant="outline" radius="xl" client:load>
-            <div class="flex items-start gap-3">
-              <Icon name="heroicons:shield-check" class="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
-              <div>
-                <h4 class="mb-1 font-bold text-white">KEINE DATEN VERLASSEN DIE INFRASTRUKTUR</h4>
-              </div>
-            </div>
-          </Card>
-
-          <Card variant="outline" radius="xl" client:load>
-            <div class="flex items-start gap-3">
-              <Icon
-                name="heroicons:cube-transparent"
-                class="mt-1 h-6 w-6 flex-shrink-0 text-cyan-400"
-              />
-              <div>
-                <h4 class="mb-1 font-bold text-white">INT8, BF16, FP16 QUANTIZATIONS</h4>
-              </div>
-            </div>
-          </Card>
-
-          <Card variant="outline" radius="xl" client:load>
-            <div class="flex items-start gap-3">
-              <Icon name="heroicons:cpu-chip" class="mt-1 h-6 w-6 flex-shrink-0 text-cyan-400" />
-              <div>
-                <h4 class="mb-1 font-bold text-white">OPTIMIERT FÜR CPU & GPU</h4>
-              </div>
-            </div>
-          </Card>
+          {
+            deployment.features.map(feature => (
+              <Card variant="outline" radius="xl" client:load>
+                <div class="flex items-start gap-3">
+                  <Icon name={feature.icon} class="mt-1 h-6 w-6 flex-shrink-0 text-primary" />
+                  <div>
+                    <h4 class="mb-1 font-bold text-white">{feature.title}</h4>
+                  </div>
+                </div>
+              </Card>
+            ))
+          }
         </div>
 
         <!-- Large CTA -->
@@ -576,24 +378,24 @@ const title = 'Products - Open Ticket AI';
             <div
               class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-cyan-500"
             >
-              <Icon name="heroicons:rocket-launch" class="h-10 w-10 text-white" />
+              <Icon name={finalCta.icon} class="h-10 w-10 text-white" />
             </div>
 
             <h2 class="mb-6 text-4xl font-bold text-white md:text-6xl">
-              Verwandeln Sie rohe Tickets in<br />
+              {finalCta.title.line1}<br />
               <span class="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent">
-                Operative Intelligenz.
+                {finalCta.title.highlight}
               </span>
             </h2>
 
             <p class="mx-auto mb-10 max-w-3xl text-xl text-text-dim">
-              Schließen Sie sich zukunftsorientierten Support-Teams an, die ihren Workflow heute automatisieren.
+              {finalCta.subtitle}
             </p>
 
             <div class="flex flex-wrap justify-center gap-4">
               <ModalTrigger
                 title="Contact Sales"
-                buttonText="KONTAKTIEREN SIE DEN VERTRIEB"
+                buttonText={finalCta.buttons.primary}
                 buttonVariant="surface"
                 buttonTone="primary"
                 buttonSize="lg"
@@ -617,7 +419,7 @@ const title = 'Products - Open Ticket AI';
                 size="lg"
                 client:load
               >
-                Dokumentation ansehen
+                {finalCta.buttons.secondary}
               </Button>
             </div>
           </div>

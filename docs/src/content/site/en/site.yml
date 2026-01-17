@@ -3,9 +3,17 @@ meta:
   siteName: Open Ticket AI
   tagline: Private, on‑premise AI for ticket automation.
   logoUrl: /images/open-ticket-ai-logo.png
+companyImage: '../../../assets/images/open_ticket_ai_mannheim.png'
 nav:
   - label: Products
     url: products
+    children:
+      - label: Features
+        url: products
+      - label: ROI Calculator
+        url: roi-calculator
+      - label: Pricing
+        url: pricing
   - label: Services
     url: services
   - label: Docs

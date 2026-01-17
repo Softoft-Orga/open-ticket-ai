@@ -1,0 +1,408 @@
+backend:
+  name: github
+  repo: Softoft-Orga/open-ticket-ai
+  branch: main
+publish_mode: editorial_workflow
+
+media_folder: "docs/public/"
+public_folder: "/uploads"
+
+slug:
+  encoding: "unicode"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: "docs"
+    label: "Docs"
+    folder: "docs/src/content/docs/en"
+    create: true
+    extension: "mdx"
+    format: "frontmatter"
+    nested:
+      depth: 10
+    path: "{{slug}}"
+    editor:
+      preview: true
+    fields:
+      - { name: "title", label: "Title", widget: "string" }
+      - { name: "description", label: "Description", widget: "string", required: false }
+      - name: "nav"
+        label: "Nav"
+        widget: "object"
+        required: false
+        fields:
+          - { name: "group", label: "Group", widget: "string", required: false }
+          - { name: "order", label: "Order", widget: "number", required: false, value_type: "int", min: 0 }
+          - { name: "hidden", label: "Hidden", widget: "boolean", required: false, default: false }
+      - { name: "draft", label: "Draft", widget: "boolean", required: false, default: false }
+      - { name: "body", label: "Body", widget: "markdown" }
+
+  - name: "blog"
+    label: "Blog"
+    folder: "docs/src/content/blog/en"
+    create: true
+    extension: "md"
+    format: "frontmatter"
+    editor:
+      preview: true
+    fields:
+      - { name: "title", label: "Title", widget: "string" }
+      - { name: "description", label: "Description", widget: "string", required: false }
+      - name: "nav"
+        label: "Nav"
+        widget: "object"
+        required: false
+        fields:
+          - { name: "group", label: "Group", widget: "string", required: false }
+          - { name: "order", label: "Order", widget: "number", required: false, value_type: "int", min: 0 }
+          - { name: "hidden", label: "Hidden", widget: "boolean", required: false, default: false }
+      - { name: "draft", label: "Draft", widget: "boolean", required: false, default: false }
+      - { name: "date", label: "Date", widget: "datetime", time_format: false, format: "YYYY-MM-DD" }
+      - { name: "tags", label: "Tags", widget: "list", required: false, field: { name: "tag", label: "Tag", widget: "string" } }
+      - { name: "category", label: "Category", widget: "string", required: false }
+      - { name: "image", label: "Image", widget: "image", required: false }
+      - { name: "body", label: "Body", widget: "markdown" }
+
+  - name: "products"
+    label: "Products"
+    files:
+      - name: "products_en"
+        label: "Products (EN)"
+        file: "docs/src/content/products/en/products.yml"
+        fields: &product_fields
+          - name: "hero"
+            label: "Hero"
+            widget: "object"
+            fields:
+              - { name: "badge", label: "Badge", widget: "string", required: false }
+              - name: "title"
+                label: "Title"
+                widget: "object"
+                fields:
+                  - { name: "line1", label: "Line 1", widget: "string" }
+                  - { name: "line2", label: "Line 2", widget: "string" }
+                  - { name: "line3", label: "Line 3", widget: "string" }
+                  - { name: "highlight", label: "Highlight", widget: "string" }
+              - { name: "description", label: "Description", widget: "text" }
+              - name: "cta"
+                label: "CTA"
+                widget: "object"
+                fields:
+                  - { name: "primary", label: "Primary", widget: "string" }
+                  - { name: "secondary", label: "Secondary", widget: "string" }
+              - name: "demo"
+                label: "Demo"
+                widget: "object"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - name: "input"
+                    label: "Input"
+                    widget: "object"
+                    fields:
+                      - { name: "label", label: "Label", widget: "string" }
+                      - { name: "subject", label: "Subject", widget: "string" }
+                      - { name: "body", label: "Body", widget: "text" }
+                  - name: "output"
+                    label: "Output"
+                    widget: "object"
+                    fields:
+                      - { name: "label", label: "Label", widget: "string" }
+                      - name: "tags"
+                        label: "Tags"
+                        widget: "list"
+                        fields:
+                          - { name: "key", label: "Key", widget: "string" }
+                          - { name: "value", label: "Value", widget: "string" }
+                          - { name: "color", label: "Color", widget: "string" }
+          - name: "capabilities"
+            label: "Capabilities"
+            widget: "object"
+            fields:
+              - { name: "title", label: "Title", widget: "string" }
+              - { name: "subtitle", label: "Subtitle", widget: "string" }
+              - name: "items"
+                label: "Items"
+                widget: "list"
+                fields:
+                  - { name: "icon", label: "Icon", widget: "string" }
+                  - { name: "title", label: "Title", widget: "string" }
+                  - { name: "description", label: "Description", widget: "text" }
+          - name: "editions"
+            label: "Editions"
+            widget: "object"
+            fields:
+              - { name: "title", label: "Title", widget: "string" }
+              - { name: "subtitle", label: "Subtitle", widget: "string" }
+              - name: "items"
+                label: "Items"
+                widget: "list"
+                fields:
+                  - { name: "slug", label: "Slug", widget: "string" }
+                  - { name: "name", label: "Name", widget: "string" }
+                  - { name: "subtitle", label: "Subtitle", widget: "string" }
+                  - { name: "price", label: "Price", widget: "number", value_type: "float" }
+                  - { name: "priceUnit", label: "Price Unit", widget: "string" }
+                  - { name: "currency", label: "Currency", widget: "string" }
+                  - { name: "badge", label: "Badge", widget: "string", required: false }
+                  - { name: "features", label: "Features", widget: "list", field: { name: "feature", label: "Feature", widget: "string" } }
+                  - { name: "availability", label: "Availability", widget: "string" }
+                  - { name: "ctaText", label: "CTA Text", widget: "string" }
+                  - { name: "highlighted", label: "Highlighted", widget: "boolean" }
+          - name: "roiCta"
+            label: "ROI CTA"
+            widget: "object"
+            fields:
+              - { name: "icon", label: "Icon", widget: "string" }
+              - { name: "text", label: "Text", widget: "string" }
+              - { name: "url", label: "URL", widget: "string" }
+          - name: "deployment"
+            label: "Deployment"
+            widget: "object"
+            fields:
+              - { name: "title", label: "Title", widget: "string" }
+              - { name: "subtitle", label: "Subtitle", widget: "string" }
+              - name: "features"
+                label: "Features"
+                widget: "list"
+                fields:
+                  - { name: "icon", label: "Icon", widget: "string" }
+                  - { name: "title", label: "Title", widget: "string" }
+          - name: "finalCta"
+            label: "Final CTA"
+            widget: "object"
+            fields:
+              - { name: "icon", label: "Icon", widget: "string" }
+              - name: "title"
+                label: "Title"
+                widget: "object"
+                fields:
+                  - { name: "line1", label: "Line 1", widget: "string" }
+                  - { name: "highlight", label: "Highlight", widget: "string" }
+              - { name: "subtitle", label: "Subtitle", widget: "string" }
+              - name: "buttons"
+                label: "Buttons"
+                widget: "object"
+                fields:
+                  - { name: "primary", label: "Primary", widget: "string" }
+                  - { name: "secondary", label: "Secondary", widget: "string" }
+      - name: "products_de"
+        label: "Products (DE)"
+        file: "docs/src/content/products/de/products.yml"
+        fields: *product_fields
+
+  - name: "services"
+    label: "Services"
+    files:
+      - name: "services_en"
+        label: "Services"
+        file: "docs/src/content/services/en/services.yml"
+        fields:
+          - name: "items"
+            label: "Services"
+            widget: "list"
+            fields:
+              - { name: "slug", label: "Slug", widget: "string" }
+              - { name: "title", label: "Title", widget: "string" }
+              - { name: "oneLiner", label: "One Liner", widget: "string", required: false }
+              - { name: "description", label: "Description", widget: "text", required: false }
+              - { name: "outcomes", label: "Outcomes", widget: "list", required: false, field: { name: "outcome", label: "Outcome", widget: "string" } }
+              - { name: "startingPrice", label: "Starting Price", widget: "number", required: false, value_type: "float", min: 0 }
+              - { name: "serviceGroup", label: "Service Group", widget: "string" }
+              - { name: "serviceOrder", label: "Service Order", widget: "number", required: false, value_type: "int", min: 0 }
+              - { name: "hidden", label: "Hidden", widget: "boolean", required: false, default: false }
+
+  - name: "site"
+    label: "Site"
+    files:
+      - name: "site_en"
+        label: "Site"
+        file: "docs/src/content/site/en/site.yml"
+        fields:
+          - { name: "slug", label: "Slug", widget: "string", required: false }
+
+          - name: "meta"
+            label: "Meta"
+            widget: "object"
+            fields:
+              - { name: "siteName", label: "Site Name", widget: "string" }
+              - { name: "tagline", label: "Tagline", widget: "string", required: false }
+              - { name: "logoUrl", label: "Logo URL", widget: "string", required: false }
+
+          - name: "nav"
+            label: "Nav"
+            widget: "list"
+            fields:
+              - { name: "label", label: "Label", widget: "string" }
+              - { name: "url", label: "URL", widget: "string" }
+
+          - name: "footer"
+            label: "Footer"
+            widget: "object"
+            fields:
+              - { name: "brandName", label: "Brand Name", widget: "string" }
+              - { name: "brandTagline", label: "Brand Tagline", widget: "string" }
+              - { name: "socialHeading", label: "Social Heading", widget: "string" }
+              - name: "sections"
+                label: "Sections"
+                widget: "list"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - name: "links"
+                    label: "Links"
+                    widget: "list"
+                    fields:
+                      - { name: "label", label: "Label", widget: "string" }
+                      - { name: "url", label: "URL", widget: "string" }
+              - name: "social"
+                label: "Social"
+                widget: "list"
+                fields:
+                  - { name: "platform", label: "Platform", widget: "string" }
+                  - { name: "url", label: "URL", widget: "string" }
+                  - { name: "ariaLabel", label: "Aria Label", widget: "string" }
+                  - { name: "iconName", label: "Icon Name", widget: "string" }
+              - { name: "copyright", label: "Copyright", widget: "string" }
+
+          - name: "popularResources"
+            label: "Popular Resources"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "title", label: "Title", widget: "string" }
+              - name: "groups"
+                label: "Groups"
+                widget: "list"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - { name: "basePath", label: "Base Path", widget: "string" }
+                  - name: "items"
+                    label: "Items"
+                    widget: "list"
+                    fields:
+                      - { name: "docId", label: "Doc ID", widget: "string" }
+                      - { name: "icon", label: "Icon", widget: "string" }
+                      - { name: "label", label: "Label", widget: "string", required: false }
+
+          - name: "legalInfo"
+            label: "Legal Info"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "companyName", label: "Company Name", widget: "string" }
+              - { name: "ceo", label: "CEO", widget: "string" }
+              - name: "address"
+                label: "Address"
+                widget: "object"
+                fields:
+                  - { name: "street", label: "Street", widget: "string" }
+                  - { name: "city", label: "City", widget: "string" }
+                  - { name: "zip", label: "ZIP", widget: "string" }
+                  - { name: "country", label: "Country", widget: "string" }
+              - { name: "legalForm", label: "Legal Form", widget: "string" }
+              - { name: "vatId", label: "VAT ID", widget: "string" }
+              - { name: "registerInfo", label: "Register Info", widget: "string" }
+              - { name: "email", label: "Email", widget: "string" }
+              - { name: "phone", label: "Phone", widget: "string" }
+
+          - name: "team"
+            label: "Team"
+            widget: "list"
+            required: false
+            fields:
+              - { name: "name", label: "Name", widget: "string", required: false }
+              - { name: "role", label: "Role", widget: "string", required: false }
+              - { name: "description", label: "Description", widget: "text", required: false }
+              - { name: "pictureUrl", label: "Picture", widget: "image", required: false }
+              - { name: "email", label: "Email", widget: "string", required: false }
+              - { name: "phoneNumber", label: "Phone Number", widget: "string", required: false }
+              - { name: "linkedInUrl", label: "LinkedIn URL", widget: "string", required: false }
+
+          - name: "dataPrivacy"
+            label: "Data Privacy"
+            widget: "object"
+            required: false
+            fields:
+              - { name: "introduction", label: "Introduction", widget: "text" }
+              - name: "controller"
+                label: "Controller"
+                widget: "object"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - { name: "content", label: "Content", widget: "text" }
+              - name: "dataProcessing"
+                label: "Data Processing"
+                widget: "object"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - name: "categories"
+                    label: "Categories"
+                    widget: "list"
+                    fields:
+                      - { name: "title", label: "Title", widget: "string" }
+                      - { name: "description", label: "Description", widget: "text" }
+                      - { name: "legalBasis", label: "Legal Basis", widget: "string", required: false }
+              - name: "yourRights"
+                label: "Your Rights"
+                widget: "object"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - name: "rights"
+                    label: "Rights"
+                    widget: "list"
+                    fields:
+                      - { name: "title", label: "Title", widget: "string" }
+                      - { name: "description", label: "Description", widget: "text" }
+              - name: "dataSecurity"
+                label: "Data Security"
+                widget: "object"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - { name: "content", label: "Content", widget: "text" }
+              - name: "thirdPartyServices"
+                label: "Third Party Services"
+                widget: "object"
+                required: false
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - name: "services"
+                    label: "Services"
+                    widget: "list"
+                    fields:
+                      - { name: "name", label: "Name", widget: "string" }
+                      - { name: "purpose", label: "Purpose", widget: "string" }
+                      - { name: "provider", label: "Provider", widget: "string", required: false }
+                      - { name: "privacyPolicy", label: "Privacy Policy", widget: "string", required: false }
+              - name: "contact"
+                label: "Contact"
+                widget: "object"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - { name: "content", label: "Content", widget: "text" }
+              - { name: "lastUpdated", label: "Last Updated", widget: "string" }
+
+          - name: "ui"
+            label: "UI"
+            widget: "object"
+            fields:
+              - { name: "ctaLabel", label: "CTA Label", widget: "string" }
+              - name: "cookieBanner"
+                label: "Cookie Banner"
+                widget: "object"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - { name: "description", label: "Description", widget: "text" }
+                  - { name: "privacyPolicyText", label: "Privacy Policy Text", widget: "string" }
+                  - { name: "acceptText", label: "Accept Text", widget: "string" }
+                  - { name: "declineText", label: "Decline Text", widget: "string" }
+              - name: "contactForm"
+                label: "Contact Form"
+                widget: "object"
+                fields:
+                  - { name: "title", label: "Title", widget: "string" }
+                  - { name: "submitButtonText", label: "Submit Button Text", widget: "string" }
+                  - { name: "messageLabel", label: "Message Label", widget: "string" }
+                  - { name: "emailLabel", label: "Email Label", widget: "string" }
+                  - { name: "subjectLabel", label: "Subject Label", widget: "string" }
+                  - { name: "emailPlaceholder", label: "Email Placeholder", widget: "string" }
+                  - { name: "messagePlaceholder", label: "Message Placeholder", widget: "string" }

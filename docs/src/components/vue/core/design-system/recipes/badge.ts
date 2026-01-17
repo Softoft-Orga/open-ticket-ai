@@ -1,5 +1,5 @@
 import { tv, type VariantProps } from 'tailwind-variants';
-import type { Variant, Tone, Size } from '../tokens.ts';
+import type { Size, Tone, Variant } from '../tokens.ts';
 
 /**
  * Badge recipe - Small label/tag component
@@ -28,6 +28,7 @@ export const badge = tv({
     size: {
       sm: 'px-2 py-0.5 text-xs gap-1 rounded-md',
       md: 'px-2.5 py-1 text-sm gap-1.5 rounded-lg',
+      lg: 'px-3 py-1.5 text-md gap-2 rounded-xl',
     } satisfies Record<Size, string>,
   },
   compoundVariants: [

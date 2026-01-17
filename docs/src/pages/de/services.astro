@@ -13,11 +13,12 @@ const description = 'Professionelle Services für Open Ticket AI Integration und
 // Get all services from the content collection for current locale
 const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
 const allServicesEntries = await getCollection('services');
+
 const servicesEntries = allServicesEntries.filter(entry =>
   entry.id.toLowerCase().startsWith(`${currentLocale}/`)
 );
-// Each entry's data is an array of services, so flatten them
-const allServices = servicesEntries.flatMap(entry => entry.data);
+
+const allServices = servicesEntries.flatMap(entry => entry.data.items);
 
 // Filter services by group
 const syntheticDataServices = allServices
@@ -136,7 +137,9 @@ const typicalScopeItems = [
             <h2 class="text-3xl font-bold text-white">Ticket Tagging AI Model</h2>
           </div>
           <p class="mb-10 max-w-2xl text-lg leading-relaxed text-slate-400">
-            Unser Kern-KI-Modell für die automatische Klassifizierung und Tagging von Helpdesk-Tickets. Es verarbeitet eingehende Anfragen, um kritische Metadaten zu identifizieren, bevor ein Mensch das Ticket überhaupt sieht.
+            Unser Kern-KI-Modell für die automatische Klassifizierung und Tagging von
+            Helpdesk-Tickets. Es verarbeitet eingehende Anfragen, um kritische Metadaten zu
+            identifizieren, bevor ein Mensch das Ticket überhaupt sieht.
           </p>
           <div class="grid grid-cols-2 gap-6">
             <div class="flex items-center gap-3 text-slate-300">
@@ -171,7 +174,8 @@ const typicalScopeItems = [
               <div>
                 <h4 class="text-sm font-bold text-white">Self-Hosted</h4>
                 <p class="text-[11px] leading-tight text-slate-500">
-                  Vollständiges On-Premise-Deployment. Keine Daten verlassen Ihre sichere Infrastruktur.
+                  Vollständiges On-Premise-Deployment. Keine Daten verlassen Ihre sichere
+                  Infrastruktur.
                 </p>
               </div>
             </div>
@@ -186,7 +190,8 @@ const typicalScopeItems = [
               <div>
                 <h4 class="text-sm font-bold text-white">Auto Write-Back</h4>
                 <p class="text-[11px] leading-tight text-slate-500">
-                  Tiefe Integration mit Ticketsystemen, um automatisch Tags und Felder zurückzuschreiben.
+                  Tiefe Integration mit Ticketsystemen, um automatisch Tags und Felder
+                  zurückzuschreiben.
                 </p>
               </div>
             </div>
@@ -210,7 +215,8 @@ const typicalScopeItems = [
           Synthetic Data Generation
         </h2>
         <p class="mx-auto max-w-3xl text-lg leading-relaxed text-slate-400">
-          Benutzerdefinierte, realistische, mehrsprachige Support-Ticket-Datensätze für KI-Training, Evaluation und Benchmarking. Keine sensiblen Kundendaten werden offengelegt.
+          Benutzerdefinierte, realistische, mehrsprachige Support-Ticket-Datensätze für KI-Training,
+          Evaluation und Benchmarking. Keine sensiblen Kundendaten werden offengelegt.
         </p>
       </div>
 
@@ -329,7 +335,8 @@ const typicalScopeItems = [
           <h2 class="mb-6 text-5xl font-black text-white">Automation Services</h2>
           <h3 class="mb-6 text-xl font-bold text-slate-200">Open Ticket Automation (OTA)</h3>
           <p class="mb-8 text-lg leading-relaxed text-slate-400">
-            OTA ist unsere Open-Source-Schicht, die KI-Tags in konkrete Aktionen übersetzt. Sie überbrückt die Lücke zwischen Intelligenz und Lösung.
+            OTA ist unsere Open-Source-Schicht, die KI-Tags in konkrete Aktionen übersetzt. Sie
+            überbrückt die Lücke zwischen Intelligenz und Lösung.
           </p>
           <ul class="space-y-4">
             {
@@ -597,7 +604,8 @@ const typicalScopeItems = [
         </div>
         <h2 class="mb-6 text-5xl font-black text-white">Flexible Services</h2>
         <p class="mx-auto max-w-3xl text-lg leading-relaxed text-slate-400">
-            Maßgeschneiderte Lösungen und Expertenberatung für Ihre einzigartigen Automatisierungsbedürfnisse.
+          Maßgeschneiderte Lösungen und Expertenberatung für Ihre einzigartigen
+          Automatisierungsbedürfnisse.
         </p>
       </div>
 

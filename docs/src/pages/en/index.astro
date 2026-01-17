@@ -5,10 +5,30 @@ import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import Button from '../../components/vue/core/basic/Button.vue';
 import { Icon } from 'astro-icon/components';
+import { Schema } from 'astro-seo-schema';
+import type { WebSite, WithContext } from 'schema-dts';
 
 const pageTitle = 'Open Ticket AI - Automated Ticket Tagging, On-Premise';
 const pageDescription =
   'Enterprise-grade ticket automation with AI-powered tagging. Process tickets locally with our on-premise solution—no cloud dependency, maximum data privacy.';
+
+// WebSite schema with search action
+const websiteSchema: WithContext<WebSite> = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Open Ticket AI',
+  url: 'https://openticketai.com',
+  description: pageDescription,
+  inLanguage: ['en', 'de'],
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://openticketai.com/en/docs?search={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
 
 const taggingFeatures = [
   {
@@ -66,7 +86,10 @@ const privacyFeatures = [
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <div slot="head"></div>
+  <div slot="head">
+    <!-- WebSite Schema for Homepage -->
+    <Schema item={websiteSchema} />
+  </div>
 
   <div class="w-full bg-background-dark text-white antialiased">
     <!-- Hero Section -->
