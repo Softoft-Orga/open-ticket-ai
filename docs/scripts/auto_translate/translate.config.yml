@@ -32,7 +32,7 @@ prompt_template_path: prompt.j2
 base_language: en
 target_language: de
 
-model: deepseek/deepseek-v3.2
+model: openai/gpt-oss-120b
 temperature: 0.1
-max_concurrency: 64
+max_concurrency: 128
 force: true
