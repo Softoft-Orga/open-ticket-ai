@@ -7,6 +7,8 @@ import Badge from '../../../components/vue/core/basic/Badge.vue';
 import { Icon } from 'astro-icon/components';
 import ModalTrigger from '../../../components/vue/core/basic/ModalTrigger.vue';
 import ContactForm from '../../../components/ContactForm.astro';
+import { Schema } from 'astro-seo-schema';
+import type { AboutPage, WithContext } from 'schema-dts';
 
 const title = 'About Us - Open Ticket AI';
 const description = 'Learn about Open Ticket AI, our team, and our mission';
@@ -20,9 +22,29 @@ const siteConfig = allSiteConfigs.find(entry =>
 const meta = siteConfig?.data.meta;
 const legalInfo = siteConfig?.data.legalInfo;
 const team = siteConfig?.data.team || [];
+
+// AboutPage schema
+const aboutPageSchema: WithContext<AboutPage> = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: title,
+  description: description,
+  url: 'https://openticketai.com/en/company/about/',
+  inLanguage: 'en',
+  mainEntity: {
+    '@type': 'Organization',
+    name: 'Open Ticket AI',
+    url: 'https://openticketai.com',
+  },
+};
+const companyImage = siteConfig?.data.companyImage;
 ---
 
 <BaseLayout title={title} description={description}>
+  <div slot="head">
+    <!-- AboutPage Schema -->
+    <Schema item={aboutPageSchema} />
+  </div>
   <div class="min-h-screen bg-background-dark pb-32">
     <!-- Hero Section -->
     <section class="relative overflow-hidden pb-24 pt-32">
@@ -263,8 +285,8 @@ const team = siteConfig?.data.team || [];
           <div class="mb-8">
             <h2 class="mb-2 text-4xl font-bold text-white">Made in Germany. Compliant Globally.</h2>
             <p class="text-base text-slate-400">
-              Headquartered in Berlin, {meta?.siteName} operates under the strictest data protection
-              laws in the world.
+              Headquartered in Mannheim, {meta?.siteName} operates under the strictest data
+              protection laws in the world.
             </p>
           </div>
 
@@ -294,12 +316,13 @@ const team = siteConfig?.data.team || [];
             </div>
 
             <div class="flex items-center justify-center">
-              <div class="flex h-64 w-full items-center justify-center rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/20 to-purple-950/10">
-                <div class="text-center">
-                  <div class="mb-2 text-2xl font-bold text-white">Berlin</div>
-                  <div class="text-sm text-slate-400">Germany</div>
-                </div>
-              </div>
+              {companyImage && (
+                <Image
+                  src={companyImage}
+                  alt={`${meta?.siteName} office in ${legalInfo.address.city}`}
+                  class="h-auto w-full rounded-2xl border border-purple-500/20"
+                />
+              )}
             </div>
           </div>
         </section>

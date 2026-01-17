@@ -20,6 +20,7 @@ const siteConfig = allSiteConfigs.find(entry =>
 const meta = siteConfig?.data.meta;
 const legalInfo = siteConfig?.data.legalInfo;
 const team = siteConfig?.data.team || [];
+const companyImage = siteConfig?.data.companyImage;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -265,7 +266,7 @@ const team = siteConfig?.data.team || [];
           <div class="mb-8">
             <h2 class="mb-2 text-4xl font-bold text-white">Made in Germany. Weltweit konform.</h2>
             <p class="text-base text-slate-400">
-              Mit Hauptsitz in Berlin operiert {meta?.siteName} unter den strengsten
+              Mit Hauptsitz in {legalInfo.address.city} operiert {meta?.siteName} unter den strengsten
               Datenschutzgesetzen der Welt.
             </p>
           </div>
@@ -296,12 +297,13 @@ const team = siteConfig?.data.team || [];
             </div>
 
             <div class="flex items-center justify-center">
-              <div class="flex h-64 w-full items-center justify-center rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-900/20 to-purple-950/10">
-                <div class="text-center">
-                  <div class="mb-2 text-2xl font-bold text-white">Berlin</div>
-                  <div class="text-sm text-slate-400">Deutschland</div>
-                </div>
-              </div>
+              {companyImage && (
+                <Image
+                  src={companyImage}
+                  alt={`${meta?.siteName} Büro in ${legalInfo.address.city}`}
+                  class="h-auto w-full rounded-2xl border border-purple-500/20"
+                />
+              )}
             </div>
           </div>
         </section>

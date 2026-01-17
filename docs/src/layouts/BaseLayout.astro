@@ -7,6 +7,8 @@ import CookieBanner from '../components/vue/core/basic/CookieBanner.vue';
 import '../styles/global.css';
 import ModalTrigger from '../components/vue/core/basic/ModalTrigger.vue';
 import ContactForm from '../components/ContactForm.astro';
+import { Schema } from 'astro-seo-schema';
+import { getOrganizationSchema } from '../utils/schemas';
 
 interface Props {
   title: string;
@@ -84,6 +86,12 @@ const contactFormTexts = siteConfig?.data.ui.contactForm || {
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Organization Schema - Site-wide -->
+    <Schema item={getOrganizationSchema()} />
+
+    <!-- Additional head content from pages -->
+    <slot name="head" />
 
     <!-- Google Analytics - only loads after cookie consent -->
     {(() => {
