@@ -68,9 +68,7 @@ export default defineConfig({
       sidebar: [
         {
           label: 'Getting Started',
-          items: [
-            { label: 'Overview', link: '/en/docs/' },
-          ],
+          items: [{ label: 'Overview', link: '/docs/' }],
         },
         {
           label: 'Open Ticket Automation',
