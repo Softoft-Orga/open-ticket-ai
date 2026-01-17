@@ -182,6 +182,14 @@ const site = defineCollection({
         z.object({
           label: z.string(),
           url: z.string(),
+          children: z
+            .array(
+              z.object({
+                label: z.string(),
+                url: z.string(),
+              })
+            )
+            .optional(),
         })
       ),
       footer: z.object({

@@ -87,7 +87,7 @@ const siteConfig = allSiteConfigs.find(entry =>
 - `slug`: string (Optional - omit to use file path as ID)
 - `meta`: `{ siteName, tagline, logoUrl }`
 - `companyImage`: image() (Optional) - Company office/location image (e.g., `'../../../assets/images/open_ticket_ai_mannheim.png'`)
-- `nav`: Array of `{ label, url }`
+- `nav`: Array of `{ label, url, children? }` - Navigation items. Each item can optionally include a `children` array with nested navigation items `{ label, url }` for dropdown menus.
 - `footer`: `{ brandName, sections, social, legal, copyright }`
 - `ui`: UI strings for components (Required)
   - `ctaLabel`: string - Call-to-action button label (e.g., "Contact Sales")

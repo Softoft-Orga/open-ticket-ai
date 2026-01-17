@@ -16,15 +16,65 @@
       </a>
 
       <nav class="hidden flex-1 justify-center gap-8 text-sm font-medium md:flex">
-        <a
-          v-for="link in navLinks"
-          :key="link.url"
-          :class="isActive(link.url) ? 'text-text-1' : 'text-text-2 hover:text-text-1'"
-          :href="link.url"
-          class="rounded-lg px-2 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-        >
-          {{ link.label }}
-        </a>
+        <template v-for="link in navLinks" :key="link.url">
+          <!-- Nav item with dropdown -->
+          <Menu v-if="link.children && link.children.length > 0" v-slot="{ open }" as="div" class="relative">
+            <MenuButton
+              :class="[
+                'flex items-center gap-1 rounded-lg px-2 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+                isActive(link.url) || isAnyChildActive(link.children) ? 'text-text-1' : 'text-text-2 hover:text-text-1'
+              ]"
+            >
+              {{ link.label }}
+              <ChevronDownIcon
+                :class="['h-4 w-4 transition-transform duration-200', open ? 'rotate-180' : '']"
+              />
+            </MenuButton>
+            <Transition
+              enter-active-class="transition duration-100 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-75 ease-in"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
+            >
+              <MenuItems
+                class="absolute left-0 mt-2 w-56 origin-top-left rounded-lg border border-border-dark bg-surface-dark shadow-lg ring-1 ring-black/5 focus:outline-none"
+              >
+                <div class="p-1">
+                  <MenuItem
+                    v-for="child in link.children"
+                    :key="child.url"
+                    v-slot="{ active }"
+                  >
+                    <a
+                      :href="child.url"
+                      :class="[
+                        'group flex w-full items-center rounded-lg px-3 py-2 text-sm transition-colors',
+                        isActive(child.url)
+                          ? 'bg-primary/20 text-text-1'
+                          : active
+                            ? 'bg-surface-lighter text-text-1'
+                            : 'text-text-2',
+                      ]"
+                    >
+                      {{ child.label }}
+                    </a>
+                  </MenuItem>
+                </div>
+              </MenuItems>
+            </Transition>
+          </Menu>
+          <!-- Regular nav item without dropdown -->
+          <a
+            v-else
+            :class="isActive(link.url) ? 'text-text-1' : 'text-text-2 hover:text-text-1'"
+            :href="link.url"
+            class="rounded-lg px-2 py-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+          >
+            {{ link.label }}
+          </a>
+        </template>
       </nav>
 
       <div class="hidden items-center gap-4 md:flex">
@@ -79,20 +129,67 @@
               </div>
 
               <nav class="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
-                <a
-                  v-for="link in navLinks"
-                  :key="link.url"
-                  :class="[
-                    'rounded-xl px-5 py-4 text-lg font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
-                    isActive(link.url)
-                      ? 'bg-primary/20 text-text-1'
-                      : 'text-text-2 hover:bg-surface-lighter hover:text-text-1',
-                  ]"
-                  :href="link.url"
-                  @click="closeMobileMenu"
-                >
-                  {{ link.label }}
-                </a>
+                <template v-for="link in navLinks" :key="link.url">
+                  <!-- Mobile nav item with children -->
+                  <div v-if="link.children && link.children.length > 0" class="flex flex-col gap-1">
+                    <button
+                      :class="[
+                        'flex items-center justify-between rounded-xl px-5 py-4 text-lg font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+                        isActive(link.url) || isAnyChildActive(link.children)
+                          ? 'bg-primary/20 text-text-1'
+                          : 'text-text-2 hover:bg-surface-lighter hover:text-text-1',
+                      ]"
+                      @click="toggleMobileDropdown(link.url)"
+                    >
+                      <span>{{ link.label }}</span>
+                      <ChevronDownIcon
+                        :class="[
+                          'h-5 w-5 transition-transform duration-200',
+                          mobileDropdownOpen[link.url] ? 'rotate-180' : '',
+                        ]"
+                      />
+                    </button>
+                    <Transition
+                      enter-active-class="transition duration-200 ease-out"
+                      enter-from-class="transform -translate-y-2 opacity-0"
+                      enter-to-class="transform translate-y-0 opacity-100"
+                      leave-active-class="transition duration-150 ease-in"
+                      leave-from-class="transform translate-y-0 opacity-100"
+                      leave-to-class="transform -translate-y-2 opacity-0"
+                    >
+                      <div v-if="mobileDropdownOpen[link.url]" class="ml-4 flex flex-col gap-1 border-l-2 border-primary/30 pl-4">
+                        <a
+                          v-for="child in link.children"
+                          :key="child.url"
+                          :href="child.url"
+                          :class="[
+                            'rounded-lg px-4 py-3 text-base font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+                            isActive(child.url)
+                              ? 'bg-primary/20 text-text-1'
+                              : 'text-text-2 hover:bg-surface-lighter hover:text-text-1',
+                          ]"
+                          @click="closeMobileMenu"
+                        >
+                          {{ child.label }}
+                        </a>
+                      </div>
+                    </Transition>
+                  </div>
+                  <!-- Mobile nav item without children -->
+                  <a
+                    v-else
+                    :class="[
+                      'rounded-xl px-5 py-4 text-lg font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
+                      isActive(link.url)
+                        ? 'bg-primary/20 text-text-1'
+                        : 'text-text-2 hover:bg-surface-lighter hover:text-text-1',
+                    ]"
+                    :href="link.url"
+                    @click="closeMobileMenu"
+                  >
+                    {{ link.label }}
+                  </a>
+                </template>
               </nav>
 
               <div v-if="ctaLabel" class="border-t border-primary/20 p-4">
@@ -111,12 +208,16 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { TransitionChild, TransitionRoot } from '@headlessui/vue';
+import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/vue/24/outline';
+import { TransitionChild, TransitionRoot, Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import Button from '../basic/Button.vue';
 import { fade, slideLeft } from '../transitions/presets';
 
-type NavLink = { label: string; url: string };
+type NavLink = { 
+  label: string; 
+  url: string; 
+  children?: { label: string; url: string }[];
+};
 
 type Props = {
   logoUrl?: string;
@@ -145,7 +246,19 @@ const openMobileMenu = () => {
 };
 const closeMobileMenu = () => {
   mobileMenuOpen.value = false;
+  // Close all dropdowns when closing mobile menu
+  mobileDropdownOpen.value = {};
+};
+
+const mobileDropdownOpen = ref<Record<string, boolean>>({});
+const toggleMobileDropdown = (url: string) => {
+  mobileDropdownOpen.value[url] = !mobileDropdownOpen.value[url];
 };
 
 const isActive = (url: string) => activePath.value === url || activePath.value.startsWith(url);
+
+const isAnyChildActive = (children?: { label: string; url: string }[]) => {
+  if (!children) return false;
+  return children.some(child => isActive(child.url));
+};
 </script>
