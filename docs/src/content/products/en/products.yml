@@ -1,89 +1,129 @@
-items:
-  - slug: open-ticket-ai-lite
-    title: Open Ticket AI Lite
-    tagline: Start automating your tickets with AI
-    description: |
-      Open Ticket AI Lite is the perfect entry point for small teams looking to
-      automate their ticket classification and routing. Deploy on-premises with
-      full control over your data.
-    features:
-      - Automatic ticket classification
-      - Queue assignment
-      - Priority detection
-      - On-premises deployment
-      - Community support
-    tier: lite
-    nav:
-      group: Products
-      order: 1
-      hidden: false
-    image: https://picsum.photos/1000/1000?blur=5
+# Products Page Content
+hero:
+  badge: '● LIVE CLASSIFICATION ENGINE v2.0'
+  title:
+    line1: 'Automated,'
+    line2: 'Consistent Ticket'
+    line3: 'Classification'
+    highlight: 'In Real Time.'
+  description: 'Analyze incoming tickets and assign structured, hierarchical tags instantly. No rules to maintain. Fully automated.'
+  cta:
+    primary: 'CONTACT SALES'
+    secondary: 'View ROI Calculator'
 
-  - slug: open-ticket-ai-pro
-    title: Open Ticket AI Pro
-    tagline: Advanced AI for growing teams
-    description: |
-      Open Ticket AI Pro delivers enterprise-grade AI capabilities for medium to
-      large support teams. Get advanced analytics, custom model training, and
-      priority support.
-    features:
-      - Everything in Lite
-      - Custom model training
-      - Advanced analytics and reporting
-      - Multi-language support
-      - Priority email support
-      - SLA guarantees
-    tier: pro
-    nav:
-      group: Products
-      order: 2
-      hidden: false
-    image: https://picsum.photos/800/400
+  demo:
+    title: 'processor_v2.exe'
+    input:
+      label: 'RAW INPUT'
+      subject: 'Login failed again?'
+      body: |
+        Hi support, I'm trying to access
+        the dashboard but getting error
+        503. This is blocking the payroll
+        run. Please fix
+    output:
+      label: 'AI STRUCTURED OUTPUT'
+      tags:
+        - key: 'INTENT'
+          value: 'access_issue'
+          color: 'primary'
+        - key: 'SYSTEM'
+          value: 'dashboard_main'
+          color: 'secondary'
+        - key: 'URGENCY'
+          value: 'critical'
+          color: 'danger'
 
+capabilities:
+  title: 'Core Capabilities'
+  subtitle: 'Built for enterprise scale and precision.'
+  items:
+    - icon: 'heroicons:cpu-chip'
+      title: 'Fully Automated Classification'
+      description: 'Assigns tags for Intent, Urgency, Impact, User Role, and Sentiment. Works seamlessly on new tickets and historical backlogs without human intervention.'
+    - icon: 'heroicons:squares-2x2'
+      title: 'Hierarchical, Not Flat'
+      description: 'A real taxonomy tree. Parent nodes for high-level aggregation, leaf tags for operational precision. Enables deep, multi-level analytics.'
+    - icon: 'heroicons:cube-transparent'
+      title: '10 Quadrillion Combinations'
+      description: 'Map our fixed high-quality taxonomy to your custom fields. Over 10 quadrillion possible combinations to fit any specific workflow or industry.'
 
-  - slug: tagging-ai
-    title: Tagging AI
-    tagline: Automated classification with military-grade privacy
-    description: |
-      Automated classification with military-grade privacy. Deploy local LLMs to
-      categorize tickets instantly without data leaving your perimeter.
-    features:
-      - Automated ticket classification
-      - Local LLM deployment
-      - Military-grade privacy
-      - On-premises/Private cloud deployment
-      - Multilingual support
-      - No data leaves your perimeter
-    tier: enterprise
-    nav:
-      group: Products
-      order: 4
-      hidden: false
-    status: Coming Soon
-    badges:
-      - Coming Soon
-      - On-Prem / Private Cloud
-      - Multilingual
-    image: https://picsum.photos/1000/1000?blur=5
+editions:
+  title: 'Flexible Editions'
+  subtitle: 'Choose the model complexity that fits your operational needs.'
+  items:
+    - slug: 'tagging-lite-free'
+      name: 'Lite Free'
+      subtitle: 'Evaluation & Testing'
+      price: 0
+      priceUnit: '/one-time'
+      currency: '€'
+      badge: null
+      features:
+        - 'Model: 0.5B Parameters'
+        - '150+ Tags'
+        - 'Accuracy: ~0.82'
+        - 'ROI: from 15 tickets/day'
+      availability: 'Available 18.01'
+      ctaText: 'Explore Lite Free'
+      highlighted: false
 
-  - slug: open-ticket-automation-core
-    title: Open Ticket Automation Core
-    tagline: The core engine for ticket automation
-    description: |
-      The renamed core engine. A secure API gateway that routes tickets between
-      your helpdesk (Znuny/OTOBO) and our AI models. Built for high-throughput
-      environments.
-    features:
-      - Secure API gateway
-      - Routes tickets to AI models
-      - Znuny/OTOBO integration
-      - High-throughput performance
-      - Enterprise-grade reliability
-    tier: pro
-    nav:
-      group: Products
-      order: 5
-      hidden: false
-    icon: heroicons:cube-transparent
-    image: https://picsum.photos/800/400
+    - slug: 'tagging-lite-pro'
+      name: 'Lite Pro'
+      subtitle: 'Production Ready'
+      price: 2500
+      priceUnit: '/one-time'
+      currency: '€'
+      badge: 'BEST VALUE'
+      features:
+        - 'Model: 4B Parameters'
+        - '150+ Tags'
+        - 'Accuracy: ~0.90'
+        - 'Focus: Routing & Reporting'
+      availability: 'Available 18.01'
+      ctaText: 'Explore Lite Pro'
+      highlighted: true
 
+    - slug: 'tagging-full-pro'
+      name: 'Full Pro'
+      subtitle: 'Advanced Enterprise'
+      price: 6000
+      priceUnit: '/one-time'
+      currency: '€'
+      badge: null
+      features:
+        - 'Model: 8B Parameters'
+        - '250+ Tags'
+        - 'Accuracy: ~0.92'
+        - 'Focus: Maximum Detail'
+      availability: 'IN DEVELOPMENT'
+      ctaText: 'Explore Full Pro'
+      highlighted: false
+
+  roiCta:
+    icon: 'heroicons:rocket-launch'
+    text: 'TRY THE ROI SIMULATOR'
+    url: '/products/roi-calculator'
+
+deployment:
+  title: 'Deployment & Hardware Flexibility'
+  subtitle: 'Secure by design. Optimized for your infrastructure.'
+  features:
+    - icon: 'heroicons:server'
+      title: 'ON-PREMISE OR PRIVATE CLOUD'
+    - icon: 'heroicons:shield-check'
+      title: 'NO DATA LEAVES INFRASTRUCTURE'
+    - icon: 'heroicons:cube-transparent'
+      title: 'INT8, BF16, FP16 QUANTIZATIONS'
+    - icon: 'heroicons:cpu-chip'
+      title: 'OPTIMIZED FOR CPU & GPU'
+
+finalCta:
+  icon: 'heroicons:rocket-launch'
+  title:
+    line1: 'Turn Raw Tickets into'
+    highlight: 'Operational Intelligence.'
+  subtitle: 'Join forward-thinking support teams automating their workflow today.'
+  buttons:
+    primary: 'CONTACT SALES'
+    secondary: 'View Docs'
