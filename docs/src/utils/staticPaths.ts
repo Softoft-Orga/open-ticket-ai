@@ -34,10 +34,8 @@ export const getLocalizedCatchAllStaticPaths = async <T extends CollectionKey>(
   // Filter out future-dated blog posts
   let filteredEntries: CollectionEntry<T>[];
   if (collection === 'blog') {
-    const now = new Date();
     filteredEntries = filterPublishedBlogPosts(
-      entries as CollectionEntry<'blog'>[],
-      now
+      entries as CollectionEntry<'blog'>[]
     ) as CollectionEntry<T>[];
   } else {
     filteredEntries = entries as CollectionEntry<T>[];
