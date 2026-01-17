@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
 import Button from '../../components/vue/core/basic/Button.vue';
+import HeroSection from '../../components/sections/HeroSection.astro';
 import { Icon } from 'astro-icon/components';
 import { Schema } from 'astro-seo-schema';
 import type { WebSite, WithContext } from 'schema-dts';
@@ -93,59 +94,25 @@ const privacyFeatures = [
 
   <div class="w-full bg-background-dark text-white antialiased">
     <!-- Hero Section -->
-    <section
-      class="relative flex w-full justify-center bg-glow-radial px-4 py-20 md:px-10 md:py-28 lg:px-20 xl:px-40"
-    >
-      <div class="flex w-full max-w-7xl flex-col items-center gap-12 text-center">
-        <div
-          class="flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-primary"
-        >
-          <span class="relative flex h-2 w-2">
-            <span
-              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"
-            ></span>
-            <span class="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
-          </span>
-          On-Premise AI • Zero Cloud Dependency
-        </div>
-
-        <h1
-          class="font-display max-w-5xl text-5xl font-bold leading-tight tracking-tight text-white md:text-6xl lg:text-7xl"
-        >
-          Enterprise Ticket Automation.<br />
-          <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
-            >100% On Your Infrastructure.</span
-          >
-        </h1>
-
-        <p class="max-w-4xl text-xl leading-relaxed text-text-dim md:text-2xl">
-          We provide AI-powered ticket tagging and workflow automation that runs entirely
-          on-premise. Your ticket data never leaves your network—keeping you in control and
-          compliant.
-        </p>
-
-        <div class="flex flex-wrap justify-center gap-4 pt-4">
-          <Button
-            variant="surface"
-            tone="primary"
-            size="lg"
-            href={getRelativeLocaleUrl(Astro.currentLocale, 'docs')}
-            client:load
-          >
-            Explore Documentation
-          </Button>
-          <Button
-            variant="outline"
-            tone="primary"
-            size="lg"
-            href={getRelativeLocaleUrl(Astro.currentLocale, 'services')}
-            client:load
-          >
-            View Services
-          </Button>
-        </div>
-      </div>
-    </section>
+    <div class="bg-glow-radial">
+      <HeroSection
+        title='Enterprise Ticket Automation.<br /><span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">100% On Your Infrastructure.</span>'
+        description="We provide AI-powered ticket tagging and workflow automation that runs entirely on-premise. Your ticket data never leaves your network—keeping you in control and compliant."
+        meta={['On-Premise AI', 'Zero Cloud Dependency']}
+        primaryCta={{
+          label: 'Explore Documentation',
+          href: getRelativeLocaleUrl(Astro.currentLocale, 'docs'),
+        }}
+        secondaryCta={{
+          label: 'View Services',
+          href: getRelativeLocaleUrl(Astro.currentLocale, 'services'),
+        }}
+        tone="primary"
+        size="lg"
+        layout="stacked"
+        align="center"
+      />
+    </div>
 
     <!-- Company Overview Section -->
     <section class="w-full bg-background-dark px-4 py-20 md:px-10 lg:px-20 xl:px-40">
