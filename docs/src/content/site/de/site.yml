@@ -7,6 +7,13 @@ companyImage: '../../../assets/images/open_ticket_ai_mannheim.png'
 nav:
   - label: Produkte
     url: products
+    children:
+      - label: Funktionen
+        url: products
+      - label: ROI-Rechner
+        url: roi-calculator
+      - label: Preise
+        url: pricing
   - label: Services
     url: services
   - label: Dokumentation

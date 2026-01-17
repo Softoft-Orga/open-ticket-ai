@@ -23,7 +23,7 @@ const meta: Meta<typeof NavBar> = {
     },
     links: {
       control: 'object',
-      description: 'Array of navigation items with url and label',
+      description: 'Array of navigation items with url, label, and optional children array',
     },
     logoUrl: {
       control: 'text',
@@ -57,6 +57,89 @@ export const Default: Story = {
       { label: 'Products', url: '/products/' },
       { label: 'Services', url: '/services/' },
       { label: 'Pricing', url: '/pricing/' },
+    ],
+    ctaLabel: 'Get Started',
+    ctaUrl: '/get-started/',
+  },
+};
+
+export const WithDropdowns: Story = {
+  render: args => ({
+    components: { NavBar },
+    setup() {
+      return { args };
+    },
+    template: `
+      <div class="min-h-screen bg-slate-900">
+        <NavBar v-bind="args" />
+        <div class="p-8">
+          <h1 class="text-white text-2xl">Navbar with Dropdown Menus</h1>
+          <p class="text-gray-400 mt-2">Navigation items can have children which are displayed in a dropdown menu.</p>
+          <p class="text-gray-400 mt-2">Desktop: Hover over "Products" to see the dropdown menu.</p>
+          <p class="text-gray-400 mt-2">Mobile: Tap "Products" to expand children inline.</p>
+        </div>
+      </div>
+    `,
+  }),
+  args: {
+    links: [
+      {
+        label: 'Products',
+        url: '/products/',
+        children: [
+          { label: 'Features', url: '/products/' },
+          { label: 'ROI Calculator', url: '/roi-calculator/' },
+          { label: 'Pricing', url: '/pricing/' },
+        ],
+      },
+      { label: 'Services', url: '/services/' },
+      { label: 'Docs', url: '/docs/' },
+      { label: 'Blog', url: '/blog/' },
+    ],
+    ctaLabel: 'Get Started',
+    ctaUrl: '/get-started/',
+  },
+};
+
+export const MixedNavigation: Story = {
+  render: args => ({
+    components: { NavBar },
+    setup() {
+      return { args };
+    },
+    template: `
+      <div class="min-h-screen bg-slate-900">
+        <NavBar v-bind="args" />
+        <div class="p-8">
+          <h1 class="text-white text-2xl">Mixed Navigation</h1>
+          <p class="text-gray-400 mt-2">Some navigation items have dropdowns, others don't.</p>
+          <p class="text-gray-400 mt-2">This demonstrates flexible navigation patterns.</p>
+        </div>
+      </div>
+    `,
+  }),
+  args: {
+    links: [
+      {
+        label: 'Products',
+        url: '/products/',
+        children: [
+          { label: 'Features', url: '/products/' },
+          { label: 'ROI Calculator', url: '/roi-calculator/' },
+          { label: 'Pricing', url: '/pricing/' },
+        ],
+      },
+      {
+        label: 'Company',
+        url: '/company/',
+        children: [
+          { label: 'About', url: '/company/about/' },
+          { label: 'Careers', url: '/company/careers/' },
+          { label: 'Contact', url: '/company/contact/' },
+        ],
+      },
+      { label: 'Docs', url: '/docs/' },
+      { label: 'Blog', url: '/blog/' },
     ],
     ctaLabel: 'Get Started',
     ctaUrl: '/get-started/',
@@ -132,6 +215,7 @@ export const MobileView: Story = {
           <ul class="text-gray-400 mt-2 list-disc ml-6 space-y-1">
             <li>Slide-in transition from the right</li>
             <li>Navigation links with active state</li>
+            <li>Expandable dropdown sections for items with children</li>
             <li>Primary CTA button at the bottom</li>
             <li>Backdrop overlay with blur effect</li>
           </ul>
@@ -141,7 +225,15 @@ export const MobileView: Story = {
   }),
   args: {
     links: [
-      { label: 'Products', url: '/products/' },
+      {
+        label: 'Products',
+        url: '/products/',
+        children: [
+          { label: 'Features', url: '/products/' },
+          { label: 'ROI Calculator', url: '/roi-calculator/' },
+          { label: 'Pricing', url: '/pricing/' },
+        ],
+      },
       { label: 'Services', url: '/services/' },
       { label: 'Pricing', url: '/pricing/' },
     ],
@@ -169,8 +261,9 @@ export const KeyboardAccessibility: Story = {
           <p class="text-gray-400 mt-2">The navbar is fully keyboard accessible:</p>
           <ul class="text-gray-400 mt-2 list-disc ml-6 space-y-1">
             <li><strong class="text-white">Tab</strong>: Navigate through all interactive elements</li>
-            <li><strong class="text-white">Enter/Space</strong>: Activate buttons and links</li>
-            <li><strong class="text-white">Escape</strong>: Close mobile menu</li>
+            <li><strong class="text-white">Enter/Space</strong>: Activate buttons, links, and open dropdowns</li>
+            <li><strong class="text-white">Arrow Keys</strong>: Navigate within dropdown menus</li>
+            <li><strong class="text-white">Escape</strong>: Close dropdown menus and mobile menu</li>
           </ul>
         </div>
       </div>
@@ -178,7 +271,15 @@ export const KeyboardAccessibility: Story = {
   }),
   args: {
     links: [
-      { label: 'Products', url: '/products/' },
+      {
+        label: 'Products',
+        url: '/products/',
+        children: [
+          { label: 'Features', url: '/products/' },
+          { label: 'ROI Calculator', url: '/roi-calculator/' },
+          { label: 'Pricing', url: '/pricing/' },
+        ],
+      },
       { label: 'Services', url: '/services/' },
       { label: 'Pricing', url: '/pricing/' },
     ],
