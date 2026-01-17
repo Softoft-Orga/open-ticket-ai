@@ -30,16 +30,17 @@ uv run -m pytest      # Run tests
 
 ```bash
 cd /home/runner/work/open-ticket-ai/open-ticket-ai/docs
-npm run format        # Format with Prettier (ALWAYS run)
-npm run lint          # ESLint check
-npm run test:site     # Site tests (if content/links changed)
+npm run format            # Format with Prettier (ALWAYS run)
+npm run lint:fix              # ESLint check (ALWAYS run)
+npm run test:site         # Site tests (ALWAYS run)
+npm run test:playwright   # Playwright Test (ALWAYS run)
 ```
 
 **Key rules**: Always format after changes, update `COMPONENTS.md` for core Vue components
 
 ## Common Pitfalls
 
-**Python**: ❌ Tests under `src/**/tests` ❌ Code comments ❌ Test `__init__.py` files  
+**Python**: ❌ Tests under `src/**/tests` ❌ Code comments ❌ Test `__init__.py` files
 **Docs**: ❌ Skip `npm run format` ❌ Custom CSS over Tailwind ❌ Outdated `COMPONENTS.md`
 
 ---

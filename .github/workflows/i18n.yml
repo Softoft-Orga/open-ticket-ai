@@ -30,6 +30,16 @@ jobs:
         run: python translate_tree.py --config translate.config.yml
         working-directory: docs/scripts/auto_translate
 
+      - name: Stage translated files
+        run: |
+          git add -A docs/src/pages/de
+          git add -A docs/src/content/blog/de
+          git add -A docs/src/content/docs/de
+          git add -A docs/src/content/products/de
+          git add -A docs/src/content/services/de
+          git add -A docs/src/content/site/de
+          git status --porcelain
+
       - name: Create PR with translated files
         uses: peter-evans/create-pull-request@v6
         with:
