@@ -67,58 +67,12 @@ export default defineConfig({
       customCss: ['./src/styles/starlight-custom.css'],
       sidebar: [
         {
-          label: 'Guides',
-          items: [
-            { slug: 'en/open-ticket-automation/guides/index' },
-            { slug: 'en/open-ticket-automation/guides/quick_start' },
-            { slug: 'en/open-ticket-automation/guides/first_pipeline' },
-            { slug: 'en/open-ticket-automation/guides/plan-ticket-automation-project' },
-          ],
-        },
-        {
-          label: 'Users',
-          items: [
-            { slug: 'en/open-ticket-automation/users/index' },
-            { slug: 'en/open-ticket-automation/users/installation' },
-            { slug: 'en/open-ticket-automation/users/otobo-znuny-plugin-setup' },
-            { slug: 'en/open-ticket-automation/users/pipeline' },
-            { slug: 'en/open-ticket-automation/users/plugins' },
-            { slug: 'en/open-ticket-automation/users/plugin-marketplace' },
-            { slug: 'en/open-ticket-automation/users/config_rendering' },
-            { slug: 'en/open-ticket-automation/users/config_examples' },
-          ],
-        },
-        {
-          label: 'Developers',
-          items: [
-            { slug: 'en/open-ticket-automation/developers/index' },
-            { slug: 'en/open-ticket-automation/developers/plugin_development' },
-            { slug: 'en/open-ticket-automation/developers/pipeline_code' },
-            { slug: 'en/open-ticket-automation/developers/ticket_system_integration' },
-            { slug: 'en/open-ticket-automation/developers/template_rendering' },
-            { slug: 'en/open-ticket-automation/developers/config_rendering' },
-            { slug: 'en/open-ticket-automation/developers/services' },
-            { slug: 'en/open-ticket-automation/developers/dependency_injection' },
-            { slug: 'en/open-ticket-automation/developers/logging' },
-            { slug: 'en/open-ticket-automation/developers/testing' },
-          ],
-        },
-        {
-          label: 'Details',
-          items: [
-            { slug: 'en/open-ticket-automation/details/index' },
-            { slug: 'en/open-ticket-automation/details/config_reference' },
-            { slug: 'en/open-ticket-automation/details/predefined-pipes' },
-            { slug: 'en/open-ticket-automation/details/template_rendering' },
-          ],
+          label: 'Open Ticket Automation',
+          autogenerate: { directory: 'en/open-ticket-automation' },
         },
         {
           label: 'Ticket Tagging',
-          items: [
-            { slug: 'en/ticket-tagging/taxonomy-design' },
-            { slug: 'en/ticket-tagging/tag-mapping' },
-            { slug: 'en/ticket-tagging/hardware-sizing' },
-          ],
+          autogenerate: { directory: 'en/ticket-tagging' },
         },
       ],
     }),
