@@ -48,6 +48,3 @@ jobs:
           body: "Auto-generated German translations."
           branch: "chore/i18n-generate-de"
           delete-branch: true
-          add-paths: |
-            docs/src/pages/de
-            docs/src/content/**/de
