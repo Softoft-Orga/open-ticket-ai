@@ -34,6 +34,7 @@ const blog = defineCollection({
       nav: navSchema,
       draft: z.boolean().optional(),
       date: z.date(),
+      futureReleaseDate: z.date().optional(),
       tags: z.array(z.string()).optional(),
       category: z.string().optional(),
       image: image().optional(),
@@ -182,6 +183,14 @@ const site = defineCollection({
         z.object({
           label: z.string(),
           url: z.string(),
+          children: z
+            .array(
+              z.object({
+                label: z.string(),
+                url: z.string(),
+              })
+            )
+            .optional(),
         })
       ),
       footer: z.object({

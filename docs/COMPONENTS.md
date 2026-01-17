@@ -76,9 +76,11 @@ visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-sto
 
 ### core/navigation
 
-- **NavBar.vue** — Simplified top navigation bar with logo, links, and primary CTA. Props:
-  `navItems` (array of {href, label}), `currentPath` (string), `ctaLabel` (string). Slots: _none_.
-  Uses Headless UI Dialog for mobile menu. Story: `stories/NavBar.stories.ts`.
+- **NavBar.vue** — Top navigation bar with logo, links, primary CTA, and dropdown support. Props:
+  `navItems` (array of {href, label, children?}), `currentPath` (string), `ctaLabel` (string). Slots: _none_.
+  Navigation items can include an optional `children` array for dropdown menus. Desktop view shows
+  dropdowns using HeadlessUI Menu component. Mobile view displays children as expandable inline sections.
+  Story: `stories/NavBar.stories.ts`.
 
 ### core/table
 

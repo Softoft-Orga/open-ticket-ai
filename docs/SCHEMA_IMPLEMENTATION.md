@@ -9,9 +9,11 @@ All schemas are implemented using the `astro-seo-schema` package with TypeScript
 ## Site-Wide Schemas
 
 ### Organization Schema
+
 **Location**: `BaseLayout.astro` (applied to all pages)
 
 Provides information about Open Ticket AI as an organization:
+
 - Organization name, URL, and logo
 - Contact information
 - Available languages (English, German)
@@ -20,33 +22,41 @@ Provides information about Open Ticket AI as an organization:
 ## Page-Specific Schemas
 
 ### Homepage (`/en/index.astro`)
+
 - **WebSite Schema**: Defines the website with search action capability
 - **Organization Schema**: Inherited from BaseLayout
 
 ### Product Pages
+
 All product pages include:
+
 - **Product Schema**: Product details including name, price, specifications
 - **BreadcrumbList Schema**: Navigation breadcrumbs
 - **Organization Schema**: Inherited from BaseLayout
 
 Pages:
+
 - `/en/products/tagging-lite-free/` - Free tier product
 - `/en/products/tagging-lite-pro/` - Professional tier product
 - `/en/products/tagging-full-pro/` - Enterprise tier product
 
 ### Blog Posts (`/en/blog/[...slug].astro`)
+
 - **Article Schema**: Article metadata including headline, date, author, keywords
 - **Organization Schema**: Inherited from BaseLayout
 
 ### Services Page (`/en/services.astro`)
+
 - **WebPage Schema**: General page information
 - **Organization Schema**: Inherited from BaseLayout
 
 ### About Page (`/en/company/about.astro`)
+
 - **AboutPage Schema**: Information about the organization
 - **Organization Schema**: Inherited from BaseLayout
 
 ### Products Listing (`/en/products.astro`)
+
 - **CollectionPage Schema**: Collection of products
 - **Organization Schema**: Inherited from BaseLayout
 
@@ -55,6 +65,7 @@ Pages:
 **File**: `src/utils/schemas.ts`
 
 Contains reusable schema generation functions:
+
 - `getOrganizationSchema()`: Returns the base Organization schema
 
 ## How Schemas are Added
@@ -84,6 +95,7 @@ const productSchema: WithContext<Product> = {
 ## Validation
 
 All schemas can be validated using:
+
 1. Google's Rich Results Test: https://search.google.com/test/rich-results
 2. Schema.org Validator: https://validator.schema.org/
 3. Browser DevTools: Search for `application/ld+json` in the page source
@@ -91,6 +103,7 @@ All schemas can be validated using:
 ## Future Enhancements
 
 Potential schemas to add:
+
 - **FAQPage Schema**: For FAQ sections
 - **HowTo Schema**: For tutorial/guide pages
 - **SoftwareApplication Schema**: For detailed product descriptions
