@@ -105,38 +105,6 @@ const description =
           </a>
         </div>
 
-        {
-          enrichedGroups.length > 0 && (
-            <div class="mt-24 border-t border-slate-800 pt-16">
-              <h4 class="mb-12 text-center text-sm font-bold uppercase tracking-[0.2em] text-slate-500">
-                {popularResources?.title}
-              </h4>
-
-              <div class="space-y-12">
-                {enrichedGroups.map(group => (
-                  <div>
-                    <h5 class="mb-6 text-lg font-bold text-slate-400">{group.title}</h5>
-                    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
-                      {group.items.map(item => (
-                        <a
-                          href={getRelativeLocaleUrl(Astro.currentLocale || 'en', item.url)}
-                          class="group flex flex-col items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/30 p-6 transition-all duration-300 hover:border-primary/40 hover:bg-slate-900/50"
-                        >
-                          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/5 transition-colors group-hover:bg-primary/10">
-                            <Icon name={item.iconName} class="h-6 w-6 text-primary" />
-                          </div>
-                          <span class="text-center text-sm font-medium text-slate-300 transition-colors group-hover:text-white">
-                            {item.title}
-                          </span>
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )
-        }
       </div>
     </div>
   </div>
