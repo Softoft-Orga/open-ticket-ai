@@ -40,8 +40,8 @@ In Formelausdrücken: Genauigkeit = (TP + TN)/(alle Stichproben). Obwohl einfach
 
 Um Klassifizierer bei Unausgewogenheit zu evaluieren, verlassen wir uns auf **Präzision, Recall und F1-Score**, die sich auf Fehler in Minderheitsklassen konzentrieren. Diese werden aus der Konfusionsmatrix abgeleitet, z. B. für binäre Klassifikation:
 
-|                     | Vorhergesagt Positiv | Vorhergesagt Negativ |
-| ------------------- | -------------------- | -------------------- |
+|                         | Vorhergesagt Positiv | Vorhergesagt Negativ |
+| ----------------------- | -------------------- | -------------------- |
 | **Tatsächlich Positiv** | True Positive (TP)   | False Negative (FN)  |
 | **Tatsächlich Negativ** | False Positive (FP)  | True Negative (TN)   |
 
@@ -62,10 +62,10 @@ berichtet Präzision, Recall, F1 (und Support) für jede Ticketklasse.
 
 Bei Mehrklassenproblemen können Metriken auf unterschiedliche Weise gemittelt werden. **Mikro-Mittelung** fasst alle Klassen zusammen, indem globale TP, FP, FN summiert werden, und berechnet dann die Metriken – effektiv gewichtet nach dem Support jeder Klasse. **Makro-Mittelung** berechnet die Metrik für jede Klasse separat und nimmt dann den ungewichteten Durchschnitt. Mit anderen Worten, Makro behandelt alle Klassen gleich (seltene Klassen zählen also genauso viel wie häufige), während Mikro die Leistung bei häufigen Klassen bevorzugt. Verwenden Sie **Makro-Mittelung**, wenn Minderheitsklassen kritisch sind (z. B. Erkennung eines seltenen dringenden Tickets), und **Mikro-Mittelung**, wenn die Gesamtgenauigkeit über alle Tickets wichtiger ist.
 
-| Mittelung   | Wie sie berechnet wird                                       | Wann zu verwenden                                      |
-| ----------- | ------------------------------------------------------------ | ------------------------------------------------------ |
-| **Mikro**   | Globale Zählungen von TP, FP, FN über alle Klassen           | Gibt Gesamtleistung an (bevorzugt große Klassen)       |
-| **Makro**   | Durchschnitt der Metrik jeder Klasse (jede Klasse gleich gewichtet) | Stellt sicher, dass kleine/seltene Klassen gleich zählen |
+| Mittelung | Wie sie berechnet wird                                              | Wann zu verwenden                                        |
+| --------- | ------------------------------------------------------------------- | -------------------------------------------------------- |
+| **Mikro** | Globale Zählungen von TP, FP, FN über alle Klassen                  | Gibt Gesamtleistung an (bevorzugt große Klassen)         |
+| **Makro** | Durchschnitt der Metrik jeder Klasse (jede Klasse gleich gewichtet) | Stellt sicher, dass kleine/seltene Klassen gleich zählen |
 
 ## Herausforderungen bei Multi-Label
 
