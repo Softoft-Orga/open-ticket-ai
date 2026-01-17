@@ -1,7 +1,8 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { docsLoader, i18nLoader } from '@astrojs/starlight/loaders';
+import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
 
-// Navigation schema shared across collections
 const navSchema = z
   .object({
     group: z.string().optional(),
@@ -10,20 +11,20 @@ const navSchema = z
   })
   .optional();
 
-// 1️⃣ docs collection - content collection (MD/MDX)
 const docs = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    lang: z.string().default('en'),
-    nav: navSchema,
-    draft: z.boolean().optional(),
+  loader: docsLoader(),
+  schema: docsSchema({
+    extend: z.object({
+      nav: navSchema,
+    }),
   }),
 });
 
-// 2️⃣ blog collection - content collection (MD/MDX)
-// noinspection TypeScriptUnresolvedReference
+const i18n = defineCollection({
+  loader: i18nLoader(),
+  schema: i18nSchema(),
+});
+
 const blog = defineCollection({
   type: 'content',
   schema: ({ image }) =>
@@ -338,9 +339,9 @@ const site = defineCollection({
     }),
 });
 
-// Export collections
 export const collections = {
   docs,
+  i18n,
   blog,
   services,
   products,
