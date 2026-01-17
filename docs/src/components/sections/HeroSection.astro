@@ -1,0 +1,155 @@
+---
+import type { Tone, Size } from '../vue/core/design-system/tokens';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Badge from '../vue/core/basic/Badge.vue';
+import Button from '../vue/core/basic/Button.vue';
+
+export interface Props {
+  title: string;
+  description?: string;
+  badge?: string;
+  meta?: string[];
+  primaryCta?: { label: string; href: string; external?: boolean };
+  secondaryCta?: { label: string; href: string; external?: boolean };
+  image?: { src: ImageMetadata; alt: string };
+  tone?: Tone;
+  size?: Size;
+  layout?: 'split' | 'stacked';
+  align?: 'left' | 'center';
+}
+
+const {
+  title,
+  description,
+  badge,
+  meta,
+  primaryCta,
+  secondaryCta,
+  image,
+  tone = 'primary',
+  size = 'lg',
+  layout = 'stacked',
+  align = 'center',
+} = Astro.props;
+
+// Compute container classes based on layout
+const containerClasses = [
+  'relative',
+  'w-full',
+  'px-4 md:px-10 lg:px-20 xl:px-40',
+  layout === 'split' ? 'grid grid-cols-1 lg:grid-cols-2 gap-12 items-center' : 'flex flex-col',
+  align === 'center' && layout === 'stacked' ? 'items-center text-center' : '',
+  size === 'sm' ? 'py-12' : size === 'md' ? 'py-16' : 'py-20 md:py-28',
+]
+  .filter(Boolean)
+  .join(' ');
+
+const contentClasses = [
+  'flex flex-col gap-8',
+  layout === 'split' ? '' : align === 'center' ? 'items-center' : '',
+  layout === 'split' ? 'max-w-none' : 'max-w-7xl',
+]
+  .filter(Boolean)
+  .join(' ');
+
+const titleClasses = [
+  'font-display font-bold leading-tight tracking-tight text-white',
+  size === 'sm'
+    ? 'text-4xl md:text-5xl'
+    : size === 'md'
+      ? 'text-5xl md:text-6xl'
+      : 'text-5xl md:text-6xl lg:text-7xl',
+  layout === 'split' ? 'max-w-none' : 'max-w-5xl',
+]
+  .filter(Boolean)
+  .join(' ');
+
+const descriptionClasses = [
+  'leading-relaxed text-text-dim',
+  size === 'sm'
+    ? 'text-base md:text-lg'
+    : size === 'md'
+      ? 'text-lg md:text-xl'
+      : 'text-xl md:text-2xl',
+  layout === 'split' ? 'max-w-xl' : 'max-w-4xl',
+]
+  .filter(Boolean)
+  .join(' ');
+
+const buttonSize = size === 'sm' ? 'md' : 'lg';
+---
+
+<section class={containerClasses}>
+  <div class={contentClasses}>
+    {
+      badge && (
+        <div class={align === 'center' ? 'w-fit' : ''}>
+          <Badge variant="subtle" tone={tone} size="md" client:load>
+            {badge}
+          </Badge>
+        </div>
+      )
+    }
+
+    {
+      meta && meta.length > 0 && (
+        <div class="flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-primary">
+          <span class="relative flex h-2 w-2">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+          </span>
+          {meta.join(' • ')}
+        </div>
+      )
+    }
+
+    <h1 class={titleClasses} set:html={title} />
+
+    {description && <p class={descriptionClasses}>{description}</p>}
+
+    {
+      (primaryCta || secondaryCta) && (
+        <div
+          class="flex flex-wrap gap-4 pt-4"
+          class:list={[align === 'center' ? 'justify-center' : '']}
+        >
+          {primaryCta && (
+            <Button
+              variant="surface"
+              tone={tone}
+              size={buttonSize}
+              href={primaryCta.href}
+              client:load
+            >
+              {primaryCta.label}
+            </Button>
+          )}
+          {secondaryCta && (
+            <Button
+              variant="outline"
+              tone={tone}
+              size={buttonSize}
+              href={secondaryCta.href}
+              client:load
+            >
+              {secondaryCta.label}
+            </Button>
+          )}
+        </div>
+      )
+    }
+  </div>
+
+  {
+    image && layout === 'split' && (
+      <div class="relative">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          class="w-full rounded-2xl border border-surface-lighter shadow-2xl"
+        />
+      </div>
+    )
+  }
+</section>

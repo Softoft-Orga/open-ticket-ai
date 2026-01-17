@@ -1,15 +1,16 @@
-# Vue Components Inventory
+# Component Inventory
 
-Below is an inventory of Vue components in `docs/src/components/vue`, organized by folder. Each
-entry lists name, brief description, props, and slots. Descriptions are concise; adjust as
-implementations evolve.
+Below is an inventory of components in `docs/src/components`, organized by folder. Each entry lists name, brief description, props, and slots. Descriptions are concise; adjust as implementations evolve.
 
-**For detailed component documentation**, including usage examples, prop types, and interactive
-demos, see the corresponding Storybook stories in `docs/stories/**/*.stories.ts`. View Storybook
-locally with `npm run storybook` or
-visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-storybook.netlify.app/).
+**For detailed Vue component documentation**, including usage examples, prop types, and interactive demos, see the corresponding Storybook stories in `docs/stories/**/*.stories.ts`. View Storybook locally with `npm run storybook` or visit [https://open-ticket-ai-storybook.netlify.app/](https://open-ticket-ai-storybook.netlify.app/).
 
-## core
+## Sections (Astro Components)
+
+- **HeroSection.astro** — Reusable hero section component for page headers. Props: `title` (string, required), `description` (string, optional), `badge` (string, optional), `meta` (string[], optional for animated status badges), `primaryCta` ({ label, href, external? }, optional), `secondaryCta` ({ label, href, external? }, optional), `image` ({ src: ImageMetadata, alt: string }, optional for split layout), `tone` (Tone, default: 'primary'), `size` (Size, default: 'lg'), `layout` ('split' | 'stacked', default: 'stacked'), `align` ('left' | 'center', default: 'center'). Uses Astro's Image component for optimized images. No hydration required. Supports gradient text via HTML in title prop.
+
+## Vue Components
+
+### core
 
 - **Alert.vue** — Alert/notification component using design-system alert() recipe. Props: `type` ('
   info' | 'success' | 'warning' | 'danger' | 'tip'), `variant` ('soft' | 'solid' | 'outline'),

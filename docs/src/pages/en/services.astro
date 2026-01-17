@@ -5,6 +5,7 @@ import ContactForm from '../../components/ContactForm.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
 import Badge from '../../components/vue/core/basic/Badge.vue';
+import HeroSection from '../../components/sections/HeroSection.astro';
 import { Icon } from 'astro-icon/components';
 import { Schema } from 'astro-seo-schema';
 import type { WebPage, WithContext } from 'schema-dts';
@@ -121,30 +122,15 @@ const typicalScopeItems = [
 
   <div class="min-h-screen bg-background-dark pb-32">
     <!-- Hero -->
-    <section class="relative pb-20 pt-24 text-center">
-      <div class="mx-auto max-w-7xl px-6">
-        <div class="mb-8">
-          <Badge variant="subtle" tone="success" size="sm" client:load>
-            <span class="flex items-center gap-2">
-              <span class="flex h-2 w-2 rounded-full bg-green-500"></span>
-              German Engineering Precision
-            </span>
-          </Badge>
-        </div>
-        <h1
-          class="mx-auto mb-8 max-w-4xl text-6xl font-black leading-[0.9] tracking-tighter text-white sm:text-7xl lg:text-8xl"
-        >
-          We Don't Just Build AI. <br />
-          <span class="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent"
-            >We Integrate It.</span
-          >
-        </h1>
-        <p class="mx-auto max-w-2xl text-xl font-medium leading-relaxed text-slate-400">
-          Transparent, fixed-price packages for enterprise-grade helpdesk automation. From
-          self-hosted AI models to full workflow automation.
-        </p>
-      </div>
-    </section>
+    <HeroSection
+      title='We Don&apos;t Just Build AI. <br /><span class="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent">We Integrate It.</span>'
+      description="Transparent, fixed-price packages for enterprise-grade helpdesk automation. From self-hosted AI models to full workflow automation."
+      badge="German Engineering Precision"
+      tone="success"
+      size="lg"
+      layout="stacked"
+      align="center"
+    />
 
     <!-- Ticket Tagging AI Model Section -->
     <section class="mx-auto mb-32 max-w-7xl px-6">
