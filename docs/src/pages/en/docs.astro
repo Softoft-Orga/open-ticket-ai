@@ -1,69 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Card from '../../components/vue/core/basic/Card.vue';
 import HeroSection from '../../components/sections/HeroSection.astro';
 import { Icon } from 'astro-icon/components';
-import { posix } from 'node:path';
 
 const title = 'Documentation | Open Ticket AI';
 const description =
   'Choose the documentation you need. Explore API references, implementation guides, and best practices.';
-
-const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
-const allSiteConfigs = await getCollection('site');
-const siteConfig = allSiteConfigs.find(entry =>
-  entry.id.toLowerCase().startsWith(`${currentLocale}/`)
-);
-const popularResources = siteConfig?.data.popularResources;
-
-async function getDocTitle(docId: string): Promise<string> {
-  try {
-    const parts = docId.split('/');
-    if (parts.length >= 3 && parts[0] === 'docs') {
-      const slug = parts.slice(2).join('/');
-
-      const allDocs = await getCollection('docs');
-      const doc = allDocs.find(d => {
-        const docSlug = d.slug.replace(/^en\//, '');
-        return docSlug === slug;
-      });
-
-      if (doc) {
-        return doc.data.title;
-      }
-    }
-  } catch (e) {
-    console.error('Error fetching doc title:', e);
-  }
-
-  return (
-    docId
-      .split('/')
-      .pop()
-      ?.replace(/-/g, ' ')
-      .replace(/\b\w/g, l => l.toUpperCase()) || 'Documentation'
-  );
-}
-
-const enrichedGroups = popularResources
-  ? await Promise.all(
-      popularResources.groups.map(async group => ({
-        title: group.title,
-        items: await Promise.all(
-          group.items.map(async item => ({
-            docId: item.docId,
-            icon: item.icon,
-            label: item.label,
-            url: posix.join(group.basePath, item.docId),
-            title: item.label || (await getDocTitle(item.docId)),
-            iconName: item.icon,
-          }))
-        ),
-      }))
-    )
-  : [];
 ---
 
 <BaseLayout title={title} description={description}>

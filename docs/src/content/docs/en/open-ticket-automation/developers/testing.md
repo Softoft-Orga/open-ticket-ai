@@ -515,7 +515,7 @@ uv run -m pytest -s
 
 ### Repository Test Layout
 
-Open Ticket AI follows a strict test organization pattern compliant with `AGENTS.md`:
+Open Ticket AI follows a strict test organization pattern:
 
 ```
 open-ticket-ai/
@@ -1017,7 +1017,6 @@ Tests run automatically on push/PR via GitHub Actions. Check `.github/workflows/
 
 ## Related Documentation
 
-- [Configuration Examples](../details/configuration/examples.md)
 - [Plugin Development](plugin_development.mdx)
-- [Custom Adapters](../integration/custom_adapters.md)
-- [AGENTS.md](../../../../AGENTS.md) - Authoritative test structure rules
+- [Configuration Examples](../../users/config_examples/)
+- [Configuration Rendering](../../users/config_rendering/)
