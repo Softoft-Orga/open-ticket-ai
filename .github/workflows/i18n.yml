@@ -1,0 +1,38 @@
+name: i18n-generate-de
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  translate:
+    if: "!contains(github.event.head_commit.message, '[skip i18n]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - run: pip install -r requirements.txt
+        working-directory: /docs/scripts/auto_translate
+
+      - name: Run translation
+        env:
+          OPEN_ROUTER_API_KEY: ${{ secrets.OPEN_ROUTER_API_KEY }}
+        run: python translate_tree.py --config translate.config.yml
+        working-directory: /docs/scripts/auto_translate
+
+      - name: Commit translated files
+        run: |
+          git config user.name "i18n-bot"
+          git config user.email "i18n-bot@users.noreply.github.com"
+          git add docs/src/pages/de docs/src/content/**/de
+          git diff --cached --quiet || git commit -m "chore(i18n): generate de [skip i18n]"
+          git push

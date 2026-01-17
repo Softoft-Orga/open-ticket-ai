@@ -1,7 +1,7 @@
 # Dependencies for auto-translate tool
-openai>=1.0.0
+openai>=2.7.1
 tenacity>=8.0.0
 jinja2>=3.1.0
-pyyaml>=6.0.0
-pytest>=8.0.0
-pytest-asyncio>=0.23.0
+pyyaml>=6.0.3
+pytest>=9.0.2
+pytest-asyncio>=1.3.0
