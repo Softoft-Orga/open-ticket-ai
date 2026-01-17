@@ -1018,5 +1018,5 @@ Tests run automatically on push/PR via GitHub Actions. Check `.github/workflows/
 ## Related Documentation
 
 - [Plugin Development](plugin_development.mdx)
-- [Configuration Examples](../users/config_examples.mdx)
-- [Configuration Rendering](../users/config_rendering.mdx)
+- [Configuration Examples](../../users/config_examples/)
+- [Configuration Rendering](../../users/config_rendering/)
