@@ -75,7 +75,7 @@ touching core code.
 
 **How it works:** Plugins are standard Python packages discovered via entry points. Install with
 `uv add otai-otobo-znuny`, reference in your config, and you're ready. Learn more in
-the [Plugin System](../users/plugins.mdx) documentation.
+the [Plugin System](/en/open-ticket-automation/users/plugins/) documentation.
 
 ### Flexible Pipeline System
 
@@ -86,7 +86,7 @@ Build sophisticated automation workflows with **sequential pipe execution**:
 - **Composite Pipes**: Nest pipelines for multi-stage orchestration
 
 Each pipe receives context from previous steps, executes its task, and passes results forward. Read
-the complete guide in [Pipe System](../users/pipeline.mdx).
+the complete guide in [Pipe System](/en/open-ticket-automation/users/pipeline/).
 
 ### Dynamic Configuration with Template Rendering
 
@@ -102,7 +102,7 @@ Configure everything using **YAML + Jinja2** for maximum flexibility:
 </div>
 
 Services are defined once and reused across multiple pipes via dependency injection.
-Explore [Configuration & Template Rendering](../users/config_rendering.mdx) for details.
+Explore [Configuration & Template Rendering](/en/open-ticket-automation/users/config_rendering/) for details.
 
 ### Easy Installation
 
@@ -121,7 +121,7 @@ services:
       - ./config.yml:/app/config.yml:ro
 ```
 
-**2. Create your `config.yml`** (see [Configuration Guide](../users/config_rendering.mdx))
+**2. Create your `config.yml`** (see [Configuration Guide](/en/open-ticket-automation/users/config_rendering/))
 
 **3. Start the service:**
 
@@ -160,7 +160,7 @@ pip install otai-otobo-znuny otai-hf-local
 
 :::
 
-See the full [Installation Guide](../guides/installation.md) for system requirements and deployment
+See the full [Installation Guide](/en/open-ticket-automation/users/installation/) for system requirements and deployment
 options.
 
 ---
@@ -175,8 +175,8 @@ licensing freedom. There's no marketplace yet, but the foundation is ready.
 - **No licensing restrictions**: Choose your own license model
 - **Sell commercial plugins**: Monetize your extensions however you like
 - **Full documentation**: Complete guide
-  at [Plugin Development](../developers/plugin_development.mdx)
-- **Community visibility**: Your plugin can be listed on our [Plugins](../users/plugins.mdx) page
+  at [Plugin Development](/en/open-ticket-automation/developers/plugin_development/)
+- **Community visibility**: Your plugin can be listed on our [Plugins](/en/open-ticket-automation/users/plugins/) page
 
 ### Future Marketplace
 

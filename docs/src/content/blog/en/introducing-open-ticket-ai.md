@@ -38,4 +38,4 @@ Traditional ticket systems rely on manual triage and basic rule-based automation
 
 ## Getting Started
 
-Ready to transform your support operations? Explore our comprehensive [Getting Started Guide](/docs/getting-started/) and discover how Open Ticket AI can elevate your ticket management workflow from reactive to proactive.
+Ready to transform your support operations? Explore our comprehensive [Getting Started Guide](/en/open-ticket-automation/guides/quick_start/) and discover how Open Ticket AI can elevate your ticket management workflow from reactive to proactive.
