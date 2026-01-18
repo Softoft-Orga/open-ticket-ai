@@ -67,12 +67,16 @@ export default defineConfig({
       customCss: ['./src/styles/starlight-custom.css'],
       sidebar: [
         {
+          label: 'Getting Started',
+          items: [{ label: 'Overview', link: '/docs/' }],
+        },
+        {
           label: 'Open Ticket Automation',
-          autogenerate: { directory: 'en/open-ticket-automation' },
+          autogenerate: { directory: 'en/docs/open-ticket-automation' },
         },
         {
           label: 'Ticket Tagging',
-          autogenerate: { directory: 'en/ticket-tagging' },
+          autogenerate: { directory: 'en/docs/ticket-tagging' },
         },
       ],
     }),
