@@ -1,9 +1,7 @@
-#file: noinspection YAMLSchemaValidation
 meta:
   siteName: Open Ticket AI
   tagline: Private, on‑premise AI for ticket automation.
   logoUrl: /images/open-ticket-ai-logo.png
-companyImage: '../../../assets/images/open_ticket_ai_mannheim.png'
 nav:
   - label: Products
     url: products
@@ -36,13 +34,13 @@ footer:
     - title: Company
       links:
         - label: About
-          url: 'company/about'
+          url: company/about
         - label: Data Privacy
           url: company/data-privacy
         - label: Legal Notice
-          url: 'company/legal-notice'
+          url: company/legal-notice
         - label: Terms & Conditions
-          url: 'company/terms'
+          url: company/terms
   social:
     - platform: linkedin
       url: https://www.linkedin.com/company/open-ticket-ai
@@ -68,7 +66,6 @@ footer:
     - label: Terms & Conditions
       url: terms
   copyright: Open Ticket AI UG. All rights reserved.
-
 popularResources:
   title: Popular Resources
   groups:
@@ -94,39 +91,43 @@ popularResources:
           icon: heroicons:arrow-path
         - docId: /tag-mapping
           icon: heroicons:chart-bar
-
 legalInfo:
   companyName: Open Ticket AI UG
   ceo: Constanze Krishnaratne
   address:
     street: Viktoriastraße 14
     city: Mannheim
-    zip: '68159'
+    zip: "68165"
     country: Germany
   legalForm: UG (haftungsbeschränkt)
-  vatId: ''
+  vatId: "33333"
   registerInfo: Amtsgericht Mannheim, HRB
   email: info@openticketai.com
-  phone: '+49 1512 0102724'
+  phone: +49 1512 0102724
 team:
   - name: Constanze Krishnaratne
     role: CEO
-    description: Leading Open Ticket AI's strategy and product direction with a focus on transparency, trust, and operational impact.
-    pictureUrl: '../../../assets/images/team/constanze_krishnaratne.png'
+    description: Leading Open Ticket AI's strategy and product direction with a
+      focus on transparency, trust, and operational impact.
+    pictureUrl: ../../../assets/images/team/constanze_krishnaratne.png
     email: constanze.krishnaratne@openticketai.com
-    phoneNumber: '+49 1512 0102724'
+    phoneNumber: +49 1512 0102724
     linkedInUrl: https://www.linkedin.com/in/constanze-krishnaratne
   - name: Tobias Bueck
     role: CTO
-    description: Developing AI models for ticket automation and ensuring reliable on-premise deployments with measurable impact.
-    pictureUrl: '../../../assets/images/team/tobias_bueck.jpg'
+    description: Developing AI models for ticket automation and ensuring reliable
+      on-premise deployments with measurable impact.
+    pictureUrl: ../../../assets/images/team/tobias_bueck.jpg
     email: tobias.bueck@openticketai.com
-    phoneNumber: ''
+    phoneNumber: ""
     linkedInUrl: https://www.linkedin.com/in/tobias-bueck
-
 dataPrivacy:
-  introduction: |
-    Open Ticket AI UG (hereinafter "we" or "us") is committed to protecting your personal data and respecting your privacy rights in accordance with the General Data Protection Regulation (GDPR) and other applicable data protection laws. This Data Privacy Policy explains how we collect, use, process, and protect your personal information when you use our services.
+  introduction: >
+    Open Ticket AI UG (hereinafter "we" or "us") is committed to protecting your
+    personal data and respecting your privacy rights in accordance with the
+    General Data Protection Regulation (GDPR) and other applicable data
+    protection laws. This Data Privacy Policy explains how we collect, use,
+    process, and protect your personal information when you use our services.
   controller:
     title: Data Controller
     content: |
@@ -139,40 +140,64 @@ dataPrivacy:
     title: Data We Collect and Process
     categories:
       - title: Contact Information
-        description: When you contact us or request information about our services, we collect your name, email address, phone number, and company information.
-        legalBasis: Your consent (Art. 6(1)(a) GDPR) or our legitimate interest in responding to inquiries (Art. 6(1)(f) GDPR)
+        description: When you contact us or request information about our services, we
+          collect your name, email address, phone number, and company
+          information.
+        legalBasis: Your consent (Art. 6(1)(a) GDPR) or our legitimate interest in
+          responding to inquiries (Art. 6(1)(f) GDPR)
       - title: Website Usage Data
-        description: We collect technical information such as IP address, browser type, device information, and pages visited through cookies and analytics tools.
-        legalBasis: Your consent (Art. 6(1)(a) GDPR) for cookies, and our legitimate interest in improving our website (Art. 6(1)(f) GDPR)
+        description: We collect technical information such as IP address, browser type,
+          device information, and pages visited through cookies and analytics
+          tools.
+        legalBasis: Your consent (Art. 6(1)(a) GDPR) for cookies, and our legitimate
+          interest in improving our website (Art. 6(1)(f) GDPR)
       - title: Service Data
-        description: When you use our services, we process data necessary for service delivery, including ticket system data, configuration settings, and usage metrics.
+        description: When you use our services, we process data necessary for service
+          delivery, including ticket system data, configuration settings, and
+          usage metrics.
         legalBasis: Performance of contract (Art. 6(1)(b) GDPR)
       - title: Communication Data
-        description: We store correspondence and communications with you, including email exchanges and support tickets.
-        legalBasis: Our legitimate interest in maintaining customer relationships (Art. 6(1)(f) GDPR)
+        description: We store correspondence and communications with you, including
+          email exchanges and support tickets.
+        legalBasis: Our legitimate interest in maintaining customer relationships (Art.
+          6(1)(f) GDPR)
   yourRights:
     title: Your Rights Under GDPR
     rights:
       - title: Right to Access
-        description: You have the right to request a copy of the personal data we hold about you.
+        description: You have the right to request a copy of the personal data we hold
+          about you.
       - title: Right to Rectification
-        description: You can request that we correct any inaccurate or incomplete personal data.
+        description: You can request that we correct any inaccurate or incomplete
+          personal data.
       - title: Right to Erasure
-        description: You have the right to request deletion of your personal data under certain circumstances.
+        description: You have the right to request deletion of your personal data under
+          certain circumstances.
       - title: Right to Restriction
-        description: You can request that we restrict the processing of your personal data in certain situations.
+        description: You can request that we restrict the processing of your personal
+          data in certain situations.
       - title: Right to Data Portability
-        description: You have the right to receive your personal data in a structured, commonly used format and transfer it to another controller.
+        description: You have the right to receive your personal data in a structured,
+          commonly used format and transfer it to another controller.
       - title: Right to Object
-        description: You can object to the processing of your personal data based on legitimate interests or for direct marketing purposes.
+        description: You can object to the processing of your personal data based on
+          legitimate interests or for direct marketing purposes.
       - title: Right to Withdraw Consent
-        description: Where processing is based on consent, you can withdraw your consent at any time.
+        description: Where processing is based on consent, you can withdraw your consent
+          at any time.
       - title: Right to Lodge a Complaint
-        description: You have the right to lodge a complaint with a supervisory authority if you believe your data protection rights have been violated.
+        description: You have the right to lodge a complaint with a supervisory
+          authority if you believe your data protection rights have been
+          violated.
   dataSecurity:
     title: Data Security
-    content: |
-      We implement appropriate technical and organizational security measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction. These measures include encryption, access controls, regular security assessments, and staff training on data protection practices. We continuously review and update our security measures to ensure the ongoing protection of your data.
+    content: >
+      We implement appropriate technical and organizational security measures to
+      protect your personal data against unauthorized access, alteration,
+      disclosure, or destruction. These measures include encryption, access
+      controls, regular security assessments, and staff training on data
+      protection practices. We continuously review and update our security
+      measures to ensure the ongoing protection of your data.
   thirdPartyServices:
     title: Third-Party Services
     services:
@@ -194,19 +219,23 @@ dataPrivacy:
         privacyPolicy: https://www.streak.com/privacy
   contact:
     title: Contact for Data Privacy Inquiries
-    content: |
-      If you have any questions about this Data Privacy Policy or wish to exercise your rights, please contact us at:
+    content: >
+      If you have any questions about this Data Privacy Policy or wish to
+      exercise your rights, please contact us at:
+
 
       Email: info@openticketai.com
+
       Phone: +49 1512 0102724
+
       Address: Open Ticket AI UG, Viktoriastraße 14, 68159 Mannheim, Germany
   lastUpdated: January 2026
-
 ui:
   ctaLabel: Contact Sales
   cookieBanner:
     title: We value your privacy
-    description: We use cookies and analytics to improve your experience and understand how you use our website. For more information, please read our
+    description: We use cookies and analytics to improve your experience and
+      understand how you use our website. For more information, please read our
     privacyPolicyText: Privacy Policy
     acceptText: Accept
     declineText: Decline
@@ -218,3 +247,4 @@ ui:
     subjectLabel: Subject
     emailPlaceholder: your@email.com
     messagePlaceholder: How can we help you?
+companyImage: ../../../assets/images/open_ticket_ai_mannheim.png
