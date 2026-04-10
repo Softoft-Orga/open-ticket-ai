@@ -58,5 +58,5 @@ your class.
 
 ## Documentation
 
-- All documentation lives in `/docs` directory, not in code comments
-- See [docs/AGENTS.md](../docs/AGENTS.md) for documentation structure
+- All documentation lives in `otai-website/src/content/docs/en/otai-runtime/`, not in code comments
+- Subdirectories: `guides/`, `users/`, `developers/`, `details/`
