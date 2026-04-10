@@ -12,28 +12,11 @@ from open_ticket_ai.core.pipes.pipe_models import PipeResult
 class PipeContext(StrictBaseModel):
     pipe_results: dict[str, dict[str, Any]] = Field(
         default_factory=dict,
-        description=(
-            "Dictionary mapping pipe IDs to their execution results "
-            "for accessing outputs from previously executed pipes."
-        ),
-    )
-    params: dict[str, Any] = Field(
-        default_factory=dict,
-        description=(
-            "Dictionary of parameters available to all pipes in the execution context "
-            "for sharing configuration and data."
-        ),
-    )
-    parent_params: dict[str, Any] | None = Field(
-        default=None,
-        description=(
-            "Optional reference to the parent context for nested pipes execution "
-            "allowing access to outer scope results."
-        ),
+        description="Mapping of pipe IDs to their serialised PipeResult dicts.",
     )
 
     def _key(self) -> tuple[Any, ...]:
-        return freeze(self.pipe_results), freeze(self.params), freeze(self.parent_params)
+        return (freeze(self.pipe_results),)
 
     def __hash__(self) -> int:
         return hash(self._key())
@@ -42,6 +25,19 @@ class PipeContext(StrictBaseModel):
         if not isinstance(other, PipeContext):
             return False
         return hash(self) == hash(other)
+
+    def get_result(self, pipe_id: str, data_key: str = "value") -> Any:
+        """Retrieve a data value from a previously executed pipe's result."""
+        if pipe_id not in self.pipe_results:
+            available = list(self.pipe_results.keys())
+            raise KeyError(f"Pipe '{pipe_id}' not found in context. Available: {available}")
+        data = self.pipe_results[pipe_id].get("data", {})
+        if data_key not in data:
+            available = list(data.keys())
+            raise KeyError(
+                f"Data key '{data_key}' not found in pipe '{pipe_id}' result. Available: {available}"
+            )
+        return data[data_key]
 
     def has_succeeded(self, pipe_id: str) -> bool:
         if pipe_id not in self.pipe_results:
@@ -52,13 +48,6 @@ class PipeContext(StrictBaseModel):
     def with_pipe_result(self, pipe_id: str, pipe_result: PipeResult) -> PipeContext:
         new_pipes = {**self.pipe_results, pipe_id: pipe_result.model_dump()}
         return self.model_copy(update={"pipe_results": new_pipes})
-
-    def with_parent(self, parent_params: BaseModel) -> PipeContext:
-        return self.model_copy(update={"parent_params": parent_params.model_dump()})
-
-    @property
-    def parent(self) -> dict[str, Any] | None:
-        return self.parent_params
 
     @staticmethod
     def empty() -> PipeContext:

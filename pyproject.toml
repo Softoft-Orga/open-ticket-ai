@@ -28,36 +28,20 @@ classifiers = [
 
 dependencies = [
     "pydantic~=2.12.0",
-    "pyyaml~=6.0.0",
-    "pyfiglet~=1.0.2",
-    "apscheduler~=3.11.0",
-    "jinja2~=3.1.6",
+    "pydantic-settings>=2.11.0",
     "transformers~=4.57.1",
     "python-dotenv~=1.1.1",
-    "typer~=0.19.2",
-    "rich~=14.2.0",
     "httpx~=0.27.0",
     "otobo-znuny~=1.4.0",
-    "pydantic-settings>=2.11.0",
-    "tabulate>=0.9.0",
-    "types-tabulate>=0.9.0.20241207",
-    "pytest-cov>=6.0.0",
-    "injector>=0.22.0",
     "otai-hf-local",
     "otai-otobo-znuny",
     "otai-zammad",
     "otai-base",
     "huggingface-hub[hf-xet]>=0.35.3",
-    "pydeps>=3.0.1",
-    "graphviz>=0.21",
-    "async-lru>=2.0.5",
     "setuptools-scm>=9.2.2",
-    "pydantic-extra-types[pendulum]>=2.10.6",
-    "node-semver>=0.9.0",
-    "semver>=3.0.4",
-    "openai>=2.7.1",
     "pytest>=8.4.2",
     "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
 ]
 
 [project.urls]
@@ -66,7 +50,7 @@ Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
 Documentation = "https://open-ticket-ai.com"
 
 [project.scripts]
-open-ticket-ai = "open_ticket_ai.core.cli:main"
+open-ticket-ai = "open_ticket_ai.main:run"
 
 
 

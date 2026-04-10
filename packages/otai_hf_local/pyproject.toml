@@ -60,9 +60,6 @@ Documentation = "https://open-ticket-ai.com/guide/available-plugins.html#hugging
 "Issue Tracker" = "https://github.com/Softoft-Orga/open-ticket-ai/issues"
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_hf_local/CHANGELOG.md"
 
-[project.entry-points."open_ticket_ai.plugins"]
-hf_local = "otai_hf_local.hf_local_plugin:HFLocalPlugin"
-
 [build-system]
 requires = ["setuptools>=61.0", "setuptools_scm[toml]>=8.1"]
 build-backend = "setuptools.build_meta"

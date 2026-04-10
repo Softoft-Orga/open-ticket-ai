@@ -12,24 +12,21 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 
 
 class MockedTicketSystem(TicketSystemService):
-    ParamsModel: ClassVar[type[StrictBaseModel]] = StrictBaseModel
     _tickets: ClassVar[dict[str, UnifiedTicket]] = {}
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-
-    async def create_ticket(self, ticket: UnifiedTicket) -> str:
+    async def create_ticket(self, ticket: UnifiedTicket | None = None, **kwargs: Any) -> str:
+        if ticket is None:
+            raise RuntimeError("Ticket is required")
         if ticket.id is None:
             raise RuntimeError("Ticket id is required")
         self._tickets[ticket.id] = ticket
         return ticket.id
 
-    async def update_ticket(self, ticket_id: str, updates: UnifiedTicket) -> bool:
+    async def update_ticket(self, ticket_id: str, updates: UnifiedTicket | None = None, **kwargs: Any) -> bool:
         if ticket_id not in self._tickets:
             return False
-
         existing_ticket = self._tickets[ticket_id]
-        update_data = updates.model_dump(exclude_unset=True, exclude_none=True)
+        update_data = (updates or UnifiedTicket()).model_dump(exclude_unset=True, exclude_none=True)
         self._tickets[ticket_id] = UnifiedTicket.model_validate(existing_ticket.model_dump() | update_data)
         return True
 
@@ -37,7 +34,8 @@ class MockedTicketSystem(TicketSystemService):
         ticket = self._tickets.get(ticket_id)
         return ticket.model_copy(deep=True) if ticket else None
 
-    async def find_tickets(self, criteria: TicketSearchCriteria) -> list[UnifiedTicket]:
+    async def find_tickets(self, criteria: TicketSearchCriteria | None = None, **kwargs: Any) -> list[UnifiedTicket]:
+        criteria = criteria or TicketSearchCriteria()
         results = [
             ticket.model_copy(deep=True)
             for ticket in self._tickets.values()
@@ -45,23 +43,21 @@ class MockedTicketSystem(TicketSystemService):
         ]
         return results[criteria.offset : criteria.offset + criteria.limit]
 
-    async def find_first_ticket(self, criteria: TicketSearchCriteria) -> UnifiedTicket | None:
+    async def find_first_ticket(self, criteria: TicketSearchCriteria | None = None, **kwargs: Any) -> UnifiedTicket | None:
+        criteria = criteria or TicketSearchCriteria()
         for ticket in self._tickets.values():
             if self._matches_criteria(ticket, criteria):
                 return ticket.model_copy(deep=True)
         return None
 
-    async def add_note(self, ticket_id: str | int, note: UnifiedNote) -> bool:
+    async def add_note(self, ticket_id: str, note: UnifiedNote | None = None, **kwargs: Any) -> bool:
         ticket_id_str = str(ticket_id)
-
         if ticket_id_str not in self._tickets:
             return False
-
         ticket = self._tickets[ticket_id_str]
-
         if ticket.notes is None:
             ticket.notes = []
-
+        note = note or UnifiedNote()
         note_id = note.id or "note-" + str(len(ticket.notes) + 1)
         note_copy = note.model_copy(update={"id": note_id})
         ticket.notes.append(note_copy)
@@ -75,7 +71,6 @@ class MockedTicketSystem(TicketSystemService):
                 return False
             if criteria.queue.name is not None and ticket.queue.name != criteria.queue.name:
                 return False
-
         return True
 
     def add_test_ticket(self, **kwargs: Any) -> str:

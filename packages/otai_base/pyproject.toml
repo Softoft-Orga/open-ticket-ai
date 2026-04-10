@@ -48,7 +48,6 @@ classifiers = [
 dependencies = [
     "open-ticket-ai>=1.0.0,<2.0.0",
     "pydantic>=2.11.7",
-    "jinja2>=3.1.0",
 ]
 
 [project.urls]
@@ -58,9 +57,6 @@ Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
 Documentation = "https://open-ticket-ai.com"
 "Issue Tracker" = "https://github.com/Softoft-Orga/open-ticket-ai/issues"
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_base/CHANGELOG.md"
-
-[project.entry-points."open_ticket_ai.plugins"]
-base = "otai_base.base_plugin:BasePlugin"
 
 [build-system]
 requires = ["setuptools>=61.0", "setuptools_scm[toml]>=8.1"]

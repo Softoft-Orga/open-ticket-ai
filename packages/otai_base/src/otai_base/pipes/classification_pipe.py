@@ -1,65 +1,57 @@
-from __future__ import annotations
+from collections.abc import Callable
 
-from typing import Any, ClassVar
-
-from open_ticket_ai import LoggerFactory, Pipe, StrictBaseModel
 from open_ticket_ai.core.ai_classification_services.classification_models import (
     ClassificationRequest,
     ClassificationResult,
 )
 from open_ticket_ai.core.ai_classification_services.classification_service import ClassificationService
-from open_ticket_ai.core.pipes.pipe_models import PipeConfig, PipeResult
+from open_ticket_ai.core.pipes.pipe import Pipe
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
+
+type ContextResolver[T] = T | Callable[[PipeContext], T]
 
 _TEXT_PREVIEW_LIMIT = 100
 
 
-class ClassificationPipeParams(StrictBaseModel):
-    text: str
-    model_name: str
-    api_token: str | None = None
+def _resolve[T](value: ContextResolver[T], context: PipeContext) -> T:
+    return value(context) if callable(value) else value
 
 
-class ClassificationPipe(Pipe[ClassificationPipeParams]):
-    ParamsModel: ClassVar[type[ClassificationPipeParams]] = ClassificationPipeParams
+class ClassificationPipe(Pipe):
+    """Classify text using a ClassificationService.
+
+    ``get_text`` can be a static string or a callable that extracts the text
+    from the current PipeContext (for dynamic pipelines).
+    """
 
     def __init__(
         self,
-        config: PipeConfig,
-        logger_factory: LoggerFactory,
+        pipe_id: str,
         classification_service: ClassificationService,
-        *args: Any,
-        **kwargs: Any,
+        model_name: str,
+        get_text: ContextResolver[str],
+        api_token: str | None = None,
     ) -> None:
-        super().__init__(config, logger_factory, *args, **kwargs)
-        self._classification_service = classification_service
+        super().__init__(pipe_id)
+        self._service = classification_service
+        self._model_name = model_name
+        self._get_text = get_text
+        self._api_token = api_token
 
-    async def _process(self, *_: Any, **__: Any) -> PipeResult:
-        text_preview = self._preview_text(self._params.text)
+    async def _process(self, context: PipeContext) -> PipeResult:
+        text = _resolve(self._get_text, context)
 
-        self._logger.info(f"🤖 Classifying text with model: {self._params.model_name}")
-        self._logger.debug(f"Text preview: {text_preview}")
-        self._logger.debug(f"Text length: {len(self._params.text)} characters")
+        preview = text[:_TEXT_PREVIEW_LIMIT] + "..." if len(text) > _TEXT_PREVIEW_LIMIT else text
+        self._logger.info(f"Classifying with model {self._model_name} (text: {preview})")
 
-        classification_result: ClassificationResult = self._classification_service.classify(
+        result: ClassificationResult = self._service.classify(
             ClassificationRequest(
-                text=self._params.text,
-                model_name=self._params.model_name,
-                api_token=self._params.api_token,
+                text=text,
+                model_name=self._model_name,
+                api_token=self._api_token,
             )
         )
 
-        result_message = (
-            f"✅ Classification result: {classification_result.label} "
-            f"(confidence: {classification_result.confidence:.4f})"
-        )
-        self._logger.info(result_message)
-
-        if hasattr(classification_result, "scores") and classification_result.scores:
-            self._logger.debug(f"All scores: {classification_result.scores}")
-
-        return PipeResult.success(data=classification_result.model_dump())
-
-    def _preview_text(self, text: str) -> str:
-        if len(text) <= _TEXT_PREVIEW_LIMIT:
-            return text
-        return f"{text[:_TEXT_PREVIEW_LIMIT]}..."
+        self._logger.info(f"Result: {result.label} (confidence={result.confidence:.4f})")
+        return PipeResult.success(data=result.model_dump())

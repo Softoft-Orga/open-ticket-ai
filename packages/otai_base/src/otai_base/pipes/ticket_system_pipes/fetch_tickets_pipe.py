@@ -1,27 +1,28 @@
-from typing import Any, ClassVar
-
-from open_ticket_ai import StrictBaseModel
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
+from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import TicketSearchCriteria
-from pydantic import Field
 
 from otai_base.pipes.ticket_system_pipes.ticket_system_pipe import TicketSystemPipe
 
 
-class FetchTicketsParams(StrictBaseModel):
-    ticket_search_criteria: TicketSearchCriteria = Field(
-        description="Search criteria including queue, limit, and offset for querying tickets from the ticket system."
-    )
+class FetchTicketsPipe(TicketSystemPipe):
+    def __init__(
+        self,
+        pipe_id: str,
+        ticket_system: TicketSystemService,
+        search_criteria: TicketSearchCriteria,
+        *,
+        fail_on_empty: bool = True,
+    ) -> None:
+        super().__init__(pipe_id, ticket_system)
+        self._search_criteria = search_criteria
+        self._fail_on_empty = fail_on_empty
 
-
-class FetchTicketsPipe(TicketSystemPipe[FetchTicketsParams]):
-    ParamsModel: ClassVar[type[FetchTicketsParams]] = FetchTicketsParams
-
-    async def _process(self, *_: Any, **__: Any) -> PipeResult:
-        search_criteria = self._params.ticket_search_criteria
-        return PipeResult(
-            succeeded=True,
-            data={
-                "fetched_tickets": (await self._ticket_system.find_tickets(search_criteria)),
-            },
+    async def _process(self, context: PipeContext) -> PipeResult:
+        tickets = await self._ticket_system.find_tickets(self._search_criteria)
+        if not tickets and self._fail_on_empty:
+            return PipeResult.failure("No tickets found matching search criteria")
+        return PipeResult.success(
+            data={"fetched_tickets": [t.model_dump() for t in tickets]},
         )

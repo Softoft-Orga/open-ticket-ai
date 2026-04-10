@@ -4,35 +4,16 @@ from collections.abc import Iterable
 from functools import reduce
 from typing import Any, Self
 
-from pydantic import ConfigDict, Field
+from pydantic import Field
 
 from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.injectables.injectable_models import InjectableConfig
-
-
-class PipeConfig(InjectableConfig):
-    # DONT USE; WILL BE REMOVED!
-    model_config = ConfigDict(populate_by_name=True, frozen=True, extra="forbid")
 
 
 class PipeResult(StrictBaseModel):
-    succeeded: bool = Field(
-        default=True, description="Indicates whether the pipe execution completed successfully without errors."
-    )
-    was_skipped: bool = Field(
-        default=False,
-        description="Indicates whether the pipe was skipped due to failed dependencies or conditional execution.",
-    )
-    message: str = Field(
-        default="",
-        description="Human-readable message providing details about the execution result or any errors encountered.",
-    )
-    data: dict[str, Any] = Field(
-        default_factory=dict,
-        description=(
-            "Dictionary containing output data produced by the pipe for use by subsequent pipes or external consumers."
-        ),
-    )
+    succeeded: bool = Field(default=True)
+    was_skipped: bool = Field(default=False)
+    message: str = Field(default="")
+    data: dict[str, Any] = Field(default_factory=dict)
 
     def __and__(self, other: Self) -> PipeResult:
         return PipeResult.model_construct(

@@ -50,7 +50,6 @@ classifiers = [
 dependencies = [
     "open-ticket-ai>=1.0.0,<2.0.0",
     "otobo-znuny==1.4.1",
-    "injector>=0.22.0",
     "pydantic>=2.11.7",
 ]
 
@@ -61,9 +60,6 @@ Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
 Documentation = "https://open-ticket-ai.com/en/guide/available-plugins.html"
 "Issue Tracker" = "https://github.com/Softoft-Orga/open-ticket-ai/issues"
 Changelog = "https://github.com/Softoft-Orga/open-ticket-ai/blob/main/packages/otai_otobo_znuny/CHANGELOG.md"
-
-[project.entry-points."open_ticket_ai.plugins"]
-otobo_znuny = "otai_otobo_znuny.otobo_znuny_plugin:OTOBOZnunyPlugin"
 
 [build-system]
 requires = ["setuptools>=61.0", "setuptools_scm[toml]>=8.1"]

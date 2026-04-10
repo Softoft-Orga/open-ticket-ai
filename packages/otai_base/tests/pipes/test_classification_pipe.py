@@ -1,117 +1,66 @@
-from dataclasses import dataclass
 from unittest.mock import MagicMock
 
 import pytest
-from open_ticket_ai.core.ai_classification_services.classification_models import ClassificationResult
+from open_ticket_ai.core.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
 from open_ticket_ai.core.ai_classification_services.classification_service import ClassificationService
-from open_ticket_ai.core.pipes.pipe_models import PipeConfig
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
 
 from otai_base.pipes.classification_pipe import ClassificationPipe
 
-CONFIDENCE_URGENT = 0.95
-CONFIDENCE_NORMAL = 0.85
-CONFIDENCE_CRITICAL = 0.99
-CONFIDENCE_BASELINE = 0.75
-CONFIDENCE_LOW = 0.88
+pytestmark = [pytest.mark.unit]
 
 
-@dataclass(frozen=True)
-class ClassificationScenario:
-    text: str
-    model_name: str
-    expected_label: str
-    expected_confidence: float
-
-
-SCENARIOS: tuple[ClassificationScenario, ...] = (
-    ClassificationScenario("Critical system failure", "bert-classifier", "critical", CONFIDENCE_CRITICAL),
-    ClassificationScenario("Normal operation", "bert-classifier", "normal", CONFIDENCE_BASELINE),
-    ClassificationScenario("Low priority task", "gpt-classifier", "low", CONFIDENCE_LOW),
-)
-
-
-@pytest.fixture
-def classification_pipe_config():
-    def _create_config(pipe_id: str, params: dict) -> PipeConfig:
-        return PipeConfig(
-            id=pipe_id,
-            use="open_ticket_ai.otai_base.pipes.classification_pipe.ClassificationPipe",
-            params=params,
-        )
-
-    return _create_config
-
-
-async def test_classification_pipe_successful_classification(
-    logger_factory, empty_pipeline_context, classification_pipe_config
-):
+async def test_classification_pipe_static_text():
     mock_service = MagicMock(spec=ClassificationService)
-    expected_result = ClassificationResult(label="urgent", confidence=CONFIDENCE_URGENT)
-    mock_service.classify.return_value = expected_result
+    expected = ClassificationResult(label="urgent", confidence=0.95)
+    mock_service.classify.return_value = expected
 
-    config = classification_pipe_config(
-        "test_classification_pipe",
-        {"text": "This is urgent!", "model_name": "test-model", "api_token": "mock-api-key"},
+    pipe = ClassificationPipe(
+        "classify",
+        mock_service,
+        "test-model",
+        "Hello world",
+        api_token="tok",
     )
+    result = await pipe.process(PipeContext.empty())
 
-    pipe = ClassificationPipe(config=config, logger_factory=logger_factory, classification_service=mock_service)
-
-    result = await pipe.process(empty_pipeline_context)
-
-    assert result.succeeded is True
-    assert not result.was_skipped
+    assert result.succeeded
     assert result.data["label"] == "urgent"
-    assert result.data["confidence"] == CONFIDENCE_URGENT
-
+    assert result.data["confidence"] == 0.95
     mock_service.classify.assert_called_once()
+    req = mock_service.classify.call_args[0][0]
+    assert isinstance(req, ClassificationRequest)
+    assert req.text == "Hello world"
+    assert req.model_name == "test-model"
+    assert req.api_token == "tok"
 
 
-async def test_classification_pipe_with_null_api_token(
-    logger_factory, empty_pipeline_context, classification_pipe_config
-):
+async def test_classification_pipe_callable_get_text():
     mock_service = MagicMock(spec=ClassificationService)
-    expected_result = ClassificationResult(label="normal", confidence=CONFIDENCE_NORMAL)
-    mock_service.classify.return_value = expected_result
+    mock_service.classify.return_value = ClassificationResult(label="low", confidence=0.5)
 
-    config = classification_pipe_config(
-        "test_classification_pipe_no_token",
-        {"text": "Test message", "model_name": "test-model"},
+    ctx = PipeContext.empty().with_pipe_result(
+        "upstream",
+        PipeResult.success(data={"body": "dynamic text"}),
     )
 
-    pipe = ClassificationPipe(config=config, logger_factory=logger_factory, classification_service=mock_service)
-
-    result = await pipe.process(empty_pipeline_context)
-
-    assert result.succeeded is True
-    assert result.data["label"] == "normal"
-    assert result.data["confidence"] == CONFIDENCE_NORMAL
-
-
-@pytest.mark.parametrize("scenario", SCENARIOS)
-async def test_classification_pipe_different_inputs(
-    logger_factory,
-    empty_pipeline_context,
-    classification_pipe_config,
-    scenario: ClassificationScenario,
-):
-    mock_service = MagicMock(spec=ClassificationService)
-    expected_result = ClassificationResult(
-        label=scenario.expected_label,
-        confidence=scenario.expected_confidence,
+    pipe = ClassificationPipe(
+        "classify",
+        mock_service,
+        "m",
+        lambda c: c.get_result("upstream", "body"),
     )
-    mock_service.classify.return_value = expected_result
+    result = await pipe.process(ctx)
 
-    config = classification_pipe_config(
-        "test_classification_pipe_parametrized",
-        {"text": scenario.text, "model_name": scenario.model_name},
-    )
-
-    pipe = ClassificationPipe(config=config, logger_factory=logger_factory, classification_service=mock_service)
-
-    result = await pipe.process(empty_pipeline_context)
-
-    assert result.succeeded is True
-    assert result.data["label"] == scenario.expected_label
-    assert result.data["confidence"] == scenario.expected_confidence
-
+    assert result.succeeded
+    assert result.data["label"] == "low"
     mock_service.classify.assert_called_once()
+    req = mock_service.classify.call_args[0][0]
+    assert isinstance(req, ClassificationRequest)
+    assert req.text == "dynamic text"
+    assert req.model_name == "m"
+    assert req.api_token is None
