@@ -4,6 +4,7 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+TicketSystemType = Literal["otobo", "zammad"]
 
 
 class Settings(BaseSettings):
@@ -16,6 +17,16 @@ class Settings(BaseSettings):
     )
 
     log_level: LogLevel = Field(default="INFO")
+
+    # API server
+    api_host: str = Field(default="0.0.0.0", description="Host to bind the API server")  # noqa: S104
+    api_port: int = Field(default=8080, description="Port to bind the API server")
+
+    # Ticket system selection
+    ticket_system_type: TicketSystemType = Field(
+        default="otobo",
+        description="Which ticket system backend to use",
+    )
 
     # OTOBO / Znuny ticket system
     otobo_base_url: str = Field(

@@ -2,7 +2,7 @@
 
 **Location:** `/src` directory in Open Ticket AI repository  
 **Parent Guidelines:** [Root AGENTS.md](../AGENTS.md)  
-**Last Updated:** 2026-04-10
+**Last Updated:** 2026-04-11
 
 This document provides Python-specific guidelines for all source code in the `src/` directory.
 
@@ -21,9 +21,22 @@ The runtime uses direct Python construction — no YAML pipeline DSL, no plugin
 registry, no DI container, no Jinja template rendering.
 
 - **`settings.py`** — `pydantic-settings` based, env-var driven (`OTAI_` prefix)
-- **`pipeline.py`** — constructs the pipe tree using direct Python imports
-- **`main.py`** — entry point, loads settings, creates pipeline, runs app
-- **`app.py`** — `OpenTicketAIApp` wraps the orchestrator pipe
+- **`pipeline.py`** — constructs the pipe tree using direct Python imports (legacy CLI path)
+- **`main.py`** — entry point, loads settings, starts FastAPI/uvicorn server
+- **`workflow_manager.py`** — manages running workflow instances as background asyncio tasks
+
+### API layer (`api/`)
+
+The runtime exposes a FastAPI REST API for ticket system access and workflow management:
+
+- **`api/app.py`** — FastAPI application factory (`create_app`)
+- **`api/dependencies.py`** — shared state (`AppState`), template registry, service factories
+- **`api/models.py`** — request/response Pydantic models
+- **`api/routers/tickets.py`** — ticket CRUD endpoints (`/api/tickets/*`)
+- **`api/routers/workflows.py`** — workflow start/stop/list endpoints (`/api/workflows/*`)
+
+Workflows are started from predefined templates with user-supplied parameters.
+No complex pipeline DSL — just template name + parameter overrides.
 
 ### Core modules
 
@@ -43,7 +56,7 @@ registry, no DI container, no Jinja template rendering.
 
 ## Python Standards
 
-All code follows Python 3.14 conventions with strict type checking enabled.
+All code follows Python 3.11 conventions with strict type checking enabled.
 
 ## Import Organization
 

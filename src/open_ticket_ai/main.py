@@ -1,9 +1,9 @@
-import asyncio
 import logging
 import sys
 
-from open_ticket_ai.app import OpenTicketAIApp
-from open_ticket_ai.pipeline import create_pipeline
+import uvicorn
+
+from open_ticket_ai.api.app import create_app
 from open_ticket_ai.settings import Settings
 
 
@@ -17,14 +17,13 @@ def _configure_logging(level: str) -> None:
     )
 
 
-async def run() -> None:
+def run() -> None:
     settings = Settings()
     _configure_logging(settings.log_level)
 
-    orchestrator = create_pipeline(settings)
-    app = OpenTicketAIApp(orchestrator)
-    await app.run()
+    app = create_app(settings)
+    uvicorn.run(app, host=settings.api_host, port=settings.api_port)
 
 
 if __name__ == "__main__":
-    asyncio.run(run())
+    run()

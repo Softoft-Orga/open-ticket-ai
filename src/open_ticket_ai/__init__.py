@@ -1,4 +1,3 @@
-from open_ticket_ai.app import OpenTicketAIApp
 from open_ticket_ai.core.ai_classification_services.classification_models import (
     ClassificationRequest,
     ClassificationResult,
@@ -17,12 +16,12 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicketBase,
 )
 from open_ticket_ai.settings import Settings
+from open_ticket_ai.workflow_manager import WorkflowManager
 
 __all__ = [
     "ClassificationRequest",
     "ClassificationResult",
     "ClassificationService",
-    "OpenTicketAIApp",
     "Pipe",
     "PipeContext",
     "PipeResult",
@@ -34,4 +33,5 @@ __all__ = [
     "UnifiedNote",
     "UnifiedTicket",
     "UnifiedTicketBase",
+    "WorkflowManager",
 ]
