@@ -85,3 +85,16 @@ class WorkflowResponse(BaseModel):
     started_at: datetime.datetime
     stopped_at: datetime.datetime | None = None
     error: str | None = None
+
+
+# ── Pipeline descriptor models ──────────────────────────────────
+
+
+class PipeDescriptor(BaseModel):
+    pipe_id: str
+    kind: str
+    role: str | None = None
+    children: list[PipeDescriptor] = Field(default_factory=list)
+
+
+PipeDescriptor.model_rebuild()

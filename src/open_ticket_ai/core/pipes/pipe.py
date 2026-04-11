@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import final
+from typing import Any, final
 
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.pipes.pipe_models import PipeResult
@@ -21,6 +21,14 @@ class Pipe(ABC):
         result: PipeResult = await self._process(context)
         self._logger.info(f"Processed {self._pipe_id}: {result.message or 'ok'}")
         return result
+
+    def to_descriptor(self) -> dict[str, Any]:
+        """Return a JSON-serializable description of this pipe and its children."""
+        return {
+            "pipe_id": self._pipe_id,
+            "kind": type(self).__name__,
+            "children": [],
+        }
 
     @abstractmethod
     async def _process(self, context: PipeContext) -> PipeResult: ...

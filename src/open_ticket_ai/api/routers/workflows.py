@@ -8,6 +8,7 @@ from fastapi import APIRouter, HTTPException, Request
 
 from open_ticket_ai.api.dependencies import WORKFLOW_TEMPLATES
 from open_ticket_ai.api.models import (
+    PipeDescriptor,
     WorkflowResponse,
     WorkflowStartRequest,
     WorkflowTemplateResponse,
@@ -47,6 +48,19 @@ async def get_template(template_name: str) -> WorkflowTemplateResponse:
     if tpl is None:
         raise HTTPException(status_code=404, detail=f"Template '{template_name}' not found")
     return tpl
+
+
+@router.get("/templates/{template_name}/descriptor", response_model=PipeDescriptor)
+async def get_template_descriptor(request: Request, template_name: str) -> PipeDescriptor:
+    """Build a pipeline from the template with default parameters and return its structure."""
+    if template_name not in WORKFLOW_TEMPLATES:
+        raise HTTPException(status_code=404, detail=f"Template '{template_name}' not found")
+    state = _state(request)
+    try:
+        pipe = state.build_pipeline_from_template(template_name, {})
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return PipeDescriptor.model_validate(pipe.to_descriptor())
 
 
 @router.post("", response_model=WorkflowResponse, status_code=201)
