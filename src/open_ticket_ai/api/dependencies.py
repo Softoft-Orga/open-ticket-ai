@@ -87,9 +87,9 @@ class AppState:
     # ── private helpers ──────────────────────────────────────────
 
     def _build_classify_and_route(self, params: dict[str, Any]) -> Pipe:
-        from otai_base.pipes.orchestrators.simple_sequential_orchestrator import SimpleSequentialOrchestrator
-        from otai_base.pipes.templates import ClassifyAndRouteConfig, classify_and_route
-        from otai_base.pipes.ticket_system_pipes import FetchTicketsPipe
+        from open_ticket_ai.pipes.orchestrators.simple_sequential_orchestrator import SimpleSequentialOrchestrator
+        from open_ticket_ai.pipes.templates import ClassifyAndRouteConfig, classify_and_route
+        from open_ticket_ai.pipes.ticket_system_pipes import FetchTicketsPipe
 
         s = self.settings
         incoming_queue = params.get("incoming_queue", s.incoming_queue)
@@ -164,8 +164,8 @@ class AppState:
     @staticmethod
     def _build_ticket_system(settings: Settings) -> TicketSystemService:
         if settings.ticket_system_type == "zammad":
-            from otai_zammad.models import ZammadTSServiceParams
-            from otai_zammad.zammad_ticket_system_service import ZammadTicketsystemService
+            from open_ticket_ai.zammad.models import ZammadTSServiceParams
+            from open_ticket_ai.zammad.zammad_ticket_system_service import ZammadTicketsystemService
 
             if not settings.zammad_base_url or not settings.zammad_access_token:
                 msg = "OTAI_ZAMMAD_BASE_URL and OTAI_ZAMMAD_ACCESS_TOKEN are required for Zammad"
@@ -177,8 +177,8 @@ class AppState:
                 ),
             )
 
-        from otai_otobo_znuny.models import OTOBOZnunyTSServiceParams
-        from otai_otobo_znuny.oto_znuny_ts_service import OTOBOZnunyTicketSystemService
+        from open_ticket_ai.otobo_znuny.models import OTOBOZnunyTSServiceParams
+        from open_ticket_ai.otobo_znuny.oto_znuny_ts_service import OTOBOZnunyTicketSystemService
 
         return OTOBOZnunyTicketSystemService(
             params=OTOBOZnunyTSServiceParams(
@@ -191,6 +191,6 @@ class AppState:
 
     @staticmethod
     def _build_classification_service(settings: Settings) -> ClassificationService:
-        from otai_hf_local.hf_classification_service import HFClassificationService
+        from open_ticket_ai.hf_local.hf_classification_service import HFClassificationService
 
         return HFClassificationService(api_token=settings.hf_api_token)

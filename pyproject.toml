@@ -33,10 +33,6 @@ dependencies = [
     "python-dotenv~=1.1.1",
     "httpx~=0.27.0",
     "otobo-znuny~=1.4.0",
-    "otai-hf-local",
-    "otai-otobo-znuny",
-    "otai-zammad",
-    "otai-base",
     "huggingface-hub[hf-xet]>=0.35.3",
     "setuptools-scm>=9.2.2",
     "fastapi>=0.115.0",
@@ -64,31 +60,17 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 include = ["open_ticket_ai*"]
 
-[tool.uv.workspace]
-members = [
-    "packages/otai_hf_local",
-    "packages/otai_otobo_znuny",
-    "packages/otai_zammad",
-    "packages/otai_base",
-]
-
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
 tag_regex = '^v(?P<version>\d+\.\d+\.\d+)$'
-
-[tool.uv.sources]
-otai-hf-local = { workspace = true }
-otai-otobo-znuny = { workspace = true }
-otai-zammad = { workspace = true }
-otai_base = { workspace = true }
 
 [tool.ruff]
 line-length = 120
 
 [tool.ruff.lint]
 select = [
-    "E", "F", "W", # otai_base
+    "E", "F", "W", # pyflakes + pycodestyle
     "I", # import sort
     "UP", # pyupgrade
     "B", "BLE", # bugbear + exceptions
@@ -137,15 +119,15 @@ explicit_package_bases = true
 mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = ["tests.*", "packages.*.tests.*"]
+module = ["tests.*"]
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = ["open_ticket_ai.base.pipes.*", "open_ticket_ai.base.triggers.*"]
+module = ["open_ticket_ai.pipes.*"]
 disable_error_code = ["attr-defined", "no-any-return", "call-arg"]
 
 [[tool.mypy.overrides]]
-module = ["packages.otai_otobo_znuny.*"]
+module = ["open_ticket_ai.otobo_znuny.*"]
 ignore_missing_imports = true
 warn_return_any = false
 disable_error_code = ["attr-defined", "arg-type", "no-any-return"]
@@ -153,7 +135,7 @@ disable_error_code = ["attr-defined", "arg-type", "no-any-return"]
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
-testpaths = ["tests", "packages/*/tests"]
+testpaths = ["tests"]
 python_files = "test_*.py"
 addopts = "-q"
 asyncio_mode = "auto"
@@ -168,10 +150,6 @@ markers = [
 branch = true
 source = [
     "src/open_ticket_ai",
-    "packages/otai_hf_local/src",
-    "packages/otai_otobo_znuny/src",
-    "packages/otai_zammad/src",
-    "packages/otai_base/src",
 ]
 omit = [
     "*model.py",

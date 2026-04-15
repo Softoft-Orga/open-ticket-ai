@@ -2,7 +2,7 @@
 
 **Location:** `/src` directory in Open Ticket AI repository  
 **Parent Guidelines:** [Root AGENTS.md](../AGENTS.md)  
-**Last Updated:** 2026-04-11
+**Last Updated:** 2026-04-15
 
 This document provides Python-specific guidelines for all source code in the `src/` directory.
 
@@ -11,14 +11,13 @@ This document provides Python-specific guidelines for all source code in the `sr
 **NEVER place tests under `src/`:**
 
 - Forbidden: `src/**/tests/`, `src/**/test_*.py`
-- Unit tests for root package: `tests/unit/`
-- Package-specific tests: `packages/<name>/tests/`
+- Unit tests: `tests/unit/`
 - Integration/e2e tests: `tests/integration/`, `tests/e2e/`
 
-## Architecture (Post-Simplification)
+## Architecture
 
-The runtime uses direct Python construction — no YAML pipeline DSL, no plugin
-registry, no DI container, no Jinja template rendering.
+The runtime is a single `open_ticket_ai` package — no plugin registry, no DI
+container, no separate installable sub-packages.
 
 - **`settings.py`** — `pydantic-settings` based, env-var driven (`OTAI_` prefix)
 - **`pipeline.py`** — constructs the pipe tree using direct Python imports (legacy CLI path)
@@ -45,18 +44,29 @@ No complex pipeline DSL — just template name + parameter overrides.
 - `core/ai_classification_services/` — `ClassificationService` ABC and models
 - `core/logging/` — `LoggerFactory` / `AppLogger` interfaces (stdlib adapter)
 
-### Package modules (under `packages/`)
+### Pipe implementations (`pipes/`)
 
-- `otai_base` — Pipe implementations: `CompositePipe`, `FetchTicketsPipe`,
-  `ClassificationPipe`, `UpdateTicketPipe`, `AddNotePipe`,
-  `SimpleSequentialOrchestrator`, `SimpleSequentialRunner`, `IntervalTrigger`
-- `otai_otobo_znuny` — OTOBO/Znuny ticket system service
-- `otai_hf_local` — HuggingFace local classification service
-- `otai_zammad` — Zammad ticket system service
+- `pipes/composite_pipe.py` — `CompositePipe`
+- `pipes/classification_pipe.py` — `ClassificationPipe`
+- `pipes/interval_trigger_pipe.py` — `IntervalTrigger`
+- `pipes/context_resolver.py` — `ContextResolver` type alias and `resolve` helper
+- `pipes/orchestrators/` — `SimpleSequentialOrchestrator`
+- `pipes/pipe_runners/` — `SimpleSequentialRunner`
+- `pipes/ticket_system_pipes/` — `FetchTicketsPipe`, `UpdateTicketPipe`, `AddNotePipe`
+- `pipes/templates/` — `classify_and_route` template
+
+### Ticket system connectors
+
+- `otobo_znuny/` — OTOBO/Znuny ticket system service and models
+- `zammad/` — Zammad ticket system service and models
+
+### AI classification
+
+- `hf_local/` — HuggingFace local classification service
 
 ## Python Standards
 
-All code follows Python 3.11 conventions with strict type checking enabled.
+All code follows Python 3.14 conventions with strict type checking enabled.
 
 ## Import Organization
 

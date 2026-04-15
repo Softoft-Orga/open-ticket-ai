@@ -38,10 +38,6 @@ jobs:
           rm -rf dist
           mkdir -p dist
           uv build --out-dir dist .
-          uv build --out-dir dist packages/otai_base
-          uv build --out-dir dist packages/otai_hf_local
-          uv build --out-dir dist packages/otai_otobo_znuny
-          uv build --out-dir dist packages/otai_zammad
       - run: |
           uv publish dist/*
 

@@ -4,7 +4,7 @@ from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
-from otai_base.pipes.interval_trigger_pipe import IntervalTrigger
+from open_ticket_ai.pipes.interval_trigger_pipe import IntervalTrigger
 
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 
@@ -34,7 +34,7 @@ class TestIntervalTriggerBehavior:
     async def test_trigger_cycle_with_mocked_time(self, empty_context: PipeContext):
         initial_time = datetime.datetime(2025, 1, 1, 0, 0, 0, tzinfo=datetime.UTC)
 
-        with patch("otai_base.pipes.interval_trigger_pipe.datetime") as mock_datetime:
+        with patch("open_ticket_ai.pipes.interval_trigger_pipe.datetime") as mock_datetime:
             mock_datetime.datetime.now.return_value = initial_time
             mock_datetime.UTC = datetime.UTC
             mock_datetime.timedelta = datetime.timedelta
