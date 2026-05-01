@@ -98,3 +98,42 @@ class PipeDescriptor(BaseModel):
 
 
 PipeDescriptor.model_rebuild()
+
+
+# ── Classification models ───────────────────────────────────────
+
+
+class ClassifyRequest(BaseModel):
+    text: str = Field(description="Text to classify")
+    model_name: str = Field(description="HuggingFace model repo name")
+
+
+class ClassifyResponse(BaseModel):
+    label: str = Field(description="Predicted label")
+    confidence: float = Field(description="Prediction confidence (0-1)")
+
+
+# ── Settings models ─────────────────────────────────────────────
+
+
+class SettingsFieldInfo(BaseModel):
+    type: str
+    description: str
+    default: Any = None
+    restart_required: bool
+    category: str
+    secret: bool = False
+
+
+class SettingsResponse(BaseModel):
+    settings: dict[str, Any]
+    schema_info: dict[str, SettingsFieldInfo]
+
+
+class SettingsUpdateRequest(BaseModel):
+    settings: dict[str, Any]
+
+
+class SettingsUpdateResponse(BaseModel):
+    settings: dict[str, Any]
+    updated_fields: list[str]

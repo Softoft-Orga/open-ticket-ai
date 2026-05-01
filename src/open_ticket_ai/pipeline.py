@@ -1,14 +1,12 @@
 """Pipeline construction for Open Ticket AI runtime."""
 
+from open_ticket_ai.api.dependencies import build_ticket_system
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedEntity,
 )
-from open_ticket_ai.hf_local.hf_classification_service import HFClassificationService
-from open_ticket_ai.otobo_znuny.models import OTOBOZnunyTSServiceParams
-from open_ticket_ai.otobo_znuny.oto_znuny_ts_service import OTOBOZnunyTicketSystemService
 from open_ticket_ai.pipes.orchestrators.simple_sequential_orchestrator import SimpleSequentialOrchestrator
 from open_ticket_ai.pipes.templates import ClassifyAndRouteConfig, classify_and_route
 from open_ticket_ai.pipes.ticket_system_pipes import FetchTicketsPipe
@@ -26,15 +24,9 @@ def _get_ticket_id(ctx: PipeContext) -> str:
 
 def create_pipeline(settings: Settings) -> Pipe:
     """Build the complete ticket-routing orchestrator from settings."""
+    from open_ticket_ai.hf_local.hf_classification_service import HFClassificationService
 
-    ts = OTOBOZnunyTicketSystemService(
-        params=OTOBOZnunyTSServiceParams(
-            base_url=settings.otobo_base_url,
-            username=settings.otobo_username,
-            password=settings.otobo_password,
-            webservice_name=settings.otobo_webservice_name,
-        ),
-    )
+    ts = build_ticket_system(settings.ticket_system)
     clf = HFClassificationService(api_token=settings.hf_api_token)
 
     threshold = settings.classification_confidence_threshold

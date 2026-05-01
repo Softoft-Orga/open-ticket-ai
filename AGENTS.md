@@ -2,6 +2,12 @@
 
 This document is **authoritative**. Follow these rules strictly when adding, moving, or generating files.
 
+> **Runtime docs landing:** [`docs/index.md`](./docs/index.md). Internal
+> Markdown documentation for the Runtime project lives there
+> (architecture, ops notes, internal references). The customer-facing
+> Astro/Vue website also lives under `docs/` at the website level — see
+> the convention note below.
+
 > **Important:** The Astro/Vue website and all docs live under the `/docs` directory. Any instructions mentioning "website", "docs", Astro, or Vue components refer to files inside `docs/`.
 
 The Astro Website is in the /docs directory!

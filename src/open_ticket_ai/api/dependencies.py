@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from open_ticket_ai.api.models import TemplateParameterSchema, WorkflowTemplateResponse
+from open_ticket_ai.api.models import SettingsFieldInfo, TemplateParameterSchema, WorkflowTemplateResponse
 from open_ticket_ai.core.ai_classification_services.classification_service import ClassificationService
 from open_ticket_ai.core.pipes.pipe import Pipe
 from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
@@ -14,7 +14,7 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedEntity,
 )
-from open_ticket_ai.settings import Settings
+from open_ticket_ai.settings import OtoboTicketSystemSettings, Settings, ZammadTicketSystemSettings
 from open_ticket_ai.workflow_manager import WorkflowManager
 
 logger = logging.getLogger(__name__)
@@ -69,14 +69,99 @@ WORKFLOW_TEMPLATES: dict[str, WorkflowTemplateResponse] = {
 }
 
 
+def build_ticket_system(
+    ts_settings: OtoboTicketSystemSettings | ZammadTicketSystemSettings,
+) -> TicketSystemService:
+    """Construct a TicketSystemService from source-agnostic settings."""
+    match ts_settings:
+        case ZammadTicketSystemSettings():
+            from open_ticket_ai.zammad.models import ZammadTSServiceParams
+            from open_ticket_ai.zammad.zammad_ticket_system_service import ZammadTicketsystemService
+
+            return ZammadTicketsystemService(
+                params=ZammadTSServiceParams(
+                    base_url=ts_settings.base_url,
+                    access_token=ts_settings.access_token,
+                ),
+            )
+        case OtoboTicketSystemSettings():
+            from open_ticket_ai.otobo_znuny.models import OTOBOZnunyTSServiceParams
+            from open_ticket_ai.otobo_znuny.oto_znuny_ts_service import OTOBOZnunyTicketSystemService
+
+            return OTOBOZnunyTicketSystemService(
+                params=OTOBOZnunyTSServiceParams(
+                    base_url=ts_settings.base_url,
+                    username=ts_settings.username,
+                    password=ts_settings.password,
+                    webservice_name=ts_settings.webservice_name,
+                ),
+            )
+
+
+_OPERATIONAL_FIELDS: set[str] = {
+    name
+    for name, info in Settings.model_fields.items()
+    if (info.json_schema_extra or {}).get("category") == "operational"
+}
+
+
 class AppState:
     """Holds shared runtime objects, initialised once at startup."""
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
-        self.ticket_system: TicketSystemService = self._build_ticket_system(settings)
+        self.ticket_system: TicketSystemService = build_ticket_system(settings.ticket_system)
         self.classification_service: ClassificationService = self._build_classification_service(settings)
         self.workflow_manager = WorkflowManager()
+
+    # ── Settings management ───────────────────────────────────────
+
+    def get_settings_masked(self) -> dict[str, Any]:
+        """Return current settings with secret fields replaced by a mask."""
+        result: dict[str, Any] = {}
+        for name, info in Settings.model_fields.items():
+            extra = info.json_schema_extra or {}
+            value = getattr(self.settings, name)
+            if extra.get("secret"):
+                result[name] = "***" if value else None
+            else:
+                result[name] = value
+        return result
+
+    @staticmethod
+    def get_settings_schema() -> dict[str, SettingsFieldInfo]:
+        """Build schema metadata for every Settings field."""
+        schema: dict[str, SettingsFieldInfo] = {}
+        for name, info in Settings.model_fields.items():
+            extra = info.json_schema_extra or {}
+            annotation = info.annotation
+            type_str = "string"
+            if annotation is float:
+                type_str = "number"
+            elif annotation is int:
+                type_str = "integer"
+            elif annotation is bool:
+                type_str = "boolean"
+            schema[name] = SettingsFieldInfo(
+                type=type_str,
+                description=info.description or "",
+                default=info.default,
+                restart_required=extra.get("restart_required", True),
+                category=extra.get("category", "infrastructure"),
+                secret=extra.get("secret", False),
+            )
+        return schema
+
+    def update_settings(self, updates: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
+        """Apply partial updates to operational settings. Returns (masked settings, updated field names)."""
+        rejected = [k for k in updates if k not in _OPERATIONAL_FIELDS]
+        if rejected:
+            msg = f"Cannot update non-operational fields: {', '.join(rejected)}"
+            raise ValueError(msg)
+        current = self.settings.model_dump()
+        current.update(updates)
+        self.settings = Settings.model_construct(**current)
+        return self.get_settings_masked(), list(updates.keys())
 
     def build_pipeline_from_template(self, template_name: str, params: dict[str, Any]) -> Pipe:
         if template_name == _TEMPLATE_CLASSIFY_AND_ROUTE:
@@ -159,34 +244,6 @@ class AppState:
                 *priority_steps,
             ],
             sleep=orch_sleep,
-        )
-
-    @staticmethod
-    def _build_ticket_system(settings: Settings) -> TicketSystemService:
-        if settings.ticket_system_type == "zammad":
-            from open_ticket_ai.zammad.models import ZammadTSServiceParams
-            from open_ticket_ai.zammad.zammad_ticket_system_service import ZammadTicketsystemService
-
-            if not settings.zammad_base_url or not settings.zammad_access_token:
-                msg = "OTAI_ZAMMAD_BASE_URL and OTAI_ZAMMAD_ACCESS_TOKEN are required for Zammad"
-                raise ValueError(msg)
-            return ZammadTicketsystemService(
-                params=ZammadTSServiceParams(
-                    base_url=settings.zammad_base_url,
-                    access_token=settings.zammad_access_token,
-                ),
-            )
-
-        from open_ticket_ai.otobo_znuny.models import OTOBOZnunyTSServiceParams
-        from open_ticket_ai.otobo_znuny.oto_znuny_ts_service import OTOBOZnunyTicketSystemService
-
-        return OTOBOZnunyTicketSystemService(
-            params=OTOBOZnunyTSServiceParams(
-                base_url=settings.otobo_base_url,
-                username=settings.otobo_username,
-                password=settings.otobo_password,
-                webservice_name=settings.otobo_webservice_name,
-            ),
         )
 
     @staticmethod

@@ -1,3 +1,19 @@
+---
+name: Open Ticket AI
+id: open-ticket-ai-runtime-readme
+internal_docs_path: /en/docs/internal/runtime/
+created_at: '2026-04-10'
+updated_at: '2026-04-10'
+description: Open Ticket AI is an intelligent ticket classification and routing system
+  that uses machine learning to automatically categorize and prioritize support tickets.
+tags:
+- open-ticket-ai-runtime
+- runtime
+project_name: OTAI Runtime
+related_linear_issues: []
+title: Open Ticket AI
+---
+
 # Open Ticket AI
 
 Open Ticket AI is an intelligent ticket classification and routing system that uses machine learning to automatically

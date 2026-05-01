@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from fastapi import FastAPI
 
 from open_ticket_ai.api.dependencies import AppState
-from open_ticket_ai.api.routers import tickets, workflows
+from open_ticket_ai.api.routers import classify, settings, tickets, workflows
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
@@ -37,6 +37,8 @@ def create_app(settings: Settings) -> FastAPI:
     )
     app.state.app_state = AppState(settings)
 
+    app.include_router(classify.router)
+    app.include_router(settings.router)
     app.include_router(tickets.router)
     app.include_router(workflows.router)
 
