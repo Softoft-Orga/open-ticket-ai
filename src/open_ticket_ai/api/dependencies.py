@@ -73,6 +73,7 @@ def build_ticket_system(
     ts_settings: OtoboTicketSystemSettings | ZammadTicketSystemSettings,
 ) -> TicketSystemService:
     """Construct a TicketSystemService from source-agnostic settings."""
+    # TODO This is a mess and needs to be refactored to handle more ticket systems properly.
     match ts_settings:
         case ZammadTicketSystemSettings():
             from open_ticket_ai.zammad.models import ZammadTSServiceParams
