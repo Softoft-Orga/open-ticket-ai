@@ -41,5 +41,5 @@ context start at the root [`DOCS.md`](../../DOCS.md).
   built on top of Runtime.
 - [OTOBO/Znuny client docs](../../otobo-znuny-python-client/docs/index.md)
   — connector library Runtime depends on.
-- [Prototype runbook](../../otai-studio/docs/architecture/prototype_runbook.md)
+- [MVP runbook](../../otai-studio/docs/mvp.md)
   — MVP scope spanning Runtime + Studio + OTOBO.
