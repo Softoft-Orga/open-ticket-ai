@@ -3,7 +3,7 @@ from datetime import timedelta
 from otobo_znuny.domain_models.ticket_operation import TicketOperation
 from pydantic import BaseModel, Field
 
-from otai_otobo_znuny.models import OTOBOZnunyTSServiceParams
+from open_ticket_ai.otobo_znuny.models import OTOBOZnunyTSServiceParams
 
 
 class OtoboTestEnvironment(BaseModel):

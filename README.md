@@ -1,11 +1,23 @@
+---
+name: Open Ticket AI
+id: open-ticket-ai-runtime-readme
+internal_docs_path: /en/docs/internal/runtime/
+created_at: '2026-04-10'
+updated_at: '2026-04-10'
+description: Open Ticket AI is an intelligent ticket classification and routing system
+  that uses machine learning to automatically categorize and prioritize support tickets.
+tags:
+- open-ticket-ai-runtime
+- runtime
+project_name: OTAI Runtime
+related_linear_issues: []
+title: Open Ticket AI
+---
+
 # Open Ticket AI
 
 Open Ticket AI is an intelligent ticket classification and routing system that uses machine learning to automatically
 categorize and prioritize support tickets.
-
-- User documentation main page: https://open-ticket-ai.com
-- User installation guide: https://open-ticket-ai.com/users/installation
-- Developer documentation: https://open-ticket-ai.com/developers/
 
 ## CI/CD Automation
 
@@ -70,20 +82,7 @@ request is merged.
 
 ## Documentation
 
-Full documentation: https://open-ticket-ai.com
-
-### Running Documentation Locally
-
-The documentation is built with Astro (custom layouts, no Starlight).
-
-```bash
-cd docs
-npm install
-npm run docs:dev  # Start development server at http://localhost:4321
-npm run docs:build # Build for production
-```
-
-Note: Starlight has been removed in favor of custom Astro layouts for better control and simplicity.
+Full documentation: https://openticketai.com
 
 ## Contributing
 
