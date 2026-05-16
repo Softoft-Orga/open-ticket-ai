@@ -28,36 +28,18 @@ classifiers = [
 
 dependencies = [
     "pydantic~=2.12.0",
-    "pyyaml~=6.0.0",
-    "pyfiglet~=1.0.2",
-    "apscheduler~=3.11.0",
-    "jinja2~=3.1.6",
+    "pydantic-settings>=2.11.0",
     "transformers~=4.57.1",
     "python-dotenv~=1.1.1",
-    "typer~=0.19.2",
-    "rich~=14.2.0",
     "httpx~=0.27.0",
     "otobo-znuny~=1.4.0",
-    "pydantic-settings>=2.11.0",
-    "tabulate>=0.9.0",
-    "types-tabulate>=0.9.0.20241207",
-    "pytest-cov>=6.0.0",
-    "injector>=0.22.0",
-    "otai-hf-local",
-    "otai-otobo-znuny",
-    "otai-zammad",
-    "otai-base",
     "huggingface-hub[hf-xet]>=0.35.3",
-    "pydeps>=3.0.1",
-    "graphviz>=0.21",
-    "async-lru>=2.0.5",
     "setuptools-scm>=9.2.2",
-    "pydantic-extra-types[pendulum]>=2.10.6",
-    "node-semver>=0.9.0",
-    "semver>=3.0.4",
-    "openai>=2.7.1",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
     "pytest>=8.4.2",
     "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
 ]
 
 [project.urls]
@@ -66,7 +48,7 @@ Repository = "https://github.com/Softoft-Orga/open-ticket-ai"
 Documentation = "https://open-ticket-ai.com"
 
 [project.scripts]
-open-ticket-ai = "open_ticket_ai.core.cli:main"
+open-ticket-ai = "open_ticket_ai.main:run"
 
 
 
@@ -78,31 +60,17 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 include = ["open_ticket_ai*"]
 
-[tool.uv.workspace]
-members = [
-    "packages/otai_hf_local",
-    "packages/otai_otobo_znuny",
-    "packages/otai_zammad",
-    "packages/otai_base",
-]
-
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
 tag_regex = '^v(?P<version>\d+\.\d+\.\d+)$'
-
-[tool.uv.sources]
-otai-hf-local = { workspace = true }
-otai-otobo-znuny = { workspace = true }
-otai-zammad = { workspace = true }
-otai_base = { workspace = true }
 
 [tool.ruff]
 line-length = 120
 
 [tool.ruff.lint]
 select = [
-    "E", "F", "W", # otai_base
+    "E", "F", "W", # pyflakes + pycodestyle
     "I", # import sort
     "UP", # pyupgrade
     "B", "BLE", # bugbear + exceptions
@@ -151,15 +119,15 @@ explicit_package_bases = true
 mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = ["tests.*", "packages.*.tests.*"]
+module = ["tests.*"]
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = ["open_ticket_ai.base.pipes.*", "open_ticket_ai.base.triggers.*"]
+module = ["open_ticket_ai.pipes.*"]
 disable_error_code = ["attr-defined", "no-any-return", "call-arg"]
 
 [[tool.mypy.overrides]]
-module = ["packages.otai_otobo_znuny.*"]
+module = ["open_ticket_ai.otobo_znuny.*"]
 ignore_missing_imports = true
 warn_return_any = false
 disable_error_code = ["attr-defined", "arg-type", "no-any-return"]
@@ -167,7 +135,7 @@ disable_error_code = ["attr-defined", "arg-type", "no-any-return"]
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
-testpaths = ["tests", "packages/*/tests"]
+testpaths = ["tests"]
 python_files = "test_*.py"
 addopts = "-q"
 asyncio_mode = "auto"
@@ -182,10 +150,6 @@ markers = [
 branch = true
 source = [
     "src/open_ticket_ai",
-    "packages/otai_hf_local/src",
-    "packages/otai_otobo_znuny/src",
-    "packages/otai_zammad/src",
-    "packages/otai_base/src",
 ]
 omit = [
     "*model.py",

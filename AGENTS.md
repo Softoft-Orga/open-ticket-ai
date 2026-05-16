@@ -2,6 +2,12 @@
 
 This document is **authoritative**. Follow these rules strictly when adding, moving, or generating files.
 
+> **Runtime docs landing:** [`docs/index.md`](./docs/index.md). Internal
+> Markdown documentation for the Runtime project lives there
+> (architecture, ops notes, internal references). The customer-facing
+> Astro/Vue website also lives under `docs/` at the website level — see
+> the convention note below.
+
 > **Important:** The Astro/Vue website and all docs live under the `/docs` directory. Any instructions mentioning "website", "docs", Astro, or Vue components refer to files inside `docs/`.
 
 The Astro Website is in the /docs directory!
@@ -9,59 +15,55 @@ So when I am refering to a website Astro or Vue Components to change or Pages to
 I am speaking about the content in the /docs folder!
 
 ## Information on Python Open Ticket Automation Platform (NOT FOR WEBSITE)
-### Workspace & Repository Layout (uv)
+### Repository Layout
 
-The repo is a uv workspace with a root app and multiple packages.
+The repo is a single Python package — no workspace, no plugins.
 
 ```
 open-ticket-ai/
-├── packages/
-│   ├── <package-a>/
-│   │   ├── pyproject.toml
-│   │   ├── src/<package_a>/...
-│   │   └── tests/                 # package-local tests
-│   └── <package-b>/
-│       ├── pyproject.toml
-│       ├── src/<package_b>/...
-│       └── tests/
 ├── src/
-│   └── open_ticket_ai/...         # root application code
-├── tests/                         # workspace-level integration/e2e
-├── pyproject.toml                 # root (workspace) config
+│   └── open_ticket_ai/            # all application code
+│       ├── core/                   # base abstractions (Pipe, TicketSystemService, etc.)
+│       ├── pipes/                  # pipe implementations (composite, classification, orchestrators, etc.)
+│       ├── hf_local/               # HuggingFace local classification service
+│       ├── otobo_znuny/            # OTOBO/Znuny ticket system connector
+│       ├── zammad/                 # Zammad ticket system connector
+│       ├── api/                    # FastAPI REST API
+│       ├── pipeline.py             # pipe tree construction
+│       ├── settings.py             # env-var driven settings
+│       ├── main.py                 # entry point
+│       └── workflow_manager.py     # background workflow management
+├── tests/                          # all tests
+│   ├── unit/                       # fast isolated tests
+│   ├── integration/                # I/O and cross-component tests
+│   ├── e2e/                        # end-to-end flows
+│   └── conftest.py                 # shared fixtures
+├── pyproject.toml                  # project config
 ```
 
 #### Absolute rules
 
 - **Never** place tests under any `src/` path. Forbidden: `src/**/tests`, `src/**/test_*.py`.
-- Unit tests of plugins live **with their package** under `packages/<name>/tests/` Unit Tests of the core in
-  /tests/unit/.
-- Cross-package **integration,e2e** tests live in **root** `tests/`.
+- All unit tests in `tests/unit/`.
+- Integration/e2e tests in `tests/integration/`, `tests/e2e/`.
 - Keep sample inputs/golden files under a sibling `data/` directory next to the tests that use them.
-- Each package is an editable member of the uv workspace. Do not add ad‑hoc `PYTHONPATH` hacks.
-- Python version: **3.13** only. Use modern typing (PEP 695). No code comments.
+- Python version: **3.14** only. Use modern typing (PEP 695). No code comments.
 
 ### Tests Layout (required)
 
-For **each** package:
-
-```
-packages/<name>/
-└── tests/
-    ├── unit/            # fast, isolated
-    ├── integration/     # touches I/O or package boundaries
-    ├── data/            # fixtures/goldens
-    └── conftest.py      # package-specific fixtures
-```
-
-At the repo root:
-
 ```
 tests/
-    unit/
-├── integration/         # spans multiple packages
+├── unit/
+│   ├── core/            # core module tests
+│   ├── pipes/           # pipe implementation tests
+│   ├── hf_local/        # HF classification tests
+│   ├── otobo_znuny/     # OTOBO/Znuny tests
+│   └── conftest.py
+├── integration/
+│   └── zammad/          # Zammad live integration tests
 ├── e2e/                 # CLI/app-level
 ├── data/
-└── conftest.py          # shared fixtures for the whole workspace
+└── conftest.py          # shared fixtures
 ```
 
 #### Naming rules
@@ -82,8 +84,7 @@ tests/
 - From repo root:
     - `uv sync`
     - `uv run -m pytest` (all tests)
-    - `uv run -m pytest packages/<name>/tests` (single package)
-- uv workspaces install members in editable mode; imports resolve without extra config.
+    - `uv run -m pytest tests/unit` (unit tests only)
 
 ### CI / Quality gates
 
@@ -151,7 +152,7 @@ The customer-facing website lives in `/docs` and uses:
 
 ## Checklist for contributors (must pass) (When making Python changes, NOT website changes)
 
-- [ ] New unit tests added under `packages/<name>/tests` or `tests/unit/`
+- [ ] New unit tests added under `tests/unit/`
 - [ ] No files under any `src/**/tests`
 - [ ] Root-level integration/e2e tests only in `tests/`
 - [ ] No `__init__.py` in any test directories

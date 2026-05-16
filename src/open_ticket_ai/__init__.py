@@ -1,34 +1,12 @@
-from open_ticket_ai.app import OpenTicketAIApp
+from open_ticket_ai.core.ai_classification_services.classification_models import (
+    ClassificationRequest,
+    ClassificationResult,
+)
+from open_ticket_ai.core.ai_classification_services.classification_service import ClassificationService
 from open_ticket_ai.core.base_model import StrictBaseModel
-from open_ticket_ai.core.config.app_config import AppConfig
-from open_ticket_ai.core.config.config_models import (
-    InfrastructureConfig,
-    OpenTicketAIConfig,
-)
-from open_ticket_ai.core.config.errors import (
-    InjectableNotFoundError,
-    MissingConfigurationForRequiredServiceError,
-    MultipleConfigurationsForSingletonServiceError,
-    NoServiceConfigurationFoundError,
-    RegistryError,
-    WrongConfigError,
-)
-from open_ticket_ai.core.injectables.injectable import Injectable
-from open_ticket_ai.core.injectables.injectable_models import (
-    InjectableConfig,
-    InjectableConfigBase,
-)
-from open_ticket_ai.core.logging.logging_iface import AppLogger, LoggerFactory
-from open_ticket_ai.core.logging.logging_models import LoggingConfig
 from open_ticket_ai.core.pipes.pipe import Pipe
-from open_ticket_ai.core.pipes.pipe_factory import PipeFactory
-from open_ticket_ai.core.plugins.plugin import Plugin
-from open_ticket_ai.core.template_rendering.template_renderer import (
-    NoRender,
-    NoRenderField,
-    TemplateRenderer,
-    TemplateRenderError,
-)
+from open_ticket_ai.core.pipes.pipe_context_model import PipeContext
+from open_ticket_ai.core.pipes.pipe_models import PipeResult
 from open_ticket_ai.core.ticket_system_integration.ticket_system_service import TicketSystemService
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
@@ -37,36 +15,23 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
     UnifiedTicket,
     UnifiedTicketBase,
 )
+from open_ticket_ai.settings import Settings
+from open_ticket_ai.workflow_manager import WorkflowManager
 
 __all__ = [
-    "AppConfig",
-    "AppLogger",
-    "InfrastructureConfig",
-    "Injectable",
-    "InjectableConfig",
-    "InjectableConfigBase",
-    "InjectableNotFoundError",
-    "LoggerFactory",
-    "LoggingConfig",
-    "MissingConfigurationForRequiredServiceError",
-    "MultipleConfigurationsForSingletonServiceError",
-    "NoRender",
-    "NoRenderField",
-    "NoServiceConfigurationFoundError",
-    "OpenTicketAIApp",
-    "OpenTicketAIConfig",
+    "ClassificationRequest",
+    "ClassificationResult",
+    "ClassificationService",
     "Pipe",
-    "PipeFactory",
-    "Plugin",
-    "RegistryError",
+    "PipeContext",
+    "PipeResult",
+    "Settings",
     "StrictBaseModel",
-    "TemplateRenderError",
-    "TemplateRenderer",
     "TicketSearchCriteria",
     "TicketSystemService",
     "UnifiedEntity",
     "UnifiedNote",
     "UnifiedTicket",
     "UnifiedTicketBase",
-    "WrongConfigError",
+    "WorkflowManager",
 ]

@@ -3,8 +3,7 @@ from pathlib import Path
 import subprocess
 
 import yaml
-
-from open_ticket_ai import AppConfig
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 SAFE_ARGS = {"up", "down", "restart", "pull", "-d", "--remove-orphans", "-f"}
@@ -16,7 +15,7 @@ class DockerComposeController:
         self._work_dir = work_dir
         self._config_file = compose_file.parent / "config.yml"
 
-    def write_config(self, config: AppConfig, config_file: Path | None = None) -> Path:
+    def write_config(self, config: BaseModel, config_file: Path | None = None) -> Path:
         self._work_dir.mkdir(parents=True, exist_ok=True)
         data = config.model_dump(mode="json", exclude_none=True)
         logger.info(f"Config {data}")

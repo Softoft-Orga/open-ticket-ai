@@ -1,6 +1,6 @@
+from abc import ABC
 from typing import Any
 
-from open_ticket_ai.core.injectables.injectable import Injectable
 from open_ticket_ai.core.ticket_system_integration.unified_models import (
     TicketSearchCriteria,
     UnifiedNote,
@@ -8,60 +8,53 @@ from open_ticket_ai.core.ticket_system_integration.unified_models import (
 )
 
 
-class TicketSystemService(Injectable):
+class TicketSystemService(ABC):
     """Base contract for ticket system integrations.
 
-    Implementations provide coroutine methods that operate on
-    :class:`~open_ticket_ai.core.ticket_system_integration.unified_models.UnifiedTicket`
-    data while remaining flexible enough to accept platform-specific keyword
-    arguments. Each method accepts ``**kwargs`` so adapters can surface the
-    parameters required by the upstream SDK, yet they must always return unified
-    models to keep downstream templates and configuration portable across ticket
-    systems.
-
-    Adapters are responsible for translating between their native models and the
-    unified representations exposed here.
+    Implementations provide coroutine methods that operate on unified ticket
+    models while remaining flexible enough to accept platform-specific keyword
+    arguments.
     """
 
     async def create_ticket(
         self,
         ticket: UnifiedTicket | None = None,
         **kwargs: Any,
-    ) -> UnifiedTicket:  # pragma: no cover - interface contract
-        raise NotImplementedError("Ticket system adapters must implement 'create_ticket'.")
+    ) -> UnifiedTicket:
+        raise NotImplementedError
 
     async def update_ticket(
         self,
         ticket_id: str,
         updates: UnifiedTicket | None = None,
         **kwargs: Any,
-    ) -> bool:  # pragma: no cover - interface contract
-        raise NotImplementedError("Ticket system adapters must implement 'update_ticket'.")
+    ) -> bool:
+        raise NotImplementedError
 
     async def find_tickets(
         self,
         criteria: TicketSearchCriteria | None = None,
         **kwargs: Any,
-    ) -> list[UnifiedTicket]:  # pragma: no cover - interface contract
-        raise NotImplementedError("Ticket system adapters must implement 'find_tickets'.")
+    ) -> list[UnifiedTicket]:
+        raise NotImplementedError
 
     async def find_first_ticket(
         self,
         criteria: TicketSearchCriteria | None = None,
         **kwargs: Any,
-    ) -> UnifiedTicket | None:  # pragma: no cover - interface contract
-        raise NotImplementedError("Ticket system adapters must implement 'find_first_ticket'.")
+    ) -> UnifiedTicket | None:
+        raise NotImplementedError
 
     async def get_ticket(
         self,
         ticket_id: str,
-    ) -> UnifiedTicket | None:  # pragma: no cover - interface contract
-        raise NotImplementedError("Ticket system adapters must implement 'get_ticket'.")
+    ) -> UnifiedTicket | None:
+        raise NotImplementedError
 
     async def add_note(
         self,
         ticket_id: str,
         note: UnifiedNote | None = None,
         **kwargs: Any,
-    ) -> bool:  # pragma: no cover - interface contract
-        raise NotImplementedError("Ticket system adapters must implement 'add_note'.")
+    ) -> bool:
+        raise NotImplementedError
